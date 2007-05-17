@@ -1,0 +1,24 @@
+src := $(obj)
+
+PHONY := __build
+__build:
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.build is included improperly)
+endif
+
+__build: $(packages-y)
+	@:
+
+$(packages-y):
+	$(call cmd,build_pkg)
+
+.PHONY: $(PHONY)
+

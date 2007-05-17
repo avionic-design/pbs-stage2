@@ -1,0 +1,6 @@
+
+quiet_cmd_build_pkg = BUILD   $@
+      cmd_build_pkg = $(Q)$(MAKE) $(package)=$@ build
+
+# vim: ft=make
+

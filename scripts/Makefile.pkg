@@ -1,0 +1,100 @@
+
+PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
+CSUM = md5
+
+src := $(obj)
+PHONY := all
+all:
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+fetch := -f scripts/Makefile.pkg download
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.build is included improperly)
+endif
+
+all: build
+	@:
+
+ALLFILES := $(TARBALLS) $(PATCHES)
+#LOCATION := $(subst ://,//,$(LOCATION))
+
+ifdef package
+fetch: $(addprefix download/, $(ALLFILES))
+
+checksum: $(addprefix $(CSUM)-, $(ALLFILES))
+
+extract: extract-$(package)
+
+patch: patch-$(package)
+
+configure: configure-$(package)
+
+build: build-$(package)
+
+install: install-$(package)
+endif
+
+quiet_cmd_check_md5 = MD5     $*
+      cmd_check_md5 = grep $* checksums/md5 | md5sum -c > /dev/null
+
+download/%:
+	@for url in $(addsuffix /$*, $(subst ://,//,$(LOCATION))); do \
+		$(MAKE) $(fetch)=$$url download && break; \
+	done
+
+md5-%: download/%
+	$(call cmd,check_md5)
+
+ifdef download
+PHONY += download
+download: $(subst ://,//,$(download))
+
+quiet_cmd_download_http = HTTP    $(subst //,://,$@)
+      cmd_download_http = wget -P download $(subst //,://,$@) > /dev/null 2>&1
+
+http//%:
+	$(call cmd,download_http)
+endif
+
+# ----- configure targets ----------------------------------------------------
+
+quiet_pkg_configure_autotools = CONFIG  $*
+      pkg_configure_autotools = cd $* && $(CONFIGURE_ENV) ./configure \
+				$(CONFIGURE_ARGS)
+
+quiet_pkg_configure_make = CONFIG  $*
+      pkg_configure_make = cd $* && $(CONFIGURE_ENV) make $(CONFIGURE_ARGS)
+
+configure-%/configure:
+	$(call cmd,pkg_configure_autotools)
+
+configure-%/Makefile:
+	$(call cmd,pkg_configure_make)
+
+# ----- build targets --------------------------------------------------------
+
+quiet_pkg_build_make = BUILD   $*
+      pkg_build_make = cd $* && $(BUILD_ENV) make $(BUILD_ARGS)
+
+build-%/Makefile:
+	$(call cmd,pkg_build_make)
+
+# ----- install targets ------------------------------------------------------
+
+quiet_pkg_install_make = INSTALL $*
+      pkg_install_make = cd $* $(INSTALL_ENV) make $(INSTALL_ARGS)
+
+install-%/Makefile:
+	$(call cmd,pkg_install_make)
+
+.PHONY: $(PHONY)
+
+# vim: ft=make
+
