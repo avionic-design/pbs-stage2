@@ -1,6 +1,6 @@
 
-PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
-CSUM = md5
+CSUM = sha256
+BUILDDIR = $(PLATFORM)/build
 
 src := $(obj)
 PHONY := all
@@ -9,7 +9,11 @@ all:
 include scripts/pbuild.mk
 
 pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
-include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+ifndef PACKAGE
+  include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+endif
+
+PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
 
 fetch := -f scripts/Makefile.pkg download
 
@@ -23,34 +27,25 @@ all: build
 	@:
 
 ALLFILES := $(TARBALLS) $(PATCHES)
-#LOCATION := $(subst ://,//,$(LOCATION))
 
 ifdef package
+clean:
+
 fetch: $(addprefix download/, $(ALLFILES))
 
 checksum: $(addprefix $(CSUM)-, $(ALLFILES))
 
-extract: extract-$(package)
+extract: $(addsuffix -extract,$(addprefix $(tmptree)/stamps/, $(ALLFILES)))
 
-patch: patch-$(package)
-
-configure: configure-$(package)
-
-build: build-$(package)
-
-install: install-$(package)
+patch: $(addprefix patch-$(BUILDDIR)/, $(ALLFILES))
 endif
-
-quiet_cmd_check_md5 = MD5     $*
-      cmd_check_md5 = grep $* checksums/md5 | md5sum -c > /dev/null
 
 download/%:
 	@for url in $(addsuffix /$*, $(subst ://,//,$(LOCATION))); do \
 		$(MAKE) $(fetch)=$$url download && break; \
 	done
 
-md5-%: download/%
-	$(call cmd,check_md5)
+# ----- downloading targets --------------------------------------------------
 
 ifdef download
 PHONY += download
@@ -62,6 +57,45 @@ quiet_cmd_download_http = HTTP    $(subst //,://,$@)
 http//%:
 	$(call cmd,download_http)
 endif
+
+# ----- checksumming targets -------------------------------------------------
+
+quiet_cmd_check_md5 = MD5     $*
+      cmd_check_md5 = grep $* checksums/md5 | md5sum -c > /dev/null
+
+md5-%: download/%
+	$(call cmd,check_md5)
+
+quiet_cmd_check_sha1 = SHA1    $*
+      cmd_check_sha1 = grep $* checksums/sha1 | sha1sum -c > /dev/null
+
+sha1-%: download/%
+	$(call cmd,check_sha1)
+
+quiet_cmd_check_sha256 = SHA256  $*
+      cmd_check_sha256 = grep $* checksums/sha256 | sha256sum -c > /dev/null
+
+sha256-%: download/%
+	$(call cmd,check_sha256)
+
+##
+## from here on, targets are platform-dependent
+##
+
+# ----- extract targets ------------------------------------------------------
+
+tarball = $(srctree)/download/$(patsubst %-extract,%,$(@F))
+
+%.tar.bz2-extract:
+	$(call cmd,mkdir_p_arg,$(@D))
+	$(call cmd,extract_tar_bz2,$(tarball))
+	#mkdir -p $(tmptree)/stamps
+	#touch $(tmptree)/stamps/extract-$(notdir $(tarball))
+
+# ----- patch targets --------------------------------------------------------
+
+patch-%:
+	@echo "Patching $@ ...\n"
 
 # ----- configure targets ----------------------------------------------------
 
@@ -93,6 +127,8 @@ quiet_pkg_install_make = INSTALL $*
 
 install-%/Makefile:
 	$(call cmd,pkg_install_make)
+
+# ----- clean targets --------------------------------------------------------
 
 .PHONY: $(PHONY)
 

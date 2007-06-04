@@ -11,11 +11,13 @@ endif
 
 srctree := $(if $(PBUILD_SRC),$(PBUILD_SRC),$(CURDIR))
 objtree := $(CURDIR)
+tmptree := $(CURDIR)/tmp
 src     := $(srctree)
 obj     := $(objtree)
+tmp     := $(tmptree)
 VPATH   := $(srctree)
 
-export srctree objtree VPATH
+export srctree objtree tmptree VPATH
 
 # TODO: beautify output
 ifeq ($(PBUILD_VERBOSE),1)
@@ -64,7 +66,10 @@ clean:
 endif
 
 ifdef package
-fetch checksum extract patch configure build install:
+clean fetch checksum extract patch:
+	$(Q)$(MAKE) $(pkg)=packages/$(package) $@
+
+configure build install:
 	$(Q)$(MAKE) $(pkg)=packages/$(package) $@
 endif
 
