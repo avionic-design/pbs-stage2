@@ -1,7 +1,10 @@
 src := $(obj)
 
-PHONY := __build
-__build:
+#PHONY := build
+#build:
+
+#PHONY += install
+#install:
 
 include scripts/pbuild.mk
 
@@ -14,11 +17,22 @@ ifndef obj
   $(warning pbuild: Makefile.build is included improperly)
 endif
 
-__build: $(packages-y)
-	@:
+build-packages   = $(addsuffix -build,   $(packages-y))
+install-packages = $(addsuffix -install, $(packages-y))
 
-$(packages-y):
+PHONY += build
+build: $(build-packages)
+
+PHONY += install
+install: $(install-packages)
+
+$(build-packages): package = $(patsubst %-build,%,$@)
+$(build-packages):
 	$(call cmd,build_pkg)
+
+$(install-packages): package = $(patsubst %-install,%,$@)
+$(install-packages):
+	$(call cmd,install_pkg)
 
 .PHONY: $(PHONY)
 

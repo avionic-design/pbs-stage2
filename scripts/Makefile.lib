@@ -1,11 +1,32 @@
+quiet_cmd_clean = CLEAN     $(wildcard $(__clean-files))
+      cmd_clean = rm -f $(wildcard $(__clean-files))
+
+quiet_cmd_cleandir = CLEAN     $(wildcard $(__clean-dirs))
+      cmd_cleandir = rm -rf $(wildcard $(__clean-dirs))
+
+quiet_cmd_mkdir_p = MKDIR     $@
+      cmd_mkdir_p = mkdir -p $@
+
 quiet_cmd_mkdir_p_arg = MKDIR     $2
       cmd_mkdir_p_arg = mkdir -p $2
 
-quiet_cmd_extract_tar_bz2 = TAR [xj]  $(subst $(srctree)/,,$2)
-      cmd_extract_tar_bz2 = cd $(tmptree); tar xjf $2; mkdir -p $(tmptree)/stamps; touch $(tmptree)/stamps/$(notdir $2)-extract
+quiet_cmd_extract_tar_gz = TAR [xz]  $(subst $(srctree)/,,$2)
+      cmd_extract_tar_gz = cd $(tmptree) && tar xzf $2
 
-quiet_cmd_build_pkg = BUILD   $@
-      cmd_build_pkg = $(Q)$(MAKE) $(package)=$@ build
+quiet_cmd_extract_tar_bz2 = TAR [xj]  $(subst $(srctree)/,,$2)
+      cmd_extract_tar_bz2 = cd $(tmptree) && tar xjf $2 #; mkdir -p $(tmptree)/stamps; touch $(tmptree)/stamps/$(notdir $2)-extract
+
+quiet_cmd_clean_pkg = CLEAN     $(package)
+      cmd_clean_pkg = $(MAKE) $(pkg)=$(package) clean
+
+quiet_cmd_build_pkg = BUILD     $(package)
+      cmd_build_pkg = $(MAKE) $(pkg)=$(package) build
+
+quiet_cmd_install_pkg = INSTALL   $(package)
+      cmd_install_pkg = $(MAKE) $(pkg)=$(package) install
+
+quiet_cmd_quilt_patch = PATCH     $(package)
+      cmd_quilt_patch = cd $(pkgtree) && QUILT_PATCHES=$(srctree)/packages/$(package)/patches quilt --quiltrc /dev/null push -a #&& touch $@
 
 # vim: ft=make
 

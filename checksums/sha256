@@ -1,2 +1,9 @@
 ca70501ae859cd86b387bb196908838275b4b06e6f4d692f9aa51b8a633334a7  download/uClibc-0.9.29.tar.bz2
 e56a8c1c63ba428d765648986cbb7d682d03052345798b968c55912f08df3d9f  download/linux-2.6.21.3.tar.bz2
+e2c33ce6f23c9a366f109ced295626cb2f8bd6b2f08ff9df6dafb5448505a25e  download/binutils-2.17.tar.bz2
+c15ba2957485bbab1c3b85cc1e4e96337cb7bce749827f526ea7209461ff707a  download/gcc-core-4.2.0.tar.bz2
+f773ae5762c193091df46244ce355e38d358e8f8be088be0dbf934a193063bba  download/glibc-2.6.tar.bz2
+398f56ad651939110ad6af88fdd3e92b5cb0583e6f612f2f12ba0134a22b1fac  download/glibc-ports-2.6.tar.bz2
+338cb3b77671f1dcec01079e8aad0084e05bb76e21b095274b5bea5d91b5a57d  download/busybox-1.6.0.tar.bz2
+82aab2ff63e5fac4bff35c91222f735ec67551db86b5c3b3455ecc10e8889e53  download/dash-0.5.3.tar.gz
+7be9c5df8000ae35d0928f0a254bfb5e8478cad5e5e57fd07820530c03b3711d  download/gcc-core-4.1.2.tar.bz2

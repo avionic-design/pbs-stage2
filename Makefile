@@ -6,15 +6,15 @@ ifdef V
   endif
 endif
 ifndef PBUILD_VERBOSE
-  PBUILD_VERBOSE = 0
+  PBUILD_VERBOSE =
 endif
 
 srctree := $(if $(PBUILD_SRC),$(PBUILD_SRC),$(CURDIR))
 objtree := $(CURDIR)
-tmptree := $(CURDIR)/tmp
+tmptree  = $(CURDIR)/tmp
 src     := $(srctree)
 obj     := $(objtree)
-tmp     := $(tmptree)
+tmp      = $(tmptree)
 VPATH   := $(srctree)
 
 export srctree objtree tmptree VPATH
@@ -36,8 +36,17 @@ export quiet Q PBUILD_VERBOSE
 
 include scripts/pbuild.mk
 
-build := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build obj
-pkg   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg   obj
+clean   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.clean         obj
+build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build build   obj
+install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build install obj
+pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg           obj
+export clean build install pkg
+
+checksum = sha256
+builddir = $(PLATFORM)/build
+stampdir = $(tmptree)/stamps
+patchdir = $(srctree)/packages/$(package)/patches
+export checksum builddir stampdir patchdir
 
 config-targets := 0
 mixed-targets  := 0
@@ -55,6 +64,10 @@ ifeq ($(mixed-targets),1)
 endif
 
 ifdef platform
+PLATFORM = $(objtree)/platform/$(platform)
+tmptree = $(PLATFORM)/build
+export PLATFORM
+
 build:
 	$(Q)$(MAKE) $(build)=platform/$(platform)
 
@@ -67,10 +80,10 @@ endif
 
 ifdef package
 clean fetch checksum extract patch:
-	$(Q)$(MAKE) $(pkg)=packages/$(package) $@
+	$(Q)$(MAKE) $(pkg)=$(package) $@
 
 configure build install:
-	$(Q)$(MAKE) $(pkg)=packages/$(package) $@
+	$(Q)$(MAKE) $(pkg)=$(package) $@
 endif
 
 PHONY += FORCE

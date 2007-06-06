@@ -1,0 +1,19 @@
+--- a/Rules.mak	2007-03-02 11:40:56.000000000 +0100
++++ b/Rules.mak	2007-03-02 11:43:16.000000000 +0100
+@@ -143,7 +143,6 @@
+ endif
+ 
+ ifeq ($(strip $(TARGET_ARCH)),arm)
+-	OPTIMIZATION+=-fstrict-aliasing
+ 	CPU_LDFLAGS-$(ARCH_LITTLE_ENDIAN)+=-EL
+ 	CPU_LDFLAGS-$(ARCH_BIG_ENDIAN)+=-EB
+ 	CPU_CFLAGS-$(ARCH_LITTLE_ENDIAN)+=-mlittle-endian
+@@ -159,7 +158,7 @@
+ 	CPU_CFLAGS-$(CONFIG_ARM_SA110)+=-mtune=strongarm110 -march=armv4
+ 	CPU_CFLAGS-$(CONFIG_ARM_SA1100)+=-mtune=strongarm1100 -march=armv4
+ 	CPU_CFLAGS-$(CONFIG_ARM_XSCALE)+=$(call check_gcc,-mtune=xscale,-mtune=strongarm110)
+-	CPU_CFLAGS-$(CONFIG_ARM_XSCALE)+=-march=armv4 -Wa,-mcpu=xscale
++	CPU_CFLAGS-$(CONFIG_ARM_XSCALE)+=-march=armv5te -Wa,-mcpu=xscale
+ endif
+ 
+ ifeq ($(strip $(TARGET_ARCH)),mips)

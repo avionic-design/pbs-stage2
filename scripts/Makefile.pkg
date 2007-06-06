@@ -1,6 +1,4 @@
-
-CSUM = sha256
-BUILDDIR = $(PLATFORM)/build
+LOG = $(if $(PBUILD_VERBOSE),,> /dev/null 2>&1)
 
 src := $(obj)
 PHONY := all
@@ -8,12 +6,14 @@ all:
 
 include scripts/pbuild.mk
 
-pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/packages/$(src))
 ifndef PACKAGE
   include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
 endif
 
 PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
+pkgtree ?= $(tmptree)/$(PACKAGE_FULLNAME)
+export pkgtree
 
 fetch := -f scripts/Makefile.pkg download
 
@@ -26,18 +26,62 @@ endif
 all: build
 	@:
 
-ALLFILES := $(TARBALLS) $(PATCHES)
+ALLFILES := $(TARBALLS)
 
+stamp = $(addsuffix -$(1), $(addprefix $(tmptree)/stamps/, $(2)))
+makestamp = $(Q)mkdir -p $(dir $@) && touch $@
+package-hook = $(if $(wildcard $(call stamp,$(1),$(package))),,package-$(1))
+
+package = $(obj)
 ifdef package
+PHONY += clean
 clean:
 
-fetch: $(addprefix download/, $(ALLFILES))
+PHONY += fetch
+fetch: $(call stamp,fetch,$(ALLFILES))
 
-checksum: $(addprefix $(CSUM)-, $(ALLFILES))
+PHONY += checksum
+checksum: $(call stamp,checksum,$(ALLFILES))
 
-extract: $(addsuffix -extract,$(addprefix $(tmptree)/stamps/, $(ALLFILES)))
+PHONY += extract
+extract: $(call stamp,extract,$(ALLFILES))
 
-patch: $(addprefix patch-$(BUILDDIR)/, $(ALLFILES))
+PHONY += patch
+patch: $(call stamp,patch,$(package))
+
+PHONY += configure
+configure: $(call stamp,configure,$(package))
+
+PHONY += build
+build: $(call stamp,build,$(package))
+
+PHONY += install
+install: $(call stamp,install,$(package))
+
+# stamp targets
+$(call stamp,fetch,$(package)): $(stampdir) $(addprefix download/, $(TARBALLS))
+	$(makestamp)
+
+$(call stamp,checksum,$(package)): $(stampdir) $(call stamp,$(checksum),$(TARBALLS))
+	$(makestamp)
+
+$(call stamp,extract,$(package)): $(stampdir) $(call stamp,checksum,$(package)) $(call stamp,extract,$(TARBALLS))
+	$(makestamp)
+
+$(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package))
+	$(makestamp)
+
+$(call stamp,configure,$(package)): $(stampdir) $(call stamp,patch,$(package)) $(call package-hook,configure)
+	$(makestamp)
+
+$(call stamp,build,$(package)): $(stampdir) $(call stamp,configure,$(package)) $(call package-hook,build)
+	$(makestamp)
+
+$(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(call package-hook,install)
+	$(makestamp)
+
+else
+  $(warning package not defined)
 endif
 
 download/%:
@@ -51,31 +95,37 @@ ifdef download
 PHONY += download
 download: $(subst ://,//,$(download))
 
-quiet_cmd_download_http = HTTP    $(subst //,://,$@)
-      cmd_download_http = wget -P download $(subst //,://,$@) > /dev/null 2>&1
+quiet_cmd_download_http = HTTP      $(subst //,://,$@)
+      cmd_download_http = wget -P download $(subst //,://,$@) $(LOG)
 
 http//%:
 	$(call cmd,download_http)
+
+quiet_cmd_download_ftp = FTP       $(subst //,://,$@)
+      cmd_download_ftp = wget -P download $(subst //,://,$@) $(LOG)
+
+ftp//%:
+	$(call cmd,download_ftp)
 endif
 
 # ----- checksumming targets -------------------------------------------------
 
-quiet_cmd_check_md5 = MD5     $*
-      cmd_check_md5 = grep $* checksums/md5 | md5sum -c > /dev/null
+quiet_cmd_check_md5 = MD5       $*
+      cmd_check_md5 = grep $* checksums/md5 | md5sum -c $(LOG) && touch $@
 
-md5-%: download/%
+$(stampdir)/%-md5: download/%
 	$(call cmd,check_md5)
 
-quiet_cmd_check_sha1 = SHA1    $*
-      cmd_check_sha1 = grep $* checksums/sha1 | sha1sum -c > /dev/null
+quiet_cmd_check_sha1 = SHA1      $*
+      cmd_check_sha1 = grep $* checksums/sha1 | sha1sum -c $(LOG) && touch $@
 
-sha1-%: download/%
+$(stampdir)/%-sha1: download/%
 	$(call cmd,check_sha1)
 
-quiet_cmd_check_sha256 = SHA256  $*
-      cmd_check_sha256 = grep $* checksums/sha256 | sha256sum -c > /dev/null
+quiet_cmd_check_sha256 = SHA256    $*
+      cmd_check_sha256 = grep $* checksums/sha256 | sha256sum -c $(LOG) && touch $@
 
-sha256-%: download/%
+$(stampdir)/%-sha256: download/%
 	$(call cmd,check_sha256)
 
 ##
@@ -86,16 +136,19 @@ sha256-%: download/%
 
 tarball = $(srctree)/download/$(patsubst %-extract,%,$(@F))
 
-%.tar.bz2-extract:
-	$(call cmd,mkdir_p_arg,$(@D))
+$(stampdir)/%.tar.gz-extract:
+	$(call cmd,extract_tar_gz,$(tarball))
+	$(makestamp)
+
+$(stampdir)/%.tar.bz2-extract:
 	$(call cmd,extract_tar_bz2,$(tarball))
-	#mkdir -p $(tmptree)/stamps
-	#touch $(tmptree)/stamps/extract-$(notdir $(tarball))
+	$(makestamp)
 
 # ----- patch targets --------------------------------------------------------
 
-patch-%:
-	@echo "Patching $@ ...\n"
+$(stampdir)/%-patch:
+	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
+	$(makestamp)
 
 # ----- configure targets ----------------------------------------------------
 
@@ -129,6 +182,12 @@ install-%/Makefile:
 	$(call cmd,pkg_install_make)
 
 # ----- clean targets --------------------------------------------------------
+
+$(stampdir):
+	$(call cmd,mkdir_p)
+
+PHONY += FORCE
+FORCE:
 
 .PHONY: $(PHONY)
 

@@ -1,0 +1,24 @@
+src := $(obj)
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.build is included improperly)
+endif
+
+clean-packages = $(addsuffix -clean, $(packages-y))
+
+PHONY += clean $(clean-packages) platform-clean
+clean: $(clean-packages) platform-clean
+
+$(clean-packages): package = $(patsubst %-clean,%,$@)
+$(clean-packages):
+	$(call cmd,clean_pkg)
+
+.PHONY: $(PHONY)
+
