@@ -11,7 +11,7 @@ include packages/toolchain/common.mk
 env += libc_ac_cv_tls=yes
 
 package-extract:
-	cd $(pkgtree) && ln -sf ../$(PACKAGE)-port-$(VERSION)
+	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
 package-configure:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -29,7 +29,8 @@ package-install:
 		install_root=$(PLATFORM) CFLAGS=-DBOOTSTRAP_GCC \
 		install-headers
 	mkdir -p $(PLATFORM)/usr/include/gnu
+	touch $(PLATFORM)/usr/include/gnu/stubs.h
 	cd $(pkgtree) && \
-		cp include/gnu/*.h $(PLATFORM)/usr/include/gnu && \
+		cp hdr-$(HOST)/include/features.h $(PLATFORM)/usr/include/features.h && \
 		cp hdr-$(HOST)/bits/*.h $(PLATFORM)/usr/include/bits
 
