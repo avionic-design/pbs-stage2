@@ -5,7 +5,7 @@ LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 PATCHES  = xscale-flags.patch
 
-env = PATH=/usr/bin:/bin:$(PLATFORM)/usr/bin
+include packages/toolchain/common.mk
 
 configure:
 

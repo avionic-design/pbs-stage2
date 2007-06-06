@@ -68,7 +68,7 @@ $(call stamp,checksum,$(package)): $(stampdir) $(call stamp,$(checksum),$(TARBAL
 $(call stamp,extract,$(package)): $(stampdir) $(call stamp,checksum,$(package)) $(call stamp,extract,$(TARBALLS))
 	$(makestamp)
 
-$(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package))
+$(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package)) $(call package-hook,patch)
 	$(makestamp)
 
 $(call stamp,configure,$(package)): $(stampdir) $(call stamp,patch,$(package)) $(call package-hook,configure)
@@ -80,6 +80,7 @@ $(call stamp,build,$(package)): $(stampdir) $(call stamp,configure,$(package)) $
 $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(call package-hook,install)
 	$(makestamp)
 
+package-patch: ;
 else
   $(warning package not defined)
 endif
@@ -146,9 +147,11 @@ $(stampdir)/%.tar.bz2-extract:
 
 # ----- patch targets --------------------------------------------------------
 
-$(stampdir)/%-patch:
-	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
-	$(makestamp)
+#$(stampdir)/$(package)-apply: patchdir = $(srctree)/packages/$(package)/patches
+#$(stampdir)/$(package)-apply:
+#	@echo "Patching package: $@ package $(package) patchdir $(patchdir)"
+#	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
+#	$(makestamp)
 
 # ----- configure targets ----------------------------------------------------
 

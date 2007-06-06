@@ -17,14 +17,22 @@ ifndef obj
   $(warning pbuild: Makefile.build is included improperly)
 endif
 
+fetch-packages   = $(addsuffix -fetch,   $(packages-y))
 build-packages   = $(addsuffix -build,   $(packages-y))
 install-packages = $(addsuffix -install, $(packages-y))
+
+PHONY += fetch
+fetch: $(fetch-packages)
 
 PHONY += build
 build: $(build-packages)
 
 PHONY += install
 install: $(install-packages)
+
+$(fetch-packages): package = $(patsubst %-fetch,%,$@)
+$(fetch-packages):
+	$(call cmd,fetch_pkg)
 
 $(build-packages): package = $(patsubst %-build,%,$@)
 $(build-packages):

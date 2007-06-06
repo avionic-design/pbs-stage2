@@ -37,6 +37,7 @@ export quiet Q PBUILD_VERBOSE
 include scripts/pbuild.mk
 
 clean   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.clean         obj
+fetch   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build fetch   obj
 build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build build   obj
 install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build install obj
 pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg           obj
@@ -67,6 +68,9 @@ ifdef platform
 PLATFORM = $(objtree)/platform/$(platform)
 tmptree = $(PLATFORM)/build
 export PLATFORM
+
+fetch:
+	$(Q)$(MAKE) $(fetch)=platform/$(platform)
 
 build:
 	$(Q)$(MAKE) $(build)=platform/$(platform)
