@@ -38,13 +38,13 @@ PHONY += clean
 clean:
 
 PHONY += fetch
-fetch: $(call stamp,fetch,$(ALLFILES))
+fetch: $(call stamp,fetch,$(package))
 
 PHONY += checksum
-checksum: $(call stamp,checksum,$(ALLFILES))
+checksum: $(call stamp,checksum,$(package))
 
 PHONY += extract
-extract: $(call stamp,extract,$(ALLFILES))
+extract: $(call stamp,extract,$(package))
 
 PHONY += patch
 patch: $(call stamp,patch,$(package))
