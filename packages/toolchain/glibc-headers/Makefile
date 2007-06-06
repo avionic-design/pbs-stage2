@@ -31,6 +31,6 @@ package-install:
 	mkdir -p $(PLATFORM)/usr/include/gnu
 	touch $(PLATFORM)/usr/include/gnu/stubs.h
 	cd $(pkgtree) && \
-		cp hdr-$(HOST)/include/features.h $(PLATFORM)/usr/include/features.h && \
+		cp include/features.h $(PLATFORM)/usr/include/features.h && \
 		cp hdr-$(HOST)/bits/*.h $(PLATFORM)/usr/include/bits
 
