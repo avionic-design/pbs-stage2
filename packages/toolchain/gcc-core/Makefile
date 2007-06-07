@@ -10,13 +10,12 @@ conf_opts = \
 	--disable-threads \
 	--disable-nls \
 	--disable-shared \
-	--without-headers \
-	--with-newlib \
+	--with-sysroot=$(PLATFORM) \
 	--enable-languages=c
 
-ifeq ($(LIBC), glibc)
-	conf_opts += --enable-__cxa_atexit
-endif
+#ifeq ($(LIBC), glibc)
+#	conf_opts += --enable-__cxa_atexit
+#endif
 
 package-configure:
 	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \

@@ -6,14 +6,22 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/toolchain/common.mk
 
+conf_opts = \
+	--with-sysroot=$(PLATFORM) \
+	--disable-nls \
+	--enable-tls \
+	--enable-shared
+#	--disable-multilib
+
 package-configure:
 	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --prefix=/usr \
-		--disable-nls --enable-tls --with-sysroot=$(PLATFORM) \
-		--mandir=/usr/share/man
+		--mandir=/usr/share/man $(conf_opts)
 
 package-build:
+	cd $(pkgtree) && $(env) $(MAKE) configure-host
 	cd $(pkgtree) && $(env) $(MAKE)
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) DESTDIR=$(PLATFORM) install
+	cd $(pkgtree) && cp include/libiberty.h $(PLATFORM)/usr/include
 

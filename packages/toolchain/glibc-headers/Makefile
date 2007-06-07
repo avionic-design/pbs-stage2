@@ -8,7 +8,15 @@ TARBALLS = \
 
 include packages/toolchain/common.mk
 
-env += libc_ac_cv_tls=yes
+env += \
+	CC=gcc \
+	libc_cv_forced_unwind=yes \
+	libc_cv_c_cleanup=yes \
+	libc_ac_cv_tls=yes
+
+ifeq ($(ARCH),arm)
+  env += libc_cv_arm_tls=yes
+endif
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -16,21 +24,20 @@ package-extract:
 package-configure:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 	cd $(pkgtree) && mkdir -p hdr-$(HOST) && cd hdr-$(HOST) && \
-		$(env) ../configure --host=$(HOST) --prefix=/usr --without-cvs \
-			--disable-sanity-checks --enable-hacker-mode \
-			--enable-addons=ports --enable-tls \
-			--with-sysroot=$(PLATFORM) \
+		$(env) ../configure --host=$(HOST) --prefix=/usr \
+			--enable-addons=ports \
 			--with-headers=$(PLATFORM)/usr/include
 
 package-build:
 
 package-install:
-	cd $(pkgtree)/hdr-$(HOST) && $(env) $(MAKE) cross-compiling=yes \
-		install_root=$(PLATFORM) CFLAGS=-DBOOTSTRAP_GCC \
+	cd $(pkgtree)/hdr-$(HOST) && $(env) $(MAKE) install_root=$(PLATFORM) \
 		install-headers
 	mkdir -p $(PLATFORM)/usr/include/gnu
 	touch $(PLATFORM)/usr/include/gnu/stubs.h
 	cd $(pkgtree) && \
 		cp include/features.h $(PLATFORM)/usr/include/features.h && \
-		cp hdr-$(HOST)/bits/*.h $(PLATFORM)/usr/include/bits
+		cp hdr-$(HOST)/bits/*.h $(PLATFORM)/usr/include/bits && \
+		cp ports/sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h \
+			$(PLATFORM)/usr/include/bits
 
