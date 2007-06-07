@@ -9,16 +9,19 @@ include packages/toolchain/common.mk
 conf_opts =
 ifeq ($(LIBC), glibc)
 	conf_opts += --enable-__cxa_atexit
+else
+	conf_opts += --disable-multilib
 endif
 
 package-configure:
 	mkdir -p $(CORE_PREFIX)/$(HOST)/include
 	cp -r $(PLATFORM)/usr/include/* $(CORE_PREFIX)/$(HOST)/include
-	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --prefix=$(CORE_PREFIX) \
-		--with-local-prefix=$(PLATFORM) --with-sysroot=$(PLATFORM) \
-		--disable-multilib --with-newlib --with-softfloat --disable-nls \
-		--enable-threads=no --enable-symvers=gnu --disable-static \
-		--enable-languages=c $(conf_opts)
+	mkdir -p $(pkgtree)/bootstrap-$(HOST) && cd $(pkgtree)/bootstrap-$(HOST) && \
+		$(env) ../configure --target=$(HOST) --prefix=$(CORE_PREFIX) \
+			--with-local-prefix=$(PLATFORM) --with-sysroot=$(PLATFORM) \
+			--with-newlib --with-softfloat --disable-nls \
+			--enable-threads=no --enable-symvers=gnu --disable-static \
+			--enable-languages=c $(conf_opts)
 
 # original command
 #	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --prefix=/usr \
@@ -34,8 +37,8 @@ package-configure:
 #		--with-float=soft --enable-languages=c
 
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) all-gcc
+	cd $(pkgtree)/bootstrap-$(HOST) && $(env) $(MAKE) all-gcc
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) install-gcc
+	cd $(pkgtree)/bootstrap-$(HOST) && $(env) $(MAKE) install-gcc
 

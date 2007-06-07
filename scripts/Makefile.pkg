@@ -27,6 +27,7 @@ all: build
 	@:
 
 ALLFILES := $(TARBALLS)
+package-sources = $(addprefix $(package)/, $(TARBALLS))
 
 stamp = $(addsuffix -$(1), $(addprefix $(tmptree)/stamps/, $(2)))
 makestamp = $(Q)mkdir -p $(dir $@) && touch $@
@@ -65,10 +66,10 @@ $(call stamp,fetch,$(package)): $(stampdir) $(addprefix download/, $(TARBALLS))
 $(call stamp,checksum,$(package)): $(stampdir) $(call stamp,$(checksum),$(TARBALLS))
 	$(makestamp)
 
-$(call stamp,extract,$(package)): $(stampdir) $(call stamp,checksum,$(package)) $(call stamp,extract,$(TARBALLS))
+$(call stamp,extract,$(package)): $(stampdir) $(call stamp,checksum,$(package)) $(call stamp,extract,$(package-sources))
 	$(makestamp)
 
-$(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package)) $(call package-hook,patch)
+$(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package)) $(call package-hook,patch) $(call stamp,apply,$(package))
 	$(makestamp)
 
 $(call stamp,configure,$(package)): $(stampdir) $(call stamp,patch,$(package)) $(call package-hook,configure)
@@ -147,11 +148,10 @@ $(stampdir)/%.tar.bz2-extract:
 
 # ----- patch targets --------------------------------------------------------
 
-#$(stampdir)/$(package)-apply: patchdir = $(srctree)/packages/$(package)/patches
-#$(stampdir)/$(package)-apply:
-#	@echo "Patching package: $@ package $(package) patchdir $(patchdir)"
-#	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
-#	$(makestamp)
+$(stampdir)/$(package)-apply: patchdir = $(srctree)/packages/$(package)/patches
+$(stampdir)/$(package)-apply:
+	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
+	$(makestamp)
 
 # ----- configure targets ----------------------------------------------------
 

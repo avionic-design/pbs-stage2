@@ -8,7 +8,8 @@ include packages/toolchain/common.mk
 
 package-configure:
 	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --prefix=/usr \
-		--disable-nls --enable-tls --with-sysroot=$(PLATFORM)
+		--disable-nls --enable-tls --with-sysroot=$(PLATFORM) \
+		--mandir=/usr/share/man
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE)
