@@ -9,24 +9,28 @@ TARBALLS = \
 include packages/toolchain/common.mk
 
 env += \
-	CC=gcc \
-	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes \
-	libc_ac_cv_tls=yes
-
-ifeq ($(ARCH),arm)
-  env += libc_cv_arm_tls=yes
-endif
+	CC=gcc
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
 package-configure:
-	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
-	cd $(pkgtree) && mkdir -p hdr-$(HOST) && cd hdr-$(HOST) && \
-		$(env) ../configure --host=$(HOST) --prefix=/usr \
-			--enable-addons=ports \
-			--with-headers=$(PLATFORM)/usr/include
+	cd $(pkgtree) && mkdir -p hdr-$(HOST)
+	# setup autoconf cache
+	cd $(pkgtree)/hdr-$(HOST) && \
+		echo 'libc_cv_forced_unwind=yes' > config.cache && \
+		echo 'libc_cv_c_cleanup=yes' >> config.cache && \
+		echo 'libc_ac_cv_tls=yes' >> config.cache && \
+		echo 'libc_cv_$(ARCH)_tls=yes' >> config.cache
+	# setup configuration params
+	cd $(pkgtree)/hdr-$(HOST) && \
+		echo 'install_root=$(PLATFORM)' > configparms
+	# configure the package
+	cd $(pkgtree)/hdr-$(HOST) && \
+		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
+			--prefix=/usr --enable-addons=ports \
+			--with-headers=$(PLATFORM)/usr/include \
+			--cache-file=config.cache
 
 package-build:
 

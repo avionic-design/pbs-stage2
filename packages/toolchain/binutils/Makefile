@@ -11,17 +11,20 @@ conf_opts = \
 	--disable-nls \
 	--enable-tls \
 	--enable-shared
-#	--disable-multilib
+
+ifeq ($(MULTILIB),)
+  conf_opts += --disable-multilib
+endif
 
 package-configure:
-	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --prefix=/usr \
-		--mandir=/usr/share/man $(conf_opts)
+	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --host=$(BUILD) \
+		--prefix=$(PLATFORM)/usr --mandir=/usr/share/man $(conf_opts)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) configure-host
 	cd $(pkgtree) && $(env) $(MAKE)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) DESTDIR=$(PLATFORM) install
+	cd $(pkgtree) && $(env) $(MAKE) install
 	cd $(pkgtree) && cp include/libiberty.h $(PLATFORM)/usr/include
 

@@ -13,14 +13,14 @@ conf_opts = \
 	--with-sysroot=$(PLATFORM) \
 	--enable-languages=c
 
-#ifeq ($(LIBC), glibc)
-#	conf_opts += --enable-__cxa_atexit
-#endif
+ifeq ($(MULTILIB),)
+  conf_opts += --disable-multilib
+endif
 
 package-configure:
 	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \
-		$(env) ../configure --target=$(HOST) --prefix=$(CORE_PREFIX) \
-			$(conf_opts)
+		$(env) ../configure --target=$(HOST) --build=$(BUILD) \
+			--prefix=$(CORE_PREFIX) $(conf_opts)
 
 package-build:
 	cd $(pkgtree)/core-$(HOST) && $(env) $(MAKE) all-gcc

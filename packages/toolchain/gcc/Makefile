@@ -8,24 +8,34 @@ TARBALLS = \
 
 include packages/toolchain/common.mk
 
-conf_opts = --mandir=/usr/share/man
+conf_opts = \
+	--with-sysroot=$(PLATFORM) \
+	--disable-nls \
+	--enable-shared \
+	--enable-languages=c,c++ \
+	--enable-c99 \
+	--enable-long-long \
+	--enable-threads=posix
+
+ifeq ($(MULTILIB),)
+  conf_opts += --disable-multilib
+endif
+
 ifeq ($(LIBC),glibc)
   conf_opts += --enable-__cxa_atexit
 endif
 
 configure:
 	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		$(env) ../configure --target=$(HOST) --prefix=/usr \
-			--with-local-prefix=$(PLATFORM) --with-sysroot=$(PLATFORM) \
-			--with-build-sysroot=$(PLATFORM) --disable-nls $(conf_opts) \
-			--with-float=soft --enable-threads=posix --enable-symvers=gnu \
-			--enable-languages=c,c++ --enable-c99 --enable-long-long
+		$(env) ../configure --target=$(HOST) --host=$(BUILD) \
+			--prefix=$(PLATFORM)/usr --mandir=/usr/share/man \
+			$(conf_opts)
 
 build:
 	# only for canadian build?
 	#cd $(pkgtree) && $(env) $(MAKE) all-build-libiberty
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) all
+	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE)
 
 install:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) DESTDIR=$(PLATFORM) install
+	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) install
 

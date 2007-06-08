@@ -7,8 +7,10 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 include packages/toolchain/common.mk
 
 package-configure:
+	cd $(pkgtree) && $(env) $(MAKE) ARCH=$(ARCH) defconfig
 
 package-build:
+	cd $(pkgtree) && $(env) $(MAKE) ARCH=$(ARCH) include/asm include/linux/version.h include/asm-$(ARCH)/.arch
 
 package-install:
 	mkdir -p $(PLATFORM)/usr/include
