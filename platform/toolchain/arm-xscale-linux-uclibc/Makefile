@@ -1,16 +1,21 @@
 ARCH = arm
+ARCH_LONG = armv5te
+CPU = xscale
+TUNE = xscale
 OS = linux
-LIBC = glibc
-HOST = $(ARCH)-$(OS)
+LIBC = uclibc
+HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
+export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
-export ARCH OS LIBC HOST
+GCC_VERSION = 4.1.2
+export GCC_VERSION
 
 ifndef TOOLCHAIN
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
-  packages-y += toolchain/glibc-headers
+  packages-y += toolchain/uclibc-headers
   packages-y += toolchain/gcc-core
-  packages-y += toolchain/glibc
+  packages-y += toolchain/uclibc
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
@@ -21,10 +26,6 @@ platform-clean:
 
 .PHONY: $(PHONY)
 else
-  CROSS_COMPILE = $(srctree)/toolchain/$(TOOLCHAIN)/usr/bin/$(HOST)-
-
   # set optimization flags, etc.
-
-  export CROSS_COMPILE
 endif
 

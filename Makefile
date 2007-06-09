@@ -44,7 +44,7 @@ pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg           obj
 export clean build install pkg
 
 checksum = sha256
-builddir = $(PLATFORM)/build
+builddir = $(PLATFORM)/build/$(package)
 stampdir = $(tmptree)/stamps
 patchdir = $(srctree)/packages/$(package)/patches
 export checksum builddir stampdir patchdir

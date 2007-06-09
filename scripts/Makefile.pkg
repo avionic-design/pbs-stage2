@@ -12,8 +12,9 @@ ifndef PACKAGE
 endif
 
 PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
-pkgtree ?= $(tmptree)/$(PACKAGE_FULLNAME)
-export pkgtree
+buildtree ?= $(tmptree)/$(package)
+pkgtree ?= $(buildtree)/$(PACKAGE_FULLNAME)
+export buildtree pkgtree
 
 fetch := -f scripts/Makefile.pkg download
 
@@ -66,7 +67,7 @@ $(call stamp,fetch,$(package)): $(stampdir) $(addprefix download/, $(TARBALLS))
 $(call stamp,checksum,$(package)): $(stampdir) $(call stamp,$(checksum),$(TARBALLS))
 	$(makestamp)
 
-$(call stamp,extract,$(package)): $(stampdir) $(call stamp,checksum,$(package)) $(call stamp,extract,$(package-sources))
+$(call stamp,extract,$(package)): $(stampdir) $(buildtree) $(call stamp,checksum,$(package)) $(call stamp,extract,$(package-sources)) $(call package-hook,extract)
 	$(makestamp)
 
 $(call stamp,patch,$(package)): $(stampdir) $(call stamp,extract,$(package)) $(call package-hook,patch) $(call stamp,apply,$(package))
@@ -81,7 +82,9 @@ $(call stamp,build,$(package)): $(stampdir) $(call stamp,configure,$(package)) $
 $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(call package-hook,install)
 	$(makestamp)
 
-package-patch: ;
+# dummy targets
+package-extract::
+package-patch::
 else
   $(warning package not defined)
 endif
@@ -185,6 +188,9 @@ install-%/Makefile:
 	$(call cmd,pkg_install_make)
 
 # ----- clean targets --------------------------------------------------------
+
+$(buildtree):
+	$(call cmd,mkdir_p)
 
 $(stampdir):
 	$(call cmd,mkdir_p)

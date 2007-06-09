@@ -6,16 +6,17 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/toolchain/common.mk
 
+conf-args = ARCH=$(ARCH)
 package-configure:
-	cd $(pkgtree) && $(env) $(MAKE) ARCH=$(ARCH) defconfig
+	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) defconfig
 
+build-args =
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) ARCH=$(ARCH) include/asm include/linux/version.h include/asm-$(ARCH)/.arch
+
+install-args = \
+	ARCH=$(ARCH) \
+	INSTALL_HDR_PATH=$(PLATFORM)/usr
 
 package-install:
-	mkdir -p $(PLATFORM)/usr/include
-	cd $(pkgtree) && \
-		cp -rf include/asm-generic $(PLATFORM)/usr/include && \
-		cp -rf include/linux $(PLATFORM)/usr/include && \
-		cp -rf include/asm-$(ARCH) $(PLATFORM)/usr/include/asm
+	cd $(pkgtree) && $(MAKE) $(install-args) headers_install
 

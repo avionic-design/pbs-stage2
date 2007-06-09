@@ -7,9 +7,29 @@ PATCHES  = xscale-flags.patch
 
 include packages/toolchain/common.mk
 
-configure:
+conf-args = \
+	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
+	MAKEFLAGS=
 
-build:
+package-configure:
+	cp conf/$(PACKAGE_FULLNAME).config $(pkgtree)/.config
+	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
-install:
+build-args = \
+	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
+	PREFIX=$(PLATFORM) \
+	RUNTIME_PREFIX=/ \
+	DEVEL_PREFIX=/usr/
+
+package-build:
+	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+
+install-args = \
+	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
+	PREFIX=$(PLATFORM) \
+	RUNTIME_PREFIX=/ \
+	DEVEL_PREFIX=/usr/
+
+package-install:
+	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
 

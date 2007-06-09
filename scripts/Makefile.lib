@@ -11,10 +11,10 @@ quiet_cmd_mkdir_p_arg = MKDIR     $2
       cmd_mkdir_p_arg = mkdir -p $2
 
 quiet_cmd_extract_tar_gz = TAR [xz]  $(subst $(srctree)/,,$2)
-      cmd_extract_tar_gz = cd $(tmptree) && tar xzf $2
+      cmd_extract_tar_gz = cd $(buildtree) && tar xzf $2
 
 quiet_cmd_extract_tar_bz2 = TAR [xj]  $(subst $(srctree)/,,$2)
-      cmd_extract_tar_bz2 = cd $(tmptree) && tar xjf $2 #; mkdir -p $(tmptree)/stamps; touch $(tmptree)/stamps/$(notdir $2)-extract
+      cmd_extract_tar_bz2 = cd $(buildtree) && tar xjf $2
 
 quiet_cmd_clean_pkg = CLEAN     $(package)
       cmd_clean_pkg = $(MAKE) $(pkg)=$(package) clean
