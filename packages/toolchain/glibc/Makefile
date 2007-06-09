@@ -9,8 +9,8 @@ TARBALLS = \
 include packages/toolchain/common.mk
 
 env += \
-	BUILD_CC=gcc
-#	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
+	BUILD_CC=gcc \
+	CC=$(PLATFORM)/usr/bin/$(HOST)-gcc
 #	AR=$(PLATFORM)/usr/bin/$(HOST)-ar \
 #	RANLIB=$(PLATFORM)/usr/bin/$(HOST)-ranlib
 
@@ -35,10 +35,13 @@ package-configure:
 			--cache-file=config.cache
 #			--with-binutils=$(PLATFORM)/usr/bin \
 
-package-build:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) all
+build-args = \
+	MAKEFLAGS=
 
+package-build:
+	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(build-args) all
+
+install-args =
 package-install:
-	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(MAKE) install
+	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(install-args) install
 

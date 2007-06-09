@@ -19,6 +19,7 @@ ifndef TOOLCHAIN
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
+platform-clean: __clean-dirs += $(PLATFORM)/lib
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
 platform-clean:

@@ -151,7 +151,7 @@ $(stampdir)/%.tar.bz2-extract:
 
 # ----- patch targets --------------------------------------------------------
 
-$(stampdir)/$(package)-apply: patchdir = $(srctree)/packages/$(package)/patches
+$(stampdir)/$(package)-apply: patchdir ?= $(srctree)/packages/$(package)/patches
 $(stampdir)/$(package)-apply:
 	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch),)
 	$(makestamp)
