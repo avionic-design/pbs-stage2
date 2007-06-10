@@ -29,7 +29,7 @@ quiet_cmd_install_pkg = INSTALL   $(package)
       cmd_install_pkg = $(MAKE) $(pkg)=$(package) install
 
 quiet_cmd_quilt_patch = PATCH     $(package)
-      cmd_quilt_patch = cd $(pkgtree) && QUILT_PATCHES=$(patchdir) quilt --quiltrc /dev/null push -a
+      cmd_quilt_patch = cd $(pkgtree) && QUILT_PATCHES=$(patchdir) quilt --quiltrc /dev/null push -a || test $$? = 2
 
 # vim: ft=make
 

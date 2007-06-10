@@ -1,13 +1,12 @@
 # select toolchain
-#TOOLCHAIN = arm-linux
-#ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
-#  include platform/toolchain/$(TOOLCHAIN)/Makefile
-#endif
-
-CROSS_COMPILE = /home/thierry/toolchain/usr/bin/arm-xscale-linux-uclibc-
-export CROSS_COMPILE
+TOOLCHAIN = arm-xscale-linux-uclibc
+ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
+  include platform/toolchain/$(TOOLCHAIN)/Makefile
+endif
 
 packages-y = \
+	initrd/linux \
+	initrd/klibc \
 	initrd/busybox \
 	initrd/dash
 

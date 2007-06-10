@@ -4,13 +4,20 @@ VERSION = 1.6.0
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+include packages/common.mk
+
+CROSS_COMPILE := $(CROSS_COMPILE)-
+
+conf-args =
 package-configure:
 	cp packages/$(package)/$(PACKAGE_FULLNAME)-initrd $(pkgtree)/.config
-	cd $(pkgtree) && $(MAKE) oldconfig V=1
+	cd $(pkgtree) && $(env) $(MAKE) oldconfig
 
+build-args =
 package-build:
-	cd $(pkgtree) && $(MAKE) V=1
+	cd $(pkgtree) && $(env) $(MAKE)
 
+install-args =
 package-install:
-	cd $(pkgtree) && $(MAKE) PREFIX=$(PLATFORM)/rootfs -n install V=1
+	cd $(pkgtree) && $(env) $(MAKE) install
 

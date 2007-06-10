@@ -7,9 +7,13 @@ conf-args = \
 	--with-local-prefix=$(PLATFORM) \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
-	--without-headers \
+	--with-headers=$(PLATFORM)/usr/include \
+	--without-fp \
 	--with-float=soft \
-	--enable-threads=no \
+	--with-softfloat-support=internal \
+	--with-newlib \
+	--with-inhibit-libc \
+	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \
 	--disable-shared \

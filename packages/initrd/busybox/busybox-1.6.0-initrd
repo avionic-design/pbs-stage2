@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Busybox version: 1.6.0
-# Wed Jun  6 09:42:15 2007
+# Sun Jun 10 00:49:03 2007
 #
 CONFIG_HAVE_DOT_CONFIG=y
 
@@ -38,7 +38,7 @@ CONFIG_BUSYBOX_EXEC_PATH="/proc/self/exe"
 #
 # Build Options
 #
-# CONFIG_STATIC is not set
+CONFIG_STATIC=y
 # CONFIG_BUILD_LIBBUSYBOX is not set
 # CONFIG_FEATURE_FULL_LIBBUSYBOX is not set
 # CONFIG_FEATURE_SHARED_BUSYBOX is not set
@@ -62,7 +62,7 @@ CONFIG_NO_DEBUG_LIB=y
 CONFIG_INSTALL_APPLET_SYMLINKS=y
 # CONFIG_INSTALL_APPLET_HARDLINKS is not set
 # CONFIG_INSTALL_APPLET_DONT is not set
-CONFIG_PREFIX="./_install"
+CONFIG_PREFIX="$(PLATFORM)/rootfs"
 
 #
 # Busybox Library Tuning

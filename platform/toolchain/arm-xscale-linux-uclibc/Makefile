@@ -7,8 +7,10 @@ LIBC = uclibc
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
-GCC_VERSION = 4.1.2
+GCC_VERSION = 4.2.0
 export GCC_VERSION
+
+include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
   packages-y  = toolchain/linux-headers
@@ -28,5 +30,20 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
+  ABIFLAGS =
+  OPTFLAGS = \
+	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
+	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
+
+  CPPFLAGS =
+  CFLAGS = \
+	$(CPPFLAGS) \
+	$(ABIFLAGS) \
+	$(OPTFLAGS)
+
+  LDFLAGS = \
+	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
+
+  export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif
 

@@ -32,6 +32,7 @@ package-configure:
 			--enable-kernel=2.6.0 --with-__thread \
 			--with-sysroot=$(PLATFORM) \
 			--with-headers=$(PLATFORM)/usr/include \
+			--without-fp \
 			--cache-file=config.cache
 #			--with-binutils=$(PLATFORM)/usr/bin \
 
