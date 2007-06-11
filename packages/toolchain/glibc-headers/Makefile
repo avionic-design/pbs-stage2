@@ -22,7 +22,8 @@ package-configure:
 	cd $(pkgtree)/hdr-$(HOST) && \
 		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
 			--prefix=/usr --enable-addons=ports \
-			--with-headers=$(PLATFORM)/usr/include
+			--with-headers=$(PLATFORM)/usr/include \
+			$(EXTRA_GLIBC_CONF_ARGS)
 
 package-build:
 

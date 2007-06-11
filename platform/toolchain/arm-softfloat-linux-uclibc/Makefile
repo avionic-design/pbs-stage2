@@ -1,10 +1,10 @@
 ARCH = arm
 ARCH_LONG = armv5te
-CPU = xscale
+CPU = softfloat
 TUNE = xscale
 OS = linux
-LIBC = glibc
-HOST = $(ARCH)-$(CPU)-$(OS)
+LIBC = uclibc
+HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
 GCC_VERSION = 4.2.0
@@ -13,17 +13,19 @@ export GCC_VERSION
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
+  EXTRA_GCC_CONF_ARGS = --with-float=soft
+  EXTRA_GLIBC_CONF_ARGS = --without-fp
+  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
+
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
-  packages-y += toolchain/glibc-headers
+  packages-y += toolchain/uclibc-headers
   packages-y += toolchain/gcc-core
-  packages-y += toolchain/glibc
+  packages-y += toolchain/uclibc
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
-platform-clean: __clean-dirs += $(PLATFORM)/etc
 platform-clean: __clean-dirs += $(PLATFORM)/lib
-platform-clean: __clean-dirs += $(PLATFORM)/sbin
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
 platform-clean:
@@ -44,7 +46,7 @@ else
 	$(OPTFLAGS)
 
   LDFLAGS = \
-	-s --shared-libgcc
+	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif

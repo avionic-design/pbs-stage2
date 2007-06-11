@@ -1,6 +1,6 @@
 ARCH = arm
 ARCH_LONG = armv5te
-CPU = xscale
+CPU = softfloat
 TUNE = xscale
 OS = linux
 LIBC = glibc
@@ -13,6 +13,10 @@ export GCC_VERSION
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
+  EXTRA_GCC_CONF_ARGS = --with-float=soft
+  EXTRA_GLIBC_CONF_ARGS = --without-fp
+  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
+
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   packages-y += toolchain/glibc-headers
@@ -21,9 +25,7 @@ ifndef TOOLCHAIN
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
-platform-clean: __clean-dirs += $(PLATFORM)/etc
 platform-clean: __clean-dirs += $(PLATFORM)/lib
-platform-clean: __clean-dirs += $(PLATFORM)/sbin
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
 platform-clean:
@@ -43,8 +45,7 @@ else
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
-  LDFLAGS = \
-	-s --shared-libgcc
+  LDFLAGS =
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif

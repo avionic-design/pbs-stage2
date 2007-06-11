@@ -1,22 +1,13 @@
-Index: b/gcc/config/arm/linux-elf.h
+Index: gcc-4.2-20061031/gcc/config/arm/linux-elf.h
 ===================================================================
---- a/gcc/config/arm/linux-elf.h	2007-06-10 00:06:40.000000000 +0200
-+++ b/gcc/config/arm/linux-elf.h	2007-06-10 00:07:39.000000000 +0200
-@@ -29,7 +29,7 @@
- #define TARGET_VERSION  fputs (" (ARM GNU/Linux with ELF)", stderr);
- 
- #undef  TARGET_DEFAULT_FLOAT_ABI
--#define TARGET_DEFAULT_FLOAT_ABI ARM_FLOAT_ABI_HARD
-+#define TARGET_DEFAULT_FLOAT_ABI ARM_FLOAT_ABI_SOFT
- 
- #undef  TARGET_DEFAULT
- #define TARGET_DEFAULT (0)
+--- gcc-4.2-20061031.orig/gcc/config/arm/linux-elf.h
++++ gcc-4.2-20061031/gcc/config/arm/linux-elf.h
 @@ -40,7 +40,7 @@
  
  #undef  MULTILIB_DEFAULTS
  #define MULTILIB_DEFAULTS \
 -	{ "marm", "mlittle-endian", "mhard-float", "mno-thumb-interwork" }
-+	{ "marm", "mlittle-endian", "mno-thumb-interwork" }
++	{ "marm", "mlittle-endian", "msoft-float" "mhard-float", "mno-thumb-interwork" }
  
  /* Now we define the strings used to build the spec file.  */
  #undef  LIB_SPEC
@@ -29,24 +20,11 @@ Index: b/gcc/config/arm/linux-elf.h
  
  #define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
  
-Index: b/gcc/config/arm/elf.h
+Index: gcc-4.2-20061031/gcc/config/arm/t-linux
 ===================================================================
---- a/gcc/config/arm/elf.h	2007-06-10 00:06:40.000000000 +0200
-+++ b/gcc/config/arm/elf.h	2007-06-10 00:07:39.000000000 +0200
-@@ -46,7 +46,7 @@
- 
- #ifndef SUBTARGET_ASM_FLOAT_SPEC
- #define SUBTARGET_ASM_FLOAT_SPEC "\
--%{mapcs-float:-mfloat}"
-+%{mapcs-float:-mfloat} %{mhard-float:-mfpu=fpa} %{!mhard-float:-mfpu=softvfp}"
- #endif
- 
- #ifndef ASM_SPEC
-Index: b/gcc/config/arm/t-linux
-===================================================================
---- a/gcc/config/arm/t-linux	2007-06-10 00:06:40.000000000 +0200
-+++ b/gcc/config/arm/t-linux	2007-06-10 00:07:39.000000000 +0200
-@@ -4,7 +4,10 @@
+--- gcc-4.2-20061031.orig/gcc/config/arm/t-linux
++++ gcc-4.2-20061031/gcc/config/arm/t-linux
+@@ -4,7 +4,10 @@ TARGET_LIBGCC2_CFLAGS = -fomit-frame-poi
  LIBGCC2_DEBUG_CFLAGS = -g0
  
  LIB1ASMSRC = arm/lib1funcs.asm

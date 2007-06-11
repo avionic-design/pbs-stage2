@@ -8,9 +8,7 @@ conf-args = \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
 	--with-headers=$(PLATFORM)/usr/include \
-	--without-fp \
-	--with-float=soft \
-	--with-softfloat-support=internal \
+	$(EXTRA_GCC_CONF_ARGS) \
 	--with-newlib \
 	--with-inhibit-libc \
 	--disable-threads \
