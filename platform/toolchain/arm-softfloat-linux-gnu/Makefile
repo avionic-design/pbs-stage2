@@ -3,8 +3,8 @@ ARCH_LONG = armv5te
 CPU = softfloat
 TUNE = xscale
 OS = linux
-LIBC = glibc
-HOST = $(ARCH)-$(CPU)-$(OS)
+LIBC = gnu
+HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
 GCC_VERSION = 4.2.0

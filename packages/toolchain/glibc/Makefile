@@ -10,7 +10,7 @@ include packages/toolchain/common.mk
 
 env += \
 	BUILD_CC=gcc \
-	CC=$(PLATFORM)/usr/bin/$(HOST)-gcc
+	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc
 #	AR=$(PLATFORM)/usr/bin/$(HOST)-ar \
 #	RANLIB=$(PLATFORM)/usr/bin/$(HOST)-ranlib
 

@@ -8,7 +8,7 @@ include packages/common.mk
 
 conf-args =
 package-configure:
-	cd $(pkgtree) && ln -sf ../../linux/linux ../linux
+	cd $(pkgtree) && ln -sf ../../../../linux/linux usr
 
 build-args = \
 	KLIBCARCH=$(ARCH)

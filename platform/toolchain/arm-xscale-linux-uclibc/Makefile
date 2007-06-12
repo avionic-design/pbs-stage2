@@ -13,6 +13,10 @@ export GCC_VERSION
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
+#  EXTRA_GCC_CONF_ARGS = --with-float=soft
+#  EXTRA_GLIBC_CONF_ARGS = --without-fp
+#  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
+
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   packages-y += toolchain/uclibc-headers

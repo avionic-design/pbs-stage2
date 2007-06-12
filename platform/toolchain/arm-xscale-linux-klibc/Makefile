@@ -1,27 +1,23 @@
 ARCH = arm
 ARCH_LONG = armv5te
-CPU = softfloat
+CPU = xscale
 TUNE = xscale
 OS = linux
-LIBC = uclibc
+LIBC = klibc
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
-GCC_VERSION = 4.1.2
+GCC_VERSION = 4.2.0
 export GCC_VERSION
 
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
-  EXTRA_GCC_CONF_ARGS = --with-float=soft
-  EXTRA_GLIBC_CONF_ARGS = --without-fp
-  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
-
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
-  packages-y += toolchain/uclibc-headers
+  packages-y += toolchain/klibc-headers
   packages-y += toolchain/gcc-core
-  packages-y += toolchain/uclibc
+  packages-y += toolchain/klibc
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
@@ -39,15 +35,7 @@ else
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
 
-  CPPFLAGS =
-  CFLAGS = \
-	$(CPPFLAGS) \
-	$(ABIFLAGS) \
-	$(OPTFLAGS)
-
   LDFLAGS = \
-	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
-
-  export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
+	-s -Wl,--dynamic-linker,/lib/ld-klibc.so.0 -shared-libgcc
 endif
 

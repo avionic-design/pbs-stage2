@@ -1,15 +1,15 @@
 # build instructions for bootstrap GCC 4.1.2
 
 conf-args = \
-	--prefix=/usr \
-	--mandir=/usr/share/man \
-	--infodir=/usr/share/info \
+	--prefix=$(CORE_PREFIX) \
 	--with-local-prefix=$(PLATFORM) \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
-	--without-headers \
-	--with-float=soft \
-	--enable-threads=no \
+	--with-headers=$(PLATFORM)/usr/include \
+	$(EXTRA_GCC_CONF_ARGS) \
+	--with-newlib \
+	--with-inhibit-libc \
+	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \
 	--disable-shared \
@@ -25,7 +25,7 @@ package-build:
 	cd $(pkgtree)/core-$(HOST) && \
 		$(env) $(MAKE) $(build-args) all-gcc
 
-install-args = DESTDIR=$(PLATFORM)
+install-args =
 package-install:
 	cd $(pkgtree)/core-$(HOST) && \
 		$(env) $(MAKE) $(install-args) install-gcc
