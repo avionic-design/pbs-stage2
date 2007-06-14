@@ -1,0 +1,53 @@
+ARCH = arm
+ARCH_LONG = armv5te
+CPU = iwmmxt
+TUNE = iwmmxt
+OS = linux
+LIBC = uclibc
+HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
+export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
+
+GCC_VERSION = 4.2.0
+export GCC_VERSION
+
+include platform/toolchain/common.mk
+
+ifndef TOOLCHAIN
+  EXTRA_GCC_CONF_ARGS = --with-float=soft
+  export EXTRA_GCC_CONF_ARGS
+
+  packages-y  = toolchain/linux-headers
+  packages-y += toolchain/binutils
+  packages-y += toolchain/uclibc-headers
+  packages-y += toolchain/gcc-core
+  packages-y += toolchain/uclibc
+  packages-y += toolchain/gcc
+
+PHONY += platform-clean
+platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
+platform-clean: __clean-dirs += $(PLATFORM)/lib
+platform-clean: __clean-dirs += $(PLATFORM)/usr
+platform-clean: __clean-dirs += $(builddir)
+platform-clean:
+	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
+
+.PHONY: $(PHONY)
+else
+  # set optimization flags, etc.
+  ABIFLAGS =
+  OPTFLAGS = \
+	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
+	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
+
+  CPPFLAGS =
+  CFLAGS = \
+	$(CPPFLAGS) \
+	$(ABIFLAGS) \
+	$(OPTFLAGS)
+
+  LDFLAGS = \
+	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
+
+  export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
+endif
+
