@@ -14,9 +14,11 @@ env += \
 #	AR=$(PLATFORM)/usr/bin/$(HOST)-ar \
 #	RANLIB=$(PLATFORM)/usr/bin/$(HOST)-ranlib
 
-package-configure:
+package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
-	cd $(pkgtree) && mkdir -p obj-$(HOST) && cd obj-$(HOST)
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(HOST)
 	# setup the autoconf cache
 	cd $(pkgtree)/obj-$(HOST) && \
 		echo 'libc_cv_forced_unwind=yes' > config.cache && \

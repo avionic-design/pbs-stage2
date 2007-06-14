@@ -14,12 +14,11 @@ env += \
 	libc_cv_c_cleanup=yes \
 	libc_cv_$(ARCH)_tls=yes
 
-package-extract::
+package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
 package-configure:
-	cd $(pkgtree) && mkdir -p hdr-$(HOST)
-	cd $(pkgtree)/hdr-$(HOST) && \
+	mkdir -p $(pkgtree)/hdr-$(HOST) && cd $(pkgtree)/hdr-$(HOST) && \
 		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
 			--prefix=/usr --enable-addons=ports \
 			--with-headers=$(PLATFORM)/usr/include \
