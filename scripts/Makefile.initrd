@@ -1,0 +1,44 @@
+src := $(obj)
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.initrd is included improperly)
+endif
+
+$(ROOTFS): FORCE
+	$(Q)$(MAKE) platform=$(platform) install
+
+$(PLATFORM)/initrd.img: $(ROOTFS) FORCE
+	(cd $< && find -not -path '*/include*' | cpio -o -H newc) > $@
+
+$(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
+	gzip -c $< > $@
+
+PHONY += u-boot.img
+u-boot.img: $(PLATFORM)/u-boot.img
+
+# TODO: move this somewhere else
+MKIMAGE = /home/thierry/bin/mkimage
+LOAD_ADDR = 0xA0008000
+EXEC_ADDR = 0xA0008000
+
+concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
+
+quiet_cmd_mk_uboot_img = MKIMAGE    $@
+      cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none -a $(LOAD_ADDR) -e $(EXEC_ADDR) -d $(call concat, :, $^) $@
+
+$(PLATFORM)/u-boot.img: $(PLATFORM)/zImage $(PLATFORM)/initrd.gz
+	$(call cmd,mk_uboot_img)
+
+PHONY += FORCE
+FORCE: ;
+	@:
+
+.PHONY: $(PHONY)
+

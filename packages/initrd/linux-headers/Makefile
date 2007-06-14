@@ -13,12 +13,17 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) defconfig
 
 build-args = \
-	ARCH=$(ARCH)
+	ARCH=$(ARCH) \
+	CROSS_COMPILE=$(CROSS_COMPILE)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) prepare
 
-install-args =
+install-args = \
+	ARCH=$(ARCH) \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	INSTALL_HDR_PATH=$(ROOTFS)/usr
+
 package-install:
-	cd $(pkgtree) && ln -sf $(notdir $(pkgtree)) ../linux
+	cd $(pkgtree) && $(env) $(MAKE) $(install-args) headers_install
 

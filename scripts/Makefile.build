@@ -28,7 +28,7 @@ PHONY += build
 build: $(build-packages)
 
 PHONY += install
-install: $(install-packages)
+install: $(install-packages) platform-install
 
 $(fetch-packages): package = $(patsubst %-fetch,%,$@)
 $(fetch-packages):
@@ -41,6 +41,10 @@ $(build-packages):
 $(install-packages): package = $(patsubst %-install,%,$@)
 $(install-packages):
 	$(call cmd,install_pkg)
+
+# dummies
+PHONY += platform-install
+platform-install:
 
 .PHONY: $(PHONY)
 

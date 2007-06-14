@@ -13,10 +13,6 @@ export GCC_VERSION
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
-#  EXTRA_GCC_CONF_ARGS = --with-float=soft
-#  EXTRA_GLIBC_CONF_ARGS = --without-fp
-#  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
-
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   packages-y += toolchain/uclibc-headers
@@ -25,6 +21,7 @@ ifndef TOOLCHAIN
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
+platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
 platform-clean: __clean-dirs += $(PLATFORM)/lib
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
@@ -37,9 +34,9 @@ else
   ABIFLAGS =
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
-	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
+	-Wa,-mcpu=$(CPU) -U$(ARCH)
 
-  CPPFLAGS =
+  CPPFLAGS = --sysroot=$(ROOTFS)
   CFLAGS = \
 	$(CPPFLAGS) \
 	$(ABIFLAGS) \

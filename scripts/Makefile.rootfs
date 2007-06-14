@@ -1,0 +1,20 @@
+
+rootfs-image ?= rootfs.ext3
+rootfs-size ?= 32M
+
+rootfs.plain:
+	dd if=/dev/zero of=$@ bs=$(rootfs-size) count=1
+
+rootfs.ext3: rootfs.plain
+	mv $< $@
+	/sbin/mkfs -t ext3 -F $@
+	/sbin/tune2fs -c 0 $@
+
+install: $(ROOTFS) $(rootfs-image)
+	mp=`mktemp -d` && \
+	echo "mountpoint: $$mp" && \
+	sudo mount -o loop $(rootfs-image) $$mp && \
+	sudo cp -a $(ROOTFS)/* $$mp && \
+	sudo umount $$mp && \
+	rm -rf $$mp
+

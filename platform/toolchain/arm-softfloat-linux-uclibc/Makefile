@@ -7,7 +7,7 @@ LIBC = uclibc
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
-GCC_VERSION = 4.1.2
+GCC_VERSION = 4.2.0
 export GCC_VERSION
 
 include platform/toolchain/common.mk
@@ -25,6 +25,7 @@ ifndef TOOLCHAIN
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
+platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
 platform-clean: __clean-dirs += $(PLATFORM)/lib
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)

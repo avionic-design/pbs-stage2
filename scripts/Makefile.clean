@@ -2,6 +2,9 @@ src := $(obj)
 
 include scripts/pbuild.mk
 
+PHONY += clean
+clean:
+
 pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
 

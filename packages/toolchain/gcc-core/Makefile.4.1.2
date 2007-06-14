@@ -5,10 +5,9 @@ conf-args = \
 	--with-local-prefix=$(PLATFORM) \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
-	--with-headers=$(PLATFORM)/usr/include \
+	--with-as=$(PLATFORM)/usr/bin/$(HOST)-as \
+	--with-ld=$(PLATFORM)/usr/bin/$(HOST)-ld \
 	$(EXTRA_GCC_CONF_ARGS) \
-	--with-newlib \
-	--with-inhibit-libc \
 	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \

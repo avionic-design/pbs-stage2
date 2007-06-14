@@ -33,6 +33,7 @@ package-sources = $(addprefix $(package)/, $(TARBALLS))
 stamp = $(addsuffix -$(1), $(addprefix $(tmptree)/stamps/, $(2)))
 makestamp = $(Q)mkdir -p $(dir $@) && touch $@
 package-hook = $(if $(wildcard $(call stamp,$(1),$(package))),,package-$(1))
+export stamp makestamp package-hook
 
 package = $(obj)
 ifdef package
@@ -83,8 +84,11 @@ $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(c
 	$(makestamp)
 
 # dummy targets
-package-extract::
-package-patch::
+package-extract:
+package-patch:
+package-configure:
+package-build:
+package-install:
 else
   $(warning package not defined)
 endif

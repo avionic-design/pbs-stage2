@@ -4,15 +4,15 @@ VERSION = 0.9.29
 LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/toolchain/common.mk
+include packages/common.mk
 
 DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config
 CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
 DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
 conf-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
 	MAKEFLAGS=
 
 package-configure:
@@ -20,9 +20,9 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
-	PREFIX=$(PLATFORM) \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
+	PREFIX=$(PLATFORM)/rootfs \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
 
@@ -30,9 +30,9 @@ package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
 install-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
-	PREFIX=$(PLATFORM) \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
+	PREFIX=$(PLATFORM)/rootfs \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
 

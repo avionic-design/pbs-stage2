@@ -1,2 +1,2 @@
-arm-softfloat.patch -p1
+#arm-softfloat.patch -p1
 libstdc++-uclibc.patch -p1
