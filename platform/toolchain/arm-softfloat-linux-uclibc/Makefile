@@ -7,8 +7,12 @@ LIBC = uclibc
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
 
+LINUX_VERSION = 2.6.21.3
 GCC_VERSION = 4.2.0
-export GCC_VERSION
+export LINUX_VERSION GCC_VERSION
+
+BROKEN = yes
+export BROKEN
 
 include platform/toolchain/common.mk
 

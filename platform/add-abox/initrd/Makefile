@@ -7,7 +7,7 @@ endif
 ROOTFS = $(PLATFORM)/rootfs
 export ROOTFS
 
-VARIANT = uclibc
+VARIANT = klibc
 
 ifeq ($(VARIANT),uclibc)
 packages-y = \

@@ -11,6 +11,10 @@ include scripts/pbuild.mk
 pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
 
+ifdef BROKEN
+  $(error platform marked broken)
+endif
+
 include scripts/Makefile.lib
 
 ifndef obj
