@@ -14,8 +14,13 @@ endif
 $(ROOTFS): FORCE
 	$(Q)$(MAKE) platform=$(platform) install
 
+INITRD_FILTER = \
+	-not -path '*/include*' \
+	-not -path '*/usr/share/man*' \
+	-not -name '*.a'
+
 $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
-	(cd $< && find -not -path '*/include*' | cpio -o -H newc) > $@
+	(cd $< && find $(INITRD_FILTER) | cpio -o -H newc) > $@
 
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
 	gzip -c $< > $@
