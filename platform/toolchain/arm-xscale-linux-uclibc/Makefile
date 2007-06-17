@@ -37,14 +37,14 @@ else
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)
 
-  CPPFLAGS = --sysroot=$(ROOTFS)
+  CPPFLAGS = --sysroot $(ROOTFS)
   CFLAGS = \
 	$(CPPFLAGS) \
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
   LDFLAGS = \
-	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
+	-s -shared-libgcc
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif
