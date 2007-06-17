@@ -16,7 +16,7 @@ package-configure:
 build-args = \
 	KLIBCARCH=$(ARCH) \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	V=1
+	INSTALLDIR=$(ROOTFS)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) all
@@ -25,10 +25,10 @@ install-args = \
 	KLIBCARCH=$(ARCH) \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	INSTALLROOT=$(ROOTFS) \
-	INSTALLDIR=/initrd \
-	V=1
+	prefix=/../tmp \
+	INSTALLDIR=/
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	cd $(ROOTFS)/initrd/bin && ln -sf sh.shared sh
+	cd $(ROOTFS)/bin && ln -sf sh.shared sh
 

@@ -17,43 +17,55 @@ echo "Loading, please wait ..."
 mkdir -p /var/lock
 
 # mount virtual filesystems
-log_begin_msg "Mounting virtual filesystems ..."
-mount -o nodev,noexec,nosuid -t sysfs  none /sys
-mount -o nodev,noexec,nosuid -t procfs none /proc
-mount -o nodev,noexec,nosuid -t udev   udev /dev
-#mount -o size=10M,mode=0755  -t tmpfs  udev /dev
+log_begin_msg "Mounting virtual filesystems"
+mount -o nodev,noexec,nosuid -t sysfs none /sys
+mount -o nodev,noexec,nosuid -t proc  none /proc
 log_end_msg
 
 # create needed devices
-log_begin_msg "Creating devices ..."
+log_begin_msg "Creating devices"
 [ -e /dev/console ] || mknod /dev/console c 5 1
 [ -e /dev/null    ] || mknod /dev/null    c 1 3
+[ -e /dev/loop0   ] || mknod /dev/loop0   b 7 0
 log_end_msg
 
 rootmnt=/root
 init=/sbin/init
 
+log_begin_msg "Running top scripts"
 run_scripts /scripts/init-top
+log_end_msg
 
+log_begin_msg "Running premount scripts"
 run_scripts /scripts/init-premount
-
-#log_begin_msg "Waiting for /dev/mmcblk0 ..."
-#while [ ! -e /dev/mmcblk0 ]; do
-#	sleep 1
-#	echo -n .
-#done
-#log_end_msg
+log_end_msg
 
 # mount target root filesystem
-log_begin_msg "Mounting root filesystem: ${rootmnt} ..."
+log_begin_msg "Mounting root filesystem: ${rootmnt}"
 mkdir -p /media/sd-card
 mount /dev/mmcblk0 /media/sd-card
-mount /media/sd-card/rootfs.img ${rootmnt}
+mount -o loop /media/sd-card/rootfs.img ${rootmnt}
 log_end_msg
 
-log_begin_msg "Root filesystem: ${rootmnt}"
-ls -l ${rootmnt}
+# create devices in the new root filesystem
+log_begin_msg "Creating devices"
+[ -e ${rootmnt}/dev/console ] || mknod ${rootmnt}/dev/console c 5 1
 log_end_msg
+
+# finishing bootstrapping
+if [ -d ${rootmnt}/debootstrap ]; then
+	log_begin_msg "Finishing bootstrap process"
+	chroot ${rootmnt} /debootstrap/debootstrap
+	log_end_msg
+fi
+
+#log_begin_msg "Running shell in new root filesystem"
+#chroot ${rootmnt} /bin/sh
+#log_end_msg
+
+#log_begin_msg "Generating ld.so cache"
+#${rootmnt}/sbin/ldconfig -r ${rootmnt}
+#log_end_msg
 
 # move virtual filesystems over to the real filesystem
 mount -o move /sys  ${rootmnt}/sys
@@ -64,5 +76,6 @@ while [ ! -x ${rootmnt}${init} ]; do
 	panic "Target filesystem doesn't have ${init}"
 done
 
-exec run-init -c ${rootmnt}/dev/console ${rootmnt} ${init} "$@"
+#exec switch_root -c ${rootmnt}/dev/console ${rootmnt} ${init} "$@"
+exec switch_root ${rootmnt} ${init} "$@"
 
