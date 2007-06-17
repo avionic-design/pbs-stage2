@@ -14,11 +14,17 @@ esac
 echo > /proc/sys/kernel/hotplug
 
 mkdir -p /dev/.udev/db/
+echo -n 'Starting hotplug daemon: udevd ... '
 udevd --daemon
+echo 'done'
 
 mkdir -p /dev/.udev/queue/
+echo -n 'Synthesizing initial hotplug events ... '
 udevtrigger
+echo 'done'
+echo -n 'Waiting for hotplug daemon to settle ... '
 udevsettle || true
+echo 'done'
 
 # If the rootdelay parameter has been set, we wait a bit for devices
 # like usb/firewire disks to settle.
@@ -34,3 +40,4 @@ fi
 
 # Leave udev running to process events that come in out-of-band (like USB
 # connections)
+
