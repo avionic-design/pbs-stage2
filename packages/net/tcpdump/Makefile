@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
+env = env -i
+
 conf-args = \
 	--host=$(HOST) \
 	--prefix=/usr \

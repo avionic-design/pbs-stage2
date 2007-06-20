@@ -1,25 +1,43 @@
+src := $(obj)
 
-rootfs-image ?= rootfs.ext2
-rootfs-size ?= 64M
+include scripts/pbuild.mk
 
-rootfs.plain:
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.rootfs is included improperly)
+endif
+
+rootfs-image ?= $(PLATFORM)/rootfs.ext2
+rootfs-size ?= 128M
+
+$(PLATFORM)/rootfs.plain:
 	dd if=/dev/zero of=$@ bs=$(rootfs-size) count=1
 
-rootfs.ext2: rootfs.plain
+$(PLATFORM)/rootfs.ext2: $(PLATFORM)/rootfs.plain
 	mv $< $@
 	/sbin/mkfs -t ext2 -F $@
 	/sbin/tune2fs -c 0 $@
 
-rootfs.ext3: rootfs.plain
+$(PLATFORM)/rootfs.ext3: $(PLATFORM)/rootfs.plain
 	mv $< $@
 	/sbin/mkfs -t ext3 -F $@
 	/sbin/tune2fs -c 0 $@
 
-install: $(ROOTFS) $(rootfs-image)
+$(PLATFORM)/rootfs.img: $(rootfs-image)
+	mv $< $@
+
+PHONY += install
+install: $(ROOTFS) $(PLATFORM)/rootfs.img
 	mp=`mktemp -d` && \
 	echo "mountpoint: $$mp" && \
-	sudo mount -o loop $(rootfs-image) $$mp && \
+	sudo mount -o loop $(PLATFORM)/rootfs.img $$mp && \
 	sudo cp -a $(ROOTFS)/* $$mp && \
 	sudo umount $$mp && \
 	rm -rf $$mp
+
+.PHONY: $(PHONY)
 

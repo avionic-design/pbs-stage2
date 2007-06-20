@@ -8,10 +8,12 @@ PATCHFILES = \
 	$(DISTNAME)-compile-fixes.patch
 
 include packages/common.mk
-env = env -i
+
+LDFLAGS += --sysroot $(ROOTFS)
+env      = env -i $(call set-args, CFLAGS LDFLAGS)
 
 build-args = \
-	$(call set-args, CC CFLAGS LDFLAGS)
+	$(call set-args, CROSS_COMPILE)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)

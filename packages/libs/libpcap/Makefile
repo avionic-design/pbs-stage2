@@ -8,6 +8,10 @@ CONFIGURE_SCRIPTS = $(WORKSRC)/configure
 BUILD_SCRIPTS = $(WORKSRC)/Makefile
 INSTALL_SCRIPTS = $(WORKSRC)/Makefile
 
+include packages/common.mk
+
+env = env -i
+
 conf-args = \
 	--host=$(HOST) \
 	--prefix=/usr \

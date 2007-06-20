@@ -1,0 +1,31 @@
+ifndef DEV
+  $(error need to define DEV)
+endif
+
+MP ?= /media
+
+src := $(obj)
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.card is included improperly)
+endif
+
+PHONY += write
+write:
+	cd ../sd-card.git && $(MAKE) $(DEV) write
+#	$(Q)$(MAKE) $(initrd)=platform/$(platform) initrd
+	$(Q)$(MAKE) platform=$(platform) rootfs
+	sudo mount $(DEV) $(MP)
+	sudo cp $(PLATFORM)/rootfs.img $(MP)
+	sudo cp $(PLATFORM)/u-boot.img $(MP)
+	sudo umount $(MP)
+
+.PHONY: $(PHONY)
+

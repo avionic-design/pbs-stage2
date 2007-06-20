@@ -44,6 +44,8 @@ build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  build   ob
 install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  install obj
 kernel  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.kernel         obj
 initrd  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.initrd         obj
+rootfs  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.rootfs         obj
+card    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.card           obj
 pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg            obj
 export clean fetch build install kernel initrd pkg
 
@@ -88,6 +90,14 @@ clean:
 PHONY += initrd
 initrd:
 	$(Q)$(MAKE) $(initrd)=platform/$(platform) u-boot.img
+
+PHONY += rootfs
+rootfs:
+	$(Q)$(MAKE) $(rootfs)=platform/$(platform) install
+
+PHONY += card
+card:
+	$(Q)$(MAKE) $(card)=platform/$(platform) write
 endif
 
 ifdef package

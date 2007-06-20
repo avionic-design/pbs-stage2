@@ -9,12 +9,14 @@ PATCHFILES = \
 
 include packages/common.mk
 
+env = env -i
+
 build-args = $(call set-args, CC CFLAGS LDFLAGS)
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
 install-args = \
-	DESTDIR=$(DESTDIR)
+	DESTDIR=$(ROOTFS)
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install

@@ -14,7 +14,7 @@ conf-args = \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS LDFLAGS)
+	$(call set-args, CC CXX CFLAGS LDFLAGS)
 
 package-configure:
 	cd $(pkgtree) && $(env) ./configure $(conf-args)

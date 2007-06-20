@@ -26,5 +26,5 @@ install-args = \
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
 	$(INSTALL) -d $(ROOTFS)/etc/minicom
-	$(INSTALL) package/$(package)/minirc.dfl $(ROOTFS)/etc/minicom
+	$(INSTALL) packages/$(package)/minirc.dfl $(ROOTFS)/etc/minicom
 

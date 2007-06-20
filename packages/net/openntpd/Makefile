@@ -6,7 +6,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
-env = env -i
+env  = env -i
+priv = sudo
 
 conf-args = \
 	--host=$(HOST) \
@@ -28,5 +29,5 @@ install-args = \
 	STRIP_OPT=''
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 
