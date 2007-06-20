@@ -26,10 +26,13 @@ package-build:
 install-args = \
 	ARCH=$(ARCH) \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	INSTALL_HDR_PATH=$(ROOTFS)/usr
+	INSTALL_PATH=$(PLATFORM) \
+	INSTALL_HDR_PATH=$(ROOTFS)/usr \
+	INSTALL_MOD_PATH=$(ROOTFS)
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) headers_install
+	cd $(pkgtree) && $(env) $(MAKE) $(install-args) zinstall
 	# for some reason the linkage.h headers won't be installed in the
 	# previous step
 	cp $(pkgtree)/include/asm/linkage.h $(ROOTFS)/usr/include/asm

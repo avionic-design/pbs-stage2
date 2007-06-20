@@ -1,0 +1,58 @@
+# unexport environment variables that may get in the way
+unexport CC CFLAGS LD LDFLAGS
+
+$(KERNELSRC)/.config:
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) $(KERNEL_CONFIG)
+
+PHONY += config
+config: $(KERNELSRC)/.config
+
+PHONY += build-zImage
+build-zImage: config
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		        zImage
+
+PHONY += build-modules
+build-modules: config
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		        modules
+
+PHONY += build
+build: build-zImage build-modules
+
+PHONY += headers-install
+headers-install: config
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		        INSTALL_HDR_PATH=$(ROOTFS)/usr \
+		        headers_install
+	# some programs need this to compile
+	cp $(KERNELSRC)/include/asm/linkage.h $(ROOTFS)/usr/include/asm
+	cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
+
+PHONY += install-zImage
+install-zImage: build-zImage
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		        INSTALL_PATH=$(PLATFORM) \
+			zinstall
+
+PHONY += install-modules
+install-modules: build-modules
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		        INSTALL_MOD_PATH=$(ROOTFS) \
+		        modules_install
+
+PHONY += install
+install: install-zImage install-modules
+
+PHONY += clean
+clean:
+	cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) mrproper
+
+.PHONY: $(PHONY)
+

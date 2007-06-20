@@ -1,7 +1,14 @@
+# check whether we want a git checkout of the Linux kernel or an officially
+# released tarball
+ifeq ($(LINUX_VERSION),git)
+  packages-y = kernel/linux.git
+else
+  packages-y = kernel/linux
+endif
+
 # base packages
 packages-y += \
 	core/base \
-	kernel/linux-headers \
 	devel/uclibc \
 	core/busybox \
 	core/coreutils \
@@ -12,12 +19,8 @@ packages-y += \
 	core/udev \
 	libs/sysfsutils \
 	libs/zlib \
-	libs/ncurses
-
-# procps seems broken as well
-#	core/procps
-
-packages-y += \
+	libs/ncurses \
+	core/procps \
 	core/psmisc \
 	core/util-linux \
 	kernel/module-init-tools \
@@ -35,8 +38,8 @@ packages-$(USB) += \
 
 # sound support packages
 packages-$(SOUND) += \
-	core/alsa-lib \
-	core/alsa-utils
+	sound/alsa-lib \
+	sound/alsa-utils
 
 packages-$(SYSLOG) += core/sysklogd
 packages-$(NTP)    += net/openntpd

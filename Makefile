@@ -36,13 +36,16 @@ export quiet Q PBUILD_VERBOSE
 
 include scripts/pbuild.mk
 
+KERNELSRC ?= /usr/src/linux
+
 clean   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.clean          obj
 fetch   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  fetch   obj
 build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  build   obj
 install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  install obj
+kernel  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.kernel         obj
 initrd  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.initrd         obj
 pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg            obj
-export clean fetch build install initrd pkg
+export clean fetch build install kernel initrd pkg
 
 checksum = sha256
 builddir = $(PLATFORM)/build
