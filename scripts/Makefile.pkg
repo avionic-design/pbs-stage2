@@ -38,7 +38,7 @@ export stamp makestamp package-hook
 package = $(obj)
 ifdef package
 PHONY += clean
-clean:
+clean: $(call package-hook,clean)
 
 PHONY += fetch
 fetch: $(call stamp,fetch,$(package))
@@ -84,6 +84,8 @@ $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(c
 	$(makestamp)
 
 # dummy targets
+package-clean:
+package-fetch:
 package-extract:
 package-patch:
 package-configure:
