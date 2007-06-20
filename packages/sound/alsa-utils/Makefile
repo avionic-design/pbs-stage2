@@ -1,8 +1,8 @@
-PACKAGE = libusb
-VERSION = 0.1.12
+PACKAGE = alsa-utils
+VERSION = 1.0.14
 
-LOCATION = http://prdownloads.sourceforge.net/libusb
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = ftp://ftp.alsa-project.org/pub/utils
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
@@ -11,12 +11,10 @@ conf-args = \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CXX CFLAGS LDFLAGS)
+	$(call set-args, CC CFLAGS LDFLAGS) \
+	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
 
 package-configure:
-	cp support/config.{guess,sub} $(pkgtree)
-#	cp support/libtool $(pkgtree)/libtool
-#	cp support/libtool $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
 build-args =

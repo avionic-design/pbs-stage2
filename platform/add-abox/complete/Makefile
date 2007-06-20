@@ -5,21 +5,24 @@ ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
 endif
 
 ROOTFS = $(PLATFORM)/rootfs
-LINUX_VERSION = 2.6.21.5
-export ROOTFS LINUX_VERSION
+export ROOTFS
+
+LINUX_VERSION = git
+KERNEL_CONFIG = add-abox_defconfig
+export LINUX_VERSION KERNEL_CONFIG
 
 NET    = y
-USB    = n
+USB    = y
 SOUND  = n
 SYSLOG = y
-NTP    = n
-DHCP   = n
-PPP    = n
+NTP    = y
+DHCP   = y
+PPP    = y
 SSH    = y
-SERIAL = n
-FB     = n
+SERIAL = y
+FB     = y
 ABOX   = y
-DEBUG  = n
+DEBUG  = y
 
 include platform/packages.mk
 

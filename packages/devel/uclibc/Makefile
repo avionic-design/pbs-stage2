@@ -22,9 +22,9 @@ package-configure:
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)/usr/include \
-	PREFIX=$(ROOTFS) \
-	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	PREFIX= \
+	RUNTIME_PREFIX= \
+	DEVEL_PREFIX=
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)

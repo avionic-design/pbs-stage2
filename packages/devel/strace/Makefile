@@ -1,8 +1,15 @@
-PACKAGE = libusb
-VERSION = 0.1.12
+PACKAGE = strace
+VERSION = 4.5.15
 
-LOCATION = http://prdownloads.sourceforge.net/libusb
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = http://heanet.dl.sourceforge.net/sourceforge/$(PACKAGE)
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+
+PATCHFILES = \
+	$(DISTNAME)-fix-arm-bad-syscall.patch
+
+CONFIGURE_SCRIPTS = $(WORKSRC)/configure
+BUILD_SCRIPTS = $(WORKSRC)/Makefile
+INSTALL_SCRIPTS = $(WORKSRC)/Makefile
 
 include packages/common.mk
 
@@ -11,12 +18,9 @@ conf-args = \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CXX CFLAGS LDFLAGS)
+	$(call set-args, CC CFLAGS LDFLAGS)
 
 package-configure:
-	cp support/config.{guess,sub} $(pkgtree)
-#	cp support/libtool $(pkgtree)/libtool
-#	cp support/libtool $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
 build-args =

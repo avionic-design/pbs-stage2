@@ -1,7 +1,7 @@
-PACKAGE = libusb
-VERSION = 0.1.12
+PACKAGE = tcpdump
+VERSION = 3.9.5
 
-LOCATION = http://prdownloads.sourceforge.net/libusb
+LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
@@ -11,13 +11,16 @@ conf-args = \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CXX CFLAGS LDFLAGS)
+	--disable-smb \
+	ac_cv_linux_vers=2 \
+	$(call set-args, CC CFLAGS LDFLAGS)
 
 package-configure:
-	cp support/config.{guess,sub} $(pkgtree)
-#	cp support/libtool $(pkgtree)/libtool
-#	cp support/libtool $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
+
+BUILD_ARGS = \
+	CFLAGS='$(CFLAGS) -include config.h -I. -D_U_="__attribute__((unused))"' \
+	LDFLAGS='$(LDFLAGS) -ldl'
 
 build-args =
 package-build:

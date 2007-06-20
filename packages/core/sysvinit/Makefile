@@ -7,9 +7,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 include packages/common.mk
 
 CFLAGS += -D_GNU_SOURCE
-
-env  = env -i
-priv = sudo
+env     = env -i
+priv    = sudo
 
 build-args = \
 	$(call set-args, CC CFLAGS LDFLAGS)

@@ -1,8 +1,12 @@
-PACKAGE = libusb
-VERSION = 0.1.12
+PACKAGE = netcat
+VERSION = 0.7.1
 
-LOCATION = http://prdownloads.sourceforge.net/libusb
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = ftp://heanet.dl.sourceforge.net/n/ne/netcat
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+
+CONFIGURE_SCRIPTS = $(WORKSRC)/configure
+BUILD_SCRIPTS = $(WORKSRC)/Makefile
+INSTALL_SCRIPTS = $(WORKSRC)/Makefile
 
 include packages/common.mk
 
@@ -11,12 +15,10 @@ conf-args = \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CXX CFLAGS LDFLAGS)
+	$(call set-args, CC CFLAGS LDFLAGS)
 
 package-configure:
 	cp support/config.{guess,sub} $(pkgtree)
-#	cp support/libtool $(pkgtree)/libtool
-#	cp support/libtool $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
 build-args =
@@ -26,6 +28,6 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
+install-args:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
 

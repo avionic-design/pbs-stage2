@@ -10,7 +10,7 @@ PATCHFILES = \
 
 include packages/common.mk
 
-env = env -i $(call set-args, CC CFLAGS LDFLAGS)
+env = env -i $(call set-args, PATH CC CFLAGS LDFLAGS)
 
 conf-args = \
 	shared \
