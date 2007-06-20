@@ -55,7 +55,7 @@ log_end_msg
 # finishing bootstrapping
 if [ -d ${rootmnt}/debootstrap ]; then
 	log_begin_msg "Finishing bootstrap process"
-	chroot ${rootmnt} /debootstrap/debootstrap
+	chroot ${rootmnt} /debootstrap/debootstrap --second-stage
 	log_end_msg
 fi
 

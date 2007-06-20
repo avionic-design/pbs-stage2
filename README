@@ -1,0 +1,26 @@
+Building a platform:
+--------------------
+
+To build a platform, enter the following command:
+
+	$ make platform=<platform-name> install
+
+Where <platform-name> is the path below the platform subdirectory of the
+platform you wish to build (e.g. platform=add-abox/initrd).
+
+A rootfs subdirectory will be created where all the software for the selected
+platform will be installed.
+
+
+Building a toolchain:
+---------------------
+
+Toolchains are sort of "special" platforms. They are located in the
+platform/toolchain subdirectory. They are built in the same way as other
+platforms.
+
+If for instance you want to build a uClibc-based platform for the Xscale, run
+the following command:
+
+	$ make platform=toolchain/arm-xscale-linux-uclibc install
+

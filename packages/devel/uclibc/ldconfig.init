@@ -1,0 +1,28 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+case $1 in
+	start)
+		log_action_begin_msg "Generating /etc/ld.so.cache"
+		if /sbin/ldconfig; then
+			log_action_end_msg $?
+		else
+			log_action_end_msg $?
+		fi
+		;;
+
+	stop)
+		;;
+
+	restart)
+		$0 stop
+		$0 start
+		;;
+
+	*)
+		echo "usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+

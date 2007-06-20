@@ -1,0 +1,2 @@
+no-rpath.patch -p1
+xscale-config.patch -p1

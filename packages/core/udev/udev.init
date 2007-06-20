@@ -1,0 +1,103 @@
+#!/bin/sh
+
+create_dev_makedev() {
+	if [ -e /sbin/MAKEDEV ]; then
+		ln -sf /sbin/MAKEDEV /dev/MAKEDEV
+	else
+		ln -sf /bin/true /dev/MAKEDEV
+	fi
+}
+
+[ -x /sbin/udevd ] || exit 0
+
+if [ -e /etc/udev/udev.conf ]; then
+	. /etc/udev/udev.conf
+fi
+
+. /lib/lsb/init-functions
+
+if [ ! -e /proc/filesystems ]; then
+	log_failure_msg "udev requires a mounted procfs, not started."
+	log_end_msg 1
+fi
+
+if [ ! -d /sys/class ]; then
+	log_failure_msg "udev requires a mounted sysfs, not started."
+	log_end_msg 1
+fi
+
+if [ ! -e /proc/sys/kernel/hotplug ]; then
+	log_failure_msg "udev requires hotplug support, not started."
+	log_end_msg 1
+fi
+
+case $1 in
+	start)
+		mkdir -p /dev/.udev/db
+
+		killall udevd
+
+		log_daemon_msg "Starting the hotplug events dispatcher" "udevd"
+		if /sbin/udevd --daemon; then
+			log_end_msg $?
+		else
+			log_end_msg $?
+		fi
+
+		mkdir -p /dev/.udev/queue
+
+		log_action_begin_msg "Synthesizing initial hotplug events"
+		if /sbin/udevtrigger; then
+			log_action_end_msg $?
+		else
+			log_action_end_msg $?
+		fi
+
+		create_dev_makedev
+
+		log_action_begin_msg "Waiting for /dev to be fully populated"
+		if /sbin/udevsettle; then
+			log_action_end_msg 0
+		else
+			log_action_end_msg 0 'timeout'
+		fi
+
+		;;
+
+	stop)
+		log_daemon_msg "Stopping the hotplug events dispatcher" "udevd"
+		if /sbin/start-stop-daemon --stop --name udevd --quiet --oknodo; then
+			log_end_msg $?
+		else
+			log_end_msg $?
+		fi
+		;;
+
+	restart)
+		log_daemon_msg "Stopping the hotplug events dispatcher" "udevd"
+		if /sbin/start-stop-daemon --stop --name udevd --quiet --oknodo; then
+			log_end_msg $?
+		else
+			log_end_msg $? || /bin/true
+		fi
+
+		log_daemon_msg "Starting the hotplug events dispatcher" "udevd"
+		if /sbin/udevd --daemon; then
+			log_end_msg $?
+		else
+			log_end_msg $?
+		fi
+		;;
+
+	reload | force-reload)
+		/sbin/udevcontrol reload_rules
+		;;
+
+	*)
+		echo "Usage: $0 {start|stop|restart|reload|force-reload}"
+		exit 1
+		;;
+esac
+
+exit 0
+

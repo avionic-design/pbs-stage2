@@ -1,0 +1,2 @@
+debian.patch -p1
+dont-strip-on-install.patch -p1

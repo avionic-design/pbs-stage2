@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ ! -e /dev/ttyS0 ]; then
+	log_action_begin_msg "Creating serial console device /dev/ttyS0"
+	if /bin/mknod /dev/ttyS0 c 4 64; then
+		log_action_end_msg $?
+	else
+		log_action_end_msg $?
+	fi
+fi
+

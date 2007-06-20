@@ -1,0 +1,8 @@
+# setting ETH0_UP and ETH1_UP to "y" will have them brought up on boot
+ETH0_UP="n"
+ETH1_UP="n"
+
+# IPv4 addresses of the eth0 and eth1 interfaces respectively
+ETH0_ADDR="192.168.255.1"
+ETH1_ADDR="192.168.255.2"
+

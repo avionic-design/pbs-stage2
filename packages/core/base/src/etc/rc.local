@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# set printk logging level
+echo 8 > /proc/sys/kernel/printk
+

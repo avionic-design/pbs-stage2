@@ -1,9 +1,14 @@
 
-rootfs-image ?= rootfs.ext3
-rootfs-size ?= 32M
+rootfs-image ?= rootfs.ext2
+rootfs-size ?= 64M
 
 rootfs.plain:
 	dd if=/dev/zero of=$@ bs=$(rootfs-size) count=1
+
+rootfs.ext2: rootfs.plain
+	mv $< $@
+	/sbin/mkfs -t ext2 -F $@
+	/sbin/tune2fs -c 0 $@
 
 rootfs.ext3: rootfs.plain
 	mv $< $@

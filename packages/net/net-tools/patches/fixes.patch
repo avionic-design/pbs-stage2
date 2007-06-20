@@ -1,0 +1,73 @@
+--- a/lib/inet_sr.c	2007-03-21 11:44:25.000000000 +0100
++++ b/lib/inet_sr.c	2007-03-21 11:44:36.000000000 +0100
+@@ -105,6 +105,7 @@
+     case 2:
+        isnet = 0; break;
+     default:
++       break;
+     }
+ 
+     /* Fill in the other fields. */
+--- a/hostname.c	2007-03-21 11:46:51.000000000 +0100
++++ b/hostname.c	2007-03-21 11:47:12.000000000 +0100
+@@ -31,6 +31,7 @@
+  *              your option) any later version.
+  */
+ #include <stdio.h>
++#include <stdlib.h>
+ #include <unistd.h>
+ #include <getopt.h>
+ #include <string.h>
+@@ -98,6 +99,7 @@
+ 	    fprintf(stderr, _("%s: name too long\n"), program_name);
+ 	    break;
+ 	default:
++	    break;
+ 	}
+ 	exit(1);
+     };
+@@ -117,6 +117,7 @@
+ 	    fprintf(stderr, _("%s: name too long\n"), program_name);
+ 	    break;
+ 	default:
++	    break;
+ 	}
+ 	exit(1);
+     };
+@@ -174,6 +175,7 @@
+ 	printf("%s\n", hp->h_name);
+ 	break;
+     default:
++	break;
+     }
+ }
+ 
+--- a/mii-tool.c	2007-03-21 11:50:48.000000000 +0100
++++ b/mii-tool.c	2007-03-21 11:51:06.000000000 +0100
+@@ -379,16 +379,16 @@
+ /*--------------------------------------------------------------------*/
+ 
+ const char *usage =
+-"usage: %s [-VvRrwl] [-A media,... | -F media] [interface ...]
+-       -V, --version               display version information
+-       -v, --verbose               more verbose output
+-       -R, --reset                 reset MII to poweron state
+-       -r, --restart               restart autonegotiation
+-       -w, --watch                 monitor for link status changes
+-       -l, --log                   with -w, write events to syslog
+-       -A, --advertise=media,...   advertise only specified media
+-       -F, --force=media           force specified media technology
+-media: 100baseT4, 100baseTx-FD, 100baseTx-HD, 10baseT-FD, 10baseT-HD,
++"usage: %s [-VvRrwl] [-A media,... | -F media] [interface ...] \
++       -V, --version               display version information \
++       -v, --verbose               more verbose output \
++       -R, --reset                 reset MII to poweron state \
++       -r, --restart               restart autonegotiation \
++       -w, --watch                 monitor for link status changes \
++       -l, --log                   with -w, write events to syslog \
++       -A, --advertise=media,...   advertise only specified media \
++       -F, --force=media           force specified media technology \
++media: 100baseT4, 100baseTx-FD, 100baseTx-HD, 10baseT-FD, 10baseT-HD, \
+        (to advertise both HD and FD) 100baseTx, 10baseT\n";
+ 
+ int main(int argc, char **argv)
