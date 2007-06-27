@@ -21,6 +21,8 @@ PPP    = y
 SSH    = y
 SERIAL = y
 FB     = y
+XORG   = n
+QTOPIA = y
 ABOX   = y
 DEBUG  = y
 

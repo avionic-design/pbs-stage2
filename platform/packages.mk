@@ -55,6 +55,50 @@ packages-$(SERIAL) += console/minicom
 packages-$(FB)     += console/fbset
 packages-$(ABOX)   += util/abox
 
+# X.Org Windowing System packages
+packages-$(XORG) += \
+	xorg/proto/bigreqs \
+	xorg/proto/composite \
+	xorg/proto/damage \
+	xorg/proto/evie \
+	xorg/proto/fixes \
+	xorg/proto/fonts \
+	xorg/proto/gl \
+	xorg/proto/input \
+	xorg/proto/kb \
+	xorg/proto/randr \
+	xorg/proto/record \
+	xorg/proto/render \
+	xorg/proto/resource \
+	xorg/proto/scrnsaver \
+	xorg/proto/trap \
+	xorg/proto/video \
+	xorg/proto/x \
+	xorg/proto/xcb-proto \
+	xorg/proto/xcmisc \
+	xorg/proto/xext \
+	xorg/proto/xf86bigfont \
+	xorg/proto/xf86dga \
+	xorg/proto/xf86dri \
+	xorg/proto/xf86misc \
+	xorg/proto/xf86vidmode \
+	xorg/proto/xinerama
+
+packages-$(XORG) += \
+	xorg/lib/xau \
+	xorg/lib/pthread-stubs \
+	xorg/lib/xcb \
+	xorg/lib/xtrans \
+	xorg/lib/x11 \
+	xorg/lib/xt
+
+packages-$(XORG) += \
+	xorg/xorg-server
+
+# Qtopia
+packages-$(QTOPIA) += \
+	libs/qtopia
+
 # debugging helper packages
 packages-$(DEBUG) += \
 	devel/strace \
