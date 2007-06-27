@@ -6,12 +6,16 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
+ac-cache = \
+	fu_cv_sys_stat_statvfs=yes
+
 conf-args = \
 	--host=$(HOST) \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
 	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS)
+	$(call set-args, CC CFLAGS) \
+	$(ac-cache)
 
 package-configure:
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
