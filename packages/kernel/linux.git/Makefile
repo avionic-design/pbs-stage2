@@ -4,6 +4,8 @@ VERSION = 000
 KERNELSRC ?= ../linux-2.6.git
 export KERNELSRC
 
+DESCRIPTION = Linux kernel
+
 package-configure:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) config
 
