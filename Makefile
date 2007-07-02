@@ -39,6 +39,7 @@ include scripts/pbuild.mk
 KERNELSRC ?= /usr/src/linux
 
 clean   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.clean          obj
+plat    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build          obj
 fetch   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  fetch   obj
 build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  build   obj
 install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  install obj
@@ -47,7 +48,7 @@ initrd  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.initrd         ob
 rootfs  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.rootfs         obj
 card    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.card           obj
 pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg            obj
-export clean fetch build install kernel initrd pkg
+export clean plat fetch build install kernel initrd pkg
 
 checksum = sha256
 builddir = $(PLATFORM)/build
@@ -74,6 +75,9 @@ ifdef platform
 PLATFORM = $(objtree)/platform/$(platform)
 tmptree = $(PLATFORM)/build
 export PLATFORM
+
+list:
+	$(Q)$(MAKE) $(plat)=platform/$(platform) list
 
 fetch:
 	$(Q)$(MAKE) $(fetch)=platform/$(platform)
