@@ -99,6 +99,11 @@ packages-$(XORG) += \
 packages-$(QTOPIA) += \
 	libs/qtopia
 
+# DirectFB
+packages-$(DIRECTFB) += \
+	libs/zlib \
+	libs/directfb
+
 # debugging helper packages
 packages-$(DEBUG) += \
 	devel/strace \

@@ -11,20 +11,21 @@ LINUX_VERSION = git
 KERNEL_CONFIG = add-abox_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
-NET    = y
-USB    = y
-SOUND  = n
-SYSLOG = y
-NTP    = y
-DHCP   = y
-PPP    = y
-SSH    = y
-SERIAL = y
-FB     = y
-XORG   = n
-QTOPIA = y
-ABOX   = y
-DEBUG  = y
+NET      = y
+USB      = y
+SOUND    = n
+SYSLOG   = y
+NTP      = y
+DHCP     = y
+PPP      = y
+SSH      = y
+SERIAL   = y
+FB       = y
+XORG     = n
+QTOPIA   = n
+DIRECTFB = y
+ABOX     = y
+DEBUG    = n
 
 include platform/packages.mk
 
