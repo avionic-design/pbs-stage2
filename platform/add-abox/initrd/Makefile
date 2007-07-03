@@ -34,6 +34,7 @@ platform-clean: __clean-dirs  += $(PLATFORM)/tmp
 platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-dirs  += $(builddir)
 platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
+platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
 platform-clean:
 	$(if $(wildcard $(__clean-dirs) ),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
