@@ -76,6 +76,10 @@ while [ ! -x ${rootmnt}${init} ]; do
 	panic "Target filesystem doesn't have ${init}"
 done
 
+# kill all running udevd instances because the new root will start the final
+# udevd
+killall udevd
+
 #exec switch_root -c ${rootmnt}/dev/console ${rootmnt} ${init} "$@"
 exec switch_root ${rootmnt} ${init} "$@"
 

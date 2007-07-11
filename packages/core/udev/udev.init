@@ -35,8 +35,6 @@ case $1 in
 	start)
 		mkdir -p /dev/.udev/db
 
-		killall udevd
-
 		log_daemon_msg "Starting the hotplug events dispatcher" "udevd"
 		if /sbin/udevd --daemon; then
 			log_end_msg $?
