@@ -24,6 +24,8 @@ FB       = y
 XORG     = n
 QTOPIA   = n
 DIRECTFB = y
+GTK      = y
+GTKMM    = y
 ABOX     = y
 DEBUG    = n
 

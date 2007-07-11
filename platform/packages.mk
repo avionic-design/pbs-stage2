@@ -53,7 +53,10 @@ packages-$(SSH) += \
 
 packages-$(SERIAL) += console/minicom
 packages-$(FB)     += console/fbset
-packages-$(ABOX)   += util/abox
+
+# image support
+packages-$(PNG)  += libs/libpng
+packages-$(JPEG) += libs/libjpeg
 
 # X.Org Windowing System packages
 packages-$(XORG) += \
@@ -101,8 +104,20 @@ packages-$(QTOPIA) += \
 
 # DirectFB
 packages-$(DIRECTFB) += \
-	libs/zlib \
 	libs/directfb
+
+# Gtk+
+packages-$(GTK) += \
+	libs/libiconv \
+	libs/gettext \
+	libs/glib \
+	libs/gtk+
+
+# C++ bindings for Gtk+
+packages-$(GTKMM) += \
+	libs/libsigc++ \
+	libs/glibmm \
+	libs/gtkmm
 
 # debugging helper packages
 packages-$(DEBUG) += \
@@ -111,4 +126,6 @@ packages-$(DEBUG) += \
 	net/netcat \
 	libs/libpcap \
 	net/tcpdump
+
+packages-$(ABOX) += util/abox
 
