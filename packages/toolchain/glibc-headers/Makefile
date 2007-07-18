@@ -14,15 +14,24 @@ env += \
 	libc_cv_c_cleanup=yes \
 	libc_cv_$(ARCH)_tls=yes
 
+conf-args = \
+	--prefix=/usr \
+	--infodir=\$${prefix}/share/info \
+	--mandir=\$${prefix}/share/man \
+	--enable-addons=ports \
+	--with-headers=$(PLATFORM)/usr/include
+
+ifeq ($(FLOAT),soft)
+	conf-args += --without-fp
+endif
+
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
 package-configure:
 	mkdir -p $(pkgtree)/hdr-$(HOST) && cd $(pkgtree)/hdr-$(HOST) && \
 		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
-			--prefix=/usr --enable-addons=ports \
-			--with-headers=$(PLATFORM)/usr/include \
-			$(EXTRA_GLIBC_CONF_ARGS)
+			$(conf-args)
 
 package-build:
 

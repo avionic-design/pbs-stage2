@@ -8,10 +8,13 @@ conf-args = \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
 	--with-headers=$(PLATFORM)/usr/include \
-	$(EXTRA_GCC_CONF_ARGS) \
 	--disable-multilib \
 	--enable-symvers=gnu \
 	--enable-languages=c,c++
+
+ifeq ($(FLOAT),soft)
+	conf-args += --with-float=soft
+endif
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \

@@ -1,8 +1,5 @@
 #!/bin/sh
 
-/bin/mount -t proc  -o nodev,noexec,nosuid proc  /proc
-/bin/mount -t sysfs -o nodev,noexec,nosuid sysfs /sys
-
 # mount devpts filesystem
 if [ -f /etc/default/devpts ]; then
 	. /etc/default/devpts

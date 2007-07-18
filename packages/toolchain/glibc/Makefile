@@ -9,33 +9,28 @@ TARBALLS = \
 include packages/toolchain/common.mk
 
 env += \
-	BUILD_CC=gcc \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc
-#	AR=$(PLATFORM)/usr/bin/$(HOST)-ar \
-#	RANLIB=$(PLATFORM)/usr/bin/$(HOST)-ranlib
+	libc_cv_forced_unwind=yes \
+	libc_cv_c_cleanup=yes \
+	libc_cv_$(ARCH)_tls=yes
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
+conf-args = \
+	--prefix=/usr \
+	--infodir=\$${prefix}/share/info \
+	--mandir=\$${prefix}/share/man \
+	--enable-addons=ports \
+	--with-headers=$(PLATFORM)/usr/include
+
+ifeq ($(FLOAT),soft)
+	conf-args += --without-fp
+endif
+
 package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST)
-	# setup the autoconf cache
-	cd $(pkgtree)/obj-$(HOST) && \
-		echo 'libc_cv_forced_unwind=yes' > config.cache && \
-		echo 'libc_cv_c_cleanup=yes' >> config.cache
-	# setup configuration parameters
-	cd $(pkgtree)/obj-$(HOST) && \
-		echo 'install_root=$(PLATFORM)' > configparms
-	# configure the package
-	cd $(pkgtree)/obj-$(HOST) && \
+	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
 		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
-			--prefix=/usr --libexecdir=/usr/lib/glibc \
-			--disable-profile --enable-add-ons --with-tls \
-			--enable-kernel=2.6.0 --with-__thread \
-			--with-sysroot=$(PLATFORM) \
-			--with-headers=$(PLATFORM)/usr/include \
-			$(EXTRA_GLIBC_CONF_ARGS) \
-			--cache-file=config.cache
+			$(conf-args)
 
 build-args = \
 	MAKEFLAGS=
@@ -43,7 +38,9 @@ build-args = \
 package-build:
 	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(build-args) all
 
-install-args =
+install-args = \
+	install_root=$(PLATFORM)
+
 package-install:
 	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(install-args) install
 

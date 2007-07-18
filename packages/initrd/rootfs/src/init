@@ -52,20 +52,8 @@ log_begin_msg "Creating devices"
 [ -e ${rootmnt}/dev/console ] || mknod ${rootmnt}/dev/console c 5 1
 log_end_msg
 
-# finishing bootstrapping
-if [ -d ${rootmnt}/debootstrap ]; then
-	log_begin_msg "Finishing bootstrap process"
-	chroot ${rootmnt} /debootstrap/debootstrap --second-stage
-	log_end_msg
-fi
-
-#log_begin_msg "Running shell in new root filesystem"
-#chroot ${rootmnt} /bin/sh
-#log_end_msg
-
-#log_begin_msg "Generating ld.so cache"
-#${rootmnt}/sbin/ldconfig -r ${rootmnt}
-#log_end_msg
+# kill the running udevd; the final udevd will be started in the new root
+killall udevd
 
 # move virtual filesystems over to the real filesystem
 mount -o move /sys  ${rootmnt}/sys
@@ -75,10 +63,6 @@ mount -o move /proc ${rootmnt}/proc
 while [ ! -x ${rootmnt}${init} ]; do
 	panic "Target filesystem doesn't have ${init}"
 done
-
-# kill all running udevd instances because the new root will start the final
-# udevd
-killall udevd
 
 #exec switch_root -c ${rootmnt}/dev/console ${rootmnt} ${init} "$@"
 exec switch_root ${rootmnt} ${init} "$@"

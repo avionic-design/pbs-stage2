@@ -6,7 +6,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
-CC += --sysroot $(ROOTFS)
+env += sysroot=$(ROOTFS)
+CC  += --sysroot $(ROOTFS)
 
 conf-args = \
 	--host=$(HOST) \
@@ -17,6 +18,7 @@ conf-args = \
 	$(call set-args, CC CFLAGS LD LDFLAGS)
 
 package-configure:
+	cp support/ltmain-sysroot.sh $(pkgtree)/build-aux/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
 build-args =

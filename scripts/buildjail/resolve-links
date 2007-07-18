@@ -1,0 +1,19 @@
+#!/bin/sh
+
+read line
+
+while [ -n "$line" ]; do
+	if [ -e "$line" ]; then
+		echo $line
+	fi
+
+	if [ -L "$line" ]; then
+		dirname=`dirname $line`
+		dirname=`cd $dirname; pwd`
+		line="$dirname/`readlink $line`"
+		echo $line
+	fi
+
+	read line
+done
+

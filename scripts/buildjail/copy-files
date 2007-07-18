@@ -1,0 +1,21 @@
+#!/bin/sh
+
+if [ "x$1" = "x" ]; then
+	echo "usage: $0 target"
+	exit 1
+fi
+
+target=$1
+
+read line
+
+while [ -n "$line" ]; do
+	directory=`dirname $line`
+	basename=`basename $line`
+
+	mkdir -p "${target}${directory}"
+	cp -dp $line "${target}${directory}/${basename}"
+
+	read line
+done
+

@@ -7,8 +7,14 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 include packages/toolchain/common.mk
 
 DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config
-CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
-DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+
+ifeq ($(FLOAT),soft)
+  CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(FLOAT).config
+  DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+else
+  CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
+  DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+endif
 
 conf-args = \
 	MAKEFLAGS=

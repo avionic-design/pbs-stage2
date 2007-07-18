@@ -1,26 +1,20 @@
 ARCH = arm
-ARCH_LONG = armv5te
-CPU = softfloat
-TUNE = xscale
+ARCH_LONG = armv4t
+CPU = xscale
+TUNE = strongarm110
 OS = linux
 LIBC = uclibc
+FLOAT = soft
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
-export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.21.3
+LINUX_VERSION = 2.6.22.1
 GCC_VERSION = 4.2.0
 export LINUX_VERSION GCC_VERSION
-
-BROKEN = yes
-export BROKEN
 
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
-  EXTRA_GCC_CONF_ARGS = --with-float=soft
-  EXTRA_GLIBC_CONF_ARGS = --without-fp
-  export EXTRA_GCC_CONF_ARGS EXTRA_GLIBC_CONF_ARGS
-
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   packages-y += toolchain/uclibc-headers
@@ -39,19 +33,20 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-  ABIFLAGS =
+  ABIFLAGS = -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux \
+             -mno-thumb-interwork
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
 
-  CPPFLAGS =
+  CPPFLAGS = --sysroot $(ROOTFS)
   CFLAGS = \
 	$(CPPFLAGS) \
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
   LDFLAGS = \
-	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
+	-s -shared-libgcc
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif

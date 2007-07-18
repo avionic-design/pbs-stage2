@@ -1,13 +1,14 @@
 ARCH = arm
-ARCH_LONG = armv5te
+ARCH_LONG = armv4t
 CPU = xscale
-TUNE = xscale
+TUNE = strongarm110
 OS = linux
 LIBC = uclibc
+FLOAT = hard
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
-export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.22
+LINUX_VERSION = 2.6.22.1
 GCC_VERSION = 4.2.0
 export LINUX_VERSION GCC_VERSION
 
@@ -32,7 +33,8 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-  ABIFLAGS =
+  ABIFLAGS = -mlittle-endian -mapcs -mno-sched-prolog -mabi=aapcs-linux \
+             -mno-thumb-interwork
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)

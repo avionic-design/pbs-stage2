@@ -1,0 +1,18 @@
+#!/bin/sh
+
+if [ "x$1" = "x" -o "x$2" = "x" ]; then
+	echo "usage: $0 binary target"
+	exit 1
+fi
+
+binary="$1"
+target="$2"
+
+ldd "$binary" | awk -f ldd.awk | ./resolve-links | ./copy-files "$target"
+
+directory=`dirname $binary`
+basename=`basename $binary`
+
+mkdir -p "${target}${directory}"
+cp "$binary" "${target}${directory}/${basename}"
+

@@ -21,6 +21,11 @@ dirs := \
 	/etc \
 	/etc/default \
 	/etc/init.d \
+	/etc/rc1.d \
+	/etc/rc2.d \
+	/etc/rc3.d \
+	/etc/rc4.d \
+	/etc/rc5.d \
 	/etc/rc6.d \
 	/etc/rcS.d \
 	/etc/udev \
@@ -59,7 +64,6 @@ files := \
 	/etc/inittab \
 	/etc/rc.local \
 	/etc/init.d/hostname.sh \
-	/etc/init.d/ldconfig \
 	/etc/init.d/rc \
 	/etc/init.d/rcS \
 	/etc/init.d/makedev \
@@ -79,28 +83,23 @@ libraries := \
 symlinks := \
 	/bin/cat \
 	/bin/echo \
+	/etc/rc2.d/S99rc.local \
+	/etc/rc3.d/S99rc.local \
+	/etc/rc4.d/S99rc.local \
+	/etc/rc5.d/S99rc.local \
 	/etc/rc6.d/S90reboot \
 	/etc/rcS.d/S01mount \
 	/etc/rcS.d/S02hostname.sh \
 	/etc/rcS.d/S03udev \
 	/etc/rcS.d/S05networking \
 	/etc/rcS.d/S10makedev \
-	/etc/rcS.d/S50ldconfig \
-	/etc/rcS.d/S75modules \
-	/etc/rcS.d/S99rc.local
+	/etc/rcS.d/S75modules
 
 binaries := \
-	/sbin/start-stop-daemon \
-	/usr/bin/fp \
-	/usr/bin/hello \
-	/usr/bin/hello++ \
-	/usr/lib/abioctl
+	/sbin/start-stop-daemon
 
 objs += \
-	sbin/start-stop-daemon.o \
-	usr/bin/fp.o \
-	usr/bin/hello.o \
-	usr/bin/hello++.o
+	sbin/start-stop-daemon.o
 
 dst-dirs := $(addprefix $(ROOTFS), $(dirs))
 dst-files := $(addprefix $(ROOTFS), $(files))
@@ -162,18 +161,6 @@ $(subst $(ROOTFS)/,,$(dst-libraries)):
 sbin/start-stop-daemon: sbin/start-stop-daemon.o
 	$(call echo-cmd,ld_o_c)
 	$(call make-cmd,ld_o_c)
-
-usr/bin/fp: usr/bin/fp.o
-	$(call echo-cmd,ld_o_c)
-	$(call make-cmd,ld_o_c)
-
-usr/bin/hello: usr/bin/hello.o
-	$(call echo-cmd,ld_o_c)
-	$(call make-cmd,ld_o_c)
-
-usr/bin/hello++: usr/bin/hello++.o
-	$(call echo-cmd,ld_o_cxx)
-	$(call make-cmd,ld_o_cxx)
 
 list:
 	@echo 'src/rootfs: additional initial root filesystem content'

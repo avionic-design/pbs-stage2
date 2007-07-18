@@ -21,13 +21,15 @@ PPP      = n
 SSH      = y
 SERIAL   = y
 FB       = y
+PNG      = n
+JPEG     = n
 XORG     = n
 QTOPIA   = n
-DIRECTFB = y
-GTK      = y
-GTKMM    = y
+DIRECTFB = n
+GTK      = n
+GTKMM    = n
+DEBUG    = y
 ABOX     = y
-DEBUG    = n
 
 include platform/packages.mk
 

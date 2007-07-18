@@ -3,6 +3,7 @@
 INSTALL = /usr/bin/install
 
 CC     = $(CROSS_COMPILE)gcc
+CPP    = $(CROSS_COMPILE)cpp
 CXX    = $(CROSS_COMPILE)g++
 LD     = $(CROSS_COMPILE)ld
 AS     = $(CROSS_COMPILE)as

@@ -1,9 +1,17 @@
 # check whether we want a git checkout of the Linux kernel or an officially
 # released tarball
 ifeq ($(LINUX_VERSION),git)
-  packages-y = kernel/linux.git
+  packages-y += kernel/linux.git
 else
-  packages-y = kernel/linux
+  packages-y += kernel/linux
+endif
+
+ifeq ($(LIBC),uclibc)
+  packages-y += devel/uclibc
+endif
+
+ifeq ($(LIBC),gnu)
+  packages-y += devel/glibc
 endif
 
 # base packages
@@ -111,6 +119,9 @@ packages-$(GTK) += \
 	libs/libiconv \
 	libs/gettext \
 	libs/glib \
+	libs/atk \
+	libs/pango \
+	libs/cairo \
 	libs/gtk+
 
 # C++ bindings for Gtk+

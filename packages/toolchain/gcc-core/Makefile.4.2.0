@@ -7,12 +7,15 @@ conf-args = \
 	--with-build-sysroot=$(PLATFORM) \
 	--with-as=$(PLATFORM)/usr/bin/$(HOST)-as \
 	--with-ld=$(PLATFORM)/usr/bin/$(HOST)-ld \
-	$(EXTRA_GCC_CONF_ARGS) \
 	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \
 	--disable-shared \
 	--enable-languages=c
+
+ifeq ($(FLOAT),soft)
+	conf-args += --with-float=soft
+endif
 
 package-configure:
 	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \

@@ -41,5 +41,6 @@ package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install_utils
 	cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
 	cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
+	cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
 	ln -s ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
 

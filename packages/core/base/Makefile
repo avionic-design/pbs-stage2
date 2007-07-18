@@ -2,6 +2,7 @@ PACKAGE = base
 VERSION = 000
 
 dirs = \
+	/bin \
 	/dev \
 	/etc \
 	/etc/init.d \
@@ -27,6 +28,7 @@ package-configure:
 package-build:
 
 package-install: $(rootfs-dirs)
+	cp -a packages/$(package)/src/bin/* $(ROOTFS)/bin
 	cp -a packages/$(package)/src/etc/* $(ROOTFS)/etc
 	cp -a packages/$(package)/src/lib/* $(ROOTFS)/lib
 
