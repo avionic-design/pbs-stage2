@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
+env += sysroot=$(ROOTFS)
+
 conf-args = \
 	--host=$(HOST) \
 	--prefix=/usr \
@@ -14,6 +16,7 @@ conf-args = \
 
 package-configure:
 	cp support/config.{guess,sub} $(pkgtree)
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
 build-args =
