@@ -1,3 +1,5 @@
+packages-y += core/base
+
 # check whether we want a git checkout of the Linux kernel or an officially
 # released tarball
 ifeq ($(LINUX_VERSION),git)
@@ -16,8 +18,6 @@ endif
 
 # base packages
 packages-y += \
-	core/base \
-	devel/uclibc \
 	core/busybox \
 	core/coreutils \
 	core/diffutils \
@@ -33,6 +33,10 @@ packages-y += \
 	core/util-linux \
 	kernel/module-init-tools \
 	shells/bash
+
+packages-$(GREP) += \
+	libs/pcre \
+	core/grep
 
 # network-related packages
 packages-$(NET) += \
