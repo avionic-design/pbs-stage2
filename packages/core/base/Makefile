@@ -4,7 +4,6 @@ VERSION = 000
 dirs = \
 	/bin \
 	/dev \
-	/etc \
 	/etc/init.d \
 	/etc/rc0.d \
 	/etc/rc1.d \
