@@ -1,0 +1,3 @@
+#host-progs.patch
+no-rpath.patch
+unbreak-libtool.patch

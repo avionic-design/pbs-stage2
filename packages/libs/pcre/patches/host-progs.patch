@@ -1,0 +1,25 @@
+--- a/Makefile.in	2007-07-19 12:15:47.000000000 +0200
++++ b/Makefile.in	2007-07-19 12:18:41.000000000 +0200
+@@ -175,9 +175,13 @@
+ 	--mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+ CCLD = $(CC)
++HOST_CCLD = $(HOSTCC)
+ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+ 	--mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) \
+ 	$(LDFLAGS) -o $@
++LINK.HOST = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
++	--mode=link $(HOST_CCLD) $(AM_HOSTCFLAGS) $(HOSTCFLAGS) \
++	$(AM_HOSTLDFLAGS) $(HOSTLDFLAGS) -o $@
+ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ LTCXXCOMPILE = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+@@ -683,7 +687,7 @@
+ 	done
+ dftables$(EXEEXT): $(dftables_OBJECTS) $(dftables_DEPENDENCIES)
+ 	@rm -f dftables$(EXEEXT)
+-	$(LINK) $(dftables_OBJECTS) $(dftables_LDADD) $(LIBS)
++	$(LINK.HOST) $(dftables_OBJECTS) $(dftables_LDADD) $(LIBS)
+ pcre_scanner_unittest$(EXEEXT): $(pcre_scanner_unittest_OBJECTS) $(pcre_scanner_unittest_DEPENDENCIES)
+ 	@rm -f pcre_scanner_unittest$(EXEEXT)
+ 	$(CXXLINK) $(pcre_scanner_unittest_OBJECTS) $(pcre_scanner_unittest_LDADD) $(LIBS)
