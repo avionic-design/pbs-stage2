@@ -1,0 +1,26 @@
+--- a/configure.in	2007-07-20 09:54:54.000000000 +0200
++++ b/configure.in	2007-07-20 09:55:06.000000000 +0200
+@@ -1486,10 +1486,6 @@
+ # Handle --with-headers=XXX.  If the value is not "yes", the contents of
+ # the named directory are copied to $(tooldir)/sys-include.
+ if test x"${with_headers}" != x && test x"${with_headers}" != xno ; then
+-  if test x${is_cross_compiler} = xno ; then
+-    echo 1>&2 '***' --with-headers is only supported when cross compiling
+-    exit 1
+-  fi
+   if test x"${with_headers}" != xyes ; then
+     case "${exec_prefixoption}" in
+     "") x=${prefix} ;;
+--- a/configure	2007-07-20 09:56:59.000000000 +0200
++++ b/configure	2007-07-20 09:57:06.000000000 +0200
+@@ -2773,10 +2773,6 @@
+ # Handle --with-headers=XXX.  If the value is not "yes", the contents of
+ # the named directory are copied to $(tooldir)/sys-include.
+ if test x"${with_headers}" != x && test x"${with_headers}" != xno ; then
+-  if test x${is_cross_compiler} = xno ; then
+-    echo 1>&2 '***' --with-headers is only supported when cross compiling
+-    exit 1
+-  fi
+   if test x"${with_headers}" != xyes ; then
+     case "${exec_prefixoption}" in
+     "") x=${prefix} ;;

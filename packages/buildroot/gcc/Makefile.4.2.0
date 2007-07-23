@@ -1,0 +1,24 @@
+# build instructions for bootstrap GCC 4.2.0
+
+include packages/buildroot/autotools.mk
+
+conf-args += \
+	--with-sysroot=$(ROOTFS)$(prefix) \
+	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
+	--with-headers=$(ROOTFS)$(prefix)/include \
+	--disable-multilib \
+	--enable-symvers=gnu \
+	--enable-languages=c,c++
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
+		$(env) ../configure $(conf-args) $(conf-vars)
+
+package-build:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(build-args) $(build-vars)
+
+package-install:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(install-args) $(install-vars) install
+

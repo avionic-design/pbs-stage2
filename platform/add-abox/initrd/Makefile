@@ -7,23 +7,29 @@ endif
 ROOTFS = $(PLATFORM)/rootfs
 export ROOTFS
 
-LINUX_VERSION = 2.6.21.5
+LINUX_VERSION  = git
+KERNEL_CONFIG  = add-abox_defconfig
 INITRD_VARIANT = uclibc
-export INITRD_VARIANT
+export LINUX_VERSION KERNEL_CONFIG INITRD_VARIANT
+
+ifeq ($(LINUX_VERSION),git)
+  packages-y = initrd/linux.git
+else
+  packages-y = initrd/linux
+endif
 
 ifeq ($(INITRD_VARIANT),uclibc)
-packages-y = \
-	initrd/linux-headers \
+  packages-y += \
 	initrd/uclibc \
-	initrd/busybox \
+	initrd/busybox
+else
+  packages-y += \
+	initrd/klibc
+endif
+
+packages-y += \
 	initrd/udev \
 	initrd/rootfs
-else
-packages-y += initrd/linux
-packages-y += initrd/klibc
-packages-y += initrd/udev
-packages-y += initrd/rootfs
-endif
 
 PHONY += platform-install
 platform-install:
