@@ -6,6 +6,7 @@ TARBALLS = \
 	$(PACKAGE_FULLNAME).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
+#autotools-subdir = hdr-$(HOST)
 include packages/buildroot/autotools.mk
 
 env := env -i PATH=/usr/bin:/bin
@@ -30,7 +31,7 @@ package-post-install:
 	touch $(ROOTFS)$(prefix)/include/gnu/stubs.h
 	cd $(pkgtree) && \
 		cp include/features.h $(ROOTFS)$(prefix)/include/features.h && \
-		cp obj-$(HOST)/bits/*.h $(ROOTFS)$(prefix)/include/bits && \
+		cp $(autotools-subdir)/bits/*.h $(ROOTFS)$(prefix)/include/bits && \
 		cp ports/sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h \
 			$(ROOTFS)$(prefix)/include/bits
 

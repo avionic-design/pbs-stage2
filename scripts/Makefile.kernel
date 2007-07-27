@@ -1,6 +1,11 @@
 # unexport environment variables that may get in the way
 unexport CC CFLAGS LD LDFLAGS
 
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
+  KBUILD_OUTPUT = $(buildtree)
+  export KBUILD_OUTPUT
+endif
+
 $(KERNELSRC)/.config:
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) $(KERNEL_CONFIG)
@@ -30,7 +35,7 @@ headers-install: config
 		        INSTALL_HDR_PATH=$(ROOTFS)/usr \
 		        headers_install
 	# some programs need this to compile
-	cp $(KERNELSRC)/include/asm/linkage.h $(ROOTFS)/usr/include/asm
+	cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)/usr/include/asm
 	cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
 
 PHONY += install-zImage
@@ -53,6 +58,10 @@ install: install-zImage install-modules
 PHONY += clean
 clean:
 	cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) mrproper
+
+PHONY += version
+version:
+	cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) kernelversion
 
 .PHONY: $(PHONY)
 

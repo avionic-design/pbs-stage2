@@ -19,7 +19,8 @@ endif
 conf-args = \
 	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
 	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
-	MAKEFLAGS=
+	MAKEFLAGS= \
+	V=1
 
 package-configure:
 	cp $(DOT_CONFIG) $(pkgtree)/.config
@@ -30,7 +31,8 @@ build-args = \
 	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
 	PREFIX=$(PLATFORM) \
 	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=/usr/ \
+	V=1
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
@@ -40,7 +42,8 @@ install-args = \
 	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
 	PREFIX=$(PLATFORM) \
 	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=/usr/ \
+	V=1
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install

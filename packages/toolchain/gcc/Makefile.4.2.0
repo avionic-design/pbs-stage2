@@ -8,7 +8,8 @@ conf-args = \
 	--with-sysroot=$(PLATFORM) \
 	--with-build-sysroot=$(PLATFORM) \
 	--with-headers=$(PLATFORM)/usr/include \
-	--disable-multilib \
+	--enable-shared \
+	--disable-static \
 	--enable-symvers=gnu \
 	--enable-languages=c,c++
 
@@ -16,10 +17,19 @@ ifeq ($(FLOAT),soft)
 	conf-args += --with-float=soft
 endif
 
+ifeq ($(MULTILIB),y)
+	conf-args += --enable-multilib
+else
+	conf-args += --disable-multilib
+endif
+
+#conf-vars = \
+	ac_gcsections=no
+
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
 		../configure --target=$(HOST) --host=$(BUILD) \
-			$(conf-args)
+			$(conf-args) $(conf-vars)
 
 build-args =
 package-build:

@@ -7,14 +7,21 @@ conf-args = \
 	--with-build-sysroot=$(PLATFORM) \
 	--with-as=$(PLATFORM)/usr/bin/$(HOST)-as \
 	--with-ld=$(PLATFORM)/usr/bin/$(HOST)-ld \
+	--disable-multilib \
+	--disable-shared \
 	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \
-	--disable-shared \
 	--enable-languages=c
 
 ifeq ($(FLOAT),soft)
 	conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+	conf-args += --enable-multilib
+else
+	conf-args += --disable-multilib
 endif
 
 package-configure:

@@ -14,20 +14,20 @@ conf-args := \
 conf-vars :=
 
 package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
+	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \
 		$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args :=
 build-vars :=
 
 package-build:
-	cd $(pkgtree)/obj-$(HOST) && \
+	cd $(pkgtree)/core-$(HOST) && \
 		$(env) $(MAKE) $(build-args) $(build-vars) all-gcc
 
 install-args :=
 install-vars :=
 
 package-install:
-	cd $(pkgtree)/obj-$(HOST) && \
+	cd $(pkgtree)/core-$(HOST) && \
 		$(env) $(MAKE) $(install-args) $(install-vars) install-gcc
 

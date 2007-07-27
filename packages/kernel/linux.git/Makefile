@@ -19,3 +19,6 @@ package-install:
 package-clean:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) clean
 
+kernel-version:
+	$(Q)$(MAKE) $(kernel)=platform/$(platform) version
+

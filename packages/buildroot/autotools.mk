@@ -2,6 +2,8 @@
 
 include packages/buildroot/common.mk
 
+autotools-subdir ?= obj-$(HOST)
+
 ifeq ($(findstring noconf,$(PBS_OPTS)),)
 conf-args += \
 	--prefix=$(prefix) \
@@ -12,8 +14,9 @@ conf-args += \
 conf-vars +=
 
 autotools-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		$(env) ../configure $(conf-args) $(conf-vars)
+	mkdir -p $(pkgtree)/$(autotools-subdir) && \
+		cd $(pkgtree)/$(autotools-subdir) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 package-pre-configure:
 package-configure: package-pre-configure autotools-configure package-post-configure
@@ -25,7 +28,8 @@ build-args +=
 build-vars +=
 
 autotools-build:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(build-args) $(build-vars)
+	cd $(pkgtree)/$(autotools-subdir) && \
+		$(env) $(MAKE) $(build-args) $(build-vars)
 
 package-pre-build:
 package-build: package-pre-build autotools-build package-post-build
@@ -38,7 +42,7 @@ install-vars += \
 	DESTDIR=$(ROOTFS)
 
 autotools-install:
-	cd $(pkgtree)/obj-$(HOST) && \
+	cd $(pkgtree)/$(autotools-subdir) && \
 		$(env) $(MAKE) $(install-args) $(install-vars) \
 			$(if $(install-targets),$(install-targets),install)
 

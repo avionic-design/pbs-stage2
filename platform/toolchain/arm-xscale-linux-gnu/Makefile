@@ -4,7 +4,7 @@ CPU = xscale
 TUNE = strongarm110
 OS = linux
 LIBC = gnu
-FLOAT = hard
+FLOAT = soft
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
@@ -37,6 +37,12 @@ else
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)
+
+ifeq ($(FLOAT),soft)
+  ABIFLAGS += -msoft-float
+else
+  ABIFLAGS += -mhard-float
+endif
 
   CPPFLAGS = --sysroot $(ROOTFS)
   CFLAGS = \

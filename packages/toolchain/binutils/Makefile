@@ -1,5 +1,5 @@
 PACKAGE = binutils
-VERSION = 2.17
+VERSION = 2.17.50
 
 LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -11,10 +11,11 @@ conf-args = \
 	--mandir=/usr/share/man \
 	--infodir=/usr/share/info \
 	--with-sysroot=$(PLATFORM) \
+	--enable-multilib \
 	--disable-nls
 
 package-configure:
-	cd $(pkgtree) && $(env) ./configure --target=$(HOST) --host=$(BUILD) \
+	cd $(pkgtree) && $(env) ./configure --target=$(HOST) \
 		$(conf-args)
 
 build-args =
