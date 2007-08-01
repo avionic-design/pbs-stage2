@@ -4,6 +4,10 @@ VERSION = 0.9.29
 LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = small C library for embedded systems
+
+##############################################################################
+
 include packages/common.mk
 
 DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config

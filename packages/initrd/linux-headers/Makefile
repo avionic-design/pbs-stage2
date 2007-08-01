@@ -8,6 +8,10 @@ VERSION = $(LINUX_VERSION)
 LOCATION = http://www.kernel.org/pub/linux/kernel/v2.6
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = Linux kernel headers
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args = \

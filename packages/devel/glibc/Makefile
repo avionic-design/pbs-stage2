@@ -6,6 +6,10 @@ TARBALLS = \
 	$(PACKAGE_FULLNAME).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
+DESCRIPTION = the GNU C library
+
+##############################################################################
+
 include packages/common.mk
 
 env += \

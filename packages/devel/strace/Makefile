@@ -7,9 +7,9 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 PATCHFILES = \
 	$(DISTNAME)-fix-arm-bad-syscall.patch
 
-CONFIGURE_SCRIPTS = $(WORKSRC)/configure
-BUILD_SCRIPTS = $(WORKSRC)/Makefile
-INSTALL_SCRIPTS = $(WORKSRC)/Makefile
+DESCRIPTION = a system call tracer
+
+##############################################################################
 
 include packages/common.mk
 

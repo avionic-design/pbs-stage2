@@ -7,6 +7,10 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 PATCHFILES = \
 	$(DISTNAME)-install-into-destdir.patch
 
+DESCRIPTION = framebuffer device maintenance program
+
+##############################################################################
+
 include packages/common.mk
 
 env = env -i

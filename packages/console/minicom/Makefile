@@ -4,6 +4,10 @@ VERSION = 2.2
 LOCATION = http://alioth.debian.org/download.php/1806
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = friendly menu-driven serial communication program
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args = \

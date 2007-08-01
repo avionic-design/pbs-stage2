@@ -4,6 +4,10 @@ VERSION = 0.5.3
 LOCATION = http://gondor.apana.org.au/~herbert/dash/files
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = Debian Almquist Shell
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args = \

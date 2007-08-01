@@ -4,6 +4,10 @@ VERSION = 2.8.1
 LOCATION = http://ftp.gnu.org/gnu/diffutils
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = file comparison utilities
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args = \

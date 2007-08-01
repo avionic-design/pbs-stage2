@@ -4,6 +4,10 @@ VERSION = 6.9
 LOCATION = http://ftp.gnu.org/gnu/coreutils
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = the GNU core utilities
+
+##############################################################################
+
 include packages/common.mk
 
 ac-cache = \

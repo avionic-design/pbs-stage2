@@ -4,6 +4,10 @@ VERSION = 2.5.1a
 LOCATION = ftp://ftp.cs.tu-berlin.de/pub/gnu/grep
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = utility to search for text in files
+
+##############################################################################
+
 include packages/autotools.mk
 
 package-pre-configure:

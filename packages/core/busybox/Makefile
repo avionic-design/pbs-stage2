@@ -4,6 +4,10 @@ VERSION = 1.6.0
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = tiny utilities for small and embedded systems
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args =

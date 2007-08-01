@@ -4,6 +4,10 @@ VERSION = 0.0.1
 LOCATION =
 TARBALLS =
 
+DESCRIPTION = base root filesystem
+
+##############################################################################
+
 include packages/common.mk
 
 package-install: $(stampdir)/initrd/rootfs/package-install

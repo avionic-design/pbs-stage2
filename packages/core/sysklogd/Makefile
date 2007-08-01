@@ -8,6 +8,10 @@ PATCHFILES = \
 	$(DISTNAME)-debian.patch \
 	$(DISTNAME)-dont-strip-on-install.patch
 
+DESCRIPTION = system logging daemon
+
+##############################################################################
+
 include packages/common.mk
 
 env      = env -i

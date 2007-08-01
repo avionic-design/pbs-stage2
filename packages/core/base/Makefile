@@ -1,6 +1,10 @@
 PACKAGE = base
 VERSION = 000
 
+DESCRIPTION = base system files
+
+##############################################################################
+
 dirs = \
 	/bin \
 	/dev \

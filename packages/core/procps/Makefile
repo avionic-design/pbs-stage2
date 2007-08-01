@@ -4,6 +4,10 @@ VERSION = 3.2.7
 LOCATION = http://procps.sourceforge.net
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = /proc filesystem utilities
+
+##############################################################################
+
 include packages/common.mk
 
 priv = sudo

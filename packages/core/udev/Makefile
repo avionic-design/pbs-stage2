@@ -4,6 +4,10 @@ VERSION = 113
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = /dev and hotplug management daemon
+
+##############################################################################
+
 include packages/common.mk
 
 EXTRAS = \

@@ -8,6 +8,10 @@ CONFIGURE_SCRIPTS = custom
 BUILD_SCRIPTS = $(WORKSRC)/Makefile
 INSTALL_SCRIPTS = $(WORKSRC)/Makefile
 
+DESCRIPTION = /dev and hotplug management daemon
+
+##############################################################################
+
 include packages/common.mk
 
 env = env -i

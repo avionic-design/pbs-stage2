@@ -4,6 +4,10 @@ VERSION = 2.86
 LOCATION = ftp://ftp.cistron.nl/pub/people/miquels/sysvinit
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = System-V-like init utilities
+
+##############################################################################
+
 include packages/common.mk
 
 CFLAGS += -D_GNU_SOURCE

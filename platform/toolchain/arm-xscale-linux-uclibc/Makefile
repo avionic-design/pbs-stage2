@@ -9,7 +9,7 @@ HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
 LINUX_VERSION = 2.6.22.1
-GCC_VERSION = 4.2.0
+GCC_VERSION = 4.2.1
 export LINUX_VERSION GCC_VERSION
 
 include platform/toolchain/common.mk

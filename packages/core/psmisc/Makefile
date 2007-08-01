@@ -4,6 +4,10 @@ VERSION = 22.3
 LOCATION = http://mesh.dl.sourceforge.net/sourceforge/psmisc
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
+DESCRIPTION = utilities that use the proc filesystem
+
+##############################################################################
+
 include packages/common.mk
 
 conf-args = \

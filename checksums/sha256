@@ -93,3 +93,5 @@ b36273f279ec835f1378f56e4a9cf442f033f32286f3f7284a6afa0cb5d93909  download/pango
 e10ace2d0361f74f759b52534f05872d93ccce10b5efe7eec73dd39dc0ac52f4  download/pcre-7.2.tar.bz2
 cdb70a6f671bf11eb747ab0e003f2327b7dc6ada93feb6a65c56f4cdd18c4889  download/binutils-2.17.50.tar.bz2
 38da4049b76b58ddbc6ead6fa84cb241d94cc38ad4ee7aefd99ae2c57a73a2d4  download/udev-113.tar.bz2
+476fe4a6f10493fdb53070aa31515326975d2fdc38f2dce931526a528b9ca453  download/gcc-core-4.2.1.tar.bz2
+6395299570fa37dfa866912e38954786ff24a6aa526500804f1d2979fa4b65fe  download/gcc-g++-4.2.1.tar.bz2

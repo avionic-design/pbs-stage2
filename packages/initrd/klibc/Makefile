@@ -4,6 +4,10 @@ VERSION = 1.5
 LOCATION = http://www.kernel.org/pub/linux/libs/klibc
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+DESCRIPTION = tiny C library
+
+##############################################################################
+
 include packages/common.mk
 
 # use a sane environment

@@ -7,9 +7,9 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 PATCHFILES = \
 	$(DISTNAME)-define-rpl_malloc.patch
 
-CONFIGURE_SCRIPTS = $(WORKSRC)/configure
-BUILD_SCRIPTS = $(WORKSRC)/Makefile
-INSTALL_SCRIPTS = $(WORKSRC)/Makefile
+DESCRIPTION = Linux USB utilities
+
+##############################################################################
 
 include packages/common.mk
 

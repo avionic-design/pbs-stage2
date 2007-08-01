@@ -6,6 +6,10 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 DOTCONFIG = packages/$(package)/$(PACKAGE_FULLNAME)
 
+DESCRIPTION = miscellaneous system utilities
+
+##############################################################################
+
 include packages/common.mk
 
 LDFLAGS := $(CFLAGS) $(LDFLAGS)

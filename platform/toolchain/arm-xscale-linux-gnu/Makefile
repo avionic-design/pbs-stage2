@@ -24,7 +24,9 @@ ifndef TOOLCHAIN
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
+platform-clean: __clean-dirs += $(PLATFORM)/etc
 platform-clean: __clean-dirs += $(PLATFORM)/lib
+platform-clean: __clean-dirs += $(PLATFORM)/sbin
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
 platform-clean:
