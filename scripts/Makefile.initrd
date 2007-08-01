@@ -11,6 +11,8 @@ ifndef obj
   $(warning pbuild: Makefile.initrd is included improperly)
 endif
 
+KREL = $(shell cat $(PLATFORM)/kernel-release)
+
 $(ROOTFS): FORCE
 	$(Q)$(MAKE) platform=$(platform) install
 
@@ -38,7 +40,7 @@ concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
 quiet_cmd_mk_uboot_img = MKIMAGE    $@
       cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none -a $(LOAD_ADDR) -e $(EXEC_ADDR) -d $(call concat, :, $^) $@
 
-$(PLATFORM)/u-boot.img: $(PLATFORM)/zImage $(PLATFORM)/initrd.gz
+$(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
 	$(call cmd,mk_uboot_img)
 
 PHONY += FORCE

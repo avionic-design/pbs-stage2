@@ -10,6 +10,10 @@ $(KERNELSRC)/.config:
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) $(KERNEL_CONFIG)
 
+$(PLATFORM)/kernel-release:
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) kernelrelease > $@
+
 PHONY += config
 config: $(KERNELSRC)/.config
 
@@ -53,7 +57,7 @@ install-modules: build-modules
 		        modules_install
 
 PHONY += install
-install: install-zImage install-modules
+install: install-zImage install-modules $(PLATFORM)/kernel-release
 
 PHONY += clean
 clean:
