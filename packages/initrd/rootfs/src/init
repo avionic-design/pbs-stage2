@@ -30,6 +30,7 @@ log_begin_msg "Creating devices"
 log_end_msg
 
 rootmnt=/root
+ro=y
 init=/sbin/init
 
 log_begin_msg "Running top scripts"
@@ -44,7 +45,11 @@ log_end_msg
 log_begin_msg "Mounting root filesystem: ${rootmnt}"
 mkdir -p /media/sd-card
 mount /dev/mmcblk0 /media/sd-card
-mount -o loop /media/sd-card/rootfs.img ${rootmnt}
+if [ "x$ro" = "xy" ]; then
+	mount -o loop,ro /media/sd-card/rootfs.img ${rootmnt}
+else
+	mount -o loop    /media/sd-card/rootfs.img ${rootmnt}
+fi
 log_end_msg
 
 # create devices in the new root filesystem
