@@ -32,3 +32,9 @@ build-vars += \
 install-args := \
 	install_root=$(ROOTFS)
 
+#package-post-install:
+#	mkdir -p $(ROOTFS)/usr/lib
+#	ln -s ../..$(prefix)/lib/crt0.o $(ROOTFS)/usr/lib
+#	ln -s ../..$(prefix)/lib/crt1.o $(ROOTFS)/usr/lib
+#	ln -s ../..$(prefix)/lib/crti.o $(ROOTFS)/usr/lib
+

@@ -4,19 +4,13 @@ conf-args := \
 	--prefix=$(ROOTFS)/bootstrap \
 	--with-local-prefix=$(ROOTFS)/bootstrap \
 	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
+	--without-headers \
+	--with-newlib \
 	--disable-multilib \
 	--disable-threads \
 	--disable-nls \
 	--enable-symvers=gnu \
 	--disable-shared \
-	--enable-languages=c
-
-# from LFS
-#conf-args := \
-	--prefix=$(ROOTFS)/bootstrap \
-	--with-local-prefix=$(ROOTFS)/bootstrap \
-	--disable-nls \
-	--enable-shared \
 	--enable-languages=c
 
 conf-vars :=
@@ -30,14 +24,12 @@ build-vars :=
 
 package-build:
 	cd $(pkgtree)/core-$(HOST) && \
-		$(env) $(MAKE) $(build-args) $(build-vars) bootstrap # from LFS
-#		$(env) $(MAKE) $(build-args) $(build-vars) all-gcc
+		$(env) $(MAKE) $(build-args) $(build-vars) all-gcc
 
 install-args :=
 install-vars :=
 
 package-install:
 	cd $(pkgtree)/core-$(HOST) && \
-		$(env) $(MAKE) $(install-args) $(install-vars) install # from LFS
-#		$(env) $(MAKE) $(install-args) $(install-vars) install-gcc
+		$(env) $(MAKE) $(install-args) $(install-vars) install-gcc
 

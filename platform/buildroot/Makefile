@@ -12,9 +12,9 @@ export LIBC LDSO
 
 # build a bootstrap compiler
 packages-y += buildroot/binutils
-packages-y += buildroot/linux-headers
-packages-y += buildroot/$(LIBC)-headers
 packages-y += buildroot/gcc-core
+packages-y += buildroot/linux-headers
+#packages-y += buildroot/$(LIBC)-headers
 packages-y += buildroot/$(LIBC)
 packages-y += buildroot/gcc
 
