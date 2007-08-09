@@ -28,6 +28,6 @@ install-args = \
 	DESTDIR=$(ROOTFS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	ln -sf bash $(ROOTFS)/bin/sh
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) ln -sf bash $(ROOTFS)/bin/sh
 

@@ -15,7 +15,6 @@ include packages/common.mk
 LDFLAGS := $(CFLAGS) $(LDFLAGS)
 CFLAGS  += -I../lib
 env      = env -i $(call set-args, CC CFLAGS LDFLAGS)
-priv     = sudo
 
 conf-args =
 package-configure:

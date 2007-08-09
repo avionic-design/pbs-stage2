@@ -7,6 +7,9 @@ quiet_cmd_cleandir = CLEAN     $(wildcard $(__clean-dirs))
 quiet_cmd_mkdir_p = MKDIR     $@
       cmd_mkdir_p = mkdir -p $@
 
+quiet_cmd_priv_mkdir_p = MKDIR     $@
+      cmd_priv_mkdir_p = $(priv) mkdir -p $@
+
 quiet_cmd_mkdir_p_arg = MKDIR     $2
       cmd_mkdir_p_arg = mkdir -p $2
 

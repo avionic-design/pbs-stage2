@@ -12,7 +12,6 @@ include packages/common.mk
 
 CFLAGS += -D_GNU_SOURCE
 env     = env -i
-priv    = sudo
 
 build-args = \
 	$(call set-args, CC CFLAGS LDFLAGS)
@@ -24,7 +23,7 @@ install-args = \
 	ROOT=$(ROOTFS)
 
 package-install:
-	mkdir -p $(ROOTFS)/usr/share/man/man{1,5,8}
+	$(priv) mkdir -p $(ROOTFS)/usr/share/man/man{1,5,8}
 	cd $(pkgtree)/src && $(priv) $(env) $(MAKE) $(install-args) install
 #	ln -sf sbin/init $(ROOTFS)/init
 

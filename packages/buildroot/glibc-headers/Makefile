@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.6
+VERSION = 2.6.1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
@@ -12,8 +12,7 @@ include packages/buildroot/autotools.mk
 env := env -i PATH=/usr/bin:/bin
 
 conf-args += \
-	--with-binutils=$(ROOTFS)/$(prefix)/bin \
-	--with-headers=$(ROOTFS)/tools/include \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
 	--enable-addons=ports
 
 package-pre-configure:

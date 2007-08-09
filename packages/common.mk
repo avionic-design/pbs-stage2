@@ -13,3 +13,7 @@ STRIP  = $(CROSS_COMPILE)strip
 
 set-args = $(foreach arg, $(1), $(arg)='$($(arg))')
 
+priv = sudo
+env  = env
+export priv env
+

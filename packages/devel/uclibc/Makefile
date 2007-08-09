@@ -41,10 +41,10 @@ install-args = \
 	DEVEL_PREFIX=/usr/
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install_utils
-	cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
-	cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
-	cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
-	ln -s ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
+	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
+	$(priv) cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
+	$(priv) cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
+	$(priv) ln -s ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
 

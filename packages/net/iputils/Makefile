@@ -18,5 +18,5 @@ package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
 package-install:
-	cd $(pkgtree) && install -t $(ROOTFS)/usr/bin ping arping ping6
+	cd $(pkgtree) && $(priv) install -t $(ROOTFS)/usr/bin ping arping ping6
 

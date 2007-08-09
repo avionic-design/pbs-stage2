@@ -26,11 +26,11 @@ install-args = \
 	$(call set-args, EXTRAS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	mkdir -p $(ROOTFS)/etc/udev/rules.d
-	cp -a $(pkgtree)/etc/udev/rules.d/* $(ROOTFS)/etc/udev/rules.d
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) mkdir -p $(ROOTFS)/etc/udev/rules.d
+	$(priv) cp -a $(pkgtree)/etc/udev/rules.d/* $(ROOTFS)/etc/udev/rules.d
 	# install package configuration files
-	cp packages/$(package)/udev.rules $(ROOTFS)/etc/udev/rules.d
-	cp packages/$(package)/udev.init $(ROOTFS)/etc/init.d/udev
-	ln -s ../init.d/udev $(ROOTFS)/etc/rcS.d/S03udev
+	$(priv) cp packages/$(package)/udev.rules $(ROOTFS)/etc/udev/rules.d
+	$(priv) cp packages/$(package)/udev.init $(ROOTFS)/etc/init.d/udev
+	$(priv) ln -s ../init.d/udev $(ROOTFS)/etc/rcS.d/S03udev
 

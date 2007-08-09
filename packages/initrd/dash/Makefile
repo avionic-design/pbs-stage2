@@ -27,5 +27,5 @@ install-args = \
 	DESTDIR=$(PLATFORM)/rootfs
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 

@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.6
+VERSION = 2.6.1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
@@ -8,8 +8,19 @@ TARBALLS = \
 
 include packages/buildroot/autotools.mk
 
+# from LFS
+#conf-args := \
+	--prefix=$(prefix) \
+	--enable-addons=ports \
+	--enable-kernel=2.6.0 \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
+	--without-gd \
+	--with-headers=$(prefix)/include \
+	--disable-profile \
+	--without-selinux
+
 conf-args += \
-	--with-headers=$(ROOTFS)/tools/include \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
 	--enable-addons=ports
 
 package-pre-configure:

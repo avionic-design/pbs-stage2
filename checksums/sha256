@@ -95,3 +95,6 @@ cdb70a6f671bf11eb747ab0e003f2327b7dc6ada93feb6a65c56f4cdd18c4889  download/binut
 38da4049b76b58ddbc6ead6fa84cb241d94cc38ad4ee7aefd99ae2c57a73a2d4  download/udev-113.tar.bz2
 476fe4a6f10493fdb53070aa31515326975d2fdc38f2dce931526a528b9ca453  download/gcc-core-4.2.1.tar.bz2
 6395299570fa37dfa866912e38954786ff24a6aa526500804f1d2979fa4b65fe  download/gcc-g++-4.2.1.tar.bz2
+1fbec5242faae1d3437cd89522389dd1af5bf58b8f1e600b758023921696c170  download/binutils-2.18.50.tar.bz2
+3ded3a3c3ba2cf02d72479a5cc0829c7c261a9d0934e49a79233de9fa276ec22  download/glibc-2.6.1.tar.bz2
+d094028bc6d6691f56b4efeff7cd7e1c7ca10733e0cb5efc36e8fb08d8324bf1  download/glibc-ports-2.6.1.tar.bz2

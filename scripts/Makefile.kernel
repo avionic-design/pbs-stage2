@@ -35,24 +35,27 @@ build: build-zImage build-modules
 PHONY += headers-install
 headers-install: config
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 		        INSTALL_HDR_PATH=$(ROOTFS)/usr \
 		        headers_install
 	# some programs need this to compile
-	cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)/usr/include/asm
-	cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
+	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)/usr/include/asm
+	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
 
 PHONY += install-zImage
 install-zImage: build-zImage
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 		        INSTALL_PATH=$(PLATFORM) \
-			zinstall
+		        zinstall
 
 PHONY += install-modules
 install-modules: build-modules
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 		        INSTALL_MOD_PATH=$(ROOTFS) \
 		        modules_install
 

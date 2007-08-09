@@ -28,6 +28,6 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-install-args:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+install:
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 

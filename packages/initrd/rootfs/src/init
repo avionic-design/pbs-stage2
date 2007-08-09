@@ -30,7 +30,7 @@ log_begin_msg "Creating devices"
 log_end_msg
 
 rootmnt=/root
-ro=y
+ro=n
 init=/sbin/init
 
 log_begin_msg "Running top scripts"

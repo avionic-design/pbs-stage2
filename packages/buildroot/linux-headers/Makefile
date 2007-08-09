@@ -16,7 +16,8 @@ package-configure:
 
 build-args :=
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args) prepare
+	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers_check # from LFS
+#	cd $(pkgtree) && $(env) $(MAKE) $(build-args) prepare
 
 install-args := \
 	INSTALL_HDR_PATH=$(ROOTFS)/tools

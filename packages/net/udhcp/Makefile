@@ -30,5 +30,5 @@ package-install:
 		> $(pkgtree)/samples/sample.script
 	rm $(pkgtree)/samples/default.script
 	# install the package
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 

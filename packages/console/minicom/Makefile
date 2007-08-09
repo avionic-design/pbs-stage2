@@ -28,7 +28,7 @@ install-args = \
 	DESTDIR=$(ROOTFS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	$(INSTALL) -d $(ROOTFS)/etc/minicom
-	$(INSTALL) packages/$(package)/minirc.dfl $(ROOTFS)/etc/minicom
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) $(INSTALL) -d $(ROOTFS)/etc/minicom
+	$(priv) $(INSTALL) packages/$(package)/minirc.dfl $(ROOTFS)/etc/minicom
 

@@ -35,6 +35,6 @@ install-args = \
 	INSTALL_PREFIX=$(ROOTFS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	mv $(ROOTFS)/usr/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) mv $(ROOTFS)/usr/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
 

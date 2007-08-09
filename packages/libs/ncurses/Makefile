@@ -26,7 +26,7 @@ install-args = \
 relink = ln -sf $(2)/$(shell readlink $(ROOTFS)$(1)) $(ROOTFS)$(1)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	mv $(ROOTFS)/usr/lib/libncurses.so* $(ROOTFS)/lib
-	$(call relink,/usr/lib/libcurses.so,../../lib)
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) mv $(ROOTFS)/usr/lib/libncurses.so* $(ROOTFS)/lib
+	$(priv) $(call relink,/usr/lib/libcurses.so,../../lib)
 

@@ -12,7 +12,7 @@ include packages/common.mk
 
 package-install: $(stampdir)/initrd/rootfs/package-install
 $(stampdir)/initrd/rootfs/package-install:
-	cp -a packages/initrd/rootfs/src/* $(ROOTFS)
+	$(priv) cp -a packages/initrd/rootfs/src/* $(ROOTFS)
 	$(makestamp)
 
 SOURCE_FILES = \

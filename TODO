@@ -1,3 +1,6 @@
 + make glibc-headers and glibc not use autotools.mk, or at least not the
   targets so they can be customized
 + adjust linux.git makefile to make building in separate directories possible
+
++ make more packages use the autotools.mk template
+

@@ -11,8 +11,8 @@ LDSO = /tools/lib/ld-linux.so.2
 export LIBC LDSO
 
 # build a bootstrap compiler
-packages-y += buildroot/linux-headers
 packages-y += buildroot/binutils
+packages-y += buildroot/linux-headers
 packages-y += buildroot/$(LIBC)-headers
 packages-y += buildroot/gcc-core
 packages-y += buildroot/$(LIBC)

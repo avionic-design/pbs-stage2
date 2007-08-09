@@ -17,7 +17,7 @@ install-args = \
 	DESTDIR=$(ROOTFS)
 
 package-install:
-	$(Q)cd $(srcdir) && $(env) $(MAKE) $(install-args) install
+	$(Q)cd $(srcdir) && $(priv) $(env) $(MAKE) $(install-args) install
 
 package-clean:
 	$(Q)cd $(srcdir) && $(env) $(MAKE) clean

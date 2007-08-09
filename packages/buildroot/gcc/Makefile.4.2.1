@@ -1,12 +1,39 @@
-# build instructions for bootstrap GCC 4.2.0
+# build instructions for final GCC 4.2.1
 
 include packages/buildroot/autotools.mk
 
 conf-args += \
-	--with-sysroot=$(ROOTFS)$(prefix) \
+	--with-sysroot=$(ROOTFS) \
+	--with-local-prefix=$(prefix) \
 	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
-	--with-headers=$(ROOTFS)$(prefix)/include \
+	--without-headers \
+	--with-newlib \
 	--disable-multilib \
+	--enable-threads=posix \
+	--disable-nls \
 	--enable-symvers=gnu \
 	--enable-languages=c,c++
+
+#	--with-build-libsubdir=$(prefix)/lib \ # genmodes
+
+#	--with-newlib \
+	--without-headers \
+
+# from LFS
+#conf-args := \
+	--prefix=$(prefix) \
+	--with-local-prefix=$(prefix) \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
+	--enable-clocale=gnu \
+	--enable-shared \
+	--enable-threads=posix \
+	--enable-__cxa_atexit \
+	--enable-languages=c,c++ \
+	--disable-libstdcxx-pch
+
+build-vars += \
+	MAKEFLAGS=
+
+install-vars += \
+	MAKEFLAGS=
 

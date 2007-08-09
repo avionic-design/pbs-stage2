@@ -15,7 +15,6 @@ DESCRIPTION = system logging daemon
 include packages/common.mk
 
 env      = env -i
-priv     = sudo
 CFLAGS  += -DSYSV
 LDFLAGS := $(CFLAGS) $(LDFLAGS)
 

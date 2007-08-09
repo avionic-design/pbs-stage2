@@ -10,8 +10,6 @@ DESCRIPTION = /proc filesystem utilities
 
 include packages/common.mk
 
-priv = sudo
-
 build-args = \
 	$(call set-args, CC CFLAGS LDFLAGS)
 

@@ -33,25 +33,25 @@ install-args = \
 	DESTDIR=$(ROOTFS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	KEYGEN=`which ssh-keygen`; if [ -x "$$KEYGEN" ]; then \
-		$$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_key -t rsa1; \
-		$$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_rsa_key -t rsa; \
-		$$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_dsa_key -t dsa; \
+		$(priv) $$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_key -t rsa1; \
+		$(priv) $$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_rsa_key -t rsa; \
+		$(priv) $$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_dsa_key -t dsa; \
 	fi
 	# install init script and symlinks
-	$(INSTALL) -d $(ROOTFS)/etc/init.d
-	$(INSTALL) -m 755 packages/$(package)/openssh.init $(ROOTFS)/etc/init.d/ssh
-	$(INSTALL) -d $(ROOTFS)/etc/rc{0,1,2,3,4,5,6}.d
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc0.d/K20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc1.d/K20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc2.d/S20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc3.d/S20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc4.d/S20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc5.d/S20ssh
-	ln -sf ../init.d/ssh $(ROOTFS)/etc/rc6.d/K20ssh
+	$(priv) $(INSTALL) -d $(ROOTFS)/etc/init.d
+	$(priv) $(INSTALL) -m 755 packages/$(package)/openssh.init $(ROOTFS)/etc/init.d/ssh
+	$(priv) $(INSTALL) -d $(ROOTFS)/etc/rc{0,1,2,3,4,5,6}.d
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc0.d/K20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc1.d/K20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc2.d/S20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc3.d/S20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc4.d/S20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc5.d/S20ssh
+	$(priv) ln -sf ../init.d/ssh $(ROOTFS)/etc/rc6.d/K20ssh
 	# install configuration files
-	$(INSTALL) -m 644 -t $(ROOTFS)/etc/ssh \
+	$(priv) $(INSTALL) -m 644 -t $(ROOTFS)/etc/ssh \
 		packages/$(package)/ssh_config \
 		packages/$(package)/sshd_config
 

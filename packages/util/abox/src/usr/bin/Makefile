@@ -3,7 +3,7 @@ ifdef PLATFORM
 endif
 
 PHONY += all
-all: abioctl dfb-test
+all: abioctl
 
 abioctl_CFLAGS = -I../include
 abioctl_LIBS = -L../lib -labox
@@ -16,15 +16,10 @@ abioctl: EXTRA_LDFLAGS = -L../lib -labox
 abioctl: abioctl.c
 	$(call cmd,ld)
 
-dfb-test: EXTRA_CFLAGS  = -I$(ROOTFS)/usr/include/directfb
-dfb-test: EXTRA_LDFLAGS = -ldirectfb
-dfb-test: dfb-test.c
-	$(call cmd,ld)
-
 quiet_cmd_install = INSTALL   $@
       cmd_install = cp $< $@
 
-files-y    := abioctl dfb-test
+files-y    := abioctl
 dstfiles-y := $(patsubst %,$(DESTDIR)/usr/bin/%,$(files-y))
 
 $(dstfiles-y): $(DESTDIR)/usr/bin/%: %

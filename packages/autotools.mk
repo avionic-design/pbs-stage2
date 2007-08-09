@@ -25,7 +25,7 @@ install-vars += \
 	DESTDIR=$(ROOTFS)
 
 autotools-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) $(install-vars) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
 
 package-configure: package-pre-configure autotools-configure package-post-configure
 package-build: package-pre-build autotools-build package-post-build

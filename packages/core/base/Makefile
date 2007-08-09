@@ -5,6 +5,8 @@ DESCRIPTION = base system files
 
 ##############################################################################
 
+include packages/common.mk
+
 dirs = \
 	/bin \
 	/dev \
@@ -31,10 +33,13 @@ package-configure:
 package-build:
 
 package-install: $(rootfs-dirs)
-	cp -a packages/$(package)/src/bin/* $(ROOTFS)/bin
-	cp -a packages/$(package)/src/etc/* $(ROOTFS)/etc
-	cp -a packages/$(package)/src/lib/* $(ROOTFS)/lib
+	tar cf - -C packages/$(package)/src \
+		bin etc lib | \
+	$(priv) tar oxf - -C $(ROOTFS)
+#	$(priv) $(INSTALL) -o root -g root packages/$(package)/src/bin/* $(ROOTFS)/bin
+#	$(priv) $(INSTALL) -o root -g root packages/$(package)/src/etc/* $(ROOTFS)/etc
+#	$(priv) $(INSTALL) -o root -g root packages/$(package)/src/lib/* $(ROOTFS)/lib
 
 $(rootfs-dirs):
-	$(call cmd,mkdir_p)
+	$(call cmd,priv_mkdir_p)
 

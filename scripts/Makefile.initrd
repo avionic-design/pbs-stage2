@@ -12,6 +12,7 @@ ifndef obj
 endif
 
 KREL = $(shell cat $(PLATFORM)/kernel-release)
+priv = sudo
 
 $(ROOTFS): FORCE
 	$(Q)$(MAKE) platform=$(platform) install
@@ -22,6 +23,7 @@ INITRD_FILTER = \
 	-not -name '*.a'
 
 $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
+	(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
 	(cd $< && find $(INITRD_FILTER) | cpio -o -H newc) > $@
 
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img

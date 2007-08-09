@@ -33,6 +33,6 @@ install-args = \
 	INSTALLDIR=/
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
-	cd $(ROOTFS)/bin && ln -sf sh.shared sh
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	cd $(ROOTFS)/bin && $(priv) ln -sf sh.shared sh
 

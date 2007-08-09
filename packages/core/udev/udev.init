@@ -54,7 +54,7 @@ case $1 in
 		create_dev_makedev
 
 		log_action_begin_msg "Waiting for /dev to be fully populated"
-		if /sbin/udevsettle; then
+		if /sbin/udevsettle --timeout 30; then
 			log_action_end_msg 0
 		else
 			log_action_end_msg 0 'timeout'

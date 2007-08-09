@@ -6,6 +6,8 @@ export KERNELSRC
 
 DESCRIPTION = Linux kernel
 
+include packages/common.mk
+
 package-configure:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) config
 

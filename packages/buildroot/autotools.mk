@@ -25,7 +25,8 @@ endif
 
 ifeq ($(findstring nobuild,$(PBS_OPTS)),)
 build-args +=
-build-vars +=
+build-vars += \
+	DESTDIR=$(ROOTFS)
 
 autotools-build:
 	cd $(pkgtree)/$(autotools-subdir) && \
