@@ -1,0 +1,30 @@
+# build instructions for final GCC 4.2.1
+
+include packages/buildroot/autotools.mk
+
+conf-args += \
+	--with-local-prefix=$(prefix) \
+	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
+	--without-headers \
+	--with-newlib \
+	--disable-multilib \
+	--enable-threads=posix \
+	--disable-nls \
+	--enable-shared \
+	--enable-symvers=gnu \
+	--enable-languages=c,c++
+
+# for sysroot build
+#	--with-sysroot=$(ROOTFS) \
+	--with-local-prefix=$(prefix) \
+	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
+	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
+	--without-headers \
+	--with-newlib \
+	--disable-multilib \
+	--enable-threads=posix \
+	--disable-nls \
+	--disable-shared \
+	--enable-symvers=gnu \
+	--enable-languages=c,c++
+

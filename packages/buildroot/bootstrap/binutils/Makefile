@@ -12,6 +12,7 @@ include packages/buildroot/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(ROOTFS) \
+	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
 	--disable-nls
 
 #package-post-install:

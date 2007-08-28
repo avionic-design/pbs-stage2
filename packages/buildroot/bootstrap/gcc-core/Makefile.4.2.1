@@ -4,6 +4,7 @@ conf-args := \
 	--prefix=$(ROOTFS)/bootstrap \
 	--with-local-prefix=$(ROOTFS)/bootstrap \
 	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
+	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
 	--without-headers \
 	--with-newlib \
 	--disable-multilib \
