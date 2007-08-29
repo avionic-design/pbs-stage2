@@ -39,6 +39,7 @@ platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-files += $(PLATFORM)/System.map*
 platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
 platform-clean: __clean-files += $(PLATFORM)/rootfs.img
+platform-clean: __clean-files += $(PLATFORM)/kernel-release
 platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
