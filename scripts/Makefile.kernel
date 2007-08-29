@@ -1,33 +1,37 @@
 # unexport environment variables that may get in the way
 unexport CC CFLAGS LD LDFLAGS
 
-ifeq ($(findstring clean,$(MAKECMDGOALS)),)
-  KBUILD_OUTPUT = $(buildtree)
-  export KBUILD_OUTPUT
-endif
+KBUILD_OUTPUT = $(buildtree)
+export KBUILD_OUTPUT
 
-$(KERNELSRC)/.config:
+$(KBUILD_OUTPUT)/.config:
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) $(KERNEL_CONFIG)
+		$(MAKE) ARCH=$(ARCH) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			$(KERNEL_CONFIG)
 
 $(PLATFORM)/kernel-release:
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) kernelrelease > $@
+		$(MAKE) ARCH=$(ARCH) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			kernelrelease > $@
 
 PHONY += config
-config: $(KERNELSRC)/.config
+config: $(KBUILD_OUTPUT)/.config
 
 PHONY += build-zImage
 build-zImage: config
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
-		        zImage
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			zImage
 
 PHONY += build-modules
 build-modules: config
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
-		        modules
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			modules
 
 PHONY += build
 build: build-zImage build-modules
@@ -37,8 +41,8 @@ headers-install: config
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-		        INSTALL_HDR_PATH=$(ROOTFS)/usr \
-		        headers_install
+			INSTALL_HDR_PATH=$(ROOTFS)/usr \
+			headers_install
 	# some programs need this to compile
 	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)/usr/include/asm
 	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
@@ -48,27 +52,35 @@ install-zImage: build-zImage
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-		        INSTALL_PATH=$(PLATFORM) \
-		        zinstall
+			INSTALL_PATH=$(PLATFORM) \
+			zinstall
 
 PHONY += install-modules
 install-modules: build-modules
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-		        INSTALL_MOD_PATH=$(ROOTFS) \
-		        modules_install
+			INSTALL_MOD_PATH=$(ROOTFS) \
+			modules_install
 
 PHONY += install
 install: install-zImage install-modules $(PLATFORM)/kernel-release
 
 PHONY += clean
 clean:
-	cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) mrproper
+ifneq ($(wildcard $(KBUILD_OUTPUT)),)
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			mrproper
+endif
 
 PHONY += version
 version:
-	cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) kernelversion
+	cd $(KERNELSRC) && \
+		$(MAKE) ARCH=$(ARCH) \
+			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			kernelversion
 
 .PHONY: $(PHONY)
 
