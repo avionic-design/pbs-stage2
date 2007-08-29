@@ -23,10 +23,9 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-relink = ln -sf $(2)/$(shell readlink $(ROOTFS)$(1)) $(ROOTFS)$(1)
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) mv $(ROOTFS)/usr/lib/libncurses.so* $(ROOTFS)/lib
-	$(priv) $(call relink,/usr/lib/libcurses.so,../../lib)
+	$(priv) ln -sf ../../lib/libncurses.so $(ROOTFS)/usr/lib/libcurses.so
 
