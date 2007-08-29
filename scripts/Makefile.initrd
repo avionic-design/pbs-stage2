@@ -19,6 +19,7 @@ $(ROOTFS): FORCE
 
 INITRD_FILTER = \
 	-not -path '*/include*' \
+	-not -path '*/lib/modules*' \
 	-not -path '*/usr/share/man*' \
 	-not -name '*.a'
 
