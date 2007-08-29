@@ -1,0 +1,21 @@
+# build instructions for final GCC 4.2.1
+
+include packages/buildroot/autotools.mk
+
+conf-args += \
+	--with-local-prefix=$(prefix) \
+	--disable-multilib \
+	--disable-nls \
+	--enable-shared \
+	--enable-languages=c
+
+#build-args += \
+#	bootstrap
+
+#package-pre-build:
+#	sudo ln -s $(ROOTFS)$(prefix) $(prefix)
+
+package-post-install:
+	ln -s gcc $(ROOTFS)$(prefix)/bin/cc
+#	sudo rm -ri $(prefix)
+

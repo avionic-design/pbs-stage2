@@ -1,22 +1,30 @@
-LINUX_VERSION = 2.6.22.1
 GCC_VERSION = 4.2.1
-export LINUX_VERSION GCC_VERSION
+export GCC_VERSION
 
 HOST = $(shell support/config.guess)
 ROOTFS = $(PLATFORM)/rootfs
 export HOST ROOTFS
 
 LIBC = glibc
-LDSO = /tools/lib/ld-linux.so.2
-export LIBC LDSO
+export LIBC
+
+ARCH          = $(shell gcc -dumpmachine | cut -d- -f1)
+CROSS_COMPILE =
+export ARCH CROSS_COMPILE
 
 # build a bootstrap compiler
+#packages-y += buildroot/binutils
+#packages-y += buildroot/gcc-core
+#packages-y += buildroot/linux-headers
+##packages-y += buildroot/$(LIBC)-headers
+#packages-y += buildroot/$(LIBC)
+#packages-y += buildroot/gcc
+
+# build a basic toolchain
 packages-y += buildroot/binutils
-packages-y += buildroot/gcc-core
-packages-y += buildroot/linux-headers
-#packages-y += buildroot/$(LIBC)-headers
-packages-y += buildroot/$(LIBC)
 packages-y += buildroot/gcc
+packages-y += buildroot/linux-headers
+packages-y += buildroot/glibc
 
 # build a basic development root filesystem
 packages-y += buildroot/ncurses
