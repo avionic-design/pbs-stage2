@@ -1,5 +1,5 @@
---- ../glibc-ports-2.6/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h 2007-05-25 01:40:22.000000000 +0200
-+++ ../glibc-ports-2.6/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h 2007-05-25 01:41:02.000000000 +0200
+--- a/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h 2007-05-25 01:40:22.000000000 +0200
++++ b/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h 2007-05-25 01:41:02.000000000 +0200
 @@ -126,3 +126,9 @@
  # define NO_CANCELLATION 1
  

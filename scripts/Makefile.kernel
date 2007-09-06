@@ -73,6 +73,8 @@ ifneq ($(wildcard $(KBUILD_OUTPUT)),)
 		$(MAKE) ARCH=$(ARCH) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			mrproper
+else
+	@:
 endif
 
 PHONY += version

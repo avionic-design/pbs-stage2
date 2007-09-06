@@ -1,15 +1,13 @@
 # common definitions for autotools-based packages
 
-include packages/buildroot/common.mk
-
 autotools-subdir ?= obj-$(HOST)
 
 ifeq ($(findstring noconf,$(PBS_OPTS)),)
 conf-args += \
 	--prefix=$(prefix) \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	--sysconfdir=\$${prefix}/etc
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=$(prefix)/etc
 
 conf-vars +=
 

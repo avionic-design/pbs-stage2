@@ -1,21 +1,17 @@
 PACKAGE = binutils
-#VERSION = 2.17
-VERSION = 2.18.50
+VERSION = 2.18
 
-#LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
-LOCATION = ftp://sourceware.org/pub/binutils/snapshots
+LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/buildroot/autotools.mk
+##############################################################################
 
-#env += LIBDIR=$(prefix)/lib
+include packages/buildroot/bootstrap/autotools.mk
 
 conf-args += \
-	--with-sysroot=$(ROOTFS) \
-	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
+	--with-lib-path=$(prefix)/lib \
 	--disable-nls
 
-#package-post-install:
-#	cd $(pkgtree) && $(MAKE) -C ld clean
-#	cd $(pkgtree) && $(MAKE) -C ld LIBDIR=$(prefix)/lib
+package-clean:
+	@:
 

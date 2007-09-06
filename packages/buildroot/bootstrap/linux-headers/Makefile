@@ -1,27 +1,27 @@
-ifndef LINUX_VERSION
-  $(error LINUX_VERSION undefined)
-endif
-
 PACKAGE = linux
-VERSION = $(LINUX_VERSION)
+VERSION = 2.6.22.5
 
 LOCATION = http://www.kernel.org/pub/linux/kernel/v2.6
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/common.mk
+##############################################################################
+
+include packages/buildroot/bootstrap/common.mk
 
 conf-args :=
 package-configure:
-	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) defconfig
+	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) mrproper
 
 build-args :=
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers_check # from LFS
-#	cd $(pkgtree) && $(env) $(MAKE) $(build-args) prepare
+	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers_check
 
 install-args := \
 	INSTALL_HDR_PATH=$(ROOTFS)/tools
 
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) headers_install
+
+package-clean:
+	@:
 

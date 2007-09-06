@@ -4,6 +4,8 @@ VERSION = s20070202
 LOCATION = http://www.skbuff.net/iputils
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+##############################################################################
+
 include packages/common.mk
 
 LDFLAGS := $(CFLAGS) $(LDFLAGS)
@@ -19,4 +21,7 @@ package-build:
 
 package-install:
 	cd $(pkgtree) && $(priv) install -t $(ROOTFS)/usr/bin ping arping ping6
+
+package-clean:
+	@:
 

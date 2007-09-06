@@ -4,28 +4,20 @@ VERSION = 2.1.0
 LOCATION = http://ovh.dl.sourceforge.net/sourceforge/linux-diag
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
-include packages/common.mk
+##############################################################################
 
-env += sysroot=$(ROOTFS)
+include packages/autotools.mk
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS LDFLAGS)
-
-package-configure:
+package-pre-configure:
 	cp support/config.{guess,sub} $(pkgtree)
 	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+#build-vars += \
+#	INCLUDES='-I../../include'
 
-install-args = \
-	DESTDIR=$(ROOTFS)
+package-post-install:
+	$(priv) $(STRIP) $(ROOTFS)/usr/lib/libsysfs.so.*
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 

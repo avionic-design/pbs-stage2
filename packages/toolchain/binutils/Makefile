@@ -1,6 +1,5 @@
 PACKAGE = binutils
-#VERSION = 2.17.50
-VERSION = 2.17
+VERSION = 2.18
 
 LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2

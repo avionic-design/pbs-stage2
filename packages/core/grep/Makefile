@@ -1,7 +1,7 @@
 PACKAGE = grep
-VERSION = 2.5.1a
+VERSION = 2.5.3
 
-LOCATION = ftp://ftp.cs.tu-berlin.de/pub/gnu/grep
+LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = utility to search for text in files
@@ -18,6 +18,11 @@ conf-args += \
 	--disable-nls \
 	--disable-perl-regexp
 
+ifneq ($(LIBC),gnu)
 conf-vars += \
 	ac_cv_func_mempcpy=no
+endif
+
+package-clean:
+	@:
 

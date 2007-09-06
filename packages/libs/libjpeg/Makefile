@@ -4,24 +4,17 @@ VERSION = 6b
 LOCATION = ftp://ftp.uu.net/graphics/jpeg
 TARBALLS = $(PACKAGE)src.v$(VERSION).tar.gz
 
-include packages/common.mk
+##############################################################################
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man
+include packages/autotools.mk
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+conf-vars += \
+	$(call set-args, CC CFLAGS LD)
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+install-vars += \
+	prefix=$(ROOTFS)$(prefix) \
+	mandir=$(ROOTFS)$(prefix)/share/man/man1
 
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 

@@ -10,6 +10,7 @@ include packages/common.mk
 dirs = \
 	/bin \
 	/dev \
+	/etc/default \
 	/etc/init.d \
 	/etc/rc0.d \
 	/etc/rc1.d \
@@ -42,4 +43,7 @@ package-install: $(rootfs-dirs)
 
 $(rootfs-dirs):
 	$(call cmd,priv_mkdir_p)
+
+package-clean:
+	@:
 

@@ -4,36 +4,21 @@ VERSION = 4.6p1
 LOCATION = ftp://ftp.freenet.de/pub/ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
-include packages/common.mk
+##############################################################################
 
-env = env -i
-LD = $(CC)
-LDFLAGS := $(CFLAGS) $(LDFLAGS)
+include packages/autotools.mk
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
+LD       = $(CC)
+LDFLAGS += --sysroot $(ROOTFS)
+
+conf-args += \
 	--sysconfdir=/etc/ssh \
 	--with-ssl-dir=\$${prefix}/lib/ssl \
 	--with-libs=-ldl \
 	--with-md5-passwords \
-	--disable-strip \
-	$(call set-args, CC CFLAGS LD LDFLAGS)
+	--disable-strip
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
-
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+package-post-install:
 	KEYGEN=`which ssh-keygen`; if [ -x "$$KEYGEN" ]; then \
 		$(priv) $$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_key -t rsa1; \
 		$(priv) $$KEYGEN -q -N '' -f $(ROOTFS)/etc/ssh/ssh_host_rsa_key -t rsa; \
@@ -54,4 +39,7 @@ package-install:
 	$(priv) $(INSTALL) -m 644 -t $(ROOTFS)/etc/ssh \
 		packages/$(package)/ssh_config \
 		packages/$(package)/sshd_config
+
+package-clean:
+	@:
 

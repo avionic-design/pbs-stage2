@@ -2,39 +2,32 @@ PACKAGE = glibc
 VERSION = 2.6.1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = \
-	$(PACKAGE_FULLNAME).tar.bz2 \
-	$(PACKAGE)-ports-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/buildroot/autotools.mk
+##############################################################################
 
-# from LFS
-#conf-args := \
-	--prefix=$(prefix) \
-	--enable-addons=ports \
-	--enable-kernel=2.6.0 \
-	--with-binutils=$(ROOTFS)$(prefix)/bin \
-	--without-gd \
-	--with-headers=$(prefix)/include \
-	--disable-profile \
-	--without-selinux
+include packages/buildroot/bootstrap/autotools.mk
+
+env = env -i PATH=$(ROOTFS)/bootstrap/bin:/usr/bin:/bin
 
 conf-args += \
+	--disable-profile \
+	--enable-add-ons \
 	--with-binutils=$(ROOTFS)$(prefix)/bin \
-	--enable-addons=ports
+	--with-headers=$(ROOTFS)$(prefix)/include \
+	--without-gd \
+	--without-selinux
 
-package-pre-configure:
-	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
-
-build-vars += \
-	MAKEFLAGS=
+conf-vars += \
+	ac_cv_sizeof_long_double=8
 
 install-args := \
 	install_root=$(ROOTFS)
 
-#package-post-install:
-#	mkdir -p $(ROOTFS)/usr/lib
-#	ln -s ../..$(prefix)/lib/crt0.o $(ROOTFS)/usr/lib
-#	ln -s ../..$(prefix)/lib/crt1.o $(ROOTFS)/usr/lib
-#	ln -s ../..$(prefix)/lib/crti.o $(ROOTFS)/usr/lib
+package-pre-install:
+	mkdir -p $(ROOTFS)$(prefix)/etc
+	touch $(ROOTFS)$(prefix)/etc/ld.so.conf
+
+package-clean:
+	@:
 

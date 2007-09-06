@@ -5,6 +5,8 @@ LOCATION  = http://www.tazenda.demon.co.uk/phil/$(PACKAGE)
 TARBALLS  = $(PACKAGE_FULLNAME).tar.bz2
 DOTCONFIG = packages/$(package)/$(PACKAGE_FULLNAME)
 
+##############################################################################
+
 include packages/common.mk
 
 env = env -i $(call set-args, CC)
@@ -25,4 +27,7 @@ install-args = \
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+
+package-clean:
+	@:
 

@@ -8,27 +8,16 @@ DESCRIPTION = file comparison utilities
 
 ##############################################################################
 
-include packages/common.mk
+include packages/autotools.mk
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS) \
+ifneq ($(LIBC),gnu)
+conf-vars += \
 	ac_cv_func_mempcpy=no
+endif
 
-package-configure:
+package-pre-configure:
 	cp -f support/config.{guess,sub} $(pkgtree)/config
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 

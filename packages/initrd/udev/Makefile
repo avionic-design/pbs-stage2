@@ -43,4 +43,5 @@ install-args = \
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) $(STRIP) $(ROOTFS)/lib/libvolume_id.so.*
 

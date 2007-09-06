@@ -4,8 +4,7 @@ VERSION = 0.9.8
 LOCATION = http://udhcp.busybox.net/source
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
-PATCHFILES = \
-	$(DISTNAME)-compile-fixes.patch
+##############################################################################
 
 include packages/common.mk
 
@@ -31,4 +30,7 @@ package-install:
 	rm $(pkgtree)/samples/default.script
 	# install the package
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+
+package-clean:
+	@:
 

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+env PATH=/tools/bin chroot platform/buildroot/rootfs /tools/bin/bash
+

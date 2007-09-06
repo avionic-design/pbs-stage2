@@ -32,3 +32,6 @@ package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) ln -sf agetty $(ROOTFS)/sbin/getty
 
+package-clean:
+	@:
+

@@ -1283,6 +1283,12 @@ EOF
 	  prev=
 	  continue
 	  ;;
+	sysroot)
+	  sysroot="$arg"
+	  compiler_flags="$compiler_flags --sysroot $arg"
+	  prev=
+	  continue
+	  ;;
 	precious_regex)
 	  precious_files_regex="$arg"
 	  prev=
@@ -1537,6 +1543,11 @@ EOF
 	prev=inst_prefix
 	continue
 	;;
+
+      --sysroot)
+        prev=sysroot
+        continue
+        ;;
 
       # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
       # so, if we see these flags be careful not to treat them like -L

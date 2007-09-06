@@ -4,28 +4,17 @@ VERSION = 5.6
 LOCATION = ftp://ftp.gnu.org/gnu/ncurses
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
-include packages/common.mk
+##############################################################################
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--mandir=\$${prefix}/share/man \
-	--with-shared \
-	$(call set-args, CC CFLAGS CXX CXXFLAGS LDFLAGS)
+include packages/autotools.mk
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+conf-args += \
+	--with-shared
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+package-post-install:
 	$(priv) mv $(ROOTFS)/usr/lib/libncurses.so* $(ROOTFS)/lib
 	$(priv) ln -sf ../../lib/libncurses.so $(ROOTFS)/usr/lib/libcurses.so
+
+package-clean:
+	@:
 

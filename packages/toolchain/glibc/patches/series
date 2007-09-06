@@ -1,2 +1,2 @@
-arm-define-RTLD_SINGLE_THREAD_P.patch -p0
-no-libgcc_eh.patch -p1
+arm-define-RTLD_SINGLE_THREAD_P.patch
+no-libgcc_eh.patch

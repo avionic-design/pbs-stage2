@@ -43,4 +43,5 @@ install-args = \
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
+	$(priv) $(STRIP) $(ROOTFS)/lib/libgcc_s.so.1
 

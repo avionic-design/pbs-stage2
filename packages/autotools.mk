@@ -1,7 +1,5 @@
 include packages/common.mk
 
-env += PATH=$(TOOLCHAIN_ROOT)/usr/bin:$(PATH)
-
 conf-args += \
 	--host=$(HOST) \
 	--prefix=/usr \
@@ -9,23 +7,29 @@ conf-args += \
 	--mandir=\$${prefix}/share/man \
 	--sysconfdir=/etc
 
-conf-vars +=
+# strip libraries and binaries
+conf-vars += \
+	$(call set-args, CC CFLAGS LD LDFLAGS)
 
 autotools-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args) $(conf-vars)
+	mkdir -p $(pkgtree)/obj-$(HOST) && \
+		cd $(pkgtree)/obj-$(HOST) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args +=
 build-vars +=
 
 autotools-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args) $(build-vars)
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(build-args) $(build-vars)
 
 install-args +=
 install-vars += \
 	DESTDIR=$(ROOTFS)
 
 autotools-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
 
 package-configure: package-pre-configure autotools-configure package-post-configure
 package-build: package-pre-build autotools-build package-post-build

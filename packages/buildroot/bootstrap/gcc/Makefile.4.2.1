@@ -1,30 +1,19 @@
 # build instructions for final GCC 4.2.1
 
-include packages/buildroot/autotools.mk
+include packages/buildroot/bootstrap/autotools.mk
+
+#env = env -i PATH=$(ROOTFS)/bootstrap/bin:/usr/bin:/bin
 
 conf-args += \
 	--with-local-prefix=$(prefix) \
-	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
-	--without-headers \
-	--with-newlib \
 	--disable-multilib \
-	--enable-threads=posix \
 	--disable-nls \
 	--enable-shared \
-	--enable-symvers=gnu \
-	--enable-languages=c,c++
+	--enable-languages=c
 
-# for sysroot build
-#	--with-sysroot=$(ROOTFS) \
-	--with-local-prefix=$(prefix) \
-	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
-	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
-	--without-headers \
-	--with-newlib \
-	--disable-multilib \
-	--enable-threads=posix \
-	--disable-nls \
-	--disable-shared \
-	--enable-symvers=gnu \
-	--enable-languages=c,c++
+package-post-install:
+	ln -sf gcc $(ROOTFS)$(prefix)/bin/cc
+	$(ROOTFS)$(prefix)/bin/gcc -dumpspecs | \
+		sed -r 's@/lib(64)?/ld@$(prefix)/lib/ld@g' \
+		> $(dir $(shell $(ROOTFS)$(prefix)/bin/gcc -print-libgcc-file-name))specs
 

@@ -27,10 +27,14 @@ install-args = \
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) $(STRIP) $(ROOTFS)/lib/libvolume_id.so.*
 	$(priv) mkdir -p $(ROOTFS)/etc/udev/rules.d
 	$(priv) cp -a $(pkgtree)/etc/udev/rules.d/* $(ROOTFS)/etc/udev/rules.d
 	# install package configuration files
 	$(priv) cp packages/$(package)/udev.rules $(ROOTFS)/etc/udev/rules.d
 	$(priv) cp packages/$(package)/udev.init $(ROOTFS)/etc/init.d/udev
 	$(priv) ln -s ../init.d/udev $(ROOTFS)/etc/rcS.d/S03udev
+
+package-clean:
+	@:
 

@@ -18,7 +18,7 @@ endif
 
 # base packages
 packages-y += \
-	core/busybox \
+	core/start-stop-daemon \
 	core/coreutils \
 	core/diffutils \
 	core/grep \
@@ -32,7 +32,9 @@ packages-y += \
 	core/psmisc \
 	core/util-linux \
 	kernel/module-init-tools \
-	shells/bash
+	shells/bash \
+	core/less \
+	disk/mtd-tools
 
 packages-$(GREP) += \
 	libs/pcre \

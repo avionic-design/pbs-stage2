@@ -1,6 +1,7 @@
 # common definitions for packages
 
 INSTALL = /usr/bin/install
+prefix ?= /usr
 
 CC     = $(CROSS_COMPILE)gcc
 CPP    = $(CROSS_COMPILE)cpp
@@ -14,6 +15,6 @@ STRIP  = $(CROSS_COMPILE)strip
 set-args = $(foreach arg, $(1), $(arg)='$($(arg))')
 
 priv = sudo
-env  = env
+env  = env -i PATH=$(TOOLCHAIN_ROOT)/usr/bin:$(PATH)
 export priv env
 

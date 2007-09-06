@@ -8,8 +8,8 @@ FLOAT = soft
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.22.1
-GCC_VERSION = 4.2.0
+LINUX_VERSION = 2.6.22.5
+GCC_VERSION = 4.2.1
 export LINUX_VERSION GCC_VERSION
 
 include platform/toolchain/common.mk
@@ -35,7 +35,10 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+# for EABI
+#  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+# for OABI
+  ABIFLAGS = -mlittle-endian
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)

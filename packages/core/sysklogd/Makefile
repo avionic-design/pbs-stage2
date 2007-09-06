@@ -4,17 +4,12 @@ VERSION = 1.4.1
 LOCATION = http://www.infodrom.org/projects/sysklogd/download
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
-PATCHFILES = \
-	$(DISTNAME)-debian.patch \
-	$(DISTNAME)-dont-strip-on-install.patch
-
 DESCRIPTION = system logging daemon
 
 ##############################################################################
 
 include packages/common.mk
 
-env      = env -i
 CFLAGS  += -DSYSV
 LDFLAGS := $(CFLAGS) $(LDFLAGS)
 
@@ -30,4 +25,7 @@ install-args = \
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+
+package-clean:
+	@:
 

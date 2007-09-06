@@ -18,8 +18,12 @@ package-build:
 
 install-args = \
 	DESTDIR=$(ROOTFS) \
-	lib64=lib
+	lib64=lib \
+	ldconfig=@:
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+
+package-clean:
+	@:
 

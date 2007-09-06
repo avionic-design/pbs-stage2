@@ -1,0 +1,103 @@
+--- a/lib/Makefile.am	2007-09-04 12:18:25.000000000 +0200
++++ b/lib/Makefile.am	2007-09-04 12:21:08.000000000 +0200
+@@ -1,7 +1,7 @@
+ lib_LTLIBRARIES = libsysfs.la
+ libsysfs_la_SOURCES = sysfs_utils.c sysfs_attr.c sysfs_class.c dlist.c \
+       sysfs_device.c sysfs_driver.c sysfs_bus.c sysfs_module.c sysfs.h
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ libsysfs_la_LDFLAGS = -version-info 2:1:0
+ EXTRA_CFLAGS = @EXTRA_CLFAGS@
+ libsysfs_la_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CLFAGS)
+--- a/lib/Makefile.in	2007-09-04 12:20:17.000000000 +0200
++++ b/lib/Makefile.in	2007-09-04 12:20:56.000000000 +0200
+@@ -183,7 +183,7 @@
+ libsysfs_la_SOURCES = sysfs_utils.c sysfs_attr.c sysfs_class.c dlist.c \
+       sysfs_device.c sysfs_driver.c sysfs_bus.c sysfs_module.c sysfs.h
+ 
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ libsysfs_la_LDFLAGS = -version-info 2:1:0
+ libsysfs_la_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CLFAGS)
+ all: all-am
+--- a/cmd/Makefile.am	2007-09-04 12:27:51.000000000 +0200
++++ b/cmd/Makefile.am	2007-09-04 12:28:16.000000000 +0200
+@@ -1,6 +1,6 @@
+ bin_PROGRAMS = systool 
+ systool_SOURCES = systool.c names.c names.h
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ LDADD = ../lib/libsysfs.la
+ EXTRA_CFLAGS = @EXTRA_CFLAGS@
+ AM_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CFLAGS)
+--- a/cmd/Makefile.in	2007-09-04 12:27:53.000000000 +0200
++++ b/cmd/Makefile.in	2007-09-04 12:28:34.000000000 +0200
+@@ -172,7 +172,7 @@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+ systool_SOURCES = systool.c names.c names.h
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ LDADD = ../lib/libsysfs.la
+ AM_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CFLAGS)
+ all: all-am
+--- a/test/Makefile.am	2007-09-04 12:35:11.000000000 +0200
++++ b/test/Makefile.am	2007-09-04 12:35:26.000000000 +0200
+@@ -2,14 +2,14 @@
+ BUILT_SOURCES = test.h
+ CLEANFILES = test.h
+ test.h:
+-	./create-test
++	$(srcdir)/create-test $(srcdir)/libsysfs.conf
+ get_device_SOURCES = get_device.c
+ get_driver_SOURCES = get_driver.c
+ get_module_SOURCES = get_module.c
+ testlibsysfs_SOURCES = test.c test_attr.c test_bus.c test_class.c \
+ 		       test_device.c test_driver.c test_module.c test_utils.c \
+ 		       testout.c test-defs.h libsysfs.conf create-test
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ LDADD = ../lib/libsysfs.la
+ EXTRA_CFLAGS = @EXTRA_CLFAGS@
+ AM_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CLFAGS)
+--- a/test/Makefile.in	2007-09-04 12:35:34.000000000 +0200
++++ b/test/Makefile.in	2007-09-04 12:36:02.000000000 +0200
+@@ -195,7 +195,7 @@
+ 		       test_device.c test_driver.c test_module.c test_utils.c \
+ 		       testout.c test-defs.h libsysfs.conf create-test
+ 
+-INCLUDES = -I../include
++INCLUDES = -I$(top_srcdir)/include
+ LDADD = ../lib/libsysfs.la
+ AM_CFLAGS = -Wall -W -Wstrict-prototypes $(EXTRA_CLFAGS)
+ all: $(BUILT_SOURCES)
+@@ -488,7 +488,7 @@
+ 	uninstall-binPROGRAMS uninstall-info-am
+ 
+ test.h:
+-	./create-test
++	$(srcdir)/create-test $(srcdir)/libsysfs.conf
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+--- a/test/create-test	2007-09-04 12:38:55.000000000 +0200
++++ b/test/create-test	2007-09-04 12:40:36.000000000 +0200
+@@ -2,9 +2,15 @@
+ 
+ rm -f test.h
+ 
+-conf_file=./libsysfs.conf
+-
+-. $conf_file
++if [ "x$1" = "x" ]; then
++	conf_file=./libsysfs.conf
++else
++	conf_file="$1"
++fi
++
++if [ -f "$conf_file" ]; then
++	. "$conf_file"
++fi
+ 
+ echo "#define val_dir_path		\"$VALID_DIRECTORY_PATH\"" > test.h
+ echo "#define val_link_path		\"$VALID_LINK_PATH\"" >> test.h

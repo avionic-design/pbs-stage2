@@ -10,18 +10,22 @@ DESCRIPTION = tiny utilities for small and embedded systems
 
 include packages/common.mk
 
-#CROSS_COMPILE := $(CROSS_COMPILE)
+conf-args = \
+	$(call set-args, CROSS_COMPILE)
 
-conf-args =
 package-configure:
 	cp packages/$(package)/$(PACKAGE_FULLNAME)-initrd $(pkgtree)/.config
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
-build-args =
+build-args = \
+	$(call set-args, CROSS_COMPILE)
+
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
-install-args =
+install-args = \
+	$(call set-args, CROSS_COMPILE ROOTFS)
+
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
 

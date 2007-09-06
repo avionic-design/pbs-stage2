@@ -27,3 +27,6 @@ package-install:
 	cd $(pkgtree)/src && $(priv) $(env) $(MAKE) $(install-args) install
 #	ln -sf sbin/init $(ROOTFS)/init
 
+package-clean:
+	@:
+

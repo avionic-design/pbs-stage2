@@ -1,36 +1,21 @@
-# build instructions for bootstrap GCC 4.2.1
+# build instructions for final GCC 4.2.1
 
-conf-args := \
-	--prefix=$(ROOTFS)/bootstrap \
-	--with-local-prefix=$(ROOTFS)/bootstrap \
-	--with-build-time-tools=$(ROOTFS)$(prefix)/bin \
-	--with-dynamic-linker=$(prefix)/lib/ld-linux.so.2 \
-	--without-headers \
-	--with-newlib \
+include packages/buildroot/bootstrap/autotools.mk
+
+conf-args += \
+	--with-local-prefix=$(prefix) \
 	--disable-multilib \
+	--disable-shared \
 	--disable-threads \
 	--disable-nls \
-	--enable-symvers=gnu \
-	--disable-shared \
 	--enable-languages=c
 
-conf-vars :=
+build-args += \
+	all-gcc
 
-package-configure:
-	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \
-		$(env) ../configure $(conf-args) $(conf-vars)
-
-build-args :=
-build-vars :=
-
-package-build:
-	cd $(pkgtree)/core-$(HOST) && \
-		$(env) $(MAKE) $(build-args) $(build-vars) all-gcc
-
-install-args :=
-install-vars :=
-
-package-install:
-	cd $(pkgtree)/core-$(HOST) && \
-		$(env) $(MAKE) $(install-args) $(install-vars) install-gcc
+package-post-install:
+	ln -sf gcc $(ROOTFS)$(prefix)/bin/cc
+	$(ROOTFS)$(prefix)/bin/gcc -dumpspecs | \
+		sed -r 's@/lib(64)?/ld@$(prefix)/lib/ld@g' \
+		> $(dir $(shell $(ROOTFS)$(prefix)/bin/gcc -print-libgcc-file-name))specs
 

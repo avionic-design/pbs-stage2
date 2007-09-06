@@ -8,29 +8,22 @@ DESCRIPTION = the GNU core utilities
 
 ##############################################################################
 
-include packages/common.mk
+include packages/autotools.mk
 
-ac-cache = \
-	fu_cv_sys_stat_statvfs=yes
+env = env -i PATH=$(dir $(CROSS_COMPILE)):/usr/bin:/bin
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS) \
-	$(ac-cache)
+# We override the PERL environment variable here. The build system will
+# try to run the built programs through a perl script otherwise, but since
+# we're cross-compiling, that just won't work.
+conf-vars += \
+	PERL=/br0ken/perl \
+	LDFLAGS='-s'
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+#ifneq ($(LIBC),gnu)
+#conf-vars += \
+#	fu_cv_sys_stat_statvfs=yes
+#endif
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 
