@@ -126,7 +126,12 @@ packages-$(GTK) += \
 	libs/gettext \
 	libs/glib \
 	libs/atk \
-	libs/pango \
+	libs/freetype \
+	libs/expat
+#	libs/fontconfig
+#	libs/pango
+packages-$(GTK) += \
+	libs/libpng \
 	libs/cairo \
 	libs/gtk+
 

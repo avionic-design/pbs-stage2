@@ -13,9 +13,13 @@ include packages/autotools.mk
 #	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig \
 #	sysroot=$(ROOTFS)
 
+conf-args += \
+	--without-x
+
 conf-vars += \
 	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig
+	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig \
+	PKG_CONFIG="$(CURDIR)/support/pkg-config --sysroot $(ROOTFS)"
 
 build-vars += \
 	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
