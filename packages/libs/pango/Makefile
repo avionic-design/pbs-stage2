@@ -4,33 +4,30 @@ VERSION = 1.17.4
 LOCATION = http://ftp.gnome.org/pub/GNOME/sources/pango/1.17
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/common.mk
+##############################################################################
 
-env += \
+include packages/autotools.mk
+
+#env += \
+#	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
+#	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig \
+#	sysroot=$(ROOTFS)
+
+conf-vars += \
 	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig \
-	sysroot=$(ROOTFS)
+	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig
 
-CC  += --sysroot $(ROOTFS)
+build-vars += \
+	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig
 
-conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS LD LDFLAGS)
+install-vars += \
+	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)/usr/lib/pkgconfig
 
-package-configure:
+package-pre-configure:
 	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
 
-build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 
