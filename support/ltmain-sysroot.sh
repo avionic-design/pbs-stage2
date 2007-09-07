@@ -1286,6 +1286,7 @@ EOF
 	sysroot)
 	  sysroot="$arg"
 	  compiler_flags="$compiler_flags --sysroot $arg"
+	  compile_command="$compile_command --sysroot $arg"
 	  prev=
 	  continue
 	  ;;
