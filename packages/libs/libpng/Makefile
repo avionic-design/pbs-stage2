@@ -1,7 +1,7 @@
 PACKAGE = libpng
-VERSION = 1.2.18
+VERSION = 1.2.19
 
-LOCATION = ftp://ftp.simplesystems.org/pub/libpng/png/src
+LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
