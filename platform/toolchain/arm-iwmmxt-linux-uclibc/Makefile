@@ -4,22 +4,18 @@ CPU = iwmmxt
 TUNE = iwmmxt
 OS = linux
 LIBC = uclibc
+FLOAT = soft
+ABI = eabi
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
-export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.21.3
-GCC_VERSION = 4.2.0
+LINUX_VERSION = 2.6.22.6
+GCC_VERSION = 4.2.1
 export LINUX_VERSION GCC_VERSION
-
-BROKEN = yes
-export BROKEN
 
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
-  EXTRA_GCC_CONF_ARGS = --with-float=soft
-  export EXTRA_GCC_CONF_ARGS
-
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   packages-y += toolchain/uclibc-headers
@@ -38,19 +34,29 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-  ABIFLAGS =
+ifeq ($(ABI),eabi)
+  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+else
+  ABIFLAGS = -mlittle-endian
+endif
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
-	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
+	-Wa,-mcpu=$(CPU) -U$(ARCH)
 
-  CPPFLAGS =
+ifeq ($(FLOAT),soft)
+  ABIFLAGS += -msoft-float
+else
+  ABIFLAGS += -mhard-float
+endif
+
+  CPPFLAGS = --sysroot $(ROOTFS)
   CFLAGS = \
 	$(CPPFLAGS) \
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
   LDFLAGS = \
-	-s -Wl,--dynamic-linker,/lib/ld-uClibc.so.0 -shared-libgcc
+	-s -shared-libgcc
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 endif

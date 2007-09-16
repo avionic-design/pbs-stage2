@@ -5,11 +5,11 @@ TUNE = strongarm110
 OS = linux
 LIBC = uclibc
 FLOAT = soft
-ABI = oabi
+ABI = eabi
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.22.5
+LINUX_VERSION = 2.6.22.6
 GCC_VERSION = 4.2.1
 export LINUX_VERSION GCC_VERSION
 

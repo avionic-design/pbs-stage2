@@ -14,7 +14,9 @@ ifndef obj
   $(warning pbuild: Makefile.build is included improperly)
 endif
 
-clean-packages = $(addsuffix -clean, $(packages-y))
+uniq = $(if $1,$(strip $(word 1,$1) $(call $0,$(filter-out $(word 1,$1),$1))))
+
+clean-packages = $(call uniq, $(addsuffix -clean, $(packages-y)))
 
 PHONY += clean $(clean-packages) platform-clean
 clean: $(clean-packages) platform-clean

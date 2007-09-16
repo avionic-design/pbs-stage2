@@ -116,10 +116,6 @@ packages-$(XORG) += \
 packages-$(QTOPIA) += \
 	libs/qtopia
 
-# DirectFB
-packages-$(DIRECTFB) += \
-	libs/directfb
-
 # Gtk+
 packages-$(GTK) += \
 	libs/libiconv \

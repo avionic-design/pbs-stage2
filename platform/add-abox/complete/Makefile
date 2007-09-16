@@ -25,7 +25,6 @@ PNG      = n
 JPEG     = n
 XORG     = n
 QTOPIA   = n
-DIRECTFB = n
 GTK      = n
 GTKMM    = n
 DEBUG    = y
