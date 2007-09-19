@@ -34,7 +34,7 @@ PHONY += u-boot.img
 u-boot.img: $(PLATFORM)/u-boot.img
 
 # TODO: move this somewhere else
-MKIMAGE = /home/thierry/bin/mkimage
+MKIMAGE = ../u-boot.git/tools/mkimage
 LOAD_ADDR = 0xA0008000
 EXEC_ADDR = 0xA0008000
 
