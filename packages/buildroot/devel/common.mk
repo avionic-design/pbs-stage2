@@ -1,5 +1,7 @@
 include packages/buildroot/common.mk
 
+prefix = /tools
+
 CROSS_COMPILE = $(ROOTFS)/tools/bin/
 AR      = $(CROSS_COMPILE)ar
 AS      = $(CROSS_COMPILE)as
