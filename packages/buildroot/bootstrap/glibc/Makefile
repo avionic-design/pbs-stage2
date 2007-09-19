@@ -8,7 +8,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/buildroot/bootstrap/autotools.mk
 
-env = env -i PATH=$(ROOTFS)/bootstrap/bin:/usr/bin:/bin
+env = env -i
 
 conf-args += \
 	--disable-profile \
@@ -17,9 +17,6 @@ conf-args += \
 	--with-headers=$(ROOTFS)$(prefix)/include \
 	--without-gd \
 	--without-selinux
-
-conf-vars += \
-	ac_cv_sizeof_long_double=8
 
 install-args := \
 	install_root=$(ROOTFS)
