@@ -6,9 +6,9 @@ HOST   = $(shell support/config.guess)
 ROOTFS = $(abspath $(PLATFORM)/../rootfs)
 export HOST ROOTFS
 
-ARCH          = $(shell gcc -dumpmachine | cut -d- -f1)
+ARCH          =
 CROSS_COMPILE =
-export ARCH CROSS_COMPILE
+unexport ARCH CROSS_COMPILE
 
 # build a bootstrap toolchain
 packages-y += buildroot/bootstrap/binutils
