@@ -9,7 +9,7 @@ conf-args += \
 	--disable-multilib \
 	--disable-nls \
 	--enable-shared \
-	--enable-languages=c
+	--enable-languages=c,c++
 
 package-post-install:
 	ln -sf gcc $(ROOTFS)$(prefix)/bin/cc
