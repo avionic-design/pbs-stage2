@@ -9,7 +9,7 @@ TARBALLS = \
 
 prefix = /bootstrap
 include packages/buildroot/bootstrap/common.mk
-include packages/buildroot/bootstrap/gcc/Makefile.$(VERSION)
+include packages/buildroot/bootstrap/gcc-core/Makefile.$(VERSION)
 
 package-clean:
 	@:
