@@ -13,6 +13,9 @@ conf-args += \
 build-args += \
 	all-gcc
 
+install-targets += \
+	install-gcc
+
 package-post-install:
 	ln -sf gcc $(ROOTFS)$(prefix)/bin/cc
 	$(ROOTFS)$(prefix)/bin/gcc -dumpspecs | \
