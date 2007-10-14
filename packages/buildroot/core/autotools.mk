@@ -1,5 +1,7 @@
 # common definitions for autotools-based packages
 
+include packages/buildroot/core/common.mk
+
 ifdef HOST
   autotools-subdir ?= obj-$(HOST)
 else
@@ -17,11 +19,17 @@ else
 	--host=$(HOST)
 endif
 
+#ifeq ($(PACKAGE),glibc)
+#  dest-prefix = $(prefix)
+#else
+  dest-prefix = $(ROOTFS)$(prefix)
+#endif
+
 conf-args += \
-	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
-	--sysconfdir=$(prefix)/etc
+	--prefix=$(dest-prefix) \
+	--infodir=$(dest-prefix)/share/info \
+	--mandir=$(dest-prefix)/share/man \
+	--sysconfdir=$(dest-prefix)/etc
 
 conf-vars +=
 
@@ -37,8 +45,7 @@ endif
 
 ifeq ($(findstring nobuild,$(PBS_OPTS)),)
 build-args +=
-build-vars += \
-	DESTDIR=$(ROOTFS)
+build-vars +=
 
 autotools-build:
 	cd $(pkgtree)/$(autotools-subdir) && \
@@ -51,8 +58,7 @@ endif
 
 ifeq ($(findstring noinst,$(PBS_OPTS)),)
 install-args +=
-install-vars += \
-	DESTDIR=$(ROOTFS)
+install-vars +=
 
 autotools-install:
 	cd $(pkgtree)/$(autotools-subdir) && \

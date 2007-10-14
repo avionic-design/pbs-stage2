@@ -1,0 +1,43 @@
+PACKAGE = glibc
+VERSION = 2.6.1
+
+LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
+TARBALLS = \
+	$(PACKAGE_FULLNAME).tar.bz2 \
+	$(PACKAGE)-ports-$(VERSION).tar.bz2
+
+##############################################################################
+
+prefix = $(core-prefix)
+
+include packages/buildroot/core/autotools.mk
+include packages/buildroot/core/glibc/Makefile.$(ARCH)
+
+env = env -i PATH=$(ROOTFS)$(core-prefix)/bin:${PATH}
+
+package-extract:
+	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+
+conf-args += \
+	--host=$(TARGET) \
+	--disable-profile \
+	--enable-add-ons \
+	--with-binutils=$(ROOTFS)$(core-prefix)/bin \
+	--with-headers=$(ROOTFS)$(prefix)/include \
+	--without-gd \
+	--without-selinux
+
+conf-vars += \
+	libc_cv_forced_unwind=yes \
+	libc_cv_c_cleanup=yes
+
+#install-args += \
+	install_root=$(ROOTFS)
+
+package-pre-install:
+	mkdir -p $(ROOTFS)$(prefix)/etc
+	touch $(ROOTFS)$(prefix)/etc/ld.so.conf
+
+package-clean:
+	@:
+

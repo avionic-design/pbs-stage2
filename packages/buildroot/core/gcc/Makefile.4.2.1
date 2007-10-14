@@ -1,0 +1,23 @@
+# build instructions for final GCC 4.2.1
+
+#env = env -i PATH=$(ROOTFS)/bootstrap/bin:/usr/bin:/bin
+
+ifneq ($(HOST), $(TARGET))
+  conf-args += \
+	--target=$(TARGET)
+endif
+
+conf-args += \
+	--with-local-prefix=$(dest-prefix) \
+	--program-prefix=$(TARGET)- \
+	--disable-multilib \
+	--disable-nls \
+	--enable-shared \
+	--enable-languages=c,c++
+
+package-post-install:
+	ln -sf $(TARGET)-gcc $(ROOTFS)$(prefix)/bin/$(TARGET)-cc
+	$(ROOTFS)$(prefix)/bin/$(TARGET)-gcc -dumpspecs | \
+		sed -r 's@/lib(64)?/ld@$(prefix)/lib/ld@g' \
+		> $(dir $(shell $(ROOTFS)$(prefix)/bin/$(TARGET)-gcc -print-libgcc-file-name))specs
+

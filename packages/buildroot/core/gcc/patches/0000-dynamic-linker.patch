@@ -1,0 +1,39 @@
+--- a/gcc/config/linux.h	2007-08-29 10:51:06.000000000 +0200
++++ b/gcc/config/linux.h	2007-08-29 10:52:09.000000000 +0200
+@@ -112,9 +112,9 @@
+    GLIBC_DYNAMIC_LINKER must be defined for each target using them, or
+    GLIBC_DYNAMIC_LINKER32 and GLIBC_DYNAMIC_LINKER64 for targets
+    supporting both 32-bit and 64-bit compilation.  */
+-#define UCLIBC_DYNAMIC_LINKER "/lib/ld-uClibc.so.0"
+-#define UCLIBC_DYNAMIC_LINKER32 "/lib/ld-uClibc.so.0"
+-#define UCLIBC_DYNAMIC_LINKER64 "/lib/ld64-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER "/tools/lib/ld-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER32 "/tools/lib/ld-uClibc.so.0"
++#define UCLIBC_DYNAMIC_LINKER64 "/tools/lib/ld64-uClibc.so.0"
+ #define LINUX_DYNAMIC_LINKER \
+   CHOOSE_DYNAMIC_LINKER (GLIBC_DYNAMIC_LINKER, UCLIBC_DYNAMIC_LINKER)
+ #define LINUX_DYNAMIC_LINKER32 \
+--- a/gcc/config/i386/linux.h	2007-08-29 10:53:28.000000000 +0200
++++ b/gcc/config/i386/linux.h	2007-08-29 10:52:38.000000000 +0200
+@@ -101,7 +101,7 @@
+ 
+ /* These macros may be overridden in k*bsd-gnu.h and i386/k*bsd-gnu.h. */
+ #define LINK_EMULATION "elf_i386"
+-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.2"
++#define GLIBC_DYNAMIC_LINKER "/tools/lib/ld-linux.so.2"
+ 
+ #undef  SUBTARGET_EXTRA_SPECS
+ #define SUBTARGET_EXTRA_SPECS \
+--- a/gcc/config/i386/linux64.h	2007-08-29 10:48:31.000000000 +0200
++++ b/gcc/config/i386/linux64.h	2007-08-29 10:54:19.000000000 +0200
+@@ -49,8 +49,8 @@
+    When the -shared link option is used a final link is not being
+    done.  */
+ 
+-#define GLIBC_DYNAMIC_LINKER32 "/lib/ld-linux.so.2"
+-#define GLIBC_DYNAMIC_LINKER64 "/lib64/ld-linux-x86-64.so.2"
++#define GLIBC_DYNAMIC_LINKER32 "/tools/lib/ld-linux.so.2"
++#define GLIBC_DYNAMIC_LINKER64 "/tools/lib64/ld-linux-x86-64.so.2"
+ 
+ #undef	LINK_SPEC
+ #define LINK_SPEC "%{!m32:-m elf_x86_64} %{m32:-m elf_i386} \
