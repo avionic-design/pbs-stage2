@@ -1,14 +1,16 @@
 ARCH = arm
-ARCH_LONG = armv5te
+ARCH_LONG = armv4t
 CPU = xscale
-TUNE = xscale
+TUNE = strongarm110
 OS = linux
 LIBC = klibc
+FLOAT = soft
+ABI = eabi
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
-export ARCH ARCH_LONG CPU TUNE OS LIBC HOST
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.21.3
-GCC_VERSION = 4.2.0
+LINUX_VERSION = 2.6.23.1
+GCC_VERSION = 4.2.2
 export LINUX_VERSION GCC_VERSION
 
 BROKEN = yes
@@ -34,10 +36,19 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-  ABIFLAGS =
+# for EABI
+# ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+# for OABI
+  ABIFLAGS = -mlittle-endian
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
-	-Wa,-mcpu=$(CPU) -msoft-float -U$(ARCH)
+	-Wa,-mcpu=$(CPU) -U$(ARCH)
+
+ifeq ($(FLOAT),soft)
+  ABIFLAGS += -msoft-float
+else
+  ABIFLAGS += -mhard-float
+endif
 
   LDFLAGS = \
 	-s -Wl,--dynamic-linker,/lib/ld-klibc.so.0 -shared-libgcc

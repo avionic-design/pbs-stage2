@@ -9,8 +9,8 @@ ABI = eabi
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.22.9
-GCC_VERSION = 4.2.1
+LINUX_VERSION = 2.6.23.1
+GCC_VERSION = 4.2.2
 export LINUX_VERSION GCC_VERSION
 
 include platform/toolchain/common.mk
@@ -27,6 +27,7 @@ PHONY += platform-clean
 platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
 platform-clean: __clean-dirs += $(PLATFORM)/etc
 platform-clean: __clean-dirs += $(PLATFORM)/lib
+platform-clean: __clean-dirs += $(PLATFORM)/lib64
 platform-clean: __clean-dirs += $(PLATFORM)/sbin
 platform-clean: __clean-dirs += $(PLATFORM)/usr
 platform-clean: __clean-dirs += $(builddir)
