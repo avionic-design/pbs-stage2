@@ -3,9 +3,13 @@ packages-y += core/base
 # check whether we want a git checkout of the Linux kernel or an officially
 # released tarball
 ifeq ($(LINUX_VERSION),git)
-  packages-y += kernel/linux.git
+  packages-y += \
+	kernel/linux-headers.git \
+	kernel/linux-modules.git
 else
-  packages-y += kernel/linux
+  packages-y += \
+	kernel/linux-headers \
+	kernel/linux-modules
 endif
 
 ifeq ($(LIBC),uclibc)
