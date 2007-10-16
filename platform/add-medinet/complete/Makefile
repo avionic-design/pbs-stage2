@@ -26,8 +26,8 @@ PNG      = y
 JPEG     = y
 XORG     = n
 QTOPIA   = n
-GTK      = y
-GTKMM    = y
+GTK      = n
+GTKMM    = n
 DEBUG    = y
 
 include platform/packages.mk
