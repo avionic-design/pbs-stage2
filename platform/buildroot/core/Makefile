@@ -1,6 +1,7 @@
-GCC_VERSION = 4.2.2
-LIBC        = glibc
-export GCC_VERSION LIBC
+LINUX_VERSION = 2.6.23.1
+GCC_VERSION   = 4.2.2
+LIBC          = glibc
+export LINUX_VERSION GCC_VERSION LIBC
 
 HOST   ?= $(shell support/config.guess)
 ROOTFS  = $(abspath $(PLATFORM)/../rootfs)
