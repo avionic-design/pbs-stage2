@@ -1,0 +1,10 @@
+#!/bin/sh
+
+mkdir -p platform/buildroot/rootfs/build
+mount --bind . platform/buildroot/rootfs/build
+
+LD_LIBRARY_PATH=/tools/lib chroot platform/buildroot/rootfs /tools/bin/sh
+
+umount platform/buildroot/rootfs/build
+rmdir platform/buildroot/rootfs/build
+
