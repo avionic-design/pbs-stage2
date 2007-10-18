@@ -1,0 +1,5 @@
+#!/bin/sh
+
+status=`scripts/uscan "$@" 2>&1`
+echo "$status" | grep 'Newer version (.*)' | sed 's/.*(\(.*\)).*/\1/'
+

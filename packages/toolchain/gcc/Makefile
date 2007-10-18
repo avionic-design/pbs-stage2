@@ -11,3 +11,6 @@ patchdir = $(srctree)/packages/$(package)/$(VERSION)/patches/$(LIBC)/$(FLOAT)
 include packages/toolchain/common.mk
 include packages/toolchain/gcc/Makefile.$(VERSION)
 
+package-clean:
+	@:
+

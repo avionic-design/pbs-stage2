@@ -33,3 +33,6 @@ install-args = \
 package-install:
 	cd $(pkgtree) && $(MAKE) $(install-args) headers_install
 
+package-clean:
+	@:
+

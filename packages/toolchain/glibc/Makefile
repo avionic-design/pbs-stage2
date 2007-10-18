@@ -44,3 +44,6 @@ install-args = \
 package-install:
 	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(install-args) install
 
+package-clean:
+	@:
+

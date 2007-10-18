@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 113
+VERSION = 116
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -44,4 +44,7 @@ install-args = \
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) $(STRIP) $(ROOTFS)/lib/libvolume_id.so.*
+
+package-clean:
+	@:
 

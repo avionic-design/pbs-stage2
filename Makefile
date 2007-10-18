@@ -79,6 +79,9 @@ export PLATFORM
 list:
 	$(Q)$(MAKE) $(plat)=platform/$(platform) list
 
+uscan:
+	$(Q)$(MAKE) $(plat)=platform/$(platform) uscan
+
 fetch:
 	$(Q)$(MAKE) $(fetch)=platform/$(platform)
 
@@ -105,6 +108,9 @@ card:
 endif
 
 ifdef package
+list uscan:
+	$(Q)$(MAKE) $(pkg)=$(package) $@
+
 clean fetch checksum extract patch:
 	$(Q)$(MAKE) $(pkg)=$(package) $@
 

@@ -41,3 +41,6 @@ package-install:
 	#	cp -r libc/sysdeps/linux/$(ARCH)/sys $(PLATFORM)/usr/include && \
 	#	cp -r libc/sysdeps/linux/$(ARCH)/bits $(PLATFORM)/usr/include
 
+package-clean:
+	@:
+

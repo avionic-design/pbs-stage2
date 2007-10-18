@@ -1,7 +1,7 @@
 PACKAGE = bash
 VERSION = 3.2
 
-LOCATION = ftp://ftp.gnu.org/pub/gnu/bash
+LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 ##############################################################################

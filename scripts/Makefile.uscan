@@ -1,0 +1,49 @@
+src := $(obj)
+
+PHONY := all
+all:
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/packages/$(src))
+ifndef PACKAGE
+  include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+endif
+
+ifndef obj
+  $(warning pbuild: Makefile.uscan is included improperly)
+endif
+
+all: uscan
+	@:
+
+package = $(obj)
+
+uscan-args += \
+	--package $(PACKAGE) \
+	--upstream-version $(VERSION) \
+	--watchfile packages/$(package)/watch \
+	--no-download
+
+cmd-uscan = \
+	@version=$(shell scripts/uscan.helper $(uscan-args)); \
+	if [ -n "$$version" ]; then \
+		echo "new version available: $(package) (current: $(VERSION), new: $$version)"; \
+	else \
+		echo "package is up-to-date: $(package)"; \
+	fi
+
+err-uscan = \
+	@echo "no watchfile for package: $(package)"
+
+uscan:
+	$(if $(wildcard $(srctree)/packages/$(package)/watch),	\
+		$(call cmd-uscan, $(package)),			\
+		$(call err-uscan, $(package)))
+
+PHONY += FORCE
+FORCE:
+	@:
+
+.PHONY: $(PHONY)
+

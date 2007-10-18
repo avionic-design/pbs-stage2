@@ -1,0 +1,3 @@
+version=3
+ftp://us4.samba.org/pub/ppp/ppp-(.+)\.tar\.gz
+

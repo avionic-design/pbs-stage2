@@ -3,6 +3,7 @@
 board=add-medinet
 mp=/media
 dev=/dev/sdc
+variant=minimal
 
 if [ "x`id -u`" != "x0" ]; then
 	echo "must be super user"
@@ -21,6 +22,10 @@ if [ "x$3" != "x" ]; then
 	board="$3"
 fi
 
+if [ "x$4" != "x" ]; then
+	variant="$4"
+fi
+
 umount $mp
 
 set -e
@@ -33,6 +38,6 @@ set -x
 #umount $mp
 mount $dev $mp
 cp platform/$board/initrd/u-boot.img $mp
-cp platform/$board/minimal/rootfs.img $mp
+cp platform/$board/$variant/rootfs.img $mp
 umount $mp
 
