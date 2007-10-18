@@ -1,3 +1,6 @@
+LINUX_VERSION = 2.6.23.1
+export LINUX_VERSION
+
 HOST   = $(shell support/config.guess)
 ROOTFS = $(abspath $(PLATFORM)/../rootfs)
 export HOST ROOTFS
