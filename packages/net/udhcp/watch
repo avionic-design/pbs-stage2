@@ -1,0 +1,3 @@
+version=3
+http://udhcp.busybox.net/source/udhcp-(.+)\.tar\.gz
+

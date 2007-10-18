@@ -1,0 +1,3 @@
+version=3
+http://users.telenet.be/geertu/Linux/fbdev/fbset-(.+)\.tar\.gz
+

@@ -1,0 +1,3 @@
+version=3
+ftp://ftp.cistron.nl/pub/people/miquels/sysvinit/sysvinit-(.+)\.tar\.gz
+
