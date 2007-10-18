@@ -122,3 +122,5 @@ f41c3898fbd53e68e0b052418960e538813cc98afcd72b2b604079d8de3e529c  download/bzip2
 0aa0e8855ed2a18557116da97a3786b753e8f117024c974a78bf8b1a49e30d06  download/gcc-core-4.2.2.tar.bz2
 b83e6f847fe30ceea9d91fc09fde4aa5b735b8810967b4df7e24ae11fbb4aa13  download/gcc-g++-4.2.2.tar.bz2
 4952bb0e5fa64f03e33beee873aa7dc9828f40fbad648d3c48359394ff5e4ef0  download/libpng-1.2.19.tar.bz2
+83c4cc813124a43f13e2ebb83cea9da9909d63891b824bf4bc7006f0567db7cf  download/busybox-1.7.2.tar.bz2
+a28b5dc28e0e6b1e812e5b051205eaf3d9c3d299f8aecf3f915df1b76cb3b8a2  download/udev-116.tar.bz2
