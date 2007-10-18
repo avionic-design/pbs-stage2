@@ -3,7 +3,7 @@ LIBC        = glibc
 export GCC_VERSION LIBC
 
 HOST   ?= $(shell support/config.guess)
-ROOTFS  = $(abspath $(PLATFORM)/rootfs)
+ROOTFS  = $(abspath $(PLATFORM)/../rootfs)
 export HOST ROOTFS
 
 ARCH          ?= $(shell echo $(HOST) | cut -d- -f1)
