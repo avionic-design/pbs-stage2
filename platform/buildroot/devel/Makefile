@@ -7,6 +7,8 @@ CROSS_COMPILE =
 export ARCH CROSS_COMPILE
 
 # build a basic development root filesystem
+packages-y += buildroot/devel/linux-headers
+packages-y += buildroot/devel/glibc
 packages-y += buildroot/devel/coreutils
 packages-y += buildroot/devel/ncurses
 packages-y += buildroot/devel/bash
