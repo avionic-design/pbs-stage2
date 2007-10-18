@@ -24,12 +24,16 @@ endif
 uniq = $(if $1,$(strip $(word 1,$1) $(call $0,$(filter-out $(word 1,$1),$1))))
 
 list-packages    = $(call uniq, $(addsuffix -list,    $(packages-y)))
+uscan-packages   = $(call uniq, $(addsuffix -uscan,   $(packages-y)))
 fetch-packages   = $(call uniq, $(addsuffix -fetch,   $(packages-y)))
 build-packages   = $(call uniq, $(addsuffix -build,   $(packages-y)))
 install-packages = $(call uniq, $(addsuffix -install, $(packages-y)))
 
 PHONY += list
 list: $(list-packages)
+
+PHONY += uscan
+uscan: $(uscan-packages)
 
 PHONY += fetch
 fetch: $(fetch-packages)
@@ -43,6 +47,10 @@ install: $(install-packages) platform-install
 $(list-packages): package = $(patsubst %-list,%,$@)
 $(list-packages):
 	$(call cmd,list_pkg)
+
+$(uscan-packages): package = $(patsubst %-uscan,%,$@)
+$(uscan-packages):
+	$(call cmd,uscan_pkg)
 
 $(fetch-packages): package = $(patsubst %-fetch,%,$@)
 $(fetch-packages):

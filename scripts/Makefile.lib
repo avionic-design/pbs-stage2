@@ -22,6 +22,9 @@ quiet_cmd_extract_tar_bz2 = TAR [xj]  $(subst $(srctree)/,,$2)
 quiet_cmd_list_pkg =
       cmd_list_pkg = $(MAKE) $(pkg)=$(package) list
 
+quiet_cmd_uscan_pkg =
+      cmd_uscan_pkg = $(MAKE) $(pkg)=$(package) uscan
+
 quiet_cmd_clean_pkg = CLEAN     $(package)
       cmd_clean_pkg = $(MAKE) $(pkg)=$(package) clean
 

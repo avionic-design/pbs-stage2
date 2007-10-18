@@ -41,6 +41,9 @@ PHONY += list
 list: $(call package-hook,list)
 	@echo $(PACKAGE) $(VERSION): $(DESCRIPTION)
 
+PHONY += uscan
+uscan: $(call package-hook,uscan)
+
 PHONY += clean
 clean: $(call package-hook,clean)
 
@@ -86,6 +89,10 @@ $(call stamp,build,$(package)): $(stampdir) $(call stamp,configure,$(package)) $
 
 $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(call package-hook,install)
 	$(makestamp)
+
+# package hooks
+package-uscan:
+	$(Q)$(MAKE) -f scripts/Makefile.uscan package=$(package) uscan
 
 # dummy targets
 package-list:
