@@ -8,6 +8,9 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/buildroot/devel/autotools.mk
 
+conf-args += \
+	--disable-rpath
+
 package-clean:
 	@:
 
