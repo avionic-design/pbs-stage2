@@ -2,7 +2,7 @@ include packages/buildroot/common.mk
 
 prefix = $(devel-prefix)
 
-CROSS_COMPILE = $(ROOTFS)/tools/bin/
+CROSS_COMPILE = $(ROOTFS)$(core-prefix)/bin/$(HOST)-
 AR      = $(CROSS_COMPILE)ar
 AS      = $(CROSS_COMPILE)as
 CC      = $(CROSS_COMPILE)gcc
