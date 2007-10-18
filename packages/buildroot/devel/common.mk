@@ -1,6 +1,6 @@
 include packages/buildroot/common.mk
 
-prefix = /tools
+prefix = $(devel-prefix)
 
 CROSS_COMPILE = $(ROOTFS)/tools/bin/
 AR      = $(CROSS_COMPILE)ar
@@ -15,9 +15,10 @@ RANLIB  = $(CROSS_COMPILE)ranlib
 READELF = $(CROSS_COMPILE)readelf
 STRIP   = $(CROSS_COMPILE)strip
 
-CFLAGS   = --sysroot $(ROOTFS)
-CXXFLAGS = --sysroot $(ROOTFS)
-LDFLAGS  = --sysroot $(ROOTFS)
+CFLAGS   +=
+CPPFLAGS +=
+CXXFLAGS +=
+LDFLAGS  +=
 
 CROSS_TOOLS = \
 	AR \
@@ -31,4 +32,10 @@ CROSS_TOOLS = \
 	RANLIB \
 	READELF \
 	STRIP
+
+CROSS_FLAGS = \
+	CFLAGS \
+	CPPFLAGS \
+	CXXFLAGS \
+	LDFLAGS
 
