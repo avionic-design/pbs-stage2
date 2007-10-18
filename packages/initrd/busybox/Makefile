@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.6.0
+VERSION = 1.7.2
 
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
