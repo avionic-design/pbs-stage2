@@ -18,6 +18,6 @@ conf-args += \
 package-post-install:
 	ln -sf $(TARGET)-gcc $(ROOTFS)$(prefix)/bin/$(TARGET)-cc
 	$(ROOTFS)$(prefix)/bin/$(TARGET)-gcc -dumpspecs | \
-		sed -r 's@/lib(64)?/ld@$(prefix)/lib/ld@g' \
+		sed -r 's@/lib(64)?/ld@$(devel-prefix)/lib/ld@g' \
 		> $(dir $(shell $(ROOTFS)$(prefix)/bin/$(TARGET)-gcc -print-libgcc-file-name))specs
 
