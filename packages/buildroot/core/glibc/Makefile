@@ -10,6 +10,12 @@ TARBALLS = \
 
 prefix = $(core-prefix)
 
+ifdef ARCH
+  ifneq ($(wildcard packages/$(package)/patches/$(ARCH)/series),)
+    patchdir = packages/$(package)/patches/$(ARCH)
+  endif
+endif
+
 include packages/buildroot/core/autotools.mk
 include packages/buildroot/core/glibc/Makefile.$(ARCH)
 
@@ -19,11 +25,10 @@ package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
 conf-args += \
-	--host=$(TARGET) \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
+	--with-headers=$(ROOTFS)$(prefix)/include \
 	--disable-profile \
 	--enable-add-ons \
-	--with-binutils=$(ROOTFS)$(core-prefix)/bin \
-	--with-headers=$(ROOTFS)$(prefix)/include \
 	--without-gd \
 	--without-selinux
 
