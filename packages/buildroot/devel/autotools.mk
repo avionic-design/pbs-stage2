@@ -11,7 +11,7 @@ endif
 ifeq ($(findstring noconf,$(PBS_OPTS)),)
 
 # buildroot/devel is *always* cross-compiled
-ifneq ($(HOST), $(BUILD))
+ifneq ($(BUILD), $(HOST))
   conf-args += \
 	--build=$(BUILD)
 endif

@@ -1,6 +1,10 @@
 include packages/buildroot/common.mk
 
-prefix = $(devel-prefix)
+HOST   ?= $(shell support/config.guess)
+BUILD  ?= $(HOST)
+TARGET ?= $(HOST)
+ARCH   ?= $(shell echo $(TARGET) | cut -d- -f1)
+prefix ?= $(devel-prefix)
 
 CROSS_COMPILE = $(ROOTFS)$(core-prefix)/bin/$(HOST)-
 AR      = $(CROSS_COMPILE)ar
