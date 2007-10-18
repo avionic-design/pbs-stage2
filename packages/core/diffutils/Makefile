@@ -1,7 +1,7 @@
 PACKAGE = diffutils
 VERSION = 2.8.1
 
-LOCATION = http://ftp.gnu.org/gnu/diffutils
+LOCATION = ftp://ftp.gnu.org/gnu/diffutils
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 DESCRIPTION = file comparison utilities
