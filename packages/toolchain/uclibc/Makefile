@@ -42,3 +42,6 @@ install-args = \
 package-install:
 	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
 
+package-clean:
+	@:
+

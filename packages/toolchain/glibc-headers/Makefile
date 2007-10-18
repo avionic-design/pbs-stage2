@@ -46,3 +46,6 @@ package-install:
 		cp ports/sysdeps/unix/sysv/linux/arm/nptl/bits/pthreadtypes.h \
 			$(PLATFORM)/usr/include/bits
 
+package-clean:
+	@:
+
