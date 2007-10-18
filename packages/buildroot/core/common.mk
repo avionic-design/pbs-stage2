@@ -5,7 +5,3 @@ BUILD  ?= $(HOST)
 TARGET ?= $(HOST)
 ARCH   ?= $(shell echo $(TARGET) | cut -d- -f1)
 
-bootstrap-prefix ?= /bootstrap
-core-prefix      ?= /core
-devel-prefix     ?= /tools
-
