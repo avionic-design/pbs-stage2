@@ -1,0 +1,3 @@
+conf-vars += \
+	ac_cv_sizeof_long_double=16
+

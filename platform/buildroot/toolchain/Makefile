@@ -1,25 +1,27 @@
 ROOTFS = $(abspath $(PLATFORM)/../rootfs)
 export ROOTFS
 
-ifdef config
-  ifneq ($(wildcard $(PLATFORM)/configs/$(config)),)
-    include $(PLATFORM)/configs/$(config)
-  else
-    include $(PLATFORM)/configs/generic
-  endif
+ifndef target
+  $(error need to specify the toolchain target)
 endif
 
-LINUX_VERSION = 2.6.23.1
-GCC_VERSION   = 4.2.2
-LIBC          = glibc
-export LINUX_VERSION GCC_VERSION LIBC
+ifneq ($(wildcard $(PLATFORM)/configs/$(target).mk),)
+  include $(PLATFORM)/configs/$(target).mk
+else
+  include $(PLATFORM)/configs/generic.mk
+endif
+
+ifeq ($(LIBC),gnu)
+  LIBC-name = glibc
+else
+  LIBC-name = $(LIBC)
+endif
 
 # build a target toolchain
-packages-y += buildroot/toolchain/linux-headers
 packages-y += buildroot/toolchain/binutils
-packages-y += buildroot/toolchain/$(LIBC)-headers
 packages-y += buildroot/toolchain/gcc-core
-packages-y += buildroot/toolchain/$(LIBC)
+packages-y += buildroot/toolchain/linux-headers
+packages-y += buildroot/toolchain/$(LIBC-name)
 packages-y += buildroot/toolchain/gcc
 
 PHONY += platform-clean
