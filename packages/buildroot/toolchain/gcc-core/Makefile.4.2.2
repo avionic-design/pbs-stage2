@@ -7,17 +7,31 @@ endif
 
 conf-args += \
 	--with-local-prefix=$(prefix) \
+	--with-as=$(ROOTFS)$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld \
 	--program-prefix=$(TARGET)- \
-	--disable-multilib \
 	--disable-shared \
 	--disable-threads \
 	--disable-nls \
 	--enable-languages=c
 
+ifeq ($(FLOAT),soft)
+  conf-args += \
+	--with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+  conf-args += \
+	--enable-multilib
+else
+  conf-args += \
+	--disable-multilib
+endif
+
 build-args += \
 	all-gcc
 
-install-targets += \
+install-targets = \
 	install-gcc
 
 package-post-install:
