@@ -1,6 +1,6 @@
 # common definitions for autotools-based packages
 
-include packages/buildroot/core/common.mk
+include packages/buildroot/bootstrap/common.mk
 
 ifdef HOST
   autotools-subdir ?= obj-$(HOST)
@@ -19,11 +19,7 @@ else
 	--host=$(HOST)
 endif
 
-#ifeq ($(PACKAGE),glibc)
-#  dest-prefix = $(prefix)
-#else
-  dest-prefix = $(ROOTFS)$(prefix)
-#endif
+dest-prefix = $(ROOTFS)$(prefix)
 
 conf-args += \
 	--prefix=$(dest-prefix) \

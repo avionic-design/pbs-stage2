@@ -21,5 +21,5 @@ install-targets += \
 	install-gcc
 
 package-post-install:
-	ln -sf $(TARGET)-gcc $(ROOTFS)$(prefix)/bin/$(TARGET)-cc
+	ln -sf $(TARGET)-gcc $(dest-prefix)/bin/$(TARGET)-cc
 

@@ -12,11 +12,11 @@ CROSS_COMPILE  =
 unexport ARCH CROSS_COMPILE
 
 # build a bootstrap toolchain
-packages-y += buildroot/core/binutils
-packages-y += buildroot/core/gcc-core
-packages-y += buildroot/core/linux-headers
-packages-y += buildroot/core/glibc
-packages-y += buildroot/core/gcc
+packages-y += buildroot/bootstrap/binutils
+packages-y += buildroot/bootstrap/gcc-core
+packages-y += buildroot/bootstrap/linux-headers
+packages-y += buildroot/bootstrap/glibc
+packages-y += buildroot/bootstrap/gcc
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)

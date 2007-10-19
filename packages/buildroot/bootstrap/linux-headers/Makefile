@@ -6,7 +6,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
 
-include packages/buildroot/core/common.mk
+include packages/buildroot/bootstrap/common.mk
 ARCH := $(shell echo $(ARCH) | sed s/i.86/i386/)
 
 conf-args := ARCH=$(ARCH)
@@ -18,7 +18,7 @@ package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers_check
 
 install-args := \
-	INSTALL_HDR_PATH=$(ROOTFS)$(core-prefix) \
+	INSTALL_HDR_PATH=$(ROOTFS)$(prefix) \
 	ARCH=$(ARCH)
 
 package-install:

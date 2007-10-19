@@ -6,9 +6,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
 
-prefix = $(core-prefix)
-
-include packages/buildroot/core/autotools.mk
+include packages/buildroot/bootstrap/autotools.mk
 
 ifneq ($(HOST), $(TARGET))
   conf-args += \

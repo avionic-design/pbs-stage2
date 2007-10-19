@@ -8,18 +8,16 @@ TARBALLS = \
 
 ##############################################################################
 
-prefix = $(core-prefix)
-
 ifdef ARCH
   ifneq ($(wildcard packages/$(package)/patches/$(ARCH)/series),)
     patchdir = packages/$(package)/patches/$(ARCH)
   endif
 endif
 
-include packages/buildroot/core/autotools.mk
-include packages/buildroot/core/glibc/Makefile.$(ARCH)
+include packages/buildroot/bootstrap/autotools.mk
+include packages/buildroot/bootstrap/glibc/Makefile.$(ARCH)
 
-env = env -i PATH=$(ROOTFS)$(core-prefix)/bin:${PATH}
+env = env -i PATH=$(ROOTFS)$(prefix)/bin:${PATH}
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -35,9 +33,6 @@ conf-args += \
 conf-vars += \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes
-
-#install-args += \
-	install_root=$(ROOTFS)
 
 package-pre-install:
 	mkdir -p $(ROOTFS)$(prefix)/etc

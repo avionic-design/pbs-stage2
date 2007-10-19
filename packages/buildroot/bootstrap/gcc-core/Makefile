@@ -7,10 +7,8 @@ TARBALLS = \
 
 ##############################################################################
 
-prefix = $(core-prefix)
-
-include packages/buildroot/core/autotools.mk
-include packages/buildroot/core/gcc-core/Makefile.$(VERSION)
+include packages/buildroot/bootstrap/autotools.mk
+include packages/buildroot/bootstrap/gcc-core/Makefile.$(VERSION)
 
 package-clean:
 	@:
