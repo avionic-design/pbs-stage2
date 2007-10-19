@@ -1,0 +1,15 @@
+#!/tools/bin/sh
+
+if [ -f /build/scripts/chroot/environment ]; then
+	. /build/scripts/chroot/environment
+fi
+
+/tools/bin/run-parts /build/scripts/chroot/setup.d
+
+if [ -x "$SHELL" ]; then
+	exec "$SHELL"
+else
+	echo Shell cannot be executed!
+	exit 1
+fi
+

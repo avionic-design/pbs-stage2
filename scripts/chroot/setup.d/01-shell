@@ -1,0 +1,7 @@
+#!/tools/bin/sh
+
+echo -n "Creating /bin/sh symlink ... "
+[ -d /bin ] || mkdir /bin
+ln -sf "$SHELL" /bin/sh
+echo "done"
+

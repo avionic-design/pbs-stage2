@@ -1,9 +1,15 @@
 #!/bin/sh
 
+if [ x`id -u` != x0 ]; then
+	echo you need to be root to execute this script
+	exit 1
+fi
+
 mkdir -p platform/buildroot/rootfs/build
 mount --bind . platform/buildroot/rootfs/build
 
-LD_LIBRARY_PATH=/tools/lib chroot platform/buildroot/rootfs /tools/bin/sh
+chroot platform/buildroot/rootfs /build/scripts/chroot/setup
+scripts/chroot/cleanup platform/buildroot/rootfs
 
 umount platform/buildroot/rootfs/build
 rmdir platform/buildroot/rootfs/build
