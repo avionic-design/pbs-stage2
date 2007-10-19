@@ -26,6 +26,9 @@ packages-y += buildroot/devel/make
 packages-y += buildroot/devel/flex
 packages-y += buildroot/devel/bison
 packages-y += buildroot/devel/quilt
+packages-y += buildroot/devel/debianutils
+packages-y += buildroot/devel/ipkg
+packages-y += buildroot/devel/ipkg-utils
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)

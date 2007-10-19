@@ -69,3 +69,6 @@ b83e6f847fe30ceea9d91fc09fde4aa5b735b8810967b4df7e24ae11fbb4aa13  download/gcc-g
 4952bb0e5fa64f03e33beee873aa7dc9828f40fbad648d3c48359394ff5e4ef0  download/libpng-1.2.19.tar.bz2
 83c4cc813124a43f13e2ebb83cea9da9909d63891b824bf4bc7006f0567db7cf  download/busybox-1.7.2.tar.bz2
 a28b5dc28e0e6b1e812e5b051205eaf3d9c3d299f8aecf3f915df1b76cb3b8a2  download/udev-116.tar.bz2
+405743e1ba320ed6095d42a898f1486e3af1d745cae2bd45dfe1d8403a4d8995  download/ipkg-0.99.163.tar.gz
+813428c1aac04393ba64d0a23f9f820277357cbcdbdd391b9cf2bbf5257e8625  download/ipkg-utils-1.7.tar.gz
+414e3f8f146ff0c749fa14e222439d98efe5924c9ca7fa211ecae8097460f96b  download/debianutils-2.25.2.tar.gz
