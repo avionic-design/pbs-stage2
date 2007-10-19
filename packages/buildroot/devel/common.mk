@@ -6,7 +6,7 @@ TARGET ?= $(HOST)
 ARCH   ?= $(shell echo $(TARGET) | cut -d- -f1)
 prefix ?= $(devel-prefix)
 
-CROSS_COMPILE = $(ROOTFS)$(core-prefix)/bin/$(HOST)-
+CROSS_COMPILE = $(ROOTFS)$(bootstrap-prefix)/bin/$(HOST)-
 AR      = $(CROSS_COMPILE)ar
 AS      = $(CROSS_COMPILE)as
 CC      = $(CROSS_COMPILE)gcc
