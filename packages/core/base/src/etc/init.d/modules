@@ -4,6 +4,10 @@ if [ ! -f /etc/modules ]; then
 	exit 0
 fi
 
+echo -n 'Generating module dependencies ... '
+/sbin/depmod
+echo 'done'
+
 echo 'Loading modules ...'
 
 /bin/cat /etc/modules | /bin/grep -v '^#' | /bin/grep -v '^$' |
