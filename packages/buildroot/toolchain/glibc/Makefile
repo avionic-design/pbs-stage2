@@ -8,19 +8,25 @@ TARBALLS = \
 
 ##############################################################################
 
-ifdef ARCH
-  ifneq ($(wildcard packages/$(package)/patches/$(ARCH)/series),)
-    patchdir = packages/$(package)/patches/$(ARCH)
-  endif
-endif
+patchdir = $(strip \
+		$(if $(wildcard $(pkgsrctree)/patches/$(ARCH)/series),\
+			$(pkgsrctree)/patches/$(ARCH), \
+			$(pkgsrctree)/patches \
+		) \
+	)
 
 include packages/buildroot/toolchain/autotools.mk
 include packages/buildroot/toolchain/glibc/Makefile.$(ARCH)
 
-env = env -i PATH=$(ROOTFS)$(prefix)/bin:${PATH}
+prefix = $(toolchain-prefix)/$(TARGET)
+env    = env -i PATH=$(ROOTFS)$(toolchain-prefix)/bin:${PATH}
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+
+conf-args := \
+	--host=$(TARGET) \
+	$(conf-args)
 
 conf-args += \
 	--with-binutils=$(ROOTFS)$(prefix)/bin \

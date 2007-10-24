@@ -5,7 +5,7 @@ BUILD  ?= $(HOST)
 TARGET ?= $(HOST)
 ARCH   ?= $(shell echo $(TARGET) | cut -d- -f1)
 prefix ?= $(toolchain-prefix)
-env    ?= env -i PATH=$(ROOTFS)$(bootstrap-prefix)/bin:${PATH}
+env    ?= env -i PATH=${PATH}
 
 CROSS_COMPILE = $(ROOTFS)$(bootstrap-prefix)/bin/$(HOST)-
 AR      = $(CROSS_COMPILE)ar

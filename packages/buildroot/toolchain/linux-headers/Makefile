@@ -8,6 +8,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/buildroot/toolchain/common.mk
 ARCH := $(shell echo $(ARCH) | sed s/i.86/i386/)
+prefix = $(toolchain-prefix)/$(TARGET)
 
 conf-args := ARCH=$(ARCH)
 package-configure:

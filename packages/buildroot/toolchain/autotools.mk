@@ -10,22 +10,11 @@ endif
 
 ifeq ($(findstring noconf,$(PBS_OPTS)),)
 
-# buildroot/toolchain is *always* cross-compiled
-ifneq ($(BUILD), $(HOST))
-  conf-args += \
-	--build=$(BUILD)
-endif
-
 conf-args += \
-	--host=$(HOST) \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=$(prefix)/etc
-
-#conf-vars += \
-	$(call set-args, $(CROSS_TOOLS)) \
-	$(call set-args, $(CROSS_FLAGS))
 
 autotools-configure:
 	mkdir -p $(pkgtree)/$(autotools-subdir) && \

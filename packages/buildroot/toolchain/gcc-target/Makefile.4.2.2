@@ -13,12 +13,11 @@ ifneq ($(HOST), $(TARGET))
 endif
 
 conf-args += \
+	--with-build-sysroot=$(ROOTFS) \
 	--with-local-prefix=$(prefix) \
 	--program-prefix=$(TARGET)- \
-	--disable-shared \
-	--disable-threads \
-	--disable-nls \
-	--enable-languages=c
+	--enable-languages=c,c++ \
+	--disable-nls
 
 ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
@@ -29,12 +28,6 @@ ifeq ($(MULTILIB),y)
 else
   conf-args += --disable-multilib
 endif
-
-build-args += \
-	all-gcc
-
-install-targets = \
-	install-gcc
 
 package-post-install:
 	ln -sf $(TARGET)-gcc $(ROOTFS)$(prefix)/bin/$(TARGET)-cc

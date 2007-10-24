@@ -32,6 +32,7 @@ packages-y += buildroot/devel/ipkg-utils
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)
+platform-clean: __clean-dirs += $(ROOTFS)/tools
 platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
