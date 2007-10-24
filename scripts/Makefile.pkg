@@ -14,7 +14,8 @@ endif
 PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
 buildtree ?= $(tmptree)/$(package)
 pkgtree ?= $(buildtree)/$(PACKAGE_FULLNAME)
-export buildtree pkgtree
+pkgsrctree ?= $(srctree)/packages/$(package)
+export buildtree pkgtree pkgsrctree
 
 fetch := -f scripts/Makefile.pkg download
 
