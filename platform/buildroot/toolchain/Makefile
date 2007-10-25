@@ -23,8 +23,8 @@ packages-y += buildroot/toolchain/gcc-core
 packages-y += buildroot/toolchain/linux-headers
 packages-y += buildroot/toolchain/$(LIBC-name)
 packages-y += buildroot/toolchain/gcc-target
-packages-y += buildroot/toolchain/gcc
-packages-y += buildroot/toolchain/binutils
+packages-y += buildroot/toolchain/gcc-final
+packages-y += buildroot/toolchain/binutils-final
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)

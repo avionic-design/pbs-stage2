@@ -8,6 +8,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/buildroot/toolchain/autotools.mk
 
+env = env -i PATH=$(ROOTFS)$(bootstrap-prefix)/bin:${PATH}
+
 # FIXME: this is still rather ugly, but it forces HOST and BUILD to be
 #        different so the tools will be cross-compiled
 conf-args += \

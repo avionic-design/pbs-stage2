@@ -9,7 +9,7 @@ TARBALLS = \
 ##############################################################################
 
 include packages/buildroot/toolchain/autotools.mk
-include packages/buildroot/toolchain/gcc/Makefile.$(VERSION)
+include packages/buildroot/toolchain/gcc-final/Makefile.$(VERSION)
 
 package-clean:
 	@:

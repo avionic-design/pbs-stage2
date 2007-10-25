@@ -14,10 +14,11 @@ endif
 
 conf-args += \
 	--with-build-sysroot=$(ROOTFS) \
+	--with-build-prefix=$(ROOTFS)$(prefix)/$(TARGET) \
 	--with-local-prefix=$(prefix) \
 	--program-prefix=$(TARGET)- \
-	--enable-languages=c,c++ \
-	--disable-nls
+	--enable-shared \
+	--enable-languages=c,c++
 
 ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft

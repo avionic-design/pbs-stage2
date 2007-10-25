@@ -1,6 +1,6 @@
 --- a/gcc/config/arm/linux-elf.h
 +++ b/gcc/config/arm/linux-elf.h
-@@ -40,7 +40,7 @@
+@@ -39,7 +39,7 @@
  
  #undef  MULTILIB_DEFAULTS
  #define MULTILIB_DEFAULTS \
@@ -9,7 +9,7 @@
  
  /* Now we define the strings used to build the spec file.  */
  #undef  LIB_SPEC
-@@ -49,7 +49,7 @@
+@@ -48,7 +48,7 @@
     %{shared:-lc} \
     %{!shared:%{profile:-lc_p}%{!profile:-lc}}"
  
