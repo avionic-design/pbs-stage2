@@ -43,6 +43,7 @@ plat    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build          ob
 fetch   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  fetch   obj
 build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  build   obj
 install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  install obj
+binary  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  binary  obj
 kernel  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.kernel         obj
 initrd  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.initrd         obj
 rootfs  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.rootfs         obj
@@ -72,10 +73,12 @@ ifeq ($(mixed-targets),1)
 endif
 
 ifdef platform
-PLATFORM = $(objtree)/platform/$(platform)
-tmptree = $(PLATFORM)/build
-export PLATFORM
+  PLATFORM = $(objtree)/platform/$(platform)
+  tmptree = $(PLATFORM)/build
+  cache = $(PLATFORM)/cache
+  export PLATFORM
 
+  ifndef package
 list:
 	$(Q)$(MAKE) $(plat)=platform/$(platform) list
 
@@ -94,6 +97,9 @@ install:
 clean:
 	$(Q)$(MAKE) $(clean)=platform/$(platform)
 
+binary:
+	$(Q)$(MAKE) $(binary)=platform/$(platform)
+
 PHONY += initrd
 initrd:
 	$(Q)$(MAKE) $(initrd)=platform/$(platform) u-boot.img
@@ -105,7 +111,11 @@ rootfs:
 PHONY += card
 card:
 	$(Q)$(MAKE) $(card)=platform/$(platform) write
-endif
+
+  else
+    include platform/$(platform)/config.mk
+  endif # !package
+endif # platform
 
 ifdef package
 list uscan:
@@ -115,6 +125,9 @@ clean fetch checksum extract patch:
 	$(Q)$(MAKE) $(pkg)=$(package) $@
 
 configure build install:
+	$(Q)$(MAKE) $(pkg)=$(package) $@
+
+binary:
 	$(Q)$(MAKE) $(pkg)=$(package) $@
 endif
 
