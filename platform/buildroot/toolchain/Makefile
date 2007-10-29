@@ -8,6 +8,7 @@ endif
 ifneq ($(wildcard $(PLATFORM)/configs/$(target).mk),)
   include $(PLATFORM)/configs/$(target).mk
 else
+  $(warning using generic configuration)
   include $(PLATFORM)/configs/generic.mk
 endif
 
