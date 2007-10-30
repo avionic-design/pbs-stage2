@@ -4,6 +4,8 @@ VERSION = 2.18
 LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+##############################################################################
+
 include packages/toolchain/common.mk
 
 conf-args = \

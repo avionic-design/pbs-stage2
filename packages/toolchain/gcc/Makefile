@@ -6,6 +6,8 @@ TARBALLS = \
 	$(PACKAGE)-core-$(VERSION).tar.bz2 \
 	$(PACKAGE)-g++-$(VERSION).tar.bz2
 
+##############################################################################
+
 patchdir = $(srctree)/packages/$(package)/$(VERSION)/patches/$(LIBC)/$(FLOAT)
 
 include packages/toolchain/common.mk

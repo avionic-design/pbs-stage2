@@ -4,6 +4,8 @@ VERSION = 0.9.29
 LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
+##############################################################################
+
 include packages/toolchain/common.mk
 
 DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config
