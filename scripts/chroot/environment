@@ -1,6 +1,6 @@
 #!/tools/bin/sh
 
-PATH=/tools/sbin:/tools/bin
+PATH=/tools/sbin:/tools/bin:/toolchain/bin
 LD_LIBRARY_PATH=/tools/lib
 export PATH LD_LIBRARY_PATH
 
