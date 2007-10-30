@@ -5,7 +5,7 @@ HOST   = $(shell support/config.guess)
 ROOTFS = $(abspath $(PLATFORM)/../rootfs)
 export HOST ROOTFS
 
-ARCH          = $(shell gcc -dumpmachine | cut -d- -f1)
+ARCH          = $(shell echo $(HOST) | cut -d- -f1)
 CROSS_COMPILE =
 export ARCH CROSS_COMPILE
 
