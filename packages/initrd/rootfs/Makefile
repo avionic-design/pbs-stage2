@@ -11,6 +11,7 @@ DESCRIPTION = base root filesystem
 include packages/common.mk
 
 SOURCE_FILES = \
+	/etc/group \
 	/init \
 	/scripts/functions
 

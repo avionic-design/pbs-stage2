@@ -10,6 +10,7 @@ $(KBUILD_OUTPUT)/.config:
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			$(KERNEL_CONFIG)
 
+PHONY += $(PLATFORM)/kernel-release
 $(PLATFORM)/kernel-release:
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) \
@@ -37,7 +38,7 @@ PHONY += build
 build: build-zImage build-modules
 
 PHONY += headers-install
-headers-install: config
+headers-install: $(PLATFORM)/kernel-release config
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
@@ -48,7 +49,7 @@ headers-install: config
 	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
 
 PHONY += install-zImage
-install-zImage: build-zImage
+install-zImage: $(PLATFORM)/kernel-release build-zImage
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
@@ -56,7 +57,7 @@ install-zImage: build-zImage
 			zinstall
 
 PHONY += install-modules
-install-modules: build-modules
+install-modules: $(PLATFORM)/kernel-release build-modules
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
@@ -64,7 +65,7 @@ install-modules: build-modules
 			modules_install
 
 PHONY += install
-install: install-zImage install-modules $(PLATFORM)/kernel-release
+install: $(PLATFORM)/kernel-release install-zImage install-modules
 
 PHONY += clean
 clean:
