@@ -22,6 +22,11 @@ mount -o nodev,noexec,nosuid -t sysfs none /sys
 mount -o nodev,noexec,nosuid -t proc  none /proc
 log_end_msg
 
+# mount /dev filesystem
+log_begin_msg "Mounting /dev"
+mount -o rw,mode=0755,size=256K -t tmpfs udev /dev
+log_end_msg
+
 # create needed devices
 log_begin_msg "Creating devices"
 [ -e /dev/console ] || mknod /dev/console c 5 1
