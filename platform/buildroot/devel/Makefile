@@ -1,12 +1,17 @@
+LINUX_VERSION = 2.6.23.1
+export LINUX_VERSION
+
 HOST   = $(shell support/config.guess)
 ROOTFS = $(abspath $(PLATFORM)/../rootfs)
 export HOST ROOTFS
 
-ARCH          = $(shell gcc -dumpmachine | cut -d- -f1)
+ARCH          = $(shell echo $(HOST) | cut -d- -f1)
 CROSS_COMPILE =
 export ARCH CROSS_COMPILE
 
 # build a basic development root filesystem
+packages-y += buildroot/devel/linux-headers
+packages-y += buildroot/devel/glibc
 packages-y += buildroot/devel/coreutils
 packages-y += buildroot/devel/ncurses
 packages-y += buildroot/devel/bash
@@ -15,15 +20,19 @@ packages-y += buildroot/devel/gzip
 packages-y += buildroot/devel/bzip2
 packages-y += buildroot/devel/tar
 packages-y += buildroot/devel/sed
-packages-y += buildroot/devel/libpam
+#packages-y += buildroot/devel/libpam
 packages-y += buildroot/devel/sudo
 packages-y += buildroot/devel/make
 packages-y += buildroot/devel/flex
 packages-y += buildroot/devel/bison
 packages-y += buildroot/devel/quilt
+packages-y += buildroot/devel/debianutils
+packages-y += buildroot/devel/ipkg
+packages-y += buildroot/devel/ipkg-utils
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)
+platform-clean: __clean-dirs += $(ROOTFS)/tools
 platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)

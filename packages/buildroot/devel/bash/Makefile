@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/buildroot/devel/autotools.mk
 
+env = env -i PATH=${PATH}
+
 conf-args += \
 	--disable-nls
 

@@ -1,0 +1,11 @@
+--- a/gcc/gcc.c	2007-10-03 22:22:06.000000000 +0200
++++ b/gcc/gcc.c	2007-10-03 22:22:51.000000000 +0200
+@@ -1452,7 +1452,7 @@
+ #define STANDARD_STARTFILE_PREFIX_1 "/lib/"
+ #endif
+ #ifndef STANDARD_STARTFILE_PREFIX_2
+-#define STANDARD_STARTFILE_PREFIX_2 "/usr/lib/"
++#define STANDARD_STARTFILE_PREFIX_2 "/toolchain/lib/"
+ #endif
+ 
+ #ifdef CROSS_COMPILE  /* Don't use these prefixes for a cross compiler.  */

@@ -1,0 +1,15 @@
+ARCH = arm
+ARCH_LONG = armv4t
+CPU = xscale
+TUNE = strongarm110
+OS = linux
+LIBC = uclibc
+FLOAT = soft
+ABI = eabi
+TARGET = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT TARGET
+
+LINUX_VERSION = 2.6.23.1
+GCC_VERSION   = 4.2.2
+export LINUX_VERSION GCC_VERSION
+

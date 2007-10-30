@@ -1,0 +1,35 @@
+# build instructions for bootstrapping GCC 4.2.2
+#
+# This cross-gcc will be able to run on the build system because that's
+# necessary to build the C runtime library. After that's been built, a final
+# GCC will be generated to run in the root jail.
+
+env = env -i PATH=$(ROOTFS)$(prefix)/bin:${PATH}
+
+ifneq ($(HOST), $(TARGET))
+  conf-args := \
+	--target=$(TARGET) \
+	$(conf-args)
+endif
+
+conf-args += \
+	--with-build-sysroot=$(ROOTFS) \
+	--with-build-prefix=$(ROOTFS)$(prefix)/$(TARGET) \
+	--with-local-prefix=$(prefix) \
+	--program-prefix=$(TARGET)- \
+	--enable-shared \
+	--enable-languages=c,c++
+
+ifeq ($(FLOAT),soft)
+  conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+  conf-args += --enable-multilib
+else
+  conf-args += --disable-multilib
+endif
+
+package-post-install:
+	ln -sf $(TARGET)-gcc $(ROOTFS)$(prefix)/bin/$(TARGET)-cc
+

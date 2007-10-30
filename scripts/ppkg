@@ -1,0 +1,26 @@
+#!/bin/sh
+
+program=$0
+
+function usage()
+{
+	echo "usage: $program [install|remove|list] package"
+}
+
+case $1 in
+	install)
+		;;
+
+	remove)
+		;;
+
+	list)
+		;;
+
+	*)
+		usage
+		exit 1
+		;;
+esac
+
+

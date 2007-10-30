@@ -1,6 +1,3 @@
-+ make glibc-headers and glibc not use autotools.mk, or at least not the
-  targets so they can be customized
-+ adjust linux.git makefile to make building in separate directories possible
-
-+ make more packages use the autotools.mk template
-
++ The binutils --lib-path and gcc's specs file probably needs to make the
+  linker use libraries and loader from /tools, not /core. /core is supposed
+  to build /tools, but not be shipped with a final tarball or anything.

@@ -1,0 +1,20 @@
+src := $(obj)
+
+PHONY := all
+all:
+
+include scripts/pbuild.mk
+
+pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/packages/$(src))
+include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
+
+include scripts/Makefile.lib
+
+ifndef obj
+  $(warning pbuild: Makefile.chroot is included improperly)
+endif
+
+PHONY += binary
+binary:
+	@echo "binary: $(package)"
+

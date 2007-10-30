@@ -8,7 +8,7 @@ TARBALLS = \
 
 ##############################################################################
 
-include packages/buildroot/bootstrap/common.mk
+include packages/buildroot/bootstrap/autotools.mk
 include packages/buildroot/bootstrap/gcc/Makefile.$(VERSION)
 
 package-clean:

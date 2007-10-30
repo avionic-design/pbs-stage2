@@ -1,8 +1,12 @@
 include packages/buildroot/common.mk
 
-prefix = /tools
+HOST   ?= $(shell support/config.guess)
+BUILD  ?= $(HOST)
+TARGET ?= $(HOST)
+ARCH   ?= $(shell echo $(TARGET) | cut -d- -f1)
+prefix ?= $(devel-prefix)
 
-CROSS_COMPILE = $(ROOTFS)/tools/bin/
+CROSS_COMPILE = $(ROOTFS)$(bootstrap-prefix)/bin/$(HOST)-
 AR      = $(CROSS_COMPILE)ar
 AS      = $(CROSS_COMPILE)as
 CC      = $(CROSS_COMPILE)gcc
@@ -15,9 +19,10 @@ RANLIB  = $(CROSS_COMPILE)ranlib
 READELF = $(CROSS_COMPILE)readelf
 STRIP   = $(CROSS_COMPILE)strip
 
-CFLAGS   = --sysroot $(ROOTFS)
-CXXFLAGS = --sysroot $(ROOTFS)
-LDFLAGS  = --sysroot $(ROOTFS)
+CFLAGS   +=
+CPPFLAGS +=
+CXXFLAGS +=
+LDFLAGS  +=
 
 CROSS_TOOLS = \
 	AR \
@@ -31,4 +36,10 @@ CROSS_TOOLS = \
 	RANLIB \
 	READELF \
 	STRIP
+
+CROSS_FLAGS = \
+	CFLAGS \
+	CPPFLAGS \
+	CXXFLAGS \
+	LDFLAGS
 

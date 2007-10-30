@@ -1,0 +1,16 @@
+--- a/Makefile	2007-10-19 08:57:47.000000000 +0200
++++ b/Makefile	2007-10-19 08:59:21.000000000 +0200
+@@ -11,10 +11,10 @@
+ 	$(CC) $(CFLAGS) -o ipkg-compare-versions ipkg-compare-versions.c
+ 
+ install: ${UTILS}
+-	cp ${UTILS} $(PREFIX)/bin
+-	python setup.py install
++	cp ${UTILS} $(DESTDIR)$(PREFIX)/bin
++	python setup.py install --root=$(DESTDIR) --prefix=$(PREFIX)
+ 	chmod agu+rx ipkg-make-index
+-	cp -f ipkg-make-index $(PREFIX)/bin
++	cp -f ipkg-make-index $(DESTDIR)$(PREFIX)/bin
+ 
+ binary: build
+ 	mkdir -p ipkg-build-binary/usr/bin

@@ -1,0 +1,5 @@
+#0000-search-dirs.patch
+arm-softfloat.patch
+build-prefix.patch
+libtool.patch
+#configure-show-cpp.patch

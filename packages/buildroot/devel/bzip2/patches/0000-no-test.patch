@@ -1,0 +1,11 @@
+--- a/Makefile	2007-10-18 08:56:38.000000000 +0200
++++ b/Makefile	2007-10-18 08:56:47.000000000 +0200
+@@ -35,7 +35,7 @@
+       decompress.o \
+       bzlib.o
+ 
+-all: libbz2.a bzip2 bzip2recover test
++all: libbz2.a bzip2 bzip2recover
+ 
+ bzip2: libbz2.a bzip2.o
+ 	$(CC) $(CFLAGS) $(LDFLAGS) -o bzip2 bzip2.o -L. -lbz2

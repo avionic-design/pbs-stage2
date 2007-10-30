@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo -n "Removing /bin/sh symlink ... "
+rm -f $ROOTFS/bin/sh
+rmdir --ignore-fail-on-non-empty $ROOTFS/bin
+echo "done"
+

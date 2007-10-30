@@ -1,9 +1,13 @@
 # build instructions for final GCC 4.2.1
 
-include packages/buildroot/bootstrap/autotools.mk
+ifneq ($(HOST), $(TARGET))
+  conf-args += \
+	--target=$(TARGET)
+endif
 
 conf-args += \
-	--with-local-prefix=$(prefix) \
+	--with-local-prefix=$(dest-prefix) \
+	--program-prefix=$(TARGET)- \
 	--disable-multilib \
 	--disable-shared \
 	--disable-threads \
@@ -17,8 +21,5 @@ install-targets += \
 	install-gcc
 
 package-post-install:
-	ln -sf gcc $(ROOTFS)$(prefix)/bin/cc
-	$(ROOTFS)$(prefix)/bin/gcc -dumpspecs | \
-		sed -r 's@/lib(64)?/ld@$(prefix)/lib/ld@g' \
-		> $(dir $(shell $(ROOTFS)$(prefix)/bin/gcc -print-libgcc-file-name))specs
+	ln -sf $(TARGET)-gcc $(dest-prefix)/bin/$(TARGET)-cc
 

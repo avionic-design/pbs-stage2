@@ -28,6 +28,7 @@ uscan-packages   = $(call uniq, $(addsuffix -uscan,   $(packages-y)))
 fetch-packages   = $(call uniq, $(addsuffix -fetch,   $(packages-y)))
 build-packages   = $(call uniq, $(addsuffix -build,   $(packages-y)))
 install-packages = $(call uniq, $(addsuffix -install, $(packages-y)))
+binary-packages  = $(call uniq, $(addsuffix -binary,  $(packages-y)))
 
 PHONY += list
 list: $(list-packages)
@@ -43,6 +44,9 @@ build: $(build-packages)
 
 PHONY += install
 install: $(install-packages) platform-install
+
+PHONY += binary
+binary: $(binary-packages)
 
 $(list-packages): package = $(patsubst %-list,%,$@)
 $(list-packages):
@@ -63,6 +67,10 @@ $(build-packages):
 $(install-packages): package = $(patsubst %-install,%,$@)
 $(install-packages):
 	$(call cmd,install_pkg)
+
+$(binary-packages): package = $(patsubst %-binary,%,$@)
+$(binary-packages):
+	$(call cmd,binary_pkg)
 
 # dummies
 PHONY += platform-install

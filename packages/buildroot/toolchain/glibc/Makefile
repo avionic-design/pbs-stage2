@@ -1,46 +1,52 @@
 PACKAGE = glibc
-VERSION = 2.6
+VERSION = 2.6.1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
 	$(PACKAGE_FULLNAME).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
-include packages/toolchain/common.mk
+##############################################################################
 
-env += \
-	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes \
-	libc_cv_$(ARCH)_tls=yes
+patchdir = $(strip \
+		$(if $(wildcard $(pkgsrctree)/patches/$(ARCH)/series),\
+			$(pkgsrctree)/patches/$(ARCH), \
+			$(pkgsrctree)/patches \
+		) \
+	)
+
+include packages/buildroot/toolchain/autotools.mk
+include packages/buildroot/toolchain/glibc/Makefile.$(ARCH)
+
+prefix = $(toolchain-prefix)/$(TARGET)
+env    = env -i PATH=$(ROOTFS)$(toolchain-prefix)/bin:${PATH}
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
-conf-args = \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	--enable-addons=ports \
-	--with-headers=$(PLATFORM)/usr/include
+conf-args := \
+	--host=$(TARGET) \
+	$(conf-args)
 
-ifeq ($(FLOAT),soft)
-	conf-args += --without-fp
-endif
+conf-args += \
+	--with-binutils=$(ROOTFS)$(prefix)/bin \
+	--with-headers=$(ROOTFS)$(prefix)/include \
+	--disable-profile \
+	--enable-add-ons \
+	--without-gd \
+	--without-selinux
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
-			$(conf-args)
+conf-vars += \
+	libc_cv_forced_unwind=yes \
+	libc_cv_c_cleanup=yes
 
-build-args = \
-	MAKEFLAGS=
+install-vars += \
+	install_root=$(ROOTFS)
 
-package-build:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(build-args) all
+package-pre-install:
+	mkdir -p $(ROOTFS)$(prefix)/etc
+	touch $(ROOTFS)$(prefix)/etc/ld.so.conf
 
-install-args = \
-	install_root=$(PLATFORM)
-
-package-install:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(install-args) install
+package-clean:
+	@:
 

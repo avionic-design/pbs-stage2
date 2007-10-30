@@ -1,0 +1,11 @@
+#!/tools/bin/sh
+
+cat > /tools/bin/exit << EOF
+#!/tools/bin/sh
+
+/tools/bin/run-parts /build/scripts/chroot/logout.d
+builtin exit
+EOF
+
+chmod a+x /tools/bin/exit
+

@@ -14,7 +14,8 @@ endif
 PACKAGE_FULLNAME = $(PACKAGE)-$(VERSION)
 buildtree ?= $(tmptree)/$(package)
 pkgtree ?= $(buildtree)/$(PACKAGE_FULLNAME)
-export buildtree pkgtree
+pkgsrctree ?= $(srctree)/packages/$(package)
+export buildtree pkgtree pkgsrctree
 
 fetch := -f scripts/Makefile.pkg download
 
@@ -68,6 +69,9 @@ build: $(call stamp,build,$(package))
 PHONY += install
 install: $(call stamp,install,$(package))
 
+PHONY += binary
+binary: $(call package-hook,binary)
+
 # stamp targets
 $(call stamp,fetch,$(package)): $(stampdir) $(addprefix download/, $(TARBALLS))
 	$(makestamp)
@@ -93,6 +97,9 @@ $(call stamp,install,$(package)): $(stampdir) $(call stamp,build,$(package)) $(c
 # package hooks
 package-uscan:
 	$(Q)$(MAKE) -f scripts/Makefile.uscan package=$(package) uscan
+
+package-binary:
+	$(Q)$(MAKE) -f scripts/Makefile.chroot package=$(package) binary
 
 # dummy targets
 package-list:

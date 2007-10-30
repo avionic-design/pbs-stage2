@@ -1,17 +1,6 @@
-# select toolchain
-TOOLCHAIN = arm-xscale-linux-uclibc
-ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
-  include platform/toolchain/$(TOOLCHAIN)/Makefile
-endif
+include platform/$(platform)/config.mk
 
-ROOTFS = $(PLATFORM)/rootfs
-export ROOTFS
-
-LINUX_VERSION  = git
-KERNEL_CONFIG  = add-medinet_defconfig
-INITRD_VARIANT = uclibc
-export LINUX_VERSION KERNEL_CONFIG INITRD_VARIANT
-
+# create package list
 ifeq ($(LINUX_VERSION),git)
   packages-y = initrd/linux-image.git
 else
