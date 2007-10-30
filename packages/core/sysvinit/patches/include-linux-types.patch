@@ -1,0 +1,10 @@
+--- a/src/init.c	2007-10-25 14:54:58.000000000 +0200
++++ b/src/init.c	2007-10-25 14:55:27.000000000 +0200
+@@ -25,6 +25,7 @@
+ #include <sys/ioctl.h>
+ #include <sys/wait.h>
+ #ifdef __linux__
++#include <linux/types.h>
+ #include <sys/kd.h>
+ #endif
+ #include <sys/resource.h>
