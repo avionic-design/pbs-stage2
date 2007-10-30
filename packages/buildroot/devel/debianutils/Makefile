@@ -1,5 +1,5 @@
 PACKAGE = debianutils
-VERSION = 2.25.2
+VERSION = 2.26
 
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
