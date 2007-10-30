@@ -13,9 +13,9 @@ INITRD_VARIANT = uclibc
 export LINUX_VERSION KERNEL_CONFIG INITRD_VARIANT
 
 ifeq ($(LINUX_VERSION),git)
-  packages-y = initrd/linux.git
+  packages-y = initrd/linux-image.git
 else
-  packages-y = initrd/linux
+  packages-y = initrd/linux-image
 endif
 
 ifeq ($(INITRD_VARIANT),uclibc)
