@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Busybox version: 1.7.2
-# Tue Oct 16 10:38:31 2007
+# Thu Nov  1 12:48:22 2007
 #
 CONFIG_HAVE_DOT_CONFIG=y
 
@@ -137,7 +137,7 @@ CONFIG_CHROOT=y
 # CONFIG_CKSUM is not set
 # CONFIG_COMM is not set
 # CONFIG_CP is not set
-# CONFIG_CUT is not set
+CONFIG_CUT=y
 # CONFIG_DATE is not set
 # CONFIG_FEATURE_DATE_ISOFMT is not set
 # CONFIG_DD is not set
@@ -215,7 +215,7 @@ CONFIG_SLEEP=y
 CONFIG_TEST=y
 # CONFIG_FEATURE_TEST_64 is not set
 CONFIG_TOUCH=y
-# CONFIG_TR is not set
+CONFIG_TR=y
 # CONFIG_FEATURE_TR_CLASSES is not set
 # CONFIG_FEATURE_TR_EQUIV is not set
 CONFIG_TRUE=y
@@ -279,7 +279,7 @@ CONFIG_FEATURE_HUMAN_READABLE=y
 #
 # Editors
 #
-# CONFIG_AWK is not set
+CONFIG_AWK=y
 # CONFIG_FEATURE_AWK_MATH is not set
 # CONFIG_CMP is not set
 # CONFIG_DIFF is not set
@@ -288,7 +288,7 @@ CONFIG_FEATURE_HUMAN_READABLE=y
 # CONFIG_FEATURE_DIFF_MINIMAL is not set
 # CONFIG_ED is not set
 # CONFIG_PATCH is not set
-# CONFIG_SED is not set
+CONFIG_SED=y
 # CONFIG_VI is not set
 CONFIG_FEATURE_VI_MAX_LEN=
 # CONFIG_FEATURE_VI_COLON is not set
@@ -301,7 +301,7 @@ CONFIG_FEATURE_VI_MAX_LEN=
 # CONFIG_FEATURE_VI_SET is not set
 # CONFIG_FEATURE_VI_WIN_RESIZE is not set
 # CONFIG_FEATURE_VI_OPTIMIZE_CURSOR is not set
-# CONFIG_FEATURE_ALLOW_EXEC is not set
+CONFIG_FEATURE_ALLOW_EXEC=y
 
 #
 # Finding Utilities
