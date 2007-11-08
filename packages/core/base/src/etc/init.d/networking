@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ETH_DEFAULT_DRIVER="ethoc"
+ETH_DEFAULT_DRIVER=""
 ETH0_DEFAULT_ADDR="192.168.255.1"
 ETH1_DEFAULT_ADDR="192.168.255.2"
 
@@ -15,7 +15,11 @@ fi
 if [ "x$ETH_DRIVER" != "x" ]; then
 	/sbin/modprobe "$ETH_DRIVER"
 else
-	/sbin/modprobe "$ETH_DEFAULT_DRIVER"
+	if [ "x$ETH_DEFAULT_DRIVER" != "x" ]; then
+		/sbin/modprobe "$ETH_DEFAULT_DRIVER"
+	else
+		exit 0
+	fi
 fi
 
 echo -n 'Bringing up network interfaces: '
