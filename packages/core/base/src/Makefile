@@ -42,6 +42,7 @@ dirs := \
 	/usr \
 	/usr/bin \
 	/var \
+	/var/lock \
 	/var/log \
 	/var/run \
 	/tmp
@@ -75,7 +76,8 @@ files := \
 	/etc/udev/rules.d/udev.rules \
 	/lib/init/mount-functions.sh \
 	/lib/init/vars.sh \
-	/lib/lsb/init-functions
+	/lib/lsb/init-functions \
+	/sbin/update-flash
 
 libraries := \
 	/usr/lib/libabox.so

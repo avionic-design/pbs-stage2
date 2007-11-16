@@ -35,7 +35,7 @@ package-build:
 
 package-install: $(rootfs-dirs)
 	tar cf - -C packages/$(package)/src \
-		bin etc lib | \
+		bin etc lib sbin | \
 	$(priv) tar oxf - -C $(ROOTFS)
 #	$(priv) $(INSTALL) -o root -g root packages/$(package)/src/bin/* $(ROOTFS)/bin
 #	$(priv) $(INSTALL) -o root -g root packages/$(package)/src/etc/* $(ROOTFS)/etc

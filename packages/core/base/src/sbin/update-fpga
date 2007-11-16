@@ -1,0 +1,45 @@
+#!/bin/sh
+
+if [ "x$1" = "x" ] || [ "x$2" = "x" ]; then
+	echo "usage: $0 device filename"
+	exit 1
+fi
+
+device="$1"
+file="$2"
+
+echo "Updating FPGA image ... "
+
+echo -n "  Unlocking flash ... "
+flash_unlock "$device"
+echo "done"
+
+echo -n "  Erasing flash ... "
+flash_eraseall --quiet "$device"
+echo "done"
+
+echo -n "  Writing new image ... "
+dd if="$file" of="$device" > /dev/null 2>&1
+echo "done"
+
+echo -n "  Locking flash ... "
+flash_lock "$device" 0 -1
+echo "done"
+
+echo "done"
+
+echo -n "Verifying image ... "
+
+filesize=`stat -c %s "$file"`
+tmpfile=`mktemp`
+dd if="$device" of="$tmpfile" bs="$filesize" count=1 > /dev/null 2>&1
+cmp "$file" "$tmpfile"
+status=$?
+rm -f "$tmpfile"
+
+if [ "x$status" = "x0" ]; then
+	echo "done"
+else
+	echo "failed"
+fi
+
