@@ -27,6 +27,7 @@ packages-y += \
 	core/diffutils \
 	core/grep \
 	core/sed \
+	core/mktemp \
 	core/sysvinit \
 	core/udev \
 	libs/sysfsutils \

@@ -1,0 +1,21 @@
+diff --git a/Makefile.in b/Makefile.in
+index fcebbe8..a5069b0 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -105,13 +105,13 @@ $(OBJS): config.h
+ install: install-dirs install-binaries install-man
+ 
+ install-dirs:
+-	$(SHELL) $(srcdir)/mkinstalldirs $(bindir) $(mandir)/man1
++	$(SHELL) $(srcdir)/mkinstalldirs $(DESTDIR)$(bindir) $(DESTDIR)$(mandir)/man1
+ 
+ install-binaries: $(PROG)
+-	$(INSTALL) -m 0555 -s $(PROG) $(bindir)/$(PROG)
++	$(INSTALL) -m 0555 $(PROG) $(DESTDIR)$(bindir)/$(PROG)
+ 
+ install-man:
+-	$(INSTALL) -m 0444 $(srcdir)/$(PROG).$(mantype) $(mandir)/man1/$(PROG).1
++	$(INSTALL) -m 0444 $(srcdir)/$(PROG).$(mantype) $(DESTDIR)$(mandir)/man1/$(PROG).1
+ 
+ check:
+ 	@echo nothing to check
