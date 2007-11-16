@@ -8,8 +8,13 @@ DESCRIPTION = Linux kernel modules
 
 include packages/common.mk
 
+RELEASE     = $(shell cat $(PLATFORM)/kernel-release)
+INITRD_ROOT = $(abspath $(PLATFORM)/../initrd)
+SYSTEM_MAP  = $(INITRD_ROOT)/System.map-$(RELEASE)
+
 package-configure:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) config
+	ln -sf $(SYSTEM_MAP) $(buildtree)/System.map
 
 package-build:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) build-modules
