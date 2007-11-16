@@ -4,9 +4,11 @@ if [ ! -f /etc/modules ]; then
 	exit 0
 fi
 
-echo -n 'Generating module dependencies ... '
-/sbin/depmod
-echo 'done'
+if [ ! -f /lib/modules/`uname -r`/modules.dep ]; then
+	echo -n 'Generating module dependencies ... '
+	/sbin/depmod
+	echo 'done'
+fi
 
 echo 'Loading modules ...'
 
