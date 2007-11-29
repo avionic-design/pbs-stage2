@@ -35,9 +35,9 @@ tmpfile=`mktemp`
 dd if="$device" of="$tmpfile" bs="$filesize" count=1 > /dev/null 2>&1
 cmp "$file" "$tmpfile"
 status=$?
-rm -f "$tmpfile"
 
 if [ "x$status" = "x0" ]; then
+	rm -f "$tmpfile"
 	echo "done"
 else
 	echo "failed"
