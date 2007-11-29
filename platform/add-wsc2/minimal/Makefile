@@ -1,15 +1,4 @@
-# select toolchain
-TOOLCHAIN = arm-xscale-linux-uclibc
-ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
-  include platform/toolchain/$(TOOLCHAIN)/Makefile
-endif
-
-ROOTFS = $(PLATFORM)/rootfs
-export ROOTFS
-
-LINUX_VERSION = git
-KERNEL_CONFIG = add-wsc2_defconfig
-export LINUX_VERSION KERNEL_CONFIG
+include platform/$(platform)/config.mk
 
 NET      = y
 USB      = n
