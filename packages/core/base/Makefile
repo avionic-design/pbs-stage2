@@ -22,10 +22,14 @@ dirs = \
 	/etc/rcS.d \
 	/lib \
 	/media \
+	/media/sd-card \
 	/mnt \
 	/proc \
 	/root \
-	/sys
+	/sys \
+	/tmp \
+	/var/lock \
+	/var/run
 
 rootfs-dirs = $(addprefix $(ROOTFS), $(dirs))
 
