@@ -26,28 +26,28 @@ if [ ! -d /dev/pts ]; then
 	mkdir -p /dev/pts
 fi
 
-/bin/mount -t devpts -o noexec,nosuid,gid=$TTYGROUP,mode=$TTYMODE devpts /dev/pts
+/bin/mount -n -t devpts -o noexec,nosuid,gid=$TTYGROUP,mode=$TTYMODE devpts /dev/pts
 
 # mount /tmp filesystem
 if [ ! -d /tmp ]; then
 	mkdir /tmp
 fi
 
-/bin/mount -t tmpfs -o size=$TMPFS_SIZE,mode=$TMPFS_MODE,nosuid tmpfs /tmp
+/bin/mount -n -t tmpfs -o size=$TMPFS_SIZE,mode=$TMPFS_MODE,nosuid tmpfs /tmp
 
 # mount /var/lock filesystem
 if [ ! -d /var/lock ]; then
 	mkdir -p /var/lock
 fi
 
-/bin/mount -t tmpfs -o size=$LOCK_SIZE,mode=$LOCK_MODE,nosuid tmpfs /var/lock
+/bin/mount -n -t tmpfs -o size=$LOCK_SIZE,mode=$LOCK_MODE,nosuid tmpfs /var/lock
 
 # mount /var/run filesystem
 if [ ! -d /var/run ]; then
 	mkdir -p /var/run
 fi
 
-/bin/mount -t tmpfs -o size=$RUN_SIZE,mode=$RUN_MODE,nodev,noexec,nosuid tmpfs /var/run
+/bin/mount -n -t tmpfs -o size=$RUN_SIZE,mode=$RUN_MODE,nodev,noexec,nosuid tmpfs /var/run
 
 # vim: tw=0
 
