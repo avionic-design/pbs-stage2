@@ -1,7 +1,7 @@
 #!/bin/sh
 
 board=add-medinet
-mp=/media
+mp=/media/sd-card
 dev=/dev/sdc
 variant=minimal
 
@@ -37,7 +37,7 @@ set -x
 #sleep 5
 #umount $mp
 mount $dev $mp
-cp platform/$board/initrd/u-boot.img $mp
+cp platform/$board/initrd/u-boot.img $mp/boot
 cp platform/$board/$variant/rootfs.img $mp
 umount $mp
 
