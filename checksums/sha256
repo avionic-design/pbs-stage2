@@ -73,3 +73,8 @@ a28b5dc28e0e6b1e812e5b051205eaf3d9c3d299f8aecf3f915df1b76cb3b8a2  download/udev-
 813428c1aac04393ba64d0a23f9f820277357cbcdbdd391b9cf2bbf5257e8625  download/ipkg-utils-1.7.tar.gz
 bcd8c8fb2d9fb688dc8a9a45d5dc16fbdfd2cb0b16b40ea6f04f66fcd4763dcf  download/debianutils-2.26.tar.gz
 cdd1506b5bc85697723961db525f2ff57548e5ba3977a56c110220a0ff28bf75  download/mktemp-1.5.tar.gz
+42ffd09f50f6a0e16d832dbe0e8f1b2aa558b8982d1dd767ddb23365f9736dee  download/udev-117.tar.bz2
+4224a522ac4ee0fd89eb337e7505e280dfb05e2fe1ad44339ba8874081c0451a  download/glibc-2.7.tar.bz2
+3e481996259af87c3581da23481970a27de679e3c87cfa9a5a59751cd20c7b44  download/glibc-ports-2.7.tar.bz2
+65d116539fbcb76c4c7777695d56786cf88e25a47a550f136c2bc0e45ea5cd93  download/linux-2.6.23.9.tar.bz2
+dbbd87554d66e438245487ac31aa4a542a1c6c1ec8273cfacbbfeda09eb44a93  download/iputils-s20071127.tar.bz2
