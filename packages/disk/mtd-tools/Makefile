@@ -13,8 +13,10 @@ prefix = /usr
 
 # only build these tools
 RAWTARGETS = \
+	flashcp \
 	flash_erase \
 	flash_eraseall \
+	flash_info \
 	flash_lock \
 	flash_unlock
 
