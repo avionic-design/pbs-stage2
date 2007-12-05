@@ -1,1 +1,3 @@
-arm-define-RTLD_SINGLE_THREAD_P.patch
+lowlevellock.patch -p0
+arm-define-RTLD_SINGLE_THREAD_P.patch -p0
+arm-local-args6.patch -p0

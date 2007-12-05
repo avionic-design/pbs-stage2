@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.6.1
+VERSION = 2.7
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
@@ -13,6 +13,9 @@ DESCRIPTION = the GNU C library
 include packages/autotools.mk
 
 env  = env -i PATH=$(srctree)/platform/toolchain/$(TOOLCHAIN)/usr/bin:/usr/bin:/bin
+
+# always optimize glibc for speed (it won't even compile with -Os)
+CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
 
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
