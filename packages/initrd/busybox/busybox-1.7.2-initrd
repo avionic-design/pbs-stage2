@@ -136,7 +136,7 @@ CONFIG_CAT=y
 CONFIG_CHROOT=y
 # CONFIG_CKSUM is not set
 # CONFIG_COMM is not set
-# CONFIG_CP is not set
+CONFIG_CP=y
 CONFIG_CUT=y
 # CONFIG_DATE is not set
 # CONFIG_FEATURE_DATE_ISOFMT is not set

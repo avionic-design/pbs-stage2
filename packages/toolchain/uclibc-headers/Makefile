@@ -20,20 +20,20 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
-	PREFIX=$(PLATFORM) \
-	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	PREFIX=$(prefix)/ \
+	RUNTIME_PREFIX=$(HOST)/ \
+	DEVEL_PREFIX=$(HOST)/
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers
 
 install-args = \
-	PREFIX=$(PLATFORM) \
-	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	PREFIX=$(prefix)/ \
+	RUNTIME_PREFIX=$(HOST)/ \
+	DEVEL_PREFIX=$(HOST)/
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install_headers
+	cd $(pkgtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers
 	# copy additional architecture-independent headers
 	#cd $(pkgtree) && \
 	#	cp -r libc/sysdeps/linux/common/sys $(PLATFORM)/usr/include && \

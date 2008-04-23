@@ -24,14 +24,16 @@ ifndef TOOLCHAIN
   packages-y += toolchain/gcc
 
 PHONY += platform-clean
-platform-clean: __clean-dirs += $(PLATFORM)/bootstrap
-platform-clean: __clean-dirs += $(PLATFORM)/etc
-platform-clean: __clean-dirs += $(PLATFORM)/lib
-platform-clean: __clean-dirs += $(PLATFORM)/sbin
-platform-clean: __clean-dirs += $(PLATFORM)/usr
-platform-clean: __clean-dirs += $(builddir)
+platform-clean: __clean-dirs  += $(PLATFORM)/bootstrap
+platform-clean: __clean-dirs  += $(PLATFORM)/etc
+platform-clean: __clean-dirs  += $(PLATFORM)/lib
+platform-clean: __clean-dirs  += $(PLATFORM)/sbin
+platform-clean: __clean-dirs  += $(PLATFORM)/usr
+platform-clean: __clean-dirs  += $(builddir)
+platform-clean: __clean-files += $(PLATFORM)/kernel-release
 platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
+	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
 
 .PHONY: $(PHONY)
 else

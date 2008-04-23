@@ -6,6 +6,8 @@ export KERNELSRC
 
 DESCRIPTION = Linux kernel
 
+##############################################################################
+
 include packages/common.mk
 
 package-configure:

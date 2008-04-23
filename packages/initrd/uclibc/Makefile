@@ -1,7 +1,7 @@
 PACKAGE = uClibc
 VERSION = 0.9.29
 
-LOCATION = http://uclibc.org/downloads
+LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = small C library for embedded systems
@@ -26,7 +26,7 @@ package-configure:
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
-	PREFIX=$(PLATFORM)/rootfs \
+	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
 
@@ -36,7 +36,7 @@ package-build:
 install-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
-	PREFIX=$(PLATFORM)/rootfs \
+	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
 

@@ -5,12 +5,12 @@ TUNE = iwmmxt
 OS = linux
 LIBC = uclibc
 FLOAT = soft
-ABI = eabi
+ABI = oabi
 HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
 
-LINUX_VERSION = 2.6.22.6
-GCC_VERSION = 4.2.1
+LINUX_VERSION = 2.6.25
+GCC_VERSION = 4.3.0
 export LINUX_VERSION GCC_VERSION
 
 include platform/toolchain/common.mk

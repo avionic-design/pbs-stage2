@@ -8,6 +8,8 @@ DESCRIPTION = Linux kernel
 
 ##############################################################################
 
+include packages/common.mk
+
 package-configure:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) config
 
@@ -20,4 +22,7 @@ package-install:
 
 package-clean:
 	$(Q)$(MAKE) $(kernel)=platform/$(platform) clean
+
+kernel-version:
+	$(Q)$(MAKE) $(kernel)=platform/$(platform) version
 

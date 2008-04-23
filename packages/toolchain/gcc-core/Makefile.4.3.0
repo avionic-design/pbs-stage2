@@ -1,0 +1,56 @@
+# build instructions for bootstrap GCC 4.3.0
+
+#conf-args = \
+	--prefix=$(CORE_PREFIX) \
+	--with-local-prefix=$(PLATFORM) \
+	--with-sysroot=$(PLATFORM) \
+	--with-build-sysroot=$(PLATFORM) \
+	--with-as=$(PLATFORM)/usr/bin/$(HOST)-as \
+	--with-ld=$(PLATFORM)/usr/bin/$(HOST)-ld \
+	--program-prefix=$(HOST)- \
+	--disable-shared \
+	--disable-threads \
+	--disable-nls \
+	--enable-symvers=gnu \
+	--enable-languages=c
+
+#	--with-as=$(prefix)/bin/$(HOST)-as \
+	--with-ld=$(prefix)/bin/$(HOST)-ld \
+
+conf-args = \
+	--prefix=$(prefix) \
+	--includedir=$(prefix)/$(HOST)/include \
+	--libexecdir=$(prefix)/lib \
+	--program-prefix=$(HOST)- \
+	--enable-languages=c
+#	--enable-shared \
+	--enable-static \
+	--disable-threads \
+	--disable-nls \
+	--enable-symvers=gnu \
+	--enable-languages=c
+
+ifeq ($(FLOAT),soft)
+	conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+	conf-args += --enable-multilib
+else
+	conf-args += --disable-multilib
+endif
+
+package-configure:
+	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \
+		$(env) ../configure --target=$(HOST) $(conf-args)
+
+build-args =
+package-build:
+	cd $(pkgtree)/core-$(HOST) && \
+		$(env) $(MAKE) $(build-args) all-gcc
+
+install-args =
+package-install:
+	cd $(pkgtree)/core-$(HOST) && \
+		$(env) $(priv) $(MAKE) $(install-args) install-gcc
+

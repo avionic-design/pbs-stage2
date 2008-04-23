@@ -26,9 +26,9 @@ package-configure:
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)/usr/include \
-	PREFIX= \
-	RUNTIME_PREFIX= \
-	DEVEL_PREFIX=
+	PREFIX=$(ROOTFS) \
+	RUNTIME_PREFIX=/ \
+	DEVEL_PREFIX=/usr/
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
@@ -40,7 +40,11 @@ install-args = \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
 
-package-install:
+rootfs-dirs = \
+	$(ROOTFS)/etc/init.d \
+	$(ROOTFS)/etc/rcS.d
+
+package-install: $(rootfs-dirs)
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
@@ -48,4 +52,7 @@ package-install:
 	$(priv) cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
 	$(priv) cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
 	$(priv) ln -s ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
+
+$(rootfs-dirs):
+	$(call cmd,priv_mkdir_p)
 

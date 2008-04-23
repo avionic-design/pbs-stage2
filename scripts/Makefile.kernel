@@ -51,11 +51,11 @@ headers-install: config
 	cd $(KERNELSRC) && \
 		$(priv) $(MAKE) ARCH=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			INSTALL_HDR_PATH=$(ROOTFS)/usr \
+			INSTALL_HDR_PATH=$(ROOTFS)$(prefix) \
 			headers_install
 	# some programs need this to compile
-	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)/usr/include/asm
-	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)/usr/include/linux
+	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)$(prefix)/include/asm
+	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)$(prefix)/include/linux
 
 PHONY += install-zImage
 install-zImage: build-zImage

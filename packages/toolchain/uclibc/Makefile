@@ -13,8 +13,7 @@ CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
 DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
 conf-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
+	CROSS_COMPILE=$(prefix)/bin/$(HOST)- \
 	MAKEFLAGS= \
 	V=1
 
@@ -23,22 +22,20 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
-	PREFIX=$(PLATFORM) \
-	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/ \
+	CROSS_COMPILE=$(prefix)/bin/$(HOST)- \
+	PREFIX=$(prefix)/ \
+	RUNTIME_PREFIX=$(HOST)/ \
+	DEVEL_PREFIX=$(HOST)/ \
 	V=1
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
 install-args = \
-	CROSS_COMPILE=$(PLATFORM)/usr/bin/$(HOST)- \
-	CC=$(CORE_PREFIX)/bin/$(HOST)-gcc \
-	PREFIX=$(PLATFORM) \
-	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/ \
+	CROSS_COMPILE=$(prefix)/bin/$(HOST)- \
+	PREFIX=$(prefix)/ \
+	RUNTIME_PREFIX=$(HOST)/ \
+	DEVEL_PREFIX=$(HOST)/ \
 	V=1
 
 package-install:

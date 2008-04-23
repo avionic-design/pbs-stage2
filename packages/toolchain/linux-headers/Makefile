@@ -7,10 +7,12 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 ##############################################################################
 
 include packages/toolchain/common.mk
+prefix := $(prefix)/$(HOST)
+export prefix priv
 
 KERNELSRC     = $(pkgtree)
 KERNEL_CONFIG = defconfig
-ROOTFS        = $(PLATFORM)
+ROOTFS        =
 export KERNELSRC KERNEL_CONFIG ROOTFS
 
 package-configure:
