@@ -15,6 +15,7 @@ tmptree  = $(CURDIR)/tmp
 src     := $(srctree)
 obj     := $(objtree)
 tmp      = $(tmptree)
+cpus    := $(shell cat /proc/cpuinfo | grep '^processor.*:' | wc -l)
 VPATH   := $(srctree)
 
 export srctree objtree tmptree VPATH

@@ -1,19 +1,25 @@
 # common definitions for toolchain platforms
 
 ifdef TOOLCHAIN
-  TOOLCHAIN_ROOT = $(srctree)/platform/toolchain/$(TOOLCHAIN)
-  CROSS_COMPILE = $(TOOLCHAIN_ROOT)/usr/bin/$(HOST)-
+  ifeq ($(variant),sysroot)
+    TOOLCHAIN_ROOT = $(srctree)/platform/toolchain/$(TOOLCHAIN)
+  endif
+
+  CROSS_COMPILE = $(TOOLCHAIN_ROOT)$(prefix)/bin/$(TARGET)-
   export TOOLCHAIN_ROOT CROSS_COMPILE
 
-  # FIXME: does this really belong here? it doesn't have anything to do with
-  # the toolchain
-  SYSROOT ?= $(PLATFORM)/rootfs
-  export SYSROOT
+  ifeq ($(variant),sysroot)
+    # FIXME: does this really belong here? it doesn't have anything to do with
+    # the toolchain
+    SYSROOT ?= $(PLATFORM)/rootfs
+    export SYSROOT
+
+    CPPFLAGS += \
+	--sysroot=$(SYSROOT)
+  endif
 
   ABIFLAGS  =
   OPTFLAGS  =
-  CPPFLAGS += \
-	--sysroot=$(SYSROOT)
 
   CFLAGS = \
 	$(CPPFLAGS) \

@@ -7,12 +7,22 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 ##############################################################################
 
 include packages/toolchain/common.mk
+ifeq ($(variant),sysroot)
+  ROOTFS := $(PLATFORM)
+  libdir :=
+else
+  ROOTFS :=
+  libdir := $(TARGET)
+endif
 
-DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config
+DEF_CONFIG = conf/$(PACKAGE_FULLNAME)-$(ARCH).config
 CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
 DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
 conf-args = \
+	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
+	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	PREFIX=$(ROOTFS) \
 	MAKEFLAGS=
 
 package-configure:
@@ -20,17 +30,17 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
-	PREFIX=$(prefix)/ \
-	RUNTIME_PREFIX=$(HOST)/ \
-	DEVEL_PREFIX=$(HOST)/
+	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
+	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	PREFIX=$(ROOTFS)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers
 
 install-args = \
-	PREFIX=$(prefix)/ \
-	RUNTIME_PREFIX=$(HOST)/ \
-	DEVEL_PREFIX=$(HOST)/
+	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
+	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	PREFIX=$(ROOTFS)
 
 package-install:
 	cd $(pkgtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers

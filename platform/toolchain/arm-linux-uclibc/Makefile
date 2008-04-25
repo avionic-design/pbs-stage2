@@ -1,14 +1,18 @@
 ARCH = arm
+CPU = xscale
 OS = linux
 LIBC = uclibc
 FLOAT = soft
 ABI = oabi
-HOST = $(ARCH)-$(OS)-$(LIBC)
-export ARCH OS LIBC FLOAT ABI HOST
+TARGET = $(ARCH)-$(OS)-$(LIBC)
+export ARCH CPU OS LIBC FLOAT ABI TARGET
 
 LINUX_VERSION = 2.6.25
 GCC_VERSION = 4.3.0
 export LINUX_VERSION GCC_VERSION
+
+#variant = sysroot
+#export variant
 
 include platform/toolchain/common.mk
 

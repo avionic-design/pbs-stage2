@@ -1,14 +1,11 @@
 # build instructions for bootstrap GCC 4.2.2
 
 conf-args = \
-	--prefix=$(CORE_PREFIX) \
-	--with-local-prefix=$(PLATFORM) \
-	--with-sysroot=$(PLATFORM) \
-	--with-build-sysroot=$(PLATFORM) \
-	--with-as=$(PLATFORM)/usr/bin/$(HOST)-as \
-	--with-ld=$(PLATFORM)/usr/bin/$(HOST)-ld \
-	--program-prefix=$(HOST)- \
-	--disable-multilib \
+	--target=$(TARGET) \
+	--prefix=$(prefix) \
+	--mandir=$(prefix)/share/man \
+	--infodir=$(prefix)/share/info \
+	--program-prefix=$(TARGET)- \
 	--disable-shared \
 	--disable-threads \
 	--disable-nls \
@@ -26,17 +23,16 @@ else
 endif
 
 package-configure:
-	mkdir -p $(pkgtree)/core-$(HOST) && cd $(pkgtree)/core-$(HOST) && \
-		$(env) ../configure --target=$(HOST) --host=$(BUILD) \
-			$(conf-args)
+	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
+		$(env) ../configure $(conf-args)
 
 build-args =
 package-build:
-	cd $(pkgtree)/core-$(HOST) && \
+	cd $(pkgtree)/obj-$(HOST) && \
 		$(env) $(MAKE) $(build-args) all-gcc
 
 install-args =
 package-install:
-	cd $(pkgtree)/core-$(HOST) && \
-		$(env) $(MAKE) $(install-args) install-gcc
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(priv) $(MAKE) $(install-args) install-gcc
 
