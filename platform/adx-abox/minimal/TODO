@@ -1,0 +1,2 @@
+- create necessary directories (/var/run, ...)
+- install udhcpc script
