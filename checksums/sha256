@@ -85,3 +85,5 @@ dbbd87554d66e438245487ac31aa4a542a1c6c1ec8273cfacbbfeda09eb44a93  download/iputi
 99ec052e13e8c2bc7d1db86d1c98fb651d45fd3e8ea90b0981c47f6e8826c813  download/gcc-core-4.2.3.tar.bz2
 d87dff2eafdfb3ca1842feb9500b9e1fd01ff9ff6a8cea05d8dc459748f9ff6a  download/gcc-g++-4.2.3.tar.bz2
 8d103554f7cf1ae60047d8f30fbd5e9cae6d3aecbe90783f88878a8701fce135  download/busybox-1.10.0.tar.bz2
+39d3d7948d000af63e9c7c0120627637a462bfda8955dc1c97617ad14ef94d5a  download/linux-2.6.24.7.tar.bz2
+11674760f70b233cbff96a63443fb2893f784ee268cb546dcdde6b842a273686  download/linux-2.6.25.2.tar.bz2
