@@ -1,2 +1,5 @@
 - create necessary directories (/var/run, ...)
 - install udhcpc script
+
+- generate FIT image for U-Boot
+
