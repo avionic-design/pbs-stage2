@@ -41,10 +41,16 @@ EXEC_ADDR = 0xA0008000
 concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
 
 quiet_cmd_mk_uboot_img = MKIMAGE    $@
-      cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none -a $(LOAD_ADDR) -e $(EXEC_ADDR) -d $(call concat, :, $^) $@
+      cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none \
+                                    -a $(LOAD_ADDR) -e $(EXEC_ADDR) \
+                                    -d $(call concat, :, $^) $@
+      cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@
 
 $(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
 	$(call cmd,mk_uboot_img)
+
+$(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
+	$(call cmd,mk_uboot_fit)
 
 PHONY += FORCE
 FORCE: ;
