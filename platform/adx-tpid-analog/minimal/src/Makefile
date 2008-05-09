@@ -11,7 +11,9 @@ dirs = \
        /etc/init.d
 
 files = \
-	/etc/init.d/rcS
+	/etc/group \
+	/etc/init.d/rcS \
+	/etc/passwd
 
 rootfs-dirs  = $(addprefix $(ROOTFS), $(dirs))
 rootfs-files = $(addprefix $(ROOTFS), $(files))
