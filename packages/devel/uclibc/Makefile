@@ -10,9 +10,15 @@ DESCRIPTION = small C library for embedded systems
 
 include packages/common.mk
 
-DEF_CONFIG = conf/$(PACKAGE_FULLNAME).config
-CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
-DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+ifneq ($(ABI),)
+DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
+CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU)-$(ABI).config
+else
+DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH).config
+CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU).config
+endif
+
+DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
 conf-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
@@ -20,7 +26,7 @@ conf-args = \
 	MAKEFLAGS=
 
 package-configure:
-	cp $(DOT_CONFIG) $(pkgtree)/.config
+	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/.config
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
@@ -51,7 +57,7 @@ package-install: $(rootfs-dirs)
 	$(priv) $(STRIP) $(ROOTFS)/lib/libgcc_s.so.1
 	$(priv) cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
 	$(priv) cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
-	$(priv) ln -s ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
+	$(priv) ln -sf ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
 
 $(rootfs-dirs):
 	$(call cmd,priv_mkdir_p)

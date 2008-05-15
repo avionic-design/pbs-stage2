@@ -1,8 +1,30 @@
 # select toolchain
-TOOLCHAIN = arm-xscale-linux-uclibc
-ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
-  include platform/toolchain/$(TOOLCHAIN)/Makefile
+ifeq ($(CUSTOM_TOOLCHAIN),y)
+  ARCH = arm
+  CPU  = xscale
+  OS   = linux
+  LIBC = uclibc
+  ABI  = eabi
+  export ARCH CPU OS LIBC ABI
+
+  TOOLCHAIN = $(ARCH)-$(CPU)-$(OS)-$(LIBC)$(ABI)
+  ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
+    include platform/toolchain/$(TOOLCHAIN)/Makefile
+  endif
+else
+  ARCH = arm
+  CPU  = xscale
+  OS   = linux
+  LIBC = gnu
+  ABI  = eabi
+  CROSS_COMPILE = $(ARCH)-$(OS)-$(LIBC)$(ABI)-
+  export ARCH OS LIBC ABI CROSS_COMPILE
 endif
+
+TARGET_LIBC    = uclibc
+TARGET_BUSYBOX = static
+export TARGET_LIBC BUSYBOX_STATIC
+
 
 prefix = /usr
 priv = sudo
@@ -13,15 +35,26 @@ LINUX_VERSION = git
 KERNEL_CONFIG = adx-abox_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
+# select kernel version
 ifeq ($(LINUX_VERSION),git)
   packages-y = kernel/linux.git
 else
   packages-y = kernel/linux
 endif
 
-packages-y += \
-	devel/uclibc \
-	core/busybox
+# select C library
+ifeq ($(TARGET_LIBC),uclibc)
+  packages-y += devel/uclibc
+else
+  packages-y += devel/glibc
+endif
+
+# select busybox variant
+ifeq ($(TARGET_BUSYBOX),static)
+  packages-y += core/busybox-static
+else
+  packages-y += core/busybox
+endif
 
 PHONY += platform-clean
 platform-clean: __clean-dirs  += $(builddir)
