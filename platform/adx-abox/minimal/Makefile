@@ -1,3 +1,5 @@
+CUSTOM_TOOLCHAIN = y
+
 # select toolchain
 ifeq ($(CUSTOM_TOOLCHAIN),y)
   ARCH = arm
@@ -22,9 +24,8 @@ else
 endif
 
 TARGET_LIBC    = uclibc
-TARGET_BUSYBOX = static
-export TARGET_LIBC BUSYBOX_STATIC
-
+TARGET_BUSYBOX = shared
+export TARGET_LIBC TARGET_BUSYBOX
 
 prefix = /usr
 priv = sudo
