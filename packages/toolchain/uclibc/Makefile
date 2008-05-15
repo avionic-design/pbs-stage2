@@ -15,9 +15,15 @@ else
   libdir := $(TARGET)
 endif
 
-DEF_CONFIG = conf/$(PACKAGE_FULLNAME)-$(ARCH).config
-CPU_CONFIG = conf/$(PACKAGE_FULLNAME)-$(CPU).config
-DOT_CONFIG = $(if $(wildcard $(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+ifneq ($(ABI),)
+DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
+CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU)-$(ABI).config
+else
+DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH).config
+CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU).config
+endif
+
+DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
 conf-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
@@ -27,7 +33,7 @@ conf-args = \
 	MAKEFLAGS=
 
 package-configure:
-	cp $(DOT_CONFIG) $(pkgtree)/.config
+	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/.config
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
