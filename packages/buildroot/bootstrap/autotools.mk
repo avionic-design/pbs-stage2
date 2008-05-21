@@ -15,17 +15,15 @@ ifeq ($(HOST), $(BUILD))
 	--build=$(BUILD)
 else
   conf-args += \
-	--build=$(BUILD) \
-	--host=$(HOST)
+	--host=$(HOST) \
+	--build=$(BUILD)
 endif
 
-dest-prefix = $(ROOTFS)$(prefix)
-
 conf-args += \
-	--prefix=$(dest-prefix) \
-	--infodir=$(dest-prefix)/share/info \
-	--mandir=$(dest-prefix)/share/man \
-	--sysconfdir=$(dest-prefix)/etc
+	--prefix=$(ROOTFS)$(prefix) \
+	--infodir=$(ROOTFS)$(prefix)/share/info \
+	--mandir=$(ROOTFS)$(prefix)/share/man \
+	--sysconfdir=$(ROOTFS)$(prefix)/etc
 
 conf-vars +=
 

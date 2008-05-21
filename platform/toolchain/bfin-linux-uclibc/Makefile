@@ -2,25 +2,21 @@ ARCH = blackfin
 CPU = bfin
 OS = linux
 LIBC = uclibc
-HOST = $(CPU)-$(OS)-$(LIBC)
-export ARCH CPU OS LIBC HOST
+TARGET = $(CPU)-$(OS)-$(LIBC)
+export ARCH CPU OS LIBC TARGET
 
-LINUX_VERSION = 2.6.24.4
+LINUX_VERSION = 2.6.25.4
 GCC_VERSION = 4.3.0
-export LINUX_VERSION GCC_VERSION
+#LIBC_VERSION = 0.9.29
+LIBC_VERSION = snapshot
+export LINUX_VERSION GCC_VERSION LIBC_VERSION
+
+variant = sysroot
+export variant
 
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN
-  packages-y += toolchain/binutils
-  packages-y += toolchain/gcc-core
-  packages-y += toolchain/linux-headers
-  packages-y += toolchain/binutils
-  packages-y += toolchain/uclibc-headers
-  packages-y += toolchain/gcc-core
-  packages-y += toolchain/uclibc
-  packages-y += toolchain/gcc
-
 PHONY += platform-clean
 platform-clean: __clean-dirs  += $(PLATFORM)/bootstrap
 platform-clean: __clean-dirs  += $(PLATFORM)/lib

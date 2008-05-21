@@ -12,6 +12,7 @@ $(KBUILD_OUTPUT)/.config:
 
 PHONY += $(PLATFORM)/kernel-release
 $(PLATFORM)/kernel-release:
+ifneq ($(ARCH),blackfin)
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
@@ -20,6 +21,7 @@ $(PLATFORM)/kernel-release:
 		$(MAKE) ARCH=$(ARCH) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			kernelrelease > $@
+endif
 
 PHONY += config
 config: $(KBUILD_OUTPUT)/.config $(PLATFORM)/kernel-release

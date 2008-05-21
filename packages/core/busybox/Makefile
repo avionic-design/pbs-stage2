@@ -38,6 +38,9 @@ package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) chmod u+s $(ROOTFS)/bin/busybox
 
+package-clean:
+	@:
+
 ifneq ($(TARGET_LIBC),$(LIBC))
   ifeq ($(TARGET_LIBC),uclibc)
     conf-args    += CFLAGS='-muclibc'

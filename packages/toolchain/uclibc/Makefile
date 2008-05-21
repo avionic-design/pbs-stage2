@@ -1,10 +1,17 @@
 PACKAGE = uClibc
-VERSION = 0.9.29
+VERSION = $(LIBC_VERSION)
 
-LOCATION = http://uclibc.org/downloads
+ifeq ($(LIBC_VERSION),snapshot)
+  LOCATION = http://uclibc.org/downloads/snapshots
+  pkgtree  = $(buildtree)/$(PACKAGE)
+else
+  LOCATION = http://uclibc.org/downloads
+endif
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
+
+patchdir = $(pkgsrctree)/patches/$(VERSION)
 
 include packages/toolchain/common.mk
 ifeq ($(variant),sysroot)
@@ -40,7 +47,8 @@ build-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
 	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
 	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
-	PREFIX=$(ROOTFS)
+	PREFIX=$(ROOTFS) \
+	V=1
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)

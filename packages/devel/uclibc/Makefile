@@ -59,6 +59,9 @@ package-install: $(rootfs-dirs)
 	$(priv) cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
 	$(priv) ln -sf ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
 
+package-clean:
+	@:
+
 $(rootfs-dirs):
 	$(call cmd,priv_mkdir_p)
 

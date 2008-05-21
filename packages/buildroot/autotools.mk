@@ -9,11 +9,12 @@ endif
 ifeq ($(findstring noconf,$(PBS_OPTS)),)
 
 ifeq ($(HOST), $(BUILD))
-  conf-args += \
-	--build=$(BUILD)
+#  conf-args += \
+#	--build=$(BUILD)
 else
   conf-args += \
-	--build=$(BUILD) \
+	--host=$(HOST)
+#	--build=$(BUILD) \
 	--host=$(HOST)
 endif
 

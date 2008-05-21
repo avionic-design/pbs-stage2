@@ -1,0 +1,46 @@
+# build instructions for bootstrap GCC 4.3.0
+
+ifneq ($(HOST), $(TARGET))
+  conf-args += \
+	--target=$(TARGET)
+endif
+
+conf-args += \
+	--program-prefix=$(TARGET)- \
+	--disable-libmudflap \
+	--disable-libssp \
+	--disable-shared \
+	--disable-threads \
+	--disable-nls \
+	--enable-symvers=gnu \
+	--enable-languages=c
+
+ifeq ($(variant),sysroot)
+  conf-args += \
+	--with-local-prefix=$(ROOTFS) \
+	--with-build-sysroot=$(ROOTFS) \
+	--with-sysroot=$(ROOTFS) \
+	--with-as=$(ROOTFS)$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
+else
+  conf-args += \
+	--includedir=$(prefix)/$(TARGET)/include \
+	--libexecdir=$(prefix)/lib
+endif
+
+ifeq ($(FLOAT),soft)
+  conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+  conf-args += --enable-multilib
+else
+  conf-args += --disable-multilib
+endif
+
+build-args += \
+	all-gcc
+
+install-targets += \
+	install-gcc
+

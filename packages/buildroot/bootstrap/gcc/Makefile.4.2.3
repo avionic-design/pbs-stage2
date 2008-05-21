@@ -1,4 +1,4 @@
-# build instructions for bootstrap GCC 4.3.0
+# build instructions for final GCC 4.2.3
 
 conf-args = \
 	--target=$(TARGET) \
@@ -6,11 +6,10 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--disable-libmudflap \
 	--disable-libssp \
-	--disable-shared \
-	--disable-threads \
-	--disable-nls \
+	--disable-static \
+	--enable-shared \
 	--enable-symvers=gnu \
-	--enable-languages=c
+	--enable-languages=c,c++
 
 ifeq ($(variant),sysroot)
   conf-args += \
@@ -25,40 +24,31 @@ else
 	--libexecdir=$(prefix)/lib
 endif
 
+
 ifeq ($(FLOAT),soft)
-	conf-args += --with-float=soft
+  conf-args += --with-float=soft
 endif
 
 ifeq ($(MULTILIB),y)
-	conf-args += --enable-multilib
+  conf-args += --enable-multilib
 else
-	conf-args += --disable-multilib
+  conf-args += --disable-multilib
 endif
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		$(env) ../configure $(conf-args)
+		../configure $(conf-args)
 
 build-args =
 package-build:
 	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(MAKE) $(build-args) all-gcc
-#	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(MAKE) $(build-args) all-target-libgcc
+		$(env) $(MAKE) $(build-args)
 
 ifeq ($(variant),sysroot)
-  CC           = $(PLATFORM)$(prefix)/bin/$(TARGET)-gcc
   install-args = DESTDIR=$(PLATFORM)
-else
-  CC           = $(prefix)/bin/$(TARGET)-gcc
 endif
 
 package-install:
 	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(priv) $(MAKE) $(install-args) install-gcc
-#	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(priv) $(MAKE) $(install-args) install-target-libgcc
-	# link missing fixed headers
-	$(priv) ln -sf ../include-fixed/limits.h \
-		`$(CC) -print-file-name=include`/limits.h
+		$(env) $(priv) $(MAKE) $(install-args) install
 

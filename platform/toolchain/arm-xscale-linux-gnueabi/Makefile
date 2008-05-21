@@ -5,13 +5,16 @@ TUNE = strongarm110
 OS = linux
 LIBC = gnu
 FLOAT = soft
-ABI = oabi
-HOST = $(ARCH)-$(CPU)-$(OS)-$(LIBC)
-export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT HOST
+ABI = eabi
+TARGET = $(ARCH)-$(CPU)-$(OS)-$(LIBC)$(ABI)
+export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT ABI TARGET
 
-LINUX_VERSION = 2.6.23.9
-GCC_VERSION = 4.2.2
+LINUX_VERSION = 2.6.25.4
+GCC_VERSION = 4.2.3
 export LINUX_VERSION GCC_VERSION
+
+variant = sysroot
+export variant
 
 include platform/toolchain/common.mk
 
@@ -38,10 +41,11 @@ platform-clean:
 .PHONY: $(PHONY)
 else
   # set optimization flags, etc.
-# for EABI
-#  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
-# for OABI
+ifeq ($(ABI),eabi)
+  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+else
   ABIFLAGS = -mlittle-endian
+endif
   OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)
@@ -52,7 +56,7 @@ else
   ABIFLAGS += -mhard-float
 endif
 
-  CPPFLAGS = --sysroot $(ROOTFS)
+  CPPFLAGS = --sysroot=$(ROOTFS)
   CFLAGS = \
 	$(CPPFLAGS) \
 	$(ABIFLAGS) \

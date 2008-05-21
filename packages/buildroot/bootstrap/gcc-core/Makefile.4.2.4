@@ -1,4 +1,4 @@
-# build instructions for bootstrap GCC 4.3.0
+# build instructions for bootstrap GCC 4.2.4
 
 conf-args = \
 	--target=$(TARGET) \
@@ -59,6 +59,6 @@ package-install:
 #	cd $(pkgtree)/obj-$(HOST) && \
 		$(env) $(priv) $(MAKE) $(install-args) install-target-libgcc
 	# link missing fixed headers
-	$(priv) ln -sf ../include-fixed/limits.h \
+	$(priv) ln -sf ../install-tools/include/limits.h \
 		`$(CC) -print-file-name=include`/limits.h
 

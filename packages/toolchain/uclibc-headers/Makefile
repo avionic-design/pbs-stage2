@@ -1,7 +1,12 @@
 PACKAGE = uClibc
-VERSION = 0.9.29
+VERSION = $(LIBC_VERSION)
 
-LOCATION = http://uclibc.org/downloads
+ifeq ($(LIBC_VERSION),snapshot)
+  LOCATION = http://uclibc.org/downloads/snapshots
+  pkgtree  = $(buildtree)/$(PACKAGE)
+else
+  LOCATION = http://uclibc.org/downloads
+endif
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
