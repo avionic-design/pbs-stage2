@@ -24,8 +24,8 @@ ifeq ($(variant),sysroot)
 	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
 else
   conf-args += \
-	--includedir=$(prefix)/$(TARGET)/include \
-	--libexecdir=$(prefix)/lib
+	--includedir=$(ROOTFS)$(prefix)/$(TARGET)/include \
+	--libexecdir=$(ROOTFS)$(prefix)/lib
 endif
 
 ifeq ($(FLOAT),soft)

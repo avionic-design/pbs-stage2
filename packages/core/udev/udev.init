@@ -45,7 +45,7 @@ case $1 in
 		mkdir -p /dev/.udev/queue
 
 		log_action_begin_msg "Synthesizing initial hotplug events"
-		if /sbin/udevtrigger; then
+		if /sbin/udevadm trigger; then
 			log_action_end_msg $?
 		else
 			log_action_end_msg $?
@@ -54,7 +54,7 @@ case $1 in
 		create_dev_makedev
 
 		log_action_begin_msg "Waiting for /dev to be fully populated"
-		if /sbin/udevsettle --timeout 30; then
+		if /sbin/udevadm settle --timeout 30; then
 			log_action_end_msg 0
 		else
 			log_action_end_msg 0 'timeout'
@@ -88,7 +88,7 @@ case $1 in
 		;;
 
 	reload | force-reload)
-		/sbin/udevcontrol reload_rules
+		/sbin/udevadm control reload_rules
 		;;
 
 	*)

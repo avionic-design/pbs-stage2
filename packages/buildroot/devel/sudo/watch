@@ -1,0 +1,3 @@
+version=3
+http://www.sudo.ws/sudo/dist/sudo-(.+)\.tar.gz
+

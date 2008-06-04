@@ -6,14 +6,53 @@ TARBALLS = $(PACKAGE)src.v$(VERSION).tar.gz
 
 ##############################################################################
 
-include packages/autotools.mk
+include packages/common.mk
 
-conf-vars += \
-	$(call set-args, CC CFLAGS LD)
+conf-args = \
+	--prefix=$(prefix) \
+	--host=$(TARGET)
 
-install-vars += \
+conf-vars = \
+	CC='$(CC)' \
+	CFLAGS='$(CFLAGS)'
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
+
+build-args =
+package-build:
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
+
+install-args = \
 	prefix=$(ROOTFS)$(prefix) \
 	mandir=$(ROOTFS)$(prefix)/share/man/man1
+
+_package-install:
+	$(priv) mkdir -p $(ROOTFS)$(prefix)/share/man/man1
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+
+files-strip = \
+	/usr/bin/jpegtran \
+	/usr/bin/wrjpgcom \
+	/usr/bin/djpeg \
+	/usr/bin/cjpeg \
+	/usr/bin/rdjpgcom
+
+files-strip := $(patsubst %,strip-$(ROOTFS)%,$(files-strip))
+
+$(files-strip): strip-%: %
+	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
+	@$(priv) $(STRIP) $<
+
+_strip: $(files-strip)
+	@:
+
+package-install: _package-install _strip
+	@:
 
 package-clean:
 	@:

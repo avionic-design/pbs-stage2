@@ -1,7 +1,7 @@
 PACKAGE = sudo
-VERSION = 1.6.9p6
+VERSION = 1.6.9p16
 
-LOCATION = ftp://ftp.sudo.ws/pub/sudo
+LOCATION = http://www.sudo.ws/sudo/dist
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 ##############################################################################

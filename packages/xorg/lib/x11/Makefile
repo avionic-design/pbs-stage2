@@ -1,11 +1,15 @@
 PACKAGE = libX11
-VERSION = 1.1.2
+VERSION = 1.1.4
+
+include packages/xorg/lib/Makefile
 
 env += \
 	DESTDIR=$(ROOTFS)
 
-extra-conf-args = \
-	--disable-malloc0returnsnull
+conf-args += \
+	--disable-malloc0returnsnull \
+	--without-xcb
 
-include packages/xorg/lib/Makefile
+package-pre-configure:
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 

@@ -12,10 +12,6 @@ export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT ABI TARGET
 LINUX_VERSION = 2.6.25.4
 GCC_VERSION = 4.2.4
 LIBC_VERSION = 0.9.29
-export LINUX_VERSION GCC_VERSION LIBC_VERSION
-
-variant = sysroot
-export variant
 
 include platform/toolchain/common.mk
 

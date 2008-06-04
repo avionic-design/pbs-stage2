@@ -1,5 +1,29 @@
 # common definitions for toolchain platforms
 
+variant ?= sysroot
+export variant
+
+# default versions
+LINUX_VERSION ?= 2.6.25.4
+export LINUX_VERSION
+
+BINUTILS_VERSION  ?= 2.18
+BINUTILS_SNAPSHOT ?= 2.18.50.0.7
+export BINUTILS_VERSION BINUTILS_SNAPSHOT
+
+GCC_VERSION  ?= 4.2.4
+GCC_SNAPSHOT ?= 4.4-20080516
+export GCC_VERSION GCC_SNAPSHOT
+
+ifeq ($(LIBC),uclibc)
+  LIBC_VERSION ?= 0.9.29
+else
+  LIBC_VERSION ?= 2.7
+endif
+
+export LIBC_VERSION
+
+# assembler, compiler and linker flags
 ifdef TOOLCHAIN
   ifeq ($(variant),sysroot)
     TOOLCHAIN_ROOT = $(srctree)/platform/toolchain/$(TOOLCHAIN)
@@ -15,7 +39,7 @@ ifdef TOOLCHAIN
     export SYSROOT
 
     CPPFLAGS += \
-	--sysroot=$(SYSROOT)
+	--sysroot $(SYSROOT)
   endif
 
   # set optimization flags, etc.

@@ -21,7 +21,7 @@ packages-y += buildroot/bootstrap/gcc
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)
-platform-clean: __clean-dirs += $(ROOTFS)
+platform-clean: __clean-dirs += $(ROOTFS)/bootstrap
 platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)

@@ -1,7 +1,13 @@
 PACKAGE = binutils
-VERSION = 2.18
 
-LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
+ifeq ($(BINUTILS_VERSION),snapshot)
+  BINUTILS_VERSION = $(BINUTILS_SNAPSHOT)
+  LOCATION = http://kernel.org/pub/linux/devel/binutils
+else
+  LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
+endif
+
+VERSION  = $(BINUTILS_VERSION)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################

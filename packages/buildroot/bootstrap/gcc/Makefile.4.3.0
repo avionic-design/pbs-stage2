@@ -23,8 +23,8 @@ ifeq ($(variant),sysroot)
 	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
 else
   conf-args += \
-	--includedir=$(prefix)/$(TARGET)/include \
-	--libexecdir=$(prefix)/lib
+	--includedir=$(ROOTFS)$(prefix)/$(TARGET)/include \
+	--libexecdir=$(ROOTFS)$(prefix)/lib
 endif
 
 
@@ -37,4 +37,9 @@ ifeq ($(MULTILIB),y)
 else
   conf-args += --disable-multilib
 endif
+
+package-post-install: CC=$(ROOTFS)$(prefix)/bin/$(TARGET)-gcc
+package-post-install:
+	ln -sf ../include-fixed/limits.h \
+		`$(CC) -print-file-name=include`/limits.h
 

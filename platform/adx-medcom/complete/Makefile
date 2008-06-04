@@ -1,4 +1,5 @@
 CUSTOM_TOOLCHAIN = y
+VARIANT = directfb
 
 # select toolchain
 ifeq ($(CUSTOM_TOOLCHAIN),y)
@@ -57,7 +58,50 @@ else
   packages-y += core/busybox
 endif
 
-packages-y += libs/directfb
+packages-y += core/udev
+
+ifeq ($(VARIANT),kdrive)
+  packages-y += libs/zlib
+  packages-y += libs/openssl
+  packages-y += libs/expat
+  packages-y += libs/dbus
+  packages-y += libs/hal
+  #packages-y += xorg/proto/xcb
+  packages-y += xorg/proto/x
+  packages-y += xorg/proto/xext
+  packages-y += xorg/proto/xcmisc
+  packages-y += xorg/proto/scrnsaver
+  packages-y += xorg/proto/bigreqs
+  packages-y += xorg/proto/fontcache
+  packages-y += xorg/proto/fonts
+  packages-y += xorg/proto/resource
+  packages-y += xorg/proto/trap
+  packages-y += xorg/proto/evie
+  packages-y += xorg/proto/input
+  packages-y += xorg/proto/render
+  packages-y += xorg/proto/randr
+  packages-y += xorg/proto/fixes
+  packages-y += xorg/proto/damage
+  packages-y += xorg/proto/composite
+  packages-y += xorg/lib/xau
+  #packages-y += xorg/lib/xcb
+  packages-y += xorg/lib/xtrans
+  packages-y += xorg/lib/xdmcp
+  packages-y += xorg/lib/x11
+  packages-y += xorg/lib/xkbfile
+  packages-y += xorg/lib/fontenc
+  packages-y += xorg/lib/xfont
+  packages-y += xorg/lib/xrender
+  packages-y += xorg/kdrive
+endif
+
+ifeq ($(VARIANT),directfb)
+  packages-y += libs/zlib
+  packages-y += libs/libpng
+  packages-y += libs/libjpeg
+  packages-y += libs/tslib
+  packages-y += libs/directfb
+endif
 
 PHONY += platform-clean
 platform-clean: __clean-dirs  += $(builddir)

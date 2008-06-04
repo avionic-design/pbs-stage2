@@ -4,22 +4,31 @@ TARBALLS ?= $(PACKAGE_FULLNAME).tar.bz2
 include packages/common.mk
 
 conf-args = \
-	--host=$(HOST) \
+	--host=$(TARGET) \
 	--prefix=/usr \
 	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	$(call set-args, CC CFLAGS STRIP)
+	--mandir=\$${prefix}/share/man
+
+conf-vars = \
+	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
 package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+
+package-clean:
+	@:
 

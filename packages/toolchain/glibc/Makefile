@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.7
+VERSION = $(GLIBC_VERSION)
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \

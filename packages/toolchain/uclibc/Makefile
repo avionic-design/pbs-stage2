@@ -1,12 +1,13 @@
 PACKAGE = uClibc
 VERSION = $(LIBC_VERSION)
 
-ifeq ($(LIBC_VERSION),snapshot)
+ifeq ($(VERSION),snapshot)
   LOCATION = http://uclibc.org/downloads/snapshots
   pkgtree  = $(buildtree)/$(PACKAGE)
 else
   LOCATION = http://uclibc.org/downloads
 endif
+
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################

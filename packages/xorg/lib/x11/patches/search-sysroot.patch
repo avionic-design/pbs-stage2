@@ -1,22 +1,30 @@
---- a/configure.ac	2007-06-27 15:40:31.000000000 +0200
-+++ b/configure.ac	2007-06-27 15:41:02.000000000 +0200
-@@ -214,7 +214,7 @@
+diff --git a/configure b/configure
+index c02dd9b..d847401 100755
+--- a/configure
++++ b/configure
+@@ -23095,7 +23095,9 @@ for flag in $XPROTO_CFLAGS -I/usr/include; do
  		*-I*)
  			dir=`echo "$flag" | sed 's/ *-I//'`
  			file="$dir/X11/keysymdef.h"
 -			if test -f "$file"; then
-+			if test -f "$file" -o -f "${DESTDIR}$file"; then
++			if test -f "${DESTDIR}$file"; then
++				KEYSYMDEF="${DESTDIR}$file"
++			elif test -f "$file"; then
  				KEYSYMDEF="$file"
  			fi
  			;;
---- a/configure	2007-06-27 15:40:31.000000000 +0200
-+++ b/configure	2007-06-27 15:41:02.000000000 +0200
-@@ -22767,7 +22767,7 @@
+diff --git a/configure.ac b/configure.ac
+index 1567a56..99f0577 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -229,7 +229,9 @@ for flag in $XPROTO_CFLAGS -I/usr/include; do
  		*-I*)
  			dir=`echo "$flag" | sed 's/ *-I//'`
  			file="$dir/X11/keysymdef.h"
 -			if test -f "$file"; then
-+			if test -f "$file" -o -f "${DESTDIR}$file"; then
++			if test -f "${DESTDIR}$file"; then
++				KEYSYMDEF="${DESTDIR}$file"
++			elif test -f "$file"; then
  				KEYSYMDEF="$file"
  			fi
  			;;

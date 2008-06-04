@@ -1,1 +1,2 @@
-blackfin-fdpic.patch -p1
+#blackfin-fdpic.patch -p1
+ldso-fdpic.patch -p1

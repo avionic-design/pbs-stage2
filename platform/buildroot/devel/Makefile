@@ -1,4 +1,4 @@
-LINUX_VERSION = 2.6.23.1
+LINUX_VERSION = 2.6.25.4
 export LINUX_VERSION
 
 HOST   = $(shell support/config.guess)
@@ -27,8 +27,8 @@ packages-y += buildroot/devel/flex
 packages-y += buildroot/devel/bison
 packages-y += buildroot/devel/quilt
 packages-y += buildroot/devel/debianutils
-packages-y += buildroot/devel/ipkg
-packages-y += buildroot/devel/ipkg-utils
+#packages-y += buildroot/devel/ipkg
+#packages-y += buildroot/devel/ipkg-utils
 
 PHONY += platform-clean
 platform-clean: __clean-dirs += $(builddir)

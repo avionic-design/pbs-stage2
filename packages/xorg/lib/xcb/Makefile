@@ -1,14 +1,18 @@
 PACKAGE = libxcb
-VERSION = 1.0
+VERSION = 1.1
 
 LOCATION = http://xcb.freedesktop.org/dist
+
+include packages/xorg/lib/Makefile
 
 env += \
 	DESTDIR=$(ROOTFS)
 
-include packages/xorg/lib/Makefile
-
 # FIXME: this is really ugly, but libtool keeps throwing away the --sysroot
 #        parameter otherwise
-CC += --sysroot $(ROOTFS)
+conf-vars += \
+	CC='$(CC) --sysroot $(ROOTFS)'
+
+env += \
+	CC='$(CC) --sysroot $(ROOTFS)'
 

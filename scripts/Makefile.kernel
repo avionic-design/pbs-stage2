@@ -89,9 +89,8 @@ install: install-zImage install-modules
 PHONY += clean
 clean:
 ifneq ($(wildcard $(KBUILD_OUTPUT)),)
-	cd $(KERNELSRC) && \
+	$(Q)cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			mrproper
 else

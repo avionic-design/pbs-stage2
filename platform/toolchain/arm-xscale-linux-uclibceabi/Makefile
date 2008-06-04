@@ -14,9 +14,6 @@ GCC_VERSION = 4.2.4
 LIBC_VERSION = 0.9.29
 export LINUX_VERSION GCC_VERSION LIBC_VERSION
 
-variant = sysroot
-export variant
-
 include platform/toolchain/common.mk
 
 ifndef TOOLCHAIN

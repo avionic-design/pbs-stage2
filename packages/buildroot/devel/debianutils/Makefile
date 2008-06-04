@@ -1,7 +1,8 @@
 PACKAGE = debianutils
-VERSION = 2.26
+VERSION = 2.28.6
 
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = http://ftp.de.debian.org/debian/pool/main/d/debianutils
+TARBALLS = $(PACKAGE)_$(VERSION).tar.gz
 
 ##############################################################################
 

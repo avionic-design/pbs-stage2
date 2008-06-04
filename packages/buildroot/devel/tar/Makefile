@@ -1,5 +1,5 @@
 PACKAGE = tar
-VERSION = 1.18
+VERSION = 1.20
 
 LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
