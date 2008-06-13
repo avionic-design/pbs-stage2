@@ -3,7 +3,7 @@ PACKAGE = gcc
 ifeq ($(GCC_VERSION),snapshot)
   VERSION  = $(GCC_SNAPSHOT)
   CONFIG   = snapshot
-  LOCATION = ftp://ftp.fu-berlin.de/unix/languages/gcc/snapshots/$(VERSION)
+  LOCATION = ftp://gcc.gnu.org/pub/$(PACKAGE)/snapshots/$(VERSION)
 else
   VERSION  = $(GCC_VERSION)
   CONFIG   = $(VERSION)
