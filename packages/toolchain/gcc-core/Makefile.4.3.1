@@ -1,0 +1,64 @@
+# build instructions for bootstrap GCC 4.3.1
+
+conf-args = \
+	--target=$(TARGET) \
+	--prefix=$(prefix) \
+	--program-prefix=$(TARGET)- \
+	--disable-libmudflap \
+	--disable-libssp \
+	--disable-shared \
+	--disable-threads \
+	--disable-nls \
+	--enable-symvers=gnu \
+	--enable-languages=c
+
+ifeq ($(variant),sysroot)
+  conf-args += \
+	--with-local-prefix=$(PLATFORM) \
+	--with-build-sysroot=$(PLATFORM) \
+	--with-sysroot=$(PLATFORM) \
+	--with-as=$(PLATFORM)$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(PLATFORM)$(prefix)/bin/$(TARGET)-ld
+else
+  conf-args += \
+	--includedir=$(prefix)/$(TARGET)/include \
+	--libexecdir=$(prefix)/lib
+endif
+
+ifeq ($(FLOAT),soft)
+	conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+	conf-args += --enable-multilib
+else
+	conf-args += --disable-multilib
+endif
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
+		$(env) ../configure $(conf-args)
+
+build-args =
+package-build:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(build-args) all-gcc
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(build-args) all-target-libgcc
+
+ifeq ($(variant),sysroot)
+  CC           = $(PLATFORM)$(prefix)/bin/$(TARGET)-gcc
+  install-args = DESTDIR=$(PLATFORM)
+else
+  CC           = $(prefix)/bin/$(TARGET)-gcc
+endif
+
+package-install:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(priv) $(MAKE) $(install-args) install-gcc
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(priv) $(MAKE) $(install-args) install-target-libgcc
+	# link missing fixed headers
+	$(priv) ln -sf ../include-fixed/limits.h \
+		`$(CC) -print-file-name=include`/limits.h
+

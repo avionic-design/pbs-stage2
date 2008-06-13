@@ -1,0 +1,13 @@
+diff --git a/libgcc/shared-object.mk b/libgcc/shared-object.mk
+index 65171b6..68d812f 100644
+--- a/libgcc/shared-object.mk
++++ b/libgcc/shared-object.mk
+@@ -23,7 +23,7 @@ endif
+ endif
+ 
+ $(base)$(objext): $o $(base).vis
+-	$(gcc_compile) -c -xassembler-with-cpp -include $*.vis $<
++	$(gcc_compile) -c -xassembler-with-cpp -include $(@:$(objext)=).vis $<
+ 
+ $(base).vis: $(base)_s$(objext)
+ 	$(gen-hide-list)
