@@ -1,0 +1,15 @@
+diff --git a/pkg.c b/pkg.c
+index 7f252bd..f20c010 100644
+--- a/pkg.c
++++ b/pkg.c
+@@ -483,6 +483,10 @@ string_list_to_string (GSList *list)
+ 	      g_string_append (str, pcsysrootdir);
+ 	      g_string_append (str, tmpstr+2);
+ 	    }
++	  else
++	    {
++	      g_string_append (str, tmpstr);
++	    }
+ 	}
+       else 
+ 	{

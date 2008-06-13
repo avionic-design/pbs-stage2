@@ -87,5 +87,6 @@ else
     packages-y += toolchain/glibc
   endif
   packages-y += toolchain/gcc
+  packages-y += toolchain/pkg-config
 endif
 
