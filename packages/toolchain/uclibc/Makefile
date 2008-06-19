@@ -48,8 +48,7 @@ build-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
 	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
 	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
-	PREFIX=$(ROOTFS) \
-	V=1
+	PREFIX=$(ROOTFS)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
