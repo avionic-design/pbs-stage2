@@ -8,13 +8,20 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
 conf-args = \
+	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--host=$(TARGET)
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
 
 conf-vars = \
-	CFLAGS='$(CFLAGS)' \
-	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)'
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
@@ -29,9 +36,25 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
+_package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libexpat.la
+
+libs-strip = \
+	$(prefix)/lib/libexpat.so.1.5.2
+
+libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+
+$(libs-strip): strip-%: %
+	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
+	@$(priv) $(STRIP) $<
+
+_strip: $(libs-strip)
+	@:
+
+package-install: _package-install _strip
+	@:
 
 package-clean:
 	@:

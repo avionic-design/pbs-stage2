@@ -11,6 +11,7 @@ ifndef obj
   $(warning pbuild: Makefile.initrd is included improperly)
 endif
 
+KVER = $(shell cat $(PLATFORM)/kernel-version)
 KREL = $(shell cat $(PLATFORM)/kernel-release)
 priv = sudo
 
@@ -30,8 +31,14 @@ $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
 	gzip -c $< > $@
 
+PHONY += images
+images: u-boot.img u-boot.fit
+
 PHONY += u-boot.img
 u-boot.img: $(PLATFORM)/u-boot.img
+
+PHONY += u-boot.fit
+u-boot.fit: $(PLATFORM)/u-boot.fit
 
 # TODO: move this somewhere else
 MKIMAGE = mkimage
@@ -44,12 +51,18 @@ quiet_cmd_mk_uboot_img = MKIMAGE    $@
       cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none \
                                     -a $(LOAD_ADDR) -e $(EXEC_ADDR) \
                                     -d $(call concat, :, $^) $@
+
+quiet_cmd_mk_uboot_fit = MKIMAGE    $@
       cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@
 
 $(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
 	$(call cmd,mk_uboot_img)
 
-$(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
+$(PLATFORM)/multi.its: $(PLATFORM)/multi.its.in $(PLATFORM)/kernel-version
+	$(Q)sed -e 's/@KVER@/$(KVER)/g' $< > $@
+	$(if $(Q),$(Q)echo '  GEN        $@')
+
+$(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz $(PLATFORM)/multi.its
 	$(call cmd,mk_uboot_fit)
 
 PHONY += FORCE

@@ -3,13 +3,19 @@ TARBALLS ?= $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
 conf-args = \
 	--host=$(TARGET) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
 
 conf-vars = \
+	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:

@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = $(GLIBC_VERSION)
+VERSION = $(LIBC_VERSION)
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
@@ -18,33 +18,47 @@ env += \
 package-extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 
+exec-prefix = $(prefix)/$(TARGET)
+
 conf-args = \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
-	--enable-addons=ports \
-	--with-headers=$(PLATFORM)/usr/include
+	--host=$(TARGET) \
+	--build=$(BUILD) \
+	--prefix=$(prefix) \
+	--datadir=$(exec-prefix)/share \
+	--includedir=$(exec-prefix)/include \
+	--infodir=$(exec-prefix)/share/info \
+	--libdir=$(exec-prefix)/lib \
+	--libexecdir=$(exec-prefix)/lib \
+	--mandir=$(exec-prefix)/share/man \
+	--program-prefix=$(TARGET)- \
+	--with-headers=$(ROOTFS)$(exec-prefix)/include \
+	--enable-addons=ports
+#	--exec-prefix=$(exec-prefix) \
 
 ifeq ($(FLOAT),soft)
 	conf-args += --without-fp
 endif
 
 package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		$(env) ../configure --host=$(HOST) --build=$(BUILD) \
-			$(conf-args)
+	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args = \
 	MAKEFLAGS=
 
 package-build:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(build-args) all
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args) all
 
-install-args = \
-	install_root=$(PLATFORM)
+ifeq ($(ROOTFS),)
+  install-args = \
+	install_root=$(ROOTFS)
+endif
 
 package-install:
-	cd $(pkgtree)/obj-$(HOST) && $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(install-args) install
 
 package-clean:
 	@:

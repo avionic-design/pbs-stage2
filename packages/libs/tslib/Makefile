@@ -8,17 +8,24 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-CFLAGS += \
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+CPPFLAGS += \
 	-DUSE_INPUT_API=1
 
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
 conf-vars = \
-	ac_cv_func_malloc_0_nonnull=yes \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	CPPFLAGS='$(CPPFLAGS)' \
+	ac_cv_func_malloc_0_nonnull=yes
 
 package-configure:
 	cd $(pkgtree) && ./autogen.sh
@@ -37,6 +44,8 @@ install-args = \
 _package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libts.la
+	$(priv) find $(ROOTFS)$(prefix)/lib/ts -name '*.la' -exec rm {} +
 
 files-strip = \
 	/usr/lib/ts/variance.so \

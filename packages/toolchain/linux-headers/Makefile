@@ -1,19 +1,13 @@
 PACKAGE = linux
 VERSION = $(LINUX_VERSION)
 
-LOCATION = http://www.kernel.org/pub/linux/kernel/v2.6
+LOCATION = http://www.de.kernel.org/pub/linux/kernel/v2.6
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
 
 include packages/toolchain/common.mk
-ifneq ($(variant),sysroot)
-  prefix := $(prefix)/$(TARGET)
-  ROOTFS  =
-else
-  ROOTFS ?= $(PLATFORM)
-endif
-export prefix priv ROOTFS
+prefix := $(prefix)/$(TARGET)
 
 KERNELSRC     = $(pkgtree)
 KERNEL_CONFIG = defconfig

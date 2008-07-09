@@ -13,15 +13,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 ##############################################################################
 
 patchdir = $(pkgsrctree)/patches/$(VERSION)
-
 include packages/toolchain/common.mk
-ifeq ($(variant),sysroot)
-  ROOTFS := $(PLATFORM)
-  libdir :=
-else
-  ROOTFS :=
-  libdir := $(TARGET)
-endif
 
 ifneq ($(ABI),)
 DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
@@ -33,10 +25,12 @@ endif
 
 DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
+exec-prefix = $(prefix)/$(TARGET)
+
 conf-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS) \
 	MAKEFLAGS=
 
@@ -46,8 +40,8 @@ package-configure:
 
 build-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
 package-build:
@@ -55,8 +49,8 @@ package-build:
 
 install-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
 package-install:

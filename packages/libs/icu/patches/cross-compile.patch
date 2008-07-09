@@ -1,0 +1,57 @@
+diff --git a/icudefs.mk.in b/icudefs.mk.in
+index 4167822..6ac8626 100644
+--- a/icudefs.mk.in
++++ b/icudefs.mk.in
+@@ -100,7 +100,9 @@ ENABLE_DEBUG = @ENABLE_DEBUG@
+ ENABLE_RELEASE = @ENABLE_RELEASE@
+ EXEEXT = @EXEEXT@
+ CC = @CC@
++CC_FOR_BUILD = @CC_FOR_BUILD@
+ CXX = @CXX@
++CXX_FOR_BUILD = @CXX_FOR_BUILD@
+ AR = @AR@
+ ARFLAGS = @ARFLAGS@ r
+ RANLIB = @RANLIB@
+@@ -114,8 +116,12 @@ COMPILE_LINK_ENVVAR = @COMPILE_LINK_ENVVAR@
+ DEFS =
+ # CFLAGS is for C only flags
+ CFLAGS = @CFLAGS@
++# CFLAGS_FOR_BUILD is for C only flags
++CFLAGS_FOR_BUILD = @CFLAGS_FOR_BUILD@
+ # CXXFLAGS is for C++ only flags
+ CXXFLAGS = @CXXFLAGS@
++# CXXFLAGS is for C++ only flags
++CXXFLAGS_FOR_BUILD = @CXXFLAGS_FOR_BUILD@
+ # CPPFLAGS is for C Pre-Processor flags
+ CPPFLAGS = @CPPFLAGS@
+ # LIBCFLAGS are the flags for static and shared libraries.
+@@ -138,6 +144,7 @@ ifeq ($(ENABLE_RPATH),YES)
+ RPATHLDFLAGS = $(LD_RPATH)$(LD_RPATH_PRE)$(libdir)
+ endif
+ LDFLAGS = @LDFLAGS@ $(RPATHLDFLAGS)
++LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
+ 
+ # What kind of libraries are we building and linking against?
+ ENABLE_STATIC = @ENABLE_STATIC@
+@@ -155,6 +162,8 @@ COMPILE.cc=   $(CXX) $(CPPFLAGS) $(DEFS) $(CXXFLAGS) -c
+ # Commands to link
+ LINK.c=       $(CC) $(CFLAGS) $(LDFLAGS)
+ LINK.cc=      $(CXX) $(CXXFLAGS) $(LDFLAGS)
++LINK_FOR_BUILD.c = $(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD)
++LINK_FOR_BUILD.cc = $(CXX_FOR_BUILD) $(CXXFLAGS_FOR_BUILD) $(LDFLAGS_FOR_BUILD)
+ 
+ # Commands to make a shared library
+ SHLIB.c=      $(CC) $(CFLAGS) $(LDFLAGS) -shared
+diff --git a/tools/genpname/Makefile.in b/tools/genpname/Makefile.in
+index 0a592a9..01d9626 100644
+--- a/tools/genpname/Makefile.in
++++ b/tools/genpname/Makefile.in
+@@ -78,7 +78,7 @@ Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+ 	 && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+ 
+ $(TARGET) : $(OBJECTS)
+-	$(LINK.cc) $(OUTOPT)$@ $^ $(LIBS) 
++	$(LINK_FOR_BUILD.cc) $(OUTOPT)$@ $^ $(LIBS) 
+ 	$(POST_BUILD_STEP)
+ 
+ 

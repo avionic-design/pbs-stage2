@@ -8,18 +8,26 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
 conf-args = \
-	--prefix=$(prefix) \
 	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
+
+conf-args += \
 	--disable-policy-kit \
 	--disable-pci-ids \
 	--disable-usb-ids
 
 conf-vars = \
-	CFLAGS='$(CFLAGS)' \
-	VOLUME_ID_CFLAGS='-I/usr/include' \
-	VOLUME_ID_LIBS='-lvolume_id' \
-	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
+	CC='$(CC) --sysroot $(ROOTFS)' \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)'
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
@@ -27,6 +35,7 @@ package-configure:
 			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
+
 package-build:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)

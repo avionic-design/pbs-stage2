@@ -1,27 +1,10 @@
 # common definitions for toolchain platforms
 
+ROOTFS  ?= $(PLATFORM)
+tprefix ?= /opt/cross
+prefix  ?= $(tprefix)
 variant ?= sysroot
-export variant
-
-# default versions
-LINUX_VERSION ?= 2.6.25.6
-export LINUX_VERSION
-
-BINUTILS_VERSION  ?= 2.18
-BINUTILS_SNAPSHOT ?= 2.18.50.0.7
-export BINUTILS_VERSION BINUTILS_SNAPSHOT
-
-GCC_VERSION  ?= 4.2.4
-GCC_SNAPSHOT ?= 4.4-20080606
-export GCC_VERSION GCC_SNAPSHOT
-
-ifeq ($(LIBC),uclibc)
-  LIBC_VERSION ?= 0.9.29
-else
-  LIBC_VERSION ?= 2.7
-endif
-
-export LIBC_VERSION
+export ROOTFS tprefix prefix variant
 
 # assembler, compiler and linker flags
 ifdef TOOLCHAIN
@@ -29,13 +12,11 @@ ifdef TOOLCHAIN
     TOOLCHAIN_ROOT = $(srctree)/platform/toolchain/$(TOOLCHAIN)
   endif
 
-  CROSS_COMPILE = $(TOOLCHAIN_ROOT)$(prefix)/bin/$(TARGET)-
+  CROSS_COMPILE = $(TOOLCHAIN_ROOT)$(tprefix)/bin/$(TARGET)-
   export TOOLCHAIN_ROOT CROSS_COMPILE
 
   ifeq ($(variant),sysroot)
-    # FIXME: does this really belong here? it doesn't have anything to do with
-    # the toolchain
-    SYSROOT ?= $(PLATFORM)/rootfs
+    SYSROOT ?= $(ROOTFS)
     export SYSROOT
 
     CPPFLAGS += \
@@ -68,11 +49,30 @@ ifdef TOOLCHAIN
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
-  LDFLAGS = \
-	-s --shared-libgcc
+  LDFLAGS =
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 else
+  # default versions
+  LINUX_VERSION ?= 2.6.25.10
+  export LINUX_VERSION
+
+  BINUTILS_VERSION  ?= 2.18
+  BINUTILS_SNAPSHOT ?= 2.18.50.0.7
+  export BINUTILS_VERSION BINUTILS_SNAPSHOT
+
+  GCC_VERSION  ?= 4.3.1
+  GCC_SNAPSHOT ?= 4.4-20080704
+  export GCC_VERSION GCC_SNAPSHOT
+
+  ifeq ($(LIBC),uclibc)
+    LIBC_VERSION ?= 0.9.29
+  else
+    LIBC_VERSION ?= 2.7
+  endif
+
+  export LIBC_VERSION
+
   packages-y  = toolchain/linux-headers
   packages-y += toolchain/binutils
   ifeq ($(LIBC),uclibc)

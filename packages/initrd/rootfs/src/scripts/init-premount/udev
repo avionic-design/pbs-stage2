@@ -20,11 +20,11 @@ echo 'done'
 
 mkdir -p /dev/.udev/queue/
 echo -n 'Synthesizing initial hotplug events ... '
-/sbin/udevtrigger
+/sbin/udevadm trigger
 echo 'done'
 
 echo -n 'Waiting for hotplug daemon to settle ... '
-/sbin/udevsettle --timeout=30 || true
+/sbin/udevadm settle --timeout=30 || true
 echo 'done'
 
 # If the rootdelay parameter has been set, we wait a bit for devices

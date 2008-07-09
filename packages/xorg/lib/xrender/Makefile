@@ -12,3 +12,6 @@ package-pre-configure:
 conf-args += \
 	--disable-malloc0returnsnull
 
+package-post-install:
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libXrender.la
+

@@ -8,12 +8,13 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/toolchain/common.mk
 
+exec-prefix = $(prefix)/$(TARGET)
+
 conf-args = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
-	--mandir=$(prefix)/share/man \
-	--infodir=$(prefix)/share/info \
-	--sysconfdir=/etc
+	--infodir=$(exec-prefix)/share/info \
+	--mandir=$(exec-prefix)/share/man
 
 conf-args += \
 	--program-prefix=$(TARGET)- \
@@ -30,8 +31,10 @@ package-build:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
-install-args = \
-	DESTDIR=$(PLATFORM)
+ifneq ($(ROOTFS),)
+  install-args = \
+	DESTDIR=$(ROOTFS)
+endif
 
 package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \

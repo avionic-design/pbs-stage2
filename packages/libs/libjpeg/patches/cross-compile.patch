@@ -1,0 +1,13 @@
+diff --git a/configure b/configure
+index 35c9db5..d33a00b 100755
+--- a/configure
++++ b/configure
+@@ -1559,7 +1559,7 @@ if test $USELIBTOOL = yes; then
+   if test "x$LTSTATIC" = xno; then
+     disable_static="--disable-static"
+   fi
+-  $srcdir/ltconfig $disable_shared $disable_static $srcdir/ltmain.sh
++  $srcdir/ltconfig $disable_shared $disable_static $srcdir/ltmain.sh $host
+ fi
+ 
+ # Select memory manager depending on user input.

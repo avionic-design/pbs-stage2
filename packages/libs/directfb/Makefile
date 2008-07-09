@@ -1,5 +1,5 @@
 PACKAGE = DirectFB
-VERSION = 1.1.1
+VERSION = 1.2.0-rc1
 
 LOCATION = http://www.directfb.org/downloads/Core
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -9,7 +9,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 include packages/common.mk
 
 env += \
-	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -53,23 +54,30 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
+major = 1.2
+plugin-dir = $(prefix)/lib/directfb-$(major)-0
+
 _package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libdirectfb.la
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libdirect.la
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libfusion.la
+	$(priv) find $(ROOTFS)$(plugin-dir) -name '*.la' -exec rm {} +
 
 libs-strip = \
-	/usr/lib/libdirect-1.1.so.0.1.0 \
-	/usr/lib/libdirectfb-1.1.so.0.1.0 \
-	/usr/lib/libfusion-1.1.so.0.1.0 \
-	/usr/lib/directfb-1.1-0/systems/libdirectfb_devmem.so \
-	/usr/lib/directfb-1.1-0/systems/libdirectfb_fbdev.so \
-	/usr/lib/directfb-1.1-0/inputdrivers/libdirectfb_linux_input.so \
-	/usr/lib/directfb-1.1-0/inputdrivers/libdirectfb_tslib.so \
-	/usr/lib/directfb-1.1-0/wm/libdirectfbwm_default.so \
-	/usr/lib/directfb-1.1-0/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.so \
-	/usr/lib/directfb-1.1-0/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_mpeg2.so \
-	/usr/lib/directfb-1.1-0/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.so \
-	/usr/lib/directfb-1.1-0/interfaces/IDirectFBFont/libidirectfbfont_default.so
+	$(prefix)/lib/libdirect-$(major).so.0.0.0 \
+	$(prefix)/lib/libdirectfb-$(major).so.0.0.0 \
+	$(prefix)/lib/libfusion-$(major).so.0.0.0 \
+	$(plugin-dir)/systems/libdirectfb_devmem.so \
+	$(plugin-dir)/systems/libdirectfb_fbdev.so \
+	$(plugin-dir)/inputdrivers/libdirectfb_linux_input.so \
+	$(plugin-dir)/inputdrivers/libdirectfb_tslib.so \
+	$(plugin-dir)/wm/libdirectfbwm_default.so \
+	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.so \
+	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_jpeg.so \
+	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.so \
+	$(plugin-dir)/interfaces/IDirectFBFont/libidirectfbfont_default.so
 
 libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
 

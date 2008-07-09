@@ -1,0 +1,2 @@
+000-directfb.patch -p1
+010-directfb-hide-funcs.patch -p1

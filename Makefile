@@ -103,7 +103,7 @@ binary:
 
 PHONY += initrd
 initrd:
-	$(Q)$(MAKE) $(initrd)=platform/$(platform) u-boot.img
+	$(Q)$(MAKE) $(initrd)=platform/$(platform) images
 
 PHONY += rootfs
 rootfs:

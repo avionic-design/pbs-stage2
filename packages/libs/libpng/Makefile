@@ -8,15 +8,19 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
 conf-args = \
 	--prefix=$(prefix) \
 	--host=$(TARGET)
 
 conf-vars = \
+	CC='$(CC) --sysroot $(ROOTFS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -33,6 +37,7 @@ install-args = \
 _package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libpng*.la
 
 libs-strip = \
 	/usr/lib/libpng.so.3.19.0 \

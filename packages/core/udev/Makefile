@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 122
+VERSION = 124
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -25,9 +25,12 @@ install-args = \
 	DESTDIR=$(ROOTFS) \
 	$(call set-args, EXTRAS)
 
+sover = 0.85.0
+
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) $(STRIP) $(ROOTFS)/lib/libvolume_id.so.*
+	$(priv) ln -sf ../../lib/libvolume_id.so.$(sover) $(ROOTFS)$(prefix)/lib/libvolume_id.so
 	$(priv) mkdir -p $(ROOTFS)/etc/udev/rules.d
 	$(priv) cp -a $(pkgtree)/etc/udev/rules.d/* $(ROOTFS)/etc/udev/rules.d
 	# install package configuration files

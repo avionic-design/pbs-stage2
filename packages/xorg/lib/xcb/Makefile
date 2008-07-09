@@ -13,6 +13,10 @@ env += \
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'
 
-env += \
+#env += \
 	CC='$(CC) --sysroot $(ROOTFS)'
+
+package-post-install:
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libxcb-*.la
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libxcb.la
 

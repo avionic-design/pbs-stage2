@@ -1,5 +1,5 @@
 CUSTOM_TOOLCHAIN = y
-VARIANT = directfb
+VARIANT = directfb gtk
 
 # select toolchain
 ifeq ($(CUSTOM_TOOLCHAIN),y)
@@ -37,71 +37,7 @@ LINUX_VERSION = git
 KERNEL_CONFIG = adx-medcom_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
-# select kernel version
-ifeq ($(LINUX_VERSION),git)
-  packages-y = kernel/linux.git
-else
-  packages-y = kernel/linux
-endif
-
-# select C library
-ifeq ($(TARGET_LIBC),uclibc)
-  packages-y += devel/uclibc
-else
-  packages-y += devel/glibc
-endif
-
-# select busybox variant
-ifeq ($(TARGET_BUSYBOX),static)
-  packages-y += core/busybox-static
-else
-  packages-y += core/busybox
-endif
-
-packages-y += core/udev
-
-ifeq ($(VARIANT),kdrive)
-  packages-y += libs/zlib
-  packages-y += libs/openssl
-  packages-y += libs/expat
-  packages-y += libs/dbus
-  packages-y += libs/hal
-  #packages-y += xorg/proto/xcb
-  packages-y += xorg/proto/x
-  packages-y += xorg/proto/xext
-  packages-y += xorg/proto/xcmisc
-  packages-y += xorg/proto/scrnsaver
-  packages-y += xorg/proto/bigreqs
-  packages-y += xorg/proto/fontcache
-  packages-y += xorg/proto/fonts
-  packages-y += xorg/proto/resource
-  packages-y += xorg/proto/trap
-  packages-y += xorg/proto/evie
-  packages-y += xorg/proto/input
-  packages-y += xorg/proto/render
-  packages-y += xorg/proto/randr
-  packages-y += xorg/proto/fixes
-  packages-y += xorg/proto/damage
-  packages-y += xorg/proto/composite
-  packages-y += xorg/lib/xau
-  #packages-y += xorg/lib/xcb
-  packages-y += xorg/lib/xtrans
-  packages-y += xorg/lib/xdmcp
-  packages-y += xorg/lib/x11
-  packages-y += xorg/lib/xkbfile
-  packages-y += xorg/lib/fontenc
-  packages-y += xorg/lib/xfont
-  packages-y += xorg/lib/xrender
-  packages-y += xorg/kdrive
-endif
-
-ifeq ($(VARIANT),directfb)
-  packages-y += libs/zlib
-  packages-y += libs/libpng
-  packages-y += libs/libjpeg
-  packages-y += libs/tslib
-  packages-y += libs/directfb
-endif
+include platform/adx-medcom/packages.mk
 
 PHONY += platform-clean
 platform-clean: __clean-dirs  += $(builddir)
@@ -118,6 +54,7 @@ platform-clean:
 
 custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
 
+PHONY += platform-install
 platform-install:
 	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-install
 

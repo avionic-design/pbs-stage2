@@ -13,13 +13,6 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 ##############################################################################
 
 include packages/toolchain/common.mk
-ifeq ($(variant),sysroot)
-  ROOTFS := $(PLATFORM)
-  libdir :=
-else
-  ROOTFS :=
-  libdir := $(TARGET)
-endif
 
 ifneq ($(ABI),)
 DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
@@ -31,9 +24,11 @@ endif
 
 DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
 
+exec-prefix = $(prefix)/$(TARGET)
+
 conf-args = \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS) \
 	MAKEFLAGS=
 
@@ -42,28 +37,28 @@ package-configure:
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) headers
 
 install-args = \
-	RUNTIME_PREFIX=$(prefix)/$(libdir)/ \
-	DEVEL_PREFIX=$(prefix)/$(libdir)/ \
+	RUNTIME_PREFIX=$(exec-prefix)/ \
+	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
 package-install:
 	cd $(pkgtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers
 	# copy additional architecture-independent headers
 	#cd $(pkgtree) && \
-	#	cp -r libc/sysdeps/linux/common/sys $(PLATFORM)/usr/include && \
-	#	cp -r libc/sysdeps/linux/common/bits $(PLATFORM)/usr/include
+	#	cp -r libc/sysdeps/linux/common/sys $(ROOTFS)$(exec-prefix)/include && \
+	#	cp -r libc/sysdeps/linux/common/bits $(ROOTFS)$(exec-prefix)/include
 	# copy additional architecture-dependent headers
 	#cd $(pkgtree) && \
-	#	cp -r libc/sysdeps/linux/$(ARCH)/sys $(PLATFORM)/usr/include && \
-	#	cp -r libc/sysdeps/linux/$(ARCH)/bits $(PLATFORM)/usr/include
+	#	cp -r libc/sysdeps/linux/$(ARCH)/sys $(ROOTFS)$(exec-prefix)/include && \
+	#	cp -r libc/sysdeps/linux/$(ARCH)/bits $(ROOTFS)$(exec-prefix)/include
 
 package-clean:
 	@:

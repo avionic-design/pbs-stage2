@@ -15,6 +15,6 @@ STRIP  = $(CROSS_COMPILE)strip
 set-args = $(foreach arg, $(1), $(arg)='$($(arg))')
 
 priv = sudo
-env  = env -i PATH=$(TOOLCHAIN_ROOT)/usr/bin:$(PATH)
+env  = env -i PATH=$(TOOLCHAIN_ROOT)$(tprefix)/bin:$(PATH)
 export priv env
 

@@ -2,22 +2,22 @@ include platform/$(platform)/config.mk
 
 # create package list
 ifeq ($(LINUX_VERSION),git)
-  packages-y = initrd/linux-image.git
+  packages-y = kernel/linux.git
 else
-  packages-y = initrd/linux-image
+  packages-y = kernel/linux
 endif
 
 ifeq ($(INITRD_VARIANT),uclibc)
   packages-y += \
-	initrd/uclibc \
-	initrd/busybox
+	devel/uclibc \
+	core/busybox
 else
   packages-y += \
-	initrd/klibc
+	devel/klibc
 endif
 
 packages-y += \
-	initrd/udev \
+	core/udev \
 	initrd/rootfs
 
 PHONY += platform-install
@@ -30,8 +30,10 @@ platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-dirs  += $(builddir)
 platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
 platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
+platform-clean: __clean-files += $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
 platform-clean: __clean-files += $(PLATFORM)/System.map-*
 platform-clean: __clean-files += $(PLATFORM)/vmlinuz-*
+platform-clean: __clean-files += $(PLATFORM)/kernel-version
 platform-clean: __clean-files += $(PLATFORM)/kernel-release
 platform-clean:
 	$(if $(wildcard $(__clean-dirs) ),$(call cmd,cleandir),)

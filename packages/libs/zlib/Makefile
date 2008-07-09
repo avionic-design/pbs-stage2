@@ -8,15 +8,16 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
-env = env -i $(call set-args, CC CFLAGS LDFLAGS AR RANLIB) prefix=/usr
+env += \
+	CC='$(CC)' \
+	CFLAGS='$(CFLAGS)'
 
 conf-args = \
+	--prefix=$(prefix) \
 	--shared
 
 package-configure:
 	cd $(pkgtree) && $(env) ./configure $(conf-args)
-
-build-args =
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)

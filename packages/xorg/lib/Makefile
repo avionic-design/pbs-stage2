@@ -4,16 +4,19 @@ TARBALLS ?= $(PACKAGE_FULLNAME).tar.bz2
 include packages/common.mk
 
 env += \
-	PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
 	--host=$(TARGET) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc \
 	$(extra-conf-args)
 
 conf-vars = \
+	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure: package-pre-configure
@@ -32,13 +35,18 @@ install-args = \
 	DESTDIR=$(ROOTFS) \
 	$(extra-install-args)
 
-package-install:
+_package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+
+package-install: package-pre-install _package-install package-post-install
+	@:
 
 package-clean:
 	@:
 
 # dummy targets
 package-pre-configure:
+package-pre-install:
+package-post-install:
 

@@ -1,29 +1,37 @@
-# build instructions for final GCC 4.3.0
+# build instructions for final GCC 4.3.1
+
+exec-prefix = $(prefix)/$(TARGET)
 
 conf-args = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
+	--datadir=$(exec-prefix)/share \
+	--infodir=$(exec-prefix)/share/info \
+	--mandir=$(exec-prefix)/share/man \
+	--libexecdir=$(exec-prefix)/lib \
+	--includedir=$(exec-prefix)/include \
+	--with-gxx-include-dir=$(exec-prefix)/include/c++/$(VERSION) \
 	--program-prefix=$(TARGET)- \
 	--disable-libmudflap \
 	--disable-libssp \
 	--disable-static \
 	--enable-shared \
 	--enable-symvers=gnu \
+
+ifeq ($(ARCH),blackfin)
+  conf-args += \
 	--enable-languages=c,c++
+else
+  conf-args += \
+	--enable-languages=c,c++
+endif
 
 ifeq ($(variant),sysroot)
   conf-args += \
-	--with-local-prefix=$(PLATFORM) \
-	--with-build-sysroot=$(PLATFORM) \
-	--with-sysroot=$(PLATFORM) \
-	--with-as=$(PLATFORM)$(prefix)/bin/$(TARGET)-as \
-	--with-ld=$(PLATFORM)$(prefix)/bin/$(TARGET)-ld
-else
-  conf-args += \
-	--includedir=$(prefix)/$(TARGET)/include \
-	--libexecdir=$(prefix)/lib
+	--with-local-prefix=$(ROOTFS) \
+	--with-build-sysroot=$(ROOTFS) \
+	--with-sysroot=$(ROOTFS)
 endif
-
 
 ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
@@ -36,16 +44,19 @@ else
 endif
 
 package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && cd $(pkgtree)/obj-$(HOST) && \
-		../configure $(conf-args)
+	mkdir -p $(pkgtree)/obj-$(HOST) && \
+		cd $(pkgtree)/obj-$(HOST) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
+
 package-build:
 	cd $(pkgtree)/obj-$(HOST) && \
 		$(env) $(MAKE) $(build-args)
 
-ifeq ($(variant),sysroot)
-  install-args = DESTDIR=$(PLATFORM)
+ifneq ($(ROOTFS),)
+  install-args = \
+	DESTDIR=$(ROOTFS)
 endif
 
 package-install:

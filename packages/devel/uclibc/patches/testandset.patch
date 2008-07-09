@@ -1,29 +1,28 @@
---- a/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h	2005-11-15 04:13:04.000000000 +0100
-+++ b/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h	2008-04-24 12:57:55.000000000 +0200
-@@ -33,6 +33,7 @@
-    machines.  Unfortunately we have no way to detect this at compile
-    time; let's hope nobody tries to use one.  */
+diff --git a/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h b/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h
+index 2845679..51f9b45 100644
+--- a/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h
++++ b/libpthread/linuxthreads.old/sysdeps/arm/pt-machine.h
+@@ -23,10 +23,13 @@
+ #define _PT_MACHINE_H   1
  
-+#if defined(FORWARD_C)
- /* Spinlock implementation; required.  */
- PT_EI long int
- testandset (int *spinlock)
-@@ -60,7 +61,7 @@
+ #ifndef PT_EI
+-# define PT_EI extern inline
++# if (__GNUC__ > 4) || ((__GNUC__ == 4) && (__GNUC_MINOR__ >= 3))
++#  define PT_EI static inline
++# else
++#  define PT_EI extern inline
++# endif
+ #endif
  
+-extern long int testandset (int *spinlock);
+ extern int __compare_and_swap (long int *p, long int oldval, long int newval);
+ 
+ /* This will not work on ARM1 or ARM2 because SWP is lacking on those
+@@ -61,7 +64,6 @@ testandset (int *spinlock)
    return ret;
  }
--
-+#endif
  
+-
  /* Get some notion of the current stack.  Need not be exactly the top
     of the stack, just something somewhere in the current frame.  */
---- a/libpthread/linuxthreads.old/forward.c	2007-01-11 23:39:13.000000000 +0100
-+++ b/libpthread/linuxthreads.old/forward.c	2008-04-24 12:57:31.000000000 +0200
-@@ -24,6 +24,7 @@
- /* psm: keep this before internals.h */
- libc_hidden_proto(exit)
- 
-+#define FORWARD_C
- #include "internals.h"
- 
- /* Pointers to the libc functions.  */
+ #define CURRENT_STACK_FRAME  stack_pointer

@@ -14,11 +14,16 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/toolchain/common.mk
 
+exec-prefix = $(prefix)/$(TARGET)
+
 conf-args = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
-	--mandir=$(prefix)/share/man \
-	--infodir=$(prefix)/share/info
+	--datadir=$(exec-prefix)/share \
+	--infodir=$(exec-prefix)/share/info \
+	--mandir=$(exec-prefix)/share/man \
+	--libdir=$(exec-prefix)/lib
+#	--exec-prefix=$(exec-prefix) \
 
 ifeq ($(variant),sysroot)
   conf-args += \
@@ -34,8 +39,9 @@ build-args =
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
-ifeq ($(variant),sysroot)
-  install-args = DESTDIR=$(PLATFORM)
+ifneq ($(ROOTFS),)
+  install-args = \
+	DESTDIR=$(ROOTFS)
 endif
 
 package-install:

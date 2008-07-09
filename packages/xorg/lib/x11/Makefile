@@ -3,13 +3,13 @@ VERSION = 1.1.4
 
 include packages/xorg/lib/Makefile
 
-env += \
-	DESTDIR=$(ROOTFS)
-
 conf-args += \
-	--disable-malloc0returnsnull \
-	--without-xcb
+	--disable-malloc0returnsnull
 
-package-pre-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+conf-vars += \
+	CC='$(CC) --sysroot $(ROOTFS)'
+
+package-post-install:
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libX11-xcb.la
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libX11.la
 

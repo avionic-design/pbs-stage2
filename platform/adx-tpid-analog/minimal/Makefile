@@ -33,8 +33,9 @@ ROOTFS = $(PLATFORM)/rootfs
 export prefix priv ROOTFS
 
 LINUX_VERSION = git
-KERNEL_CONFIG = adx-tpid_defconfig
-export LINUX_VERSION KERNEL_CONFIG
+KERNELSRC     = ../linux-2.6-stable.git
+KERNEL_CONFIG = adx-tpid-analog_defconfig
+export LINUX_VERSION KERNELSRC KERNEL_CONFIG
 
 # select kernel version
 ifeq ($(LINUX_VERSION),git)
@@ -62,11 +63,14 @@ platform-clean: __clean-dirs  += $(builddir)
 platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
 platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
+platform-clean: __clean-files += $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
 platform-clean: __clean-files += $(PLATFORM)/System.map*
 platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
 platform-clean: __clean-files += $(PLATFORM)/rootfs.img
+platform-clean: __clean-files += $(PLATFORM)/kernel-version
 platform-clean: __clean-files += $(PLATFORM)/kernel-release
 platform-clean:
+	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-clean
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
 

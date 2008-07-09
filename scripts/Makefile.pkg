@@ -166,6 +166,10 @@ $(stampdir)/%-sha256: download/%
 
 tarball = $(srctree)/download/$(patsubst %-extract,%,$(@F))
 
+$(stampdir)/%.tgz-extract:
+	$(call cmd,extract_tar_gz,$(tarball))
+	$(makestamp)
+
 $(stampdir)/%.tar.gz-extract:
 	$(call cmd,extract_tar_gz,$(tarball))
 	$(makestamp)

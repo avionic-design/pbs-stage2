@@ -1,5 +1,5 @@
 # select toolchain
-TOOLCHAIN = arm-xscale-linux-uclibc
+TOOLCHAIN = arm-xscale-linux-uclibceabi
 ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
   include platform/toolchain/$(TOOLCHAIN)/Makefile
 endif

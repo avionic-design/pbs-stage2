@@ -1,0 +1,32 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+daemon=/usr/sbin/tvp5150-monit
+name=`basename $daemon`
+
+pid=`cat /var/lock/$name.lock 2> /dev/null || echo no`
+
+case $1 in
+	start)
+		log_action_begin_msg "Starting TVP5150 monitor "
+		$daemon
+		log_action_end_msg $?
+		;;
+
+	stop)
+		log_action_begin_msg "Stopping TVP5150 monitor "
+		if [ "x$pid" != "xno" ]; then
+			kill $pid 2> /dev/null
+			log_action_end_msg $? $pid
+		else
+			log_action_end_msg $? "not running"
+		fi
+		;;
+
+	*)
+		echo "usage: $0 {start|stop}"
+		exit 1
+		;;
+esac
+

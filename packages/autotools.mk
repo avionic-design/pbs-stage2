@@ -1,10 +1,14 @@
 include packages/common.mk
 
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
 conf-args += \
 	--host=$(TARGET) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
+	--prefix=$(prefix) \
+	--mandir=$(prefix)/share/man \
+	--infodir=$(prefix)/share/info \
 	--sysconfdir=/etc
 
 # strip libraries and binaries

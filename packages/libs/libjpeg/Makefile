@@ -10,13 +10,16 @@ include packages/common.mk
 
 conf-args = \
 	--prefix=$(prefix) \
-	--host=$(TARGET)
+	--host=$(TARGET) \
+	--enable-shared \
+	--enable-static
 
 conf-vars = \
 	CC='$(CC)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
+	cp support/config.sub $(pkgtree)/config.sub
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -34,6 +37,7 @@ _package-install:
 	$(priv) mkdir -p $(ROOTFS)$(prefix)/share/man/man1
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) rm $(ROOTFS)$(prefix)/lib/libjpeg.la
 
 files-strip = \
 	/usr/bin/jpegtran \

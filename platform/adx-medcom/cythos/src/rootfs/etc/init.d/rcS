@@ -1,0 +1,24 @@
+#!/bin/sh
+
+mkdir -p /etc
+touch /etc/fstab
+touch /etc/mdev.conf
+
+echo -n "Mounting /proc filesystem ... "
+mkdir -p /proc
+mount -t proc none /proc
+echo "done"
+
+echo -n "Mounting /sys filesystem ... "
+mkdir -p /sys
+mount -t sysfs none /sys
+echo "done"
+
+echo -n "Populating /dev filesystem ... "
+mdev -s
+echo "done"
+
+for script in /etc/rcS.d/S*; do
+	$script start
+done
+

@@ -1,4 +1,4 @@
-#arm-softfloat.patch
+arm-softfloat.patch -p1
 #arm-multilib.patch
 #libstdc++-uclibc.patch
 libgcc-shared.patch -p1
