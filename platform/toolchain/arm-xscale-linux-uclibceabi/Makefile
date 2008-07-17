@@ -9,10 +9,8 @@ ABI = eabi
 TARGET = $(ARCH)-$(CPU)-$(OS)-$(LIBC)$(ABI)
 export ARCH ARCH_LONG CPU TUNE OS LIBC FLOAT ABI TARGET
 
-#LINUX_VERSION = 2.6.25.10
-#GCC_VERSION = 4.3.1
-#LIBC_VERSION = 0.9.29
-#export LINUX_VERSION GCC_VERSION LIBC_VERSION
+variant = sysroot
+export variant
 
 include platform/toolchain/common.mk
 

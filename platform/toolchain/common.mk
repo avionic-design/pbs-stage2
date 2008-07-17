@@ -54,11 +54,11 @@ ifdef TOOLCHAIN
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 else
   # default versions
-  LINUX_VERSION ?= 2.6.25.10
+  LINUX_VERSION ?= 2.6.26
   export LINUX_VERSION
 
   BINUTILS_VERSION  ?= 2.18
-  BINUTILS_SNAPSHOT ?= 2.18.50.0.7
+  BINUTILS_SNAPSHOT ?= 2.18.50.0.8
   export BINUTILS_VERSION BINUTILS_SNAPSHOT
 
   GCC_VERSION  ?= 4.3.1
@@ -87,6 +87,7 @@ else
     packages-y += toolchain/glibc
   endif
   packages-y += toolchain/gcc
+  packages-y += toolchain/gdb
   packages-y += toolchain/pkg-config
 endif
 
