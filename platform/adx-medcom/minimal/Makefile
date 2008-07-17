@@ -72,10 +72,10 @@ platform-clean:
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
 
-#custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
-#
-#platform-install:
-#	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-install
+custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
+
+platform-install:
+	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-install
 
 .PHONY: $(PHONY)
 
