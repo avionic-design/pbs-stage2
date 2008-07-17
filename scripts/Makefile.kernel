@@ -4,8 +4,14 @@ unexport CC CFLAGS LD LDFLAGS
 KBUILD_OUTPUT = $(buildtree)
 export KBUILD_OUTPUT
 
-image-blackfin = vmImage
-install-target = install
+  image-blackfin = vmImage
+install-blackfin = install
+
+ifneq ($(install-$(ARCH)),)
+  install-target = $(install-$(ARCH))
+else
+  install-target = zinstall
+endif
 
 ifneq ($(image-$(ARCH)),)
   image = $(image-$(ARCH))
