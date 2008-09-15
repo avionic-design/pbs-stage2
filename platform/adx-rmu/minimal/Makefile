@@ -57,7 +57,6 @@ else
   packages-y += core/busybox
 endif
 
-
 packages-y += devel/gdb-server
 
 PHONY += platform-clean
