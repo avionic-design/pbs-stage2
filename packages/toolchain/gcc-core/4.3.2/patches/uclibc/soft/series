@@ -1,0 +1,4 @@
+arm-softfloat.patch -p1
+#arm-multilib.patch
+libgcc-shared.patch -p1
+cross-include.patch -p1
