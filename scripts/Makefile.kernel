@@ -87,7 +87,8 @@ headers-install: config
 			headers_install
 ifeq ($(ARCH),arm)
 	# some programs need this to compile
-	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)$(prefix)/include/asm
+	-$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)$(prefix)/include/asm
+	-$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/linkage.h $(ROOTFS)$(prefix)/include/asm
 	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)$(prefix)/include/linux
 endif
 ifeq ($(ARCH),blackfin)
