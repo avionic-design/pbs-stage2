@@ -3,6 +3,14 @@ VERSION = 1.0.2
 
 include packages/xorg/lib/Makefile
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libXdmcp.la
+prunefiles = \
+	$(prefix)/lib/libXdmcp.la
+
+stripfiles = \
+	$(prefix)/lib/libXdmcp.so.6.0.0
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
 

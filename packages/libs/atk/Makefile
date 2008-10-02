@@ -1,7 +1,7 @@
 PACKAGE = atk
-VERSION = 1.22.0
+VERSION = 1.24.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.22
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.24
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
@@ -43,8 +43,10 @@ _package-install:
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) rm $(ROOTFS)$(prefix)/lib/libatk-1.0.la
 
+sover = 0.2409.1
+
 libs-strip = \
-	$(prefix)/lib/libatk-1.0.so.0.2209.1
+	$(prefix)/lib/libatk-1.0.so.$(sover)
 
 libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
 

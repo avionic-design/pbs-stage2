@@ -1,7 +1,7 @@
 PACKAGE = glib
-VERSION = 2.17.2
+VERSION = 2.18.1
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.17
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.18
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
@@ -45,34 +45,32 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgio-2.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libglib-2.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgmodule-2.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgobject-2.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.1702.0
+prunefiles = \
+	$(prefix)/lib/libgio-2.0.la \
+	$(prefix)/lib/libglib-2.0.la \
+	$(prefix)/lib/libgmodule-2.0.la \
+	$(prefix)/lib/libgobject-2.0.la \
+	$(prefix)/lib/libgthread-2.0.la \
 
-libs-strip = \
+sover = 0.1800.1
+
+stripfiles = \
+	$(prefix)/bin/glib-genmarshal \
+	$(prefix)/bin/gobject-query \
+	$(prefix)/bin/gtester \
 	$(prefix)/lib/libgthread-2.0.so.$(sover) \
 	$(prefix)/lib/libgmodule-2.0.so.$(sover) \
 	$(prefix)/lib/libgobject-2.0.so.$(sover) \
 	$(prefix)/lib/libgio-2.0.so.$(sover) \
 	$(prefix)/lib/libglib-2.0.so.$(sover)
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:

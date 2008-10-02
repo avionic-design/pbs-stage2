@@ -12,6 +12,14 @@ package-pre-configure:
 conf-args += \
 	--disable-malloc0returnsnull
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libXrender.la
+prunefiles = \
+	$(prefix)/lib/libXrender.la
+
+stripfiles = \
+	$(prefix)/lib/libXrender.so.1.3.0
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
 

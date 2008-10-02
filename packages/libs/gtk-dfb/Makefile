@@ -1,7 +1,7 @@
 PACKAGE = gtk+
-VERSION = 2.13.3
+VERSION = 2.14.3
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.13
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.14
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
@@ -41,7 +41,8 @@ package-configure:
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 
-build-args =
+build-args = \
+	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
 package-build:
 	cd $(pkgtree)/obj-$(TARGET) && \

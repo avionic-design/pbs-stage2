@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if [ "x$1" = "x" ]; then
+	echo "usage: $0 platform"
+	exit 1
+fi
+
+platform="$1"
+
+find platform/$platform/rootfs -name '*.la*'
+

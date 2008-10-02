@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.3.6
+VERSION = 2.3.7
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -44,7 +44,7 @@ _package-install:
 	$(priv) rm $(ROOTFS)$(prefix)/lib/libfreetype.la
 
 libs-strip = \
-	$(prefix)/lib/libfreetype.so.6.3.17
+	$(prefix)/lib/libfreetype.so.6.3.18
 
 libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
 

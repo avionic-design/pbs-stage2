@@ -1,8 +1,16 @@
 PACKAGE = libXau
-VERSION = 1.0.3
+VERSION = 1.0.4
 
 include packages/xorg/lib/Makefile
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libXau.la
+prunefiles = \
+	$(prefix)/lib/libXau.la
+
+stripfiles = \
+	$(prefix)/lib/libXau.so.6.0.0
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
 

@@ -10,12 +10,12 @@ include packages/buildroot/bootstrap/autotools.mk
 
 ifneq ($(HOST),$(TARGET))
   conf-args += \
+	--program-prefix=$(TARGET)- \
 	--target=$(TARGET)
 endif
 
 conf-args += \
 	--with-lib-path=$(devel-prefix)/lib \
-	--program-prefix=$(TARGET)- \
 	--disable-nls
 
 package-configure:

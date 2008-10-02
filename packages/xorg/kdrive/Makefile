@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.4.99.902
+VERSION = 1.5.1
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/xserver
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -8,11 +8,17 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 include packages/common.mk
 
-env += PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
-	--prefix=$(prefix) \
 	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc \
+	--enable-kdrive \
 	--enable-xfbdev \
 	--disable-xinerama \
 	--disable-xprint \
@@ -25,6 +31,7 @@ conf-args = \
 	--disable-dri2
 
 conf-vars = \
+	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
@@ -34,9 +41,25 @@ package-configure:
 
 build-args =
 package-build:
-	cd $(pkgtree)/obj-$(TARGET) && $(env) $(MAKE) $(build-args)
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
 
-package-install:
+install-args = \
+	DESTDIR=$(ROOTFS)
+
+_install:
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+
+stripfiles = \
+	$(prefix)/bin/Xephyr \
+	$(prefix)/bin/Xfbdev \
+	$(prefix)/bin/Xnest \
+	$(prefix)/bin/Xvfb \
+
+include packages/cleanup.mk
+
+package-install: _install _strip
 	@:
 
 package-clean:

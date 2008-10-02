@@ -1,5 +1,6 @@
 PACKAGE = uClibc
-VERSION = 0.9.29
+#VERSION = 0.9.29
+VERSION = snapshot
 
 LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -9,6 +10,10 @@ DESCRIPTION = small C library for embedded systems
 ##############################################################################
 
 include packages/common.mk
+
+ifeq ($(VERSION),snapshot)
+  pkgtree = $(buildtree)/$(PACKAGE)
+endif
 
 ifneq ($(ABI),)
 DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
@@ -50,7 +55,7 @@ rootfs-dirs = \
 	$(ROOTFS)/etc/init.d \
 	$(ROOTFS)/etc/rcS.d
 
-package-install: $(rootfs-dirs)
+_install: $(rootfs-dirs)
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
@@ -58,6 +63,15 @@ package-install: $(rootfs-dirs)
 	$(priv) cp packages/$(package)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
 	$(priv) cp packages/$(package)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
 	$(priv) ln -sf ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
+
+stripfiles = \
+	$(prefix)/bin/ldd \
+	/sbin/ldconfig
+
+include packages/strip.mk
+
+package-install: _install _strip
+	@:
 
 package-clean:
 	@:

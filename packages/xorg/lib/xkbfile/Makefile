@@ -6,10 +6,14 @@ include packages/xorg/lib/Makefile
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'
 
-#package-pre-configure:
-#	chmod u+w $(pkgtree)/ltmain.sh
-#	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+prunefiles = \
+	$(prefix)/lib/libxkbfile.la
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libxkbfile.la
+stripfiles = \
+	$(prefix)/lib/libxkbfile.so.1.0.2
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
 

@@ -1,5 +1,5 @@
 PACKAGE = openssl
-VERSION = 0.9.8h
+VERSION = 0.9.8i
 
 LOCATION = http://www.openssl.org/source
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -25,20 +25,41 @@ build-vars = \
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) $(build-vars)
 
-install-vars = \
+install-args = \
 	MANDIR=$(prefix)/share/man \
 	MANSUFFIX=ssl \
 	INSTALL_PREFIX=$(ROOTFS)
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
+PHONY += _install
+_install:
+	cd $(pkgtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
 
-package-post-install:
+plugin = $(prefix)/lib/engines
+sover  = 0.9.8
+
+stripfiles = \
+	$(prefix)/bin/openssl \
+	$(prefix)/lib/libcrypto.so.$(sover) \
+	$(prefix)/lib/libssl.so.$(sover) \
+	$(plugin)/lib4758cca.so \
+	$(plugin)/libaep.so \
+	$(plugin)/libatalla.so \
+	$(plugin)/libcapi.so \
+	$(plugin)/libchil.so \
+	$(plugin)/libcswift.so \
+	$(plugin)/libgmp.so \
+	$(plugin)/libnuron.so \
+	$(plugin)/libsureware.so \
+	$(plugin)/libubsec.so
+
+include packages/cleanup.mk
+
+package-install: _install _strip
 	$(priv) mv $(ROOTFS)/usr/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
-	$(priv) $(STRIP) $(ROOTFS)/usr/lib/libcrypto.so.*
-	$(priv) $(STRIP) $(ROOTFS)/usr/lib/libssl.so.*
-	$(priv) $(STRIP) $(ROOTFS)/usr/lib/engines/lib*.so
 
 package-clean:
 	@:
+
+.PHONY: $(PHONY)
 

@@ -2,11 +2,21 @@
 
 ifneq ($(HOST), $(TARGET))
   conf-args += \
+	--program-prefix=$(TARGET)- \
 	--target=$(TARGET)
+
+  CC = $(TARGET)-gcc
+else
+  CC = gcc
+endif
+
+ifneq ($(ROOTFS),)
+  CC := $(ROOTFS)$(prefix)/bin/$(CC)
+else
+  CC := $(prefix)/bin/$(CC)
 endif
 
 conf-args += \
-	--program-prefix=$(TARGET)- \
 	--disable-libmudflap \
 	--disable-libssp \
 	--disable-shared \
@@ -43,4 +53,8 @@ build-args += \
 
 install-targets += \
 	install-gcc
+
+package-post-install:
+	ln -sf ../include-fixed/limits.h \
+		`$(CC) --print-file-name=include`/limits.h
 

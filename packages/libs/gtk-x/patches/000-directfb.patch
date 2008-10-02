@@ -15,7 +15,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 475e858..58caf73 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -515,7 +515,7 @@ XVFB_START = \
+@@ -516,7 +516,7 @@ XVFB_START = \
  	&& DISPLAY=:$$XID && export DISPLAY
  
  

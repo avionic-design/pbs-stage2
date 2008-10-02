@@ -66,19 +66,23 @@ ifneq ($(findstring kdrive, $(VARIANT)),)
   packages-y += xorg/proto/fixes
   packages-y += xorg/proto/damage
   packages-y += xorg/proto/composite
+  packages-y += xorg/proto/video
   packages-y += xorg/lib/xau
   packages-y += xorg/lib/pthread-stubs
   packages-y += xorg/lib/xcb
   packages-y += xorg/lib/xtrans
   packages-y += xorg/lib/xdmcp
   packages-y += xorg/lib/x11
+  packages-y += xorg/lib/xext
   packages-y += xorg/lib/xkbfile
   packages-y += xorg/lib/fontenc
   packages-y += xorg/lib/xfont
   packages-y += xorg/lib/xrender
+  packages-y += xorg/lib/xv
   packages-y += libs/dbus
   packages-y += libs/dbus-glib
   packages-y += libs/hal
+  packages-y += libs/pixman
   packages-y += xorg/kdrive
 
   cairo-y    += libs/cairo-x
@@ -89,7 +93,6 @@ endif
 ifneq ($(findstring gtk, $(VARIANT)),)
   packages-y += libs/freetype
   packages-y += libs/fontconfig
-  packages-y += libs/pixman
   packages-y += $(cairo-y)
   packages-y += $(pango-y)
   packages-y += libs/atk

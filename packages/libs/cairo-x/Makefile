@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.6.4
+VERSION = 1.8.0
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -9,7 +9,8 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 include packages/common.mk
 
 env += \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -48,7 +49,7 @@ _package-install:
 	$(priv) rm $(ROOTFS)$(prefix)/lib/libcairo.la
 
 libs-strip = \
-	$(prefix)/lib/libcairo.so.2.17.5
+	$(prefix)/lib/libcairo.so.2.10800.0
 
 libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
 

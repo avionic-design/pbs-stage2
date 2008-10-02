@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 124
+VERSION = 128
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -10,33 +10,53 @@ DESCRIPTION = /dev and hotplug management daemon
 
 include packages/common.mk
 
-EXTRAS = \
-	extras/path_id \
-	extras/volume_id
+conf-args = \
+	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
 
-build-args = \
-	$(call set-args, CROSS_COMPILE OPTFLAGS LDFLAGS EXTRAS)
-#	prefix=/ \
+conf-vars += \
+	CFLAGS='$(CFLAGS)'
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
+
+build-args =
 
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
 
 install-args = \
-	DESTDIR=$(ROOTFS) \
-	$(call set-args, EXTRAS)
+	DESTDIR=$(ROOTFS)
 
-sover = 0.85.0
+_install:
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) $(STRIP) $(ROOTFS)/lib/libvolume_id.so.*
-	$(priv) ln -sf ../../lib/libvolume_id.so.$(sover) $(ROOTFS)$(prefix)/lib/libvolume_id.so
-	$(priv) mkdir -p $(ROOTFS)/etc/udev/rules.d
-	$(priv) cp -a $(pkgtree)/etc/udev/rules.d/* $(ROOTFS)/etc/udev/rules.d
-	# install package configuration files
-	$(priv) cp packages/$(package)/udev.rules $(ROOTFS)/etc/udev/rules.d
-	$(priv) cp packages/$(package)/udev.init $(ROOTFS)/etc/init.d/udev
-	$(priv) ln -s ../init.d/udev $(ROOTFS)/etc/rcS.d/S03udev
+stripfiles = \
+	$(prefix)/sbin/udevadm \
+	$(prefix)/sbin/udevd \
+	$(prefix)/lib/libudev.so.0.0.1 \
+	$(prefix)/lib/libvolume_id.so.1.0.1 \
+	$(prefix)/lib/udev/ata_id \
+	$(prefix)/lib/udev/cdrom_id \
+	$(prefix)/lib/udev/collect \
+	$(prefix)/lib/udev/create_floppy_devices \
+	$(prefix)/lib/udev/edd_id \
+	$(prefix)/lib/udev/fstab_import \
+	$(prefix)/lib/udev/scsi_id \
+	$(prefix)/lib/udev/usb_id \
+	$(prefix)/lib/udev/vol_id
+
+include packages/strip.mk
+
+package-install: _install _strip
+	@:
 
 package-clean:
 	@:

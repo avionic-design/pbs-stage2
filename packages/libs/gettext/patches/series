@@ -1,1 +1,2 @@
-uclibc-support.patch -p1
+uclibc.patch -p1
+mbstate.patch -p1

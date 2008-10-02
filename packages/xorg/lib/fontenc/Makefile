@@ -6,6 +6,13 @@ include packages/xorg/lib/Makefile
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libfontenc.la
+prunefiles = \
+	$(prefix)/lib/libfontenc.la
+
+stripfiles = \
+	$(prefix)/lib/libfontenc.so.1.0.0
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
 

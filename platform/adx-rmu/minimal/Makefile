@@ -58,6 +58,8 @@ else
 endif
 
 packages-y += devel/gdb-server
+packages-y += libs/libusb
+packages-y += core/usbutils
 
 PHONY += platform-clean
 platform-clean: __clean-dirs  += $(builddir)

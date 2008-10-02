@@ -1,5 +1,5 @@
 PACKAGE = gettext
-VERSION = 0.16.1
+VERSION = 0.17
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -42,32 +42,52 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libasprintf.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgettextlib.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgettextpo.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libgettextsrc.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libintl.la
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libasprintf.la \
+	$(prefix)/lib/libgettextlib.la \
+	$(prefix)/lib/libgettextpo.la \
+	$(prefix)/lib/libgettextsrc.la \
+	$(prefix)/lib/libintl.la
+
+po-version   = 0.4.0
+intl-version = 8.0.2
+plugin       = $(prefix)/lib/gettext
+
+stripfiles = \
+	$(prefix)/bin/envsubst \
+	$(prefix)/bin/gettext \
+	$(prefix)/bin/msgattrib \
+	$(prefix)/bin/msgcat \
+	$(prefix)/bin/msgcmp \
+	$(prefix)/bin/msgcomm \
+	$(prefix)/bin/msgconv \
+	$(prefix)/bin/msgen \
+	$(prefix)/bin/msgexec \
+	$(prefix)/bin/msgfilter \
+	$(prefix)/bin/msgfmt \
+	$(prefix)/bin/msggrep \
+	$(prefix)/bin/msginit \
+	$(prefix)/bin/msgmerge \
+	$(prefix)/bin/msgunfmt \
+	$(prefix)/bin/msguniq \
+	$(prefix)/bin/ngettext \
+	$(prefix)/bin/recode-sr-latin \
+	$(prefix)/bin/xgettext \
 	$(prefix)/lib/libasprintf.so.0.0.0 \
-	$(prefix)/lib/libgettextlib-0.16.1.so \
-	$(prefix)/lib/libgettextpo.so.0.3.0 \
-	$(prefix)/lib/libgettextsrc-0.16.1.so \
-	$(prefix)/lib/libintl.so.8.0.1
+	$(prefix)/lib/libgettextlib-$(VERSION).so \
+	$(prefix)/lib/libgettextpo.so.$(po-version) \
+	$(prefix)/lib/libgettextsrc-$(VERSION).so \
+	$(prefix)/lib/libintl.so.$(intl-version) \
+	$(plugin)/hostname \
+	$(plugin)/urlget
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:

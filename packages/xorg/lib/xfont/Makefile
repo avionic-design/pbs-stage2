@@ -1,10 +1,7 @@
 PACKAGE = libXfont
-VERSION = 1.3.2
+VERSION = 1.3.3
 
 include packages/xorg/lib/Makefile
-
-#package-pre-configure:
-#	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 
 conf-args += \
 	--disable-freetype
@@ -12,6 +9,14 @@ conf-args += \
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'
 
-package-post-install:
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libXfont.la
+prunefiles = \
+	$(prefix)/lib/libXfont.la
+
+stripfiles = \
+	$(prefix)/lib/libXfont.so.1.4.1
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
 

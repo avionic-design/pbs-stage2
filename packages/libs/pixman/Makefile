@@ -1,5 +1,5 @@
 PACKAGE = pixman
-VERSION = 0.11.4
+VERSION = 0.12.0
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/lib
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -45,7 +45,7 @@ _package-install:
 	$(priv) rm $(ROOTFS)$(prefix)/lib/libpixman-1.la
 
 libs-strip = \
-	$(prefix)/lib/libpixman-1.so.0.11.4
+	$(prefix)/lib/libpixman-1.so.$(VERSION)
 
 libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
 

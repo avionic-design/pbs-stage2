@@ -37,27 +37,23 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libcharset.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libiconv.la
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libcharset.la \
+	$(prefix)/lib/libiconv.la
+
+stripfiles = \
+	$(prefix)/bin/iconv \
 	$(prefix)/lib/libcharset.so.1.0.0 \
 	$(prefix)/lib/libiconv.so.2.4.0 \
 	$(prefix)/lib/preloadable_libiconv.so
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:

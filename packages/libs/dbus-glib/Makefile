@@ -41,10 +41,21 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libdbus-glib-1.la
+
+prunefiles = \
+	$(prefix)/lib/libdbus-glib-1.la
+
+stripfiles = \
+	$(prefix)/bin/dbus-binding-tool \
+	$(prefix)/lib/libdbus-glib-1.so.2.1.0
+
+include packages/cleanup.mk
+
+package-install: _install _cleanup
+	@:
 
 package-clean:
 	@:
