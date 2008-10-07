@@ -1,43 +1,64 @@
-include platform/$(platform)/config.mk
+CUSTOM_TOOLCHAIN = y
 
-# create package list
-ifeq ($(LINUX_VERSION),git)
-  packages-y = kernel/linux.git
+# select toolchain
+ifeq ($(CUSTOM_TOOLCHAIN),y)
+  ARCH = arm
+  CPU  = xscale
+  OS   = linux
+  LIBC = uclibc
+  ABI  = eabi
+  export ARCH CPU OS LIBC ABI
+
+  TOOLCHAIN = $(ARCH)-$(CPU)-$(OS)-$(LIBC)$(ABI)
+  ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
+    include platform/toolchain/$(TOOLCHAIN)/Makefile
+  endif
 else
-  packages-y = kernel/linux
+  ARCH = arm
+  CPU  = xscale
+  OS   = linux
+  LIBC = gnu
+  ABI  = eabi
+  CROSS_COMPILE = $(ARCH)-$(OS)-$(LIBC)$(ABI)-
+  export ARCH OS LIBC ABI CROSS_COMPILE
 endif
 
-ifeq ($(INITRD_VARIANT),uclibc)
-  packages-y += \
-	devel/uclibc \
-	core/busybox
-else
-  packages-y += \
-	devel/klibc
-endif
+TARGET_LIBC    = uclibc
+TARGET_BUSYBOX = shared
+export TARGET_LIBC TARGET_BUSYBOX
 
-packages-y += \
-	core/udev \
-	initrd/rootfs
+prefix = /usr
+priv = sudo
+ROOTFS = $(PLATFORM)/rootfs
+export prefix priv ROOTFS
 
-PHONY += platform-install
-platform-install:
-#	cd $(PLATFORM)/initrd
+LINUX_VERSION = git
+KERNEL_CONFIG = adx-medcom_defconfig
+export LINUX_VERSION KERNEL_CONFIG
+
+packages-y += kernel/linux.git
+packages-y += devel/uclibc
+packages-y += core/busybox
+packages-y += initrd/rootfs
 
 PHONY += platform-clean
-platform-clean: __clean-dirs  += $(PLATFORM)/tmp
-platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-dirs  += $(builddir)
+platform-clean: __clean-dirs  += $(ROOTFS)
 platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
 platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
-platform-clean: __clean-files += $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
-platform-clean: __clean-files += $(PLATFORM)/System.map-*
-platform-clean: __clean-files += $(PLATFORM)/vmlinuz-*
-platform-clean: __clean-files += $(PLATFORM)/kernel-version
+platform-clean: __clean-files += $(PLATFORM)/System.map*
+platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
+platform-clean: __clean-files += $(PLATFORM)/rootfs.img
 platform-clean: __clean-files += $(PLATFORM)/kernel-release
 platform-clean:
-	$(if $(wildcard $(__clean-dirs) ),$(call cmd,cleandir),)
+	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
+
+#custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
+#
+#PHONY += platform-install
+#platform-install:
+#	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-install
 
 .PHONY: $(PHONY)
 
