@@ -19,6 +19,14 @@ build-vars += \
 	CFLAGS='$(CFLAGS) -include config.h -I.. -D_U_="__attribute__((unused))"' \
 	LDFLAGS='$(LDFLAGS)'
 
+stripfiles = \
+	/usr/sbin/tcpdump
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
+
 package-clean:
 	@:
 
