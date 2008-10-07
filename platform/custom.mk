@@ -2,7 +2,13 @@ ifneq ($(wildcard platform/toolchain/$(TOOLCHAIN)/Makefile),)
   include platform/toolchain/$(TOOLCHAIN)/Makefile
 endif
 
-CC ?= $(CROSS_COMPILE)gcc
+ifdef stripfiles
+  include packages/strip.mk
+  build-targets += _strip
+endif
+
+CC	?= $(CROSS_COMPILE)gcc
+STRIP	?= $(CROSS_COMPILE)strip
 
 quiet_cmd_build = CC        $(subst $(PLATFORM)/src/rootfs,,$@)
       cmd_build = $(CC) $(CFLAGS) $(LDFLAGS) -o $@ $<
@@ -36,7 +42,7 @@ $(src-progs): $(srctree)/%: $(srctree)/%.c
 $(clean-progs): clean-%:
 	$(call cmd,clean)
 
-rootfs-build: $(src-progs)
+rootfs-build: $(src-progs) $(build-targets)
 	@:
 
 rootfs-install: rootfs-build $(rootfs-dirs) $(rootfs-files) $(rootfs-links) \

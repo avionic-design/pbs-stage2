@@ -29,5 +29,7 @@ progs = \
 scripts = \
 	/usr/share/udhcpc/default.script
 
+stripfiles = $(progs)
+
 include platform/custom.mk
 
