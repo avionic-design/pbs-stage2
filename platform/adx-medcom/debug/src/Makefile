@@ -6,6 +6,7 @@ include scripts/Makefile.lib
 
 dirs = \
 	/etc/init.d \
+	/etc/modprobe.d \
 	/lib/lsb \
 	/media/sd-card \
 	/usr/share/udhcpc \
@@ -18,6 +19,7 @@ files = \
 	/etc/init.d/rcS \
 	/etc/init.d/syslogd \
 	/etc/passwd \
+	/etc/sysctl.conf \
 	/lib/lsb/init-functions
 
 links = \

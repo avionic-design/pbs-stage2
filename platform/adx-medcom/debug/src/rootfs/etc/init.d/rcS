@@ -18,7 +18,7 @@ echo -n "Populating /dev filesystem ... "
 mdev -s
 echo "done"
 
-sleep 3
+sleep 1
 mdev -s
 
 echo -n "Mounting /media/sd-card filesystem ... "
@@ -29,8 +29,8 @@ echo -n "Unblanking /dev/tty0 ... "
 echo -ne "\033[9;0]" > /dev/tty0
 echo "done"
 
-echo -n "Forcing IGMP v2 ... "
-sysctl -w net.ipv4.conf.all.force_igmp_version=2
+echo -n "Configuring kernel parameters ... "
+sysctl -p > /dev/null
 echo "done"
 
 /bin/run-parts -a start /etc/rcS.d
