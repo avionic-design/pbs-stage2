@@ -1,5 +1,5 @@
 PACKAGE = dbus
-VERSION = 1.2.3
+VERSION = 1.2.4
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
