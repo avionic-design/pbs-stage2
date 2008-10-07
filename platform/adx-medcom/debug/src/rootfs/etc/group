@@ -1,0 +1,7 @@
+root:x:0:
+tty:x:5:
+disk:x:6:
+lp:x:7:
+uucp:x:10:
+kmem:x:15:
+floppy:x:25:

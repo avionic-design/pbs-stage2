@@ -1,0 +1,37 @@
+#!/bin/sh
+
+mkdir -p /etc
+touch /etc/fstab
+touch /etc/mdev.conf
+
+echo -n "Mounting /proc filesystem ... "
+mkdir -p /proc
+mount -t proc none /proc
+echo "done"
+
+echo -n "Mounting /sys filesystem ... "
+mkdir -p /sys
+mount -t sysfs none /sys
+echo "done"
+
+echo -n "Populating /dev filesystem ... "
+mdev -s
+echo "done"
+
+sleep 3
+mdev -s
+
+echo -n "Mounting /media/sd-card filesystem ... "
+mount /media/sd-card
+echo "done"
+
+echo -n "Unblanking /dev/tty0 ... "
+echo -ne "\033[9;0]" > /dev/tty0
+echo "done"
+
+echo -n "Forcing IGMP v2 ... "
+sysctl -w net.ipv4.conf.all.force_igmp_version=2
+echo "done"
+
+/bin/run-parts -a start /etc/rcS.d
+

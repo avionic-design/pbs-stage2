@@ -1,0 +1,23 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+case $1 in
+	start)
+		log_action_begin_msg "Starting syslogd "
+		syslogd
+		log_action_end_msg $? syslogd
+		;;
+
+	stop)
+		log_action_begin_msg "Stopping syslogd "
+		kill `pidof syslogd` > /dev/null 2>&1
+		log_action_end_msg $? syslogd
+		;;
+
+	*)
+		echo "usage: $0 {start|stop}"
+		exit 1
+		;;
+esac
+
