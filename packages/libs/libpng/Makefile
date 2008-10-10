@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.2.19
+VERSION = 1.2.32
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -34,25 +34,21 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libpng*.la
 
-libs-strip = \
-	/usr/lib/libpng.so.3.19.0 \
-	/usr/lib/libpng12.so.0.19.0
+prunefiles = \
+	$(prefix)/lib/libpng.la \
+	$(prefix)/lib/libpng12.la
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+stripfiles = \
+	$(prefix)/lib/libpng.so.3.32.0 \
+	$(prefix)/lib/libpng12.so.0.32.0
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
+include packages/cleanup.mk
 
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
