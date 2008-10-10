@@ -27,6 +27,7 @@ use strict;
 use Cwd;
 use File::Basename;
 use File::Copy;
+use File::Temp qw/tempdir/;
 use filetest 'access';
 use Getopt::Long;
 use lib '/usr/share/devscripts';
@@ -89,7 +90,8 @@ Options:
     --symlink      Make an orig.tar.gz symlink to downloaded file (default)
     --rename       Rename to orig.tar.gz instead of symlinking
                    (Both will use orig.tar.bz2 if appropriate)
-    --repack       Repack downloaded archives from orig.tar.bz2 to orig.tar.gz
+    --repack       Repack downloaded archives from orig.tar.bz2 or orig.zip to
+                   orig.tar.gz
                    (does nothing if downloaded archive orig.tar.gz)
     --no-symlink   Don\'t make symlink or rename
     --verbose      Give verbose output
@@ -110,6 +112,10 @@ Options:
     --upstream-version VERSION
                    Specify the current upstream version in use rather than
                    parsing debian/changelog to determine this
+    --download-version VERSION
+                   Specify the version which the upstream release must
+                   match in order to be considered, rather than using the
+                   release with the highest version
     --package PACKAGE
                    Specify the package name rather than examining
                    debian/changelog; must use --upstream-version and
@@ -133,7 +139,7 @@ EOF
 
 sub version {
     print <<"EOF";
-This is $progname, from the Debian devscripts package, version 2.10.9
+This is $progname, from the Debian devscripts package, version 2.10.38
 This code is copyright 1999-2006 by Julian Gilbey, all rights reserved.
 Original code by Christoph Lameter.
 This program comes with ABSOLUTELY NO WARRANTY.
@@ -150,9 +156,10 @@ our $passive = 'default';
 
 my $destdir = "..";
 my $download = 1;
+my $download_version;
 my $force_download = 0;
 my $report = 0; # report even on up-to-date packages?
-my $repack = 0; # repack .tar.bz2 to .tar.gz
+my $repack = 0; # repack .tar.bz2 or .zip to .tar.gz
 my $symlink = 'symlink';
 my $verbose = 0;
 my $check_dirname_level = 1;
@@ -163,7 +170,7 @@ my $dehs_end_output = 0;
 my $dehs_start_output = 0;
 my $pkg_report_header = '';
 my $timeout = 20;
-my $user_agent_string = 'Debian uscan 2.10.9';
+my $user_agent_string = 'Debian uscan 2.10.38';
 
 if (@ARGV and $ARGV[0] =~ /^--no-?conf$/) {
     $modified_conf_msg = "  (no configuration files read)";
@@ -237,7 +244,7 @@ if (@ARGV and $ARGV[0] =~ /^--no-?conf$/) {
     $check_dirname_level = $config_vars{'DEVSCRIPTS_CHECK_DIRNAME_LEVEL'};
     $check_dirname_regex = $config_vars{'DEVSCRIPTS_CHECK_DIRNAME_REGEX'};
     $user_agent_string = $config_vars{'USCAN_USER_AGENT'}
-	if defined $config_vars{'USCAN_USER_AGENT'};
+	if $config_vars{'USCAN_USER_AGENT'};
 }
 
 # Now read the command line arguments
@@ -246,12 +253,14 @@ my ($opt_h, $opt_v, $opt_destdir, $opt_download, $opt_force_download,
     $opt_report, $opt_passive, $opt_symlink, $opt_repack);
 my ($opt_verbose, $opt_ignore, $opt_level, $opt_regex, $opt_noconf);
 my ($opt_package, $opt_uversion, $opt_watchfile, $opt_dehs, $opt_timeout);
+my $opt_download_version;
 my $opt_user_agent;
 
 GetOptions("help" => \$opt_h,
 	   "version" => \$opt_v,
 	   "destdir=s" => \$opt_destdir,
 	   "download!" => \$opt_download,
+	   "download-version=s" => \$opt_download_version,
 	   "force-download" => \$opt_force_download,
 	   "report" => sub { $opt_download = 0; },
 	   "report-status" => sub { $opt_download = 0; $opt_report = 1; },
@@ -296,6 +305,7 @@ $symlink = $opt_symlink if defined $opt_symlink;
 $verbose = $opt_verbose if defined $opt_verbose;
 $dehs = $opt_dehs if defined $opt_dehs;
 $user_agent_string = $opt_user_agent if defined $opt_user_agent;
+$download_version = $opt_download_version if defined $opt_download_version;
 if ($dehs) {
     $SIG{'__WARN__'} = \&dehs_warn;
     $SIG{'__DIE__'} = \&dehs_die;
@@ -316,8 +326,8 @@ if (defined $opt_level) {
 $check_dirname_regex = $opt_regex if defined $opt_regex;
 
 if (defined $opt_package) {
-    die "$progname: --package requires the use of --upstream-version and --watchfile\nas well; run $progname --help for more details\n"
-	unless defined $opt_uversion and defined $opt_watchfile;
+    die "$progname: --package requires the use of --watchfile\nas well; run $progname --help for more details\n"
+	unless defined $opt_watchfile;
     $download = -$download unless defined $opt_download;
 }
 
@@ -349,7 +359,30 @@ else { $passive = undef; }
 #   else { delete $ENV{'FTP_PASSIVE'}; }
 # to restore $ENV{'FTP_PASSIVE'} to what it was at this point
 
-my $user_agent = LWP::UserAgent->new(env_proxy => 1);
+# dummy subclass used to store all the redirections for later use
+package LWP::UserAgent::UscanCatchRedirections;
+
+use base 'LWP::UserAgent';
+
+my @uscan_redirections;
+
+sub redirect_ok {
+    my $self = shift;
+    my ($request) = @_;
+    if ($self->SUPER::redirect_ok(@_)) {
+	push @uscan_redirections, $request->uri;
+	return 1;
+    }
+    return 0;
+}
+
+sub get_redirections {
+    return \@uscan_redirections;
+}
+
+package main;
+
+my $user_agent = LWP::UserAgent::UscanCatchRedirections->new(env_proxy => 1);
 $user_agent->timeout($timeout);
 $user_agent->agent($user_agent_string);
 
@@ -414,7 +447,7 @@ if (defined $opt_watchfile) {
     # Are there any warnings to give if we're using dehs?
     $dehs_end_output=1;
     dehs_output if $dehs;
-    exit 0;
+    exit ($found ? 0 : 1);
 }
 
 # Otherwise we're scanning for watchfiles
@@ -504,6 +537,8 @@ for my $dir (@dirs) {
 	next;
     }
 }
+
+warn "$progname: no watch file found\n" if (@debdirs == 0 and $report);
 
 # Was there a --uversion option?
 if (defined $opt_uversion) {
@@ -641,13 +676,18 @@ sub process_watchline ($$$$$$)
 
     my $origline = $line;
     my ($base, $site, $dir, $filepattern, $pattern, $lastversion, $action);
+    my (@patterns, @sites, @redirections);
     my %options = ();
 
     my ($request, $response);
     my ($newfile, $newversion);
     my $style='new';
     my $urlbase;
+    my $headers = HTTP::Headers->new;
 
+    # Comma-separated list of features that sites being queried might
+    # want to be aware of
+    $headers->header('X-uscan-features' => 'enhanced-matching');
     %dehs_tags = ('package' => $pkg);
 
     if ($watch_version == 1) {
@@ -732,6 +772,11 @@ sub process_watchline ($$$$$$)
 	    (undef, $lastversion, $action) = split ' ', $line, 3;
 	}
 
+	if ((!$lastversion or $lastversion eq 'debian') and not defined $pkg_version) {
+	    warn "$progname warning: Unable to determine current version\n  in $watchfile, skipping:\n  $line\n";
+	    return 1;
+	}
+
 	# Check all's OK
 	if ($filepattern !~ /\(.*\)/) {
 	    warn "$progname warning: Filename pattern missing version delimiters ()\n  in $watchfile, skipping:\n  $line\n";
@@ -744,7 +789,10 @@ sub process_watchline ($$$$$$)
 	}
 
 	# Handle sf.net addresses specially
-	$base =~ s%^http://sf\.net/%http://qa.debian.org/watch/sf.php/%;
+	if ($base =~ m%^http://sf\.net/%) {
+	    $base =~ s%^http://sf\.net/%http://qa.debian.org/watch/sf.php/%;
+	    $filepattern .= '(?:\?.*)?';
+	}
 	if ($base =~ m%^(\w+://[^/]+)%) {
 	    $site = $1;
 	} else {
@@ -770,6 +818,9 @@ sub process_watchline ($$$$$$)
 	return 1;
     }
 
+    push @patterns, $pattern;
+    push @sites, $site;
+
     # What is the most recent file, based on the filenames?
     # We first have to find the candidates, then we sort them using
     # Devscripts::Versort::versort
@@ -778,11 +829,36 @@ sub process_watchline ($$$$$$)
 	    die "$progname: you must have the libcrypt-ssleay-perl package installed\nto use https URLs\n";
 	}
 	print STDERR "$progname debug: requesting URL $base\n" if $debug;
-	$request = HTTP::Request->new('GET', $base);
+	$request = HTTP::Request->new('GET', $base, $headers);
 	$response = $user_agent->request($request);
 	if (! $response->is_success) {
 	    warn "$progname warning: In watchfile $watchfile, reading webpage\n  $base failed: " . $response->status_line . "\n";
 	    return 1;
+	}
+
+	@redirections = @{$user_agent->get_redirections};
+	
+	print STDERR "$progname debug: redirections: @redirections\n"
+	    if $debug;
+
+	foreach my $_redir (@redirections) {
+	    my $base_dir = $_redir;
+	    
+	    $base_dir =~ s%^\w+://[^/]+/%/%;
+	    if ($_redir =~ m%^(\w+://[^/]+)%) {
+		my $base_site = $1;
+
+		push @patterns, "(?:(?:$base_site)?" . quotemeta($base_dir) . ")?$filepattern";
+		push @sites, $base_site;
+
+		# remove the filename, if any
+		my $base_dir_orig = $base_dir;
+		$base_dir =~ s%/[^/]*$%/%;
+		if ($base_dir ne $base_dir_orig) {
+		    push @patterns, "(?:(?:$base_site)?" . quotemeta($base_dir) . ")?$filepattern";
+		    push @sites, $base_site;
+		}
+	    }
 	}
 
 	my $content = $response->content;
@@ -795,7 +871,7 @@ sub process_watchline ($$$$$$)
 	# Strip comments
 	$content =~ s/<!-- .*?-->//sg;
 	# Is there a base URL given?
-	if ($content =~ /<\s*base\s+[^>]*href\s*=\s*([\"\'])(.*?)\1/) {
+	if ($content =~ /<\s*base\s+[^>]*href\s*=\s*([\"\'])(.*?)\1/i) {
 	    # Ensure it ends with /
 	    $urlbase = "$2/";
 	    $urlbase =~ s%//$%/%;
@@ -804,26 +880,29 @@ sub process_watchline ($$$$$$)
 	    ($urlbase = $base) =~ s%/[^/]*$%/%;
 	}
 
-	print STDERR "$progname debug: matching pattern $pattern\n" if $debug;
+	print STDERR "$progname debug: matching pattern(s) @patterns\n" if $debug;
 	my @hrefs;
-	while ($content =~ m/<\s*a\s+[^>]*href\s*=\s*([\"\'])(.*?)\1/gi) {
+	while ($content =~ m/<\s*a\s+[^>]*href\s*=\s*([\"\'])(.*?)\1/sgi) {
 	    my $href = $2;
-	    if ($href =~ m&^$pattern$&) {
-		if ($watch_version == 2) {
-		    # watch_version 2 only recognised one group; the code
-		    # below will break version 2 watchfiles with a construction
-		    # such as file-([\d\.]+(-\d+)?) (bug #327258)
-		    push @hrefs, [$1, $href];
-		} else {
-		    # need the map { ... } here to handle cases of (...)?
-		    # which may match but then return undef values
-		    my $mangled_version =
-			join(".", map { $_ if defined($_) }
-			     $href =~ m&^$pattern$&);
-		    foreach my $pat (@{$options{'uversionmangle'}}) {
-			eval "\$mangled_version =~ $pat;";
+	    $href =~ s/\n//g;
+	    foreach my $_pattern (@patterns) {
+		if ($href =~ m&^$_pattern$&) {
+		    if ($watch_version == 2) {
+			# watch_version 2 only recognised one group; the code
+			# below will break version 2 watchfiles with a construction
+			# such as file-([\d\.]+(-\d+)?) (bug #327258)
+			push @hrefs, [$1, $href];
+		    } else {
+			# need the map { ... } here to handle cases of (...)?
+			# which may match but then return undef values
+			my $mangled_version =
+			    join(".", map { $_ if defined($_) }
+			 	$href =~ m&^$_pattern$&);
+			foreach my $pat (@{$options{'uversionmangle'}}) {
+			    eval "\$mangled_version =~ $pat;";
+			}
+			push @hrefs, [$mangled_version, $href];
 		    }
-		    push @hrefs, [$mangled_version, $href];
 		}
 	    }
 	}
@@ -832,8 +911,19 @@ sub process_watchline ($$$$$$)
 		print "-- Found the following matching hrefs:\n";
 		foreach my $href (@hrefs) { print "     $$href[1]\n"; }
 	    }
-	    @hrefs = Devscripts::Versort::versort(@hrefs);
-	    ($newversion, $newfile) = @{$hrefs[0]};
+	    if (defined $download_version) {
+		my @vhrefs = grep { $$_[0] eq $download_version } @hrefs;
+		if (@vhrefs) {
+		    ($newversion, $newfile) = @{$vhrefs[0]};
+		} else {
+		    warn "$progname warning: In $watchfile no matching hrefs for version $download_version"
+			. " in watch line\n  $line\n";
+		    return 1;
+		}
+	    } else {
+		@hrefs = Devscripts::Versort::versort(@hrefs);
+		($newversion, $newfile) = @{$hrefs[0]};
+	    }
 	} else {
 	    warn "$progname warning: In $watchfile,\n  no matching hrefs for watch line\n  $line\n";
 	    return 1;
@@ -874,9 +964,9 @@ sub process_watchline ($$$$$$)
 
 	# We separate out HTMLised listings from standard listings, so
 	# that we can target our search correctly
-	if (/<\s*a\s+[^>]*href/i) {
+	if ($content =~ /<\s*a\s+[^>]*href/i) {
 	    while ($content =~ 
-		m/(?:<\s*a\s+[^>]*href\s*=\s*\")($pattern)\"/gi) {
+		m/(?:<\s*a\s+[^>]*href\s*=\s*\")((?-i)$pattern)\"/gi) {
 		my $file = $1;
 		my $mangled_version = join(".", $file =~ m/^$pattern$/);
 		foreach my $pat (@{$options{'uversionmangle'}}) {
@@ -887,7 +977,7 @@ sub process_watchline ($$$$$$)
 	} else {
 	    # they all look like:
 	    # info info ... info filename [ -> linkname]
-	    while ($content =~ m/($filepattern)(\s+->\s+\S+)?$/mgi) {
+	    while ($content =~ m/($filepattern)(\s+->\s+\S+)?$/mg) {
 		my $file = $1;
 		my $mangled_version = join(".", $file =~ m/^$filepattern$/);
 		foreach my $pat (@{$options{'uversionmangle'}}) {
@@ -902,8 +992,19 @@ sub process_watchline ($$$$$$)
 		print "-- Found the following matching files:\n";
 		foreach my $file (@files) { print "     $$file[1]\n"; }
 	    }
-	    @files = Devscripts::Versort::versort(@files);
-	    ($newversion, $newfile) = @{$files[0]};
+	    if (defined $download_version) {
+		my @vfiles = grep { $$_[0] eq $download_version } @files;
+		if (@vfiles) {
+		    ($newversion, $newfile) = @{$vfiles[0]};
+		} else {
+		    warn "$progname warning: In $watchfile no matching files for version $download_version"
+			. " in watch line\n  $line\n";
+		    return 1;
+		}
+	    } else {
+		@files = Devscripts::Versort::versort(@files);
+		($newversion, $newfile) = @{$files[0]};
+	    }
 	} else {
 	    warn "$progname warning: In $watchfile no matching files for watch line\n  $line\n";
 	    return 1;
@@ -947,7 +1048,12 @@ EOF
 	}
     }
     if (! $lastversion or $lastversion eq 'debian') {
-	$lastversion=$pkg_version;
+	if (defined $pkg_version) {
+	    $lastversion=$pkg_version;
+	} else {
+	    warn "$progname warning: Unable to determine current version\n  in $watchfile, skipping:\n  $line\n";
+	    return 1;
+	}
     }
     # And mangle it if requested
     my $mangled_lastversion = $lastversion;
@@ -965,7 +1071,25 @@ EOF
 	}
 	# absolute filename?
 	elsif ($newfile =~ m%^/%) {
-	    $upstream_url = "$site$newfile";
+	    # Were there any redirections? If so try using those first
+	    if ($#patterns > 0) {
+		# replace $site here with the one we were redirected to
+		foreach my $index (0 .. $#patterns) {
+		    if ("$sites[$index]$newfile" =~ m&^$patterns[$index]$&) {
+			$upstream_url = "$sites[$index]$newfile";
+			last;
+		    }
+		}
+		if (!defined($upstream_url)) {
+		    if ($debug) {
+			warn "$progname warning: Unable to determine upstream url from redirections,\n" .
+			    "defaulting to using site specified in watchfile\n";
+		    }
+		    $upstream_url = "$sites[0]$newfile";
+		}
+	    } else {
+		$upstream_url = "$sites[0]$newfile";
+	    }
 	}
 	# relative filename, we hope
 	else {
@@ -1132,6 +1256,20 @@ EOF
 	my $newfile_base_gz = "$1.tar.gz";
 	system("bunzip2 -c $destdir/$newfile_base | gzip > $destdir/$newfile_base_gz") == 0
 	  or die "repacking from bzip2 to gzip failed\n";
+	unlink "$destdir/$newfile_base";
+	$newfile_base = $newfile_base_gz;
+    }
+
+    if ($repack and $newfile_base =~ /^(.*)\.zip$/) {
+	print "-- Repacking from zip to .tar.gz\n" if $verbose;
+
+	system('command -v unzip >/dev/null 2>&1') >> 8 == 0
+	  or die("unzip binary not found. You need to install the package unzip to be able to repack .zip upstream archives.\n");
+
+	my $newfile_base_gz = "$1.tar.gz";
+	my $tempdir = tempdir ( "uscanXXXX", TMPDIR => 1, CLEANUP => 1 );
+	system("unzip -q -d $tempdir $destdir/$newfile_base; tar -C $tempdir -czf $destdir/$newfile_base_gz .") == 0 
+	  or die("Repacking from zip to tar.gz failed\n");
 	unlink "$destdir/$newfile_base";
 	$newfile_base = $newfile_base_gz;
     }
@@ -1373,9 +1511,9 @@ sub newest_dir ($$$$$) {
 
 	# We separate out HTMLised listings from standard listings, so
 	# that we can target our search correctly
-	if (/<\s*a\s+[^>]*href/i) {
+	if ($content =~ /<\s*a\s+[^>]*href/i) {
 	    while ($content =~ 
-		m/(?:<\s*a\s+[^>]*href\s*=\s*\")($pattern)\"/gi) {
+		m/(?:<\s*a\s+[^>]*href\s*=\s*\")((?-i)$pattern)\"/gi) {
 		my $dir = $1;
 		my $mangled_version = join(".", $dir =~ m/^$pattern$/);
 		push @dirs, [$mangled_version, $dir];
@@ -1383,7 +1521,7 @@ sub newest_dir ($$$$$) {
 	} else {
 	    # they all look like:
 	    # info info ... info filename [ -> linkname]
-	    while ($content =~ m/($pattern)(\s+->\s+\S+)?$/mgi) {
+	    while ($content =~ m/($pattern)(\s+->\s+\S+)?$/mg) {
 		my $dir = $1;
 		my $mangled_version = join(".", $dir =~ m/^$pattern$/);
 		push @dirs, [$mangled_version, $dir];
