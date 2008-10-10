@@ -1,5 +1,5 @@
 PACKAGE = usbutils
-VERSION = 0.72
+VERSION = 0.73
 
 LOCATION = http://kent.dl.sourceforge.net/sourceforge/linux-usb
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
