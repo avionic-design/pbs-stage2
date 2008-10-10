@@ -1,4 +1,3 @@
 version=3
-http://mesh.dl.sourceforge.net/sourceforge/linux-usb/usbutils-(.+)\.tar\.gz
-#http://kent.dl.sourceforge.net/sourceforge/linux-usb/usbutils-(.+)\.tar\.gz
+http://sf.net/linux-usb/usbutils-(.+)\.tar\.gz
 
