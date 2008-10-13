@@ -9,6 +9,7 @@ dirs = \
 	/etc/modprobe.d \
 	/lib/lsb \
 	/media/sd-card \
+	/tmp \
 	/usr/share/udhcpc \
 	/var/lock \
 	/var/log
