@@ -58,6 +58,7 @@ else
 endif
 
 packages-y += devel/gdb-server
+packages-y += devel/strace
 packages-y += libs/libusb
 packages-y += core/usbutils
 
