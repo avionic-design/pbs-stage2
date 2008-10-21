@@ -47,7 +47,6 @@ rootfs-build: $(src-progs) $(build-targets)
 
 rootfs-install: rootfs-build $(rootfs-dirs) $(rootfs-files) $(rootfs-links) \
 			$(rootfs-progs) $(rootfs-scripts)
-	$(call cmd,link,/sbin/init,$(ROOTFS)/init)
 
 rootfs-clean: $(clean-progs)
 	@:
@@ -66,5 +65,4 @@ $(rootfs-progs): $(ROOTFS)%: $(PLATFORM)/src/rootfs/%
 
 $(rootfs-scripts): $(ROOTFS)%: $(PLATFORM)/src/rootfs/%
 	$(call cmd,install_bin)
-
 
