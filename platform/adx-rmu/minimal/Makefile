@@ -62,23 +62,26 @@ packages-y += devel/strace
 packages-y += libs/libusb
 packages-y += core/usbutils
 
+include platform/common.mk
+
+platform-clean-dirs	+= $(builddir)
+platform-clean-dirs	+= $(ROOTFS)
+platform-clean-files	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
+platform-clean-files	+= $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
+platform-clean-files	+= $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
+platform-clean-files	+= $(PLATFORM)/System.map*
+platform-clean-files	+= $(PLATFORM)/vmlinuz*
+platform-clean-files	+= $(PLATFORM)/rootfs.img
+platform-clean-files	+= $(PLATFORM)/kernel-release
+platform-clean-files	+= $(PLATFORM)/kernel-version
+
+include platform/cleanup.mk
+
 PHONY += platform-clean
-platform-clean: __clean-dirs  += $(builddir)
-platform-clean: __clean-dirs  += $(ROOTFS)
-platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
-platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
-platform-clean: __clean-files += $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
-platform-clean: __clean-files += $(PLATFORM)/System.map*
-platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
-platform-clean: __clean-files += $(PLATFORM)/rootfs.img
-platform-clean: __clean-files += $(PLATFORM)/kernel-version
-platform-clean: __clean-files += $(PLATFORM)/kernel-release
-platform-clean:
-	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
-	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
+platform-clean: platform-cleanup
+	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-clean
 
-custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
-
+PHONY += platform-install
 platform-install:
 	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-install
 
