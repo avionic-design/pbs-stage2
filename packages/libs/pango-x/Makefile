@@ -1,5 +1,5 @@
 PACKAGE = pango
-VERSION = 1.22.0
+VERSION = 1.22.1
 
 LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.22
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -64,7 +64,7 @@ prunefiles = \
 	$(plugin)/pango-thai-fc.la \
 	$(plugin)/pango-tibetan-fc.la
 
-sover = 0.2200.0
+sover = 0.2201.0
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
