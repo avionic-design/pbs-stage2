@@ -1,39 +1,70 @@
 PACKAGE = xorg-server
-VERSION = 1.3.0.0
+VERSION = 1.5.2
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/xserver
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-CONFIGURE_SCRIPTS = $(WORKSRC)/configure
-BUILD_SCRIPTS = $(WORKSRC)/Makefile
-INSTALL_SCRIPTS = $(WORKSRC)/Makefile
+##############################################################################
 
 include packages/common.mk
 
-env += PKG_CONFIG_PATH=$(ROOTFS)/usr/lib/pkgconfig
-
-ac-cache = \
-	ac_cv_file__usr_share_X11_sgml_defs_ent=no
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
-	--host=$(HOST) \
-	--prefix=/usr \
-	--infodir=\$${prefix}/share/info \
-	--mandir=\$${prefix}/share/man \
+	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc \
+	--disable-kdrive \
+	--disable-xfbdev \
+	--disable-xinerama \
+	--disable-xprint \
+	--disable-dpms \
+	--disable-xv \
+	--disable-xgl \
+	--disable-glx \
 	--disable-dri \
-	$(call set-args, AR CC CFLAGS LDFLAGS RANLIB STRIP) \
-	$(ac-cache)
+	--disable-dri2 \
+	--disable-dga \
+	--enable-xv \
+	--enable-xorg
+
+conf-vars = \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
-	cd $(pkgtree) && $(env) $(MAKE) $(install-args) install
+_install:
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+
+#stripfiles = \
+	$(prefix)/bin/Xephyr \
+	$(prefix)/bin/Xfbdev \
+	$(prefix)/bin/Xnest \
+	$(prefix)/bin/Xvfb \
+
+#include packages/cleanup.mk
+
+package-install: _install
+#	_strip
+	@:
+
+package-clean:
+	@:
 
