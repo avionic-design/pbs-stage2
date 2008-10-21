@@ -1,0 +1,40 @@
+diff --git a/hald/linux/addons/addon-input.c b/hald/linux/addons/addon-input.c
+index 5704f82..4a8c6a8 100644
+--- a/hald/linux/addons/addon-input.c
++++ b/hald/linux/addons/addon-input.c
+@@ -41,8 +41,7 @@
+ #else
+   #include <linux/input.h>
+ #endif
+-#include <glib/gmain.h>
+-#include <glib/gprintf.h>
++#include <glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+ #include "libhal/libhal.h"
+diff --git a/hald/linux/addons/addon-omap-backlight.c b/hald/linux/addons/addon-omap-backlight.c
+index f9913f5..7b7d6f7 100644
+--- a/hald/linux/addons/addon-omap-backlight.c
++++ b/hald/linux/addons/addon-omap-backlight.c
+@@ -41,7 +41,7 @@
+ #include <fcntl.h>
+ #include <unistd.h> 
+ 
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
+diff --git a/hald/linux/addons/addon-storage.c b/hald/linux/addons/addon-storage.c
+index fff22d6..83430e9 100644
+--- a/hald/linux/addons/addon-storage.c
++++ b/hald/linux/addons/addon-storage.c
+@@ -39,7 +39,7 @@
+ #include <string.h>
+ #include <sys/ioctl.h>
+ #include <unistd.h>
+-#include <glib/gmain.h>
++#include <glib.h>
+ #include <dbus/dbus-glib.h>
+ #include <dbus/dbus-glib-lowlevel.h>
+ 
