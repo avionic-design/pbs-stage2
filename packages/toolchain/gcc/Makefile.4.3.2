@@ -33,6 +33,12 @@ ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
 endif
 
+ifeq ($(LIBC),newlib)
+  conf-args += \
+	--with-newlib \
+	--with-libgloss
+endif
+
 ifeq ($(MULTILIB),y)
   conf-args += --enable-multilib
 else

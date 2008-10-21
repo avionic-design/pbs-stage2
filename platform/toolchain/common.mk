@@ -54,7 +54,7 @@ ifdef TOOLCHAIN
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 else
   # default versions
-  LINUX_VERSION ?= 2.6.26.5
+  LINUX_VERSION ?= 2.6.27.2
   export LINUX_VERSION
 
   BINUTILS_VERSION  ?= 2.18
@@ -65,29 +65,39 @@ else
   GCC_SNAPSHOT ?= 4.4-20080725
   export GCC_VERSION GCC_SNAPSHOT
 
-  ifeq ($(LIBC),uclibc)
-    LIBC_VERSION ?= 0.9.29
+  ifeq ($(LIBC),newlib)
+    LIBC_VERSION ?= 1.16.0
   else
-    LIBC_VERSION ?= 2.7
+    ifeq ($(LIBC),uclibc)
+      LIBC_VERSION ?= 0.9.29
+    else
+      LIBC_VERSION ?= 2.7
+    endif
   endif
 
   export LIBC_VERSION
 
-  packages-y  = toolchain/linux-headers
-  packages-y += toolchain/binutils
-  ifeq ($(LIBC),uclibc)
-    packages-y += toolchain/uclibc-headers
+  ifeq ($(LIBC),newlib)
+    packages-y  = toolchain/binutils
+    packages-y += toolchain/gcc
+    packages-y += toolchain/newlib
   else
-    packages-y += toolchain/glibc-headers
+    packages-y  = toolchain/linux-headers
+    packages-y += toolchain/binutils
+    ifeq ($(LIBC),uclibc)
+      packages-y += toolchain/uclibc-headers
+    else
+      packages-y += toolchain/glibc-headers
+    endif
+    packages-y += toolchain/gcc-core
+    ifeq ($(LIBC),uclibc)
+      packages-y += toolchain/uclibc
+    else
+      packages-y += toolchain/glibc
+    endif
+    packages-y += toolchain/gcc
+    packages-y += toolchain/gdb
+    packages-y += toolchain/pkg-config
   endif
-  packages-y += toolchain/gcc-core
-  ifeq ($(LIBC),uclibc)
-    packages-y += toolchain/uclibc
-  else
-    packages-y += toolchain/glibc
-  endif
-  packages-y += toolchain/gcc
-  packages-y += toolchain/gdb
-  packages-y += toolchain/pkg-config
 endif
 
