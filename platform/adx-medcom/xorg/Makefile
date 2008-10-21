@@ -1,5 +1,5 @@
 CUSTOM_TOOLCHAIN = y
-VARIANT = x kdrive gtk
+VARIANT = x xorg gtk
 
 # select toolchain
 ifeq ($(CUSTOM_TOOLCHAIN),y)

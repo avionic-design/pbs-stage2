@@ -46,7 +46,7 @@ ifneq ($(findstring directfb, $(VARIANT)),)
   gtk-y      += libs/gtk-dfb
 endif
 
-ifneq ($(findstring kdrive, $(VARIANT)),)
+ifneq ($(findstring x, $(VARIANT)),)
   packages-y += libs/openssl
   packages-y += xorg/proto/xcb
   packages-y += xorg/proto/x
@@ -83,8 +83,19 @@ ifneq ($(findstring kdrive, $(VARIANT)),)
   packages-y += libs/dbus-glib
   packages-y += libs/hal
   packages-y += libs/pixman
-  packages-y += xorg/kdrive
+endif
 
+ifneq ($(findstring kdrive, $(VARIANT)),)
+  packages-y += xorg/kdrive
+endif
+
+ifneq ($(findstring xorg, $(VARIANT)),)
+  packages-y += xorg/proto/dga
+  packages-y += xorg/lib/pciaccess
+  packages-y += xorg/xorg-server
+endif
+
+ifneq ($(findstring x, $(VARIANT)),)
   cairo-y    += libs/cairo-x
   pango-y    += libs/pango-x
   gtk-y      += libs/gtk-x
