@@ -37,8 +37,8 @@ install-args = \
 _install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) cp $(pkgsrctree)/udev.init $(ROOTFS)/etc/init.d/udev
-	$(priv) ln -sf ../init.d/udev $(ROOTFS)/etc/rcS.d/S10udev
+	$(call cmd,install_bin,$(pkgsrctree)/udev.init,$(ROOTFS)/etc/init.d/udev)
+	$(call cmd,link,../init.d/udev,$(ROOTFS)/etc/rcS.d/S10udev)
 
 stripfiles = \
 	$(prefix)/sbin/udevadm \
