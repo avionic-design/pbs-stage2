@@ -1,0 +1,77 @@
+#!/bin/sh
+
+pkglist="make platform=toolchain/\$toolchain list | sort -u"
+version="cut -d: -f1 | cut -d' ' -f2"
+
+function build_toolchain()
+{
+	a=$1; c=$2; o=$3; l=$4; b=$5;
+
+	case $l in
+	gnu)
+		libc=glibc
+		;;
+
+	uclibc)
+		libc=uClibc
+		;;
+
+	*)
+		libc=
+		;;
+	esac
+
+	if [ "x$b" != "xoabi" ]; then
+		toolchain="$a-$c-$o-$l$b"
+	else
+		toolchain="$a-$c-$o-$l"
+	fi
+
+	gcc="`eval $pkglist | grep gcc | eval $version`"
+	linux="_`eval $pkglist | grep linux | eval $version`"
+
+	if [ "x$libc" != "x" ]; then
+		libc="_`eval $pkglist | grep $libc | eval $version`"
+	else
+		libc=""
+	fi
+
+	echo -n "Building toolchain $toolchain ... "
+	#make platform=toolchain/$chain install 2>&1 | tee $chain.log
+
+	if [ $? -eq 0 ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+
+	echo -n "Tarballing toolchain $toolchain ... "
+
+	tarball="../toolchains/${toolchain}_${gcc}${linux}${libc}.tar.bz2"
+	tar cjf "$tarball" -C platform/toolchain/$toolchain opt
+
+	if [ $? -eq 0 ]; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+}
+
+arch=arm
+cpu=xscale
+os=linux
+libc="uclibc gnu"
+abi="oabi eabi"
+
+for a in $arch; do
+  for c in $cpu; do
+    for o in $os; do
+      for l in $libc; do
+        for b in $abi; do
+          build_toolchain $a $c $o $l $b
+        done
+      done
+    done
+  done
+done
+
