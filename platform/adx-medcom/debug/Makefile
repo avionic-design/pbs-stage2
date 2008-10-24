@@ -62,7 +62,7 @@ endif
 packages-y += libs/libpcap
 packages-y += net/tcpdump
 
-custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
+include platform/common.mk
 
 platform-clean-dirs	+= $(builddir)
 platform-clean-dirs	+= $(ROOTFS)

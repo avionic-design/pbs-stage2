@@ -1,0 +1,6 @@
+rootfs-install:
+	@:
+
+rootfs-clean:
+	@:
+

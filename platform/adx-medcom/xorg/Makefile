@@ -37,22 +37,27 @@ LINUX_VERSION = git
 KERNEL_CONFIG = adx-medcom_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
+rootfs-size = 256M
+export rootfs-size
+
 include platform/adx-medcom/packages.mk
+include platform/common.mk
+
+platform-clean-dirs	+= $(builddir)
+platform-clean-dirs	+= $(ROOTFS)
+platform-clean-files	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
+platform-clean-files	+= $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
+platform-clean-files	+= $(PLATFORM)/System.map*
+platform-clean-files	+= $(PLATFORM)/vmlinuz*
+platform-clean-files	+= $(PLATFORM)/rootfs.img
+platform-clean-files	+= $(PLATFORM)/kernel-release
+platform-clean-files	+= $(PLATFORM)/kernel-version
+
+include platform/cleanup.mk
 
 PHONY += platform-clean
-platform-clean: __clean-dirs  += $(builddir)
-platform-clean: __clean-dirs  += $(ROOTFS)
-platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
-platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
-platform-clean: __clean-files += $(PLATFORM)/System.map*
-platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
-platform-clean: __clean-files += $(PLATFORM)/rootfs.img
-platform-clean: __clean-files += $(PLATFORM)/kernel-release
-platform-clean:
-	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
-	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
-
-custom := -f $(if $(PBUILD_SRC), $(srctree)/)platform/$(platform)/src/Makefile obj
+platform-clean: platform-cleanup
+	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-clean
 
 PHONY += platform-install
 platform-install:

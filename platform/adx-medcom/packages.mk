@@ -19,13 +19,11 @@ else
   packages-y += core/busybox
 endif
 
-packages-y += core/udev
-
 # common packages
 ifneq ($(findstring qt, $(VARIANT)),)
   packages-y += libs/qt
 else
-  ifneq ($(VARIANT),alsa)
+  ifeq ($(findstring initrd, $(VARIANT)),)
     packages-y += core/udev
     packages-y += libs/zlib
     packages-y += libs/libpng
