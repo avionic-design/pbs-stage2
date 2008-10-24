@@ -54,7 +54,7 @@ ifdef TOOLCHAIN
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
 else
   # default versions
-  LINUX_VERSION ?= 2.6.27.2
+  LINUX_VERSION ?= 2.6.27.3
   export LINUX_VERSION
 
   BINUTILS_VERSION  ?= 2.18
@@ -69,7 +69,7 @@ else
     LIBC_VERSION ?= 1.16.0
   else
     ifeq ($(LIBC),uclibc)
-      LIBC_VERSION ?= 0.9.29
+      LIBC_VERSION ?= 0.9.30-rc2
     else
       LIBC_VERSION ?= 2.7
     endif
