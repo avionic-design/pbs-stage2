@@ -37,8 +37,8 @@ set -x
 #sleep 5
 #umount $mp
 mount $dev $mp
-mkdir $mp/boot
-cp platform/$board/initrd/u-boot.img $mp/boot
+mkdir -p $mp/boot
+cp platform/$board/initrd-ng/u-boot.img $mp/boot
 cp platform/$board/$variant/rootfs.img $mp
 umount $mp
 
