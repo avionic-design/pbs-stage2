@@ -15,16 +15,16 @@ echo > /proc/sys/kernel/hotplug
 
 mkdir -p /dev/.udev/db/
 echo -n 'Starting hotplug daemon: udevd ... '
-udevd --daemon
+/usr/sbin/udevd --daemon
 echo 'done'
 
 mkdir -p /dev/.udev/queue/
 echo -n 'Synthesizing initial hotplug events ... '
-/sbin/udevadm trigger
+/usr/sbin/udevadm trigger
 echo 'done'
 
 echo -n 'Waiting for hotplug daemon to settle ... '
-/sbin/udevadm settle --timeout=30 || true
+/usr/sbin/udevadm settle --timeout=30 || true
 echo 'done'
 
 # If the rootdelay parameter has been set, we wait a bit for devices
