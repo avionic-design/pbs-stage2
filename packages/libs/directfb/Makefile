@@ -1,5 +1,5 @@
 PACKAGE = DirectFB
-VERSION = 1.2.0-rc1
+VERSION = 1.3.0
 
 LOCATION = http://www.directfb.org/downloads/Core
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -54,41 +54,58 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-major = 1.2
-plugin-dir = $(prefix)/lib/directfb-$(major)-0
-
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libdirectfb.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libdirect.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libfusion.la
-	$(priv) find $(ROOTFS)$(plugin-dir) -name '*.la' -exec rm {} +
 
-libs-strip = \
+major  = 1.3
+plugin = $(prefix)/lib/directfb-$(major)-0
+
+prunefiles = \
+	$(prefix)/lib/libdirect.la \
+	$(prefix)/lib/libdirectfb.la \
+	$(prefix)/lib/libfusion.la \
+	$(plugin)/inputdrivers/libdirectfb_linux_input.la \
+	$(plugin)/inputdrivers/libdirectfb_tslib.la \
+	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_default.la \
+	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_dgiff.la \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.la \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_jpeg.la \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.la \
+	$(plugin)/systems/libdirectfb_devmem.la \
+	$(plugin)/systems/libdirectfb_fbdev.la \
+	$(plugin)/wm/libdirectfbwm_default.la
+
+stripfiles = \
+	$(prefix)/bin/dfbdump \
+	$(prefix)/bin/dfbfx \
+	$(prefix)/bin/dfbg \
+	$(prefix)/bin/dfbinfo \
+	$(prefix)/bin/dfbinput \
+	$(prefix)/bin/dfbinspector \
+	$(prefix)/bin/dfblayer \
+	$(prefix)/bin/dfbmaster \
+	$(prefix)/bin/dfbpenmount \
+	$(prefix)/bin/dfbscreen \
+	$(prefix)/bin/directfb-csource \
+	$(prefix)/bin/mkdfiff \
 	$(prefix)/lib/libdirect-$(major).so.0.0.0 \
 	$(prefix)/lib/libdirectfb-$(major).so.0.0.0 \
 	$(prefix)/lib/libfusion-$(major).so.0.0.0 \
-	$(plugin-dir)/systems/libdirectfb_devmem.so \
-	$(plugin-dir)/systems/libdirectfb_fbdev.so \
-	$(plugin-dir)/inputdrivers/libdirectfb_linux_input.so \
-	$(plugin-dir)/inputdrivers/libdirectfb_tslib.so \
-	$(plugin-dir)/wm/libdirectfbwm_default.so \
-	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.so \
-	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_jpeg.so \
-	$(plugin-dir)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.so \
-	$(plugin-dir)/interfaces/IDirectFBFont/libidirectfbfont_default.so
+	$(plugin)/inputdrivers/libdirectfb_linux_input.so \
+	$(plugin)/inputdrivers/libdirectfb_tslib.so \
+	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_default.so \
+	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_dgiff.so \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.so \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_jpeg.so \
+	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.so \
+	$(plugin)/systems/libdirectfb_devmem.so \
+	$(plugin)/systems/libdirectfb_fbdev.so \
+	$(plugin)/wm/libdirectfbwm_default.so
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:

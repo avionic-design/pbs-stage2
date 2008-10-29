@@ -2,7 +2,7 @@ diff --git a/configure.in b/configure.in
 index 9b2368d..1c1ba78 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1468,6 +1468,18 @@ AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
+@@ -1490,6 +1490,18 @@ AS_AC_EXPAND(SYSCONFDIR, $sysconfdir)
  
  CFLAGS="$CFLAGS -Werror-implicit-function-declaration"
  
