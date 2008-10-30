@@ -57,7 +57,7 @@ else
   LINUX_VERSION ?= 2.6.27.4
   export LINUX_VERSION
 
-  BINUTILS_VERSION  ?= 2.18
+  BINUTILS_VERSION  ?= 2.19
   BINUTILS_SNAPSHOT ?= 2.18.50.0.8
   export BINUTILS_VERSION BINUTILS_SNAPSHOT
 
@@ -69,7 +69,7 @@ else
     LIBC_VERSION ?= 1.16.0
   else
     ifeq ($(LIBC),uclibc)
-      LIBC_VERSION ?= 0.9.30-rc2
+      LIBC_VERSION ?= 0.9.30-rc3
     else
       LIBC_VERSION ?= 2.7
     endif
