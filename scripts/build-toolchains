@@ -27,7 +27,8 @@ function build_toolchain()
 		toolchain="$a-$c-$o-$l"
 	fi
 
-	gcc="`eval $pkglist | grep gcc | eval $version`"
+	binutils="`eval $pkglist | grep binutils | eval $version`"
+	gcc="_`eval $pkglist | grep gcc | eval $version`"
 	linux="_`eval $pkglist | grep linux | eval $version`"
 
 	if [ "x$libc" != "x" ]; then
@@ -47,7 +48,7 @@ function build_toolchain()
 
 	echo -n "Tarballing toolchain $toolchain ... "
 
-	tarball="../toolchains/${toolchain}_${gcc}${linux}${libc}.tar.bz2"
+	tarball="../toolchains/${toolchain}_${binutils}${gcc}${linux}${libc}.tar.bz2"
 	tar cjf "$tarball" -C platform/toolchain/$toolchain opt
 
 	if [ $? -eq 0 ]; then
