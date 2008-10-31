@@ -1,5 +1,5 @@
 PACKAGE = uClibc
-VERSION = 0.9.30-rc2
+VERSION = 0.9.30-rc3
 
 LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
