@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.8.0
+VERSION = 1.8.2
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -43,24 +43,21 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libcairo.la
 
-libs-strip = \
-	$(prefix)/lib/libcairo.so.2.10800.0
+sover = 2.10802.0
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+prunefiles = \
+	$(prefix)/lib/libcairo.la
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
+strifiles = \
+	$(prefix)/lib/libcairo.so.$(sover)
 
-_strip: $(libs-strip)
-	@:
+include packages/cleanup.mk
 
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
