@@ -47,12 +47,12 @@ _install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
-sover = 2.10802.0
+sover = 2.10800.2
 
 prunefiles = \
 	$(prefix)/lib/libcairo.la
 
-strifiles = \
+stripfiles = \
 	$(prefix)/lib/libcairo.so.$(sover)
 
 include packages/cleanup.mk
