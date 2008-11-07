@@ -1,5 +1,5 @@
 PACKAGE = libxcb
-VERSION = 1.1
+VERSION = 1.1.92
 
 LOCATION = http://xcb.freedesktop.org/dist
 
@@ -31,14 +31,13 @@ prunefiles = \
 	$(prefix)/lib/libxcb-xf86dri.la \
 	$(prefix)/lib/libxcb-xfixes.la \
 	$(prefix)/lib/libxcb-xinerama.la \
-	$(prefix)/lib/libxcb-xlib.la \
 	$(prefix)/lib/libxcb-xprint.la \
 	$(prefix)/lib/libxcb-xtest.la \
 	$(prefix)/lib/libxcb-xv.la \
 	$(prefix)/lib/libxcb-xvmc.la
 
 stripfiles = \
-	$(prefix)/lib/libxcb.so.1.0.0 \
+	$(prefix)/lib/libxcb.so.1.1.0 \
 	$(prefix)/lib/libxcb-composite.so.0.0.0 \
 	$(prefix)/lib/libxcb-damage.so.0.0.0 \
 	$(prefix)/lib/libxcb-dpms.so.0.0.0 \
@@ -55,7 +54,6 @@ stripfiles = \
 	$(prefix)/lib/libxcb-xf86dri.so.0.0.0 \
 	$(prefix)/lib/libxcb-xfixes.so.0.0.0 \
 	$(prefix)/lib/libxcb-xinerama.so.0.0.0 \
-	$(prefix)/lib/libxcb-xlib.so.0.0.0 \
 	$(prefix)/lib/libxcb-xprint.so.0.0.0 \
 	$(prefix)/lib/libxcb-xtest.so.0.0.0 \
 	$(prefix)/lib/libxcb-xv.so.0.0.0 \
