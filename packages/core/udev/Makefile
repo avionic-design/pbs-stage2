@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 130
+VERSION = 131
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -43,8 +43,8 @@ _install:
 stripfiles = \
 	$(prefix)/sbin/udevadm \
 	$(prefix)/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.0.2 \
-	$(prefix)/lib/libvolume_id.so.1.0.2 \
+	$(prefix)/lib/libudev.so.0.0.4 \
+	$(prefix)/lib/libvolume_id.so.1.0.4 \
 	$(prefix)/lib/udev/ata_id \
 	$(prefix)/lib/udev/cdrom_id \
 	$(prefix)/lib/udev/collect \
