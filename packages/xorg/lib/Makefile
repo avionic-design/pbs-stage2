@@ -27,7 +27,7 @@ package-configure: package-pre-configure
 build-args = \
 	$(extra-build-args)
 
-package-build:
+package-build: package-pre-build
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
@@ -47,6 +47,7 @@ package-clean:
 
 # dummy targets
 package-pre-configure:
+package-pre-build:
 package-pre-install:
 package-post-install:
 
