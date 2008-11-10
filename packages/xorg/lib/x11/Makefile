@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.1.5
+VERSION = 1.1.99.2
 
 include packages/xorg/lib/Makefile
 
@@ -8,6 +8,12 @@ conf-args += \
 
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'
+
+# build native utilities (they are built separately because they can't take
+# cross-compiling compiler flags)
+package-pre-build:
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) -C src/util CPPFLAGS='' CFLAGS=''
 
 prunefiles = \
 	$(prefix)/lib/libX11-xcb.la \
@@ -19,6 +25,6 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-post-install: _prune _strip
+package-post-install: _cleanup
 	@:
 
