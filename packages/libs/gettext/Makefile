@@ -50,8 +50,12 @@ prunefiles = \
 	$(prefix)/lib/libasprintf.la \
 	$(prefix)/lib/libgettextlib.la \
 	$(prefix)/lib/libgettextpo.la \
-	$(prefix)/lib/libgettextsrc.la \
+	$(prefix)/lib/libgettextsrc.la
+
+ifneq ($(LIBC),gnu)
+prunefiles += \
 	$(prefix)/lib/libintl.la
+endif
 
 po-version   = 0.4.0
 intl-version = 8.0.2
@@ -81,9 +85,13 @@ stripfiles = \
 	$(prefix)/lib/libgettextlib-$(VERSION).so \
 	$(prefix)/lib/libgettextpo.so.$(po-version) \
 	$(prefix)/lib/libgettextsrc-$(VERSION).so \
-	$(prefix)/lib/libintl.so.$(intl-version) \
 	$(plugin)/hostname \
 	$(plugin)/urlget
+
+ifneq ($(LIBC),gnu)
+stripfiles += \
+	$(prefix)/lib/libintl.so.$(intl-version)
+endif
 
 include packages/cleanup.mk
 
