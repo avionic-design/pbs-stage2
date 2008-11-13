@@ -1,25 +1,24 @@
-PACKAGE = jpeg
+PACKAGE = libjpeg
 VERSION = 6b
 
 LOCATION = ftp://ftp.uu.net/graphics/jpeg
-TARBALLS = $(PACKAGE)src.v$(VERSION).tar.gz
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
 
 include packages/common.mk
 
 conf-args = \
-	--prefix=$(prefix) \
 	--host=$(TARGET) \
-	--enable-shared \
-	--enable-static
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
 
 conf-vars = \
-	CC='$(CC)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/config.sub $(pkgtree)/config.sub
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -30,32 +29,26 @@ package-build:
 		$(env) $(MAKE) $(build-args)
 
 install-args = \
-	prefix=$(ROOTFS)$(prefix) \
-	mandir=$(ROOTFS)$(prefix)/share/man/man1
+	DESTDIR=$(ROOTFS)
 
-_package-install:
-	$(priv) mkdir -p $(ROOTFS)$(prefix)/share/man/man1
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libjpeg.la
 
-files-strip = \
-	/usr/bin/jpegtran \
-	/usr/bin/wrjpgcom \
-	/usr/bin/djpeg \
-	/usr/bin/cjpeg \
-	/usr/bin/rdjpgcom
+prunefiles = \
+	$(prefix)/lib/libjpeg.la
 
-files-strip := $(patsubst %,strip-$(ROOTFS)%,$(files-strip))
+stripfiles = \
+	$(prefix)/bin/jpegtran \
+	$(prefix)/bin/wrjpgcom \
+	$(prefix)/bin/djpeg \
+	$(prefix)/bin/cjpeg \
+	$(prefix)/bin/rdjpgcom \
+	$(prefix)/lib/libjpeg.so.62.0.0
 
-$(files-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
+include packages/cleanup.mk
 
-_strip: $(files-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
