@@ -37,6 +37,8 @@ install-args = \
 _install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,install_dir,$(ROOTFS)/etc/init.d)
+	$(call cmd,install_dir,$(ROOTFS)/etc/rcS.d)
 	$(call cmd,install_bin,$(pkgsrctree)/udev.init,$(ROOTFS)/etc/init.d/udev)
 	$(call cmd,link,../init.d/udev,$(ROOTFS)/etc/rcS.d/S10udev)
 
