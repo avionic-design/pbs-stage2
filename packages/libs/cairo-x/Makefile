@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.8.2
+VERSION = 1.8.4
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -47,7 +47,7 @@ _install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
-sover = 2.10800.2
+sover = 2.10800.4
 
 prunefiles = \
 	$(prefix)/lib/libcairo.la
