@@ -84,11 +84,6 @@ else
   else
     packages-y  = toolchain/linux-headers
     packages-y += toolchain/binutils
-    ifeq ($(LIBC),uclibc)
-      packages-y += toolchain/uclibc-headers
-    else
-      packages-y += toolchain/glibc-headers
-    endif
     packages-y += toolchain/gcc-core
     ifeq ($(LIBC),uclibc)
       packages-y += toolchain/uclibc

@@ -4,6 +4,8 @@ unexport CC CFLAGS LD LDFLAGS
 KBUILD_OUTPUT = $(buildtree)
 export KBUILD_OUTPUT
 
+ARCH := $(patsubst mips%,mips,$(ARCH))
+
   image-blackfin = vmImage
 install-blackfin = install
 

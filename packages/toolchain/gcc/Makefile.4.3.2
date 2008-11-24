@@ -27,6 +27,9 @@ ifeq ($(variant),sysroot)
 	--with-sysroot=$(ROOTFS) \
 	--with-as=$(ROOTFS)$(prefix)/bin/$(TARGET)-as \
 	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
+else
+  conf-args += \
+	--with-local-prefix=$(prefix)
 endif
 
 ifeq ($(FLOAT),soft)
