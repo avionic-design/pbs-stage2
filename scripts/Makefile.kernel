@@ -40,7 +40,7 @@ ifneq ($(CROSS_COMPILE),)
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			prepare
+			include/config/kernel.release
 	cd $(KERNELSRC) && \
 		$(MAKE) ARCH=$(ARCH) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
