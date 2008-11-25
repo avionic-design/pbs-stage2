@@ -1,0 +1,30 @@
+diff --git a/ldso/ldso/bfin/dl-sysdep.h b/ldso/ldso/bfin/dl-sysdep.h
+index 8c3a166..7fc8aff 100644
+--- a/ldso/ldso/bfin/dl-sysdep.h
++++ b/ldso/ldso/bfin/dl-sysdep.h
+@@ -213,6 +213,12 @@ while (0)
+ #endif
+ 
+ #include <elf.h>
++static inline Elf32_Addr __attribute__((unused))
++elf_machine_load_address(void)
++{
++	return 0;
++}
++
+ static inline void
+ elf_machine_relative (DL_LOADADDR_TYPE load_off, const Elf32_Addr rel_addr,
+ 		      Elf32_Word relative_count)
+diff --git a/ldso/ldso/ldso.c b/ldso/ldso/ldso.c
+index 722344c..44bf11b 100644
+--- a/ldso/ldso/ldso.c
++++ b/ldso/ldso/ldso.c
+@@ -297,7 +297,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+ 				for (i = 0; i < auxvt[AT_PHNUM].a_un.a_val; i++, ppnt++) {
+ 					if (ppnt->p_type == PT_LOAD && !(ppnt->p_flags & PF_W))
+ 						_dl_mprotect((void *) (DL_RELOC_ADDR(app_tpnt->loadaddr, ppnt->p_vaddr) & PAGE_ALIGN),
+-							     ((ppnt->p_vaddr + app_tpnt->loadaddr) & ADDR_ALIGN) +
++							     ((unsigned long)(ppnt->p_vaddr + DL_LOADADDR_BASE(app_tpnt->loadaddr)) & ADDR_ALIGN) +
+ 							     (unsigned long) ppnt->p_filesz,
+ 							     PROT_READ | PROT_WRITE | PROT_EXEC);
+ 				}
