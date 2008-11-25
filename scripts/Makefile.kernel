@@ -94,7 +94,7 @@ ifeq ($(ARCH),arm)
 	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)$(prefix)/include/linux
 endif
 ifeq ($(ARCH),blackfin)
-	$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/user.h $(ROOTFS)$(prefix)/include/asm
+	$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/user.h $(ROOTFS)$(prefix)/include/asm
 	$(priv) cp $(KERNELSRC)/include/linux/user.h $(ROOTFS)$(prefix)/include/linux
 endif
 
