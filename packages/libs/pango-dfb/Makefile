@@ -1,7 +1,7 @@
 PACKAGE = pango
-VERSION = 1.21.3
+VERSION = 1.22.3
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.21
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.22
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
@@ -33,7 +33,8 @@ package-configure:
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 
-build-args =
+build-args = \
+	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
 package-build:
 	cd $(pkgtree)/obj-$(TARGET) && \
@@ -42,44 +43,50 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-mod-dir = $(prefix)/lib/pango/1.6.0/modules
-
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libpango-1.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libpangocairo-1.0.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libpangoft2-1.0.la
-	$(priv) rm $(ROOTFS)$(mod-dir)/*.la
 
-sover = 0.2101.2
+plugin = $(prefix)/lib/pango/1.6.0/modules
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libpango-1.0.la \
+	$(prefix)/lib/libpangocairo-1.0.la \
+	$(prefix)/lib/libpangoft2-1.0.la \
+	$(plugin)/pango-arabic-fc.la \
+	$(plugin)/pango-arabic-lang.la \
+	$(plugin)/pango-basic-fc.la \
+	$(plugin)/pango-hangul-fc.la \
+	$(plugin)/pango-hebrew-fc.la \
+	$(plugin)/pango-indic-fc.la \
+	$(plugin)/pango-indic-lang.la \
+	$(plugin)/pango-khmer-fc.la \
+	$(plugin)/pango-syriac-fc.la \
+	$(plugin)/pango-thai-fc.la \
+	$(plugin)/pango-tibetan-fc.la
+
+sover = 0.2203.0
+
+stripfiles = \
+	$(prefix)/bin/pango-querymodules \
 	$(prefix)/lib/libpangocairo-1.0.so.$(sover) \
 	$(prefix)/lib/libpango-1.0.so.$(sover) \
 	$(prefix)/lib/libpangoft2-1.0.so.$(sover) \
-	$(mod-dir)/pango-arabic-lang.so \
-	$(mod-dir)/pango-hangul-fc.so \
-	$(mod-dir)/pango-indic-fc.so \
-	$(mod-dir)/pango-tibetan-fc.so \
-	$(mod-dir)/pango-khmer-fc.so \
-	$(mod-dir)/pango-syriac-fc.so \
-	$(mod-dir)/pango-arabic-fc.so \
-	$(mod-dir)/pango-basic-fc.so \
-	$(mod-dir)/pango-hebrew-fc.so \
-	$(mod-dir)/pango-indic-lang.so \
-	$(mod-dir)/pango-thai-fc.so
+	$(plugin)/pango-arabic-fc.so \
+	$(plugin)/pango-arabic-lang.so \
+	$(plugin)/pango-basic-fc.so \
+	$(plugin)/pango-hangul-fc.so \
+	$(plugin)/pango-hebrew-fc.so \
+	$(plugin)/pango-indic-fc.so \
+	$(plugin)/pango-indic-lang.so \
+	$(plugin)/pango-khmer-fc.so \
+	$(plugin)/pango-syriac-fc.so \
+	$(plugin)/pango-thai-fc.so \
+	$(plugin)/pango-tibetan-fc.so
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
