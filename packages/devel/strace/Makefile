@@ -14,6 +14,14 @@ conf-args += \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
+stripfiles = \
+	$(prefix)/bin/strace
+
+include packages/cleanup.mk
+
+package-post-install: _cleanup
+	@:
+
 package-clean:
 	@:
 
