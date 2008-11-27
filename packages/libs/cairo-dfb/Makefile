@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.6.4
+VERSION = 1.8.4
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -10,7 +10,7 @@ include packages/common.mk
 
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT=$(ROOTFS)
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -30,6 +30,7 @@ conf-vars = \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
+	rm $(pkgtree)/src/cairo-features.h
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -43,24 +44,21 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libcairo.la
 
-libs-strip = \
-	$(prefix)/lib/libcairo.so.2.17.5
+sover = 2.10800.4
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+prunefiles = \
+	$(prefix)/lib/libcairo.la
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
+stripfiles = \
+	$(prefix)/lib/libcairo.so.$(sover)
 
-_strip: $(libs-strip)
-	@:
+include packages/cleanup.mk
 
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
