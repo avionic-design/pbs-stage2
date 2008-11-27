@@ -38,7 +38,8 @@ conf-args += \
 conf-vars = \
 	CC='$(CC) --sysroot $(ROOTFS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='-shared-libgcc'
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
