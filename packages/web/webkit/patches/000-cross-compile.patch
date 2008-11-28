@@ -1,0 +1,222 @@
+diff --git a/JavaScriptCore/runtime/Collector.cpp b/JavaScriptCore/runtime/Collector.cpp
+index 70bccfa..0f36d2a 100644
+--- a/JavaScriptCore/runtime/Collector.cpp
++++ b/JavaScriptCore/runtime/Collector.cpp
+@@ -65,6 +65,8 @@
+ 
+ #if HAVE(PTHREAD_NP_H)
+ #include <pthread_np.h>
++#else
++#include <pthread.h>
+ #endif
+ 
+ #endif
+diff --git a/WebCore/platform/image-decoders/jpeg/JPEGImageDecoder.cpp b/WebCore/platform/image-decoders/jpeg/JPEGImageDecoder.cpp
+index 44e0e4c..b839aff 100644
+--- a/WebCore/platform/image-decoders/jpeg/JPEGImageDecoder.cpp
++++ b/WebCore/platform/image-decoders/jpeg/JPEGImageDecoder.cpp
+@@ -56,6 +56,7 @@
+ #endif // COMPILER(MSVC)
+ 
+ extern "C" {
++#define HAVE_PROTOTYPES 1
+ #include "jpeglib.h"
+ }
+ 
+diff --git a/WebCore/plugins/gtk/PluginPackageGtk.cpp b/WebCore/plugins/gtk/PluginPackageGtk.cpp
+index 997583e..4745d16 100644
+--- a/WebCore/plugins/gtk/PluginPackageGtk.cpp
++++ b/WebCore/plugins/gtk/PluginPackageGtk.cpp
+@@ -34,6 +34,7 @@
+ #include "NotImplemented.h"
+ #include "npruntime_impl.h"
+ #include "PluginDebug.h"
++#include <stdio.h>
+ 
+ namespace WebCore {
+ 
+diff --git a/autogen.sh b/autogen.sh
+index a929538..778295e 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -54,4 +54,3 @@ autoconf || exit $?
+ 
+ cd $ORIGDIR || exit 1
+ 
+-$srcdir/configure $AUTOGEN_CONFIGURE_ARGS "$@" || exit $?
+diff --git a/configure.ac b/configure.ac
+index f48f98f..4fe39ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -150,66 +150,6 @@ AC_CHECK_HEADERS([pthread.h],
+                  AC_MSG_ERROR([pthread support is required to build WebKit]))
+ fi
+ 
+-# check for libjpeg the way Gtk does it.
+-AC_CHECK_LIB(jpeg, jpeg_destroy_decompress,
+-                   jpeg_ok=yes, jpeg_ok=no
+-                   AC_MSG_ERROR([JPEG library (libjpeg) not found]))
+-if test "$jpeg_ok" = yes; then
+-   AC_MSG_CHECKING([for jpeglib])
+-   AC_TRY_CPP(
+-[#include <stdio.h>
+-#undef PACKAGE
+-#undef VERSION
+-#undef HAVE_STDLIB_H
+-#include <jpeglib.h>],
+-         jpeg_ok=yes,
+-         jpeg_ok=no)
+-   AC_MSG_RESULT($jpeg_ok)
+-   if test "$jpeg_ok" = yes; then
+-      JPEG_LIBS="-ljpeg"
+-      # should we check for progressive JPEG like GTK+ as well?
+-   else
+-      AC_MSG_ERROR([JPEG library (libjpeg) not found])
+-   fi
+-fi
+-AC_SUBST([JPEG_LIBS])
+-
+-# check for pkg-config
+-AC_PATH_PROG(PKG_CONFIG, pkg-config, no)
+-if test "$PKG_CONFIG" = "no"; then
+-   AC_MSG_ERROR([Cannot find pkg-config, make sure it is installed in your PATH])
+-fi
+-
+-# Check for libpng the way Gtk+ does it
+-AC_MSG_CHECKING(for libpng12)
+-if $PKG_CONFIG --exists libpng12 ; then
+-    AC_MSG_RESULT(yes)
+-    PNG_LIBS=`$PKG_CONFIG --libs libpng12`
+-else
+-  AC_MSG_RESULT(no)
+-  AC_CHECK_LIB(png, png_read_info,
+-    [AC_CHECK_HEADER(png.h,
+-      png_ok=yes,
+-      png_ok=no)],
+-    AC_MSG_ERROR([PNG library (libpng) not found]), -lz -lm)
+-  if test "$png_ok" = yes; then
+-    AC_MSG_CHECKING([for png_structp in png.h])
+-    AC_TRY_COMPILE([#include <png.h>],
+-      [png_structp pp; png_infop info; png_colorp cmap; png_create_read_struct;],
+-      png_ok=yes,
+-      png_ok=no)
+-    AC_MSG_RESULT($png_ok)
+-    if test "$png_ok" = yes; then
+-      PNG_LIBS='-lpng -lz'
+-    else
+-      AC_MSG_ERROR([PNG library (libpng) not found])
+-    fi
+-  else
+-   AC_MSG_ERROR([PNG library (libpng) not found])
+-  fi
+-fi
+-AC_SUBST([PNG_LIBS])
+-
+ # determine the Unicode backend
+ AC_MSG_CHECKING([the Unicode backend to use])
+ AC_ARG_WITH(unicode_backend,
+@@ -262,21 +202,6 @@ esac
+ 
+ AC_MSG_RESULT([$with_target])
+ 
+-AC_MSG_CHECKING([for Hildon UI extensions])
+-AC_ARG_WITH(hildon,
+-            AC_HELP_STRING([--with-hildon],
+-                           [Use Hildon UI extensions [default=no]]),
+-            [],[with_hildon="no"])
+-AC_MSG_RESULT([$with_hildon])
+-
+-if test "$with_hildon" = "yes"; then
+-    HILDON_CPPFLAGS="-DMAEMO_CHANGES"
+-    PKG_CHECK_MODULES([HILDON], [hildon-1])
+-    AC_SUBST([HILDON_CPPFLAGS])
+-    AC_SUBST([HILDON_CFLAGS])
+-    AC_SUBST([HILDON_LIBS])
+-fi
+-
+ # determine the http backend
+ AC_MSG_CHECKING([the HTTP backend to use])
+ AC_ARG_WITH(http_backend,
+@@ -318,6 +243,60 @@ PKG_CHECK_MODULES([GLOBALDEPS],
+ AC_SUBST([GLOBALDEPS_CFLAGS])
+ AC_SUBST([GLOBALDEPS_LIBS])
+ 
++# check for libjpeg the way Gtk does it.
++AC_CHECK_LIB(jpeg, jpeg_destroy_decompress,
++                   jpeg_ok=yes, jpeg_ok=no
++                   AC_MSG_ERROR([JPEG library (libjpeg) not found]))
++if test "$jpeg_ok" = yes; then
++   AC_MSG_CHECKING([for jpeglib])
++   AC_TRY_CPP(
++[#include <stdio.h>
++#undef PACKAGE
++#undef VERSION
++#undef HAVE_STDLIB_H
++#include <jpeglib.h>],
++         jpeg_ok=yes,
++         jpeg_ok=no)
++   AC_MSG_RESULT($jpeg_ok)
++   if test "$jpeg_ok" = yes; then
++      JPEG_LIBS="-ljpeg"
++      # should we check for progressive JPEG like GTK+ as well?
++   else
++      AC_MSG_ERROR([JPEG library (libjpeg) not found])
++   fi
++fi
++AC_SUBST([JPEG_LIBS])
++
++# Check for libpng the way Gtk+ does it
++AC_MSG_CHECKING(for libpng12)
++if $PKG_CONFIG --exists libpng12 ; then
++    AC_MSG_RESULT(yes)
++    PNG_LIBS=`$PKG_CONFIG --libs libpng12`
++else
++  AC_MSG_RESULT(no)
++  AC_CHECK_LIB(png, png_read_info,
++    [AC_CHECK_HEADER(png.h,
++      png_ok=yes,
++      png_ok=no)],
++    AC_MSG_ERROR([PNG library (libpng) not found]), -lz -lm)
++  if test "$png_ok" = yes; then
++    AC_MSG_CHECKING([for png_structp in png.h])
++    AC_TRY_COMPILE([#include <png.h>],
++      [png_structp pp; png_infop info; png_colorp cmap; png_create_read_struct;],
++      png_ok=yes,
++      png_ok=no)
++    AC_MSG_RESULT($png_ok)
++    if test "$png_ok" = yes; then
++      PNG_LIBS='-lpng -lz'
++    else
++      AC_MSG_ERROR([PNG library (libpng) not found])
++    fi
++  else
++   AC_MSG_ERROR([PNG library (libpng) not found])
++  fi
++fi
++AC_SUBST([PNG_LIBS])
++
+ PKG_CHECK_MODULES(LIBXML, libxml-2.0 >= $LIBXML_REQUIRED_VERSION)
+ AC_SUBST(LIBXML_CFLAGS)
+ AC_SUBST(LIBXML_LIBS)
+@@ -326,6 +305,21 @@ PKG_CHECK_MODULES(PANGO, pango >= $PANGO_REQUIRED_VERSION)
+ AC_SUBST(PANGO_CFLAGS)
+ AC_SUBST(PANGO_LIBS)
+ 
++AC_MSG_CHECKING([for Hildon UI extensions])
++AC_ARG_WITH(hildon,
++            AC_HELP_STRING([--with-hildon],
++                           [Use Hildon UI extensions [default=no]]),
++            [],[with_hildon="no"])
++AC_MSG_RESULT([$with_hildon])
++
++if test "$with_hildon" = "yes"; then
++    HILDON_CPPFLAGS="-DMAEMO_CHANGES"
++    PKG_CHECK_MODULES([HILDON], [hildon-1])
++    AC_SUBST([HILDON_CPPFLAGS])
++    AC_SUBST([HILDON_CFLAGS])
++    AC_SUBST([HILDON_LIBS])
++fi
++
+ # check for target-specific dependencies
+ if test "$with_target" = "directfb"; then
+    PKG_CHECK_MODULES(CAIRO, cairo-directfb >= $CAIRO_REQUIRED_VERSION)

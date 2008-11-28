@@ -1,5 +1,5 @@
 PACKAGE = WebKit
-VERSION = r34728
+VERSION = r38698
 
 LOCATION = http://nightly.webkit.org/files/trunk/src
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -7,6 +7,10 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 ##############################################################################
 
 include packages/common.mk
+
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -17,10 +21,21 @@ conf-args = \
 conf-args += \
 	--with-target=directfb
 
+conf-vars += \
+	ac_cv_path_icu_config="$(ROOTFS)$(prefix)/bin/icu-config" \
+	CC="$(CC) --sysroot $(ROOTFS)" \
+	CXX="$(CXX) --sysroot $(ROOTFS)" \
+	CPPFLAGS="$(CPPFLAGS)" \
+	CXXFLAGS="$(CXXFLAGS)" \
+	CFLAGS="$(CFLAGS)"
+
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
+			$(env) ../autogen.sh
+	install -m 755 support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
 
