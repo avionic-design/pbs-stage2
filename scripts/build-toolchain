@@ -1,0 +1,107 @@
+#!/bin/sh -e
+
+pkglist="make platform=toolchain/\$toolchain list | sort -u"
+version="cut -d: -f1 | cut -d' ' -f2"
+date="date +%X"
+
+function log_begin_msg()
+{
+	echo "$@"
+}
+
+function log_end_msg()
+{
+	if [ "x$?" = "x0" ]; then
+		echo "$@" "done"
+	else
+		echo "$@" "failed ($?)"
+	fi
+}
+
+function toolchain_version()
+{
+	toolchain=$1
+	libc=$2
+
+	case $libc in
+	gnu)
+		libc=glibc
+		;;
+
+	uclibc)
+		libc=uClibc
+		;;
+
+	*)
+		libc=
+		;;
+	esac
+
+	binutils="`eval $pkglist | grep binutils | eval $version`"
+	gcc="_`eval $pkglist | grep gcc | eval $version`"
+	linux="_`eval $pkglist | grep linux | eval $version`"
+
+	if [ "x$libc" != "x" ]; then
+		libc="_`eval $pkglist | grep $libc | eval $version`"
+	else
+		libc=""
+	fi
+
+	version="${binutils}${gcc}${linux}${libc}"
+	echo $version
+	return 0
+}
+
+if [ "x$1" = "x" ]; then
+	echo "usage: $0 toolchain"
+	exit 1
+fi
+
+toolchain="$1"
+arch=`echo $toolchain | cut -d- -f1`
+cpu=`echo $toolchain | cut -d- -f2`
+os=`echo $toolchain | cut -d- -f3`
+libc=`echo $toolchain | cut -d- -f4`
+
+if [ "x$libc" = "x" ]; then
+	libc=$os
+	os=$cpu
+	cpu=
+fi
+
+abi=`echo $libc | sed -e s/uclibc//g -e s/gnu//g`
+libc=`echo $libc | sed -e s/uclibc.*/uclibc/ -e s/gnu.*/gnu/g`
+
+
+if [ ! -d "`pwd`/platform/toolchain/$toolchain" ]; then
+	echo "$toolchain: no such toolchain"
+	exit 1
+fi
+
+echo "[`eval $date`] Building $toolchain toolchain ... "
+
+version=`toolchain_version $toolchain $libc`
+
+log_begin_msg -n "[`eval $date`]   Building toolchain ... "
+CROSS_COMPILE="${arch}-${os}-gnu${abi}-" \
+	time make platform=toolchain/$toolchain install > $toolchain.log 2>&1
+log_end_msg
+
+if [ ! -f ../toolchains/${toolchain}_${version}.tar.bz2 ]; then
+	log_begin_msg -n "[`eval $date`]   Archiving toolchain ... "
+	tar cjf ../toolchains/${toolchain}_${version}.tar.bz2 \
+		-C platform/toolchain/$toolchain opt
+	log_end_msg
+fi
+
+log_begin_msg -n "[`eval $date`]   Cleaning up toolchain ... "
+make platform=toolchain/$toolchain clean > /dev/null 2>&1
+log_end_msg
+
+log_begin_msg -n "[`eval $date`]   Installing toolchain ... "
+tar xjf ../toolchains/${toolchain}_${version}.tar.bz2 \
+	-C platform/toolchain/${toolchain}
+log_end_msg
+
+echo "[`eval $date`] done"
+
