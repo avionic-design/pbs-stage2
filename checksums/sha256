@@ -103,11 +103,9 @@ ab3c24d8028a5792e62e8e3b40a9733b10b21327dc4c578e34b092a1793afbb8  download/dbus-
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 5ac4d4a308b032727c61fd56db5a2eaadaedfbce5bc9dc504320bff9d696b002  download/xf86dgaproto-2.0.3.tar.bz2
 f0ce91e6860b762a5a929cd923eff4eda2bf58ab1c121f1ef0a63d05963aa958  download/glib-2.19.0.tar.bz2
-72f1b48b570bf57dfa4c9cb297050f1bcc7ee173c50618cdd94a93b5ceb6fbed  download/gtk+-2.14.4.tar.bz2
 24274af4e800fd32702c5258dabe16eccf96f50a4b4feb4a14780c85f3e786df  download/xproto-7.0.14.tar.bz2
 4c71e92c4ace100bc7c5cdb0a9b603f0452df40f8f344f7570ad10e2b6bd28d2  download/DirectFB-1.3.0.tar.gz
 bd2ea10ffc2bf62a917b05f4fbe3d02212589c2bc177fa0c51a9c874d3da528a  download/binutils-2.19.tar.bz2
-4b32a435c93ce60ea3ff289fa7d2439f242f2d51c5b315e0c8371683491fb1b9  download/pango-1.22.2.tar.bz2
 b6c5765a3994e59053cb3b46741b858bb56ea868baa5c48fba7e5c36ca4ae95d  download/libpciaccess-0.10.5.tar.bz2
 d82a78b1f7af38226ec957948669fd113c81821732da7723c1a8a6e8a6ef35d3  download/libxcb-1.1.92.tar.bz2
 b910fa3ce9fd6c571ce13ab536284d5e532ec022e247da5f553eae4c0b5c25b1  download/libX11-1.1.99.2.tar.bz2
@@ -128,3 +126,4 @@ b93ea5b406b49dc53f2d824d25efc714a33005f1f58a2b321affc565793780af  download/pango
 c0c10944841e9a79f29d409c6f8da0d1b1af0403eb3819c82c788dfa6a180b3e  download/libxslt-1.1.24.tar.gz
 60091fe65ad3aed9b5151cb4e8fcfaf56567c5ae705fdf4246854625eb91c272  download/curl-7.19.2.tar.bz2
 09d261aa15f16ff97b2fdbc9883d85fa5f0a09d5509f8904fc1d1574dc0edda8  download/sqlite-3.6.6.2.tar.gz
+05d01dfce51cd96cd7ce44c3a77c200a70f27551915d372cfc2de32ca9550c51  download/gtk+-2.14.5.tar.bz2
