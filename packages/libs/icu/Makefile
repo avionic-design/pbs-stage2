@@ -77,6 +77,13 @@ stripfiles = \
 include packages/cleanup.mk
 
 package-install: _install _cleanup
+	tmpfile=`mktemp` && \
+		echo "Temporary file: $$tmpfile" && \
+		sed -e 's@default_prefix="\(.*\)"@default_prefix="$(ROOTFS)\1"@g' \
+				< $(ROOTFS)$(prefix)/bin/icu-config \
+				> $$tmpfile && \
+		$(priv) mv $$tmpfile $(ROOTFS)$(prefix)/bin/icu-config && \
+		$(priv) chmod a+rx $(ROOTFS)$(prefix)/bin/icu-config
 	@:
 
 package-clean:
