@@ -1,36 +1,41 @@
-PACKAGE = newlib
-VERSION = $(LIBC_VERSION)
+PACKAGE = w32api
+VERSION = 3.12-mingw32
 
-LOCATION = ftp://sources.redhat.com/pub/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = http://prdownloads.sourceforge.net/mingw
+TARBALLS = $(PACKAGE_FULLNAME)-src.tar.gz
 
 ##############################################################################
 
 include packages/toolchain/common.mk
 
+CPPFLAGS := $(CPPFLAGS) -DARM --sysroot $(prefix)
+CFLAGS   := $(CPPFLAGS) $(CFLAGS)
+
 conf-args = \
 	--target=$(TARGET) \
-	--prefix=$(prefix) \
-	--datadir=$(exec-prefix)/share \
-	--infodir=$(exec-prefix)/share/info \
-	--mandir=$(exec-prefix)/share/man \
-	--libdir=$(exec-prefix)/lib
+	--host=$(TARGET) \
+	--prefix=$(prefix)
+
+conf-vars = \
+	CPPFLAGS="$(CPPFLAGS)" \
+	CFLAGS="$(CFLAGS)"
 
 package-configure:
 	mkdir $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 
+build-args = \
+	CPPFLAGS="$(CPPFLAGS)" \
+	CFLAGS="$(CFLAGS)"
+
 package-build:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
-install-args = \
-	DESTDIR=$(ROOTFS)
-
 package-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(install-args) install -n
 
 package-clean:
 	@:

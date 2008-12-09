@@ -1,4 +1,4 @@
-# build instructions for bootstrap GCC 4.3.1
+# build instructions for bootstrap GCC 4.3.2
 
 exec-prefix = $(prefix)/$(TARGET)
 
@@ -18,7 +18,6 @@ conf-args = \
 	--disable-nls \
 	--enable-symvers=gnu \
 	--enable-languages=c
-#	--exec-prefix=$(exec-prefix) \
 
 ifeq ($(variant),sysroot)
   conf-args += \

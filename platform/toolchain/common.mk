@@ -49,9 +49,14 @@ ifdef TOOLCHAIN
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
+  CXXFLAGS = \
+	$(CPPFLAGS) \
+	$(ABIFLAGS) \
+	$(OPTFLAGS)
+
   LDFLAGS =
 
-  export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS LDFLAGS
+  export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 else
   # default versions
   LINUX_VERSION ?= 2.6.27.7
@@ -82,15 +87,13 @@ else
     packages-y += toolchain/gcc
     packages-y += toolchain/newlib
   else
+    libc := $(shell echo $(LIBC) | sed -e s/gnu/glibc/)
     packages-y  = toolchain/linux-headers
     packages-y += toolchain/binutils
     packages-y += toolchain/gcc-core
-    ifeq ($(LIBC),uclibc)
-      packages-y += toolchain/uclibc
-    else
-      packages-y += toolchain/glibc
-    endif
+    packages-y += toolchain/$(libc)
     packages-y += toolchain/gcc
+    packages-y += toolchain/$(libc)-cleanup
     packages-y += toolchain/gdb
     packages-y += toolchain/pkg-config
   endif

@@ -1,4 +1,4 @@
-# build instructions for final GCC 4.3.1
+# build instructions for final GCC 4.3.2
 
 exec-prefix = $(prefix)/$(TARGET)
 
@@ -17,8 +17,7 @@ conf-args = \
 	--disable-static \
 	--enable-shared \
 	--enable-symvers=gnu \
-	--enable-languages=c,c++ \
-#	--exec-prefix=$(exec-prefix) \
+	--enable-languages=c,c++
 
 ifeq ($(variant),sysroot)
   conf-args += \
@@ -34,12 +33,6 @@ endif
 
 ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
-endif
-
-ifeq ($(LIBC),newlib)
-  conf-args += \
-	--with-newlib \
-	--with-libgloss
 endif
 
 ifeq ($(MULTILIB),y)

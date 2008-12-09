@@ -13,6 +13,11 @@ variant = sysroot
 export variant
 
 include platform/toolchain/common.mk
+packages-y  = toolchain/binutils
+#packages-y += toolchain/newlib
+packages-y += toolchain/gcc-core
+#packages-y += toolchain/mingwrt
+#packages-y += toolchain/w32api
 
 ifndef TOOLCHAIN
 PHONY += platform-clean

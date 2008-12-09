@@ -1,0 +1,3 @@
+version=3
+http://uclibc.org/downloads/uClibc-(\d.+)\.tar\.bz2
+
