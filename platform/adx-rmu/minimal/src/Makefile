@@ -5,10 +5,14 @@ include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-di
 include scripts/Makefile.lib
 
 dirs = \
-	/etc/init.d
+	/etc/init.d \
+	/usr/share/udhcpc
 
 files = \
 	/etc/init.d/rcS
+
+scripts = \
+	/usr/share/udhcpc/default.script
 
 links = \
 	/init
