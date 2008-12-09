@@ -13,26 +13,32 @@ include packages/common.mk
 DOT_CONFIG = $(PACKAGE_FULLNAME)-minimal
 
 conf-args = \
+	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	ARCH=$(ARCH) \
-	CONFIG_PREFIX=$(ROOTFS)
+	CONFIG_PREFIX=$(ROOTFS) \
+	ARCH=$(ARCH)
 
 package-configure:
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/.config
 	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
 
 build-args = \
+	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	ARCH=$(ARCH) \
-	CONFIG_PREFIX=$(ROOTFS)
+	CONFIG_PREFIX=$(ROOTFS) \
+	ARCH=$(ARCH)
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
 install-args = \
+	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	ARCH=$(ARCH) \
-	CONFIG_PREFIX=$(ROOTFS)
+	CONFIG_PREFIX=$(ROOTFS) \
+	ARCH=$(ARCH)
 
 package-install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
@@ -40,12 +46,4 @@ package-install:
 
 package-clean:
 	@:
-
-ifneq ($(TARGET_LIBC),$(LIBC))
-  ifeq ($(TARGET_LIBC),uclibc)
-    conf-args    += CFLAGS='-muclibc'
-    build-args   += CFLAGS='-muclibc'
-    install-args += CFLAGS='-muclibc'
-  endif
-endif
 
