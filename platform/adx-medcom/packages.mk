@@ -36,9 +36,15 @@ else
   endif
 endif
 
+ifneq ($(findstring webkit, $(VARIANT)),)
+  packages-y += libs/libxml2
+  packages-y += libs/libxslt
+endif
+
 ifneq ($(findstring directfb, $(VARIANT)),)
   packages-y += libs/directfb
 
+  cairo-y    += libs/pixman
   cairo-y    += libs/cairo-dfb
   pango-y    += libs/pango-dfb
   gtk-y      += libs/gtk-dfb
@@ -119,6 +125,12 @@ endif
 
 ifneq ($(findstring webkit, $(VARIANT)),)
   packages-y += libs/icu
+  packages-y += libs/curl
+  packages-y += libs/sqlite
   packages-y += web/webkit
+endif
+
+ifneq ($(findstring python, $(VARIANT)),)
+  packages-y += devel/python
 endif
 

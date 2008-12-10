@@ -1,0 +1,614 @@
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index 8451445..2bf6bd5 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -175,6 +175,7 @@ UNICODE_OBJS=   @UNICODE_OBJS@
+ 
+ PYTHON=		python$(EXE)
+ BUILDPYTHON=	python$(BUILDEXE)
++HOSTPYTHON=	./$(BUILDPYTHON)
+ 
+ # The task to run while instrument when building the profile-opt target
+ PROFILE_TASK=	Tools/pybench/pybench.py -n 2 --with-gc --with-syscheck
+@@ -205,6 +206,7 @@ GRAMMAR_INPUT=	$(srcdir)/Grammar/Grammar
+ ##########################################################################
+ # Parser
+ PGEN=		Parser/pgen$(EXE)
++HOSTPGEN=	$(PGEN)
+ 
+ POBJS=		\
+ 		Parser/acceler.o \
+@@ -370,7 +372,7 @@ build_all_generate_profile:
+ 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-generate" LIBS="$(LIBS) -lgcov"
+ 
+ run_profile_task:
+-	./$(BUILDPYTHON) $(PROFILE_TASK)
++	$(HOSTPYTHON) $(PROFILE_TASK)
+ 
+ build_all_use_profile:
+ 	$(MAKE) all CFLAGS="$(CFLAGS) -fprofile-use"
+@@ -387,15 +389,15 @@ $(BUILDPYTHON):	Modules/python.o $(LIBRARY) $(LDLIBRARY)
+ 			Modules/python.o \
+ 			$(BLDLIBRARY) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
+ 
+-platform: $(BUILDPYTHON)
+-	$(RUNSHARED) ./$(BUILDPYTHON) -E -c 'import sys ; from distutils.util import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
++platform: $(HOSTPYTHON)
++	$(RUNSHARED) $(HOSTPYTHON) -E -c 'import sys ; from distutils.util import get_platform ; print get_platform()+"-"+sys.version[0:3]' >platform
+ 
+ 
+ # Build the shared modules
+-sharedmods: $(BUILDPYTHON)
++sharedmods: $(HOSTPYTHON)
+ 	@case $$MAKEFLAGS in \
+-	*s*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./$(BUILDPYTHON) -E $(srcdir)/setup.py -q build;; \
+-	*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' ./$(BUILDPYTHON) -E $(srcdir)/setup.py build;; \
++	*s*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' $(HOSTPYTHON) -E $(srcdir)/setup.py -q build;; \
++	*) $(RUNSHARED) CC='$(CC)' LDSHARED='$(BLDSHARED)' OPT='$(OPT)' $(HOSTPYTHON) -E $(srcdir)/setup.py build;; \
+ 	esac
+ 
+ # Build static library
+@@ -511,9 +513,9 @@ Modules/python.o: $(srcdir)/Modules/python.c
+ 	$(MAINCC) -c $(PY_CFLAGS) -o $@ $(srcdir)/Modules/python.c
+ 
+ 
+-$(GRAMMAR_H) $(GRAMMAR_C): $(PGEN) $(GRAMMAR_INPUT)
++$(GRAMMAR_H) $(GRAMMAR_C): $(HOSTPGEN) $(GRAMMAR_INPUT)
+ 		-@$(INSTALL) -d Include
+-		-$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
++		-$(HOSTPGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
+ 
+ $(PGEN):	$(PGENOBJS)
+ 		$(CC) $(OPT) $(LDFLAGS) $(PGENOBJS) $(LIBS) -o $(PGEN)
+@@ -879,23 +881,23 @@ libinstall:	build_all $(srcdir)/Lib/$(PLATDIR)
+ 	done
+ 	$(INSTALL_DATA) $(srcdir)/LICENSE $(DESTDIR)$(LIBDEST)/LICENSE.txt
+ 	PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+-		./$(BUILDPYTHON) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
++		$(HOSTPYTHON) -Wi -tt $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
+ 		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
+ 	PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
+-		./$(BUILDPYTHON) -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
++		$(HOSTPYTHON) -Wi -tt -O $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST) -f \
+ 		-x 'bad_coding|badsyntax|site-packages' $(DESTDIR)$(LIBDEST)
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST)  $(RUNSHARED) \
+-		./$(BUILDPYTHON) -Wi -t $(DESTDIR)$(LIBDEST)/compileall.py \
++		$(HOSTPYTHON) -Wi -t $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST)/site-packages -f \
+ 		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
+-		./$(BUILDPYTHON) -Wi -t -O $(DESTDIR)$(LIBDEST)/compileall.py \
++		$(HOSTPYTHON) -Wi -t -O $(DESTDIR)$(LIBDEST)/compileall.py \
+ 		-d $(LIBDEST)/site-packages -f \
+ 		-x badsyntax $(DESTDIR)$(LIBDEST)/site-packages
+ 	-PYTHONPATH=$(DESTDIR)$(LIBDEST) $(RUNSHARED) \
+-		./$(BUILDPYTHON) -Wi -t -c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"
++		$(HOSTPYTHON) -Wi -t -c "import lib2to3.pygram, lib2to3.patcomp;lib2to3.patcomp.PatternCompiler()"
+ 
+ # Create the PLATDIR source directory, if one wasn't distributed..
+ $(srcdir)/Lib/$(PLATDIR):
+@@ -993,7 +995,7 @@ libainstall:	all
+ # Install the dynamically loadable modules
+ # This goes into $(exec_prefix)
+ sharedinstall:
+-	$(RUNSHARED) ./$(BUILDPYTHON) -E $(srcdir)/setup.py install \
++	$(RUNSHARED) $(HOSTPYTHON) -E $(srcdir)/setup.py install \
+ 	   	--prefix=$(prefix) \
+ 		--install-scripts=$(BINDIR) \
+ 		--install-platlib=$(DESTSHARED) \
+@@ -1031,7 +1033,7 @@ frameworkinstallstructure:	$(LDLIBRARY)
+ 		fi; \
+ 	done
+ 	$(LN) -fsn include/python$(VERSION) $(DESTDIR)$(prefix)/Headers
+-	sed 's/%VERSION%/'"`$(RUNSHARED) ./$(BUILDPYTHON) -c 'import platform; print platform.python_version()'`"'/g' < $(RESSRCDIR)/Info.plist > $(DESTDIR)$(prefix)/Resources/Info.plist
++	sed 's/%VERSION%/'"`$(RUNSHARED) $(HOSTPYTHON) -c 'import platform; print platform.python_version()'`"'/g' < $(RESSRCDIR)/Info.plist > $(DESTDIR)$(prefix)/Resources/Info.plist
+ 	$(LN) -fsn $(VERSION) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Versions/Current
+ 	$(LN) -fsn Versions/Current/$(PYTHONFRAMEWORK) $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/$(PYTHONFRAMEWORK)
+ 	$(LN) -fsn Versions/Current/Headers $(DESTDIR)$(PYTHONFRAMEWORKINSTALLDIR)/Headers
+@@ -1073,7 +1075,7 @@ frameworkinstallextras:
+ # This installs a few of the useful scripts in Tools/scripts
+ scriptsinstall:
+ 	SRCDIR=$(srcdir) $(RUNSHARED) \
+-	./$(BUILDPYTHON) $(srcdir)/Tools/scripts/setup.py install \
++	$(HOSTPYTHON) $(srcdir)/Tools/scripts/setup.py install \
+ 	--prefix=$(prefix) \
+ 	--install-scripts=$(BINDIR) \
+ 	--root=/$(DESTDIR)
+@@ -1095,7 +1097,7 @@ config.status:	$(srcdir)/configure
+ 
+ # Run reindent on the library
+ reindent:
+-	./$(BUILDPYTHON) $(srcdir)/Tools/scripts/reindent.py -r $(srcdir)/Lib
++	$(HOSTPYTHON) $(srcdir)/Tools/scripts/reindent.py -r $(srcdir)/Lib
+ 
+ # Rerun configure with the same options as it was run last time,
+ # provided the config.status script exists
+@@ -1191,7 +1193,7 @@ funny:
+ 
+ # Perform some verification checks on any modified files.
+ patchcheck:
+-	$(RUNSHARED) ./$(BUILDPYTHON) $(srcdir)/Tools/scripts/patchcheck.py
++	$(RUNSHARED) $(HOSTPYTHON) $(srcdir)/Tools/scripts/patchcheck.py
+ 
+ # Dependencies
+ 
+diff --git a/configure b/configure
+index ffc351d..6b7ff05 100755
+--- a/configure
++++ b/configure
+@@ -17050,12 +17050,11 @@ fi
+ # exit Python
+ { echo "$as_me:$LINENO: checking for chflags" >&5
+ echo $ECHO_N "checking for chflags... $ECHO_C" >&6; }
+-if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++if test "${ac_cv_func_chflags+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  if test "$cross_compiling" = yes; then
++  ac_cv_func_chflags=no
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+@@ -17064,14 +17063,14 @@ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ 
+-#include <sys/stat.h>
+-#include <unistd.h>
+-int main(int argc, char*argv[])
+-{
+-  if(chflags(argv[0], 0) != 0)
+-    return 1;
+-  return 0;
+-}
++    #include <sys/stat.h>
++    #include <unistd.h>
++    int main(int argc, char*argv[])
++    {
++      if(chflags(argv[0], 0) != 0)
++        return 1;
++      return 0;
++    }
+ 
+ _ACEOF
+ rm -f conftest$ac_exeext
+@@ -17094,36 +17093,39 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }; then
+-
+-cat >>confdefs.h <<\_ACEOF
+-#define HAVE_CHFLAGS 1
+-_ACEOF
+-
+-  { echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6; }
++  ac_cv_func_chflags=yes
+ else
+   echo "$as_me: program exited with status $ac_status" >&5
+ echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ ( exit $ac_status )
+-{ echo "$as_me:$LINENO: result: no" >&5
+-echo "${ECHO_T}no" >&6; }
+-
++ac_cv_func_chflags=no
+ fi
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+ fi
+ 
+ 
+ 
++fi
++
++{ echo "$as_me:$LINENO: result: $ac_cv_func_chflags" >&5
++echo "${ECHO_T}$ac_cv_func_chflags" >&6; }
++if test $ac_cv_func_chflags = yes; then
++
++cat >>confdefs.h <<\_ACEOF
++#define HAVE_CHFLAGS 1
++_ACEOF
++
++fi
++
+ { echo "$as_me:$LINENO: checking for lchflags" >&5
+ echo $ECHO_N "checking for lchflags... $ECHO_C" >&6; }
+-if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++if test "${ac_cv_func_lchflags+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++  if test "$cross_compiling" = yes; then
++  ac_cv_func_lchflags=no
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+@@ -17132,14 +17134,14 @@ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ 
+-#include <sys/stat.h>
+-#include <unistd.h>
+-int main(int argc, char*argv[])
+-{
+-  if(lchflags(argv[0], 0) != 0)
+-    return 1;
+-  return 0;
+-}
++    #include <sys/stat.h>
++    #include <unistd.h>
++    int main(int argc, char*argv[])
++    {
++      if(lchflags(argv[0], 0) != 0)
++        return 1;
++      return 0;
++    }
+ 
+ _ACEOF
+ rm -f conftest$ac_exeext
+@@ -17162,28 +17164,32 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }; then
+-
+-cat >>confdefs.h <<\_ACEOF
+-#define HAVE_LCHFLAGS 1
+-_ACEOF
+-
+-  { echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6; }
++  ac_cv_func_lchflags=yes
+ else
+   echo "$as_me: program exited with status $ac_status" >&5
+ echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ ( exit $ac_status )
+-{ echo "$as_me:$LINENO: result: no" >&5
+-echo "${ECHO_T}no" >&6; }
+-
++ac_cv_func_lchflags=no
+ fi
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+ fi
+ 
+ 
+ 
++fi
++
++{ echo "$as_me:$LINENO: result: ac_cv_func_lchflags" >&5
++echo "${ECHO_T}ac_cv_func_lchflags" >&6; }
++if test $ac_cv_func_lchflags = yes; then
++
++cat >>confdefs.h <<\_ACEOF
++#define HAVE_LCHFLAGS 1
++_ACEOF
++
++fi
++
+ case $ac_sys_system/$ac_sys_release in
+ Darwin/*)
+ 	_CUR_CFLAGS="${CFLAGS}"
+@@ -24419,12 +24425,12 @@ fi
+ 
+ { echo "$as_me:$LINENO: checking for %zd printf() format support" >&5
+ echo $ECHO_N "checking for %zd printf() format support... $ECHO_C" >&6; }
+-if test "$cross_compiling" = yes; then
+-  { { echo "$as_me:$LINENO: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&5
+-echo "$as_me: error: cannot run test program while cross compiling
+-See \`config.log' for more details." >&2;}
+-   { (exit 1); exit 1; }; }
++if test "${ac_cv_printf_fmt_zd+set}" = set; then
++  echo $ECHO_N "(cached) $ECHO_C" >&6
++else
++
++  if test "$cross_compiling" = yes; then
++  ac_cv_printf_fmt_zd=no
+ else
+   cat >conftest.$ac_ext <<_ACEOF
+ /* confdefs.h.  */
+@@ -24433,39 +24439,40 @@ cat confdefs.h >>conftest.$ac_ext
+ cat >>conftest.$ac_ext <<_ACEOF
+ /* end confdefs.h.  */
+ #include <stdio.h>
+-#include <stddef.h>
+-#include <string.h>
+-
+-#ifdef HAVE_SYS_TYPES_H
+-#include <sys/types.h>
+-#endif
+-
+-#ifdef HAVE_SSIZE_T
+-typedef ssize_t Py_ssize_t;
+-#elif SIZEOF_VOID_P == SIZEOF_LONG
+-typedef long Py_ssize_t;
+-#else
+-typedef int Py_ssize_t;
+-#endif
++    #include <stddef.h>
++    #include <string.h>
++
++    #ifdef HAVE_SYS_TYPES_H
++    #include <sys/types.h>
++    #endif
++
++    #ifdef HAVE_SSIZE_T
++    typedef ssize_t Py_ssize_t;
++    #elif SIZEOF_VOID_P == SIZEOF_LONG
++    typedef long Py_ssize_t;
++    #else
++    typedef int Py_ssize_t;
++    #endif
++
++    int main()
++    {
++        char buffer[256];
+ 
+-int main()
+-{
+-    char buffer[256];
++        if(sprintf(buffer, "%zd", (size_t)123) < 0)
++           return 1;
+ 
+-    if(sprintf(buffer, "%zd", (size_t)123) < 0)
+-       	return 1;
++        if (strcmp(buffer, "123"))
++          return 1;
+ 
+-    if (strcmp(buffer, "123"))
+-	return 1;
++        if (sprintf(buffer, "%zd", (Py_ssize_t)-123) < 0)
++          return 1;
+ 
+-    if (sprintf(buffer, "%zd", (Py_ssize_t)-123) < 0)
+-       	return 1;
++        if (strcmp(buffer, "-123"))
++          return 1;
+ 
+-    if (strcmp(buffer, "-123"))
+-	return 1;
++        return 0;
++    }
+ 
+-    return 0;
+-}
+ _ACEOF
+ rm -f conftest$ac_exeext
+ if { (ac_try="$ac_link"
+@@ -24487,27 +24494,32 @@ eval "echo \"\$as_me:$LINENO: $ac_try_echo\"") >&5
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }; then
+-  { echo "$as_me:$LINENO: result: yes" >&5
+-echo "${ECHO_T}yes" >&6; }
+-
+-cat >>confdefs.h <<\_ACEOF
+-#define PY_FORMAT_SIZE_T "z"
+-_ACEOF
+-
++  ac_cv_printf_fmt_zd=yes
+ else
+   echo "$as_me: program exited with status $ac_status" >&5
+ echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ ( exit $ac_status )
+-{ echo "$as_me:$LINENO: result: no" >&5
+-echo "${ECHO_T}no" >&6; }
++ac_cv_printf_fmt_zd=no
+ fi
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+ fi
+ 
+ 
+ 
++fi
++
++{ echo "$as_me:$LINENO: result: $ac_cv_printf_fmt_zd" >&5
++echo "${ECHO_T}$ac_cv_printf_fmt_zd" >&6; }
++if test $ac_cv_printf_fmt_zd = yes; then
++
++cat >>confdefs.h <<\_ACEOF
++#define PY_FORMAT_SIZE_T "z"
++_ACEOF
++
++fi
++
+ { echo "$as_me:$LINENO: checking for socklen_t" >&5
+ echo $ECHO_N "checking for socklen_t... $ECHO_C" >&6; }
+ if test "${ac_cv_type_socklen_t+set}" = set; then
+diff --git a/configure.in b/configure.in
+index e450b06..79067f0 100644
+--- a/configure.in
++++ b/configure.in
+@@ -2559,34 +2559,46 @@ AC_CHECK_LIB(c, inet_aton, [$ac_cv_prog_TRUE],
+ # On Tru64, chflags seems to be present, but calling it will
+ # exit Python
+ AC_MSG_CHECKING(for chflags)
+-AC_TRY_RUN([
+-#include <sys/stat.h>
+-#include <unistd.h>
+-int main(int argc, char*argv[])
+-{
+-  if(chflags(argv[0], 0) != 0)
+-    return 1;
+-  return 0;
+-}
+-],AC_DEFINE(HAVE_CHFLAGS, 1, Define to 1 if you have the `chflags' function.)
+-  AC_MSG_RESULT(yes),
+-  AC_MSG_RESULT(no)
+-)
++AC_CACHE_VAL(ac_cv_func_chflags,
++  [AC_TRY_RUN([
++    #include <sys/stat.h>
++    #include <unistd.h>
++    int main(int argc, char*argv[])
++    {
++      if(chflags(argv[0], 0) != 0)
++        return 1;
++      return 0;
++    }
++  ],
++  ac_cv_func_chflags=yes,
++  ac_cv_func_chflags=no,
++  ac_cv_func_chflags=no)
++])
++AC_MSG_RESULT($ac_cv_func_chflags)
++if test $ac_cv_func_chflags = yes; then
++  AC_DEFINE(HAVE_CHFLAGS, 1, Define to 1 if you have the 'chflags' function.)
++fi
+ 
+ AC_MSG_CHECKING(for lchflags)
+-AC_TRY_RUN([
+-#include <sys/stat.h>
+-#include <unistd.h>
+-int main(int argc, char*argv[])
+-{
+-  if(lchflags(argv[0], 0) != 0)
+-    return 1;
+-  return 0;
+-}
+-],AC_DEFINE(HAVE_LCHFLAGS, 1, Define to 1 if you have the `lchflags' function.)
+-  AC_MSG_RESULT(yes),
+-  AC_MSG_RESULT(no)
+-)
++AC_CACHE_VAL(ac_cv_func_lchflags,
++  [AC_TRY_RUN([
++    #include <sys/stat.h>
++    #include <unistd.h>
++    int main(int argc, char*argv[])
++    {
++      if(lchflags(argv[0], 0) != 0)
++        return 1;
++      return 0;
++    }
++  ],
++  ac_cv_func_lchflags=yes,
++  ac_cv_func_lchflags=no,
++  ac_cv_func_lchflags=no)
++])
++AC_MSG_RESULT(ac_cv_func_lchflags)
++if test $ac_cv_func_lchflags = yes; then
++  AC_DEFINE(HAVE_LCHFLAGS, 1, Define to 1 if you have the `lchflags' function.)
++fi
+ 
+ dnl Check if system zlib has *Copy() functions
+ dnl
+@@ -3650,43 +3662,50 @@ else
+ fi
+ 
+ AC_MSG_CHECKING(for %zd printf() format support)
+-AC_TRY_RUN([#include <stdio.h>
+-#include <stddef.h>
+-#include <string.h>
+-
+-#ifdef HAVE_SYS_TYPES_H
+-#include <sys/types.h>
+-#endif
+-
+-#ifdef HAVE_SSIZE_T
+-typedef ssize_t Py_ssize_t;
+-#elif SIZEOF_VOID_P == SIZEOF_LONG
+-typedef long Py_ssize_t;
+-#else
+-typedef int Py_ssize_t;
+-#endif
+-
+-int main()
+-{
+-    char buffer[256];
++AC_CACHE_VAL(ac_cv_printf_fmt_zd, [
++  AC_TRY_RUN([#include <stdio.h>
++    #include <stddef.h>
++    #include <string.h>
++
++    #ifdef HAVE_SYS_TYPES_H
++    #include <sys/types.h>
++    #endif
++
++    #ifdef HAVE_SSIZE_T
++    typedef ssize_t Py_ssize_t;
++    #elif SIZEOF_VOID_P == SIZEOF_LONG
++    typedef long Py_ssize_t;
++    #else
++    typedef int Py_ssize_t;
++    #endif
++
++    int main()
++    {
++        char buffer[256];
+ 
+-    if(sprintf(buffer, "%zd", (size_t)123) < 0)
+-       	return 1;
++        if(sprintf(buffer, "%zd", (size_t)123) < 0)
++           return 1;
+ 
+-    if (strcmp(buffer, "123"))
+-	return 1;
++        if (strcmp(buffer, "123"))
++          return 1;
+ 
+-    if (sprintf(buffer, "%zd", (Py_ssize_t)-123) < 0)
+-       	return 1;
++        if (sprintf(buffer, "%zd", (Py_ssize_t)-123) < 0)
++          return 1;
+ 
+-    if (strcmp(buffer, "-123"))
+-	return 1;
++        if (strcmp(buffer, "-123"))
++          return 1;
+ 
+-    return 0;
+-}],
+-[AC_MSG_RESULT(yes)
+- AC_DEFINE(PY_FORMAT_SIZE_T, "z", [Define to printf format modifier for Py_ssize_t])],
+- AC_MSG_RESULT(no))
++        return 0;
++    }
++  ],
++  ac_cv_printf_fmt_zd=yes,
++  ac_cv_printf_fmt_zd=no,
++  ac_cv_printf_fmt_zd=no)
++])
++AC_MSG_RESULT($ac_cv_printf_fmt_zd)
++if test $ac_cv_printf_fmt_zd = yes; then
++  AC_DEFINE(PY_FORMAT_SIZE_T, "z", [Define to printf format modifier for Py_ssize_t])
++fi
+ 
+ AC_CHECK_TYPE(socklen_t,,
+   AC_DEFINE(socklen_t,int,
+diff --git a/pyconfig.h.in b/pyconfig.h.in
+index 852e671..70edf3f 100644
+--- a/pyconfig.h.in
++++ b/pyconfig.h.in
+@@ -76,7 +76,7 @@
+ /* Define this if you have the type _Bool. */
+ #undef HAVE_C99_BOOL
+ 
+-/* Define to 1 if you have the `chflags' function. */
++/* Define to 1 if you have the 'chflags' function. */
+ #undef HAVE_CHFLAGS
+ 
+ /* Define to 1 if you have the `chown' function. */
+@@ -360,7 +360,7 @@
+ /* Define to 1 if you have the <libintl.h> header file. */
+ #undef HAVE_LIBINTL_H
+ 
+-/* Define to 1 if you have the `readline' library (-lreadline). */
++/* Define if you have the readline library (-lreadline). */
+ #undef HAVE_LIBREADLINE
+ 
+ /* Define to 1 if you have the `resolv' library (-lresolv). */
