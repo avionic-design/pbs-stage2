@@ -1,0 +1,50 @@
+diff --git a/lsusb.c b/lsusb.c
+index 4833536..6b6c673 100644
+--- a/lsusb.c
++++ b/lsusb.c
+@@ -118,6 +118,19 @@ static inline int typesafe_control_msg(usb_dev_handle *dev,
+ 
+ /* ---------------------------------------------------------------------- */
+ 
++#if malloc == rpl_malloc
++#undef malloc
++void *malloc(size_t size);
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ int lprintf(unsigned int vl, const char *format, ...)
+ {
+ 	va_list ap;
+diff --git a/names.c b/names.c
+index aae040c..38f1a2d 100644
+--- a/names.c
++++ b/names.c
+@@ -23,6 +23,10 @@
+ 
+ /*****************************************************************************/
+ 
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -34,10 +38,6 @@
+ #include <stdio.h>
+ #include <ctype.h>
+ 
+-#ifdef HAVE_CONFIG_H
+-#include "config.h"
+-#endif
+-
+ #ifdef HAVE_LIBZ
+ #include <zlib.h>
+ #define 	usb_file				gzFile
