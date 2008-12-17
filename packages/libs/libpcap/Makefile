@@ -1,5 +1,5 @@
 PACKAGE = libpcap
-VERSION = 0.9.8
+VERSION = 1.0.0
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz

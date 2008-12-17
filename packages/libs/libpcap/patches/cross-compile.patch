@@ -1,0 +1,58 @@
+diff --git a/Makefile.in b/Makefile.in
+index 5c4d679..121ddd9 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -346,7 +346,7 @@ libpcap.dylib: $(OBJ)
+ 
+ scanner.c: $(srcdir)/scanner.l
+ 	@rm -f $@
+-	./runlex.sh $(LEX) -o$@ $<
++	$(srcdir)/runlex.sh $(LEX) -o$@ $<
+ 
+ scanner.o: scanner.c tokdefs.h
+ 	$(CC) $(CFLAGS) -c scanner.c
+@@ -390,7 +390,7 @@ bpf_filter.c: $(srcdir)/bpf/net/bpf_filter.c
+ 	ln -s $(srcdir)/bpf/net/bpf_filter.c bpf_filter.c
+ 
+ bpf_filter.o: bpf_filter.c
+-	$(CC) $(CFLAGS) -c bpf_filter.c
++	$(CC) $(CFLAGS) -c $(srcdir)/bpf_filter.c
+ 
+ #
+ # Generate the pcap-config script.
+@@ -400,7 +400,7 @@ pcap-config: pcap-config.in Makefile
+ 	sed -e 's|@includedir[@]|$(includedir)|g' \
+ 	    -e 's|@libdir[@]|$(libdir)|g' \
+ 	    -e 's|@DEPLIBS[@]|$(DEPLIBS)|g' \
+-	    pcap-config.in >$@.tmp
++	    $(srcdir)/pcap-config.in >$@.tmp
+ 	mv $@.tmp $@
+ 	chmod a+x $@
+ 
+@@ -449,9 +449,12 @@ install: libpcap.a pcap-config
+ 	for i in $(MAN1); do \
+ 		$(INSTALL_DATA) $(srcdir)/$$i \
+ 		    $(DESTDIR)$(mandir)/man1/$$i; done
+-	for i in $(MAN3PCAP); do \
++	for i in $(MAN3PCAP_NOEXPAND); do \
+ 		$(INSTALL_DATA) $(srcdir)/$$i \
+ 		    $(DESTDIR)$(mandir)/man3/$$i; done
++	for i in $(MAN3PCAP_EXPAND:.in=); do \
++		$(INSTALL_DATA) $$i \
++		    $(DESTDIR)$(mandir)/man3/$$i; done
+ 	ln $(DESTDIR)$(mandir)/man3/pcap_datalink_val_to_name.3pcap \
+ 		 $(DESTDIR)$(mandir)/man3/pcap_datalink_val_to_description.3pcap
+ 	ln $(DESTDIR)$(mandir)/man3/pcap_dump_open.3pcap \
+@@ -471,10 +474,10 @@ install: libpcap.a pcap-config
+ 	ln $(DESTDIR)$(mandir)/man3/pcap_setnonblock.3pcap \
+ 		 $(DESTDIR)$(mandir)/man3/pcap_getnonblock.3pcap
+ 	for i in $(MANFILE); do \
+-		$(INSTALL_DATA) $(srcdir)/`echo $$i | sed 's/.manfile.in/.manfile/'` \
++		$(INSTALL_DATA) `echo $$i | sed 's/.manfile.in/.manfile/'` \
+ 		    $(DESTDIR)$(mandir)/man@MAN_FILE_FORMATS@/`echo $$i | sed 's/.manfile.in/.@MAN_FILE_FORMATS@/'`; done
+ 	for i in $(MANMISC); do \
+-		$(INSTALL_DATA) $(srcdir)/`echo $$i | sed 's/.manmisc.in/.manmisc/'` \
++		$(INSTALL_DATA) `echo $$i | sed 's/.manmisc.in/.manmisc/'` \
+ 		    $(DESTDIR)$(mandir)/man@MAN_MISC_INFO@/`echo $$i | sed 's/.manmisc.in/.@MAN_MISC_INFO@/'`; done
+ 
+ install-shared: install-shared-$(DYEXT)
