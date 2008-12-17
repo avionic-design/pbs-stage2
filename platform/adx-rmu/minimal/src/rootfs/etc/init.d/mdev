@@ -1,0 +1,30 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+do_start() {
+	log_action_begin_msg "Populating /dev filesystem "
+	sysctl -n -w kernel.hotplug=/sbin/mdev
+	/sbin/mdev -s
+	log_action_end_msg $?
+}
+
+case $1 in
+	start)
+		do_start
+		;;
+
+	stop)
+		# no-op
+		;;
+
+	restart)
+		do_start
+		;;
+
+	*)
+		echo "usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+

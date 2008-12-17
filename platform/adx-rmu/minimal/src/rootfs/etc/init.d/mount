@@ -1,0 +1,50 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+TTYGRP=5
+TTYMODE=620
+
+do_start() {
+	log_action_begin_msg "Mounting /proc filesystem "
+	mkdir -p /proc
+	mount -t proc -o nodev,noexec,nosuid proc /proc
+	log_action_end_msg $?
+
+	log_action_begin_msg "Mounting /sys filesystem "
+	mkdir -p /sys
+	mount -t sysfs -o nodev,noexec,nosuid sysfs /sys
+	log_action_end_msg $?
+
+	if [ -d /proc/bus/usb ]; then
+		log_action_begin_msg "Mounting /proc/bus/usb filesystem "
+		mount -t usbfs -o nodev,noexec,nosuid usbfs /proc/bus/usb
+		log_action_end_msg $?
+	fi
+
+	log_action_begin_msg "Mounting /dev/pts filesystem "
+	mkdir -p /dev/pts
+	mount -t devpts -o noexec,nosuid,gid=$TTYGRP,mode=$TTYMODE \
+		devpts /dev/pts
+	log_action_end_msg $?
+}
+
+case "$1" in
+	start)
+		do_start
+		;;
+
+	stop)
+		# no-op
+		;;
+
+	restart)
+		do_start
+		;;
+
+	*)
+		echo "usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+

@@ -1,22 +1,10 @@
 #!/bin/sh
 
-mkdir -p /etc
-touch /etc/fstab
-touch /etc/mdev.conf
+. /lib/lsb/init-functions
 
-echo -n "Mounting /proc filesystem ... "
-mkdir -p /proc
-mount -t proc none /proc
-echo "done"
+run-parts --arg=start -- /etc/rcS.d
 
-echo -n "Mounting /sys filesystem ... "
-mkdir -p /sys
-mount -t sysfs none /sys
-echo "done"
-
-echo -n "Populating /dev filesystem ... "
-mdev -s
-echo "done"
-
+log_action_begin_msg "Enabling verbose kernel messages "
 echo 8 > /proc/sys/kernel/printk
+log_action_end_msg $?
 

@@ -1,0 +1,42 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+daemon=/usr/sbin/telnetd
+args='-l /bin/sh -K'
+pidfile=/var/run/telnetd.pid
+
+do_start() {
+	log_daemon_msg "Starting telnet server" "telnetd"
+	start-stop-daemon --start --exec $daemon --pidfile $pidfile \
+		--make-pidfile --quiet -- $args
+	log_end_msg $?
+}
+
+do_stop() {
+	log_daemon_msg "Stopping telnet server" "telnetd"
+	start-stop-daemon --stop --exec $daemon --pidfile $pidfile \
+		--quiet -- $args
+	log_end_msg $?
+}
+
+case $1 in
+	start)
+		do_start
+		;;
+
+	stop)
+		do_stop
+		;;
+
+	restart)
+		do_stop
+		do_start
+		;;
+
+	*)
+		echo "usage: $0 {start|stop|restart}"
+		exit 1
+		;;
+esac
+

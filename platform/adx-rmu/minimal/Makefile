@@ -61,6 +61,8 @@ packages-y += devel/gdb-server
 packages-y += devel/strace
 packages-y += libs/libusb
 packages-y += core/usbutils
+packages-y += libs/libpcap
+packages-y += net/tcpdump
 packages-y += net/switchctrl
 
 include platform/common.mk
