@@ -1,5 +1,5 @@
 PACKAGE = tcpdump
-VERSION = 3.9.8
+VERSION = 4.0.0
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -9,18 +9,20 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 include packages/autotools.mk
 
 conf-args += \
+	--without-crypto \
+	--enable-ipv6 \
 	--disable-smb
 
 conf-vars += \
-	ac_cv_linux_vers=2 \
-	$(call set-args, CC CFLAGS LDFLAGS)
+	CPPFLAGS='$(CPPFLAGS)' \
+	td_cv_buggygetaddrinfo=no \
+	ac_cv_linux_vers=2
 
-build-vars += \
-	CFLAGS='$(CFLAGS) -include config.h -I.. -D_U_="__attribute__((unused))"' \
-	LDFLAGS='$(LDFLAGS)'
+prunefiles = \
+	$(prefix)/sbin/tcpdump.4.0.0
 
 stripfiles = \
-	/usr/sbin/tcpdump
+	$(prefix)/sbin/tcpdump
 
 include packages/cleanup.mk
 
