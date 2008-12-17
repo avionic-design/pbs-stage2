@@ -54,7 +54,11 @@ ifdef TOOLCHAIN
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
-  LDFLAGS =
+  ifeq ($(variant),sysroot)
+    LDFLAGS = --sysroot $(SYSROOT)
+  else
+    LDFLAGS =
+  endif
 
   export ABIFLAGS OPTFLAGS CPPFLAGS CFLAGS CXXFLAGS LDFLAGS
 else
