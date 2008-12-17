@@ -18,6 +18,7 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-vars += \
+	CC='$(CC) --sysroot $(ROOTFS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
@@ -40,7 +41,7 @@ _install:
 	$(call cmd,install_dir,$(ROOTFS)/etc/init.d)
 	$(call cmd,install_dir,$(ROOTFS)/etc/rcS.d)
 	$(call cmd,install_bin,$(pkgsrctree)/udev.init,$(ROOTFS)/etc/init.d/udev)
-	$(call cmd,link,../init.d/udev,$(ROOTFS)/etc/rcS.d/S10udev)
+	$(call cmd,link,../init.d/udev,$(ROOTFS)/etc/rcS.d/S03udev)
 
 stripfiles = \
 	$(prefix)/sbin/udevadm \
