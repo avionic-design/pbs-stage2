@@ -1,17 +1,48 @@
 PACKAGE = libxcb
-VERSION = 1.1.92
+VERSION = 1.1.93
 
 LOCATION = http://xcb.freedesktop.org/dist
+TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
-include packages/xorg/lib/Makefile
+DESCRIPTION = X C binding
+
+##############################################################################
+
+include packages/common.mk
 
 env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS) \
 	DESTDIR=$(ROOTFS)
 
-# FIXME: this is really ugly, but libtool keeps throwing away the --sysroot
-#        parameter otherwise
-conf-vars += \
-	CC='$(CC) --sysroot $(ROOTFS)'
+conf-args = \
+	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--sysconfdir=/etc
+
+conf-vars = \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)'
+
+package-configure:
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+	cd $(pkgtree) && \
+		$(env) ./configure $(conf-args) $(conf-vars)
+
+build-args =
+
+package-build:
+	cd $(pkgtree) && \
+		$(env) $(MAKE) $(build-args)
+
+install-args = \
+	DESTDIR=$(ROOTFS)
+
+_install:
+	cd $(pkgtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
 
 prunefiles = \
 	$(prefix)/lib/libxcb.la \
@@ -61,6 +92,9 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-post-install: _cleanup
+package-install: _install _cleanup
+	@:
+
+package-clean:
 	@:
 
