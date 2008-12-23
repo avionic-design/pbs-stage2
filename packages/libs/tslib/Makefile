@@ -29,6 +29,7 @@ conf-vars = \
 
 package-configure:
 	cd $(pkgtree) && ./autogen.sh
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -41,42 +42,38 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libts.la
-	$(priv) find $(ROOTFS)$(prefix)/lib/ts -name '*.la' -exec rm {} +
 
-files-strip = \
-	/usr/lib/ts/variance.so \
-	/usr/lib/ts/pthres.so \
-	/usr/lib/ts/linear_h2200.so \
-	/usr/lib/ts/mk712.so \
-	/usr/lib/ts/linear.so \
-	/usr/lib/ts/corgi.so \
-	/usr/lib/ts/input.so \
-	/usr/lib/ts/arctic2.so \
-	/usr/lib/ts/dejitter.so \
-	/usr/lib/ts/h3600.so \
-	/usr/lib/ts/ucb1x00.so \
-	/usr/lib/ts/collie.so \
-	/usr/lib/libts-0.0.so.0.1.1 \
-	/usr/bin/ts_test \
-	/usr/bin/ts_print_raw \
-	/usr/bin/ts_calibrate \
-	/usr/bin/ts_harvest \
-	/usr/bin/ts_print
+plugin = $(prefix)/lib/ts
 
-files-strip := $(patsubst %,strip-$(ROOTFS)%,$(files-strip))
+prunefiles = \
+	$(prefix)/lib/libts.la
 
-$(files-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
+stripfiles = \
+	$(plugin)/variance.so \
+	$(plugin)/pthres.so \
+	$(plugin)/linear_h2200.so \
+	$(plugin)/mk712.so \
+	$(plugin)/linear.so \
+	$(plugin)/corgi.so \
+	$(plugin)/input.so \
+	$(plugin)/arctic2.so \
+	$(plugin)/dejitter.so \
+	$(plugin)/h3600.so \
+	$(plugin)/ucb1x00.so \
+	$(plugin)/collie.so \
+	$(prefix)/lib/libts-0.0.so.0.1.1 \
+	$(prefix)/bin/ts_test \
+	$(prefix)/bin/ts_print_raw \
+	$(prefix)/bin/ts_calibrate \
+	$(prefix)/bin/ts_harvest \
+	$(prefix)/bin/ts_print
 
-_strip: $(files-strip)
-	@:
+include packages/cleanup.mk
 
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
