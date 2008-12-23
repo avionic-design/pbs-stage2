@@ -25,7 +25,7 @@ conf-vars = \
 	ac_cv_have_abstract_sockets=yes
 
 package-configure:
-	install -m 755 support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)

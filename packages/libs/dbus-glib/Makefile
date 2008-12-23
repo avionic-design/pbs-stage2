@@ -20,14 +20,13 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-vars = \
-	CC='$(CC) --sysroot $(ROOTFS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
 	ac_cv_func_posix_getpwnam_r=yes \
 	ac_cv_have_abstract_sockets=yes
 
 package-configure:
-	install -m 755 support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -50,7 +49,8 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/dbus-binding-tool \
-	$(prefix)/lib/libdbus-glib-1.so.2.1.0
+	$(prefix)/lib/libdbus-glib-1.so.2.1.0 \
+	$(prefix)/libexec/dbus-bash-completion-helper
 
 include packages/cleanup.mk
 
