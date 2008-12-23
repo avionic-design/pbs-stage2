@@ -9,7 +9,7 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 include packages/common.mk
 
 env += \
-	CC='$(CC)' \
+	CC='$(CC) --sysroot $(ROOTFS)' \
 	CFLAGS='$(CFLAGS)'
 
 conf-args = \
@@ -25,9 +25,17 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
+_install:
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) $(STRIP) $(ROOTFS)/usr/lib/libz.so.*
+
+prunefiles =
+stripfiles = \
+	$(prefix)/lib/libz.so.1.2.3
+
+include packages/cleanup.mk
+
+package-install: _install _cleanup
+	@:
 
 package-clean:
 	@:
