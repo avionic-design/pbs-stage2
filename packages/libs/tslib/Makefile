@@ -49,7 +49,19 @@ _install:
 plugin = $(prefix)/lib/ts
 
 prunefiles = \
-	$(prefix)/lib/libts.la
+	$(prefix)/lib/libts.la \
+	$(plugin)/arctic2.la \
+	$(plugin)/collie.la \
+	$(plugin)/corgi.la \
+	$(plugin)/dejitter.la \
+	$(plugin)/h3600.la \
+	$(plugin)/input.la \
+	$(plugin)/linear_h2200.la \
+	$(plugin)/linear.la \
+	$(plugin)/mk712.la \
+	$(plugin)/pthres.la \
+	$(plugin)/ucb1x00.la \
+	$(plugin)/variance.la
 
 stripfiles = \
 	$(plugin)/variance.so \
