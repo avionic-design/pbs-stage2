@@ -81,7 +81,6 @@ eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6
 0687e7279d78eb963ac34a3b06a0a6a1d1e9a26807ef4939cf4a2ad5f062e75a  download/gcc-core-4.3.2.tar.bz2
 254e2bc95ca397579634b2277c4dbe84ee47cb86d0aad6bfff8586107085bb80  download/gcc-g++-4.3.2.tar.bz2
 e8fc5fcfb715ffe925b2982aa9ca287832a93495d7fff03f17f6449f0732718c  download/openssl-0.9.8i.tar.gz
-3822e6758991be713837d15a058cba5917ce65f552f1ce60301cb388b18a2e10  download/randrproto-1.2.2.tar.bz2
 10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
 6171e6bca4bd6333611bd9c63cccc8e8e412d876c72097f0dddc490a9df51d5a  download/libXfont-1.3.3.tar.bz2
 a82b54382a82c2fb42f7ad2c8f363e945602a5183f6df685b69a584d3b25b228  download/pixman-0.12.0.tar.bz2
@@ -131,3 +130,4 @@ acbb5e7d322253ed242f28fbc1974bd34a4da7c29275e17cd5b32b38b2a5c849  download/udev-
 3f09fd80360316f5282e8062d09457370e4c1e25c161e07aaa928a074ce8d1ac  download/xcb-proto-1.3.tar.bz2
 e27f723f4218908be96c28a8e0e740e9b31a00c97dad6aaa9a57b79fc0295614  download/xextproto-7.0.4.tar.bz2
 ef90f7e4c151095cc75a573acd86355aa65c5bc7fd1dcce4a1483b64788e1461  download/inputproto-1.5.0.tar.bz2
+b769347fe70a4e19f58378b4c95a29304ed8dc87d50a8909901da89c4e4a7bc2  download/randrproto-1.2.99.3.tar.bz2
