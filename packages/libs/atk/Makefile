@@ -1,8 +1,10 @@
 PACKAGE = atk
-VERSION = 1.24.0
+VERSION = 1.25.2
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.24
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.25
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+
+DESCRIPTION = The ATK accessibility toolkit
 
 ##############################################################################
 
@@ -38,26 +40,21 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libatk-1.0.la
 
-sover = 0.2409.1
+sover = 0.2511.1
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libatk-1.0.la
+
+stripfiles = \
 	$(prefix)/lib/libatk-1.0.so.$(sover)
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
