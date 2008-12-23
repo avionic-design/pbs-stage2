@@ -20,12 +20,11 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-vars = \
-	CC='$(CC) --sysroot $(ROOTFS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/config.sub $(pkgtree)/config.sub
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -39,24 +38,19 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+_install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libpixman-1.la
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libpixman-1.la
+
+stripfiles = \
 	$(prefix)/lib/libpixman-1.so.$(VERSION)
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: _install _cleanup
 	@:
 
 package-clean:
