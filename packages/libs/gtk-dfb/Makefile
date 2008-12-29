@@ -1,8 +1,10 @@
 PACKAGE = gtk+
-VERSION = 2.14.5
+VERSION = 2.14.6
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.14
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+
+DESCRIPTION = The GTK+ graphical user interface library
 
 ##############################################################################
 
@@ -34,9 +36,9 @@ conf-vars = \
 
 package-configure:
 	cd $(pkgtree) && autoreconf
-	install -m 755 support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
-	install -m 755 support/config.guess $(pkgtree)/config.guess
-	install -m 755 support/config.sub $(pkgtree)/config.sub
+	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
+	cp support/config.guess $(pkgtree)/config.guess
+	cp support/config.sub $(pkgtree)/config.sub
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -57,7 +59,7 @@ _install:
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1400.5
+sover  = 0.1400.6
 
 prunefiles = \
 	$(prefix)/lib/libgtk-directfb-2.0.la \
