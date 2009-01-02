@@ -25,9 +25,8 @@ else
   export ARCH OS LIBC ABI CROSS_COMPILE
 endif
 
-TARGET_LIBC    = uclibc
-TARGET_BUSYBOX = shared
-export TARGET_LIBC TARGET_BUSYBOX
+TARGET_LIBC = uclibc
+export TARGET_LIBC
 
 prefix = /usr
 priv = sudo
@@ -52,13 +51,7 @@ else
   packages-y += devel/glibc
 endif
 
-# select busybox variant
-ifeq ($(TARGET_BUSYBOX),static)
-  packages-y += core/busybox-static
-else
-  packages-y += core/busybox
-endif
-
+packages-y += core/busybox
 packages-y += libs/libpcap
 packages-y += net/tcpdump
 

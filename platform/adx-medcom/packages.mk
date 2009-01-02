@@ -12,12 +12,7 @@ else
   packages-y += devel/glibc
 endif
 
-# select busybox variant
-ifeq ($(TARGET_BUSYBOX),static)
-  packages-y += core/busybox-static
-else
-  packages-y += core/busybox
-endif
+packages-y += core/busybox
 
 # common packages
 ifneq ($(findstring qt, $(VARIANT)),)

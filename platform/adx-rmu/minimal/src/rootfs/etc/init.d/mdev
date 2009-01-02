@@ -4,7 +4,7 @@
 
 do_start() {
 	log_action_begin_msg "Populating /dev filesystem "
-	sysctl -n -w kernel.hotplug=/sbin/mdev
+	sysctl -n -w kernel.hotplug=/sbin/mdev > /dev/null 2>&1
 	/sbin/mdev -s
 	log_action_end_msg $?
 }
