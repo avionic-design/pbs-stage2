@@ -1,7 +1,7 @@
 PACKAGE = switchctrl
-VERSION = 0.1.2
+VERSION = 0.1.4
 
-LOCATION = http://www.avionic-design.de/releases/$(PACKAGE)
+LOCATION = http://www.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
