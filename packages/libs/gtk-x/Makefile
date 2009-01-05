@@ -1,7 +1,7 @@
 PACKAGE = gtk+
-VERSION = 2.14.6
+VERSION = 2.15.0
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.14
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.15
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = The GTK+ graphical user interface library
@@ -33,10 +33,7 @@ conf-vars = \
 	gio_can_sniff=yes
 
 package-configure:
-	cd $(pkgtree) && autoreconf
 	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
-	cp support/config.guess $(pkgtree)/config.guess
-	cp support/config.sub $(pkgtree)/config.sub
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -57,7 +54,7 @@ _install:
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1400.6
+sover  = 0.1500.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
