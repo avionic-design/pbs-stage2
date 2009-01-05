@@ -1,5 +1,6 @@
+LIBC_VERSION ?= 0.9.30
 PACKAGE = uClibc
-VERSION = 0.9.30
+VERSION = $(LIBC_VERSION)
 
 LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -8,6 +9,7 @@ DESCRIPTION = small C library for embedded systems
 
 ##############################################################################
 
+patchdir = $(pkgsrctree)/patches/$(VERSION)
 include packages/common.mk
 
 ifeq ($(VERSION),snapshot)
