@@ -10,11 +10,16 @@ DESCRIPTION = tiny utilities for small and embedded systems
 
 include packages/common.mk
 
-DOT_CONFIG = $(PACKAGE_FULLNAME)-minimal
+DEF_CONFIG = $(PACKAGE_FULLNAME)-minimal
+CPU_CONFIG = $(PACKAGE_FULLNAME)-minimal-$(CPU)
+DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
+		$(CPU_CONFIG), \
+		$(DEF_CONFIG)))
 
 conf-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
@@ -26,6 +31,7 @@ package-configure:
 build-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
@@ -36,6 +42,7 @@ package-build:
 install-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
+	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
