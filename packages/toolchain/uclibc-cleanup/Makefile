@@ -16,35 +16,38 @@ package-configure:
 package-build:
 	@:
 
+prunedirs = \
+	$(exec-prefix)/include
+
 prunefiles = \
-	$(ROOTFS)$(exec-prefix)/lib/libc.a \
-	$(ROOTFS)$(exec-prefix)/lib/libc.so \
-	$(ROOTFS)$(exec-prefix)/lib/libc_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libcrypt.a \
-	$(ROOTFS)$(exec-prefix)/lib/libcrypt.so \
-	$(ROOTFS)$(exec-prefix)/lib/libcrypt_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libdl.a \
-	$(ROOTFS)$(exec-prefix)/lib/libdl.so \
-	$(ROOTFS)$(exec-prefix)/lib/libdl_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libm.a \
-	$(ROOTFS)$(exec-prefix)/lib/libm.so \
-	$(ROOTFS)$(exec-prefix)/lib/libm_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libnsl.a \
-	$(ROOTFS)$(exec-prefix)/lib/libnsl.so \
-	$(ROOTFS)$(exec-prefix)/lib/libnsl_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libpthread.a \
-	$(ROOTFS)$(exec-prefix)/lib/libpthread.so \
-	$(ROOTFS)$(exec-prefix)/lib/libpthread_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libresolv.a \
-	$(ROOTFS)$(exec-prefix)/lib/libresolv.so \
-	$(ROOTFS)$(exec-prefix)/lib/libresolv_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/librt.a \
-	$(ROOTFS)$(exec-prefix)/lib/librt.so \
-	$(ROOTFS)$(exec-prefix)/lib/librt_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/libutil.a \
-	$(ROOTFS)$(exec-prefix)/lib/libutil.so \
-	$(ROOTFS)$(exec-prefix)/lib/libutil_pic.a \
-	$(ROOTFS)$(exec-prefix)/lib/uclibc_nonshared.a
+	$(exec-prefix)/lib/libc.a \
+	$(exec-prefix)/lib/libc.so \
+	$(exec-prefix)/lib/libc_pic.a \
+	$(exec-prefix)/lib/libcrypt.a \
+	$(exec-prefix)/lib/libcrypt.so \
+	$(exec-prefix)/lib/libcrypt_pic.a \
+	$(exec-prefix)/lib/libdl.a \
+	$(exec-prefix)/lib/libdl.so \
+	$(exec-prefix)/lib/libdl_pic.a \
+	$(exec-prefix)/lib/libm.a \
+	$(exec-prefix)/lib/libm.so \
+	$(exec-prefix)/lib/libm_pic.a \
+	$(exec-prefix)/lib/libnsl.a \
+	$(exec-prefix)/lib/libnsl.so \
+	$(exec-prefix)/lib/libnsl_pic.a \
+	$(exec-prefix)/lib/libpthread.a \
+	$(exec-prefix)/lib/libpthread.so \
+	$(exec-prefix)/lib/libpthread_pic.a \
+	$(exec-prefix)/lib/libresolv.a \
+	$(exec-prefix)/lib/libresolv.so \
+	$(exec-prefix)/lib/libresolv_pic.a \
+	$(exec-prefix)/lib/librt.a \
+	$(exec-prefix)/lib/librt.so \
+	$(exec-prefix)/lib/librt_pic.a \
+	$(exec-prefix)/lib/libutil.a \
+	$(exec-prefix)/lib/libutil.so \
+	$(exec-prefix)/lib/libutil_pic.a \
+	$(exec-prefix)/lib/uclibc_nonshared.a
 
 include packages/cleanup.mk
 
