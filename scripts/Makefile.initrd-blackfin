@@ -1,3 +1,5 @@
+MKIMAGE = mkimage
+
 KVER = $(shell cat $(PLATFORM)/kernel-version)
 KREL = $(shell cat $(PLATFORM)/kernel-release)
 priv = sudo
@@ -5,27 +7,45 @@ priv = sudo
 $(ROOTFS): FORCE
 	$(Q)$(MAKE) platform=$(platform) install
 
+$(PLATFORM)/vmlinux.gz: $(PLATFORM)/uImage
+	@echo '  GEN       $@'
+	@dd if=$< of=$@ bs=64 skip=1 > /dev/null 2>&1
+
 INITRD_FILTER = \
 	-not -path '*/include*' \
 	-not -path '*/usr/share/man*' \
 	-not -name '*.a'
-#	-not -path '*/lib/modules*' \
 
 $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
-	(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
-	(cd $< && find $(INITRD_FILTER) | cpio -o -H newc) > $@
+	@echo '  CPIO      $@'
+	@(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
+	@(cd $< && find $(INITRD_FILTER) | cpio -o -H newc --quiet) > $@
 
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
-	gzip -c $< > $@
+	@echo '  GZIP      $@'
+	@gzip -c $< > $@
+
+quiet_cmd_mk_uboot_fit = MKIMAGE   $@
+      cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@ > /dev/null 2>&1
+
+$(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinux.gz $(PLATFORM)/initrd.gz $(PLATFORM)/multi.its
+	$(call cmd,mk_uboot_fit)
 
 PHONY += images
-images: uImage initrd.gz
+images: u-boot.fit
+	@:
 
-PHONY += uImage
-uImage: $(PLATFORM)/uImage
+PHONY += u-boot.fit
+u-boot.fit: $(PLATFORM)/u-boot.fit
+	@:
+
+PHONY += vmlinux.gz
+vmlinux.gz: $(PLATFORM)/vmlinux.gz
+	@:
 
 PHONY += initrd.gz
 initrd.gz: $(PLATFORM)/initrd.gz
+	@:
 
 PHONY += FORCE
 FORCE: ;
