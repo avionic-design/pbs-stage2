@@ -44,33 +44,43 @@ list: $(call package-hook,list)
 
 PHONY += uscan
 uscan: $(call package-hook,uscan)
+	@:
 
 PHONY += clean
 clean: $(call package-hook,clean)
+	@:
 
 PHONY += fetch
 fetch: $(call stamp,fetch,$(package))
+	@:
 
 PHONY += checksum
 checksum: $(call stamp,checksum,$(package))
+	@:
 
 PHONY += extract
 extract: $(call stamp,extract,$(package))
+	@:
 
 PHONY += patch
 patch: $(call stamp,patch,$(package))
+	@:
 
 PHONY += configure
 configure: $(call stamp,configure,$(package))
+	@:
 
 PHONY += build
 build: $(call stamp,build,$(package))
+	@:
 
 PHONY += install
 install: $(call stamp,install,$(package))
+	@:
 
 PHONY += binary
 binary: $(call package-hook,binary)
+	@:
 
 # stamp targets
 $(call stamp,fetch,$(package)): $(stampdir) $(addprefix download/, $(TARBALLS))
