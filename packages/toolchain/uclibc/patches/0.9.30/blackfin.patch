@@ -1,25 +1,38 @@
 diff --git a/ldso/ldso/bfin/dl-sysdep.h b/ldso/ldso/bfin/dl-sysdep.h
-index 8c3a166..7fc8aff 100644
+index 52df4c9..973fc24 100644
 --- a/ldso/ldso/bfin/dl-sysdep.h
 +++ b/ldso/ldso/bfin/dl-sysdep.h
 @@ -213,6 +213,12 @@ while (0)
  #endif
  
  #include <elf.h>
-+static inline Elf32_Addr __attribute__((unused))
++static __inline__ Elf32_Addr __attribute__((unused))
 +elf_machine_load_address(void)
 +{
 +	return 0;
 +}
 +
- static inline void
+ static __inline__ void
  elf_machine_relative (DL_LOADADDR_TYPE load_off, const Elf32_Addr rel_addr,
  		      Elf32_Word relative_count)
 diff --git a/ldso/ldso/ldso.c b/ldso/ldso/ldso.c
-index 722344c..44bf11b 100644
+index 46cc91c..9c1653a 100644
 --- a/ldso/ldso/ldso.c
 +++ b/ldso/ldso/ldso.c
-@@ -297,7 +297,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+@@ -180,10 +180,12 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+ 		_dl_progname = argv[0];
+ 	}
+ 
++#if !defined(__bfin__)
+ 	if (_start == (void *) auxvt[AT_ENTRY].a_un.a_val) {
+ 		_dl_dprintf(_dl_debug_file, "Standalone execution is not supported yet\n");
+ 		_dl_exit(1);
+ 	}
++#endif
+ 
+ 	/* Start to build the tables of the modules that are required for
+ 	 * this beast to run.  We start with the basic executable, and then
+@@ -297,7 +299,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
  				for (i = 0; i < auxvt[AT_PHNUM].a_un.a_val; i++, ppnt++) {
  					if (ppnt->p_type == PT_LOAD && !(ppnt->p_flags & PF_W))
  						_dl_mprotect((void *) (DL_RELOC_ADDR(app_tpnt->loadaddr, ppnt->p_vaddr) & PAGE_ALIGN),

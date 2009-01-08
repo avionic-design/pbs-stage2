@@ -5,12 +5,6 @@ LIBC = uclibc
 TARGET = $(CPU)-$(OS)-$(LIBC)
 export ARCH CPU OS LIBC TARGET
 
-#BINUTILS_VERSION	= snapshot
-GCC_VERSION		= snapshot
-LIBC_VERSION		= 0.9.29-bfin
-#export BINUTILS_VERSION GCC_VERSION LIBC_VERSION
-export GCC_VERSION LIBC_VERSION
-
 variant = sysroot
 export variant
 
