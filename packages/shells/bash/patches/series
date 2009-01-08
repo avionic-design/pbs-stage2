@@ -1,1 +1,1 @@
-flags-for-build.patch -p1
+cross-compile.patch -p1

@@ -1,0 +1,13 @@
+diff --git a/builtins/Makefile.in b/builtins/Makefile.in
+index e027f7a..ea65a66 100644
+--- a/builtins/Makefile.in
++++ b/builtins/Makefile.in
+@@ -63,7 +63,7 @@ LOCAL_DEFS = @LOCAL_DEFS@
+ 
+ LIBS = @LIBS@
+ LDFLAGS = @LDFLAGS@ $(LOCAL_LDFLAGS) $(CFLAGS)
+-LDFLAGS_FOR_BUILD = $(LDFLAGS)
++LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
+ LOCAL_LDFLAGS = @LOCAL_LDFLAGS@
+ #LIBS_FOR_BUILD = @LIBS_FOR_BUILD@
+ LIBS_FOR_BUILD = $(LIBS)
