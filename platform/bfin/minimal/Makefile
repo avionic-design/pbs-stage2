@@ -30,7 +30,7 @@ ROOTFS = $(PLATFORM)/rootfs
 export prefix priv ROOTFS
 
 LINUX_VERSION = git
-KERNEL_CONFIG = BF561-EZKIT_defconfig
+KERNEL_CONFIG = BF527-EZKIT_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
 # select kernel version
@@ -48,19 +48,23 @@ else
 endif
 
 packages-y += core/busybox
+packages-y += shells/bash
+
+platform-clean-dirs	+= $(builddir)
+platform-clean-dirs	+= $(ROOTFS)
+platform-clean-files	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
+platform-clean-files	+= $(PLATFORM)/u-boot.fit
+platform-clean-files	+= $(PLATFORM)/System.map*
+platform-clean-files	+= $(PLATFORM)/uImage*
+platform-clean-files	+= $(PLATFORM)/vmlinux.gz
+platform-clean-files	+= $(PLATFORM)/rootfs.img
+platform-clean-files	+= $(PLATFORM)/kernel-version
+platform-clean-files	+= $(PLATFORM)/kernel-release
+
+include platform/cleanup.mk
 
 PHONY += platform-clean
-platform-clean: __clean-dirs  += $(builddir)
-platform-clean: __clean-dirs  += $(ROOTFS)
-platform-clean: __clean-files += $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
-platform-clean: __clean-files += $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
-platform-clean: __clean-files += $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
-platform-clean: __clean-files += $(PLATFORM)/System.map*
-platform-clean: __clean-files += $(PLATFORM)/vmlinuz*
-platform-clean: __clean-files += $(PLATFORM)/rootfs.img
-platform-clean: __clean-files += $(PLATFORM)/kernel-version
-platform-clean: __clean-files += $(PLATFORM)/kernel-release
-platform-clean:
+platform-clean: platform-cleanup
 	$(if $(wildcard $(__clean-dirs)),$(call cmd,cleandir),)
 	$(if $(wildcard $(__clean-files)),$(call cmd,clean),)
 
