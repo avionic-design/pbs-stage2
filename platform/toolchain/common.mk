@@ -41,7 +41,11 @@ ifdef TOOLCHAIN
   ifeq ($(FLOAT),soft)
     ABIFLAGS += -msoft-float
   else
-    ABIFLAGS += -mhard-float
+    ifeq ($(FLOAT),hard)
+      ABIFLAGS += -mhard-float
+    else
+      ABIFLAGS +=
+    endif
   endif
 
   CFLAGS = \
