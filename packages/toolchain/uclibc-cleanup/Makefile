@@ -16,10 +16,8 @@ package-configure:
 package-build:
 	@:
 
-prunedirs = \
-	$(exec-prefix)/include
-
 prunefiles = \
+	$(exec-prefix)/include/bits/uClibc_*.h \
 	$(exec-prefix)/lib/libc.a \
 	$(exec-prefix)/lib/libc.so \
 	$(exec-prefix)/lib/libc_pic.a \

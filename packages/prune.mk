@@ -1,5 +1,9 @@
-prunedirs  := $(patsubst %,prune-$(ROOTFS)%,$(prunedirs))
-prunefiles := $(patsubst %,prune-$(ROOTFS)%,$(prunefiles))
+# add rootfs prefix and expand wildcards
+prunedirs  := $(wildcard $(patsubst %,$(ROOTFS)%,$(prunedirs)))
+prunefiles := $(wildcard $(patsubst %,$(ROOTFS)%,$(prunefiles)))
+# add the prune- prefix
+prunedirs  := $(patsubst %,prune-%,$(prunedirs))
+prunefiles := $(patsubst %,prune-%,$(prunefiles))
 
 PHONY += $(prunedirs)
 $(prunedirs): prune-%:
