@@ -1,3 +1,4 @@
+# add the strip- and rootfs prefixes
 stripfiles := $(patsubst %,strip-$(ROOTFS)%,$(stripfiles))
 
 PHONY += $(stripfiles)
