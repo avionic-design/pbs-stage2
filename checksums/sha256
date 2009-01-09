@@ -79,7 +79,6 @@ d9a7c6f5518a0d6677995bd66b3510cefd1d9428bc684a81fa7063977fe73f16  download/alsa-
 eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6.8.tar.bz2
 0687e7279d78eb963ac34a3b06a0a6a1d1e9a26807ef4939cf4a2ad5f062e75a  download/gcc-core-4.3.2.tar.bz2
 254e2bc95ca397579634b2277c4dbe84ee47cb86d0aad6bfff8586107085bb80  download/gcc-g++-4.3.2.tar.bz2
-e8fc5fcfb715ffe925b2982aa9ca287832a93495d7fff03f17f6449f0732718c  download/openssl-0.9.8i.tar.gz
 10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
 4ecf879eb69fc323669981f02aebff1e3045de415303e86ee67f2080cb3ee888  download/freetype-2.3.7.tar.bz2
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
@@ -130,3 +129,4 @@ c285606ceef417cb6035d94c46e95130dbf5780653b63a49c7d7a2bca020951a  download/switc
 90ff7b0049e0805fe27697430e7ddbc15d9af28e1efa7decb2f7a133a1cc5933  download/gtk+-2.15.0.tar.bz2
 ff1f113b460c269b747e747bb0da6ce81c2d5fa748051e8f295de8c9242cde43  download/udev-136.tar.bz2
 f7ba41ce2d5eb8acad621a6a1373fbe1b19fa3fd7b623fd5566b19dd63c62bcd  download/glib-2.19.4.tar.bz2
+7131242042dbd631fbd83436f42aea1775e7c32f587fa4ada5a01df4c3ae8e8b  download/openssl-0.9.8j.tar.gz
