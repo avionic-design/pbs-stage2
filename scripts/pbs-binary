@@ -1,0 +1,19 @@
+#!/bin/sh
+
+dstdir=install
+
+if [ "x$1" = "x" ]; then
+	packages="*.install"
+else
+	packages="$1"
+fi
+
+for package in $packages; do
+	package="${package%.install}"
+	version="0.0.0"
+
+	tarball="${package}_${version}.tar.bz2"
+
+	echo "Building binary package: $tarball ... "
+done
+

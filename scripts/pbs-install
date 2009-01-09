@@ -1,0 +1,32 @@
+#!/bin/sh
+
+if [ "x$1" = "x" ]; then
+	packages="*.install"
+else
+	packages="$1"
+fi
+
+srcdir=build
+dstdir=install
+
+for package in $packages; do
+	package="${package%.install}"
+	cat "$package.install" | (
+		while read line; do
+			src=`echo $line | awk '{ print $1 }'`
+			dst=`echo $line | awk '{ print $2 }'`
+
+			if [ "x$dst" = "x" ]; then
+				dst=`dirname $src`
+			fi
+
+			[ "x${src#/}" = "x$src" ] && src="/$src"
+			[ "x${dst#/}" = "x$dst" ] && dst="/$dst"
+
+			echo "Installing: ${srcdir}${src} -> ${dstdir}/${package}${dst}"
+			mkdir -p "${dstdir}/${package}${dst}"
+			cp -a ${srcdir}${src} "${dstdir}/${package}/${dst}"
+		done
+	)
+done
+
