@@ -1,8 +1,8 @@
 include packages/prune.mk
 include packages/strip.mk
 
-PHONY += _cleanup
-_cleanup: _prune _strip
+PHONY += package-cleanup
+package-cleanup: package-prune package-strip
 	@:
 
 .PHONY: $(PHONY)

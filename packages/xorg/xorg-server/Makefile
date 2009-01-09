@@ -50,33 +50,18 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+PHONY += package-do-install
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
 module = $(prefix)/lib/xorg/modules
 
 prunefiles = \
-	$(module)/libexa.la \
-	$(module)/libfb.la \
-	$(module)/libint10.la \
-	$(module)/libshadow.la \
-	$(module)/libshadowfb.la \
-	$(module)/libvbe.la \
-	$(module)/libvgahw.la \
-	$(module)/libwfb.la \
-	$(module)/libxaa.la \
-	$(module)/libxf8_16bpp.la \
-	$(module)/extensions/libdbe.la \
-	$(module)/extensions/libextmod.la \
-	$(module)/linux/libfbdevhw.la \
-	$(module)/multimedia/bt829_drv.la \
-	$(module)/multimedia/fi1236_drv.la \
-	$(module)/multimedia/msp3430_drv.la \
-	$(module)/multimedia/tda8425_drv.la \
-	$(module)/multimedia/tda9850_drv.la \
-	$(module)/multimedia/tda9885_drv.la \
-	$(module)/multimedia/uda1380_drv.la
+	$(module)/*.la \
+	$(module)/extensions/*.la \
+	$(module)/linux/*.la \
+	$(module)/multimedia/*.la
 
 stripfiles = \
 	$(prefix)/bin/cvt \
@@ -84,30 +69,14 @@ stripfiles = \
 	$(prefix)/bin/Xnest \
 	$(prefix)/bin/Xorg \
 	$(prefix)/bin/Xvfb \
-	$(module)/libexa.so \
-	$(module)/libfb.so \
-	$(module)/libint10.so \
-	$(module)/libshadow.so \
-	$(module)/libshadowfb.so \
-	$(module)/libvbe.so \
-	$(module)/libvgahw.so \
-	$(module)/libwfb.so \
-	$(module)/libxaa.so \
-	$(module)/libxf8_16bpp.so \
-	$(module)/extensions/libdbe.so \
-	$(module)/extensions/libextmod.so \
-	$(module)/linux/libfbdevhw.so \
-	$(module)/multimedia/bt829_drv.so \
-	$(module)/multimedia/fi1236_drv.so \
-	$(module)/multimedia/msp3430_drv.so \
-	$(module)/multimedia/tda8425_drv.so \
-	$(module)/multimedia/tda9850_drv.so \
-	$(module)/multimedia/tda9885_drv.so \
-	$(module)/multimedia/uda1380_drv.so
+	$(module)/*.so \
+	$(module)/extensions/*.so \
+	$(module)/linux/*.so \
+	$(module)/multimedia/*.so
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

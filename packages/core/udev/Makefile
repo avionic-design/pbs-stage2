@@ -35,7 +35,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,install_dir,$(ROOTFS)/etc/init.d)
@@ -60,7 +60,7 @@ stripfiles = \
 
 include packages/strip.mk
 
-package-install: _install _strip
+package-install: package-do-install package-strip
 	@:
 
 package-clean:

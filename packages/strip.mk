@@ -1,14 +1,10 @@
-# add the strip- and rootfs prefixes
-stripfiles := $(patsubst %,strip-$(ROOTFS)%,$(stripfiles))
+strip-pkg := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.strip \
+			package
+export stripfiles
 
-PHONY += $(stripfiles)
-$(stripfiles): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-PHONY += _strip
-_strip: $(stripfiles)
-	@:
+PHONY += package-strip
+package-strip:
+	$(Q)$(MAKE) $(strip-pkg)=$(package)
 
 .PHONY: $(PHONY)
 

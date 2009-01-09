@@ -50,7 +50,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -65,33 +65,10 @@ prunefiles = \
 	$(prefix)/lib/libgailutil.la \
 	$(module)/libferret.la \
 	$(module)/libgail.la \
-	$(plugin)/immodules/im-inuktitut.la \
-	$(plugin)/immodules/im-viqr.la \
-	$(plugin)/immodules/im-am-et.la \
-	$(plugin)/immodules/im-ipa.la \
-	$(plugin)/immodules/im-cedilla.la \
-	$(plugin)/immodules/im-ti-er.la \
-	$(plugin)/immodules/im-thai.la \
-	$(plugin)/immodules/im-multipress.la \
-	$(plugin)/immodules/im-ti-et.la \
-	$(plugin)/immodules/im-cyrillic-translit.la \
-	$(plugin)/printbackends/libprintbackend-lpr.la \
-	$(plugin)/printbackends/libprintbackend-file.la \
-	$(plugin)/loaders/libpixbufloader-wbmp.la \
-	$(plugin)/loaders/libpixbufloader-pcx.la \
-	$(plugin)/loaders/libpixbufloader-bmp.la \
-	$(plugin)/loaders/libpixbufloader-ico.la \
-	$(plugin)/loaders/libpixbufloader-ani.la \
-	$(plugin)/loaders/libpixbufloader-pnm.la \
-	$(plugin)/loaders/libpixbufloader-tga.la \
-	$(plugin)/loaders/libpixbufloader-png.la \
-	$(plugin)/loaders/libpixbufloader-ras.la \
-	$(plugin)/loaders/libpixbufloader-icns.la \
-	$(plugin)/loaders/libpixbufloader-xpm.la \
-	$(plugin)/loaders/libpixbufloader-xbm.la \
-	$(plugin)/loaders/libpixbufloader-gif.la \
-	$(plugin)/loaders/libpixbufloader-jpeg.la \
-	$(plugin)/engines/libpixmap.la
+	$(plugin)/engines/*.la \
+	$(plugin)/immodules/*.la \
+	$(plugin)/loaders/*.la \
+	$(plugin)/printbackends/*.la
 
 stripfiles = \
 	$(prefix)/bin/gdk-pixbuf-csource \
@@ -104,37 +81,14 @@ stripfiles = \
 	$(prefix)/lib/libgtk-directfb-2.0.so.$(sover) \
 	$(module)/libferret.so \
 	$(module)/libgail.so \
-	$(plugin)/engines/libpixmap.so \
-	$(plugin)/immodules/im-am-et.so \
-	$(plugin)/immodules/im-cedilla.so \
-	$(plugin)/immodules/im-cyrillic-translit.so \
-	$(plugin)/immodules/im-inuktitut.so \
-	$(plugin)/immodules/im-ipa.so \
-	$(plugin)/immodules/im-multipress.so \
-	$(plugin)/immodules/im-thai.so \
-	$(plugin)/immodules/im-ti-er.so \
-	$(plugin)/immodules/im-ti-et.so \
-	$(plugin)/immodules/im-viqr.so \
-	$(plugin)/loaders/libpixbufloader-ani.so \
-	$(plugin)/loaders/libpixbufloader-bmp.so \
-	$(plugin)/loaders/libpixbufloader-gif.so \
-	$(plugin)/loaders/libpixbufloader-icns.so \
-	$(plugin)/loaders/libpixbufloader-ico.so \
-	$(plugin)/loaders/libpixbufloader-jpeg.so \
-	$(plugin)/loaders/libpixbufloader-pcx.so \
-	$(plugin)/loaders/libpixbufloader-png.so \
-	$(plugin)/loaders/libpixbufloader-pnm.so \
-	$(plugin)/loaders/libpixbufloader-ras.so \
-	$(plugin)/loaders/libpixbufloader-tga.so \
-	$(plugin)/loaders/libpixbufloader-wbmp.so \
-	$(plugin)/loaders/libpixbufloader-xbm.so \
-	$(plugin)/loaders/libpixbufloader-xpm.so \
-	$(plugin)/printbackends/libprintbackend-file.so \
-	$(plugin)/printbackends/libprintbackend-lpr.so
+	$(plugin)/engines/*.so \
+	$(plugin)/immodules/*.so \
+	$(plugin)/loaders/*.so \
+	$(plugin)/printbackends/*.so
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

@@ -42,7 +42,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -95,7 +95,7 @@ endif
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

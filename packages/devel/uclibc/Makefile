@@ -56,7 +56,7 @@ rootfs-dirs = \
 	$(ROOTFS)/etc/init.d \
 	$(ROOTFS)/etc/rcS.d
 
-_install: $(rootfs-dirs)
+package-do-install: $(rootfs-dirs)
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
@@ -71,7 +71,7 @@ stripfiles = \
 
 include packages/strip.mk
 
-package-install: _install _strip
+package-install: package-do-install package-strip
 	@:
 
 package-clean:

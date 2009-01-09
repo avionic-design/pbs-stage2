@@ -47,10 +47,11 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
+prunefiles =
 stripfiles = \
 	$(prefix)/bin/Xephyr \
 	$(prefix)/bin/Xfbdev \
@@ -59,7 +60,7 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: _install _strip
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

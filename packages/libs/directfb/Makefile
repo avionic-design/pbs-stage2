@@ -55,7 +55,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -93,20 +93,15 @@ stripfiles = \
 	$(prefix)/lib/libdirect-$(major).so.0.0.0 \
 	$(prefix)/lib/libdirectfb-$(major).so.0.0.0 \
 	$(prefix)/lib/libfusion-$(major).so.0.0.0 \
-	$(plugin)/inputdrivers/libdirectfb_linux_input.so \
-	$(plugin)/inputdrivers/libdirectfb_tslib.so \
-	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_default.so \
-	$(plugin)/interfaces/IDirectFBFont/libidirectfbfont_dgiff.so \
-	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_dfiff.so \
-	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_jpeg.so \
-	$(plugin)/interfaces/IDirectFBImageProvider/libidirectfbimageprovider_png.so \
-	$(plugin)/systems/libdirectfb_devmem.so \
-	$(plugin)/systems/libdirectfb_fbdev.so \
-	$(plugin)/wm/libdirectfbwm_default.so
+	$(plugin)/inputdrivers/*.so \
+	$(plugin)/interfaces/IDirectFBFont/*.so \
+	$(plugin)/interfaces/IDirectFBImageProvider/*.so \
+	$(plugin)/systems/*.so \
+	$(plugin)/wm/*.so
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

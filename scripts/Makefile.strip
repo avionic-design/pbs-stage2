@@ -1,0 +1,22 @@
+PHONY += all
+all: strip
+	@:
+
+include packages/$(package)/Makefile
+
+# add the and rootfs prefix and expand wildcards
+stripfiles := $(wildcard $(patsubst %,$(ROOTFS)%,$(stripfiles)))
+# add the strip- prefix
+stripfiles := $(patsubst %,strip-%,$(stripfiles))
+
+PHONY += $(stripfiles)
+$(stripfiles): strip-%: %
+	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
+	@$(priv) $(STRIP) $<
+
+PHONY += strip
+strip: $(stripfiles)
+	@:
+
+.PHONY: $(PHONY)
+

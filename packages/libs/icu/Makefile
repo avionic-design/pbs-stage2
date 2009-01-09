@@ -44,7 +44,7 @@ install-args = \
 	BUILD_LIBDIR=$(pkgtree)/obj-build/lib \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -76,7 +76,7 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	tmpfile=`mktemp` && \
 		echo "Temporary file: $$tmpfile" && \
 		sed -e 's@default_prefix="\(.*\)"@default_prefix="$(ROOTFS)\1"@g' \

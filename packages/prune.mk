@@ -1,20 +1,11 @@
-# add the prune- and rootfs prefixes
-prunedirs  := $(patsubst %,prune-$(ROOTFS)%,$(prunedirs))
-prunefiles := $(patsubst %,prune-$(ROOTFS)%,$(prunefiles))
+prune-pkg := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.prune \
+			package
+export prunefiles
+export prunedirs
 
-PHONY += $(prunedirs)
-$(prunedirs): prune-%:
-	@echo "  PRUNE     $(subst prune-$(ROOTFS),,$@)"
-	@$(priv) rm -rf $(subst prune-,,$@)
-
-PHONY += $(prunefiles)
-$(prunefiles): prune-%:
-	@echo "  PRUNE     $(subst prune-$(ROOTFS),,$@)"
-	@$(priv) rm -f $(subst prune-,,$@)
-
-PHONY += _prune
-_prune: $(prunedirs) $(prunefiles)
-	@:
+PHONY += package-prune
+package-prune:
+	$(Q)$(MAKE) $(prune-pkg)=$(package)
 
 .PHONY: $(PHONY)
 

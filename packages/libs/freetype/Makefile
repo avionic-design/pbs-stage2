@@ -38,24 +38,20 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_package-install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) rm $(ROOTFS)$(prefix)/lib/libfreetype.la
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libfreetype.la
+
+stripfiles = \
 	$(prefix)/lib/libfreetype.so.6.3.18
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _package-install _strip
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

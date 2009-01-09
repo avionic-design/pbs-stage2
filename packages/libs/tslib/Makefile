@@ -42,7 +42,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -50,42 +50,20 @@ plugin = $(prefix)/lib/ts
 
 prunefiles = \
 	$(prefix)/lib/libts.la \
-	$(plugin)/arctic2.la \
-	$(plugin)/collie.la \
-	$(plugin)/corgi.la \
-	$(plugin)/dejitter.la \
-	$(plugin)/h3600.la \
-	$(plugin)/input.la \
-	$(plugin)/linear_h2200.la \
-	$(plugin)/linear.la \
-	$(plugin)/mk712.la \
-	$(plugin)/pthres.la \
-	$(plugin)/ucb1x00.la \
-	$(plugin)/variance.la
+	$(plugin)/*.la
 
 stripfiles = \
-	$(plugin)/variance.so \
-	$(plugin)/pthres.so \
-	$(plugin)/linear_h2200.so \
-	$(plugin)/mk712.so \
-	$(plugin)/linear.so \
-	$(plugin)/corgi.so \
-	$(plugin)/input.so \
-	$(plugin)/arctic2.so \
-	$(plugin)/dejitter.so \
-	$(plugin)/h3600.so \
-	$(plugin)/ucb1x00.so \
-	$(plugin)/collie.so \
-	$(prefix)/lib/libts-0.0.so.0.1.1 \
 	$(prefix)/bin/ts_test \
 	$(prefix)/bin/ts_print_raw \
 	$(prefix)/bin/ts_calibrate \
 	$(prefix)/bin/ts_harvest \
-	$(prefix)/bin/ts_print
+	$(prefix)/bin/ts_print \
+	$(prefix)/lib/libts-0.0.so.0.1.1 \
+	$(plugin)/*.so
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

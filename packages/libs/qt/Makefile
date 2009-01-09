@@ -51,10 +51,34 @@ install-args = \
 	RANLIB='$(RANLIB)' \
 	INSTALL_ROOT=$(ROOTFS)
 
+package-do-install:
+	cd $(pkgtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+
+prunefiles = \
+	$(prefix)/lib/libQt3Support.la \
+	$(prefix)/lib/libQt3Support.prl \
+	$(prefix)/lib/libQtSvg.la \
+	$(prefix)/lib/libQtSvg.prl \
+	$(prefix)/lib/libQtNetwork.la \
+	$(prefix)/lib/libQtNetwork.prl \
+	$(prefix)/lib/libQtCore.la \
+	$(prefix)/lib/libQtCore.prl \
+	$(prefix)/lib/libQtTest.la \
+	$(prefix)/lib/libQtTest.prl \
+	$(prefix)/lib/libQtGui.la \
+	$(prefix)/lib/libQtGui.prl \
+	$(prefix)/lib/libQtXml.la \
+	$(prefix)/lib/libQtXml.prl \
+	$(prefix)/lib/libQtScript.la \
+	$(prefix)/lib/libQtScript.prl \
+	$(prefix)/lib/libQtSql.la \
+	$(prefix)/lib/libQtSql.prl
+
 sover = $(VERSION)
 plugin-dir = $(prefix)/plugins
 
-libs-strip = \
+stripfiles = \
 	$(prefix)/lib/libQt3Support.so.$(sover) \
 	$(prefix)/lib/libQtCore.so.$(sover) \
 	$(prefix)/lib/libQtGui.so.$(sover) \
@@ -64,44 +88,18 @@ libs-strip = \
 	$(prefix)/lib/libQtSvg.so.$(sover) \
 	$(prefix)/lib/libQtTest.so.$(sover) \
 	$(prefix)/lib/libQtXml.so.$(sover) \
-	$(plugin-dir)/iconengines/libqsvgicon.so \
-	$(plugin-dir)/accessible/libqtaccessiblewidgets.so \
-	$(plugin-dir)/accessible/libqtaccessiblecompatwidgets.so \
-	$(plugin-dir)/sqldrivers/libqsqlite.so \
-	$(plugin-dir)/imageformats/libqjpeg.so \
-	$(plugin-dir)/imageformats/libqmng.so \
-	$(plugin-dir)/imageformats/libqico.so \
-	$(plugin-dir)/imageformats/libqsvg.so \
-	$(plugin-dir)/imageformats/libqtiff.so \
-	$(plugin-dir)/imageformats/libqgif.so \
-	$(tools-dir)/echoplugin/plugin/libechoplugin.so \
-	$(tools-dir)/styleplugin/styles/libsimplestyleplugin.so \
-	$(tools-dir)/plugandpaint/plugins/libpnp_extrafilters.so
+	$(plugin-dir)/iconengines/*.so \
+	$(plugin-dir)/accessible/*.so \
+	$(plugin-dir)/sqldrivers/*.so \
+	$(plugin-dir)/imageformats/*.so \
+	$(tools-dir)/echoplugin/plugin/*.so \
+	$(tools-dir)/styleplugin/styles/*.so \
+	$(tools-dir)/plugandpaint/plugins/*.so
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
+package-install: package-do-install package-cleanup
 	@:
-
-package-install: _package-install _strip
-	@:
-
-_package-install:
-	cd $(pkgtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQt3Support.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtSvg.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtNetwork.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtCore.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtTest.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtGui.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtXml.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtScript.{la,prl}
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libQtSql.{la,prl}
 
 package-clean:
 	@:

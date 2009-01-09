@@ -57,7 +57,7 @@ install-args = \
 LIBGCC = $(shell $(CC) --print-file-name=libgcc_s.so.1)
 plugin = $(prefix)/lib/gconv
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,install_bin,$(LIBGCC),$(ROOTFS)/lib/$(notdir $(LIBGCC)))
@@ -349,7 +349,7 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

@@ -35,28 +35,22 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
 sover = 5.6
 
-libs-strip = \
+prunefiles =
+stripfiles = \
 	$(prefix)/lib/libform.so.$(sover) \
 	$(prefix)/lib/libmenu.so.$(sover) \
 	$(prefix)/lib/libncurses.so.$(sover) \
 	$(prefix)/lib/libpanel.so.$(sover)
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _install _strip
+package-install: package-do-install package-strip
 	@:
 
 package-clean:

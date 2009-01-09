@@ -45,31 +45,24 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-mod-dir = $(prefix)/lib/alsa-lib
+plugin = $(prefix)/lib/alsa-lib
 sover = 2.0.0
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libasound.la
-	$(priv) find $(ROOTFS)$(mod-dir) -name '*.la' -exec rm {} +
 
-libs-strip = \
+prunefiles = \
+	$(prefix)/lib/libasound.la \
+	$(plugin)/smixer/*.la
+
+stripfiles = \
 	$(prefix)/lib/libasound.so.$(sover) \
-	$(mod-dir)/smixer/smixer-sbase.so \
-	$(mod-dir)/smixer/smixer-hda.so \
-	$(mod-dir)/smixer/smixer-ac97.so
+	$(plugin)/smixer/*.so
 
-libs-strip := $(patsubst %,strip-$(ROOTFS)%,$(libs-strip))
+include packages/cleanup.mk
 
-$(libs-strip): strip-%: %
-	@echo "  STRIP     $(subst $(ROOTFS),,$<)"
-	@$(priv) $(STRIP) $<
-
-_strip: $(libs-strip)
-	@:
-
-package-install: _install _strip
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:

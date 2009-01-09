@@ -30,8 +30,8 @@ install-args = \
 	MANSUFFIX=ssl \
 	INSTALL_PREFIX=$(ROOTFS)
 
-PHONY += _install
-_install:
+PHONY += package-do-install
+package-do-install:
 	cd $(pkgtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -55,7 +55,7 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: _install _strip
+package-install: package-do-install package-strip
 	$(priv) mv $(ROOTFS)/usr/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
 
 package-clean:

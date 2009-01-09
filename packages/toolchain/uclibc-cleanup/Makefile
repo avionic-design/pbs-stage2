@@ -49,7 +49,7 @@ prunefiles = \
 
 include packages/cleanup.mk
 
-package-install: _cleanup
+package-install: package-cleanup
 	@:
 
 package-clean:

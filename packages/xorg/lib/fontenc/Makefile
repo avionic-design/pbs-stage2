@@ -14,5 +14,5 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-post-install: _cleanup
+package-post-install: package-cleanup
 

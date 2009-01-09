@@ -44,7 +44,7 @@ package-build:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-_install:
+package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
@@ -54,17 +54,7 @@ prunefiles = \
 	$(prefix)/lib/libpango-1.0.la \
 	$(prefix)/lib/libpangocairo-1.0.la \
 	$(prefix)/lib/libpangoft2-1.0.la \
-	$(plugin)/pango-arabic-fc.la \
-	$(plugin)/pango-arabic-lang.la \
-	$(plugin)/pango-basic-fc.la \
-	$(plugin)/pango-hangul-fc.la \
-	$(plugin)/pango-hebrew-fc.la \
-	$(plugin)/pango-indic-fc.la \
-	$(plugin)/pango-indic-lang.la \
-	$(plugin)/pango-khmer-fc.la \
-	$(plugin)/pango-syriac-fc.la \
-	$(plugin)/pango-thai-fc.la \
-	$(plugin)/pango-tibetan-fc.la
+	$(plugin)/*.la
 
 sover = 0.2203.1
 
@@ -73,21 +63,11 @@ stripfiles = \
 	$(prefix)/lib/libpangocairo-1.0.so.$(sover) \
 	$(prefix)/lib/libpango-1.0.so.$(sover) \
 	$(prefix)/lib/libpangoft2-1.0.so.$(sover) \
-	$(plugin)/pango-arabic-fc.so \
-	$(plugin)/pango-arabic-lang.so \
-	$(plugin)/pango-basic-fc.so \
-	$(plugin)/pango-hangul-fc.so \
-	$(plugin)/pango-hebrew-fc.so \
-	$(plugin)/pango-indic-fc.so \
-	$(plugin)/pango-indic-lang.so \
-	$(plugin)/pango-khmer-fc.so \
-	$(plugin)/pango-syriac-fc.so \
-	$(plugin)/pango-thai-fc.so \
-	$(plugin)/pango-tibetan-fc.so
+	$(plugin)/*.so
 
 include packages/cleanup.mk
 
-package-install: _install _cleanup
+package-install: package-do-install package-cleanup
 	@:
 
 package-clean:
