@@ -9,14 +9,15 @@ INITRD_FILTER = \
 	-not -path '*/include*' \
 	-not -path '*/usr/share/man*' \
 	-not -name '*.a'
-#	-not -path '*/lib/modules*' \
 
 $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
-	(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
-	(cd $< && find $(INITRD_FILTER) | cpio -o -H newc) > $@
+	@echo '  CPIO      $@'
+	@(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
+	@(cd $< && find $(INITRD_FILTER) | cpio -o -H newc --quiet) > $@
 
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
-	gzip -c $< > $@
+	@echo '  GZIP      $@'
+	@gzip -c $< > $@
 
 PHONY += images
 images: u-boot.img u-boot.fit
@@ -34,13 +35,15 @@ EXEC_ADDR = 0xA0008000
 
 concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
 
-quiet_cmd_mk_uboot_img = MKIMAGE    $@
+quiet_cmd_mk_uboot_img = MKIMAGE   $@
       cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none \
-                                    -a $(LOAD_ADDR) -e $(EXEC_ADDR) \
-                                    -d $(call concat, :, $^) $@
+			 	-a $(LOAD_ADDR) -e $(EXEC_ADDR) \
+				-d $(call concat, :, $^) $@ \
+				> /dev/null 2>&1
 
-quiet_cmd_mk_uboot_fit = MKIMAGE    $@
-      cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@
+quiet_cmd_mk_uboot_fit = MKIMAGE   $@
+      cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@ \
+			 	> /dev/null 2>&1
 
 $(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
 	$(call cmd,mk_uboot_img)
