@@ -11,7 +11,6 @@ b439e04adab9b1e66e11f59c4331680da48f1722f2123123f7c16dfbed2c38dc  download/procp
 9b561fec2ed2e1199f6cd5dfec44b3d0fe78320bc4417b6dea5290cdd20acf1f  download/psmisc-22.3.tar.gz
 d3d70ebf15458ac15bd9930cbe516bedebfdb7ac4c679c456668eb0d56eddb2c  download/util-linux-2.12r.tar.gz
 036c694caa1aeb6639f7e2c1b10c78b7133e51b322a7123578e7709fe6190240  download/module-init-tools-3.2.tar.bz2
-26c99025b59e30779300b68adb764f824974d267a4d7cc1b347d14a2393f9fb4  download/bash-3.2.tar.gz
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
 7bbe277faa80c8d8d9cb96111db65fc0007d451784cc459207cd46b746a6f23a  download/openssh-4.6p1.tar.gz
 be955bef7a81d69222e929689e0de0ecf64c13dc5b15b2ee5696d5ef66fdeec0  download/sed-4.1.5.tar.gz
@@ -130,3 +129,4 @@ ff1f113b460c269b747e747bb0da6ce81c2d5fa748051e8f295de8c9242cde43  download/udev-
 f7ba41ce2d5eb8acad621a6a1373fbe1b19fa3fd7b623fd5566b19dd63c62bcd  download/glib-2.19.4.tar.bz2
 7131242042dbd631fbd83436f42aea1775e7c32f587fa4ada5a01df4c3ae8e8b  download/openssl-0.9.8j.tar.gz
 b2ec81e7d9fa5e24f67baccfd9af2755a7797a65cb4c3cad10d023867f2bd220  download/dbus-1.2.12.tar.gz
+de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-4.0-rc1.tar.gz

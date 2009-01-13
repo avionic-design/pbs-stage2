@@ -1,5 +1,5 @@
 PACKAGE = bash
-VERSION = 3.2
+VERSION = 4.0-rc1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -30,6 +30,7 @@ endif
 
 package-configure:
 	cp support/config.{guess,sub} $(pkgtree)/support
+	chmod a+x $(pkgtree)/configure
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
