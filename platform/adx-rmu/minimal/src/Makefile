@@ -14,6 +14,10 @@ dirs = \
 	/etc/rcS.d \
 	/lib \
 	/lib/lsb \
+	/media \
+	/media/sd-card \
+	/media/usb-storage \
+	/root \
 	/usr/share/udhcpc \
 	/var \
 	/var/run
@@ -33,7 +37,11 @@ files = \
 	/etc/modules \
 	/etc/passwd \
 	/etc/network/interfaces \
-	/lib/lsb/init-functions
+	/lib/lsb/init-functions \
+	/root/igmp-snooping.sh \
+	/root/perf-test.sh \
+	/root/vlan-port-based.sh \
+	/root/vlan-tag-based.sh
 
 scripts = \
 	/usr/share/udhcpc/default.script
