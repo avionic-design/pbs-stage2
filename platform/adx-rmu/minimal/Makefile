@@ -57,6 +57,7 @@ packages-y += core/usbutils
 packages-y += libs/libpcap
 packages-y += net/tcpdump
 packages-y += net/switchctrl
+packages-y += shells/bash
 
 include platform/common.mk
 
