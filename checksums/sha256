@@ -85,7 +85,6 @@ ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/video
 2dfd8eace1cafacc87b4055c57efeb771a740e24141d3f113de58c2a9eebd21f  download/libXext-1.0.4.tar.bz2
 95e7b7470e04f22c3ec8dc6d0b1fdd8944306cb5313c84c4545cd83abada26d0  download/strace-4.5.18.tar.bz2
 2edc7cc98fd217f6980d8ba0b3792beed4695d4e8429a11c7237faab04ab47f4  download/usbutils-0.73.tar.gz
-2c462e7727173e41795184bc7cf3fd7b019d36e83f00103faf578f004f046e54  download/xtrans-1.2.2.tar.bz2
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 5ac4d4a308b032727c61fd56db5a2eaadaedfbce5bc9dc504320bff9d696b002  download/xf86dgaproto-2.0.3.tar.bz2
 24274af4e800fd32702c5258dabe16eccf96f50a4b4feb4a14780c85f3e786df  download/xproto-7.0.14.tar.bz2
@@ -130,3 +129,4 @@ f7ba41ce2d5eb8acad621a6a1373fbe1b19fa3fd7b623fd5566b19dd63c62bcd  download/glib-
 b2ec81e7d9fa5e24f67baccfd9af2755a7797a65cb4c3cad10d023867f2bd220  download/dbus-1.2.12.tar.gz
 de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-4.0-rc1.tar.gz
 6e04bf990b2a8ccb0602c912246cc73a5bf92427c062380355708df605456ed9  download/switchctrl-0.1.6.tar.bz2
+a67a8b09d9530021e2bd4b93136f385e72a8d8e4f2c26a99aeb169bee88facf0  download/xtrans-1.2.3.tar.bz2
