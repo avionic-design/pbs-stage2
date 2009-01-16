@@ -39,6 +39,9 @@ ifeq ($(FLOAT),soft)
 	conf-args += --without-fp
 endif
 
+conf-vars += \
+	ac_cv_lib_cap_cap_init=no
+
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
