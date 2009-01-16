@@ -79,7 +79,6 @@ eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6
 0687e7279d78eb963ac34a3b06a0a6a1d1e9a26807ef4939cf4a2ad5f062e75a  download/gcc-core-4.3.2.tar.bz2
 254e2bc95ca397579634b2277c4dbe84ee47cb86d0aad6bfff8586107085bb80  download/gcc-g++-4.3.2.tar.bz2
 10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
-4ecf879eb69fc323669981f02aebff1e3045de415303e86ee67f2080cb3ee888  download/freetype-2.3.7.tar.bz2
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
 4d3cc49b6f4da6d396196054eca23a91df1a41001c736dcfd22fec5a5c7428c8  download/libXv-1.0.4.tar.bz2
 2dfd8eace1cafacc87b4055c57efeb771a740e24141d3f113de58c2a9eebd21f  download/libXext-1.0.4.tar.bz2
@@ -130,3 +129,4 @@ de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-
 6e04bf990b2a8ccb0602c912246cc73a5bf92427c062380355708df605456ed9  download/switchctrl-0.1.6.tar.bz2
 a67a8b09d9530021e2bd4b93136f385e72a8d8e4f2c26a99aeb169bee88facf0  download/xtrans-1.2.3.tar.bz2
 8334a973a69be16fec87db9709ab8d089e1305eb45bfc4679e524a4375b7ae80  download/xorg-server-1.5.99.901.tar.bz2
+8acd37c9160a5bdbe73ba925a4e534a5b6d164d95edd0335191c015aea5351e6  download/freetype-2.3.8.tar.bz2

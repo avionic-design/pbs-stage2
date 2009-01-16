@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.3.7
+VERSION = 2.3.8
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -41,13 +41,12 @@ install-args = \
 package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libfreetype.la
 
 prunefiles = \
 	$(prefix)/lib/libfreetype.la
 
 stripfiles = \
-	$(prefix)/lib/libfreetype.so.6.3.18
+	$(prefix)/lib/libfreetype.so.6.3.19
 
 include packages/cleanup.mk
 
