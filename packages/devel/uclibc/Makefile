@@ -48,6 +48,7 @@ package-build:
 install-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)/usr/include \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
