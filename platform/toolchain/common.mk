@@ -24,6 +24,9 @@ ifdef TOOLCHAIN
   endif
 
   # set optimization flags, etc.
+  OPTFLAGS =
+
+  # ARM
   ifeq ($(ARCH),arm)
     ifeq ($(ABI),eabi)
       ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
@@ -34,8 +37,11 @@ ifdef TOOLCHAIN
     OPTFLAGS = \
 	-g -Os -m$(ARCH) -march=$(ARCH_LONG) -mtune=$(TUNE) \
 	-Wa,-mcpu=$(CPU) -U$(ARCH)
-  else
-    OPTFLAGS =
+  endif
+
+  # Intel x86
+  ifeq ($(ARCH),i786)
+    OPTFLAGS = -O2 -g
   endif
 
   ifeq ($(FLOAT),soft)

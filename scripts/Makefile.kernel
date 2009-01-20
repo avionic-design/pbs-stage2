@@ -5,6 +5,7 @@ KBUILD_OUTPUT = $(buildtree)
 export KBUILD_OUTPUT
 
 ARCH := $(patsubst mips%,mips,$(ARCH))
+ARCH := $(patsubst i%86,x86,$(ARCH))
 
   image-blackfin = vmImage
 install-blackfin = install
