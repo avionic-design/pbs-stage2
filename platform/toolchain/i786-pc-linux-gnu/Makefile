@@ -1,6 +1,6 @@
 ARCH = i786
 OS = linux
-LIBC = uclibc
+LIBC = gnu
 TARGET = $(ARCH)-pc-$(OS)-$(LIBC)
 export ARCH OS LIBC TARGET
 
