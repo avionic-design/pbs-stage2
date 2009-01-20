@@ -39,6 +39,10 @@ conf-vars += \
 	ac_cv_sizeof_long_double=8 \
 	$(call set-args, LDFLAGS)
 
+ifeq ($(ARCH),i786)
+	conf-vars += CFLAGS='-march=prescott -O2 -g'
+endif
+
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
