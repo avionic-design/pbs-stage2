@@ -15,7 +15,7 @@ else
   ARCH = i786
   OS   = linux
   LIBC = uclibc
-  CROSS_COMPILE = $(ARCH)-pc-$(LIBC)-
+  CROSS_COMPILE = $(ARCH)-pc-$(OS)-$(LIBC)-
   export ARCH OS LIBC CROSS_COMPILE
 endif
 
@@ -63,7 +63,7 @@ platform-clean-files	+= $(PLATFORM)/kernel-release
 include platform/cleanup.mk
 
 PHONY += platform-clean
-platform-clean:
+platform-clean: platform-cleanup
 	$(Q)$(MAKE) $(custom)=platform/$(platform) rootfs-clean
 
 PHONY += platform-install
