@@ -10,16 +10,19 @@ ARCH := $(patsubst i%86,x86,$(ARCH))
   image-blackfin = vmImage
 install-blackfin = install
 
-ifneq ($(install-$(ARCH)),)
-  install-target = $(install-$(ARCH))
-else
-  install-target = zinstall
-endif
+  image-x86 = bzImage
+install-x86 = install
 
 ifneq ($(image-$(ARCH)),)
   image = $(image-$(ARCH))
 else
   image = zImage
+endif
+
+ifneq ($(install-$(ARCH)),)
+  install-target = $(install-$(ARCH))
+else
+  install-target = zinstall
 endif
 
 $(KBUILD_OUTPUT)/.config:
