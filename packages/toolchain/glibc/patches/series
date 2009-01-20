@@ -1,5 +1,6 @@
 lowlevellock.patch -p0
 arm-define-RTLD_SINGLE_THREAD_P.patch -p0
 arm-local-args6.patch -p0
-no-libgcc_eh.patch
+#no-libgcc_eh.patch
 linux-2.6.patch -p1
+binutils-2.18.50.0.3+.patch -p1

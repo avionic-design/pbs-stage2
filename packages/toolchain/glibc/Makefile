@@ -42,6 +42,10 @@ endif
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no
 
+ifeq ($(ARCH),i786)
+	conf-vars += CFLAGS='-march=prescott -O2 -g'
+endif
+
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
