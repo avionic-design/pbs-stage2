@@ -121,7 +121,6 @@ e197630958d6023b4951dda071503a62d7e4f316b7dd1d33e721770b9da8d733  download/atk-1
 927774408bd982dd246fb716bb2e646ab0708ce321b42c5e271dc98c1f5d1dc8  download/busybox-1.13.2.tar.bz2
 90ff7b0049e0805fe27697430e7ddbc15d9af28e1efa7decb2f7a133a1cc5933  download/gtk+-2.15.0.tar.bz2
 ff1f113b460c269b747e747bb0da6ce81c2d5fa748051e8f295de8c9242cde43  download/udev-136.tar.bz2
-f7ba41ce2d5eb8acad621a6a1373fbe1b19fa3fd7b623fd5566b19dd63c62bcd  download/glib-2.19.4.tar.bz2
 7131242042dbd631fbd83436f42aea1775e7c32f587fa4ada5a01df4c3ae8e8b  download/openssl-0.9.8j.tar.gz
 b2ec81e7d9fa5e24f67baccfd9af2755a7797a65cb4c3cad10d023867f2bd220  download/dbus-1.2.12.tar.gz
 de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-4.0-rc1.tar.gz
@@ -130,3 +129,4 @@ a67a8b09d9530021e2bd4b93136f385e72a8d8e4f2c26a99aeb169bee88facf0  download/xtran
 8334a973a69be16fec87db9709ab8d089e1305eb45bfc4679e524a4375b7ae80  download/xorg-server-1.5.99.901.tar.bz2
 8acd37c9160a5bdbe73ba925a4e534a5b6d164d95edd0335191c015aea5351e6  download/freetype-2.3.8.tar.bz2
 5374cbe80c288a366b307b5c9617c8e87248c800edcdb2eca0ea5c52ab9f13e5  download/linux-2.6.28.1.tar.bz2
+6c5ba38db8eb05d562f156a176fdfac96ddc260fd95447524659df60b5af8c8a  download/glib-2.19.5.tar.bz2
