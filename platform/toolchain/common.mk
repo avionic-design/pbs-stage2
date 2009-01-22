@@ -40,10 +40,15 @@ ifdef TOOLCHAIN
   endif
 
   # Intel x86
+  ifeq ($(ARCH),i686)
+    OPTFLAGS = -O2 -g
+  endif
+
   ifeq ($(ARCH),i786)
     OPTFLAGS = -O2 -g
   endif
 
+  # floating point variants
   ifeq ($(FLOAT),soft)
     ABIFLAGS += -msoft-float
   else
