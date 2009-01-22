@@ -25,22 +25,42 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
 	--with-headers=$(ROOTFS)$(prefix)/include \
-	--enable-addons=ports \
-	--disable-sanity-checks
+	--enable-addons=ports
 
 ifeq ($(FLOAT),soft)
 	conf-args += --without-fp
 endif
 
+#	libc_cv_$(ARCH)_tls=yes \
+
 conf-vars += \
+	ac_cv_lib_cap_cap_init=no \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes \
-	libc_cv_$(ARCH)_tls=yes \
-	ac_cv_sizeof_long_double=8 \
-	$(call set-args, LDFLAGS)
+	LDFLAGS='$(LDFLAGS)'
+
+ifeq ($(ARCH),arm)
+  ifeq ($(CPU),xscale)
+	conf-vars += \
+		ac_cv_sizeof_long_double=8
+  endif
+endif
+
+ifeq ($(ARCH),i686)
+	conf-vars += \
+		ac_cv_sizeof_long_double=8 \
+		CFLAGS='-march=i686 -O2 -g'
+endif
 
 ifeq ($(ARCH),i786)
-	conf-vars += CFLAGS='-march=prescott -O2 -g'
+	conf-vars += \
+		ac_cv_sizeof_long_double=8 \
+		CFLAGS='-march=prescott -O2 -g'
+endif
+
+ifeq ($(ARCH),x86_64)
+	conf-vars += \
+		ac_cv_sizeof_long_double=16
 endif
 
 package-configure:

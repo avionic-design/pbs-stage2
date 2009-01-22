@@ -1,0 +1,36 @@
+diff --git a/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h b/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+index f48e867..42e30c2 100644
+--- a/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
++++ b/ports/sysdeps/unix/sysv/linux/arm/nptl/lowlevellock.h
+@@ -25,6 +25,7 @@
+ #include <atomic.h>
+ #include <sysdep.h>
+ #include <kernel-features.h>
++#include <tls.h>		/* Need THREAD_*, and header.*.  */
+ 
+ #define FUTEX_WAIT		0
+ #define FUTEX_WAKE		1
+diff --git a/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h b/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+index 3fb2186..e2e917f 100644
+--- a/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
++++ b/ports/sysdeps/unix/sysv/linux/arm/nptl/sysdep-cancel.h
+@@ -73,6 +73,9 @@
+ # define DOCARGS_5	DOCARGS_4
+ # define UNDOCARGS_5	UNDOCARGS_4
+ 
++# define DOCARGS_6	DOCARGS_5
++# define UNDOCARGS_6	UNDOCARGS_5
++
+ # ifdef IS_IN_libpthread
+ #  define CENABLE	bl PLTJMP(__pthread_enable_asynccancel)
+ #  define CDISABLE	bl PLTJMP(__pthread_disable_asynccancel)
+@@ -132,3 +135,9 @@ extern int __local_multiple_threads attribute_hidden;
+   __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
+ 				   header.multiple_threads) == 0, 1)
+ #endif
++
++#ifndef __ASSEMBLER__
++# define RTLD_SINGLE_THREAD_P \
++  __builtin_expect (THREAD_GETMEM (THREAD_SELF, \
++				   header.multiple_threads) == 0, 1)
++#endif

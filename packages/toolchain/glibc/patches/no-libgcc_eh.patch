@@ -1,6 +1,8 @@
---- a/Makeconfig	2007-06-10 01:56:34.000000000 +0200
-+++ b/Makeconfig	2007-06-10 01:57:47.000000000 +0200
-@@ -524,12 +524,12 @@
+diff --git a/Makeconfig b/Makeconfig
+index e768cb1..1532684 100644
+--- a/Makeconfig
++++ b/Makeconfig
+@@ -524,12 +524,12 @@ else
    libunwind = -lunwind
  endif
  ifneq ($(have-as-needed),yes)
