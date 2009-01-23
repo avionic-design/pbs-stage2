@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.7
+VERSION = 2.9
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
@@ -33,11 +33,15 @@ endif
 
 #	libc_cv_$(ARCH)_tls=yes \
 
-conf-vars += \
+#conf-vars += \
 	ac_cv_lib_cap_cap_init=no \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes \
 	LDFLAGS='$(LDFLAGS)'
+
+conf-vars += \
+	libc_cv_forced_unwind=yes \
+	libc_cv_c_cleanup=yes
 
 ifeq ($(ARCH),arm)
   ifeq ($(CPU),xscale)

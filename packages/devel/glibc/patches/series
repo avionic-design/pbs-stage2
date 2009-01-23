@@ -1,3 +1,0 @@
-arm.patch -p1
-linux-2.6.patch -p1
-binutils-2.18.50.0.3+.patch -p1

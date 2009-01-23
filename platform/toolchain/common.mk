@@ -95,7 +95,7 @@ else
     ifeq ($(LIBC),uclibc)
       LIBC_VERSION ?= 0.9.30
     else
-      LIBC_VERSION ?= 2.7
+      LIBC_VERSION ?= 2.9
     endif
   endif
 
