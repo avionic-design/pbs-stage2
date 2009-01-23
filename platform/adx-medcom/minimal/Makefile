@@ -17,7 +17,7 @@ else
   ARCH = arm
   CPU  = xscale
   OS   = linux
-  LIBC = gnu
+  LIBC = uclibc
   ABI  = eabi
   CROSS_COMPILE = $(ARCH)-$(OS)-$(LIBC)$(ABI)-
   export ARCH OS LIBC ABI CROSS_COMPILE
