@@ -11,6 +11,8 @@ ifndef obj
   $(warning pbuild: Makefile.initrd is included improperly)
 endif
 
+ARCH := $(patsubst i%86,x86,$(ARCH))
+
 ifneq ($(wildcard scripts/Makefile.initrd-$(ARCH)),)
   include scripts/Makefile.initrd-$(ARCH)
 else

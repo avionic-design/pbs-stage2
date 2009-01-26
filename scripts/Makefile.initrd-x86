@@ -1,0 +1,30 @@
+KVER = $(shell cat $(PLATFORM)/kernel-version)
+KREL = $(shell cat $(PLATFORM)/kernel-release)
+priv = sudo
+
+$(ROOTFS): FORCE
+	$(Q)$(MAKE) platform=$(platform) install
+
+INITRD_FILTER = \
+	-not -path '*/include*' \
+	-not -path '*/usr/share/man*' \
+	-not -name '*.a'
+
+$(PLATFORM)/initrd.img: $(ROOTFS) FORCE
+	@echo '  CPIO      $@'
+	@(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
+	@(cd $< && find $(INITRD_FILTER) | cpio -o -H newc --quiet) > $@
+
+$(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
+	@echo '  GZIP      $@'
+	@gzip -c $< > $@
+
+PHONY += images
+images: $(PLATFORM)/initrd.gz
+	@:
+
+PHONY += FORCE
+FORCE:
+
+.PHONY: $(PHONY)
+
