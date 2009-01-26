@@ -1,0 +1,64 @@
+# build instructions for final GCC 4.3.3
+
+exec-prefix = $(prefix)/$(TARGET)
+
+conf-args = \
+	--target=$(TARGET) \
+	--prefix=$(prefix) \
+	--datadir=$(exec-prefix)/share \
+	--infodir=$(exec-prefix)/share/info \
+	--mandir=$(exec-prefix)/share/man \
+	--libexecdir=$(exec-prefix)/lib \
+	--includedir=$(exec-prefix)/include \
+	--with-gxx-include-dir=$(exec-prefix)/include/c++/$(VERSION) \
+	--program-prefix=$(TARGET)- \
+	--disable-libmudflap \
+	--disable-libssp \
+	--disable-static \
+	--enable-shared \
+	--enable-symvers=gnu \
+	--enable-languages=c,c++
+
+ifeq ($(variant),sysroot)
+  conf-args += \
+	--with-local-prefix=$(ROOTFS) \
+	--with-build-sysroot=$(ROOTFS) \
+	--with-sysroot=$(ROOTFS) \
+	--with-as=$(ROOTFS)$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
+else
+  conf-args += \
+	--with-local-prefix=$(prefix)
+endif
+
+ifeq ($(FLOAT),soft)
+  conf-args += --with-float=soft
+endif
+
+ifeq ($(MULTILIB),y)
+  conf-args += --enable-multilib
+else
+  conf-args += --disable-multilib
+endif
+
+package-configure:
+	mkdir -p $(pkgtree)/obj-$(HOST) && \
+		cd $(pkgtree)/obj-$(HOST) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
+
+build-args = \
+	MAKEFLAGS=
+
+package-build:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(MAKE) $(build-args)
+
+ifneq ($(ROOTFS),)
+  install-args = \
+	DESTDIR=$(ROOTFS)
+endif
+
+package-install:
+	cd $(pkgtree)/obj-$(HOST) && \
+		$(env) $(priv) $(MAKE) $(install-args) install
+

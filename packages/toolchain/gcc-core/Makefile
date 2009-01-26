@@ -7,7 +7,7 @@ ifeq ($(GCC_VERSION),snapshot)
 else
   VERSION  = $(GCC_VERSION)
   CONFIG   = $(VERSION)
-  LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
+  LOCATION = ftp://ftp.gwdg.de/pub/misc/gcc/releases/$(PACKAGE)-$(VERSION)
 endif
 
 TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2
