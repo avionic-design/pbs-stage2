@@ -1,3 +1,0 @@
-#arm-softfloat.patch -p1
-#cross-include.patch -p1
-#libgcc-shared.patch -p1

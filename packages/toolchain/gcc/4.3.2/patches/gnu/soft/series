@@ -1,2 +1,0 @@
-arm-softfloat.patch -p1
-libgcc-shared.patch -p1
