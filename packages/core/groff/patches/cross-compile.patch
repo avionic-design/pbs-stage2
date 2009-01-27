@@ -1,0 +1,24 @@
+diff --git a/Makefile.in b/Makefile.in
+index ccc46dc..89c7c8b 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -590,18 +590,7 @@ OTHERDIRS=\
+   tmac \
+   src/utils/afmtodit \
+   src/roff/grog \
+-  src/roff/nroff \
+-  doc \
+-  contrib/mm \
+-  contrib/chem \
+-  contrib/pic2graph \
+-  contrib/eqn2graph \
+-  contrib/grap2graph \
+-  contrib/groffer \
+-  contrib/mom \
+-  contrib/hdtbl \
+-  contrib/pdfmark \
+-  contrib/gdiffmk
++  src/roff/nroff
+ ALLDIRS=$(INCDIRS) $(LIBDIRS) $(PROGDIRS) \
+   $(DEVDIRS) $(XDEVDIRS) $(OTHERDEVDIRS) $(TTYDEVDIRS) $(OTHERDIRS)
+ EXTRADIRS=\
