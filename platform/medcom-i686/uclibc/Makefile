@@ -28,7 +28,7 @@ ROOTFS = $(PLATFORM)/rootfs
 export prefix priv ROOTFS
 
 LINUX_VERSION = git
-KERNEL_CONFIG = i386_defconfig
+KERNEL_CONFIG = nano_defconfig
 export LINUX_VERSION KERNEL_CONFIG
 
 # select kernel version
@@ -51,7 +51,7 @@ include platform/common.mk
 
 platform-clean-dirs	+= $(builddir)
 platform-clean-dirs	+= $(ROOTFS)
-platform-clean-file	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
+platform-clean-files	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
 platform-clean-files	+= $(PLATFORM)/u-boot.img $(PLATFORM)/zImage
 platform-clean-files	+= $(PLATFORM)/u-boot.fit $(PLATFORM)/multi.its
 platform-clean-files	+= $(PLATFORM)/System.map*

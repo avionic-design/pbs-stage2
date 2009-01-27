@@ -15,14 +15,12 @@ dirs = \
 	/lib \
 	/lib/lsb \
 	/media \
-	/media/sd-card \
-	/media/usb-storage \
 	/root \
 	/usr/share/udhcpc \
 	/var \
 	/var/run
 
-#files = \
+files = \
 	/etc/fstab \
 	/etc/group \
 	/etc/hostname \
@@ -37,16 +35,12 @@ dirs = \
 	/etc/modules \
 	/etc/passwd \
 	/etc/network/interfaces \
-	/lib/lsb/init-functions \
-	/root/igmp-snooping.sh \
-	/root/perf-test.sh \
-	/root/vlan-port-based.sh \
-	/root/vlan-tag-based.sh
+	/lib/lsb/init-functions
 
 scripts = \
 	/usr/share/udhcpc/default.script
 
-#links = \
+links = \
 	/etc/rcS.d/S02hostname \
 	/etc/rcS.d/S02mount \
 	/etc/rcS.d/S03mdev \
