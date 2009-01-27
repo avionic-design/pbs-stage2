@@ -1,5 +1,5 @@
 PACKAGE = libxml2
-VERSION = 2.7.2
+VERSION = 2.7.3
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
