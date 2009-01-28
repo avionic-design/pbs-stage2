@@ -8,8 +8,8 @@
 #    0 |       2 | Multicast & DHCP server
 #    1 |       4 | WLAN
 #    2 |       - | unused
-#    3 |       - | unused
-#    4 |       3 | Service Network 
+#    3 |       3 | Service Network
+#    4 |       - | (n/a, shared with 5)
 #    5 |       1 | Xanthos Ethernet MAC
 #
 
@@ -35,7 +35,7 @@ switchctrl -i eth0 phy 0x16 write 0x0e 0x2002
 switchctrl -i eth0 phy 0x16 write 0x0f 0x3003
 # set port memberships for VLAN 0 and 1
 switchctrl -i eth0 phy 0x17 write 0x00 0x2a29
-# add VLAN tags for VLAN 0 and 1 (ports 4 & 5)
+# add VLAN tags for VLAN 0 and 1 (ports 3 & 5)
 switchctrl -i eth0 phy 0x17 write 0x08 0x2828
 # remove VLAN tags for VLAN 0 (ports 0 and 1)
 switchctrl -i eth0 phy 0x17 write 0x10 0x0201
