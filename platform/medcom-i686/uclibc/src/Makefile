@@ -33,8 +33,9 @@ files = \
 	/etc/init.d/telnetd \
 	/etc/mdev.conf \
 	/etc/modules \
-	/etc/passwd \
 	/etc/network/interfaces \
+	/etc/passwd \
+	/etc/profile \
 	/lib/lsb/init-functions
 
 scripts = \
