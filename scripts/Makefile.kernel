@@ -6,13 +6,15 @@ export KBUILD_OUTPUT
 
 ARCH := $(patsubst mips%,mips,$(ARCH))
 ARCH := $(patsubst i%86,x86,$(ARCH))
-ARCH := $(patsubst x86_64,x86,$(ARCH))
 
   image-blackfin = vmImage
 install-blackfin = install
 
   image-x86 = bzImage
 install-x86 = install
+
+  image-x86_64 = bzImage
+install-x86_64 = install
 
 ifneq ($(image-$(ARCH)),)
   image = $(image-$(ARCH))
