@@ -1,7 +1,7 @@
 PACKAGE = ppp
 VERSION = 2.4.4
 
-LOCATION = ftp://us4.samba.org/pub/ppp
+LOCATION = ftp://ftp.samba.org/pub/ppp
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 ##############################################################################
@@ -9,26 +9,58 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 include packages/common.mk
 
 conf-args = \
+	--host=$(TARGET) \
 	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+conf-vars =
 
-build-vars = \
-	CC='$(CC)' \
-	COPTS='$(CFLAGS) -trigraphs' \
-	LDFLAGS='-shared $(LDFLAGS)'
+package-configure:
+#	mkdir -p $(pkgtree)/obj-$(TARGET) && \
+		cd $(pkgtree)/obj-$(TARGET) && \
+			$(env) ../configure $(conf-args) $(conf-vars)
+	cd $(pkgtree) && $(env) ./configure $(conf-args) $(conf-vars)
+
+build-args = \
+	CC='$(CC) $(CPPFLAGS) $(CFLAGS)'
 
 package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args) $(build-vars)
+#	cd $(pkgtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
+	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
 
-install-vars = \
+install-args = \
 	INSTROOT=$(ROOTFS) \
-	DESTDIR=$(ROOTFS)/usr
+	DESTDIR=$(ROOTFS)$(prefix)
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
+package-do-install:
+#	cd $(pkgtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+
+plugin = $(prefix)/lib/pppd/$(VERSION)
+
+prunefiles =
+stripfiles = \
+	$(plugin)/minconn.so \
+	$(plugin)/passprompt.so \
+	$(plugin)/passwordfd.so \
+	$(plugin)/radattr.so \
+	$(plugin)/radius.so \
+	$(plugin)/radrealms.so \
+	$(plugin)/winbind.so \
+	$(prefix)/sbin/chat \
+	$(prefix)/sbin/pppd \
+	$(prefix)/sbin/pppdump \
+	$(prefix)/sbin/pppoe-discovery \
+	$(prefix)/sbin/pppstats
+
+include packages/cleanup.mk
+
+package-install: package-do-install package-cleanup
+	@:
 
 package-clean:
 	@:

@@ -1,6 +1,8 @@
---- a/chat/Makefile.linux	2007-09-04 09:10:49.000000000 +0200
-+++ b/chat/Makefile.linux	2007-09-04 09:10:59.000000000 +0200
-@@ -25,7 +25,7 @@
+diff --git a/chat/Makefile.linux b/chat/Makefile.linux
+index 1065ac5..7f7a18b 100644
+--- a/chat/Makefile.linux
++++ b/chat/Makefile.linux
+@@ -25,7 +25,7 @@ chat.o:	chat.c
  
  install: chat
  	mkdir -p $(BINDIR) $(MANDIR)
@@ -9,9 +11,11 @@
  	$(INSTALL) -c -m 644 chat.8 $(MANDIR)
  
  clean:
---- a/pppd/Makefile.linux	2007-09-04 09:11:25.000000000 +0200
-+++ b/pppd/Makefile.linux	2007-09-04 09:11:37.000000000 +0200
-@@ -99,7 +99,7 @@
+diff --git a/pppd/Makefile.linux b/pppd/Makefile.linux
+index af8f6c6..495dbbc 100644
+--- a/pppd/Makefile.linux
++++ b/pppd/Makefile.linux
+@@ -99,7 +99,7 @@ ifdef USE_SRP
  CFLAGS	+= -DUSE_SRP -DOPENSSL -I/usr/local/ssl/include
  LIBS	+= -lsrp -L/usr/local/ssl/lib -lcrypto
  TARGETS	+= srp-entry
@@ -20,7 +24,7 @@
  MANPAGES += srp-entry.8
  EXTRACLEAN += srp-entry.o
  NEEDDES=y
-@@ -200,7 +200,7 @@
+@@ -200,7 +200,7 @@ all: $(TARGETS)
  install: pppd
  	mkdir -p $(BINDIR) $(MANDIR)
  	$(EXTRAINSTALL)
@@ -29,43 +33,11 @@
  	if chgrp pppusers $(BINDIR)/pppd 2>/dev/null; then \
  	  chmod o-rx,u+s $(BINDIR)/pppd; fi
  	$(INSTALL) -c -m 444 pppd.8 $(MANDIR)
---- a/pppdump/Makefile.linux	2007-09-04 09:12:29.000000000 +0200
-+++ b/pppdump/Makefile.linux	2007-09-04 09:12:40.000000000 +0200
-@@ -17,5 +17,5 @@
- 
- install:
- 	mkdir -p $(BINDIR) $(MANDIR)
--	$(INSTALL) -s -c pppdump $(BINDIR)
-+	$(INSTALL) -c pppdump $(BINDIR)
- 	$(INSTALL) -c -m 444 pppdump.8 $(MANDIR)
---- a/pppstats/Makefile.linux	2007-09-04 09:13:09.000000000 +0200
-+++ b/pppstats/Makefile.linux	2007-09-04 09:13:15.000000000 +0200
-@@ -22,7 +22,7 @@
- 
- install: pppstats
- 	-mkdir -p $(MANDIR)
--	$(INSTALL) -s -c pppstats $(BINDIR)
-+	$(INSTALL) -c pppstats $(BINDIR)
- 	$(INSTALL) -c -m 444 pppstats.8 $(MANDIR)
- 
- pppstats: $(PPPSTATSRCS)
---- a/pppd/plugins/rp-pppoe/Makefile.linux	2007-09-04 09:15:42.000000000 +0200
-+++ b/pppd/plugins/rp-pppoe/Makefile.linux	2007-09-04 09:15:55.000000000 +0200
-@@ -39,9 +39,9 @@
- 
- install: all
- 	$(INSTALL) -d -m 755 $(LIBDIR)
--	$(INSTALL) -s -c -m 4550 rp-pppoe.so $(LIBDIR)
-+	$(INSTALL) -c -m 4550 rp-pppoe.so $(LIBDIR)
- 	$(INSTALL) -d -m 755 $(BINDIR)
--	$(INSTALL) -s -c -m 555 pppoe-discovery $(BINDIR)
-+	$(INSTALL) -c -m 555 pppoe-discovery $(BINDIR)
- 
- clean:
- 	rm -f *.o *.so
---- a/pppd/plugins/radius/Makefile.linux	2007-09-04 09:16:38.000000000 +0200
-+++ b/pppd/plugins/radius/Makefile.linux	2007-09-04 09:16:57.000000000 +0200
-@@ -36,9 +36,9 @@
+diff --git a/pppd/plugins/radius/Makefile.linux b/pppd/plugins/radius/Makefile.linux
+index 24ed3e5..f0c0032 100644
+--- a/pppd/plugins/radius/Makefile.linux
++++ b/pppd/plugins/radius/Makefile.linux
+@@ -36,9 +36,9 @@ all: $(PLUGIN)
  
  install: all
  	$(INSTALL) -d -m 755 $(LIBDIR)
@@ -78,3 +50,43 @@
  	$(INSTALL) -c -m 444 pppd-radius.8 $(MANDIR)
  	$(INSTALL) -c -m 444 pppd-radattr.8 $(MANDIR)
  
+diff --git a/pppd/plugins/rp-pppoe/Makefile.linux b/pppd/plugins/rp-pppoe/Makefile.linux
+index b874a23..d07b358 100644
+--- a/pppd/plugins/rp-pppoe/Makefile.linux
++++ b/pppd/plugins/rp-pppoe/Makefile.linux
+@@ -39,9 +39,9 @@ rp-pppoe.so: libplugin.a plugin.o
+ 
+ install: all
+ 	$(INSTALL) -d -m 755 $(LIBDIR)
+-	$(INSTALL) -s -c -m 4550 rp-pppoe.so $(LIBDIR)
++	$(INSTALL) -c -m 4550 rp-pppoe.so $(LIBDIR)
+ 	$(INSTALL) -d -m 755 $(BINDIR)
+-	$(INSTALL) -s -c -m 555 pppoe-discovery $(BINDIR)
++	$(INSTALL) -c -m 555 pppoe-discovery $(BINDIR)
+ 
+ clean:
+ 	rm -f *.o *.so
+diff --git a/pppdump/Makefile.linux b/pppdump/Makefile.linux
+index ac028f6..3376dd8 100644
+--- a/pppdump/Makefile.linux
++++ b/pppdump/Makefile.linux
+@@ -17,5 +17,5 @@ clean:
+ 
+ install:
+ 	mkdir -p $(BINDIR) $(MANDIR)
+-	$(INSTALL) -s -c pppdump $(BINDIR)
++	$(INSTALL) -c pppdump $(BINDIR)
+ 	$(INSTALL) -c -m 444 pppdump.8 $(MANDIR)
+diff --git a/pppstats/Makefile.linux b/pppstats/Makefile.linux
+index cca6f0f..faa0f83 100644
+--- a/pppstats/Makefile.linux
++++ b/pppstats/Makefile.linux
+@@ -22,7 +22,7 @@ all: pppstats
+ 
+ install: pppstats
+ 	-mkdir -p $(MANDIR)
+-	$(INSTALL) -s -c pppstats $(BINDIR)
++	$(INSTALL) -c pppstats $(BINDIR)
+ 	$(INSTALL) -c -m 444 pppstats.8 $(MANDIR)
+ 
+ pppstats: $(PPPSTATSRCS)
