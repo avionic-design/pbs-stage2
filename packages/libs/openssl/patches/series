@@ -1,2 +1,4 @@
 no-rpath.patch -p1
 xscale-config.patch -p1
+unix-no-timeb.patch -p1
+extra-cflags.patch -p1

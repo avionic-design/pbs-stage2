@@ -1,0 +1,730 @@
+diff --git a/Makefile.shared b/Makefile.shared
+index 3183436..9ee9768 100644
+--- a/Makefile.shared
++++ b/Makefile.shared
+@@ -7,7 +7,7 @@
+ 
+ # CC contains the current compiler.  This one MUST be defined
+ CC=cc
+-CFLAGS=$(CFLAG)
++CFLAGS=$(EXTRA_CPPFLAGS) $(CFLAG) $(EXTRA_CFLAGS)
+ # LDFLAGS contains flags to be used when temporary object files (when building
+ # shared libraries) are created, or when an application is linked.
+ # SHARED_LDFLAGS contains flags to be used when the shared library is created.
+diff --git a/apps/Makefile b/apps/Makefile
+index 402981a..4154349 100644
+--- a/apps/Makefile
++++ b/apps/Makefile
+@@ -20,7 +20,7 @@ EXE_EXT=
+ 
+ SHLIB_TARGET=
+ 
+-CFLAGS= -DMONOLITH $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) -DMONOLITH $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile makeapps.com install.com
+ 
+diff --git a/crypto/Makefile b/crypto/Makefile
+index 6557f2b..6a14c20 100644
+--- a/crypto/Makefile
++++ b/crypto/Makefile
+@@ -23,7 +23,7 @@ RECURSIVE_MAKE=	[ -n "$(SDIRS)" ] && for i in $(SDIRS) ; do \
+ PEX_LIBS=
+ EX_LIBS=
+  
+-CFLAGS= $(INCLUDE) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDE) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDE) $(ASFLAG)
+ AFLAGS=$(ASFLAGS)
+ 
+diff --git a/crypto/aes/Makefile b/crypto/aes/Makefile
+index 9d174f4..795d1b9 100644
+--- a/crypto/aes/Makefile
++++ b/crypto/aes/Makefile
+@@ -13,7 +13,7 @@ AR=		ar r
+ 
+ AES_ASM_OBJ=aes_core.o aes_cbc.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/asn1/Makefile b/crypto/asn1/Makefile
+index 94a6885..5901e92 100644
+--- a/crypto/asn1/Makefile
++++ b/crypto/asn1/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/bf/Makefile b/crypto/bf/Makefile
+index 7f4f03e..a5ef4f7 100644
+--- a/crypto/bf/Makefile
++++ b/crypto/bf/Makefile
+@@ -15,7 +15,7 @@ BF_ENC=		bf_enc.o
+ # or use
+ #DES_ENC=	bx86-elf.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/bio/Makefile b/crypto/bio/Makefile
+index 1cd76ce..78cea6a 100644
+--- a/crypto/bio/Makefile
++++ b/crypto/bio/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/bn/Makefile b/crypto/bn/Makefile
+index f5e8f65..eb183d0 100644
+--- a/crypto/bn/Makefile
++++ b/crypto/bn/Makefile
+@@ -15,7 +15,7 @@ BN_ASM=		bn_asm.o
+ # or use
+ #BN_ASM=	bn86-elf.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/buffer/Makefile b/crypto/buffer/Makefile
+index 9e0f46e..007d338 100644
+--- a/crypto/buffer/Makefile
++++ b/crypto/buffer/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/camellia/Makefile b/crypto/camellia/Makefile
+index dfb1295..6a66eb6 100644
+--- a/crypto/camellia/Makefile
++++ b/crypto/camellia/Makefile
+@@ -13,7 +13,7 @@ AR=		ar r
+ 
+ CAMELLIA_ASM_OBJ=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/cast/Makefile b/crypto/cast/Makefile
+index 2e026db..be98ec4 100644
+--- a/crypto/cast/Makefile
++++ b/crypto/cast/Makefile
+@@ -13,7 +13,7 @@ AR=		ar r
+ 
+ CAST_ENC=c_enc.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/cms/Makefile b/crypto/cms/Makefile
+index 1c137e0..6976ee5 100644
+--- a/crypto/cms/Makefile
++++ b/crypto/cms/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/comp/Makefile b/crypto/comp/Makefile
+index 5d364b8..177081d 100644
+--- a/crypto/comp/Makefile
++++ b/crypto/comp/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/conf/Makefile b/crypto/conf/Makefile
+index ccd0721..3e3d31e 100644
+--- a/crypto/conf/Makefile
++++ b/crypto/conf/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/des/Makefile b/crypto/des/Makefile
+index 786e688..75bd72c 100644
+--- a/crypto/des/Makefile
++++ b/crypto/des/Makefile
+@@ -15,7 +15,7 @@ DES_ENC=	des_enc.o fcrypt_b.o
+ # or use
+ #DES_ENC=	dx86-elf.o yx86-elf.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/dh/Makefile b/crypto/dh/Makefile
+index d01fa96..9fa2f2d 100644
+--- a/crypto/dh/Makefile
++++ b/crypto/dh/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST= dhtest.c
+diff --git a/crypto/dsa/Makefile b/crypto/dsa/Makefile
+index 2cc45cd..22a9275 100644
+--- a/crypto/dsa/Makefile
++++ b/crypto/dsa/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=dsatest.c
+diff --git a/crypto/dso/Makefile b/crypto/dso/Makefile
+index 52f1528..3f1abc6 100644
+--- a/crypto/dso/Makefile
++++ b/crypto/dso/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/ec/Makefile b/crypto/ec/Makefile
+index b5bbc9f..4d4cc7e 100644
+--- a/crypto/ec/Makefile
++++ b/crypto/ec/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=ectest.c
+diff --git a/crypto/ecdh/Makefile b/crypto/ecdh/Makefile
+index 7a7b618..822e4f4 100644
+--- a/crypto/ecdh/Makefile
++++ b/crypto/ecdh/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g -Wall
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=ecdhtest.c
+diff --git a/crypto/ecdsa/Makefile b/crypto/ecdsa/Makefile
+index 4865f3c..aa9973c 100644
+--- a/crypto/ecdsa/Makefile
++++ b/crypto/ecdsa/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g -Wall
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=ecdsatest.c
+diff --git a/crypto/engine/Makefile b/crypto/engine/Makefile
+index 0cc3722..f299cf3 100644
+--- a/crypto/engine/Makefile
++++ b/crypto/engine/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST= enginetest.c
+diff --git a/crypto/err/Makefile b/crypto/err/Makefile
+index 91d1379..475b2d7 100644
+--- a/crypto/err/Makefile
++++ b/crypto/err/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/evp/Makefile b/crypto/evp/Makefile
+index c204f84..af71624 100644
+--- a/crypto/evp/Makefile
++++ b/crypto/evp/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=evp_test.c
+diff --git a/crypto/hmac/Makefile b/crypto/hmac/Makefile
+index 5cfa37d..9b5fa2a 100644
+--- a/crypto/hmac/Makefile
++++ b/crypto/hmac/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=hmactest.c
+diff --git a/crypto/idea/Makefile b/crypto/idea/Makefile
+index 55c0d4d..18335ed 100644
+--- a/crypto/idea/Makefile
++++ b/crypto/idea/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=ideatest.c
+diff --git a/crypto/jpake/Makefile b/crypto/jpake/Makefile
+index a4a1402..475ce0a 100644
+--- a/crypto/jpake/Makefile
++++ b/crypto/jpake/Makefile
+@@ -1,7 +1,7 @@
+ DIR=jpake
+ TOP=../..
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ LIB=$(TOP)/libcrypto.a
+ LIBOBJ=jpake.o jpake_err.o
+diff --git a/crypto/krb5/Makefile b/crypto/krb5/Makefile
+index 8efb9e8..24958a7 100644
+--- a/crypto/krb5/Makefile
++++ b/crypto/krb5/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/lhash/Makefile b/crypto/lhash/Makefile
+index 35f0932..4779880 100644
+--- a/crypto/lhash/Makefile
++++ b/crypto/lhash/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/md2/Makefile b/crypto/md2/Makefile
+index 7f43321..d2867fc 100644
+--- a/crypto/md2/Makefile
++++ b/crypto/md2/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=md2test.c
+diff --git a/crypto/md4/Makefile b/crypto/md4/Makefile
+index 0bc4896..6a922af 100644
+--- a/crypto/md4/Makefile
++++ b/crypto/md4/Makefile
+@@ -11,7 +11,7 @@ CFLAG=-g
+ MAKEFILE=       Makefile
+ AR=             ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=md4test.c
+diff --git a/crypto/md5/Makefile b/crypto/md5/Makefile
+index 3c450fc..ce669e0 100644
+--- a/crypto/md5/Makefile
++++ b/crypto/md5/Makefile
+@@ -13,7 +13,7 @@ AR=             ar r
+ 
+ MD5_ASM_OBJ=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/mdc2/Makefile b/crypto/mdc2/Makefile
+index ea25688..d5250e5 100644
+--- a/crypto/mdc2/Makefile
++++ b/crypto/mdc2/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST= mdc2test.c
+diff --git a/crypto/objects/Makefile b/crypto/objects/Makefile
+index 25e8b23..3585284 100644
+--- a/crypto/objects/Makefile
++++ b/crypto/objects/Makefile
+@@ -11,7 +11,7 @@ MAKEFILE=	Makefile
+ AR=		ar r
+ PERL=		perl
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/ocsp/Makefile b/crypto/ocsp/Makefile
+index 30a00b3..d100a35 100644
+--- a/crypto/ocsp/Makefile
++++ b/crypto/ocsp/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/pem/Makefile b/crypto/pem/Makefile
+index 669f366..024ffe6 100644
+--- a/crypto/pem/Makefile
++++ b/crypto/pem/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/pkcs12/Makefile b/crypto/pkcs12/Makefile
+index eed226b..7f44c5e 100644
+--- a/crypto/pkcs12/Makefile
++++ b/crypto/pkcs12/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/pkcs7/Makefile b/crypto/pkcs7/Makefile
+index 790d8ed..3d8caff 100644
+--- a/crypto/pkcs7/Makefile
++++ b/crypto/pkcs7/Makefile
+@@ -12,8 +12,8 @@ AR=		ar r
+ 
+ PEX_LIBS=
+ EX_LIBS=
+- 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/pqueue/Makefile b/crypto/pqueue/Makefile
+index 36bfc34..32c9c4c 100644
+--- a/crypto/pqueue/Makefile
++++ b/crypto/pqueue/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/rand/Makefile b/crypto/rand/Makefile
+index 3079430..f92819b 100644
+--- a/crypto/rand/Makefile
++++ b/crypto/rand/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST= randtest.c
+diff --git a/crypto/rc2/Makefile b/crypto/rc2/Makefile
+index 4b6292b..e784d0d 100644
+--- a/crypto/rc2/Makefile
++++ b/crypto/rc2/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=rc2test.c
+diff --git a/crypto/rc4/Makefile b/crypto/rc4/Makefile
+index f0bd767..62d802e 100644
+--- a/crypto/rc4/Makefile
++++ b/crypto/rc4/Makefile
+@@ -12,7 +12,7 @@ AR=		ar r
+ 
+ RC4_ENC=rc4_enc.o rc4_skey.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/rc5/Makefile b/crypto/rc5/Makefile
+index b4e21c9..e316ed4 100644
+--- a/crypto/rc5/Makefile
++++ b/crypto/rc5/Makefile
+@@ -15,7 +15,7 @@ RC5_ENC=		rc5_enc.o
+ # or use
+ #DES_ENC=	r586-elf.o
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/ripemd/Makefile b/crypto/ripemd/Makefile
+index 6145f13..c175888 100644
+--- a/crypto/ripemd/Makefile
++++ b/crypto/ripemd/Makefile
+@@ -13,7 +13,7 @@ AR=             ar r
+ 
+ RIP_ASM_OBJ=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/rsa/Makefile b/crypto/rsa/Makefile
+index 7b1fd64..a879fca 100644
+--- a/crypto/rsa/Makefile
++++ b/crypto/rsa/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=rsa_test.c
+diff --git a/crypto/seed/Makefile b/crypto/seed/Makefile
+index ffaeb84..8b2adfe 100644
+--- a/crypto/seed/Makefile
++++ b/crypto/seed/Makefile
+@@ -11,7 +11,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/sha/Makefile b/crypto/sha/Makefile
+index f4741b9..6817b73 100644
+--- a/crypto/sha/Makefile
++++ b/crypto/sha/Makefile
+@@ -13,7 +13,7 @@ AR=             ar r
+ 
+ SHA1_ASM_OBJ=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
+ 
+diff --git a/crypto/stack/Makefile b/crypto/stack/Makefile
+index 489a77b..42d5024 100644
+--- a/crypto/stack/Makefile
++++ b/crypto/stack/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/store/Makefile b/crypto/store/Makefile
+index c9f5d00..7316120 100644
+--- a/crypto/store/Makefile
++++ b/crypto/store/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ #TEST= storetest.c
+diff --git a/crypto/txt_db/Makefile b/crypto/txt_db/Makefile
+index 87e57b4..5591d07 100644
+--- a/crypto/txt_db/Makefile
++++ b/crypto/txt_db/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ TEST=
+diff --git a/crypto/ui/Makefile b/crypto/ui/Makefile
+index 4755e20..4a0a0fc 100644
+--- a/crypto/ui/Makefile
++++ b/crypto/ui/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile
+ #TEST= uitest.c
+diff --git a/crypto/x509/Makefile b/crypto/x509/Makefile
+index 464752b..44c0582 100644
+--- a/crypto/x509/Makefile
++++ b/crypto/x509/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/crypto/x509v3/Makefile b/crypto/x509v3/Makefile
+index e71dc42..b131f05 100644
+--- a/crypto/x509v3/Makefile
++++ b/crypto/x509v3/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README
+ TEST=
+diff --git a/engines/Makefile b/engines/Makefile
+index 002d40c..93f74ae 100644
+--- a/engines/Makefile
++++ b/engines/Makefile
+@@ -13,7 +13,7 @@ AR=		ar r
+ PEX_LIBS=
+ EX_LIBS=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile engines.com install.com engine_vector.mar
+ TEST=
+diff --git a/ssl/Makefile b/ssl/Makefile
+index 46c0659..14b8d17 100644
+--- a/ssl/Makefile
++++ b/ssl/Makefile
+@@ -12,7 +12,7 @@ AR=		ar r
+ # KRB5 stuff
+ KRB5_INCLUDES=
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile README ssl-lib.com install.com
+ TEST=ssltest.c
+diff --git a/test/Makefile b/test/Makefile
+index 73d6444..328a32a 100644
+--- a/test/Makefile
++++ b/test/Makefile
+@@ -16,7 +16,7 @@ LIBKRB5=
+ PEX_LIBS=
+ EX_LIBS= #-lnsl -lsocket
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ 
+ GENERAL=Makefile maketests.com \
+ 	tests.com testenc.com tx509.com trsa.com tcrl.com tsid.com treq.com \

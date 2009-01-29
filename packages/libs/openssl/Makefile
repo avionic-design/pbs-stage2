@@ -8,19 +8,37 @@ TARBALLS = $(PACKAGE_FULLNAME).tar.gz
 
 include packages/common.mk
 
+ARCH := $(patsubst i%86,x86,$(ARCH))
+
 conf-args = \
 	shared \
 	--prefix=$(prefix) \
 	--openssldir=$(prefix)/lib/ssl \
-	no-idea no-mdc2 no-rc5 zlib-dynamic \
-	linux-xscale
+	no-idea no-mdc2 no-rc5 zlib-dynamic
+
+ifeq ($(ARCH),arm)
+  ifeq ($(CPU),xscale)
+    config = linux-xscale
+  else
+  endif
+endif
+
+ifeq ($(ARCH),x86)
+  config = linux-generic32
+endif
+
+ifndef config
+  $(error no configuration defined)
+endif
 
 package-configure:
-	cd $(pkgtree) && $(env) ./Configure $(conf-args)
+	cd $(pkgtree) && $(env) ./Configure $(conf-args) $(config)
 
 build-vars = \
-	$(call set-args, CC LD LDFLAGS) \
-	EXTRA_CFLAG='$(CFLAGS)'
+	CC='$(CC)' \
+	LD='$(LD)' \
+	EXTRA_CPPFLAGS='$(CPPFLAGS)' \
+	EXTRA_CFLAGS='$(CFLAGS)'
 
 package-build:
 	cd $(pkgtree) && $(env) $(MAKE) $(build-args) $(build-vars)
