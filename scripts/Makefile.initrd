@@ -12,6 +12,7 @@ ifndef obj
 endif
 
 ARCH := $(patsubst i%86,x86,$(ARCH))
+ARCH := $(subst x86_64,x86,$(ARCH))
 
 ifneq ($(wildcard scripts/Makefile.initrd-$(ARCH)),)
   include scripts/Makefile.initrd-$(ARCH)
