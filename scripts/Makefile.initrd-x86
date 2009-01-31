@@ -18,7 +18,7 @@ $(PLATFORM)/initrd.img: $(ROOTFS) FORCE
 
 $(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
 	@echo '  GZIP      $@'
-	@gzip -c $< > $@
+	@cat $< | gzip -c9 > $@
 
 PHONY += images
 images: $(PLATFORM)/initrd.gz
