@@ -34,7 +34,7 @@ conf-args = \
 	--enable-symvers=gnu \
 	--enable-languages=c
 
-ifeq ($(variant),sysroot)
+ifneq ($(findstring sysroot,$(variant)),)
   conf-args += \
 	--with-local-prefix=$(ROOTFS) \
 	--with-build-sysroot=$(ROOTFS) \
@@ -50,7 +50,7 @@ ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
 endif
 
-ifeq ($(MULTILIB),y)
+ifneq ($(findstring multilib,$(variant)),)
   conf-args += --enable-multilib
 else
   conf-args += --disable-multilib

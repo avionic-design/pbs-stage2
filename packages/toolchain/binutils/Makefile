@@ -22,14 +22,20 @@ conf-args = \
 	--datadir=$(exec-prefix)/share \
 	--infodir=$(exec-prefix)/share/info \
 	--mandir=$(exec-prefix)/share/man \
-	--libdir=$(exec-prefix)/lib
-#	--exec-prefix=$(exec-prefix) \
+	--libdir=$(exec-prefix)/lib \
+	--disable-nls
 
-ifeq ($(variant),sysroot)
+ifneq ($(findstring sysroot,$(variant)),)
   conf-args += \
 	--with-sysroot=$(PLATFORM)
-#	--enable-multilib \
-#	--disable-nls
+endif
+
+ifneq ($(findstring multilib,$(variant)),)
+  conf-args += \
+	--enable-multilib
+else
+  conf-args += \
+	--disable-multilib
 endif
 
 package-configure:

@@ -8,14 +8,14 @@ export ROOTFS tprefix prefix variant
 
 # assembler, compiler and linker flags
 ifdef TOOLCHAIN
-  ifeq ($(variant),sysroot)
+  ifneq ($(findstring sysroot,$(variant)),)
     TOOLCHAIN_ROOT = $(srctree)/platform/toolchain/$(TOOLCHAIN)
   endif
 
   CROSS_COMPILE = $(TOOLCHAIN_ROOT)$(tprefix)/bin/$(TARGET)-
   export TOOLCHAIN_ROOT CROSS_COMPILE
 
-  ifeq ($(variant),sysroot)
+  ifneq ($(findstring sysroot,$(variant)),)
     SYSROOT ?= $(ROOTFS)
     export SYSROOT
 
@@ -69,7 +69,7 @@ ifdef TOOLCHAIN
 	$(ABIFLAGS) \
 	$(OPTFLAGS)
 
-  ifeq ($(variant),sysroot)
+  ifneq ($(findstring sysroot,$(variant)),)
     LDFLAGS = --sysroot $(SYSROOT)
   else
     LDFLAGS =
