@@ -6,7 +6,7 @@ To build a platform, enter the following command:
 	$ make platform=<platform-name> install
 
 Where <platform-name> is the path below the platform subdirectory of the
-platform you wish to build (e.g. platform=add-abox/initrd).
+platform you wish to build (e.g. platform=adx-abox/initrd).
 
 A rootfs subdirectory will be created where all the software for the selected
 platform will be installed.
