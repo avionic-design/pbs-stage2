@@ -50,7 +50,7 @@ $(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz
 
 $(PLATFORM)/multi.its: $(PLATFORM)/multi.its.in $(PLATFORM)/kernel-version
 	$(Q)sed -e 's/@KVER@/$(KVER)/g' $< > $@
-	$(if $(Q),$(Q)echo '  GEN        $@')
+	$(if $(Q),$(Q)echo '  GEN       $@')
 
 $(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinuz-$(KREL) $(PLATFORM)/initrd.gz $(PLATFORM)/multi.its
 	$(call cmd,mk_uboot_fit)
