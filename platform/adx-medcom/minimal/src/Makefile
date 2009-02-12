@@ -20,7 +20,8 @@ files = \
 scripts =
 
 progs = \
-	/root/i2c-card-dump
+	/root/i2c-card-dump \
+	/root/teletext-dump
 
 links = \
 	/init
