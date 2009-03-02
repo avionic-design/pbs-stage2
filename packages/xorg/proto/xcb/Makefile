@@ -1,5 +1,5 @@
 PACKAGE = xcb-proto
-VERSION = 1.3
+VERSION = 1.4
 
 LOCATION = http://xcb.freedesktop.org/dist
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
