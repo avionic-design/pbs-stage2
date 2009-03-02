@@ -1,5 +1,5 @@
 PACKAGE = libxcb
-VERSION = 1.1.93
+VERSION = 1.2
 
 LOCATION = http://xcb.freedesktop.org/dist
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
