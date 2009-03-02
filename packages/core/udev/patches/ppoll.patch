@@ -1,0 +1,19 @@
+diff --git a/udev/udevd.c b/udev/udevd.c
+index ee3d6f5..4f117a8 100644
+--- a/udev/udevd.c
++++ b/udev/udevd.c
+@@ -965,8 +965,14 @@ int main(int argc, char *argv[])
+ 			inotify_poll->events = POLLIN;
+ 		}
+ 
++#if defined(SYS_ppoll)
+ 		fdcount = ppoll(pfd, nfds, NULL, &orig_mask);
+ 		sigprocmask(SIG_SETMASK, &orig_mask, NULL);
++#else
++		sigprocmask(SIG_SETMASK, &orig_mask, &blocked_mask);
++		fdcount = poll(pfd, nfds, -1);
++		sigprocmask(SIG_SETMASK, &blocked_mask, NULL);
++#endif
+ 		if (fdcount < 0) {
+ 			if (errno == EINTR)
+ 				goto handle_signals;
