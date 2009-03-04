@@ -1,1 +1,2 @@
+ltmain-sysroot.patch -p1
 syslog.patch -p1
