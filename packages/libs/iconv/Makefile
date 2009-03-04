@@ -24,8 +24,6 @@ conf-vars = \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/build-aux/ltmain.sh
-	cp support/ltmain-sysroot.sh $(pkgtree)/libcharset/build-aux/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
