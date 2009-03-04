@@ -77,7 +77,6 @@ eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6
 10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
 4d3cc49b6f4da6d396196054eca23a91df1a41001c736dcfd22fec5a5c7428c8  download/libXv-1.0.4.tar.bz2
-2dfd8eace1cafacc87b4055c57efeb771a740e24141d3f113de58c2a9eebd21f  download/libXext-1.0.4.tar.bz2
 95e7b7470e04f22c3ec8dc6d0b1fdd8944306cb5313c84c4545cd83abada26d0  download/strace-4.5.18.tar.bz2
 2edc7cc98fd217f6980d8ba0b3792beed4695d4e8429a11c7237faab04ab47f4  download/usbutils-0.73.tar.gz
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
@@ -131,3 +130,4 @@ d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextp
 4fe14659ed0c5ceacec25ad6067a9521f85852280bc39c0375f5000ab133cb3f  download/libxcb-1.2.tar.bz2
 fd8cd0bc3e94d7416e6af9eddfa909b0e64246e0d2bb41c00f4e02bd85c76bee  download/xproto-7.0.15.tar.bz2
 e4863cdf5d471763806e9bcae25ea47606a56cd91a5546a34c093aa3de181051  download/libX11-1.2.tar.bz2
+1280af98466cb4484a89858ede3347ba9d7785baeb80b11f2066142dc2317d97  download/libXext-1.0.5.tar.bz2
