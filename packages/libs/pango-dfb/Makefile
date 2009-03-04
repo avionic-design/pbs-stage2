@@ -1,7 +1,7 @@
 PACKAGE = pango
-VERSION = 1.22.4
+VERSION = 1.23.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.22
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.23
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = Layout and rendering of internationalized text
@@ -29,7 +29,6 @@ conf-vars = \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -56,7 +55,7 @@ prunefiles = \
 	$(prefix)/lib/libpangoft2-1.0.la \
 	$(plugin)/*.la
 
-sover = 0.2203.1
+sover = 0.2300.0
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \

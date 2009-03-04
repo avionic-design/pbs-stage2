@@ -2,7 +2,7 @@ diff --git a/pango/Makefile.am b/pango/Makefile.am
 index 9b31610..e91c78e 100644
 --- a/pango/Makefile.am
 +++ b/pango/Makefile.am
-@@ -125,10 +125,11 @@ pangoinclude_HEADERS =	   \
+@@ -129,10 +129,11 @@ pangoinclude_HEADERS =	   \
  	pango-features.h   \
  	pango-enum-types.h
  
@@ -19,7 +19,7 @@ diff --git a/pango/Makefile.in b/pango/Makefile.in
 index f5afafd..a353d3f 100644
 --- a/pango/Makefile.in
 +++ b/pango/Makefile.in
-@@ -1400,10 +1399,11 @@ uninstall-am: uninstall-aliasDATA uninstall-binPROGRAMS \
+@@ -1432,10 +1431,11 @@ uninstall-am: uninstall-aliasDATA uninstall-binPROGRAMS \
  pango-win32-res.o: pango.rc
  	$(WINDRES) $< $@
  
