@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.1.99.2
+VERSION = 1.2
 
 include packages/xorg/lib/Makefile
 

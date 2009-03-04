@@ -84,7 +84,6 @@ db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newli
 5ac4d4a308b032727c61fd56db5a2eaadaedfbce5bc9dc504320bff9d696b002  download/xf86dgaproto-2.0.3.tar.bz2
 4c71e92c4ace100bc7c5cdb0a9b603f0452df40f8f344f7570ad10e2b6bd28d2  download/DirectFB-1.3.0.tar.gz
 b6c5765a3994e59053cb3b46741b858bb56ea868baa5c48fba7e5c36ca4ae95d  download/libpciaccess-0.10.5.tar.bz2
-b910fa3ce9fd6c571ce13ab536284d5e532ec022e247da5f553eae4c0b5c25b1  download/libX11-1.1.99.2.tar.bz2
 8ab16102fdf0a53c922483c0629bfd435263cb6c20374a64c9646fcf345457b8  download/libjpeg-6b.tar.bz2
 67e7e6b983cd2caa163f177d5196282434ae1e18b7270495cd6c65f5c1549555  download/uClibc-0.9.30.tar.bz2
 c0c10944841e9a79f29d409c6f8da0d1b1af0403eb3819c82c788dfa6a180b3e  download/libxslt-1.1.24.tar.gz
@@ -131,3 +130,4 @@ d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextp
 222c5e759aa33dc1f810b1f3c17189f365ffa69535ad41f924f1736e4aa9c895  download/randrproto-1.2.99.4.tar.bz2
 4fe14659ed0c5ceacec25ad6067a9521f85852280bc39c0375f5000ab133cb3f  download/libxcb-1.2.tar.bz2
 fd8cd0bc3e94d7416e6af9eddfa909b0e64246e0d2bb41c00f4e02bd85c76bee  download/xproto-7.0.15.tar.bz2
+e4863cdf5d471763806e9bcae25ea47606a56cd91a5546a34c093aa3de181051  download/libX11-1.2.tar.bz2
