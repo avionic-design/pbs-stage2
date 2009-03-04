@@ -27,7 +27,6 @@ conf-vars = \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	cd $(pkgtree) && \
 		$(env) ./configure $(conf-args) $(conf-vars)
 
