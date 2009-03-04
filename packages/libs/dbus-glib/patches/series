@@ -1,2 +1,2 @@
-no-examples.patch -p1
-no-tools.patch -p1
+ltmain-sysroot.patch -p1
+cross-compile.patch -p1
