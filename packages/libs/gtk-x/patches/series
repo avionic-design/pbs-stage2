@@ -1,1 +1,2 @@
-000-directfb.patch -p1
+ltmain-sysroot.patch -p1
+cross-compile.patch -p1

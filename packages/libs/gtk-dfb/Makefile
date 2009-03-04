@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.15.2
+VERSION = 2.15.5
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.15
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -35,9 +35,7 @@ conf-vars = \
 	gio_can_sniff=yes
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	cp support/config.{guess,sub} $(pkgtree)
-	cd $(pkgtree) && autoreconf
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -58,7 +56,7 @@ package-do-install:
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1502.0
+sover  = 0.1505.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-directfb-2.0.la \
