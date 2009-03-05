@@ -70,7 +70,6 @@ a99e244fd78babb95ea3c9a5c88b964994edaa1d15fd8dde5b4067801e23f0cd  download/libic
 8f829aa8f4de91a8db203d07db907a3db17674b06576e521b92ba9a4470de9b1  download/icu4c-4.0d02.tar.bz2
 bbfac3ed6bfbc2823d3775ebb931087371e142bb0e9bb1bee51a76a6e0078690  download/libmad-0.15.1b.tar.gz
 c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2dec-0.4.1.tar.gz
-d9a7c6f5518a0d6677995bd66b3510cefd1d9428bc684a81fa7063977fe73f16  download/alsa-utils-1.0.17rc2.tar.bz2
 eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6.8.tar.bz2
 10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
@@ -131,3 +130,4 @@ f9c6390b71404d3b70a96f0afb6d6d667d07455b2c63045939051a0f191677b4  download/pango
 ebd7788e2adc7df0f780b4ca0282363c5f0b3507123771bfcffd208338b51d10  download/gtk+-2.15.5.tar.bz2
 32ee26d93a25963fdc49b4b5ccd014749d675e33f419022c646a61c31a4a2886  download/alsa-lib-1.0.19.tar.bz2
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
+1f4924f5ae7857ce64a3d6ecbeb98133c74ff1ead2b0f48187623d6e4b838cad  download/alsa-utils-1.0.19.tar.bz2
