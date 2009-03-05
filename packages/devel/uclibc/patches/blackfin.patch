@@ -19,7 +19,7 @@ diff --git a/ldso/ldso/ldso.c b/ldso/ldso/ldso.c
 index 46cc91c..9c1653a 100644
 --- a/ldso/ldso/ldso.c
 +++ b/ldso/ldso/ldso.c
-@@ -180,10 +180,12 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+@@ -179,10 +179,12 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
  		_dl_progname = argv[0];
  	}
  
@@ -32,7 +32,7 @@ index 46cc91c..9c1653a 100644
  
  	/* Start to build the tables of the modules that are required for
  	 * this beast to run.  We start with the basic executable, and then
-@@ -297,7 +299,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
+@@ -296,7 +298,7 @@ void _dl_get_ready_to_run(struct elf_resolve *tpnt, DL_LOADADDR_TYPE load_addr,
  				for (i = 0; i < auxvt[AT_PHNUM].a_un.a_val; i++, ppnt++) {
  					if (ppnt->p_type == PT_LOAD && !(ppnt->p_flags & PF_W))
  						_dl_mprotect((void *) (DL_RELOC_ADDR(app_tpnt->loadaddr, ppnt->p_vaddr) & PAGE_ALIGN),

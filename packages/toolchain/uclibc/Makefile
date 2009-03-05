@@ -1,29 +1,23 @@
 PACKAGE = uClibc
 VERSION = $(LIBC_VERSION)
 
-ifeq ($(VERSION),snapshot)
-  LOCATION = http://uclibc.org/downloads/snapshots
-  pkgtree  = $(buildtree)/$(PACKAGE)
-else
-  LOCATION = http://uclibc.org/downloads
-endif
-
+LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 ##############################################################################
 
-patchdir = $(pkgsrctree)/patches/$(VERSION)
 include packages/toolchain/common.mk
 
 ifneq ($(ABI),)
-DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
-CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU)-$(ABI).config
+DEF_CONFIG = $(ARCH)-$(ABI).config
+CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
 else
-DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH).config
-CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU).config
+DEF_CONFIG = $(ARCH).config
+CPU_CONFIG = $(ARCH)-$(CPU).config
 endif
 
-DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
+		$(CPU_CONFIG), $(DEF_CONFIG)))
 
 exec-prefix = $(prefix)/$(TARGET)
 

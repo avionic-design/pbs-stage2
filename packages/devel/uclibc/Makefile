@@ -1,4 +1,4 @@
-LIBC_VERSION ?= 0.9.30
+LIBC_VERSION ?= 0.9.30.1
 PACKAGE = uClibc
 VERSION = $(LIBC_VERSION)
 
@@ -9,26 +9,22 @@ DESCRIPTION = small C library for embedded systems
 
 ##############################################################################
 
-patchdir = $(pkgsrctree)/patches/$(VERSION)
 include packages/common.mk
 
-ifeq ($(VERSION),snapshot)
-  pkgtree = $(buildtree)/$(PACKAGE)
-endif
-
 ifneq ($(ABI),)
-DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(ABI).config
-CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU)-$(ABI).config
+DEF_CONFIG = $(ARCH)-$(ABI).config
+CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
 else
-DEF_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH).config
-CPU_CONFIG = $(PACKAGE_FULLNAME)-$(ARCH)-$(CPU).config
+DEF_CONFIG = $(ARCH).config
+CPU_CONFIG = $(ARCH)-$(CPU).config
 endif
 
-DOT_CONFIG = $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)),$(CPU_CONFIG),$(DEF_CONFIG))
+DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
+		$(CPU_CONFIG), $(DEF_CONFIG)))
 
 conf-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	KERNEL_HEADERS="$(ROOTFS)/usr/include" \
+	KERNEL_HEADERS="$(ROOTFS)$(prefix)/include" \
 	MAKEFLAGS=
 
 package-configure:
@@ -37,7 +33,7 @@ package-configure:
 
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	KERNEL_HEADERS=$(ROOTFS)/usr/include \
+	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
 	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=/usr/
@@ -47,11 +43,11 @@ package-build:
 
 install-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	KERNEL_HEADERS=$(ROOTFS)/usr/include \
+	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
 	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=$(prefix)/
 
 rootfs-dirs = \
 	$(ROOTFS)/etc/init.d \
