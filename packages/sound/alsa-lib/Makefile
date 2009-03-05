@@ -1,5 +1,5 @@
 PACKAGE = alsa-lib
-VERSION = 1.0.17rc2
+VERSION = 1.0.19
 
 LOCATION = ftp://ftp.alsa-project.org/pub/lib
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -22,16 +22,20 @@ conf-args = \
 conf-args += \
 	--disable-old-symbols \
 	--disable-alisp \
-	--disable-python \
+	--disable-python
+
+ifeq ($(FLOAT),soft)
+conf-args += \
 	--with-softfloat
+endif
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)' \
 	LIBS='-lm'
 
 package-configure:
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -57,6 +61,7 @@ prunefiles = \
 	$(plugin)/smixer/*.la
 
 stripfiles = \
+	$(prefix)/bin/aserver \
 	$(prefix)/lib/libasound.so.$(sover) \
 	$(plugin)/smixer/*.so
 
