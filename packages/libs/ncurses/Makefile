@@ -1,5 +1,5 @@
 PACKAGE = ncurses
-VERSION = 5.6
+VERSION = 5.7
 
 LOCATION = ftp://ftp.gnu.org/gnu/ncurses
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
@@ -19,6 +19,8 @@ conf-args += \
 	--with-shared
 
 conf-vars = \
+	CXXFLAGS='$(CXXFLAGS)' \
+	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
 package-configure:
@@ -39,10 +41,16 @@ package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
-sover = 5.6
+sover = 5.7
 
 prunefiles =
 stripfiles = \
+	$(prefix)/bin/clear \
+	$(prefix)/bin/infocmp \
+	$(prefix)/bin/tic \
+	$(prefix)/bin/toe \
+	$(prefix)/bin/tput \
+	$(prefix)/bin/tset \
 	$(prefix)/lib/libform.so.$(sover) \
 	$(prefix)/lib/libmenu.so.$(sover) \
 	$(prefix)/lib/libncurses.so.$(sover) \

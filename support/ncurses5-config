@@ -1,0 +1,7 @@
+#!/bin/sh
+
+curdir=`cd $(dirname $0); pwd`
+PATH=`echo $PATH | sed "s@$curdir:@@" | sed "s@$curdir@@"`
+
+ncurses5-config "$@" | sed 's/-L\/usr\/lib //'
+

@@ -6,7 +6,6 @@ c5001748b069224dd98bf1bb9ee877321c7de8b332c8aad5af3e2a7372d23f5a  download/diffu
 035f98fae17d9cff002993c564ccc83dc4ed136127172caeff872b6abdb679d8  download/sysvinit-2.86.tar.gz
 e865de2c1f559fff0d3fc936e660c0efaf7afe662064f2fb97ccad1ec28d208a  download/sysfsutils-2.1.0.tar.gz
 e3b9950851a19904d642c4dec518623382cf4d2ac24f70a76510c944330d28ca  download/zlib-1.2.3.tar.bz2
-f9cac2b31683a37d65bc37119599752198a0691e462d0d1a252cf9815f5724d5  download/ncurses-5.6.tar.gz
 b439e04adab9b1e66e11f59c4331680da48f1722f2123123f7c16dfbed2c38dc  download/procps-3.2.7.tar.gz
 9b561fec2ed2e1199f6cd5dfec44b3d0fe78320bc4417b6dea5290cdd20acf1f  download/psmisc-22.3.tar.gz
 d3d70ebf15458ac15bd9930cbe516bedebfdb7ac4c679c456668eb0d56eddb2c  download/util-linux-2.12r.tar.gz
@@ -131,3 +130,4 @@ eb6d14a582cd5055c52e8278641984c17945a8693733214a5d5a10b4f849ca4d  download/pixma
 f9c6390b71404d3b70a96f0afb6d6d667d07455b2c63045939051a0f191677b4  download/pango-1.23.0.tar.bz2
 ebd7788e2adc7df0f780b4ca0282363c5f0b3507123771bfcffd208338b51d10  download/gtk+-2.15.5.tar.bz2
 32ee26d93a25963fdc49b4b5ccd014749d675e33f419022c646a61c31a4a2886  download/alsa-lib-1.0.19.tar.bz2
+0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
