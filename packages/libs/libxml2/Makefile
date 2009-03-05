@@ -23,10 +23,9 @@ conf-args += \
 	--without-python
 
 conf-vars = \
-	CC="$(CC) --sysroot=$(ROOTFS)" \
 	CPPFLAGS="$(CPPFLAGS)" \
-	LDFLAGS="$(LDFLAGS)" \
-	CFLAGS="$(CFLAGS)"
+	CFLAGS="$(CFLAGS)" \
+	LDFLAGS="$(LDFLAGS)"
 
 package-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
