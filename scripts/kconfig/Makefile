@@ -32,7 +32,7 @@ kxgettext-objs-y = \
 
 zconf.tab.o: lex.zconf.c zconf.hash.c
 
-zconf.tab.c: zconf.y
+zconf.tab.c: zconf.y confdata.c
 lex.zconf.c: zconf.l
 zconf.hash.c: zconf.gperf
 

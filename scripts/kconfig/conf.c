@@ -486,8 +486,8 @@ int main(int ac, char **av)
 	if (sync_kconfig) {
 		if (stat(".config", &tmpstat)) {
 			fprintf(stderr, _("***\n"
-				"*** You have not yet configured your kernel!\n"
-				"*** (missing kernel .config file)\n"
+				"*** You have not yet configured your platform!\n"
+				"*** (missing platform .config file)\n"
 				"***\n"
 				"*** Please run some configurator (e.g. \"make oldconfig\" or\n"
 				"*** \"make menuconfig\" or \"make xconfig\").\n"
@@ -585,16 +585,16 @@ int main(int ac, char **av)
 		 * All other commands are only used to generate a config.
 		 */
 		if (conf_get_changed() && conf_write(NULL)) {
-			fprintf(stderr, _("\n*** Error during writing of the kernel configuration.\n\n"));
+			fprintf(stderr, _("\n*** Error during writing of the platform configuration.\n\n"));
 			exit(1);
 		}
 		if (conf_write_autoconf()) {
-			fprintf(stderr, _("\n*** Error during update of the kernel configuration.\n\n"));
+			fprintf(stderr, _("\n*** Error during update of the platform configuration.\n\n"));
 			return 1;
 		}
 	} else {
 		if (conf_write(NULL)) {
-			fprintf(stderr, _("\n*** Error during writing of the kernel configuration.\n\n"));
+			fprintf(stderr, _("\n*** Error during writing of the platform configuration.\n\n"));
 			exit(1);
 		}
 	}
