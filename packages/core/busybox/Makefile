@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.13.2
+VERSION = 1.13.3
 
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -10,11 +10,10 @@ DESCRIPTION = tiny utilities for small and embedded systems
 
 include packages/common.mk
 
-DEF_CONFIG = $(PACKAGE_FULLNAME)-minimal
-CPU_CONFIG = $(PACKAGE_FULLNAME)-minimal-$(CPU)
+DEF_CONFIG = minimal
+CPU_CONFIG = minimal-$(CPU)
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
-		$(CPU_CONFIG), \
-		$(DEF_CONFIG)))
+		$(CPU_CONFIG), $(DEF_CONFIG)))
 
 conf-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
