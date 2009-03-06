@@ -60,7 +60,6 @@ b3fe971ccc8152db6c78da7117c31fc4cd2fcb2b6a4df3db0f8fed13d4ceb08f  download/fixes
 9d2684fac835e9cdf78befff2a58292f54db90094acbfb9f2ed5316fa30d641d  download/damageproto-1.1.0.tar.bz2
 6013d1ca63b2b7540f6f99977090812b899852acfbd9df123b5ebaa911e30003  download/compositeproto-0.4.tar.bz2
 78a2621209b2db4d71f25fe3a7df7b7dd4b5e866e9c699454b78e611def065cf  download/hal-0.5.11.tar.bz2
-9c40d914e4f6fe00bdd77137d671c7ce4f211686228f2eb8b2d3c2360bc249c8  download/tslib-1.0.tar.bz2
 a9a639eaa0e5666606a4657cc1494eb6df820fac7e5a2aa0c3f7e703b7c8d8a5  download/fontconfig-2.6.0.tar.gz
 a99e244fd78babb95ea3c9a5c88b964994edaa1d15fd8dde5b4067801e23f0cd  download/libiconv-1.12.tar.gz
 209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba  download/gettext-0.17.tar.gz
@@ -132,3 +131,4 @@ ebd7788e2adc7df0f780b4ca0282363c5f0b3507123771bfcffd208338b51d10  download/gtk+-
 1f4924f5ae7857ce64a3d6ecbeb98133c74ff1ead2b0f48187623d6e4b838cad  download/alsa-utils-1.0.19.tar.bz2
 2d9769a02c46cff73f56a076268192da1ce91c913e2e4e31c120be098f704c8c  download/uClibc-0.9.30.1.tar.bz2
 2899af57e28fe1fd2aa1c6467919e1350e3653b000d4f870d55665ef7eef8419  download/busybox-1.13.3.tar.bz2
+d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2

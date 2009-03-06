@@ -1,5 +1,5 @@
 PACKAGE = tslib
-VERSION = 1.0
+VERSION = 1.0.0-svn70
 
 LOCATION = http://download.berlios.de/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -28,8 +28,6 @@ conf-vars = \
 	ac_cv_func_malloc_0_nonnull=yes
 
 package-configure:
-	cd $(pkgtree) && ./autogen.sh
-	cp support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
 		cd $(pkgtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -58,7 +56,7 @@ stripfiles = \
 	$(prefix)/bin/ts_calibrate \
 	$(prefix)/bin/ts_harvest \
 	$(prefix)/bin/ts_print \
-	$(prefix)/lib/libts-0.0.so.0.1.1 \
+	$(prefix)/lib/libts-1.0.so.0.0.0 \
 	$(plugin)/*.so
 
 include packages/cleanup.mk
