@@ -1,6 +1,42 @@
 choice
 	prompt "Toolchain"
 
+config TOOLCHAIN_ARM_LINUX_GNUEABI
+	bool "arm-linux-gnueabi"
+
+config TOOLCHAIN_ARM_LINUX_UCLIBCEABI
+	bool "arm-linux-uclibceabi"
+
+config TOOLCHAIN_ARM_XSCALE_LINUX_GNUEABI
+	bool "arm-xscale-linux-gnueabi"
+
+config TOOLCHAIN_ARM_XSCALE_LINUX_UCLIBCEABI
+	bool "arm-xscale-linux-uclibceabi"
+
+config TOOLCHAIN_BLACKFIN_LINUX_UCLIBC
+	bool "arm-linux-gnueabi"
+
+config TOOLCHAIN_I686_PC_LINUX_GNU
+	bool "i686-pc-linux-gnueabi"
+
+config TOOLCHAIN_I686_PC_LINUX_UCLIBC
+	bool "i686-pc-linux-uclibceabi"
+
+config TOOLCHAIN_I786_PC_LINUX_GNU
+	bool "i786-pc-linux-gnueabi"
+
+config TOOLCHAIN_I786_PC_LINUX_UCLIBC
+	bool "i786-pc-linux-uclibceabi"
+
+config TOOLCHAIN_MIPS_LINUX_UCLIBC
+	bool "mips-linux-uclibc"
+
+config TOOLCHAIN_MIPSEL_LINUX_UCLIBC
+	bool "mipsel-linux-uclibc"
+
+config TOOLCHAIN_X86_64_LINUX_GNU
+	bool "x86_64-linux-gnu"
+
 config TOOLCHAIN_X86_64_LINUX_UCLIBC
 	bool "x86_64-linux-uclibc"
 
