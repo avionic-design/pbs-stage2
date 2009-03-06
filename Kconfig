@@ -1,0 +1,10 @@
+mainmenu "Platform Build System"
+
+config SHELL
+	string
+	default "bin/sh"
+	---help---
+
+source "platform/toolchain/Kconfig"
+source "packages/Kconfig"
+

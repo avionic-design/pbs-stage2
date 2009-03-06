@@ -1,0 +1,8 @@
+menu "Disk Utilities"
+
+config PACKAGE_DISK_MTD_TOOLS
+	bool "mtd-tools"
+	default n
+
+endmenu
+

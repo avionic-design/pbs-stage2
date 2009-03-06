@@ -1,0 +1,20 @@
+menu "Operating System Kernel"
+
+config PACKAGE_KERNEL_LINUX_HEADERS
+	bool "linux-headers: Linux kernel headers"
+	default n
+
+config PACKAGE_KERNEL_LINUX_MODULES
+	bool "linux-modules: Linux kernel modules"
+	default n
+
+config PACKAGE_KERNEL_LINUX_KERNEL
+	bool "linux: Linux kernel"
+	default y
+
+config PACKAGE_KERNEL_LINUX_KERNEL_MODULE_INIT_TOOLS
+	bool "module-init-tools: Linux kernel - module init tools"
+	default n
+
+endmenu
+

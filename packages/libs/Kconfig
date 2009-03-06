@@ -1,0 +1,140 @@
+menu "Libraries"
+
+config PACKAGE_LIBS_ATK
+	bool "atk"
+	default n
+
+config PACKAGE_LIBS_CAIRO
+	bool "cairo"
+	default n
+
+config PACKAGE_LIBS_CURL
+	bool "curl"
+	default n
+
+config PACKAGE_LIBS_DBUS_GLIB
+	bool "dbus-glib"
+	default n
+
+config PACKAGE_LIBS_DBUS
+	bool "dbus"
+	default n
+
+config PACKAGE_LIBS_DIRECTFB
+	bool "directfb"
+	default n
+
+config PACKAGE_LIBS_EXPAT
+	bool "expat"
+	default n
+
+config PACKAGE_LIBS_FONTCONFIG
+	bool "fontconfig"
+	default n
+
+config PACKAGE_LIBS_FREETYPE
+	bool "freetype"
+	default n
+
+config PACKAGE_LIBS_GETTEXT
+	bool "gettext"
+	default n
+
+config PACKAGE_LIBS_GLIB
+	bool "glib"
+	default n
+
+config PACKAGE_LIBS_GLIBMM
+	bool "glibmm"
+	default n
+
+config PACKAGE_LIBS_GTK
+	bool "gtk"
+	default n
+
+config PACKAGE_LIBS_GTKMM
+	bool "gtkmm"
+	default n
+
+config PACKAGE_LIBS_HAL
+	bool "hal"
+	default n
+
+config PACKAGE_LIBS_ICONV
+	bool "iconv"
+	default n
+
+config PACKAGE_LIBS_ICU
+	bool "icu"
+	default n
+
+config PACKAGE_LIBS_LIBJPEG
+	bool "libjpeg"
+	default n
+
+config PACKAGE_LIBS_LIBPCAP
+	bool "libpcap"
+	default n
+
+config PACKAGE_LIBS_LIBPNG
+	bool "libpng"
+	default n
+
+config PACKAGE_LIBS_LIBSIGC++
+	bool "libsigc++"
+	default n
+
+config PACKAGE_LIBS_LIBUSB
+	bool "libusb"
+	default n
+
+config PACKAGE_LIBS_LIBXML2
+	bool "libxml2"
+	default n
+
+config PACKAGE_LIBS_LIBXSLT
+	bool "libxslt"
+	default n
+
+config PACKAGE_LIBS_NCURSES
+	bool "ncurses"
+	default n
+
+config PACKAGE_LIBS_OPENSSL
+	bool "openssl"
+	default n
+
+config PACKAGE_LIBS_PANGO
+	bool "pango"
+	default n
+
+config PACKAGE_LIBS_PCRE
+	bool "pcre"
+	default n
+
+config PACKAGE_LIBS_PIXMAN
+	bool "pixman"
+	default n
+
+config PACKAGE_LIBS_QT
+	bool "qt"
+	default n
+
+config PACKAGE_LIBS_QTOPIA
+	bool "qtopia"
+	default n
+
+config PACKAGE_LIBS_SQLITE
+	bool "sqlite"
+	default n
+
+config PACKAGE_LIBS_TSLIB
+	bool "tslib"
+	default n
+
+config PACKAGE_LIBS_ZLIB
+	bool "zlib"
+	default n
+
+endmenu
+

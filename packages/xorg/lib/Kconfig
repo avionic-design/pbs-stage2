@@ -1,0 +1,60 @@
+menu "X.Org - Libraries"
+
+config PACKAGE_XORG_LIB_FONTENC
+	bool "fontenc"
+	default n
+
+config PACKAGE_XORG_LIB_PCIACCESS
+	bool "pciaccess"
+	default n
+
+config PACKAGE_XORG_LIB_PTHREAD_STUBS
+	bool "pthread-stubs"
+	default n
+
+config PACKAGE_XORG_LIB_X11
+	bool "x11"
+	default n
+
+config PACKAGE_XORG_LIB_XAU
+	bool "xau"
+	default n
+
+config PACKAGE_XORG_LIB_XCB
+	bool "xcb"
+	default n
+
+config PACKAGE_XORG_LIB_XDMCP
+	bool "xdmcp"
+	default n
+
+config PACKAGE_XORG_LIB_XEXT
+	bool "xext"
+	default n
+
+config PACKAGE_XORG_LIB_XFONT
+	bool "xfont"
+	default n
+
+config PACKAGE_XORG_LIB_XKBFILE
+	bool "xkbfile"
+	default n
+
+config PACKAGE_XORG_LIB_XRENDER
+	bool "xrender"
+	default n
+
+config PACKAGE_XORG_LIB_XT
+	bool "xt"
+	default n
+
+config PACKAGE_XORG_LIB_XTRANS
+	bool "xtrans"
+	default n
+
+config PACKAGE_XORG_LIB_XV
+	bool "xv"
+	default n
+
+endmenu
+

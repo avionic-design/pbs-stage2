@@ -1,0 +1,24 @@
+menu "Development Tools"
+
+config PACKAGE_DEVEL_UCLIBC
+	bool "uclibc: uClibc"
+	default n
+
+config PACKAGE_DEVEL_GLIBC
+	bool "glibc: GNU libc"
+	default n
+
+config PACKAGE_DEVEL_KLIBC
+	bool "klibc"
+	default n
+
+config PACKAGE_DEVEL_GDB_SERVER
+	bool "gdb-server: GNU debugger server"
+	default n
+
+config PACKAGE_DEVEL_STRACE
+	bool "strace"
+	default n
+
+endmenu
+

@@ -1,0 +1,8 @@
+menu "World-Wide Web Utilities"
+
+config PACKAGE_WEB_WEBKIT
+	bool "webkit"
+	default n
+
+endmenu
+

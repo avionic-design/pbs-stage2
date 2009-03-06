@@ -1,0 +1,8 @@
+menu "Miscellaneous Utilities"
+
+config PACKAGE_UTIL_ABOX
+	bool "abox"
+	default n
+
+endmenu
+

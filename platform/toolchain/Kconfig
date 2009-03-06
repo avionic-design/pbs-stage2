@@ -1,0 +1,8 @@
+choice
+	prompt "Toolchain"
+
+config TOOLCHAIN_X86_64_LINUX_UCLIBC
+	bool "x86_64-linux-uclibc"
+
+endchoice
+

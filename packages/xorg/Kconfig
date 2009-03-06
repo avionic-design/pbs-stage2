@@ -1,0 +1,15 @@
+menu "X.Org - X11 Windowing System"
+
+source "packages/xorg/proto/Kconfig"
+source "packages/xorg/lib/Kconfig"
+
+config PACKAGE_XORG_KDRIVE
+	bool "kdrive"
+	default n
+
+config PACKAGE_XORG_XORG_SERVER
+	bool "xorg-server"
+	default n
+
+endmenu
+

@@ -1,0 +1,64 @@
+menu "Networking"
+
+config PACKAGE_NET_DHCP
+	bool "dhcp"
+	default n
+
+config PACKAGE_NET_DROPBEAR
+	bool "dropbear"
+	default n
+
+config PACKAGE_NET_ETHTOOL
+	bool "ethtool"
+	default n
+
+config PACKAGE_NET_IPERF
+	bool "iperf"
+	default n
+
+config PACKAGE_NET_IPUTILS
+	bool "iputils"
+	default n
+
+config PACKAGE_NET_NET_TOOLS
+	bool "net-tools"
+	default n
+
+config PACKAGE_NET_NETCAT
+	bool "netcat"
+	default n
+
+config PACKAGE_NET_OPENNTPD
+	bool "openntpd"
+	default n
+
+config PACKAGE_NET_OPENSSH
+	bool "openssh"
+	default n
+
+config PACKAGE_NET_PPP
+	bool "ppp"
+	default n
+
+config PACKAGE_NET_RP_PPPOE
+	bool "rp-pppoe"
+	default n
+
+config PACKAGE_NET_SWITCHCTRL
+	bool "switchctrl"
+	default n
+
+config PACKAGE_NET_TCPDUMP
+	bool "tcpdump"
+	default n
+
+config PACKAGE_NET_UDHCP
+	bool "udhcp"
+	default n
+
+config PACKAGE_NET_XORP
+	bool "xorp"
+	default n
+
+endmenu
+

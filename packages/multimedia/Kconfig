@@ -1,0 +1,16 @@
+menu "Multimedia Tools"
+
+config PACKAGE_MULTIMEDIA_ADMP
+	bool "admp"
+	default n
+
+config PACKAGE_MULTIMEDIA_LIBMAD
+	bool "libmad"
+	default n
+
+config PACKAGE_MULTIMEDIA_MPEG2DEC
+	bool "mpeg2dec"
+	default n
+
+endmenu
+

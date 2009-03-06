@@ -1,0 +1,16 @@
+menu "Console Utilities"
+
+config PACKAGE_CONSOLE_CONSOLE_TOOLS
+	bool "console-tools"
+	default n
+
+config PACKAGE_CONSOLE_FBSET
+	bool "fbset"
+	default n
+
+config PACKAGE_CONSOLE_MINICOM
+	bool "minicom"
+	default n
+
+endmenu
+

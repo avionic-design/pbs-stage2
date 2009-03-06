@@ -1,0 +1,8 @@
+menu "Shells"
+
+config PACKAGE_SHELLS_BASH
+	bool "bash"
+	default n
+
+endmenu
+

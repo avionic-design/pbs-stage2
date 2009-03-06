@@ -1,0 +1,12 @@
+menu "Sound Utilities"
+
+config PACKAGE_SOUND_ALSA_LIB
+	bool "alsa-lib"
+	default n
+
+config PACKAGE_SOUND_ALSA_UTILS
+	bool "alsa-utils"
+	default n
+
+endmenu
+

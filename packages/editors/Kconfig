@@ -1,0 +1,8 @@
+menu "Editors"
+
+config PACKAGE_EDITORS_VIM
+	bool "vim"
+	default n
+
+endmenu
+
