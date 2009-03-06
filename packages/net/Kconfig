@@ -2,62 +2,77 @@ menu "Networking"
 
 config PACKAGE_NET_DHCP
 	bool "dhcp"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_DROPBEAR
 	bool "dropbear"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_ETHTOOL
 	bool "ethtool"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_IPERF
 	bool "iperf"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_IPUTILS
 	bool "iputils"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_NET_TOOLS
 	bool "net-tools"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_NETCAT
 	bool "netcat"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_OPENNTPD
 	bool "openntpd"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_OPENSSH
 	bool "openssh"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_PPP
 	bool "ppp"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_RP_PPPOE
 	bool "rp-pppoe"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_SWITCHCTRL
 	bool "switchctrl"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_TCPDUMP
 	bool "tcpdump"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_UDHCP
 	bool "udhcp"
+	depends on LIBC
 	default n
 
 config PACKAGE_NET_XORP
 	bool "xorp"
+	depends on LIBC
 	default n
 
 endmenu

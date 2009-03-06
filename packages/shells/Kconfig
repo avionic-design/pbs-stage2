@@ -2,6 +2,7 @@ menu "Shells"
 
 config PACKAGE_SHELLS_BASH
 	bool "bash"
+	depends on LIBC
 	default n
 
 endmenu

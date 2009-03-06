@@ -2,6 +2,7 @@ menu "Disk Utilities"
 
 config PACKAGE_DISK_MTD_TOOLS
 	bool "mtd-tools"
+	depends on LIBC
 	default n
 
 endmenu
