@@ -112,7 +112,6 @@ b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805  download/groff
 9af6c40c75cbfe5af9ef800d84dd1d2010ce0bd7402623ca9afae535eb0393ad  download/linux-2.6.28.7.tar.bz2
 6786a896146b12323d0ef31601dc23b6e5501762d7d61c475d09e405494c21df  download/udev-139.tar.bz2
 cafe6431f9e6d561fb7b396bf94ff73a9cd0f4279f3eea2fc714ab90e345eee6  download/libpng-1.2.35.tar.bz2
-e983003805c9a14ae40eead9b54de5e17d78a05f18295d495d9e6319992c5cea  download/glib-2.19.10.tar.bz2
 2d50a7b6f5a948ece84549c80872115bc7c2b7e6371f24b4742eb1c51bd259bd  download/xcb-proto-1.4.tar.bz2
 d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextproto-7.0.5.tar.bz2
 4fe14659ed0c5ceacec25ad6067a9521f85852280bc39c0375f5000ab133cb3f  download/libxcb-1.2.tar.bz2
@@ -132,3 +131,4 @@ ebd7788e2adc7df0f780b4ca0282363c5f0b3507123771bfcffd208338b51d10  download/gtk+-
 2899af57e28fe1fd2aa1c6467919e1350e3653b000d4f870d55665ef7eef8419  download/busybox-1.13.3.tar.bz2
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
 cfeb1429465e3c24debde1bf53ec35ef738fde5e80d2eed14f33e315e747bb8d  download/randrproto-1.3.0.tar.bz2
+6fb4269a187bee6f7825c358fd6f0e0e99e6ad71f7f995ddcbfe9466ec8f6631  download/glib-2.20.0.tar.bz2
