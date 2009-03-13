@@ -98,7 +98,6 @@ b2ec81e7d9fa5e24f67baccfd9af2755a7797a65cb4c3cad10d023867f2bd220  download/dbus-
 de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-4.0-rc1.tar.gz
 6e04bf990b2a8ccb0602c912246cc73a5bf92427c062380355708df605456ed9  download/switchctrl-0.1.6.tar.bz2
 a67a8b09d9530021e2bd4b93136f385e72a8d8e4f2c26a99aeb169bee88facf0  download/xtrans-1.2.3.tar.bz2
-8acd37c9160a5bdbe73ba925a4e534a5b6d164d95edd0335191c015aea5351e6  download/freetype-2.3.8.tar.bz2
 03bdebc968692dd84261224e2a41197b17d035cd19ad4e57e5897644e52bfd94  download/glibc-2.9.tar.bz2
 370777462a479842d15d6bc48415dfb63520959403bd6e6282677d46fe19e263  download/glibc-ports-2.9.tar.bz2
 4690f4ef0218ed9795509ca05cbccaa6023fde943c83e1625db8627be3d6d323  download/gcc-core-4.3.3.tar.bz2
@@ -132,3 +131,4 @@ ebd7788e2adc7df0f780b4ca0282363c5f0b3507123771bfcffd208338b51d10  download/gtk+-
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
 cfeb1429465e3c24debde1bf53ec35ef738fde5e80d2eed14f33e315e747bb8d  download/randrproto-1.3.0.tar.bz2
 6fb4269a187bee6f7825c358fd6f0e0e99e6ad71f7f995ddcbfe9466ec8f6631  download/glib-2.20.0.tar.bz2
+51a033bce9904d73e0821e8e2bba24bd319619d7d1b2e9eeccac611580242ab6  download/freetype-2.3.9.tar.bz2

@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.3.8
+VERSION = 2.3.9
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
@@ -46,7 +46,7 @@ prunefiles = \
 	$(prefix)/lib/libfreetype.la
 
 stripfiles = \
-	$(prefix)/lib/libfreetype.so.6.3.19
+	$(prefix)/lib/libfreetype.so.6.3.20
 
 include packages/cleanup.mk
 
