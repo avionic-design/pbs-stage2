@@ -2,7 +2,7 @@ diff --git a/udev/udevd.c b/udev/udevd.c
 index ee3d6f5..4f117a8 100644
 --- a/udev/udevd.c
 +++ b/udev/udevd.c
-@@ -965,8 +965,14 @@ int main(int argc, char *argv[])
+@@ -973,8 +973,14 @@ int main(int argc, char *argv[])
  			inotify_poll->events = POLLIN;
  		}
  
