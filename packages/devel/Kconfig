@@ -4,20 +4,22 @@ config LIBC
 	bool
 	default n
 
+choice
+	prompt "C runtime library"
+
 config PACKAGE_DEVEL_UCLIBC
 	bool "uclibc: uClibc"
 	select LIBC
-	default n
 
 config PACKAGE_DEVEL_GLIBC
 	bool "glibc: GNU libc"
 	select LIBC
-	default n
 
 config PACKAGE_DEVEL_KLIBC
 	bool "klibc"
 	select LIBC
-	default n
+
+endchoice
 
 config PACKAGE_DEVEL_GDB_SERVER
 	bool "gdb-server: GNU debugger server"
