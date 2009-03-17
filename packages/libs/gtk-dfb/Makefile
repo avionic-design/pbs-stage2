@@ -1,7 +1,7 @@
 PACKAGE = gtk+
-VERSION = 2.15.5
+VERSION = 2.16.0
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.15
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.16
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = The GTK+ graphical user interface library
@@ -56,7 +56,7 @@ package-do-install:
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1505.0
+sover  = 0.1600.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-directfb-2.0.la \
