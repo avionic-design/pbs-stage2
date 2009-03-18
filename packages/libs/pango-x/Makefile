@@ -1,7 +1,7 @@
 PACKAGE = pango
-VERSION = 1.23.0
+VERSION = 1.24.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.23
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.24
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = Layout and rendering of internationalized text
@@ -53,7 +53,7 @@ prunefiles = \
 	$(prefix)/lib/libpangox-1.0.la \
 	$(plugin)/*.la
 
-sover = 0.2300.0
+sover = 0.2400.0
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
