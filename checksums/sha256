@@ -92,7 +92,6 @@ a214c4e1d7e22a758f66fe1d08f0ce41c3ba801a4c13dd1188e1e38288ac73c0  download/libpc
 5fe99efe0274b5764c9974417c96a38b5f94e21096d8a94cc1fa172a42035284  download/tcpdump-4.0.0.tar.gz
 ef90f7e4c151095cc75a573acd86355aa65c5bc7fd1dcce4a1483b64788e1461  download/inputproto-1.5.0.tar.bz2
 93a347af0cecf258be8fb54265b16a0fb16317df4a32896141d2987c30773535  download/cairo-1.8.6.tar.gz
-e197630958d6023b4951dda071503a62d7e4f316b7dd1d33e721770b9da8d733  download/atk-1.25.2.tar.bz2
 7131242042dbd631fbd83436f42aea1775e7c32f587fa4ada5a01df4c3ae8e8b  download/openssl-0.9.8j.tar.gz
 b2ec81e7d9fa5e24f67baccfd9af2755a7797a65cb4c3cad10d023867f2bd220  download/dbus-1.2.12.tar.gz
 de57f941becd511e141f7902f507bd2fb7cffe34434a626156bbdba5c61408af  download/bash-4.0-rc1.tar.gz
@@ -132,3 +131,4 @@ cfeb1429465e3c24debde1bf53ec35ef738fde5e80d2eed14f33e315e747bb8d  download/randr
 ff25cbf43dd5c5f8cddc1b2094505c1d079a576b873a6d3d6b62d95da1bdd1d7  download/gtk+-2.16.0.tar.bz2
 d3c78c42278e55d31c661f8fff4846fb79b103acc28049f5a810f86d5aa58e14  download/linux-2.6.28.8.tar.bz2
 7a0af222b8f07defbf492246b7f7ba386025ab504f2ec4abc408d3d6fa4d4b95  download/pango-1.24.0.tar.bz2
+f7993d26c3606a9b0e32d1eebe716f2294ac37fac014c47744e986fc0ff5e6d1  download/atk-1.26.0.tar.bz2

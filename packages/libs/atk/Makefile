@@ -1,7 +1,7 @@
 PACKAGE = atk
-VERSION = 1.25.2
+VERSION = 1.26.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.25
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.26
 TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
 
 DESCRIPTION = The ATK accessibility toolkit
@@ -44,7 +44,7 @@ package-do-install:
 	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
-sover = 0.2511.1
+sover = 0.2609.1
 
 prunefiles = \
 	$(prefix)/lib/libatk-1.0.la
