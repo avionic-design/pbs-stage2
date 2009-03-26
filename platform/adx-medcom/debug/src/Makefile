@@ -24,7 +24,8 @@ files = \
 	/lib/lsb/init-functions
 
 links = \
-	/etc/rcS.d/S10syslogd
+	/etc/rcS.d/S10syslogd \
+	/init
 
 progs = \
 	/usr/bin/igmp-join
