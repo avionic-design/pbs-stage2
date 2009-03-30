@@ -39,6 +39,9 @@ export LINUX_VERSION KERNEL_CONFIG
 include platform/adx-medcom/packages.mk
 include platform/common.mk
 
+# don't install core/udev package, it currently seems broken
+packages-y := $(subst core/udev,,$(packages-y))
+
 platform-clean-dirs	+= $(builddir)
 platform-clean-dirs	+= $(ROOTFS)
 platform-clean-files	+= $(PLATFORM)/initrd.img $(PLATFORM)/initrd.gz
