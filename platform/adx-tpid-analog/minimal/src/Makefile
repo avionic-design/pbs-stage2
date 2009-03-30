@@ -14,7 +14,6 @@ quiet_cmd_relink = LN        $*
       cmd_relink = $(priv) ln -sf $(shell readlink $<) $@
 
 dirs = \
-	/etc/init.d \
 	/lib/lsb \
 	/var/lock \
 	/var/log
