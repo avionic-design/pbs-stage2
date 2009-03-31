@@ -80,24 +80,31 @@ ifdef platform
   export PLATFORM
 
   ifndef package
+PHONY += list
 list:
 	$(Q)$(MAKE) $(plat)=platform/$(platform) list
 
+PHONY += uscan
 uscan:
 	$(Q)$(MAKE) $(plat)=platform/$(platform) uscan
 
+PHONY += fetch
 fetch:
 	$(Q)$(MAKE) $(fetch)=platform/$(platform)
 
+PHONY += build
 build:
 	$(Q)$(MAKE) $(build)=platform/$(platform)
 
+PHONY += install
 install:
 	$(Q)$(MAKE) $(install)=platform/$(platform)
 
+PHONY += clean
 clean:
 	$(Q)$(MAKE) $(clean)=platform/$(platform)
 
+PHONY += binary
 binary:
 	$(Q)$(MAKE) $(binary)=platform/$(platform)
 
@@ -114,12 +121,12 @@ card:
 	$(Q)$(MAKE) $(card)=platform/$(platform) write
 
   else
-    include platform/$(platform)/config.mk
+    include platform/$(platform)/Makefile
   endif # !package
 endif # platform
 
 ifdef package
-list uscan:
+list uscan version:
 	$(Q)$(MAKE) $(pkg)=$(package) $@
 
 clean fetch checksum extract patch:
