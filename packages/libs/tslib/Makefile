@@ -47,6 +47,7 @@ package-do-install:
 plugin = $(prefix)/lib/ts
 
 prunefiles = \
+	/etc/ts.conf \
 	$(prefix)/lib/libts.la \
 	$(plugin)/*.la
 
