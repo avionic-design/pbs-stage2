@@ -46,6 +46,24 @@ else
 endif
 
 packages-y += core/busybox
+packages-y += libs/zlib
+#packages-y += libs/libpng
+#packages-y += libs/libjpeg
+#packages-y += libs/libxml2
+#packages-y += core/groff
+packages-y += core/pciutils
+#packages-y += libs/directfb
+#packages-y += libs/pixman
+#packages-y += libs/freetype
+#packages-y += libs/fontconfig
+#packages-y += libs/cairo-dfb
+
+#packages-y += net/ethtool
+#packages-y += net/iperf
+
+#packages-y += libs/eagle-git
+#packages-y += libs/drm-git
+#packages-y += libs/wayland-git
 
 include platform/common.mk
 
