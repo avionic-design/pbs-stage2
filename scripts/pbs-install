@@ -1,31 +1,99 @@
 #!/bin/sh
 
-if [ "x$1" = "x" ]; then
-	packages="*.install"
-else
-	packages="$1"
+packages="*.install"
+
+for arg in $@; do
+	if [ "x$prev" != "x" ]; then
+		if [ "x${arg#-}" = "x$arg" ]; then
+			eval $prev=$arg
+			prev=
+			shift; continue
+		else
+			echo "WARNING: missing argument for parameter: $opt"
+		fi
+	fi
+
+	opt=$arg
+
+	case $arg in
+		-a | --arch)
+			prev=arch
+			shift
+			;;
+
+		-s | --source)
+			prev=srcdir
+			shift
+			;;
+
+		*)
+			packages="$@"
+			break
+			;;
+	esac
+done
+
+if [ "x$prev" != "x" ]; then
+	echo "WARNING: missing argument for parameter: $opt"
 fi
 
-srcdir=build
-dstdir=install
+if [ "x$srcdir" = "x" ]; then
+	echo "ERROR: no source directory specified - try using -s PATH"
+	exit 1
+fi
+
+cwd=`pwd`
+base=`dirname $cwd`
+name=`basename $cwd`
+
+while [ "x$name" != "xpackages" ]; do
+	if [ "x$name" == "x$base" ]; then
+		break;
+	fi
+
+	base=`dirname $base`
+	name=`basename $base`
+done
+
+pkg=${cwd#$base/}
+base=`dirname $base`
+
+if [ ! -f "$base/Makefile" ]; then
+	echo "cannot find base directory"
+	exit 1
+fi
+
+binary="${base}/binary/${arch}/${pkg}"
+dstdir="${binary}/install"
+
+echo -n "Removing directory: $dstdir ... "
+rm -rf "$dstdir"
+echo "done"
+
+package_list=`echo $packages`
+if [ "x$package_list" = "x$packages" ]; then
+	echo "ERROR: no package definition found"
+	exit 1
+fi
 
 for package in $packages; do
 	package="${package%.install}"
+	echo "Installing $package "
 	cat "$package.install" | (
 		while read line; do
-			src=`echo $line | awk '{ print $1 }'`
-			dst=`echo $line | awk '{ print $2 }'`
+			src=`echo "$line" | awk '{ print $1 }'`
+			dst=`echo "$line" | awk '{ print $2 }'`
 
 			if [ "x$dst" = "x" ]; then
-				dst=`dirname $src`
+				dst=`dirname "$src"`
 			fi
 
 			[ "x${src#/}" = "x$src" ] && src="/$src"
 			[ "x${dst#/}" = "x$dst" ] && dst="/$dst"
 
-			echo "Installing: ${srcdir}${src} -> ${dstdir}/${package}${dst}"
+			echo "  installing: ${src}"
 			mkdir -p "${dstdir}/${package}${dst}"
-			cp -a ${srcdir}${src} "${dstdir}/${package}/${dst}"
+			cp -dpR ${srcdir}${src} "${dstdir}/${package}${dst}"
 		done
 	)
 done

@@ -4,12 +4,12 @@ packages="*.install"
 
 for arg in $@; do
 	if [ "x$prev" != "x" ]; then
-		if [ "x${arg#-}" = "x$arg" ]; then
+		if [ "x${arg#-}" != "x$arg" ]; then
+			echo "WARNING: missing argument for parameter: $opt"
+		else
 			eval $prev=$arg
 			prev=
 			shift; continue
-		else
-			echo "WARNING: missing argument for parameter: $opt"
 		fi
 	fi
 
@@ -18,6 +18,11 @@ for arg in $@; do
 	case $arg in
 		-a | --arch)
 			prev=arch
+			shift
+			;;
+
+		-r | --root)
+			prev=root
 			shift
 			;;
 
@@ -30,6 +35,16 @@ done
 
 if [ "x$prev" != "x" ]; then
 	echo "WARNING: missing argument for parameter: $opt"
+fi
+
+if [ "x$root" = "x" ]; then
+	echo "ERROR: root directory was not specified - try using -r PATH"
+	exit 1
+fi
+
+if [ ! -d "$root" ]; then
+	echo "ERROR: root directory $root does not exist"
+	exit 1
 fi
 
 cwd=`pwd`
@@ -54,33 +69,15 @@ if [ ! -f "$base/Makefile" ]; then
 fi
 
 binary="${base}/binary/${arch}/${pkg}"
-srcdir="${binary}/install"
 
 for package in $packages; do
 	package="${package%.install}"
 	version=`cd $base && make package=$pkg version`
 
 	tarball="${package}_${version}_${arch}.tar.bz2"
-	mkdir -p "${binary}"
 
-	echo -n "Building binary package: $tarball ... "
-
-	cat "$package.install" | (
-		while read line; do
-			src=`echo "$line" | awk '{ print $1 }'`
-			dst=`echo "$line" | awk '{ print $2 }'`
-
-			if [ "x$dst" = "x" ]; then
-				dst=`dirname "$src"`
-			fi
-
-			src=${src#/}
-			dst=${dst#/}
-
-			echo "$dst"
-		done
-	) | tar cjpf "$binary/$tarball" -C "$srcdir/$package" -T -
-
+	echo -n "Extracting binary package: $tarball ... "
+	tar xjf "$binary/$tarball" -C "$root"
 	echo "done"
 done
 
