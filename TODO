@@ -10,3 +10,5 @@
 
 + Add support for building in a clean build chroot (f.e. debootstrap chroot).
 
++ Add automatic inter-package dependency handling.
+
