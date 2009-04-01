@@ -61,7 +61,6 @@ b3fe971ccc8152db6c78da7117c31fc4cd2fcb2b6a4df3db0f8fed13d4ceb08f  download/fixes
 6013d1ca63b2b7540f6f99977090812b899852acfbd9df123b5ebaa911e30003  download/compositeproto-0.4.tar.bz2
 78a2621209b2db4d71f25fe3a7df7b7dd4b5e866e9c699454b78e611def065cf  download/hal-0.5.11.tar.bz2
 a9a639eaa0e5666606a4657cc1494eb6df820fac7e5a2aa0c3f7e703b7c8d8a5  download/fontconfig-2.6.0.tar.gz
-a99e244fd78babb95ea3c9a5c88b964994edaa1d15fd8dde5b4067801e23f0cd  download/libiconv-1.12.tar.gz
 209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba  download/gettext-0.17.tar.gz
 004dae11e11598584939d66d26a5ab9b48d08a00ca2d00ae8d38ee3ac7a15d65  download/libpthread-stubs-0.1.tar.bz2
 79945d06de16736d14210139e8e68cf29f8ea312190d2375507511f367a2f872  download/qt-embedded-linux-opensource-src-4.4.0.tar.bz2
@@ -132,3 +131,4 @@ ff25cbf43dd5c5f8cddc1b2094505c1d079a576b873a6d3d6b62d95da1bdd1d7  download/gtk+-
 f7993d26c3606a9b0e32d1eebe716f2294ac37fac014c47744e986fc0ff5e6d1  download/atk-1.26.0.tar.bz2
 58a5ea16d499fe06f90fcbf1d687d1235d2cb9bc28bf979867bd3faadf38fc3f  download/linux-2.6.29.tar.bz2
 7e7cd4f3974199b729e6e3a0af08bd4279fde0370a1120c1a3b351ab090c6101  download/openssl-0.9.8k.tar.gz
+8a4fc94bcecf87fd7f39104d356d3c4c307cad390721e65973988430a2519cf6  download/libiconv-1.13.tar.gz

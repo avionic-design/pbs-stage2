@@ -1,5 +1,5 @@
 PACKAGE = libiconv
-VERSION = 1.12
+VERSION = 1.13
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
