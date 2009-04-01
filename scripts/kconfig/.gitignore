@@ -1,5 +1,6 @@
 *.o
 conf
+kdeps
 kxgettext
 mconf
 lex.backup

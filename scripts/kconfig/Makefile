@@ -2,7 +2,7 @@ CONFIG_SHELL ?= /bin/sh
 
 HOSTCC = gcc
 
-host-progs-y = conf mconf kxgettext
+host-progs-y = conf mconf kxgettext kdeps
 
 all: $(host-progs-y)
 
@@ -30,6 +30,10 @@ kxgettext-objs-y = \
 	kxgettext.o \
 	zconf.tab.o
 
+kdeps-objs-y = \
+	kdeps.o \
+	zconf.tab.o
+
 zconf.tab.o: lex.zconf.c zconf.hash.c
 
 zconf.tab.c: zconf.y confdata.c
@@ -54,6 +58,9 @@ mconf: $(mconf-objs-y)
 kxgettext: $(kxgettext-objs-y)
 	$(HOSTCC) -o $@ $^
 
+kdeps: $(kdeps-objs-y)
+	$(HOSTCC) -o $@ $^
+
 util.o: lkc_defs.h
 
 lkc_defs.h: lkc_proto.h
@@ -69,4 +76,5 @@ clean:
 	rm -rf $(conf-objs-y)
 	rm -rf $(mconf-objs-y)
 	rm -rf $(kxgettext-objs-y)
+	rm -rf $(kdeps-objs-y)
 
