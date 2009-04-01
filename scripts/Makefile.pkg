@@ -188,6 +188,10 @@ $(stampdir)/%.tar.bz2-extract:
 	$(call cmd,extract_tar_bz2,$(tarball))
 	$(makestamp)
 
+$(stampdir)/%.tar.lzma-extract:
+	$(call cmd,extract_tar_lzma,$(tarball))
+	$(makestamp)
+
 # ----- patch targets --------------------------------------------------------
 
 $(stampdir)/$(package)-apply: patchdir ?= $(srctree)/packages/$(package)/patches
