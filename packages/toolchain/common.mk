@@ -5,6 +5,6 @@ prefix := $(ROOTFS)$(prefix)
 PATH   := $(prefix)/bin:$(PATH)
 ROOTFS :=
 
-env = PATH=$(PATH)
+env = env -i PATH=$(PATH)
 export prefix PATH ROOTFS priv env
 

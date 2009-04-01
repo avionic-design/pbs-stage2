@@ -101,13 +101,16 @@ else
 
   export LIBC_VERSION
 
+  packages-y := toolchain/gmp
+  packages-y += toolchain/mpfr
+
   ifeq ($(LIBC),newlib)
-    packages-y  = toolchain/binutils
+    packages-y += toolchain/binutils
     packages-y += toolchain/gcc
     packages-y += toolchain/newlib
   else
     libc := $(shell echo $(LIBC) | sed -e s/gnu/glibc/)
-    packages-y  = toolchain/linux-headers
+    packages-y += toolchain/linux-headers
     packages-y += toolchain/binutils
     packages-y += toolchain/gcc-core
     packages-y += toolchain/$(libc)

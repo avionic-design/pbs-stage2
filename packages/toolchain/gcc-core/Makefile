@@ -26,6 +26,8 @@ conf-args = \
 	--libexecdir=$(exec-prefix)/lib \
 	--includedir=$(exec-prefix)/include \
 	--program-prefix=$(TARGET)- \
+	--with-mpfr=$(ROOTFS)$(prefix) \
+	--with-gmp=$(ROOTFS)$(prefix) \
 	--disable-libmudflap \
 	--disable-libssp \
 	--disable-shared \

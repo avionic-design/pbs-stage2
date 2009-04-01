@@ -29,6 +29,8 @@ conf-args = \
 	--includedir=$(exec-prefix)/include \
 	--with-gxx-include-dir=$(exec-prefix)/include/c++/$(VERSION) \
 	--program-prefix=$(TARGET)- \
+	--with-mpfr=$(ROOTFS)$(prefix) \
+	--with-gmp=$(ROOTFS)$(prefix) \
 	--disable-libmudflap \
 	--disable-libssp \
 	--disable-static \
