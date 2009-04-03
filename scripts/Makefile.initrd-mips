@@ -1,0 +1,71 @@
+KVER = $(shell cat $(PLATFORM)/kernel-version)
+KREL = $(shell cat $(PLATFORM)/kernel-release)
+priv = sudo
+
+$(ROOTFS): FORCE
+	$(Q)$(MAKE) platform=$(platform) install
+
+INITRD_FILTER = \
+	-not -path '*/include*' \
+	-not -path '*/usr/share/man*' \
+	-not -name '*.a'
+
+$(PLATFORM)/initrd.img: $(ROOTFS) FORCE
+	@echo '  CPIO      $@'
+	@(cd $< && find $(INITRD_FILTER) | $(priv) xargs chown -h root:root)
+	@(cd $< && find $(INITRD_FILTER) | cpio -o -H newc --quiet) > $@
+
+$(PLATFORM)/initrd.gz: $(PLATFORM)/initrd.img
+	@echo '  GZIP      $@'
+	@gzip -c $< > $@
+
+PHONY += images
+images: u-boot.img u-boot.fit
+
+PHONY += u-boot.img
+u-boot.img: $(PLATFORM)/u-boot.img
+
+PHONY += u-boot.fit
+u-boot.fit: $(PLATFORM)/u-boot.fit
+
+# TODO: move this somewhere else
+MKIMAGE = mkimage
+LOAD_ADDR = 0x80002000
+EXEC_ADDR = 0x80002000
+
+concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
+
+quiet_cmd_mk_uboot_img = MKIMAGE   $@
+      cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none \
+			 	-a $(LOAD_ADDR) -e $(EXEC_ADDR) \
+				-d $(call concat, :, $^) $@ \
+				> /dev/null 2>&1
+
+quiet_cmd_mk_uboot_fit = MKIMAGE   $@
+      cmd_mk_uboot_fit = $(MKIMAGE) -f $(PLATFORM)/multi.its $@ \
+			 	> /dev/null 2>&1
+
+quiet_cmd_objcopy = OBJCOPY   $@
+      cmd_objcopy = $(CROSS_COMPILE)objcopy -O binary -R .reginfo	\
+			-R .note -R .comment -R .mdebug			\
+			-R .note.gnu.build-id -S $< $@
+
+$(PLATFORM)/vmlinux: $(PLATFORM)/vmlinux-$(KREL)
+	$(call cmd,objcopy)
+
+$(PLATFORM)/u-boot.img: $(PLATFORM)/vmlinux $(PLATFORM)/initrd.gz
+	$(call cmd,mk_uboot_img)
+
+$(PLATFORM)/multi.its: $(PLATFORM)/multi.its.in $(PLATFORM)/kernel-version
+	$(Q)sed -e 's/@KVER@/$(KVER)/g' $< > $@
+	$(if $(Q),$(Q)echo '  GEN       $@')
+
+$(PLATFORM)/u-boot.fit: $(PLATFORM)/vmlinux $(PLATFORM)/initrd.gz $(PLATFORM)/multi.its
+	$(call cmd,mk_uboot_fit)
+
+PHONY += FORCE
+FORCE: ;
+	@:
+
+.PHONY: $(PHONY)
+

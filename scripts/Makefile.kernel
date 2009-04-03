@@ -10,6 +10,9 @@ ARCH := $(patsubst i%86,x86,$(ARCH))
   image-blackfin = vmImage
 install-blackfin = install
 
+  image-mips = vmlinux
+install-mips = install
+
   image-x86 = bzImage
 install-x86 = install
 
