@@ -11,7 +11,6 @@ b439e04adab9b1e66e11f59c4331680da48f1722f2123123f7c16dfbed2c38dc  download/procp
 d3d70ebf15458ac15bd9930cbe516bedebfdb7ac4c679c456668eb0d56eddb2c  download/util-linux-2.12r.tar.gz
 036c694caa1aeb6639f7e2c1b10c78b7133e51b322a7123578e7709fe6190240  download/module-init-tools-3.2.tar.bz2
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
-7bbe277faa80c8d8d9cb96111db65fc0007d451784cc459207cd46b746a6f23a  download/openssh-4.6p1.tar.gz
 be955bef7a81d69222e929689e0de0ecf64c13dc5b15b2ee5696d5ef66fdeec0  download/sed-4.1.5.tar.gz
 44357e0fae8c8f0e315bf130b4e86a4f96b91d66eeb4e473def4ce8336fff102  download/sysklogd-1.4.1.tar.gz
 37f6f7d9de74196eb5fc0bbe0aea9b5c939de7f500acba3af6fd643f3b538b44  download/libusb-0.1.12.tar.gz
@@ -134,3 +133,4 @@ f7993d26c3606a9b0e32d1eebe716f2294ac37fac014c47744e986fc0ff5e6d1  download/atk-1
 5420b0e558a69a53b36f2b2c70a69f547e075d98366a585fc80cbbcce1efe368  download/gmp-4.2.4.tar.bz2
 95e507b26bac3b64215bc3cf1463525781582d40358b09becdb24d058b31def8  download/mpfr-2.4.1.tar.lzma
 0d395e9440b1cdd16b7e5da5296e1ef5b149e2a187196de50d820ae0d407c675  download/linux-2.6.29.1.tar.bz2
+4023710c37d0b3d79e6299cb79b6de2a31db7d581fe59e775a5351784034ecae  download/openssh-5.2p1.tar.gz
