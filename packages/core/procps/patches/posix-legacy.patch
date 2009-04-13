@@ -1,0 +1,22 @@
+diff --git a/sysctl.c b/sysctl.c
+index 0c0e73a..52f94ef 100644
+--- a/sysctl.c
++++ b/sysctl.c
+@@ -272,7 +272,7 @@ static int WriteSetting(const char *setting) {
+       return 0;
+    } /* end if */
+ 
+-   equals = index(setting, '=');
++   equals = strchr(setting, '=');
+  
+    if (!equals) {
+       fprintf(stderr, ERR_NO_EQUALS, setting);
+@@ -503,7 +503,7 @@ int main(int argc, char *argv[]) {
+          if (NameOnly && Quiet)   // nonsense
+             return Usage(me);
+          SwitchesAllowed = false;
+-         if (WriteMode || index(*argv, '='))
++         if (WriteMode || strchr(*argv, '='))
+             ReturnCode = WriteSetting(*argv);
+          else
+             ReturnCode = ReadSetting(*argv);
