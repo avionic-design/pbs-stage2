@@ -1,0 +1,23 @@
+diff --git a/src/pstree.c b/src/pstree.c
+index 6dfd139..8680ceb 100644
+--- a/src/pstree.c
++++ b/src/pstree.c
+@@ -48,8 +48,6 @@
+ #include <selinux/selinux.h>
+ #endif /*WITH_SELINUX*/
+ 
+-extern const char *__progname;
+-
+ #ifndef MAX_DEPTH
+ #define MAX_DEPTH    100
+ #endif
+@@ -824,9 +822,6 @@ main (int argc, char **argv)
+   textdomain(PACKAGE);
+ #endif
+   
+-  if (!strcmp(__progname, "pstree.x11"))
+-    wait_end=1;
+-
+   /*
+    * Attempt to figure out a good default symbol set.  Will be overriden by
+    * command-line options, if given.

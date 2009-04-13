@@ -1,0 +1,139 @@
+diff --git a/src/fuser.c b/src/fuser.c
+index b88b7a8..43ab4be 100644
+--- a/src/fuser.c
++++ b/src/fuser.c
+@@ -80,6 +80,20 @@ static void scan_knfsd(struct names *names_head, struct device_list *dev_head);
+ static void debug_match_lists(struct names *names_head, struct inode_list *ino_head, struct device_list *dev_head);
+ #endif
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ static void usage (const char *errormsg)
+ {
+ 	if (errormsg != NULL)
+diff --git a/src/killall.c b/src/killall.c
+index e9a47b7..94e7192 100644
+--- a/src/killall.c
++++ b/src/killall.c
+@@ -59,6 +59,34 @@ static int verbose = 0, exact = 0, interactive = 0, reg = 0,
+            quiet = 0, wait_until_dead = 0, process_group = 0,
+            ignore_case = 0, pidof;
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
++#if realloc == rpl_realloc
++#undef realloc
++extern void *realloc(void *ptr, size_t size);
++
++void *rpl_realloc(void *ptr, size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return realloc(ptr, size);
++}
++#define realloc rpl_realloc
++#endif
++
+ static int
+ ask (char *name, pid_t pid, const int signal)
+ {
+diff --git a/src/pstree.c b/src/pstree.c
+index a85c7bc..6dfd139 100644
+--- a/src/pstree.c
++++ b/src/pstree.c
+@@ -136,6 +136,20 @@ static char last_char = 0;
+ static int dumped = 0;		/* used by dump_by_user */
+ 
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ static void
+ out_char (char c)
+ {
+diff --git a/src/oldfuser.c b/src/oldfuser.c
+index acf07d9..79cc6e3 100644
+--- a/src/oldfuser.c
++++ b/src/oldfuser.c
+@@ -171,6 +171,20 @@ static dev_t net_dev;
+ static int ipv4only = 0, ipv6only = 0;
+ 
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ static void
+ parse_net_file (SPACE_DSC * dsc,char *filename, NET_CACHE **lastptr,int version )
+ {
+diff --git a/src/peekfd.c b/src/peekfd.c
+index 4c3a570..229e147 100644
+--- a/src/peekfd.c
++++ b/src/peekfd.c
+@@ -63,6 +63,20 @@
+ int num_attached_pids = 0;
+ pid_t attached_pids[MAX_ATTACHED_PIDS];
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ void detach(void) {
+ 	int i;
+ 	for (i = 0; i < num_attached_pids; i++)	

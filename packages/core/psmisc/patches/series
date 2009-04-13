@@ -1,0 +1,2 @@
+rpl_malloc.patch -p1
+no-__progname.patch -p1

@@ -1,5 +1,5 @@
 PACKAGE = psmisc
-VERSION = 22.3
+VERSION = 22.6
 
 LOCATION = http://mesh.dl.sourceforge.net/sourceforge/psmisc
 TARBALLS = $(PACKAGE_FULLNAME).tar.gz
