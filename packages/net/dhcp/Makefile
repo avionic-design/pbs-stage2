@@ -1,5 +1,5 @@
 PACKAGE = dhcp
-VERSION = 4.1.0rc1
+VERSION = 4.1.1b1
 
 LOCATION = http://ftp.isc.org/isc/$(PACKAGE)
 TARBALLS = \
