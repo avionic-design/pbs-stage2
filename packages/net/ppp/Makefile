@@ -39,6 +39,9 @@ package-do-install:
 #	cd $(pkgtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	cd $(pkgtree) && $(priv) $(env) install -m 755 \
+		scripts/pon scripts/plog scripts/poff \
+		$(ROOTFS)$(prefix)/bin
 
 plugin = $(prefix)/lib/pppd/$(VERSION)
 
