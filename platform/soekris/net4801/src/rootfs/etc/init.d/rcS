@@ -1,0 +1,10 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+run-parts --arg=start -- /etc/rcS.d
+
+log_action_begin_msg "Enabling verbose kernel messages "
+echo 8 > /proc/sys/kernel/printk
+log_action_end_msg $?
+

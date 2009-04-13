@@ -1,0 +1,8 @@
+user "04085105005"
+plugin rp-pppoe.so
+eth0
+noipdefault
+usepeerdns
+defaultroute
+persist
+noauth
