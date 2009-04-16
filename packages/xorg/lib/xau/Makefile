@@ -1,7 +1,7 @@
 PACKAGE = libXau
 VERSION = 1.0.4
 
-include packages/xorg/lib/Makefile
+include packages/xorg/lib/common.mk
 
 prunefiles = \
 	$(prefix)/lib/libXau.la

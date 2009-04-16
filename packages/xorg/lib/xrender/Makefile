@@ -1,7 +1,7 @@
 PACKAGE = libXrender
 VERSION = 0.9.4
 
-include packages/xorg/lib/Makefile
+include packages/xorg/lib/common.mk
 
 package-pre-configure:
 	cp -f support/config.{guess,sub} $(pkgtree)

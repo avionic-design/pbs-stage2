@@ -1,40 +1,28 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/proto
-TARBALLS ?= $(PACKAGE_FULLNAME).tar.bz2
-
-include packages/common.mk
-
-env += \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
-
-conf-args = \
-	--host=$(TARGET) \
-	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc
-
-conf-vars = \
-	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
-
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
-
-build-args =
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+obj-y += bigreqs
+obj-y += composite
+obj-y += damage
+obj-y += dga
+obj-y += evie
+obj-y += fixes
+obj-y += fontcache
+obj-y += fonts
+obj-y += gl
+obj-y += input
+obj-y += kb
+obj-y += randr
+obj-y += record
+obj-y += render
+obj-y += resource
+obj-y += scrnsaver
+obj-y += trap
+obj-y += video
+obj-y += x
+obj-y += xcb
+obj-y += xcmisc
+obj-y += xext
+obj-y += xf86bigfont
+obj-y += xf86dga
+obj-y += xf86dri
+obj-y += xf86misc
+obj-y += xf86vidmode
+obj-y += xinerama

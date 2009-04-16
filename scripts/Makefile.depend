@@ -1,7 +1,7 @@
 src = $(obj)
 
-PHONY := __build
-__build:
+PHONY := __depend
+__depend:
 
 obj-y :=
 
@@ -16,16 +16,16 @@ obj-y := $(patsubst %,$(obj)/%,$(obj-y))
 pkgdir-y := $(sort $(filter-out %/, $(obj-y)))
 subdir-y := $(sort $(filter %/, $(obj-y)))
 
-__build: $(subdir-y) $(pkgdir-y)
+__depend: $(subdir-y) $(pkgdir-y)
 	@:
 
 PHONY += $(subdir-y)
 $(subdir-y):
-	$(Q)$(MAKE) $(build)=$@
+	$(Q)$(MAKE) $(depend)=$@
 
 PHONY += $(pkgdir-y)
 $(pkgdir-y):
-	@echo "building package $@ ..."
+	$(call cmd,add_dep)
 
 PHONY += FORCE
 FORCE:

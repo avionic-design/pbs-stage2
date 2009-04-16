@@ -2,26 +2,66 @@ MAKEFLAGS += -rR --no-print-directory
 
 ifdef V
   ifeq ("$(origin V)", "command line")
-    PBUILD_VERBOSE = $(V)
+    KBUILD_VERBOSE = $(V)
   endif
 endif
-ifndef PBUILD_VERBOSE
-  PBUILD_VERBOSE =
+ifndef KBUILD_VERBOSE
+  KBUILD_VERBOSE = 0
 endif
 
-srctree := $(if $(PBUILD_SRC),$(PBUILD_SRC),$(CURDIR))
-objtree := $(CURDIR)
-tmptree  = $(CURDIR)/tmp
-src     := $(srctree)
-obj     := $(objtree)
-tmp      = $(tmptree)
-cpus    := $(shell cat /proc/cpuinfo | grep '^processor.*:' | wc -l)
-VPATH   := $(srctree)
+ifeq ($(KBUILD_SRC),)
 
-export srctree objtree tmptree VPATH
+ifdef O
+  ifeq ("$(origin O)", "command line")
+    KBUILD_OUTPUT := $(O)
+  endif
+endif
+ifndef KBUILD_OUTPUT
+  KBUILD_OUTPUT = $(CURDIR)
+endif
 
-# TODO: beautify output
-ifeq ($(PBUILD_VERBOSE),1)
+PHONY := _all
+_all:
+
+$(CURDIR)/Makefile Makefile: ;
+
+ifneq ($(KBUILD_OUTPUT),)
+
+saved-output := $(KBUILD_OUTPUT)
+KBUILD_OUTPUT := $(shell cd $(KBUILD_OUTPUT) 2> /dev/null && pwd)
+$(if $(KBUILD_OUTPUT),, \
+	$(error output directory "$(saved-output)" does not exist))
+
+PHONY += $(MAKECMDGOALS) sub-make
+
+$(filter-out _all sub-make $(CURDIR)/Makefile, $(MAKECMDGOALS)) _all: sub-make
+	$(Q)@:
+
+sub-make: FORCE
+	$(if $(KBUILD_VERBOSE:1=),@)$(MAKE) KBUILD_SRC=$(CURDIR) \
+		-f $(CURDIR)/Makefile \
+		-C $(KBUILD_OUTPUT) \
+		$(filter-out _all sub-make, $(MAKECMDGOALS))
+
+skip-makefile := 1
+endif # KBUILD_OUTPUT
+endif # KBUILD_SRC
+
+ifneq ($(skip-makefile),1)
+PHONY += all
+_all: all
+
+srctree	:= $(if $(KBUILD_SRC),$(KBUILD_SRC),$(CURDIR))
+objtree	:= $(CURDIR)
+src	:= $(srctree)
+obj	:= $(objtree)
+VPATH	:= $(srctree)
+export srctree objtree VPATH
+
+##
+## beautify output
+##
+ifeq ($(KBUILD_VERBOSE),1)
   quiet =
   Q =
 else
@@ -29,120 +69,48 @@ else
   Q = @
 endif
 
-ifneq ($(findstring s, $(MAKEFLAGS)),)
+ifneq ($(findstring s,$(MAKEFLAGS)),)
   quiet = silent_
 endif
 
-export quiet Q PBUILD_VERBOSE
+export quiet Q KBUILD_VERBOSE
 
-include scripts/pbuild.mk
+MAKEFLAGS += --include-dir=$(srctree)
 
-KERNELSRC ?= /usr/src/linux
+$(srctree)/scripts/Kbuild.include: ;
+include $(srctree)/scripts/Kbuild.include
 
-clean   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.clean          obj
-plat    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build          obj
-fetch   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  fetch   obj
-build   := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  build   obj
-install := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  install obj
-binary  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.build  binary  obj
-kernel  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.kernel         obj
-initrd  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.initrd         obj
-rootfs  := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.rootfs         obj
-card    := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.card           obj
-pkg     := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.pkg            obj
-export clean plat fetch build install kernel initrd pkg
+$(srctree)/scripts/Makefile.lib: ;
+include $(srctree)/scripts/Makefile.lib
 
-checksum = sha256
-builddir = $(PLATFORM)/build
-stampdir = $(tmptree)/stamps
-#patchdir = $(srctree)/packages/$(package)/patches
-export checksum builddir stampdir #patchdir
+dirs := \
+	packages
 
-config-targets := 0
-mixed-targets  := 0
+depend-dirs := $(addprefix depend-,$(dirs))
 
-ifneq ($(filter config %config, $(MAKECMDGOALS)),)
-  config-targets := 1
-  ifneq ($(filter-out config %config, $(MAKECMDGOALS)),)
-    mixed-targets := 1
-  endif
-endif
+PHONY += $(package-list)
+$(package-list): $(depend-dirs)
+	@:
 
-ifeq ($(mixed-targets),1)
-%:: FORCE
-	$(Q)$(MAKE) -C $(srctree) KBUILD_SRC= $@
-endif
+$(depends-file): $(package-list)
+	$(call cmd,gen_dep)
 
-ifdef platform
-  PLATFORM = $(objtree)/platform/$(platform)
-  tmptree = $(PLATFORM)/build
-  cache = $(PLATFORM)/cache
-  export PLATFORM
+PHONY += depend
+depend: $(depends-file)
+	@:
 
-  ifndef package
-PHONY += list
-list:
-	$(Q)$(MAKE) $(plat)=platform/$(platform) list
+PHONY += $(depend-dirs)
+$(depend-dirs): quiet = silent_
+$(depend-dirs): depend-%:
+	$(Q)$(MAKE) $(depend)=$*
 
-PHONY += uscan
-uscan:
-	$(Q)$(MAKE) $(plat)=platform/$(platform) uscan
+_all: depend
+	@:
 
-PHONY += fetch
-fetch:
-	$(Q)$(MAKE) $(fetch)=platform/$(platform)
-
-PHONY += build
-build:
-	$(Q)$(MAKE) $(build)=platform/$(platform)
-
-PHONY += install
-install:
-	$(Q)$(MAKE) $(install)=platform/$(platform)
-
-PHONY += clean
-clean:
-	$(Q)$(MAKE) $(clean)=platform/$(platform)
-
-PHONY += binary
-binary:
-	$(Q)$(MAKE) $(binary)=platform/$(platform)
-
-PHONY += initrd
-initrd:
-	$(Q)$(MAKE) $(initrd)=platform/$(platform) images
-
-PHONY += rootfs
-rootfs:
-	$(Q)$(MAKE) $(rootfs)=platform/$(platform) install
-
-PHONY += card
-card:
-	$(Q)$(MAKE) $(card)=platform/$(platform) write
-
-  else
-    include platform/$(platform)/Makefile
-  endif # !package
-endif # platform
-
-ifdef package
-list uscan version:
-	$(Q)$(MAKE) $(pkg)=$(package) $@
-
-clean fetch checksum extract patch:
-	$(Q)$(MAKE) $(pkg)=$(package) $@
-
-configure build install:
-	$(Q)$(MAKE) $(pkg)=$(package) $@
-
-binary:
-	$(Q)$(MAKE) $(pkg)=$(package) $@
-endif
+endif # skip-makefile
 
 PHONY += FORCE
 FORCE:
-
-Makefile: ;
 
 .PHONY: $(PHONY)
 

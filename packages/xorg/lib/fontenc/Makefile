@@ -1,7 +1,7 @@
 PACKAGE = libfontenc
 VERSION = 1.0.4
 
-include packages/xorg/lib/Makefile
+include packages/xorg/lib/common.mk
 
 conf-vars += \
 	CC='$(CC) --sysroot $(ROOTFS)'

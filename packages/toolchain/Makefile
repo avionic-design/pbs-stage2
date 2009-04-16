@@ -1,0 +1,16 @@
+obj-y += binutils
+obj-y += gcc-core
+obj-y += gcc
+obj-y += gdb
+obj-y += glibc-cleanup
+obj-y += glibc
+obj-y += gmp
+obj-y += libfloat
+obj-y += linux-headers
+obj-y += mingwrt
+obj-y += mpfr
+obj-y += newlib
+obj-y += pkg-config
+obj-y += uclibc-cleanup
+obj-y += uclibc
+obj-y += w32api

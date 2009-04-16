@@ -1,7 +1,7 @@
 PACKAGE = libXfont
 VERSION = 1.4.0
 
-include packages/xorg/lib/Makefile
+include packages/xorg/lib/common.mk
 
 conf-args += \
 	--disable-freetype

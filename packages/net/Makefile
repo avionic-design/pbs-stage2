@@ -1,0 +1,16 @@
+obj-y += dhcp
+obj-y += dropbear
+obj-y += ethtool
+obj-y += iperf
+obj-y += iputils
+obj-y += net-tools
+obj-y += netcat
+obj-y += openntpd
+obj-y += openssh
+obj-y += ppp.git
+obj-y += ppp
+obj-y += rp-pppoe
+obj-y += switchctrl
+obj-y += tcpdump
+obj-y += udhcp
+obj-y += xorp

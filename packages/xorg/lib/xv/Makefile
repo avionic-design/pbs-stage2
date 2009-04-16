@@ -1,7 +1,7 @@
 PACKAGE = libXv
 VERSION = 1.0.4
 
-include packages/xorg/lib/Makefile
+include packages/xorg/lib/common.mk
 
 conf-args += \
 	--disable-malloc0returnsnull

@@ -1,0 +1,16 @@
+obj-y += console/
+obj-y += core/
+obj-y += devel/
+obj-y += disk/
+obj-y += editors/
+obj-y += initrd/
+obj-y += kernel/
+obj-y += libs/
+obj-y += multimedia/
+obj-y += net/
+obj-y += shells/
+obj-y += sound/
+obj-y += toolchain/
+obj-y += util/
+obj-y += web/
+obj-y += xorg/
