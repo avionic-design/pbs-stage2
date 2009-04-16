@@ -25,6 +25,11 @@ _all:
 
 $(CURDIR)/Makefile Makefile: ;
 
+HOSTCC = gcc
+export HOSTCC
+
+KCONFIG_CONFIG ?= .config
+
 ifneq ($(KBUILD_OUTPUT),)
 
 saved-output := $(KBUILD_OUTPUT)
@@ -83,10 +88,79 @@ include $(srctree)/scripts/Kbuild.include
 $(srctree)/scripts/Makefile.lib: ;
 include $(srctree)/scripts/Makefile.lib
 
+PHONY += scripts_basic
+scripts_basic:
+	$(Q)$(MAKE) $(build)=scripts/basic
+
+scripts/basic/%: scripts_basic ;
+
+config-targets	:= 0
+mixed-targets	:= 0
+dot-config	:= 1
+
+ifneq ($(filter $(no-dot-config-targets), $(MAKECMDGOALS)),)
+  ifeq ($(filter-out $(no-dot-config-targets), $(MAKECMDGOALS)),)
+    dot-config := 0
+  endif
+endif
+
+ifneq ($(filter config %config, $(MAKECMDGOALS)),)
+  config-targets := 1
+  ifneq ($(filter-out config %config, $(MAKECMDGOALS)),)
+    mixed-targets := 1
+  endif
+endif
+
+ifeq ($(mixed-targets),1)
+%:: FORCE
+	$(Q)$(MAKE) -C $(srctree) KBUILD_SRC= $@
+else
+  ifeq ($(config-targets),1)
+
+config: scripts_basic FORCE
+	$(Q)mkdir -p include/config
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+
+%config: scripts_basic FORCE
+	$(Q)mkdir -p include/config
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+
+  else
+
+PHONY += scripts
+scripts: scripts_basic include/config/auto.conf
+	$(Q)$(MAKE) $(build)=$@
+
+    ifeq ($(dot-config),1)
+      -include include/config/auto.conf
+      -include include/config/auto.conf.cmd
+
+$(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
+
+include/config/auto.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
+	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
+
+    else
+
+include/config/auto.conf:
+	@echo "  ERROR: configuration is invalid."
+	@/bin/false
+
+    endif
+
+  endif
+endif
+
 dirs := \
 	packages
 
 depend-dirs := $(addprefix depend-,$(dirs))
+build-dirs := $(addprefix build-,$(dirs))
+
+PHONY += $(depend-dirs)
+$(depend-dirs): quiet = silent_
+$(depend-dirs): depend-%:
+	$(Q)$(MAKE) $(depend)=$*
 
 PHONY += $(package-list)
 $(package-list): $(depend-dirs)
@@ -99,12 +173,16 @@ PHONY += depend
 depend: $(depends-file)
 	@:
 
-PHONY += $(depend-dirs)
-$(depend-dirs): quiet = silent_
-$(depend-dirs): depend-%:
-	$(Q)$(MAKE) $(depend)=$*
+PHONY += $(build-dirs)
+#$(build-dirs): quiet = silent_
+$(build-dirs): build-%:
+	$(Q)$(MAKE) $(build)=$*
 
-_all: depend
+PHONY += build
+build: depend $(build-dirs)
+	@:
+
+_all: build
 	@:
 
 endif # skip-makefile

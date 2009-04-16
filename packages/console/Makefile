@@ -1,3 +1,3 @@
-obj-y += console-tools
-obj-y += fbset
-obj-y += minicom
+obj-$(CONFIG_PACKAGE_CONSOLE_CONSOLE_TOOLS) += console-tools
+obj-$(CONFIG_PACKAGE_CONSOLE_FBSET) += fbset
+obj-$(CONFIG_PACKAGE_CONSOLE_MINICOM) += minicom

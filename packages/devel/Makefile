@@ -1,6 +1,6 @@
-obj-y += gdb-server
-obj-y += glibc
-obj-y += klibc
-obj-y += python
-obj-y += strace
-obj-y += uclibc
+obj-$(CONFIG_PACKAGE_DEVEL_GDB_SERVER) += gdb-server
+obj-$(CONFIG_PACKAGE_DEVEL_GLIBC) += glibc
+obj-$(CONFIG_PACKAGE_DEVEL_KLIBC) += klibc
+obj-$(CONFIG_PACKAGE_DEVEL_PYTHON) += python
+obj-$(CONFIG_PACKAGE_DEVEL_STRACE) += strace
+obj-$(CONFIG_PACKAGE_DEVEL_UCLIBC) += uclibc

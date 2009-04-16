@@ -14,8 +14,6 @@
 #define LKC_DIRECT_LINK
 #include "lkc.h"
 
-#include "zconf.hash.c"
-
 #define printd(mask, fmt...) if (cdebug & (mask)) printf(fmt)
 
 #define PRINTD		0x0001
@@ -37,6 +35,7 @@ static struct menu *current_menu, *current_entry;
 #if YYDEBUG
 #define YYERROR_VERBOSE
 #endif
+
 %}
 %expect 26
 
@@ -99,6 +98,10 @@ static struct menu *current_menu, *current_entry;
 	if (current_menu == $$)
 		menu_end_menu();
 } if_entry menu_entry choice_entry
+
+%{
+#include "zconf.hash.c"
+%}
 
 %%
 input: stmt_list;
@@ -476,7 +479,7 @@ void conf_parse(const char *name)
 	modules_sym = sym_lookup(NULL, 0);
 	modules_sym->type = S_BOOLEAN;
 	modules_sym->flags |= SYMBOL_AUTO;
-	rootmenu.prompt = menu_add_prompt(P_MENU, "Linux Kernel Configuration", NULL);
+	rootmenu.prompt = menu_add_prompt(P_MENU, "Platform Build System", NULL);
 
 #if YYDEBUG
 	if (getenv("ZCONF_DEBUG"))

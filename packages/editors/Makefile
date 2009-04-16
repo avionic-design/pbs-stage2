@@ -1,1 +1,1 @@
-obj-y += vim
+obj-$(CONFIG_PACKAGE_EDITORS_VIM) += vim
