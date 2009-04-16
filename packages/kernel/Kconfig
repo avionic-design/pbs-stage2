@@ -12,7 +12,7 @@ config PACKAGE_KERNEL_LINUX_KERNEL
 	bool "linux: Linux kernel"
 	default y
 
-config PACKAGE_KERNEL_LINUX_KERNEL_MODULE_INIT_TOOLS
+config PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS
 	bool "module-init-tools: Linux kernel - module init tools"
 	depends on LIBC
 	default n

@@ -1,1 +1,1 @@
-obj-y += bash
+obj-$(CONFIG_PACKAGE_SHELLS_BASH) += bash

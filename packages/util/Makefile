@@ -1,1 +1,1 @@
-obj-y += abox
+obj-$(CONFIG_PACKAGE_UTIL_ABOX) += abox

@@ -1,1 +1,1 @@
-obj-y += webkit
+obj-$(CONFIG_PACKAGE_WEB_WEBKIT) += webkit

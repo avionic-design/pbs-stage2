@@ -90,7 +90,7 @@ include $(srctree)/scripts/Makefile.lib
 
 PHONY += scripts_basic
 scripts_basic:
-	$(Q)$(MAKE) $(build)=scripts/basic
+	$(Q)$(MAKE) $(host)=scripts/basic
 
 scripts/basic/%: scripts_basic ;
 
@@ -118,18 +118,18 @@ else
   ifeq ($(config-targets),1)
 
 config: scripts_basic FORCE
-	$(Q)mkdir -p include/config
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+	$(Q)mkdir -p include/config include/linux
+	$(Q)$(MAKE) $(host)=scripts/kconfig $@
 
 %config: scripts_basic FORCE
-	$(Q)mkdir -p include/config
-	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+	$(Q)mkdir -p include/config include/linux
+	$(Q)$(MAKE) $(host)=scripts/kconfig $@
 
   else
 
 PHONY += scripts
 scripts: scripts_basic include/config/auto.conf
-	$(Q)$(MAKE) $(build)=$@
+	$(Q)$(MAKE) $(host)=$@
 
     ifeq ($(dot-config),1)
       -include include/config/auto.conf

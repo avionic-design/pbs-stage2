@@ -1,5 +1,5 @@
-obj-y += linux-headers.git
-obj-y += linux-modules.git
-obj-y += linux.git
-obj-y += linux
-obj-y += module-init-tools
+obj-$(CONFIG_PACKAGE_KERNEL_LINUX_HEADERS) += linux-headers.git
+obj-$(CONFIG_PACKAGE_KERNEL_LINUX_MODULES) += linux-modules.git
+obj-$(CONFIG_PACKAGE_KERNEL_LINUX_KERNEL) += linux.git
+#obj-$(CONFIG_PACKAGE_KERNEL_LINUX_KERNEL) += linux
+obj-$(CONFIG_PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS) += module-init-tools

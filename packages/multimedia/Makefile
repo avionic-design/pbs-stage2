@@ -1,3 +1,3 @@
-obj-y += admp.git
-obj-y += libmad
-obj-y += mpeg2dec
+obj-$(CONFIG_PACKAGE_MULTIMEDIA_ADMP) += admp.git
+obj-$(CONFIG_PACKAGE_MULTIMEDIA_LIBMAD) += libmad
+obj-$(CONFIG_PACKAGE_MULTIMEDIA_MPEG2DEC) += mpeg2dec
