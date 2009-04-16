@@ -13,7 +13,7 @@ conf-args += \
 
 # strip libraries and binaries
 conf-vars += \
-	$(call set-args, CC CFLAGS LD LDFLAGS)
+	$(call set-args, CC CPPFLAGS CFLAGS LD LDFLAGS)
 
 autotools-configure:
 	mkdir -p $(pkgtree)/obj-$(TARGET) && \
