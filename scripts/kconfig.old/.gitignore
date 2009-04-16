@@ -1,9 +1,0 @@
-*.o
-conf
-kdeps
-kxgettext
-mconf
-lex.backup
-lex.zconf.c
-zconf.hash.c
-zconf.tab.c
