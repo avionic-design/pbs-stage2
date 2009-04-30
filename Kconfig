@@ -6,7 +6,7 @@ config VERSION
 
 config SHELL
 	string
-	default "bin/sh"
+	default "/bin/sh"
 	---help---
 
 source "platform/toolchain/Kconfig"
