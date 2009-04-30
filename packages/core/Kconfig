@@ -2,87 +2,87 @@ menu "Core System"
 
 config PACKAGE_CORE_BUSYBOX
 	bool "busybox"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_COREUTILS
 	bool "coreutils"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_DIFFUTILS
 	bool "diffutils"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_GREP
 	bool "grep"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_GROFF
 	bool "groff"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_LESS
 	bool "less"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_MKTEMP
 	bool "mktemp"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_PCIUTILS
 	bool "pciutils"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_PROCPS
 	bool "procps"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_PSMISC
 	bool "psmisc"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_SED
 	bool "sed"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_START_STOP_DAEMON
 	bool "start-stop-daemon"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_SYSKLOGD
 	bool "sysklogd"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_SYSVINIT
 	bool "sysvinit"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_UDEV
 	bool "udev"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_USBUTILS
 	bool "usbutils"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CORE_UTIL_LINUX
 	bool "util-linux"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

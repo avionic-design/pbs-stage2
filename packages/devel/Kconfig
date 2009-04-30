@@ -1,6 +1,6 @@
 menu "Development Tools"
 
-config LIBC
+config PACKAGE_DEVEL_LIBC
 	bool
 	default n
 
@@ -9,26 +9,29 @@ choice
 
 config PACKAGE_DEVEL_UCLIBC
 	bool "uclibc: uClibc"
-	select LIBC
+	select PACKAGE_DEVEL_LIBC
+	depends on PACKAGE_KERNEL_LINUX_LIBC
 
 config PACKAGE_DEVEL_GLIBC
 	bool "glibc: GNU libc"
-	select LIBC
+	select PACKAGE_DEVEL_LIBC
+	depends on PACKAGE_KERNEL_LINUX_LIBC
 
 config PACKAGE_DEVEL_KLIBC
 	bool "klibc"
-	select LIBC
+	select PACKAGE_DEVEL_LIBC
+	depends on PACKAGE_KERNEL_LINUX_LIBC
 
 endchoice
 
 config PACKAGE_DEVEL_GDB_SERVER
 	bool "gdb-server: GNU debugger server"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_DEVEL_STRACE
 	bool "strace"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

@@ -2,12 +2,12 @@ menu "Sound Utilities"
 
 config PACKAGE_SOUND_ALSA_LIB
 	bool "alsa-lib"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_SOUND_ALSA_UTILS
 	bool "alsa-utils"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

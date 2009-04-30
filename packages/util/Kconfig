@@ -2,7 +2,7 @@ menu "Miscellaneous Utilities"
 
 config PACKAGE_UTIL_ABOX
 	bool "abox"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

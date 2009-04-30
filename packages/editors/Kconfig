@@ -2,7 +2,7 @@ menu "Editors"
 
 config PACKAGE_EDITORS_VIM
 	bool "vim"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

@@ -2,172 +2,172 @@ menu "Libraries"
 
 config PACKAGE_LIBS_ATK
 	bool "atk"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_CAIRO
 	bool "cairo"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_CURL
 	bool "curl"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_DBUS_GLIB
 	bool "dbus-glib"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_DBUS
 	bool "dbus"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_DIRECTFB
 	bool "directfb"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_EXPAT
 	bool "expat"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_FONTCONFIG
 	bool "fontconfig"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_FREETYPE
 	bool "freetype"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_GETTEXT
 	bool "gettext"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_GLIB
 	bool "glib"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_GLIBMM
 	bool "glibmm"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_GTK
 	bool "gtk"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_GTKMM
 	bool "gtkmm"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_HAL
 	bool "hal"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_ICONV
 	bool "iconv"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_ICU
 	bool "icu"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBJPEG
 	bool "libjpeg"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBPCAP
 	bool "libpcap"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBPNG
 	bool "libpng"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBSIGC++
 	bool "libsigc++"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBUSB
 	bool "libusb"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBXML2
 	bool "libxml2"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_LIBXSLT
 	bool "libxslt"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_NCURSES
 	bool "ncurses"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_OPENSSL
 	bool "openssl"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_PANGO
 	bool "pango"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_PCRE
 	bool "pcre"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_PIXMAN
 	bool "pixman"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_QT
 	bool "qt"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_QTOPIA
 	bool "qtopia"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_SQLITE
 	bool "sqlite"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_TSLIB
 	bool "tslib"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_LIBS_ZLIB
 	bool "zlib"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

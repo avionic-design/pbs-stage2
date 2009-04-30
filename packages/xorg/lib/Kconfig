@@ -2,72 +2,72 @@ menu "X.Org - Libraries"
 
 config PACKAGE_XORG_LIB_FONTENC
 	bool "fontenc"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_PCIACCESS
 	bool "pciaccess"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_PTHREAD_STUBS
 	bool "pthread-stubs"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_X11
 	bool "x11"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XAU
 	bool "xau"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XCB
 	bool "xcb"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XDMCP
 	bool "xdmcp"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XEXT
 	bool "xext"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XFONT
 	bool "xfont"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XKBFILE
 	bool "xkbfile"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XRENDER
 	bool "xrender"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XT
 	bool "xt"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XTRANS
 	bool "xtrans"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_LIB_XV
 	bool "xv"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

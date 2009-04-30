@@ -2,17 +2,17 @@ menu "Console Utilities"
 
 config PACKAGE_CONSOLE_CONSOLE_TOOLS
 	bool "console-tools"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CONSOLE_FBSET
 	bool "fbset"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_CONSOLE_MINICOM
 	bool "minicom"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu

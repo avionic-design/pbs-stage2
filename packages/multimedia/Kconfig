@@ -2,17 +2,17 @@ menu "Multimedia Tools"
 
 config PACKAGE_MULTIMEDIA_ADMP
 	bool "admp"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_MULTIMEDIA_LIBMAD
 	bool "libmad"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_MULTIMEDIA_MPEG2DEC
 	bool "mpeg2dec"
-	depends on LIBC
+	depends on PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu
