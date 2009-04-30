@@ -1,0 +1,103 @@
+src = $(obj)
+
+PHONY := __all
+__all:
+
+obj-y :=
+
+-include include/config/auto.conf
+include scripts/Kbuild.include
+include scripts/Makefile.lib
+
+package		:= $(patsubst packages/%,%,$(obj))
+pkgsrctree	:= $(srctree)/packages/$(package)
+pkgtree		:= $(objtree)/$(package)
+
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
+
+# FIXME: only for backward compatibility
+PACKAGE_FULLNAME := $(PACKAGE)-$(VERSION)
+
+location	:= $(LOCATION)
+tarballs	:= $(TARBALLS)
+
+extprefix	:= $(pkgtree)/.extract-
+extract		:= $(addprefix $(extprefix),$(tarballs))
+extract-gz	:= $(filter %.tar.gz,$(extract))
+extract-bz2	:= $(filter %.tar.bz2,$(extract))
+extract-lzma	:= $(filter %.tar.lzma,$(extract))
+
+local-files	:= $(addprefix $(srctree)/download/, $(tarballs))
+remote-files	:= $(addprefix $(subst ://,//,$(location))/, $(tarballs))
+
+quiet_cmd_stamp =
+      cmd_stamp = mkdir -p $(@D); touch $@
+
+quiet_cmd_wget = WGET    $(patsubst %,$(location)/%,$*)
+      cmd_wget = #wget $(patsubst %,$(location)/%,$*)
+
+$(local-files): $(srctree)/download/%:
+	$(call cmd,wget)
+
+quiet_cmd_tar_gz = TAR     $<
+      cmd_tar_gz =
+
+quiet_cmd_tar_bz2 = TAR     $<
+      cmd_tar_bz2 =
+
+quiet_cmd_tar_lzma = TAR     $<
+      cmd_tar_lzma =
+
+$(extract-gz): $(extprefix)%.tar.gz: $(srctree)/download/%.tar.gz
+	$(call cmd,tar_gz)
+	$(call cmd,stamp)
+
+$(extract-bz2): $(extprefix)%.tar.bz2: $(srctree)/download/%.tar.bz2
+	$(call cmd,tar_bz2)
+	$(call cmd,stamp)
+
+$(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
+	$(call cmd,tar_lzma)
+	$(call cmd,stamp)
+
+$(pkgtree)/.extract: $(extract)
+	$(call cmd,stamp)
+
+$(pkgtree)/.patch: $(pkgtree)/.extract
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.patch
+#	@echo "$@"
+
+$(pkgtree)/.build: $(pkgtree)/.configure
+#	@echo "$@"
+
+$(pkgtree)/.binary: $(pkgtree)/.build
+#	@echo "$@"
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+#	@echo "$@"
+
+PHONY += __build
+__build: $(pkgtree)/.build
+#	@echo "Package: $(PACKAGE) $(VERSION)"
+#	@echo "   Tree: $(pkgsrctree)"
+
+PHONY += __binary
+__binary: $(pkgtree)/.binary
+#	@echo "building binary packages $(PACKAGE) $(VERSION)"
+
+PHONY += __install
+__install: $(pkgtree)/.install
+#	@echo "installing $(PACKAGE) $(VERSION)"
+
+PHONY += __all
+__all: __install
+
+PHONY += FORCE
+FORCE: ;
+
+.PHONY: $(PHONY)
+

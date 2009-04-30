@@ -213,4 +213,7 @@ quiet_cmd_add_dep = DEP     $@
 quiet_cmd_gen_dep = GEN     $@
       cmd_gen_dep = $(srctree)/scripts/depend $< > $@
 
+quiet_cmd_mkdir_p = MKDIR   $@
+      cmd_mkdir_p = mkdir -p $@
+
 # vim: ft=make

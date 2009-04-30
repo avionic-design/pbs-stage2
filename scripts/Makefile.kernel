@@ -1,7 +1,7 @@
 # unexport environment variables that may get in the way
 unexport CC CFLAGS LD LDFLAGS
 
-KBUILD_OUTPUT = $(buildtree)
+KBUILD_OUTPUT = $(obj)
 export KBUILD_OUTPUT
 
 ARCH := $(patsubst mips%,mips,$(ARCH))
@@ -31,52 +31,78 @@ else
   install-target = zinstall
 endif
 
+ifeq ($(KERNEL_CONFIG),)
+  $(error KERNEL_CONFIG is undefined, aborting ..)
+endif
+
+include $(srctree)/scripts/Kbuild.include
+
+quiet_cmd_gen_config = GEN     $@
+      cmd_gen_config = \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+				ARCH=$(ARCH) \
+				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+				$(KERNEL_CONFIG)
+
 $(KBUILD_OUTPUT)/.config:
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			$(KERNEL_CONFIG)
+	$(call cmd,gen_config)
 
-PHONY += $(PLATFORM)/kernel-version
-$(PLATFORM)/kernel-version:
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			kernelversion > $@
+quiet_cmd_gen_kernel_version = GEN     $@
+      cmd_gen_kernel_version = \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+				ARCH=$(ARCH) \
+				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+				kernelversion > $@
 
-PHONY += $(PLATFORM)/kernel-release
-$(PLATFORM)/kernel-release:
+PHONY += $(objtree)/kernel-version
+$(objtree)/kernel-version:
+	$(call cmd,gen_kernel_version)
+
+quiet_cmd_gen_kernel_release = GEN     $@
+      cmd_gen_kernel_release = \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+				ARCH=$(ARCH) \
+				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+				include/config/kernel.release; \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+				ARCH=$(ARCH) \
+				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+				kernelrelease > $@
+
+PHONY += $(objtree)/kernel-release
+$(objtree)/kernel-release:
 ifneq ($(CROSS_COMPILE),)
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			include/config/kernel.release
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			kernelrelease > $@
+	$(call cmd,gen_kernel_release)
 endif
 
 PHONY += config
 config: $(KBUILD_OUTPUT)/.config
-config: $(PLATFORM)/kernel-version
-config: $(PLATFORM)/kernel-release
+config: $(objtree)/kernel-version
+config: $(objtree)/kernel-release
+
+quiet_cmd_build_kernel_image = BUILD   $(image)
+      cmd_build_kernel_image = \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+					ARCH=$(ARCH) \
+					CROSS_COMPILE=$(CROSS_COMPILE) \
+					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+					$(image)
 
 PHONY += build-$(image)
-build-$(image): config
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			$(image)
+build-$(image): $(objtree)/.config
+	$(call cmd,build_kernel_image)
+
+quiet_cmd_build_kernel_modules = BUILD   modules
+      cmd_build_kernel_modules = \
+			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
+					ARCH=$(ARCH) \
+					CROSS_COMPILE=$(CROSS_COMPILE) \
+					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+					modules
 
 PHONY += build-modules
-build-modules: config
-	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			modules
+build-modules: $(objtree)/.config
+	$(call cmd,build_kernel_modules)
 
 PHONY += build
 build: build-$(image) build-modules

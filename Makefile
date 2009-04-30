@@ -154,24 +154,7 @@ endif
 dirs := \
 	packages
 
-depend-dirs := $(addprefix depend-,$(dirs))
 build-dirs := $(addprefix build-,$(dirs))
-
-PHONY += $(depend-dirs)
-$(depend-dirs): quiet = silent_
-$(depend-dirs): depend-%:
-	$(Q)$(MAKE) $(depend)=$*
-
-PHONY += $(package-list)
-$(package-list): $(depend-dirs)
-	@:
-
-$(depends-file): $(package-list)
-	$(call cmd,gen_dep)
-
-PHONY += depend
-depend: $(depends-file)
-	@:
 
 PHONY += $(build-dirs)
 #$(build-dirs): quiet = silent_

@@ -7,6 +7,7 @@ obj-y :=
 
 include scripts/Kbuild.include
 include scripts/Makefile.lib
+-include .package
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
@@ -16,9 +17,32 @@ packages-y = $(shell cat $(depends-file) | xargs echo)
 
 PHONY += $(packages-y)
 $(packages-y):
-	@echo "building package $@"
+	@echo $@ > .package
+	$(Q)$(MAKE) $(build)=$(obj) package
+	@rm .package
 
 __build: $(packages-y)
+
+dirs := $(filter %/,$(obj-y))
+dirs := $(addprefix $(obj)/, $(dirs))
+
+pkgs := $(filter-out %/,$(obj-y))
+pkgs := $(addprefix $(obj)/, $(pkgs))
+
+build-dirs := $(addprefix build-,$(dirs))
+build-pkgs := $(addprefix build-,$(pkgs))
+
+PHONY += $(build-dirs)
+$(build-dirs): build-%:
+	$(Q)$(MAKE) $(build)=$* package
+
+PHONY += $(build-pkgs)
+$(build-pkgs): build-%:
+	$(Q)$(MAKE) $(package)=$*
+
+PHONY += package
+package: $(build-dirs) $(build-pkgs)
+	@:
 
 PHONY += FORCE
 FORCE:

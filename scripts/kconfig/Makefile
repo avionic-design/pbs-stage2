@@ -10,22 +10,23 @@ else
 Kconfig := Kconfig
 endif
 
-xconfig: $(obj)/qconf
+xconfig: $(obj)/qconf $(obj)/deps
 	$< $(Kconfig)
 
-gconfig: $(obj)/gconf
+gconfig: $(obj)/gconf $(obj)/deps
 	$< $(Kconfig)
 
-menuconfig: $(obj)/mconf
+menuconfig: $(obj)/mconf $(obj)/deps
 	$< $(Kconfig)
 
-config: $(obj)/conf
+config: $(obj)/conf $(obj)/deps
 	$< $(Kconfig)
 
-oldconfig: $(obj)/conf
+oldconfig: $(obj)/conf $(obj)/deps
 	$< -o $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
-silentoldconfig: $(obj)/conf
+silentoldconfig: $(obj)/conf $(obj)/deps
 	$< -s $(Kconfig)
 
 # Create new linux.pot file
@@ -53,19 +54,19 @@ update-po-config: $(obj)/kxgettext $(obj)/gconf.glade.h
 
 PHONY += randconfig allyesconfig allnoconfig allmodconfig defconfig
 
-randconfig: $(obj)/conf
+randconfig: $(obj)/conf $(obj)/deps
 	$< -r $(Kconfig)
 
-allyesconfig: $(obj)/conf
+allyesconfig: $(obj)/conf $(obj)/deps
 	$< -y $(Kconfig)
 
-allnoconfig: $(obj)/conf
+allnoconfig: $(obj)/conf $(obj)/deps
 	$< -n $(Kconfig)
 
-allmodconfig: $(obj)/conf
+allmodconfig: $(obj)/conf $(obj)/deps
 	$< -m $(Kconfig)
 
-defconfig: $(obj)/conf
+defconfig: $(obj)/conf $(obj)/deps
 ifeq ($(KBUILD_DEFCONFIG),)
 	$< -d $(Kconfig)
 else
@@ -73,7 +74,7 @@ else
 	$(Q)$< -D arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
 endif
 
-%_defconfig: $(obj)/conf
+%_defconfig: $(obj)/conf $(obj)/deps
 	$(Q)$< -D arch/$(SRCARCH)/configs/$@ $(Kconfig)
 
 # Help text used by make help
@@ -118,8 +119,9 @@ lxdialog += lxdialog/textbox.o lxdialog/yesno.o lxdialog/menubox.o
 conf-objs	:= conf.o  zconf.tab.o
 mconf-objs	:= mconf.o zconf.tab.o $(lxdialog)
 kxgettext-objs	:= kxgettext.o zconf.tab.o
+deps-objs	:= deps.o zconf.tab.o
 
-hostprogs-y := conf qconf gconf kxgettext
+hostprogs-y := conf qconf gconf kxgettext deps
 
 ifeq ($(MAKECMDGOALS),menuconfig)
 	hostprogs-y += mconf
