@@ -4,6 +4,9 @@ config PACKAGE_DEVEL_LIBC
 	bool
 	default n
 
+#
+# C runtime library
+#
 choice
 	prompt "C runtime library"
 
@@ -23,6 +26,10 @@ config PACKAGE_DEVEL_KLIBC
 	depends on PACKAGE_KERNEL_LINUX_LIBC
 
 endchoice
+
+source "packages/devel/uclibc/Kconfig"
+source "packages/devel/glibc/Kconfig"
+source "packages/devel/klibc/Kconfig"
 
 config PACKAGE_DEVEL_GDB_SERVER
 	bool "gdb-server: GNU debugger server"

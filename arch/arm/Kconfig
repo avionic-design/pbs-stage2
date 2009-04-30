@@ -1,0 +1,52 @@
+config ARCH
+	string
+	default "arm"
+
+#
+# ARM CPU selection
+#
+choice
+	prompt "CPU"
+
+config ARCH_ARM_CPU_GENERIC
+	bool "generic"
+
+config ARCH_ARM_CPU_XSCALE
+	bool "Xscale"
+
+endchoice
+
+if ARCH_ARM_CPU_GENERIC
+source "arch/arm/generic/Kconfig"
+endif
+
+if ARCH_ARM_CPU_XSCALE
+source "arch/arm/xscale/Kconfig"
+endif
+
+#
+# ABI configuration
+#
+choice
+	prompt "ABI"
+
+config ARCH_ARM_ABI_OABI
+	bool "OABI"
+
+config ARCH_ARM_ABI_EABI
+	bool "EABI"
+
+endchoice
+
+if ARCH_ARM_ABI_OABI
+config ABI
+	string
+	default ""
+endif
+
+if ARCH_ARM_ABI_EABI
+config ABI
+	string
+	default "eabi"
+endif
+

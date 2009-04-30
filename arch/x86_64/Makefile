@@ -1,0 +1,4 @@
+TARGET  = $(ARCH)-
+TARGET += $(OS)-
+TARGET += $(LIBC)
+

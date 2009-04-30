@@ -5,9 +5,21 @@ __build:
 
 obj-y :=
 
+ifeq ($(findstring package, $(MAKECMDGOALS)),)
+  include $(objtree)/include/config/auto.conf
+
+  # get rid of quotes
+  ARCH := $(shell echo $(CONFIG_ARCH))
+
+  include arch/$(ARCH)/Makefile
+endif
+
 include scripts/Kbuild.include
 include scripts/Makefile.lib
--include .package
+
+ifneq ($(wildcard .package),)
+include .package
+endif
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)

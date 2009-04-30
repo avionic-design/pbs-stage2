@@ -162,7 +162,7 @@ $(build-dirs): build-%:
 	$(Q)$(MAKE) $(build)=$*
 
 PHONY += build
-build: depend $(build-dirs)
+build: $(build-dirs)
 	@:
 
 _all: build

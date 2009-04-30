@@ -1,0 +1,19 @@
+config ARCH
+	string
+	default "x86_64"
+
+#
+# x86-64 CPU selection
+#
+choice
+	prompt "CPU"
+
+config ARCH_X86_64_GENERIC
+	bool "generic"
+
+endchoice
+
+if ARCH_X86_64_GENERIC
+source "arch/x86_64/generic/Kconfig"
+endif
+

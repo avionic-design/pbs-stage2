@@ -9,6 +9,9 @@ config SHELL
 	default "/bin/sh"
 	---help---
 
-source "platform/toolchain/Kconfig"
+menu "Target Configuration"
+source "arch/Kconfig"
+endmenu
+
 source "packages/Kconfig"
 

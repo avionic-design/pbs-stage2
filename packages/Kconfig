@@ -1,8 +1,8 @@
 menu "Packages"
 
 source "packages/kernel/Kconfig"
-source "packages/core/Kconfig"
 source "packages/devel/Kconfig"
+source "packages/core/Kconfig"
 source "packages/libs/Kconfig"
 source "packages/shells/Kconfig"
 source "packages/net/Kconfig"

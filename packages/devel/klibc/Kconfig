@@ -1,0 +1,4 @@
+config LIBC
+	string
+	default "klibc"
+

@@ -1,0 +1,40 @@
+choice
+	prompt "Architecture"
+
+config ARCH_X86
+	bool "x86"
+
+config ARCH_X86_64
+	bool "x86_64"
+
+config ARCH_ARM
+	bool "arm"
+
+config ARCH_BLACKFIN
+	bool "blackfin"
+
+config ARCH_MIPS
+	bool "mips"
+
+endchoice
+
+if ARCH_X86
+source "arch/x86/Kconfig"
+endif
+
+if ARCH_X86_64
+source "arch/x86_64/Kconfig"
+endif
+
+if ARCH_ARM
+source "arch/arm/Kconfig"
+endif
+
+if ARCH_BLACKFIN
+source "arch/blackfin/Kconfig"
+endif
+
+if ARCH_MIPS
+source "arch/mips/Kconfig"
+endif
+

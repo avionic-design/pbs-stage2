@@ -1,0 +1,4 @@
+config CPU
+	string
+	default "i786"
+

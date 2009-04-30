@@ -1,0 +1,4 @@
+config ARCH
+	string
+	default "mips"
+

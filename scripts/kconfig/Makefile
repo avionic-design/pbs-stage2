@@ -18,6 +18,7 @@ gconfig: $(obj)/gconf $(obj)/deps
 
 menuconfig: $(obj)/mconf $(obj)/deps
 	$< $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 config: $(obj)/conf $(obj)/deps
 	$< $(Kconfig)

@@ -23,5 +23,15 @@ config PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS
 	depends on PACKAGE_DEVEL_LIBC
 	default n
 
+config KERNEL_CONFIG
+	string "Kernel configuration"
+	default "defconfig"
+
 endmenu
+
+if PACKAGE_DEVEL_LIBC
+config OS
+	string
+	default "linux"
+endif
 

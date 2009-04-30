@@ -4,6 +4,7 @@ unexport CC CFLAGS LD LDFLAGS
 KBUILD_OUTPUT = $(obj)
 export KBUILD_OUTPUT
 
+ARCH := $(shell echo $(ARCH))
 ARCH := $(patsubst mips%,mips,$(ARCH))
 ARCH := $(patsubst i%86,x86,$(ARCH))
 

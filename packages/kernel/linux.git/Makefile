@@ -8,8 +8,10 @@ DESCRIPTION = Linux kernel
 
 ##############################################################################
 
+include $(objtree)/include/config/auto.conf
 ARCH = $(CONFIG_ARCH)
-export ARCH
+KERNEL_CONFIG = $(CONFIG_KERNEL_CONFIG)
+export ARCH KERNEL_CONFIG
 
 MAKEFLAGS =
 KBUILD_SRC =
