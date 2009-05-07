@@ -1,4 +1,4 @@
 config CPU
 	string
-	default ""
+	default "generic"
 

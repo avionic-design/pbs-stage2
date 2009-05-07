@@ -42,13 +42,13 @@ $(local-files): $(srctree)/download/%:
 	$(call cmd,wget)
 
 quiet_cmd_tar_gz = TAR     $<
-      cmd_tar_gz =
+      cmd_tar_gz = cd $(pkgtree) && tar xzf $<
 
 quiet_cmd_tar_bz2 = TAR     $<
-      cmd_tar_bz2 =
+      cmd_tar_bz2 = cd $(pkgtree) && tar xjf $<
 
 quiet_cmd_tar_lzma = TAR     $<
-      cmd_tar_lzma =
+      cmd_tar_lzma = cd $(pkgtree) && tar --lzma -xf $<
 
 $(extract-gz): $(extprefix)%.tar.gz: $(srctree)/download/%.tar.gz
 	$(call cmd,tar_gz)
@@ -62,36 +62,38 @@ $(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
 	$(call cmd,tar_lzma)
 	$(call cmd,stamp)
 
-$(pkgtree)/.extract: $(extract)
+$(pkgtree):
+	$(call cmd,mkdir_p)
+
+$(pkgtree)/.extract: $(pkgtree) $(extract)
 	$(call cmd,stamp)
 
 $(pkgtree)/.patch: $(pkgtree)/.extract
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-#	@echo "$@"
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-#	@echo "$@"
 
 $(pkgtree)/.binary: $(pkgtree)/.build
-#	@echo "$@"
 
 $(pkgtree)/.install: $(pkgtree)/.binary
-#	@echo "$@"
 
 PHONY += __build
 __build: $(pkgtree)/.build
-#	@echo "Package: $(PACKAGE) $(VERSION)"
-#	@echo "   Tree: $(pkgsrctree)"
+	@:
 
 PHONY += __binary
 __binary: $(pkgtree)/.binary
-#	@echo "building binary packages $(PACKAGE) $(VERSION)"
+	@:
 
 PHONY += __install
 __install: $(pkgtree)/.install
-#	@echo "installing $(PACKAGE) $(VERSION)"
+	@:
+
+$(pkgtree)/.build: $(pkgtree)/.configure
+$(pkgtree)/.binary: $(pkgtree)/.build
+$(pkgtree)/.install: $(pkgtree)/.binary
 
 PHONY += __all
 __all: __install

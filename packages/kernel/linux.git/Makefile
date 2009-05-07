@@ -25,19 +25,20 @@ $(pkgtree)/build:
 
 $(pkgtree)/.configure: $(pkgtree)/build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build config
+	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build build
+	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "not implemented yet"
+$(pkgtree)/.binary: $(pkgtree)/.build
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.binary
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build headers-install
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
-
-$(pkgtree)/.clean:
-	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build clean
+	$(call cmd,stamp)
 
 kernel-version:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build version

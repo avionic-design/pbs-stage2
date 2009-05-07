@@ -38,3 +38,7 @@ if ARCH_MIPS
 source "arch/mips/Kconfig"
 endif
 
+config CROSS_COMPILE
+	string "cross-compilation toolchain"
+	default ""
+

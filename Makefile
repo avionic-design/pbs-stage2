@@ -94,6 +94,8 @@ scripts_basic:
 
 scripts/basic/%: scripts_basic ;
 
+no-dot-config-targets := clean mrproper distclean
+
 config-targets	:= 0
 mixed-targets	:= 0
 dot-config	:= 1
@@ -167,6 +169,21 @@ build: $(build-dirs)
 
 _all: build
 	@:
+
+clean-dirs := $(dirs) scripts/basic scripts/kconfig
+clean-dirs := $(addprefix _clean_-,$(clean-dirs))
+
+PHONY += $(clean-dirs)
+$(clean-dirs): _clean_-%: %
+	$(Q)$(MAKE) $(clean)=$*
+
+PHONY += clean
+clean: $(clean-dirs)
+	@echo "$@"
+
+PHONY += mrproper
+mrproper: clean
+	@echo "$@"
 
 endif # skip-makefile
 

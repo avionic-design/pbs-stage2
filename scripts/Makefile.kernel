@@ -138,10 +138,10 @@ endif
 PHONY += install-$(image)
 install-$(image): build-$(image)
 	cd $(KERNELSRC) && \
-		$(priv) $(MAKE) ARCH=$(ARCH) \
+		$(MAKE) ARCH=$(ARCH) \
 			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			INSTALL_PATH=$(PLATFORM) \
+			INSTALL_PATH=$(objtree) \
 			$(install-target)
 
 PHONY += install-modules

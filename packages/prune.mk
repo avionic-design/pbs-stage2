@@ -1,4 +1,4 @@
-prune-pkg := -f $(if $(PBUILD_SRC), $(srctree)/)scripts/Makefile.prune \
+prune-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.prune \
 			package
 export prunefiles
 export prunedirs

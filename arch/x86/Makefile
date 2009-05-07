@@ -1,4 +1,5 @@
-TARGET  = $(CPU)-
-TARGET += $(OS)-
-TARGET += $(LIBC)
+TARGET  = $(CONFIG_CPU)-
+TARGET += $(TARGET)$(CONFIG_OS)-
+TARGET += $(TARGET)$(LIBC)-
+export TARGET
 

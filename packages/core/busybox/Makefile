@@ -10,6 +10,10 @@ DESCRIPTION = tiny utilities for small and embedded systems
 
 include packages/common.mk
 
+pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU := $(shell echo $(CONFIG_CPU))
+
 DEF_CONFIG = minimal
 CPU_CONFIG = minimal-$(CPU)
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
@@ -23,9 +27,10 @@ conf-args = \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
 
-package-configure:
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/.config
-	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
+$(pkgtree)/.configure:
+	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
+	$(call cmd,stamp)
 
 build-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
@@ -35,8 +40,13 @@ build-args = \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build: $(pkgtree)/.configure
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary: $(pkgtree)/.build
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
@@ -46,10 +56,8 @@ install-args = \
 	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) chmod u+s $(ROOTFS)/bin/busybox
-
-package-clean:
-	@:
+	$(call cmd,stamp)
 

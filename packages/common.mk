@@ -1,7 +1,22 @@
 # common definitions for packages
 
 INSTALL = /usr/bin/install
+ROOTFS ?= $(objtree)/rootfs
 prefix ?= /usr
+export ROOTFS prefix
+
+CONFIG_ARCH := $(shell echo $(CONFIG_ARCH))
+CONFIG_CPU := $(shell echo $(CONFIG_CPU))
+CONFIG_OS := $(shell echo $(CONFIG_OS))
+CONFIG_LIBC := $(shell echo $(CONFIG_LIBC))
+CONFIG_ABI := $(shell echo $(CONFIG_ABI))
+
+include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
+ifeq ($(origin CONFIG_CROSS_COMPILE), "command line")
+  CROSS_COMPILE = $(CONFIG_CROSS_COMPILE)
+else
+  CROSS_COMPILE ?= $(srctree)/toolchains/opt/cross/bin/$(TARGET)
+endif
 
 CC     = $(CROSS_COMPILE)gcc
 CPP    = $(CROSS_COMPILE)cpp
