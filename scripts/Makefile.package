@@ -32,7 +32,7 @@ extract-lzma	:= $(filter %.tar.lzma,$(extract))
 local-files	:= $(addprefix $(srctree)/download/, $(tarballs))
 remote-files	:= $(addprefix $(subst ://,//,$(location))/, $(tarballs))
 
-quiet_cmd_stamp =
+quiet_cmd_stamp = STAMP   $@
       cmd_stamp = mkdir -p $(@D); touch $@
 
 quiet_cmd_wget = WGET    $(patsubst %,$(location)/%,$*)
@@ -62,10 +62,11 @@ $(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
 	$(call cmd,tar_lzma)
 	$(call cmd,stamp)
 
-$(pkgtree):
-	$(call cmd,mkdir_p)
+$(pkgtree)/.directory:
+	$(Q)mkdir -p $(@D)
+	$(call cmd,stamp)
 
-$(pkgtree)/.extract: $(pkgtree) $(extract)
+$(pkgtree)/.extract: $(pkgtree)/.directory $(extract)
 	$(call cmd,stamp)
 
 $(pkgtree)/.patch: $(pkgtree)/.extract

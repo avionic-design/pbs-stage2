@@ -83,9 +83,6 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.cleanup: package-cleanup
-	$(call cmd,stamp)
-
 $(pkgtree)/.package-install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	$(call cmd,stamp)
 

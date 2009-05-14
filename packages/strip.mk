@@ -2,9 +2,9 @@ strip-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.strip \
 			package
 export stripfiles
 
-PHONY += package-strip
-package-strip:
+$(pkgtree)/.strip:
 	$(Q)$(MAKE) $(strip-pkg)=$(package)
+	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
 

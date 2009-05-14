@@ -1,9 +1,8 @@
 include packages/prune.mk
 include packages/strip.mk
 
-PHONY += package-cleanup
-package-cleanup: package-prune package-strip
-	@:
+$(pkgtree)/.cleanup: $(pkgtree)/.prune $(pkgtree)/.strip
+	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
 

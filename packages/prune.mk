@@ -3,9 +3,9 @@ prune-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.prune \
 export prunefiles
 export prunedirs
 
-PHONY += package-prune
-package-prune:
+$(pkgtree)/.prune:
 	$(Q)$(MAKE) $(prune-pkg)=$(package)
+	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
 

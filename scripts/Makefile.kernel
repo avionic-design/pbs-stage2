@@ -40,40 +40,41 @@ include $(srctree)/scripts/Kbuild.include
 
 quiet_cmd_gen_config = GEN     $@
       cmd_gen_config = \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-				ARCH=$(ARCH) \
+			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 				$(KERNEL_CONFIG)
 
 $(KBUILD_OUTPUT)/.config:
+	$(if $(wildcard $(@D)),,mkdir -p $(@D))
 	$(call cmd,gen_config)
 
 quiet_cmd_gen_kernel_version = GEN     $@
       cmd_gen_kernel_version = \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-				ARCH=$(ARCH) \
+			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 				kernelversion > $@
 
-PHONY += $(objtree)/kernel-version
-$(objtree)/kernel-version:
+$(KBUILD_OUTPUT)/.version:
 	$(call cmd,gen_kernel_version)
+
+quiet_cmd_symlink = SYMLINK  $@
+      cmd_symlink = ln -sf $< $@
+
+$(objtree)/kernel-version: $(KBUILD_OUTPUT)/.version
+	$(call cmd,symlink)
 
 quiet_cmd_gen_kernel_release = GEN     $@
       cmd_gen_kernel_release = \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-				ARCH=$(ARCH) \
+			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-				include/config/kernel.release; \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-				ARCH=$(ARCH) \
-				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-				kernelrelease > $@
+				include/config/kernel.release
 
-PHONY += $(objtree)/kernel-release
-$(objtree)/kernel-release:
+$(KBUILD_OUTPUT)/include/config/kernel.release:
+	$(call cmd,prepare)
+
+$(objtree)/kernel-release: $(KBUILD_OUTPUT)/include/config/kernel.release
 ifneq ($(CROSS_COMPILE),)
-	$(call cmd,gen_kernel_release)
+	$(call cmd,symlink)
 endif
 
 PHONY += config
@@ -83,8 +84,7 @@ config: $(objtree)/kernel-release
 
 quiet_cmd_build_kernel_image = BUILD   $(image)
       cmd_build_kernel_image = \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-					ARCH=$(ARCH) \
+			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 					CROSS_COMPILE=$(CROSS_COMPILE) \
 					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 					$(image)
@@ -95,8 +95,7 @@ build-$(image): $(objtree)/.config
 
 quiet_cmd_build_kernel_modules = BUILD   modules
       cmd_build_kernel_modules = \
-			cd $(KERNELSRC) && $(MAKE) --no-print-directory \
-					ARCH=$(ARCH) \
+			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 					CROSS_COMPILE=$(CROSS_COMPILE) \
 					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 					modules

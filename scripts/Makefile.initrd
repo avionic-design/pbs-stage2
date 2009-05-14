@@ -1,16 +1,16 @@
+PHONY := _all
+_all:
+
 src := $(obj)
 
-include scripts/pbuild.mk
-
-pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
-include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
-
+include scripts/Kbuild.include
 include scripts/Makefile.lib
 
 ifndef obj
-  $(warning pbuild: Makefile.initrd is included improperly)
+  $(warning kbuild: Makefile.initrd is included improperly)
 endif
 
+ARCH := $(shell echo $(CONFIG_ARCH))
 ARCH := $(patsubst i%86,x86,$(ARCH))
 ARCH := $(subst x86_64,x86,$(ARCH))
 
@@ -20,3 +20,11 @@ else
   include scripts/Makefile.initrd-generic
 endif
 
+$(obj)/rootfs:
+	$(if $(wildcard $(obj)/rootfs),,@echo "run 'make install' first")
+
+PHONY += FORCE
+FORCE: ;
+	@:
+
+.PHONY: $(PHONY)

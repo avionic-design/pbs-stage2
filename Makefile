@@ -170,6 +170,10 @@ build: $(build-dirs)
 _all: build
 	@:
 
+PHONY += initrd
+initrd:
+	$(Q)$(MAKE) $(initrd)=$(objtree)
+
 clean-dirs := $(dirs) scripts/basic scripts/kconfig
 clean-dirs := $(addprefix _clean_-,$(clean-dirs))
 

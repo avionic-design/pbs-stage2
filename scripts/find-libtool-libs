@@ -1,11 +1,11 @@
 #!/bin/sh
 
 if [ "x$1" = "x" ]; then
-	echo "usage: $0 platform"
+	echo "usage: $0 path"
 	exit 1
 fi
 
-platform="$1"
+rootfs="$1"
 
-find platform/$platform/rootfs -name '*.la*'
+find "$rootfs" -name '*.la*'
 

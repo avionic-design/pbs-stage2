@@ -12,11 +12,16 @@ CONFIG_LIBC := $(shell echo $(CONFIG_LIBC))
 CONFIG_ABI := $(shell echo $(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
-ifeq ($(origin CONFIG_CROSS_COMPILE), "command line")
-  CROSS_COMPILE = $(CONFIG_CROSS_COMPILE)
-else
-  CROSS_COMPILE ?= $(srctree)/toolchains/opt/cross/bin/$(TARGET)
+ifdef CONFIG_CROSS_COMPILE
+  ifeq ($(origin CONFIG_CROSS_COMPILE), "command line")
+    CROSS_COMPILE = $(CONFIG_CROSS_COMPILE)
+  endif
 endif
+ifndef CROSS_COMPILE
+  CROSS_COMPILE = $(srctree)/toolchains/opt/cross/bin/$(TARGET)
+endif
+
+export CROSS_COMPILE
 
 CC     = $(CROSS_COMPILE)gcc
 CPP    = $(CROSS_COMPILE)cpp
