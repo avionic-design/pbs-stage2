@@ -1,0 +1,1 @@
+OPTFLAGS = -O2 -g
