@@ -5,6 +5,11 @@ config PACKAGE_NET_DHCP
 	depends on PACKAGE_DEVEL_LIBC
 	default n
 
+config PACKAGE_NET_DNSMASQ
+	bool "dnsmasq"
+	depends on PACKAGE_DEVEL_LIBC
+	default n
+
 config PACKAGE_NET_DROPBEAR
 	bool "dropbear"
 	depends on PACKAGE_DEVEL_LIBC
