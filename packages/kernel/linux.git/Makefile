@@ -39,4 +39,3 @@ $(pkgtree)/.install: $(pkgtree)/.binary
 
 kernel-version:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build version
-
