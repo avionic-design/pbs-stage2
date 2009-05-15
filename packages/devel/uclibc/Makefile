@@ -3,7 +3,7 @@ PACKAGE = uClibc
 VERSION = $(LIBC_VERSION)
 
 LOCATION = http://www.uclibc.org/downloads
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = small C library for embedded systems
 
@@ -94,4 +94,3 @@ quiet_cmd_priv_mkdir_p = MKDIR   $@
 
 $(rootfs-dirs):
 	$(call cmd,priv_mkdir_p)
-

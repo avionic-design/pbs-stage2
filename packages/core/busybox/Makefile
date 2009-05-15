@@ -2,7 +2,7 @@ PACKAGE = busybox
 VERSION = 1.13.3
 
 LOCATION = http://busybox.net/downloads
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = tiny utilities for small and embedded systems
 
@@ -60,4 +60,3 @@ $(pkgtree)/.install: $(pkgtree)/.binary
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	$(priv) chmod u+s $(ROOTFS)/bin/busybox
 	$(call cmd,stamp)
-
