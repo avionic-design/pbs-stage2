@@ -12,9 +12,11 @@ endif
 
 xconfig: $(obj)/qconf $(obj)/deps
 	$< $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 gconfig: $(obj)/gconf $(obj)/deps
 	$< $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 menuconfig: $(obj)/mconf $(obj)/deps
 	$< $(Kconfig)
@@ -29,6 +31,7 @@ oldconfig: $(obj)/conf $(obj)/deps
 
 silentoldconfig: $(obj)/conf $(obj)/deps
 	$< -s $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 # Create new linux.pot file
 # Adjust charset to UTF-8 in .po file to accept UTF-8 in Kconfig files
@@ -57,15 +60,19 @@ PHONY += randconfig allyesconfig allnoconfig allmodconfig defconfig
 
 randconfig: $(obj)/conf $(obj)/deps
 	$< -r $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 allyesconfig: $(obj)/conf $(obj)/deps
 	$< -y $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 allnoconfig: $(obj)/conf $(obj)/deps
 	$< -n $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 allmodconfig: $(obj)/conf $(obj)/deps
 	$< -m $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 defconfig: $(obj)/conf $(obj)/deps
 ifeq ($(KBUILD_DEFCONFIG),)
@@ -74,9 +81,11 @@ else
 	@echo "*** Default configuration is based on '$(KBUILD_DEFCONFIG)'"
 	$(Q)$< -D arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
 endif
+	$(obj)/deps $(Kconfig)
 
 %_defconfig: $(obj)/conf $(obj)/deps
 	$(Q)$< -D arch/$(SRCARCH)/configs/$@ $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 # Help text used by make help
 help:
