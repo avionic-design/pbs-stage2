@@ -197,6 +197,9 @@ static int resolve_expr_dependencies(struct list_head *packages, struct expr *ex
 			find_reverse_deps(packages, expr);
 		}
 		break;
+
+	default:
+		break;
 	}
 
 	return ret;
@@ -294,7 +297,22 @@ static int create_package_list(struct list_head *head, struct menu *root)
 	return ret;
 }
 
-int list_sort(struct list_head *head)
+static int destroy_package_list(struct list_head *head)
+{
+	struct package *package;
+	struct list_head *node;
+	struct list_head *temp;
+	int ret = 0;
+
+	list_for_each_safe(node, temp, head) {
+		package = list_entry(node, struct package, list);
+		package_destroy(package);
+	}
+
+	return ret;
+}
+
+static int list_sort(struct list_head *head)
 {
 	struct package *package;
 	struct package *pivot;
@@ -340,13 +358,11 @@ int list_sort(struct list_head *head)
 int main(int argc, char *argv[])
 {
 	LIST_HEAD(packages);
-	struct list_head *node;
 	struct package *package;
 	const char *name;
 	FILE *fp = NULL;
 	int ret = 0;
 	int opt;
-	int i;
 
 	setlocale(LC_ALL, "");
 	bindtextdomain(PACKAGE, LOCALEDIR);
@@ -394,6 +410,7 @@ int main(int argc, char *argv[])
 	printf("# package dependency list written to %s\n", depfile);
 	printf("#\n");
 
+	destroy_package_list(&packages);
 	fclose(fp);
 	return 0;
 }
