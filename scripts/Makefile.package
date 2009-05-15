@@ -17,8 +17,9 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-# FIXME: only for backward compatibility
-PACKAGE_FULLNAME := $(PACKAGE)-$(VERSION)
+ifeq ($(pkgbuildtree),)
+  pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
+endif
 
 location	:= $(LOCATION)
 tarballs	:= $(TARBALLS)
@@ -69,7 +70,14 @@ $(pkgtree)/.directory:
 $(pkgtree)/.extract: $(pkgtree)/.directory $(extract)
 	$(call cmd,stamp)
 
+quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
+      cmd_quilt_patch = cd $(pkgbuildtree) && \
+		QUILT_PATCHES=$(pkgsrctree)/patches quilt \
+			--quiltrc /dev/null push -a || \
+		test $$? = 2
+
 $(pkgtree)/.patch: $(pkgtree)/.extract
+	$(call cmd,quilt_patch)
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
@@ -103,4 +111,3 @@ PHONY += FORCE
 FORCE: ;
 
 .PHONY: $(PHONY)
-
