@@ -1,7 +1,7 @@
 #
 # Automatically generated make config: don't edit
 # Linux kernel version: KERNELVERSION
-# Wed May 13 18:23:09 2009
+# Thu May 14 18:08:53 2009
 #
 CONFIG_VERSION="0.1.0"
 CONFIG_SHELL="/bin/sh"
@@ -115,6 +115,7 @@ CONFIG_PACKAGE_CORE_BUSYBOX=y
 # Networking
 #
 # CONFIG_PACKAGE_NET_DHCP is not set
+CONFIG_PACKAGE_NET_DNSMASQ=y
 # CONFIG_PACKAGE_NET_DROPBEAR is not set
 # CONFIG_PACKAGE_NET_ETHTOOL is not set
 # CONFIG_PACKAGE_NET_IPERF is not set
