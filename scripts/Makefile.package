@@ -71,10 +71,12 @@ $(pkgtree)/.extract: $(pkgtree)/.directory $(extract)
 	$(call cmd,stamp)
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
-      cmd_quilt_patch = cd $(pkgbuildtree) && \
-		QUILT_PATCHES=$(pkgsrctree)/patches quilt \
-			--quiltrc /dev/null push -a || \
-		test $$? = 2
+      cmd_quilt_patch = $(if $(wildcard $(pkgsrctree)/patches/series), \
+				cd $(pkgbuildtree) && \
+					QUILT_PATCHES=$(pkgsrctree)/patches \
+					quilt --quiltrc /dev/null push -a || \
+					test $$? = 2 \
+		)
 
 $(pkgtree)/.patch: $(pkgtree)/.extract
 	$(call cmd,quilt_patch)
