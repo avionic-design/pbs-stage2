@@ -1,1 +1,2 @@
+arm-eabi.patch -p1
 blackfin.patch -p1
