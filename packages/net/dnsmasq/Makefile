@@ -9,9 +9,6 @@ DESCRIPTION = a small caching DNS proxy and DHCP/TFTP server
 ##############################################################################
 
 include packages/common.mk
-CPPFLAGS := --sysroot $(ROOTFS)
-CFLAGS := $(CPPFLAGS)
-LDFLAGS := --sysroot $(ROOTFS)
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 
