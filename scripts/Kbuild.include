@@ -141,6 +141,7 @@ ld-option = $(call try-run,\
 # Shorthand for $(Q)$(MAKE) -f scripts/Makefile.build obj=
 # Usage:
 # $(Q)$(MAKE) $(build)=dir
+uscan := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.uscan obj
 depend := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.depend obj
 build := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.build obj
 clean := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.clean obj

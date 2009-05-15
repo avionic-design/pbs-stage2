@@ -25,9 +25,6 @@ _all:
 
 $(CURDIR)/Makefile Makefile: ;
 
-HOSTCC = gcc
-export HOSTCC
-
 KCONFIG_CONFIG ?= .config
 
 ifneq ($(KBUILD_OUTPUT),)
@@ -62,6 +59,15 @@ src	:= $(srctree)
 obj	:= $(objtree)
 VPATH	:= $(srctree)
 export srctree objtree VPATH
+
+SRCARCH := $(ARCH)
+export SRCARCH
+
+HOSTCC = gcc
+HOSTCXX = g++
+HOSTCFLAGS = -Wall -Wstrict-prototypes -O2 -fomit-frame-pointer
+HOSTCXXFLAGS = -O2
+export HOSTCC HOSTCXX HOSTCFLAGS HOSTCXXFLAGS
 
 ##
 ## beautify output
@@ -157,10 +163,19 @@ dirs := \
 	packages
 
 build-dirs := $(addprefix build-,$(dirs))
+uscan-dirs := $(addprefix uscan-,$(dirs))
+
+PHONY += $(uscan-dirs)
+$(uscan-dirs): uscan-%: %
+	$(Q)$(MAKE) $(uscan)=$*
+
+PHONY += uscan
+uscan: $(uscan-dirs)
+	@:
 
 PHONY += $(build-dirs)
 #$(build-dirs): quiet = silent_
-$(build-dirs): build-%:
+$(build-dirs): build-%: %
 	$(Q)$(MAKE) $(build)=$*
 
 PHONY += build

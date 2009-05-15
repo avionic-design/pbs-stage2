@@ -3,19 +3,19 @@ src := $(obj)
 PHONY := all
 all:
 
-include scripts/pbuild.mk
+-include include/config/auto.conf
+include scripts/Kbuild.include
+include scripts/Makefile.lib
 
-pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/packages/$(src))
-ifndef PACKAGE
-  include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
-endif
-
-ifndef obj
-  $(warning pbuild: Makefile.uscan is included improperly)
-endif
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
 
 all: uscan
 	@:
+
+uscan-dirs := $(addprefix uscan-$(obj)/,$(filter %/,$(obj-y)))
+uscan-pkgs := $(addprefix uscan-$(obj)/,$(filter-out %/,$(obj-y)))
 
 package = $(obj)
 
@@ -26,20 +26,28 @@ uscan-args += \
 	--no-download
 
 cmd-uscan = \
-	@version=$(shell scripts/uscan.helper $(uscan-args)); \
+	@version=$(shell $(srctree)/scripts/uscan.helper $(uscan-args)); \
 	if [ -n "$$version" ]; then \
-		echo "new version available: $(package) (current: $(VERSION), new: $$version)"; \
+		echo "new version available: $* (current: $(VERSION), new: $$version)"; \
 	else \
-		echo "package is up-to-date: $(package)"; \
+		echo "package is up-to-date: $*"; \
 	fi
 
 err-uscan = \
-	@echo "no watchfile for package: $(package)"
+	@echo "no watchfile for package: $*"
 
-uscan:
-	$(if $(wildcard $(srctree)/packages/$(package)/watch),	\
-		$(call cmd-uscan, $(package)),			\
-		$(call err-uscan, $(package)))
+PHONY += $(uscan-dirs)
+$(uscan-dirs): uscan-%: %
+	$(Q)$(MAKE) $(uscan)=$*
+
+PHONY += $(uscan-pkgs)
+$(uscan-pkgs): uscan-%: %
+	$(if $(wildcard $(srctree)/$*/watch),	\
+		$(call cmd-uscan),		\
+		$(call err-uscan))
+
+uscan: $(uscan-dirs) $(uscan-pkgs)
+	@:
 
 PHONY += FORCE
 FORCE:
