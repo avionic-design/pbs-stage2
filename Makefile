@@ -198,11 +198,11 @@ $(clean-dirs): _clean_-%: %
 
 PHONY += clean
 clean: $(clean-dirs)
-	@echo "$@"
+	@:
 
 PHONY += mrproper
 mrproper: clean
-	@echo "$@"
+	@:
 
 endif # skip-makefile
 
