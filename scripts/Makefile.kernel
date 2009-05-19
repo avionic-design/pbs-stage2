@@ -54,13 +54,13 @@ quiet_cmd_gen_kernel_version = GEN     $@
 				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 				kernelversion > $@
 
-$(KBUILD_OUTPUT)/.version:
+$(pkgtree)/.version:
 	$(call cmd,gen_kernel_version)
 
-quiet_cmd_symlink = SYMLINK  $@
+quiet_cmd_symlink = SYMLINK $@
       cmd_symlink = ln -sf $< $@
 
-$(objtree)/kernel-version: $(KBUILD_OUTPUT)/.version
+$(objtree)/kernel-version: $(pkgtree)/.version
 	$(call cmd,symlink)
 
 quiet_cmd_gen_kernel_release = GEN     $@
