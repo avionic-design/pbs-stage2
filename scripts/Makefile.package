@@ -12,6 +12,7 @@ include scripts/Makefile.lib
 package		:= $(patsubst packages/%,%,$(obj))
 pkgsrctree	:= $(srctree)/packages/$(package)
 pkgtree		:= $(objtree)/$(package)
+export pkgsrctree pkgtree
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
