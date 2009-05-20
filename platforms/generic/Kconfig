@@ -1,0 +1,2 @@
+if PLATFORM_GENERIC
+endif

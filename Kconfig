@@ -14,4 +14,4 @@ source "arch/Kconfig"
 endmenu
 
 source "packages/Kconfig"
-
+source "platforms/Kconfig"

@@ -16,4 +16,3 @@ source "packages/xorg/Kconfig"
 source "packages/util/Kconfig"
 
 endmenu
-

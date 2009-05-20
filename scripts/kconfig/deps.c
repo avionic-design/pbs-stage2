@@ -209,9 +209,8 @@ static int resolve_dependencies(struct list_head *packages, struct package *pack
 {
 	int ret = 0;
 
-	if (package->depends) {
+	if (package->depends)
 		resolve_expr_dependencies(packages, package->depends);
-	}
 
 	return ret;
 }
@@ -221,10 +220,13 @@ static int symbol_is_package(struct symbol *symbol)
 	if (!symbol || !symbol->name)
 		return 0;
 
-	if (strncmp(symbol->name, "PACKAGE_", 8) != 0)
-		return 0;
+	if (strncmp(symbol->name, "PACKAGE_", 8) == 0)
+		return 1;
 
-	return 1;
+	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
+		return 1;
+
+	return 0;
 }
 
 static struct package *package_create_from_menu(struct menu *menu)

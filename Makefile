@@ -160,7 +160,8 @@ include/config/auto.conf:
 endif
 
 dirs := \
-	packages
+	packages \
+	platforms
 
 build-dirs := $(addprefix build-,$(dirs))
 uscan-dirs := $(addprefix uscan-,$(dirs))

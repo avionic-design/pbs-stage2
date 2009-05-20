@@ -25,7 +25,7 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-packages-y = $(shell cat $(depends-file) | xargs echo)
+packages-y = $(shell cat $(depends-file) | grep '^CONFIG_PACKAGE_' | xargs echo)
 
 PHONY += $(packages-y)
 $(packages-y):
@@ -33,7 +33,13 @@ $(packages-y):
 	$(Q)$(MAKE) $(build)=$(obj) package
 	@rm .package
 
-__build: $(packages-y)
+PHONY += platforms
+platforms:
+	@cat $(depends-file) | grep '^CONFIG_PLATFORM_' > .package
+	$(Q)$(MAKE) $(build)=$(obj) package
+	@rm .package
+
+__build: $(packages-y) platforms
 
 dirs := $(filter %/,$(obj-y))
 dirs := $(addprefix $(obj)/, $(dirs))
