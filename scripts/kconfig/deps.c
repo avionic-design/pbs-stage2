@@ -247,7 +247,7 @@ static struct package *package_create_from_menu(struct menu *menu)
 		if (sym_get_tristate_value(symbol) == yes) {
 			package = package_create(symbol, menu->dep);
 			if (package) {
-				if (symbol->rev_dep.expr)
+				if (symbol->rev_dep.expr && !menu->prompt)
 					package->flags |= PACKAGE_VIRTUAL;
 			}
 		}
