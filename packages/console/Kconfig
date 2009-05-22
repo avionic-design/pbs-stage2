@@ -13,6 +13,7 @@ config PACKAGE_CONSOLE_FBSET
 config PACKAGE_CONSOLE_MINICOM
 	bool "minicom"
 	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_LIBS_NCURSES
 	default n
 
 endmenu
