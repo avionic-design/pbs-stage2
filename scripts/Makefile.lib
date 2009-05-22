@@ -201,19 +201,18 @@ cmd_bzip2 = (bzip2 -9 < $< && $(size_append) $<) > $@ || (rm -f $@ ; false)
 quiet_cmd_lzma = LZMA    $@
 cmd_lzma = (lzma -9 -c $< && $(size_append) $<) >$@ || (rm -f $@ ; false)
 
-# package dependency tracking
+# miscellaneous common commands
 # ---------------------------------------------------------------------------
-
-package-list = $(objtree)/.package-list
-depends-file = $(objtree)/.depends
-
-quiet_cmd_add_dep = DEP     $@
-      cmd_add_dep = echo $@ >> $(package-list)
-
-quiet_cmd_gen_dep = GEN     $@
-      cmd_gen_dep = $(srctree)/scripts/depend $< > $@
 
 quiet_cmd_mkdir_p = MKDIR   $@
       cmd_mkdir_p = mkdir -p $@
 
-# vim: ft=make
+quiet_cmd_install = INSTALL $*
+      cmd_install = $(if $(wildcard $(@D)),,$(priv) mkdir -p $(@D);) \
+		$(priv) install -m 644 -o root -g root $< $@
+
+quiet_cmd_install_bin = INSTALL $*
+      cmd_install_bin = $(if $(wildcard $(@D)),,$(priv) mkdir -p $(@D);) \
+		$(priv) install -m 755 -o root -g root $< $@
+
+# vim: ft=make noet

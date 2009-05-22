@@ -25,6 +25,7 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
+depends-file = $(objtree)/.depends
 packages-y = $(shell cat $(depends-file) | grep '^CONFIG_PACKAGE_' | xargs echo)
 
 PHONY += $(packages-y)
