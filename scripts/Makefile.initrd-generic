@@ -30,8 +30,8 @@ EXEC_ADDR = 0xA0008000
 concat = $(shell echo $(filter-out FORCE, $(2)) | tr ' ' $(1))
 
 quiet_cmd_mk_uboot_img = MKIMAGE   $@
-      cmd_mk_uboot_img = $(MKIMAGE) -A $(ARCH) -O linux -T multi -C none \
-			 	-a $(LOAD_ADDR) -e $(EXEC_ADDR) \
+      cmd_mk_uboot_img = $(MKIMAGE) -A $(CONFIG_ARCH) -O linux -T multi \
+				-C none -a $(LOAD_ADDR) -e $(EXEC_ADDR) \
 				-d $(call concat, :, $^) $@ \
 				> /dev/null 2>&1
 
@@ -51,4 +51,3 @@ $(obj)/u-boot.fit: $(obj)/vmlinuz-$(KREL) $(obj)/initrd.gz $(obj)/multi.its
 
 _all: $(obj)/u-boot.img $(obj)/u-boot.fit
 	@:
-
