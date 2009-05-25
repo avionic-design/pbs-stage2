@@ -2,7 +2,7 @@ PACKAGE = ncurses
 VERSION = 5.7
 
 LOCATION = ftp://ftp.gnu.org/gnu/ncurses
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 ##############################################################################
 
@@ -21,25 +21,33 @@ conf-args += \
 conf-vars = \
 	CXXFLAGS='$(CXXFLAGS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args =
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.binary
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 sover = 5.7
 
@@ -58,9 +66,5 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-strip
-	@:
-
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	$(call cmd,stamp)
