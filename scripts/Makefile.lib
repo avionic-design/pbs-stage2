@@ -215,4 +215,8 @@ quiet_cmd_install_bin = INSTALL $*
       cmd_install_bin = $(if $(wildcard $(@D)),,$(priv) mkdir -p $(@D);) \
 		$(priv) install -m 755 -o root -g root $< $@
 
+quiet_cmd_install_link = INSTALL $*
+      cmd_install_link = $(if $(wildcard $(@D)),,$(priv) mkdir -p $(@D);) \
+		$(priv) cp -d $< $@
+
 # vim: ft=make noet
