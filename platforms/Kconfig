@@ -9,9 +9,13 @@ config PLATFORM_GENERIC
 config PLATFORM_SOEKRIS
 	bool "Soekris Engineering"
 
+config PLATFORM_AVIONIC_DESIGN
+	bool "Avionic Design"
+
 endchoice
 
 source "platforms/generic/Kconfig"
 source "platforms/soekris/Kconfig"
+source "platforms/avionic-design/Kconfig"
 
 endmenu
