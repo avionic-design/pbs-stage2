@@ -25,6 +25,9 @@ endif
 location	:= $(LOCATION)
 tarballs	:= $(TARBALLS)
 
+chksum-prefix	:= $(pkgtree)/.chksum-
+chksum		:= $(addprefix $(chksum-prefix),$(tarballs))
+
 extprefix	:= $(pkgtree)/.extract-
 extract		:= $(addprefix $(extprefix),$(tarballs))
 extract-gz	:= $(filter %.tar.gz,$(extract))
@@ -42,6 +45,17 @@ quiet_cmd_wget = WGET    $(patsubst %,$(location)/%,$*)
 
 $(local-files): $(srctree)/download/%:
 	$(call cmd,wget)
+
+quiet_cmd_checksum_sha256 = SHA256  $<
+      cmd_checksum_sha256 = cd $(srctree) && \
+		grep $* checksums/sha256 | sha256sum -c --quiet
+
+$(chksum): $(chksum-prefix)%: $(srctree)/download/%
+	$(call cmd,checksum_sha256)
+	$(call cmd,stamp)
+
+$(pkgtree)/.checksum: $(pkgtree)/.directory $(chksum)
+	$(call cmd,stamp)
 
 quiet_cmd_tar_gz = TAR     $<
       cmd_tar_gz = cd $(pkgtree) && tar xzf $<
@@ -68,15 +82,14 @@ $(pkgtree)/.directory:
 	$(Q)mkdir -p $(@D)
 	$(call cmd,stamp)
 
-$(pkgtree)/.extract: $(pkgtree)/.directory $(extract)
+$(pkgtree)/.extract: $(pkgtree)/.checksum $(extract)
 	$(call cmd,stamp)
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
       cmd_quilt_patch = cd $(pkgbuildtree) && \
 				QUILT_PATCHES=$(pkgsrctree)/patches \
 				quilt --quiltrc /dev/null push -a || \
-				test $$? = 2 \
-		)
+				test $$? = 2
 
 $(pkgtree)/.patch: $(pkgtree)/.extract
 	$(if $(wildcard $(pkgsrctree)/patches/series),$(call cmd,quilt_patch))
