@@ -5,6 +5,11 @@ config PACKAGE_CORE_BUSYBOX
 	depends on PACKAGE_DEVEL_LIBC
 	default n
 
+config PACKAGE_CORE_BUSYBOX_GIT
+	bool "busybox (git)"
+	depends on PACKAGE_DEVEL_LIBC
+	default n
+
 config PACKAGE_CORE_COREUTILS
 	bool "coreutils"
 	depends on PACKAGE_DEVEL_LIBC
