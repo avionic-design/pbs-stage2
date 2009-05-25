@@ -8,9 +8,7 @@ TARGET := $(TARGET)$(CONFIG_OS)-
 TARGET := $(TARGET)$(CONFIG_LIBC)
 
 ifneq ($(CONFIG_ABI),)
-  TARGET := $(TARGET)$(CONFIG_ABI)-
-else
-  TARGET := $(TARGET)-
+  TARGET := $(TARGET)$(CONFIG_ABI)
 endif
 
 export TARGET

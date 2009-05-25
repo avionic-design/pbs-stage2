@@ -1,6 +1,6 @@
 TARGET  = $(CONFIG_CPU)-pc-
 TARGET := $(TARGET)$(CONFIG_OS)-
-TARGET := $(TARGET)$(CONFIG_LIBC)-
+TARGET := $(TARGET)$(CONFIG_LIBC)
 export TARGET
 
 CPPFLAGS = --sysroot $(objtree)/rootfs
