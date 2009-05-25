@@ -41,7 +41,7 @@ quiet_cmd_stamp = STAMP   $@
       cmd_stamp = mkdir -p $(@D); touch $@
 
 quiet_cmd_wget = WGET    $(patsubst %,$(location)/%,$*)
-      cmd_wget = #wget $(patsubst %,$(location)/%,$*)
+      cmd_wget = wget -q $(patsubst %,$(location)/%,$*) -O $@
 
 $(local-files): $(srctree)/download/%:
 	$(call cmd,wget)
