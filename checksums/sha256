@@ -15,7 +15,6 @@ be955bef7a81d69222e929689e0de0ecf64c13dc5b15b2ee5696d5ef66fdeec0  download/sed-4
 37f6f7d9de74196eb5fc0bbe0aea9b5c939de7f500acba3af6fd643f3b538b44  download/libusb-0.1.12.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
 da0ca1e821e3fa7cfbe73ddb1480b921002ee992f5e5fbc611422c103b907443  download/udhcp-0.9.8.tar.gz
-cc0406714ece77f5b1b1cb9e85e937531de556a72f962a3532c02da41b154d64  download/minicom-2.2.tar.gz
 40ff4ab0247b75138a0887ed40f81c1a6184f340b77126c16d074b1075b41c20  download/fbset-2.1.tar.gz
 e9baea8cb516b5d83013f746f9fa104abb45fcf15d444a03add06769916e41d6  download/iperf-2.0.2.tar.gz
 b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netcat-0.7.1.tar.bz2
@@ -135,3 +134,4 @@ f7993d26c3606a9b0e32d1eebe716f2294ac37fac014c47744e986fc0ff5e6d1  download/atk-1
 a13c81897c94b3d6e705fc9da07c610492e28cf7abd5ff8e992f0ec95a269d62  download/psmisc-22.6.tar.gz
 9fd033c8d97303c30056c3a9e21081308a796d13b49592bc03559daf3eb169e5  download/dhcp-4.1.1b1.tar.gz
 eee233d08274feb2d3fc93a674d6045b94167375d86ff9b54c3c60cae047095e  download/console-tools-0.4.0-rc1-wip.tar.bz2
+2acbc3d4a07e1134ee285a72fa44bbc27703b02dba02be68db9e6fd8320356fb  download/minicom-2.3.tar.gz
