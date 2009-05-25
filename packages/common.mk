@@ -18,7 +18,8 @@ ifdef CONFIG_CROSS_COMPILE
   endif
 endif
 ifndef CROSS_COMPILE
-  CROSS_COMPILE = $(srctree)/toolchains/opt/cross/bin/$(TARGET)
+  TOOLCHAIN_PATH = $(srctree)/toolchains/opt/cross/bin
+  CROSS_COMPILE = $(TOOLCHAIN_PATH)/$(TARGET)-
 endif
 
 export CROSS_COMPILE
@@ -35,5 +36,5 @@ STRIP  = $(CROSS_COMPILE)strip
 set-args = $(foreach arg, $(1), $(arg)='$($(arg))')
 
 priv = sudo
-env  = env -i PATH=$(TOOLCHAIN_ROOT)$(tprefix)/bin:$(PATH)
+env  = env -i PATH=$(TOOLCHAIN_PATH):$(PATH)
 export priv env
