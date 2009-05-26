@@ -11,6 +11,7 @@ pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 BUSYBOX_TREE = $(srctree)/../busybox.git
 ARCH := $(shell echo $(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
+DESTDIR := $(pkgtree)/install
 
 DEF_CONFIG = minimal
 CPU_CONFIG = minimal-$(CPU)
@@ -22,7 +23,6 @@ conf-args = \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CONFIG_PREFIX=$(ROOTFS) \
 	O=$(pkgbuildtree) \
 	ARCH=$(ARCH)
 
@@ -37,7 +37,6 @@ build-args = \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CONFIG_PREFIX=$(ROOTFS) \
 	O=$(pkgbuildtree) \
 	ARCH=$(ARCH)
 
@@ -45,20 +44,32 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary: $(pkgtree)/.build
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CONFIG_PREFIX=$(ROOTFS) \
+	CONFIG_PREFIX=$(DESTDIR) \
 	O=$(pkgbuildtree) \
 	ARCH=$(ARCH)
 
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) chmod u+s $(DESTDIR)/bin/busybox
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
 $(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(BUSYBOX_TREE) && $(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) chmod u+s $(ROOTFS)/bin/busybox
+	$(priv) mkdir -p $(ROOTFS)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)

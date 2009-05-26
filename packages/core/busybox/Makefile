@@ -25,7 +25,6 @@ conf-args = \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.configure:
@@ -38,7 +37,6 @@ build-args = \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_CFLAGS="--sysroot $(ROOTFS)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	CONFIG_PREFIX=$(ROOTFS) \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
@@ -68,6 +66,7 @@ $(pkgtree)/.binary: $(pkgtree)/.do-install
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
+	$(priv) mkdir -p $(ROOTFS)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
 			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
