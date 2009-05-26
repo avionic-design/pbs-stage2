@@ -1,6 +1,7 @@
 #!/bin/sh
 
 packages="*.install"
+version="current"
 
 for arg in $@; do
 	if [ "x$prev" != "x" ]; then
@@ -23,6 +24,11 @@ for arg in $@; do
 
 		-r | --root)
 			prev=root
+			shift
+			;;
+
+		-v | --version)
+			prev=version
 			shift
 			;;
 
@@ -72,12 +78,9 @@ binary="${base}/binary/${arch}/${pkg}"
 
 for package in $packages; do
 	package="${package%.install}"
-	version=`cd $base && make package=$pkg version`
-
 	tarball="${package}_${version}_${arch}.tar.bz2"
 
 	echo -n "Extracting binary package: $tarball ... "
 	tar xjf "$binary/$tarball" -C "$root"
 	echo "done"
 done
-

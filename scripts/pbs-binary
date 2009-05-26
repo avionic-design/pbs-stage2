@@ -1,6 +1,7 @@
 #!/bin/sh
 
 packages="*.install"
+version="current"
 
 for arg in $@; do
 	if [ "x$prev" != "x" ]; then
@@ -18,6 +19,11 @@ for arg in $@; do
 	case $arg in
 		-a | --arch)
 			prev=arch
+			shift
+			;;
+
+		-v | --version)
+			prev=version
 			shift
 			;;
 
@@ -58,8 +64,6 @@ srcdir="${binary}/install"
 
 for package in $packages; do
 	package="${package%.install}"
-	version=`cd $base && make package=$pkg version`
-
 	tarball="${package}_${version}_${arch}.tar.bz2"
 	mkdir -p "${binary}"
 
@@ -83,4 +87,3 @@ for package in $packages; do
 
 	echo "done"
 done
-
