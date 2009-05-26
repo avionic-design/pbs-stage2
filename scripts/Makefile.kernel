@@ -121,17 +121,17 @@ headers-install: config
 		$(priv) $(MAKE) ARCH=$(ARCH) \
 			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			INSTALL_HDR_PATH=$(ROOTFS)$(prefix) \
+			INSTALL_HDR_PATH=$(DESTDIR)$(prefix) \
 			headers_install
 ifeq ($(ARCH),arm)
 	# some programs need this to compile
-	-$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(ROOTFS)$(prefix)/include/asm
-	-$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/linkage.h $(ROOTFS)$(prefix)/include/asm
-	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(ROOTFS)$(prefix)/include/linux
+	-$(priv) cp $(KERNELSRC)/include/asm-$(ARCH)/linkage.h $(DESTDIR)$(prefix)/include/asm
+	-$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/linkage.h $(DESTDIR)$(prefix)/include/asm
+	$(priv) cp $(KERNELSRC)/include/linux/linkage.h $(DESTDIR)$(prefix)/include/linux
 endif
 ifeq ($(ARCH),blackfin)
-	$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/user.h $(ROOTFS)$(prefix)/include/asm
-	$(priv) cp $(KERNELSRC)/include/linux/user.h $(ROOTFS)$(prefix)/include/linux
+	$(priv) cp $(KERNELSRC)/arch/$(ARCH)/include/asm/user.h $(DESTDIR)$(prefix)/include/asm
+	$(priv) cp $(KERNELSRC)/include/linux/user.h $(DESTDIR)$(prefix)/include/linux
 endif
 
 PHONY += install-$(image)
@@ -149,7 +149,7 @@ install-modules: build-modules
 		$(priv) $(MAKE) ARCH=$(ARCH) \
 			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-			INSTALL_MOD_PATH=$(ROOTFS) \
+			INSTALL_MOD_PATH=$(DESTDIR) \
 			modules_install
 
 PHONY += install
