@@ -15,6 +15,7 @@ pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 ARCH := $(shell echo $(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
 ABI := $(shell echo $(CONFIG_ABI))
+DESTDIR := $(pkgtree)/install
 
 ifneq ($(ABI),)
 DEF_CONFIG = $(ARCH)-$(ABI).config
@@ -48,32 +49,34 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary: $(pkgtree)/.build
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
 	CROSS=$(CROSS_COMPILE) \
-	PREFIX=$(ROOTFS) \
+	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=$(prefix)/
 
-rootfs-dirs = \
-	$(ROOTFS)/etc/init.d \
-	$(ROOTFS)/etc/rcS.d
+dest-dirs = \
+	$(DESTDIR)/etc/init.d \
+	$(DESTDIR)/etc/rcS.d
 
-$(pkgtree)/.do-install: $(rootfs-dirs)
+quiet_cmd_priv_mkdir_p = MKDIR   $@
+      cmd_priv_mkdir_p = $(priv) mkdir -p $@
+
+$(dest-dirs):
+	$(call cmd,priv_mkdir_p)
+
+$(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
-	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(ROOTFS)/lib
-	$(priv) $(STRIP) $(ROOTFS)/lib/libgcc_s.so.1
-	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libstdc++.so.6` $(ROOTFS)/lib
-	$(priv) $(STRIP) $(ROOTFS)/lib/libstdc++.so.6
-	$(priv) cp $(pkgsrctree)/ldconfig.init $(ROOTFS)/etc/init.d/ldconfig
-	$(priv) cp $(pkgsrctree)/ld.so.conf $(ROOTFS)/etc/ld.so.conf
-	$(priv) ln -sf ../init.d/ldconfig $(ROOTFS)/etc/rcS.d/S50ldconfig
+	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(DESTDIR)/lib
+	$(priv) $(STRIP) $(DESTDIR)/lib/libgcc_s.so.1
+	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libstdc++.so.6` $(DESTDIR)/lib
+	$(priv) $(STRIP) $(DESTDIR)/lib/libstdc++.so.6
+	$(priv) cp $(pkgsrctree)/ldconfig.init $(DESTDIR)/etc/init.d/ldconfig
+	$(priv) cp $(pkgsrctree)/ld.so.conf $(DESTDIR)/etc/ld.so.conf
+	$(priv) ln -sf ../init.d/ldconfig $(DESTDIR)/etc/rcS.d/S50ldconfig
 	$(call cmd,stamp)
 
 prunefiles =
@@ -83,14 +86,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.package-install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
 	$(call cmd,stamp)
 
-$(pkgtree)/.install: $(pkgtree)/.binary $(pkgtree)/.package-install
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
-
-quiet_cmd_priv_mkdir_p = MKDIR   $@
-      cmd_priv_mkdir_p = $(priv) mkdir -p $@
-
-$(rootfs-dirs):
-	$(call cmd,priv_mkdir_p)
