@@ -96,6 +96,7 @@ $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
+	$(priv) mkdir -p $(ROOTFS)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
 			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
