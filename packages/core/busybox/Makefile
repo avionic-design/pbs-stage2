@@ -59,7 +59,6 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary: $(pkgtree)/.do-install
-	# build binary package
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
 			-a $(ARCH) -s $(DESTDIR)
