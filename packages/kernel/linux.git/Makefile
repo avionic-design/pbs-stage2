@@ -11,7 +11,8 @@ DESCRIPTION = Linux kernel
 include $(objtree)/include/config/auto.conf
 ARCH = $(CONFIG_ARCH)
 KERNEL_CONFIG = $(CONFIG_KERNEL_CONFIG)
-export ARCH KERNEL_CONFIG
+DESTDIR = $(pkgtree)/install
+export ARCH KERNEL_CONFIG DESTDIR
 
 MAKEFLAGS =
 KBUILD_SRC =
@@ -28,13 +29,25 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build build
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary: $(pkgtree)/.build
-	@echo "$@: not implemented yet"
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build headers-install
+	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
-	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build headers-install
-	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
+	$(priv) mkdir -p $(ROOTFS)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
 
 kernel-version:
