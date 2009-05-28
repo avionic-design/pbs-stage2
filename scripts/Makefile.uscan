@@ -19,22 +19,24 @@ uscan-pkgs := $(addprefix uscan-$(obj)/,$(filter-out %/,$(obj-y)))
 
 package = $(obj)
 
-uscan-args += \
+uscan-args = \
 	--package $(PACKAGE) \
 	--upstream-version $(VERSION) \
-	--watchfile packages/$(package)/watch \
+	--watchfile $(srctree)/$(obj)/watch \
 	--no-download
 
+run-uscan = $(srctree)/scripts/uscan.helper $(uscan-args)
+
 cmd-uscan = \
-	@version=$(shell $(srctree)/scripts/uscan.helper $(uscan-args)); \
+	@version=`$(run-uscan)`; ec=$$?; \
 	if [ -n "$$version" ]; then \
-		echo "new version available: $* (current: $(VERSION), new: $$version)"; \
+		echo "new version available: $(obj) (current: $(VERSION), new: $$version)"; \
 	else \
-		echo "package is up-to-date: $*"; \
+		echo "package is up-to-date: $(obj)"; \
 	fi
 
 err-uscan = \
-	@echo "no watchfile for package: $*"
+	@echo "no watchfile for package: $(obj)"
 
 PHONY += $(uscan-dirs)
 $(uscan-dirs): uscan-%: %
@@ -42,11 +44,14 @@ $(uscan-dirs): uscan-%: %
 
 PHONY += $(uscan-pkgs)
 $(uscan-pkgs): uscan-%: %
-	$(if $(wildcard $(srctree)/$*/watch),	\
-		$(call cmd-uscan),		\
-		$(call err-uscan))
+	$(Q)$(MAKE) $(uscan)=$*
 
 uscan: $(uscan-dirs) $(uscan-pkgs)
+ifdef PACKAGE
+	$(if $(wildcard $(srctree)/$(obj)/watch), \
+		$(call cmd-uscan), \
+		$(call err-uscan))
+endif
 	@:
 
 PHONY += FORCE
@@ -54,4 +59,3 @@ FORCE:
 	@:
 
 .PHONY: $(PHONY)
-
