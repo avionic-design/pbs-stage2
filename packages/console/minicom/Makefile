@@ -40,7 +40,7 @@ $(pkgtree)/.binary:
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-$(pkgtree)/.do-install:
+$(pkgtree)/.do-install: $(pkgtree)/.binary
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
