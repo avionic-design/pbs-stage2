@@ -2,7 +2,7 @@ PHONY += all
 all: strip
 	@:
 
-include include/config/auto.conf
+-include include/config/auto.conf
 include packages/$(package)/Makefile
 
 # add the and rootfs prefix and expand wildcards
@@ -20,4 +20,3 @@ strip: $(stripfiles)
 	@:
 
 .PHONY: $(PHONY)
-
