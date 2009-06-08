@@ -1,5 +1,5 @@
 PACKAGE = uClibc
-VERSION = $(LIBC_VERSION)
+VERSION = $(uclibc_VERSION)
 
 LOCATION =
 TARBALLS =
@@ -10,11 +10,14 @@ include packages/toolchain/common.mk
 
 exec-prefix = $(prefix)/$(TARGET)
 
-package-configure:
-	@:
+$(pkgtree)/.configure:
+	$(call cmd,stamp)
 
-package-build:
-	@:
+$(pkgtree)/.build:
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	$(call cmd,stamp)
 
 prunefiles = \
 	$(exec-prefix)/include/bits/uClibc_*.h \
@@ -49,9 +52,5 @@ prunefiles = \
 
 include packages/cleanup.mk
 
-package-install: package-cleanup
-	@:
-
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.cleanup
+	$(call cmd,stamp)

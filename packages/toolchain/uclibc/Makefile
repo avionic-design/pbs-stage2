@@ -1,8 +1,8 @@
 PACKAGE = uClibc
-VERSION = $(LIBC_VERSION)
+VERSION = $(uclibc_VERSION)
 
 LOCATION = http://uclibc.org/downloads
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 ##############################################################################
 
@@ -28,9 +28,10 @@ conf-args = \
 	PREFIX=$(ROOTFS) \
 	MAKEFLAGS=
 
-package-configure:
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/.config
-	cd $(pkgtree) && $(env) $(MAKE) $(conf-args) oldconfig
+$(pkgtree)/.configure:
+	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
+	$(call cmd,stamp)
 
 build-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
@@ -38,8 +39,13 @@ build-args = \
 	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	CROSS_COMPILE=$(ROOTFS)$(prefix)/bin/$(TARGET)- \
@@ -47,9 +53,6 @@ install-args = \
 	DEVEL_PREFIX=$(exec-prefix)/ \
 	PREFIX=$(ROOTFS)
 
-package-install:
-	cd $(pkgtree) && $(env) $(priv) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install
+	$(call cmd,stamp)

@@ -7,7 +7,7 @@ W32API_TARBALL = $(W32API_PACKAGE)-$(W32API_VERSION)-src.tar.gz
 
 LOCATION = http://prdownloads.sourceforge.net/mingw
 TARBALLS = \
-	$(PACKAGE_FULLNAME)-src.tar.gz \
+	$(PACKAGE)-$(VERSION)-src.tar.gz \
 	$(W32API_TARBALL)
 
 ##############################################################################
@@ -25,25 +25,21 @@ conf-vars = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-package-configure:
+$(pkgtree)/.configure:
 	ln -sf $(W32API_PACKAGE)-$(W32API_VERSION) $(buildtree)/$(W32API_PACKAGE)
-	mkdir $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args =
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(install-args) install -n
-
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install

@@ -60,27 +60,30 @@ else
   conf-args += --disable-multilib
 endif
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(HOST) && \
-		cd $(pkgtree)/obj-$(HOST) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
+		cd $(pkgbuildtree)/obj-$(HOST) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	MAKEFLAGS=
 
-package-build:
-	cd $(pkgtree)/obj-$(HOST) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 ifneq ($(ROOTFS),)
   install-args = \
 	DESTDIR=$(ROOTFS)
 endif
 
-package-install:
-	cd $(pkgtree)/obj-$(HOST) && \
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+	$(call cmd,stamp)

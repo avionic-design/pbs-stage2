@@ -1,8 +1,8 @@
 PACKAGE = newlib
-VERSION = $(LIBC_VERSION)
+VERSION = $(newlib_VERSION)
 
 LOCATION = ftp://sources.redhat.com/pub/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 ##############################################################################
 
@@ -16,22 +16,25 @@ conf-args = \
 	--mandir=$(exec-prefix)/share/man \
 	--libdir=$(exec-prefix)/lib
 
-package-configure:
-	mkdir $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+	$(call cmd,stamp)

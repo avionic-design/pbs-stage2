@@ -8,7 +8,7 @@ else
 endif
 
 VERSION  = $(BINUTILS_VERSION)
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 ##############################################################################
 
@@ -38,21 +38,25 @@ else
 	--disable-multilib
 endif
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && $(env) ./configure $(conf-args)
+	$(call cmd,stamp)
 
 build-args =
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 ifneq ($(ROOTFS),)
   install-args = \
 	DESTDIR=$(ROOTFS)
 endif
 
-package-install:
-	cd $(pkgtree) && $(env) $(priv) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)

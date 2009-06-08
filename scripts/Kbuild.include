@@ -149,6 +149,7 @@ package := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.package obj
 initrd := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.initrd obj
 host := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.host obj
 kernel := --no-print-directory -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.kernel obj
+toolchain := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.toolchain obj
 
 # Prefix -I with $(srctree) if it is not an absolute path.
 # skip if -I has no parameter

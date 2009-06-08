@@ -1,17 +1,18 @@
 PACKAGE = glibc
-VERSION = $(LIBC_VERSION)
+VERSION = $(glibc_VERSION)
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
-	$(PACKAGE_FULLNAME).tar.bz2 \
+	$(PACKAGE)-$(VERSION).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
 ##############################################################################
 
 include packages/toolchain/common.mk
 
-package-extract:
+$(pkgtree)/.extract:
 	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+	$(call cmd,stamp)
 
 exec-prefix = $(prefix)/$(TARGET)
 
@@ -54,27 +55,30 @@ ifeq ($(ARCH),i786)
 	conf-vars += CFLAGS='-march=prescott -O2 -g'
 endif
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	MAKEFLAGS=
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args) all
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 ifeq ($(ROOTFS),)
   install-args = \
 	install_root=$(ROOTFS)
 endif
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)

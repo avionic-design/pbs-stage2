@@ -2,7 +2,7 @@ PACKAGE = pkg-config
 VERSION = 0.23
 
 LOCATION = http://pkgconfig.freedesktop.org/releases
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 ##############################################################################
 
@@ -20,26 +20,29 @@ conf-args += \
 	--program-prefix=$(TARGET)- \
 	--with-installed-glib
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args =
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 ifneq ($(ROOTFS),)
   install-args = \
 	DESTDIR=$(ROOTFS)
 endif
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-
-package-clean:
-	@:
-
+	$(call cmd,stamp)

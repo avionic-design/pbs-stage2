@@ -1,10 +1,10 @@
-BUILD = $(shell echo $$MACHTYPE)
-HOST = $(shell echo $$MACHTYPE)
+include toolchains/common.mk
 
-prefix := $(ROOTFS)$(prefix)
-PATH   := $(prefix)/bin:$(PATH)
-ROOTFS :=
+BUILD	:= $(shell echo $$MACHTYPE)
+HOST	:= $(shell echo $$MACHTYPE)
 
-env = env -i PATH=$(PATH)
-export prefix PATH ROOTFS priv env
-
+prefix	:= $(ROOTFS)$(prefix)
+PATH	:= $(prefix)/bin:$(PATH)
+ROOTFS	:=
+env	:= env -i PATH=$(PATH)
+export prefix PATH env

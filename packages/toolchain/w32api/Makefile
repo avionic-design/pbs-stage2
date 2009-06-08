@@ -2,7 +2,7 @@ PACKAGE = w32api
 VERSION = 3.12-mingw32
 
 LOCATION = http://prdownloads.sourceforge.net/mingw
-TARBALLS = $(PACKAGE_FULLNAME)-src.tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION)-src.tar.gz
 
 ##############################################################################
 
@@ -20,23 +20,19 @@ conf-vars = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-package-configure:
-	mkdir $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 
 build-args = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(install-args) install -n
-
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install

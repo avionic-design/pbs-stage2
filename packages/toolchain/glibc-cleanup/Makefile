@@ -10,10 +10,10 @@ include packages/toolchain/common.mk
 
 exec-prefix = $(prefix)/$(TARGET)
 
-package-configure:
+$(pkgtree)/.configure:
 	@:
 
-package-build:
+$(pkgtree)/.build:
 	@:
 
 prunefiles = \
@@ -44,9 +44,5 @@ prunefiles = \
 
 include packages/cleanup.mk
 
-package-install: package-cleanup
+$(pkgtree)/.install: package-cleanup
 	@:
-
-package-clean:
-	@:
-

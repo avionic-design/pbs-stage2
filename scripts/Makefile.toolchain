@@ -1,0 +1,27 @@
+src := $(obj)
+
+PHONY := all
+all:
+
+include scripts/Kbuild.include
+include scripts/Makefile.lib
+
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
+
+ROOTFS = $(CURDIR)
+export ROOTFS
+
+packages := $(obj-y)
+
+PHONY += $(packages)
+$(packages):
+	$(Q)$(MAKE) $(package)=$@
+
+all: $(packages)
+
+PHONY += FORCE
+FORCE: ;
+
+.PHONY: $(PHONY)
