@@ -119,6 +119,10 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 $(pkgtree)/.binary: $(pkgtree)/.build
 $(pkgtree)/.install: $(pkgtree)/.binary
 
+PHONY += list
+list:
+	@echo "$(PACKAGE): $(VERSION)"
+
 PHONY += __all
 __all: __install
 

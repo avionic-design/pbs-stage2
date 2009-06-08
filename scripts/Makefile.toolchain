@@ -13,11 +13,50 @@ include $(kbuild-file)
 ROOTFS = $(CURDIR)
 export ROOTFS
 
-packages := $(obj-y)
+mode ?= build
+
+packages := $(addprefix $(mode)-,$(obj-y))
+
+ifeq ($(mode),clean)
+  packages := clean
+endif
 
 PHONY += $(packages)
-$(packages):
-	$(Q)$(MAKE) $(package)=$@
+
+$(addprefix list-,$(obj-y)): list-%:
+	$(Q)$(MAKE) $(package)=$* list
+
+$(addprefix build-,$(obj-y)): build-%:
+	$(Q)$(MAKE) $(package)=$*
+
+$(addprefix uscan-,$(obj-y)): uscan-%:
+	$(Q)$(MAKE) $(uscan)=$*
+
+clean-y	:= toolchain/
+clean-y	+= opt/
+clean-y	+= kernel-release
+clean-y	+= kernel-version
+
+clean-dirs	:= $(addprefix $(CURDIR)/,$(filter %/,$(clean-y)))
+clean-files	:= $(addprefix $(CURDIR)/,$(filter-out %/,$(clean-y)))
+
+quiet_cmd_cleandir = CLEAN   $@
+      cmd_cleandir = rm -rf $@
+
+quiet_cmd_clean = CLEAN   $@
+      cmd_clean = rm -f $@
+
+PHONY += $(clean-dirs)
+$(clean-dirs):
+	$(call cmd,cleandir)
+
+PHONY += $(clean-files)
+$(clean-files):
+	$(call cmd,clean)
+
+PHONY += clean
+clean: $(clean-dirs) $(clean-files)
+	@:
 
 all: $(packages)
 
