@@ -4,4 +4,6 @@ ifneq ($(ARCH_LONG),)
   OPTFLAGS += -march=$(ARCH_LONG)
 endif
 
-OPTFLAGS += -U$(ARCH)
+ifneq ($(ARCH),)
+  OPTFLAGS += -U$(ARCH)
+endif
