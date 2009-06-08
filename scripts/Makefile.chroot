@@ -17,4 +17,3 @@ endif
 PHONY += binary
 binary:
 	@echo "binary: $(package)"
-

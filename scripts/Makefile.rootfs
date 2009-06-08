@@ -40,4 +40,3 @@ install: $(ROOTFS) $(PLATFORM)/rootfs.img
 	rm -rf $$mp
 
 .PHONY: $(PHONY)
-

@@ -59,4 +59,3 @@ $(obj)/u-boot.fit: $(obj)/vmlinux $(obj)/initrd.gz $(obj)/multi.its
 
 _all: $(obj)/u-boot.img $(obj)/u-boot.fit
 	$@
-

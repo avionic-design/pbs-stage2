@@ -28,4 +28,3 @@ write:
 	sudo umount $(MP)
 
 .PHONY: $(PHONY)
-

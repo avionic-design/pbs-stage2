@@ -34,4 +34,3 @@ u-boot.fit: $(obj)/u-boot.fit
 
 _all: u-boot.fit
 	@:
-

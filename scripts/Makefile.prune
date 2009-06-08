@@ -24,4 +24,3 @@ prune: $(prunedirs) $(prunefiles)
 	@:
 
 .PHONY: $(PHONY)
-
