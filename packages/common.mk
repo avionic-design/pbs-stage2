@@ -18,7 +18,7 @@ ifdef CONFIG_CROSS_COMPILE
   endif
 endif
 ifndef CROSS_COMPILE
-  TOOLCHAIN_PATH = $(srctree)/toolchains/opt/cross/bin
+  TOOLCHAIN_PATH = $(srctree)/toolchains/$(TARGET)/usr/bin
   CROSS_COMPILE = $(TOOLCHAIN_PATH)/$(TARGET)-
 endif
 

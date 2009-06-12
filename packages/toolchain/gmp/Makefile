@@ -10,8 +10,13 @@ DESCRIPTION = multiprecision arithmetic library
 
 include packages/toolchain/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
-	--prefix=$(prefix)
+	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man
 
 conf-vars =
 
@@ -32,9 +37,9 @@ $(pkgtree)/.binary:
 	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
-ifneq ($(ROOTFS),)
+ifneq ($(SYSROOT),)
   install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 endif
 
 $(pkgtree)/.install:

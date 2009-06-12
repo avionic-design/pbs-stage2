@@ -3,8 +3,9 @@ include toolchains/common.mk
 BUILD	:= $(shell echo $$MACHTYPE)
 HOST	:= $(shell echo $$MACHTYPE)
 
-prefix	:= $(ROOTFS)$(prefix)
-PATH	:= $(prefix)/bin:$(PATH)
-ROOTFS	:=
+PATH	:= $(SYSROOT)$(prefix)/bin:$(PATH)
 env	:= env -i PATH=$(PATH)
-export prefix PATH env
+export PATH env
+
+prefix	:= $(SYSROOT)$(prefix)
+SYSROOT	:=

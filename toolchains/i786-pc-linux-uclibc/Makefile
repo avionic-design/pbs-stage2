@@ -1,5 +1,5 @@
-ARCH = i786
-CPU = pc
+ARCH = x86
+CPU = i786
 OS = linux
 LIBC = uclibc
 export ARCH CPU OS LIBC

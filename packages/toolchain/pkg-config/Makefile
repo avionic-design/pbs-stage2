@@ -7,8 +7,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 ##############################################################################
 
 include packages/toolchain/common.mk
-
 exec-prefix = $(prefix)/$(TARGET)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--target=$(TARGET) \
@@ -37,9 +39,9 @@ $(pkgtree)/.binary:
 	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
-ifneq ($(ROOTFS),)
+ifneq ($(SYSROOT),)
   install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 endif
 
 $(pkgtree)/.install:

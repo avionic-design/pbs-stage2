@@ -13,8 +13,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 ##############################################################################
 
 include packages/toolchain/common.mk
-
 exec-prefix = $(prefix)/$(TARGET)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--target=$(TARGET) \
@@ -23,12 +25,8 @@ conf-args = \
 	--infodir=$(exec-prefix)/share/info \
 	--mandir=$(exec-prefix)/share/man \
 	--libdir=$(exec-prefix)/lib \
+	--with-sysroot=yes \
 	--disable-nls
-
-ifneq ($(findstring sysroot,$(variant)),)
-  conf-args += \
-	--with-sysroot=$(PLATFORM)
-endif
 
 ifneq ($(findstring multilib,$(variant)),)
   conf-args += \
@@ -52,9 +50,9 @@ $(pkgtree)/.binary:
 	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
-ifneq ($(ROOTFS),)
+ifneq ($(SYSROOT),)
   install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 endif
 
 $(pkgtree)/.install:

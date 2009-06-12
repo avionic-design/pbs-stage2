@@ -17,6 +17,9 @@ include packages/toolchain/common.mk
 CPPFLAGS := $(CPPFLAGS) -DARM --sysroot $(prefix)
 CFLAGS   := $(CPPFLAGS) $(CFLAGS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix)
@@ -38,7 +41,7 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 
 $(pkgtree)/.install:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \

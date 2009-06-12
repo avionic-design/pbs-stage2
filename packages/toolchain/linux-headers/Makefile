@@ -9,6 +9,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/toolchain/common.mk
 prefix := $(prefix)/$(TARGET)
 
+ARCH := $(subst bfin,blackfin,$(ARCH))
+
 MAKEFLAGS =
 KBUILD_SRC =
 KBUILD_OUTPUT =
@@ -17,6 +19,13 @@ unexport MAKEFLAGS KBUILD_SRC KBUILD_OUTPUT
 KERNELSRC	= $(pkgbuildtree)
 KERNEL_CONFIG	= defconfig
 export KERNELSRC KERNEL_CONFIG
+
+DESTDIR		:= $(SYSROOT)$(prefix)/sys-root
+prefix		:= /usr
+export DESTDIR prefix
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 $(pkgtree)/.configure:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree) config

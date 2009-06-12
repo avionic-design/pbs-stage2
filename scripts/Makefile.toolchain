@@ -33,7 +33,7 @@ $(addprefix uscan-,$(obj-y)): uscan-%:
 	$(Q)$(MAKE) $(uscan)=$*
 
 clean-y	:= toolchain/
-clean-y	+= opt/
+clean-y	+= usr/
 clean-y	+= kernel-release
 clean-y	+= kernel-version
 

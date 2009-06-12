@@ -16,6 +16,10 @@ TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
 exec-prefix = $(prefix)/$(TARGET)
+sysroot = $(exec-prefix)/sys-root
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--target=$(TARGET) \
@@ -23,11 +27,12 @@ conf-args = \
 	--datadir=$(exec-prefix)/share \
 	--infodir=$(exec-prefix)/share/info \
 	--mandir=$(exec-prefix)/share/man \
-	--libexecdir=$(exec-prefix)/lib \
-	--includedir=$(exec-prefix)/include \
+	--libdir=$(sysroot)/usr/lib \
+	--libexecdir=$(sysroot)/usr/lib \
+	--includedir=$(sysroot)/usr/include \
 	--program-prefix=$(TARGET)- \
-	--with-mpfr=$(ROOTFS)$(prefix) \
-	--with-gmp=$(ROOTFS)$(prefix) \
+	--with-mpfr=$(SYSROOT)$(prefix) \
+	--with-gmp=$(SYSROOT)$(prefix) \
 	--disable-libmudflap \
 	--disable-libssp \
 	--disable-shared \
@@ -36,17 +41,10 @@ conf-args = \
 	--enable-symvers=gnu \
 	--enable-languages=c
 
-ifneq ($(findstring sysroot,$(variant)),)
-  conf-args += \
-	--with-local-prefix=$(ROOTFS) \
-	--with-build-sysroot=$(ROOTFS) \
-	--with-sysroot=$(ROOTFS) \
-	--with-as=$(ROOTFS)$(prefix)/bin/$(TARGET)-as \
-	--with-ld=$(ROOTFS)$(prefix)/bin/$(TARGET)-ld
-else
-  conf-args += \
-	--with-local-prefix=$(prefix)
-endif
+conf-args += \
+	--with-as=$(SYSROOT)$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(SYSROOT)$(prefix)/bin/$(TARGET)-ld \
+	--with-sysroot=yes
 
 ifeq ($(FLOAT),soft)
   conf-args += --with-float=soft
@@ -78,11 +76,12 @@ $(pkgtree)/.binary:
 	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
-ifneq ($(ROOTFS),)
-  CC           = $(ROOTFS)$(prefix)/bin/$(TARGET)-gcc
-  install-args = DESTDIR=$(ROOTFS)
+ifneq ($(SYSROOT),)
+  CC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcc
+  install-args = \
+	DESTDIR=$(SYSROOT)
 else
-  CC           = $(prefix)/bin/$(TARGET)-gcc
+  CC = $(prefix)/bin/$(TARGET)-gcc
 endif
 
 $(pkgtree)/.install:

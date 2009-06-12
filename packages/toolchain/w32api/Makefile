@@ -11,6 +11,9 @@ include packages/toolchain/common.mk
 CPPFLAGS := $(CPPFLAGS) -DARM --sysroot $(prefix)
 CFLAGS   := $(CPPFLAGS) $(CFLAGS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--target=$(TARGET) \
 	--host=$(TARGET) \

@@ -114,7 +114,7 @@ else
 	log_begin_msg -n "[`eval $date`]   Archiving toolchain ... "
 	mkdir -p "$tcroot/archive"
 	tar cjf "$tcroot/archive/${toolchain}_${version}.tar.bz2" \
-		-C "$tcroot/$toolchain" opt
+		-C "$tcroot/$toolchain" usr > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
 
@@ -125,7 +125,7 @@ else
 
 	log_begin_msg -n "[`eval $date`]   Installing toolchain ... "
 	tar xjf "$tcroot/archive/${toolchain}_${version}.tar.bz2" \
-		-C "$tcroot/${toolchain}"
+		-C "$tcroot/${toolchain}" > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
 

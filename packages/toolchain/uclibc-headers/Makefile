@@ -7,11 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 ##############################################################################
 
 include packages/toolchain/common.mk
-
-prefix	:= $(subst $(CURDIR),,$(prefix))
-SYSROOT	:= $(CURDIR)
 exec-prefix = $(prefix)/$(TARGET)
-sysroot = $(exec-prefix)/sys-root
 
 ARCH := $(subst bfin,blackfin,$(ARCH))
 
@@ -31,9 +27,9 @@ $(pkgtree)/.setup:
 
 conf-args = \
 	CROSS_COMPILE=$(SYSROOT)$(prefix)/bin/$(TARGET)- \
-	PREFIX=$(SYSROOT)$(sysroot) \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/ \
+	RUNTIME_PREFIX=$(exec-prefix)/sys-root/usr/ \
+	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
+	PREFIX=$(SYSROOT) \
 	MAKEFLAGS=
 
 $(pkgtree)/.configure:
@@ -41,14 +37,7 @@ $(pkgtree)/.configure:
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
-build-args = \
-	CROSS_COMPILE=$(SYSROOT)$(prefix)/bin/$(TARGET)- \
-	PREFIX=$(SYSROOT)$(sysroot) \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/
-
 $(pkgtree)/.build:
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary:
@@ -57,11 +46,10 @@ $(pkgtree)/.binary:
 
 install-args = \
 	CROSS_COMPILE=$(SYSROOT)$(prefix)/bin/$(TARGET)- \
-	PREFIX=$(SYSROOT)$(sysroot) \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/
+	RUNTIME_PREFIX=$(exec-prefix)/sys-root/usr/ \
+	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
+	PREFIX=$(SYSROOT)
 
 $(pkgtree)/.install:
-	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install
-	mv $(SYSROOT)$(sysroot)/usr/lib/*crt*.o $(SYSROOT)$(exec-prefix)/lib
+	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers
 	$(call cmd,stamp)

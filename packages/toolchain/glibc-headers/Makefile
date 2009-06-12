@@ -10,8 +10,10 @@ TARBALLS = \
 
 include packages/toolchain/common.mk
 
-prefix	:= $(subst $(CURDIR),,$(prefix))
-SYSROOT	:= $(CURDIR)$(prefix)/$(TARGET)/sys-root
+prefix		:= $(subst $(CURDIR),,$(prefix))
+SYSROOT		:= $(CURDIR)
+exec-prefix	:= $(prefix)/$(TARGET)
+sysroot		:= $(exec-prefix)/sys-root
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -20,12 +22,12 @@ $(pkgtree)/.setup:
 conf-args = \
 	--host=$(TARGET) \
 	--build=$(BUILD) \
-	--prefix=$(prefix) \
-	--datadir=$(prefix)/share \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
+	--prefix=$(sysroot)$(prefix) \
+	--datadir=$(exec-prefix)/share \
+	--infodir=$(exec-prefix)/share/info \
+	--mandir=$(exec-prefix)/share/man \
 	--program-prefix=$(TARGET)- \
-	--with-headers=$(SYSROOT)/usr/include \
+	--with-headers=$(SYSROOT)$(sysroot)/usr/include \
 	--enable-addons=ports
 
 ifeq ($(FLOAT),soft)
@@ -59,12 +61,7 @@ $(pkgtree)/.configure:
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-build-args = \
-	MAKEFLAGS=
-
 $(pkgtree)/.build:
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args) all
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary:
@@ -78,5 +75,8 @@ endif
 
 $(pkgtree)/.install:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(priv) $(env) $(MAKE) $(install-args) install-headers
+	cp $(pkgbuildtree)/obj-$(TARGET)/bits/stdio_lim.h \
+		$(SYSROOT)$(sysroot)/usr/include/bits
+	touch $(SYSROOT)$(sysroot)/usr/include/gnu/stubs.h
 	$(call cmd,stamp)

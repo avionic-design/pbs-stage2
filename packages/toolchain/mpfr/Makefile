@@ -10,9 +10,14 @@ DESCRIPTION = multiple precision floating-point computation
 
 include packages/toolchain/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--prefix=$(prefix) \
-	--with-gmp=$(ROOTFS)$(prefix)
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
+	--with-gmp=$(SYSROOT)$(prefix)
 
 conf-vars =
 
@@ -33,9 +38,9 @@ $(pkgtree)/.binary:
 	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
-ifneq ($(ROOTFS),)
+ifneq ($(SYSROOT),)
   install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 endif
 
 $(pkgtree)/.install:

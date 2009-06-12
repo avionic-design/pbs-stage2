@@ -7,8 +7,10 @@ TARBALLS =
 ##############################################################################
 
 include packages/toolchain/common.mk
+exec-prefix = $(SYSROOT)$(prefix)/$(TARGET)
 
-exec-prefix = $(prefix)/$(TARGET)
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 $(pkgtree)/.configure:
 	$(call cmd,stamp)

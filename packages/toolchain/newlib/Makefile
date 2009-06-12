@@ -8,6 +8,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/toolchain/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
@@ -32,7 +35,7 @@ $(pkgtree)/.binary:
 	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(SYSROOT)
 
 $(pkgtree)/.install:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \

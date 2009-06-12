@@ -1,5 +1,5 @@
-ARCH = i686
-CPU = pc
+ARCH = x86
+CPU = i686
 OS = linux
 LIBC = glibc
 export ARCH CPU OS LIBC
