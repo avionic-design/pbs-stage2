@@ -34,26 +34,12 @@ ifeq ($(FLOAT),soft)
 	conf-args += --without-fp
 endif
 
-#conf-vars += \
-	ac_cv_lib_cap_cap_init=no \
-	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes \
-	libc_cv_$(ARCH)_tls=yes
-
 conf-vars += \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes
 
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no
-
-ifeq ($(ARCH),i686)
-	conf-vars += CFLAGS='-march=i686 -O2 -g'
-endif
-
-ifeq ($(ARCH),i786)
-	conf-vars += CFLAGS='-march=prescott -O2 -g'
-endif
 
 $(pkgtree)/.configure:
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
