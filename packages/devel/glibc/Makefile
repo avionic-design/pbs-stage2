@@ -3,7 +3,7 @@ VERSION = 2.9
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
-	$(PACKAGE_FULLNAME).tar.bz2 \
+	$(PACKAGE)-$(VERSION).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
 DESCRIPTION = the GNU C library
@@ -14,9 +14,12 @@ include packages/common.mk
 
 # always optimize glibc for speed (it won't even compile with -Os)
 CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU := $(shell echo $(CONFIG_CPU))
 
-package-extract:
-	cd $(pkgtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+$(pkgtree)/.setup:
+	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -31,14 +34,6 @@ ifeq ($(FLOAT),soft)
 	conf-args += --without-fp
 endif
 
-#	libc_cv_$(ARCH)_tls=yes \
-
-#conf-vars += \
-	ac_cv_lib_cap_cap_init=no \
-	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes \
-	LDFLAGS='$(LDFLAGS)'
-
 conf-vars += \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes
@@ -50,16 +45,18 @@ ifeq ($(ARCH),arm)
   endif
 endif
 
-ifeq ($(ARCH),i686)
+ifeq ($(ARCH),x86)
+  ifeq ($(CPU),i686)
 	conf-vars += \
 		ac_cv_sizeof_long_double=8 \
 		CFLAGS='-march=i686 -O2 -g'
-endif
+  endif
 
-ifeq ($(ARCH),i786)
+  ifeq ($(CPU),i786)
 	conf-vars += \
 		ac_cv_sizeof_long_double=8 \
 		CFLAGS='-march=prescott -O2 -g'
+  endif
 endif
 
 ifeq ($(ARCH),x86_64)
@@ -67,17 +64,23 @@ ifeq ($(ARCH),x86_64)
 		ac_cv_sizeof_long_double=16
 endif
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	MAKEFLAGS=
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args) all
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	install_root=$(ROOTFS)
@@ -85,10 +88,11 @@ install-args = \
 LIBGCC = $(shell $(CC) --print-file-name=libgcc_s.so.1)
 plugin = $(prefix)/lib/gconv
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.binary
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,install_bin,$(LIBGCC),$(ROOTFS)/lib/$(notdir $(LIBGCC)))
+	$(call cmd,stamp)
 
 stripfiles = \
 	/lib/$(notdir $(LIBGCC)) \
@@ -377,9 +381,5 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
-
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	$(call cmd,stamp)
