@@ -20,6 +20,9 @@ CPU_CONFIG = minimal-$(CPU)
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	EXTRA_CPPFLAGS="--sysroot $(ROOTFS)" \
 	EXTRA_LDFLAGS="--sysroot $(ROOTFS)" \

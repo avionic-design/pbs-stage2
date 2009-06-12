@@ -21,6 +21,9 @@ unexport MAKEFLAGS KBUILD_SRC KBUILD_OUTPUT
 
 include packages/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 $(pkgtree)/.configure:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build config
 	$(call cmd,stamp)

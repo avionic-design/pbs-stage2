@@ -8,6 +8,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \

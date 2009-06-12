@@ -17,6 +17,8 @@ CPU := $(shell echo $(CONFIG_CPU))
 ABI := $(shell echo $(CONFIG_ABI))
 DESTDIR := $(pkgtree)/install
 
+ARCH := $(subst bfin,blackfin,$(ARCH))
+
 ifneq ($(ABI),)
 DEF_CONFIG = $(ARCH)-$(ABI).config
 CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
@@ -27,6 +29,9 @@ endif
 
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \

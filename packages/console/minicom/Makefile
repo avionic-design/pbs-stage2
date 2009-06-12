@@ -10,6 +10,9 @@ DESCRIPTION = friendly menu-driven serial communication program
 
 include packages/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
