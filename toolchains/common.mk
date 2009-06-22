@@ -1,5 +1,5 @@
 # release versions
-LINUX_VERSION		= 2.6.29.4
+LINUX_VERSION		= 2.6.30
 BINUTILS_VERSION	= 2.19.1
 GCC_VERSION		= 4.3.3
 
