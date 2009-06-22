@@ -12,7 +12,6 @@ d3d70ebf15458ac15bd9930cbe516bedebfdb7ac4c679c456668eb0d56eddb2c  download/util-
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
 be955bef7a81d69222e929689e0de0ecf64c13dc5b15b2ee5696d5ef66fdeec0  download/sed-4.1.5.tar.gz
 44357e0fae8c8f0e315bf130b4e86a4f96b91d66eeb4e473def4ce8336fff102  download/sysklogd-1.4.1.tar.gz
-37f6f7d9de74196eb5fc0bbe0aea9b5c939de7f500acba3af6fd643f3b538b44  download/libusb-0.1.12.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
 da0ca1e821e3fa7cfbe73ddb1480b921002ee992f5e5fbc611422c103b907443  download/udhcp-0.9.8.tar.gz
 40ff4ab0247b75138a0887ed40f81c1a6184f340b77126c16d074b1075b41c20  download/fbset-2.1.tar.gz
@@ -136,3 +135,4 @@ eee233d08274feb2d3fc93a674d6045b94167375d86ff9b54c3c60cae047095e  download/conso
 23f977f55da5c1bbfdcf5db9ada641cfd94819f7452113c3be40fd7dfe200a46  download/dnsmasq-2.47.tar.lzma
 d7b9f19b92fd5c693c16cd62f441d051b699f28ec6a175d1b464e58bacd8c78f  download/linux-2.6.30.tar.bz2
 3565a52329e179d525127c4f80c45e76de3dbe45303151bd7f4b7d4d9ab6e4d2  download/busybox-1.14.2.tar.bz2
+9f5737019f3e4c14f68a2f829deb690330e89b634d1337683e453b94137669f1  download/libusb-1.0.2.tar.bz2
