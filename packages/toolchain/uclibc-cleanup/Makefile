@@ -7,7 +7,9 @@ TARBALLS =
 ##############################################################################
 
 include packages/toolchain/common.mk
-exec-prefix = $(SYSROOT)$(prefix)/$(TARGET)
+
+CROSS_COMPILE	:= $(SYSROOT)$(prefix)/bin/$(TARGET)-
+exec-prefix	 = $(SYSROOT)$(prefix)/$(TARGET)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -54,5 +56,12 @@ prunefiles = \
 
 include packages/cleanup.mk
 
+includedir = $(shell $(CROSS_COMPILE)gcc -print-file-name=include)
+
 $(pkgtree)/.install: $(pkgtree)/.cleanup
+	ln -sf ../../../../../sys-root/usr/include/byteswap.h \
+		$(includedir)
+	mkdir -p $(includedir)/bits
+	ln -sf ../../../../../../sys-root/usr/include/bits/byteswap.h \
+		$(includedir)/bits
 	$(call cmd,stamp)

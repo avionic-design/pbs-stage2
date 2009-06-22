@@ -10,8 +10,9 @@ TARBALLS = \
 
 include packages/toolchain/common.mk
 
-prefix	:= $(subst $(CURDIR),,$(prefix))
-SYSROOT	:= $(CURDIR)$(prefix)/$(TARGET)/sys-root
+CROSS_COMPILE	:= $(SYSROOT)$(prefix)/bin/$(TARGET)-
+prefix		:= $(subst $(CURDIR),,$(prefix))
+SYSROOT		:= $(CURDIR)$(prefix)/$(TARGET)/sys-root
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
