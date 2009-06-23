@@ -15,7 +15,7 @@ ARCH := $(shell echo $(CONFIG_ARCH))
 ARCH := $(patsubst i%86,x86,$(ARCH))
 ARCH := $(subst x86_64,x86,$(ARCH))
 
-ifneq ($(wildcard scripts/Makefile.initrd-$(ARCH)),)
+ifneq ($(wildcard $(srctree)/scripts/Makefile.initrd-$(ARCH)),)
   include scripts/Makefile.initrd-$(ARCH)
 else
   include scripts/Makefile.initrd-generic
