@@ -2,7 +2,7 @@ PACKAGE = zlib
 VERSION = 1.2.3
 
 LOCATION = http://www.zlib.net
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 ##############################################################################
 
@@ -12,21 +12,34 @@ env += \
 	CC='$(CC) --sysroot $(ROOTFS)' \
 	CFLAGS='$(CFLAGS)'
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--prefix=$(prefix) \
 	--shared
 
-package-configure:
-	cd $(pkgtree) && $(env) ./configure $(conf-args)
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && \
+		$(env) ./configure $(conf-args)
+	$(call cmd,stamp)
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-do-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+$(pkgtree)/.do-install: $(pkgtree)/.binary
+	cd $(pkgbuildtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 prunefiles =
 stripfiles = \
@@ -34,9 +47,5 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
-
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	$(call cmd,stamp)
