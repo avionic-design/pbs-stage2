@@ -105,6 +105,8 @@ struct package {
 
 #define	PACKAGE_VIRTUAL		(1 << 0)
 
+#define is_virtual(pkg) (((pkg)->flags & PACKAGE_VIRTUAL) == 0)
+
 static struct package *package_create(struct symbol *symbol, struct expr *depends)
 {
 	struct package *package = NULL;
@@ -152,6 +154,9 @@ static int find_reverse_deps(struct list_head *packages, struct expr *expr)
 {
 	struct package *package;
 	int ret = 0;
+
+	if (!expr)
+		return -EINVAL;
 
 	switch (expr->type) {
 	case E_AND:
@@ -205,12 +210,39 @@ static int resolve_expr_dependencies(struct list_head *packages, struct expr *ex
 	return ret;
 }
 
+static int resolve_revdeps(struct list_head *packages, struct package *package, struct expr *expr)
+{
+	struct package *revdep;
+
+	switch (expr->type) {
+	case E_AND:
+	case E_OR:
+		resolve_revdeps(packages, package, expr->left.expr);
+		resolve_revdeps(packages, package, expr->right.expr);
+		break;
+
+	case E_SYMBOL:
+		revdep = find_package(packages, expr->left.sym);
+		if (revdep && is_virtual(revdep) && is_virtual(package))
+			package->numdeps++;
+		break;
+
+	default:
+		break;
+	}
+
+	return 0;
+}
+
 static int resolve_dependencies(struct list_head *packages, struct package *package)
 {
 	int ret = 0;
 
 	if (package->depends)
 		resolve_expr_dependencies(packages, package->depends);
+
+	if (package->symbol->rev_dep.expr)
+		resolve_revdeps(packages, package, package->symbol->rev_dep.expr);
 
 	return ret;
 }
@@ -416,4 +448,3 @@ int main(int argc, char *argv[])
 	fclose(fp);
 	return 0;
 }
-
