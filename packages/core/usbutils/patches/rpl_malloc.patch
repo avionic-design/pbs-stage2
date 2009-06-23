@@ -2,7 +2,7 @@ diff --git a/lsusb.c b/lsusb.c
 index 4833536..6b6c673 100644
 --- a/lsusb.c
 +++ b/lsusb.c
-@@ -118,6 +118,19 @@ static inline int typesafe_control_msg(usb_dev_handle *dev,
+@@ -139,6 +139,19 @@ static inline int typesafe_control_msg(usb_dev_handle *dev,
  
  /* ---------------------------------------------------------------------- */
  

@@ -84,6 +84,7 @@ config PACKAGE_CORE_UDEV
 config PACKAGE_CORE_USBUTILS
 	bool "usbutils"
 	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_LIBS_LIBUSB_COMPAT
 	default n
 
 config PACKAGE_CORE_UTIL_LINUX

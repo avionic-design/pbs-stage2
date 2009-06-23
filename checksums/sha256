@@ -69,7 +69,6 @@ eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
 4d3cc49b6f4da6d396196054eca23a91df1a41001c736dcfd22fec5a5c7428c8  download/libXv-1.0.4.tar.bz2
 95e7b7470e04f22c3ec8dc6d0b1fdd8944306cb5313c84c4545cd83abada26d0  download/strace-4.5.18.tar.bz2
-2edc7cc98fd217f6980d8ba0b3792beed4695d4e8429a11c7237faab04ab47f4  download/usbutils-0.73.tar.gz
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 5ac4d4a308b032727c61fd56db5a2eaadaedfbce5bc9dc504320bff9d696b002  download/xf86dgaproto-2.0.3.tar.bz2
 4c71e92c4ace100bc7c5cdb0a9b603f0452df40f8f344f7570ad10e2b6bd28d2  download/DirectFB-1.3.0.tar.gz
@@ -137,3 +136,4 @@ d7b9f19b92fd5c693c16cd62f441d051b699f28ec6a175d1b464e58bacd8c78f  download/linux
 3565a52329e179d525127c4f80c45e76de3dbe45303151bd7f4b7d4d9ab6e4d2  download/busybox-1.14.2.tar.bz2
 9f5737019f3e4c14f68a2f829deb690330e89b634d1337683e453b94137669f1  download/libusb-1.0.2.tar.bz2
 476eb0d48981ea05e2f82955d59a3445e32be41c0afeb8a2827b9361bb560560  download/libusb-compat-0.1.2.tar.bz2
+9876b0e45a1bd3899222b916ab1d423e9efa3ad9374d55a6a301d5716f2d8a2f  download/usbutils-0.82.tar.gz
