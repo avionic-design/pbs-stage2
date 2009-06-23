@@ -110,6 +110,12 @@ config PACKAGE_LIBS_LIBUSB
 	depends on PACKAGE_DEVEL_LIBC
 	default n
 
+config PACKAGE_LIBS_LIBUSB_COMPAT
+	bool "libusb-compat"
+	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_LIBS_LIBUSB
+	default n
+
 config PACKAGE_LIBS_LIBXML2
 	bool "libxml2"
 	depends on PACKAGE_DEVEL_LIBC
@@ -171,4 +177,3 @@ config PACKAGE_LIBS_ZLIB
 	default n
 
 endmenu
-
