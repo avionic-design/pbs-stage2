@@ -29,14 +29,10 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-$(pkgtree)/.do-install: $(pkgtree)/.binary
+$(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
@@ -47,5 +43,9 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
 	$(call cmd,stamp)
