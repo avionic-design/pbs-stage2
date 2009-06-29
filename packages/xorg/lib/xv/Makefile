@@ -14,9 +14,3 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/lib/libXv.so.1.0.0
-
-include packages/cleanup.mk
-
-package-post-install: package-cleanup
-	@:
-

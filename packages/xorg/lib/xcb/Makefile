@@ -12,8 +12,10 @@ include packages/common.mk
 
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS) \
-	DESTDIR=$(ROOTFS)
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -26,22 +28,25 @@ conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)'
 
-package-configure:
-	cd $(pkgtree) && \
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args =
 
-package-build:
-	cd $(pkgtree) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-do-install:
-	cd $(pkgtree) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 prunefiles = \
 	$(prefix)/lib/libxcb.la \
@@ -53,9 +58,9 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	$(call cmd,stamp)

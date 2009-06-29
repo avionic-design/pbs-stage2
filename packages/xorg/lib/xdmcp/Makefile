@@ -8,9 +8,3 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/lib/libXdmcp.so.6.0.0
-
-include packages/cleanup.mk
-
-package-post-install: package-cleanup
-	@:
-
