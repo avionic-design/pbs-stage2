@@ -12,6 +12,9 @@ env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 CPPFLAGS += \
 	-DUSE_INPUT_API=1
 
@@ -27,22 +30,29 @@ conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	ac_cv_func_malloc_0_nonnull=yes
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args =
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
+
+$(pkgtree)/.binary:
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(ROOTFS)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.binary
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/ts
 
@@ -62,9 +72,5 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
-
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	$(call cmd,stamp)
