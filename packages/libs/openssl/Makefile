@@ -2,13 +2,17 @@ PACKAGE = openssl
 VERSION = 0.9.8k
 
 LOCATION = http://www.openssl.org/source
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 ##############################################################################
 
 include packages/common.mk
 
-ARCH := $(patsubst i%86,x86,$(ARCH))
+ARCH := $(patsubst i%86,x86,$(CONFIG_ARCH))
+CPU := $(shell echo $(CONFIG_CPU))
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	shared \
@@ -31,8 +35,10 @@ ifndef config
   $(error no configuration defined)
 endif
 
-package-configure:
-	cd $(pkgtree) && $(env) ./Configure $(conf-args) $(config)
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && \
+		$(env) ./Configure $(conf-args) $(config)
+	$(call cmd,stamp)
 
 build-vars = \
 	CC='$(CC)' \
@@ -40,18 +46,21 @@ build-vars = \
 	EXTRA_CPPFLAGS='$(CPPFLAGS)' \
 	EXTRA_CFLAGS='$(CFLAGS)'
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args) $(build-vars)
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(build-args) $(build-vars)
+	$(call cmd,stamp)
 
 install-args = \
 	MANDIR=$(prefix)/share/man \
 	MANSUFFIX=ssl \
 	INSTALL_PREFIX=$(ROOTFS)
 
-PHONY += package-do-install
-package-do-install:
-	cd $(pkgtree) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) mv $(ROOTFS)$(prefix)/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
+	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/engines
 sover  = 0.9.8
@@ -73,11 +82,9 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-strip
-	$(priv) mv $(ROOTFS)/usr/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
-.PHONY: $(PHONY)
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	$(call cmd,stamp)

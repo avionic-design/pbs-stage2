@@ -134,6 +134,7 @@ config PACKAGE_LIBS_NCURSES
 config PACKAGE_LIBS_OPENSSL
 	bool "openssl"
 	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_LIBS_ZLIB
 	default n
 
 config PACKAGE_LIBS_PANGO
