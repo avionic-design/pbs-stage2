@@ -1,5 +1,5 @@
 LOCATION ?= http://xorg.freedesktop.org/releases/individual/lib
-TARBALLS ?= $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
@@ -7,47 +7,47 @@ env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc \
-	$(extra-conf-args)
+	--sysconfdir=/etc
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure: package-pre-configure
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args = \
-	$(extra-build-args)
+build-args =
 
-package-build: package-pre-build
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS) \
-	$(extra-install-args)
+	DESTDIR=$(ROOTFS)
 
-_package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
-package-install: package-pre-install _package-install package-post-install
-	@:
+include packages/cleanup.mk
 
-package-clean:
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	@echo "$@: not implemented yet"
+	$(call cmd,stamp)
 
-# dummy targets
-package-pre-configure:
-package-pre-build:
-package-pre-install:
-package-post-install:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	$(call cmd,stamp)
