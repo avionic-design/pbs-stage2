@@ -8,4 +8,3 @@ $(pkgtree)/.prune:
 	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
-

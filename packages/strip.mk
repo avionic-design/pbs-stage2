@@ -7,4 +7,3 @@ $(pkgtree)/.strip:
 	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
-
