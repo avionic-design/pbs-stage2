@@ -1,22 +1,26 @@
+ifeq ($(DESTDIR),)
+  $(error DESTDIR is undefined)
+endif
+
 PHONY += all
 all: prune
 	@:
 
 # add the rootfs prefix and expand wildcards
-prunedirs  := $(wildcard $(patsubst %,$(ROOTFS)%,$(prunedirs)))
-prunefiles := $(wildcard $(patsubst %,$(ROOTFS)%,$(prunefiles)))
+prunedirs  := $(wildcard $(patsubst %,$(DESTDIR)%,$(prunedirs)))
+prunefiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(prunefiles)))
 # add the prune- prefix
 prunedirs  := $(patsubst %,prune-%,$(prunedirs))
 prunefiles := $(patsubst %,prune-%,$(prunefiles))
 
 PHONY += $(prunedirs)
 $(prunedirs): prune-%: %
-	@echo "  PRUNE   $(subst prune-$(ROOTFS),,$@)"
+	@echo "  PRUNE   $(subst prune-$(DESTDIR),,$@)"
 	@$(priv) rm -rf $(subst prune-,,$@)
 
 PHONY += $(prunefiles)
 $(prunefiles): prune-%: %
-	@echo "  PRUNE   $(subst prune-$(ROOTFS),,$@)"
+	@echo "  PRUNE   $(subst prune-$(DESTDIR),,$@)"
 	@$(priv) rm -f $(subst prune-,,$@)
 
 PHONY += prune

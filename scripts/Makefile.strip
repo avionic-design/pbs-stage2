@@ -1,3 +1,7 @@
+ifeq ($(DESTDIR),)
+  $(error DESTDIR is undefined)
+endif
+
 PHONY += all
 all: strip
 	@:
@@ -6,13 +10,13 @@ all: strip
 include packages/$(package)/Makefile
 
 # add the and rootfs prefix and expand wildcards
-stripfiles := $(wildcard $(patsubst %,$(ROOTFS)%,$(stripfiles)))
+stripfiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(stripfiles)))
 # add the strip- prefix
 stripfiles := $(patsubst %,strip-%,$(stripfiles))
 
 PHONY += $(stripfiles)
 $(stripfiles): strip-%: %
-	@echo "  STRIP   $(subst $(ROOTFS),,$<)"
+	@echo "  STRIP   $(subst $(DESTDIR),,$<)"
 	@$(priv) $(STRIP) $<
 
 PHONY += strip
