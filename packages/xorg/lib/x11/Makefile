@@ -1,16 +1,10 @@
 PACKAGE = libX11
-VERSION = 1.2
+VERSION = 1.2.1
 
 include packages/xorg/lib/common.mk
 
 conf-args += \
 	--disable-malloc0returnsnull
-
-# build native utilities (they are built separately because they can't take
-# cross-compiling compiler flags)
-package-pre-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) -C src/util CPPFLAGS='' CFLAGS=''
 
 prunefiles = \
 	$(prefix)/lib/libX11-xcb.la \

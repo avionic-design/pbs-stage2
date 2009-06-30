@@ -1,0 +1,34 @@
+commit a09561311308685886d19350a6efc126ce030ba1
+Author: Thierry Reding <thierry.reding@avionic-design.de>
+Date:   Tue Jun 30 12:56:01 2009 +0200
+
+    Fixes src/util for cross-compilation.
+
+diff --git a/configure.ac b/configure.ac
+index b4593f4..a4f0fb1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -32,6 +32,9 @@ if test x"$CC_FOR_BUILD" = x; then
+ 	fi
+ fi
+ AC_SUBST([CC_FOR_BUILD])
++AC_SUBST([CPPFLAGS_FOR_BUILD])
++AC_SUBST([CFLAGS_FOR_BUILD])
++AC_SUBST([LDFLAGS_FOR_BUILD])
+ 
+ XORG_PROG_RAWCPP
+ 
+diff --git a/src/util/Makefile.am b/src/util/Makefile.am
+index c9e81c0..ccf1f9d 100644
+--- a/src/util/Makefile.am
++++ b/src/util/Makefile.am
+@@ -5,6 +5,9 @@ noinst_PROGRAMS=makekeys
+ makekeys_CFLAGS=$(X11_CFLAGS)
+ 
+ CC = @CC_FOR_BUILD@
++CPPFLAGS = @CPPFLAGS_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ 
+ EXTRA_DIST = mkks.sh
+ 
