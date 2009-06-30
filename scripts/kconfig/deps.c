@@ -95,17 +95,46 @@ static void list_del_init(struct list_head *entry)
 		&(pos)->member != (head);				\
 		pos = list_entry(pos->member.next, typeof(*pos), member))
 
+struct package;
+struct dependency;
+
+struct dependency {
+	struct package *package;
+	struct list_head list;
+};
+
+static struct dependency *dependency_create(struct package *package)
+{
+	struct dependency *dependency;
+
+	dependency = malloc(sizeof(*dependency));
+	if (!dependency)
+		return NULL;
+
+	memset(dependency, 0, sizeof(*dependency));
+	dependency->package = package;
+	INIT_LIST_HEAD(&dependency->list);
+
+	return dependency;
+}
+
+static void dependency_destroy(struct dependency *dependency)
+{
+	free(dependency);
+}
+
 struct package {
 	struct symbol *symbol;
 	struct expr *depends;
 	struct list_head list;
+	struct list_head deps;
 	unsigned long numdeps;
 	unsigned long flags;
 };
 
 #define	PACKAGE_VIRTUAL		(1 << 0)
 
-#define is_virtual(pkg) (((pkg)->flags & PACKAGE_VIRTUAL) == 0)
+#define package_is_virtual(pkg)	(((pkg)->flags & PACKAGE_VIRTUAL) != 0)
 
 static struct package *package_create(struct symbol *symbol, struct expr *depends)
 {
@@ -117,6 +146,7 @@ static struct package *package_create(struct symbol *symbol, struct expr *depend
 
 	memset(package, 0, sizeof(*package));
 	INIT_LIST_HEAD(&package->list);
+	INIT_LIST_HEAD(&package->deps);
 	package->symbol = symbol;
 	package->depends = depends;
 
@@ -125,20 +155,34 @@ static struct package *package_create(struct symbol *symbol, struct expr *depend
 
 static int package_destroy(struct package *package)
 {
+	struct list_head *node, *next;
+
 	if (!package)
 		return -EINVAL;
+
+	list_for_each_safe(node, next, &package->deps) {
+		struct dependency *dep = list_entry(node, struct dependency, list);
+		dependency_destroy(dep);
+	}
 
 	free(package);
 	return 0;
 }
 
+static int package_add_dependency(struct package *package, struct package *dep)
+{
+	struct dependency *d = dependency_create(dep);
+	if (!d)
+		return -ENOMEM;
+
+	list_add_tail(&d->list, &package->deps);
+	return 0;
+}
+
 static struct package *find_package(struct list_head *packages, struct symbol *symbol)
 {
+	struct package *package = NULL;
 	struct package *ret = NULL;
-	struct package *package;
-
-	if (!packages || !symbol)
-		return NULL;
 
 	list_for_each_entry(package, packages, list) {
 		if (package->symbol == symbol) {
@@ -150,101 +194,130 @@ static struct package *find_package(struct list_head *packages, struct symbol *s
 	return ret;
 }
 
-static int find_reverse_deps(struct list_head *packages, struct expr *expr)
+static int expr_is_terminal(struct expr *child, struct expr *parent)
 {
-	struct package *package;
-	int ret = 0;
-
-	if (!expr)
-		return -EINVAL;
-
-	switch (expr->type) {
-	case E_AND:
-	case E_OR:
-		find_reverse_deps(packages, expr->left.expr);
-		find_reverse_deps(packages, expr->right.expr);
-		break;
-
-	case E_SYMBOL:
-		package = find_package(packages, expr->left.sym);
-		if (package) {
-			if (package->flags & PACKAGE_VIRTUAL) {
-				expr = package->symbol->rev_dep.expr;
-				find_reverse_deps(packages, expr);
-				package->numdeps++;
-			} else {
-				package->numdeps++;
+	/* TODO: refactor */
+	if (child->type == E_SYMBOL) {
+		if (child == parent->left.expr) {
+			if (parent->right.expr->type == E_SYMBOL) {
+				if (child->left.sym->name)
+					return 1;
 			}
 		}
-		break;
 
-	default:
-		break;
-	}
-
-	return ret;
-}
-
-static int resolve_expr_dependencies(struct list_head *packages, struct expr *expr)
-{
-	int ret = 0;
-
-	switch (expr->type) {
-	case E_AND:
-	case E_OR:
-		resolve_expr_dependencies(packages, expr->left.expr);
-		resolve_expr_dependencies(packages, expr->right.expr);
-		break;
-
-	case E_SYMBOL:
-		if (expr->left.sym->name) {
-			expr = expr->left.sym->rev_dep.expr;
-			find_reverse_deps(packages, expr);
+		if (child == parent->right.expr) {
+			if (parent->left.expr->type == E_SYMBOL) {
+				if (child->left.sym->name)
+					return 1;
+			}
 		}
-		break;
-
-	default:
-		break;
-	}
-
-	return ret;
-}
-
-static int resolve_revdeps(struct list_head *packages, struct package *package, struct expr *expr)
-{
-	struct package *revdep;
-
-	switch (expr->type) {
-	case E_AND:
-	case E_OR:
-		resolve_revdeps(packages, package, expr->left.expr);
-		resolve_revdeps(packages, package, expr->right.expr);
-		break;
-
-	case E_SYMBOL:
-		revdep = find_package(packages, expr->left.sym);
-		if (revdep && is_virtual(revdep) && is_virtual(package))
-			package->numdeps++;
-		break;
-
-	default:
-		break;
 	}
 
 	return 0;
 }
 
-static int resolve_dependencies(struct list_head *packages, struct package *package)
+static void build_package_deps_expr(struct list_head *packages, struct package *package, struct expr *expr)
 {
-	int ret = 0;
+	struct package *dep;
 
-	if (package->depends)
-		resolve_expr_dependencies(packages, package->depends);
+	switch (expr->type) {
+	case E_AND:
+	case E_OR:
+		build_package_deps_expr(packages, package, expr->left.expr);
+		build_package_deps_expr(packages, package, expr->right.expr);
+		break;
 
-	if (package->symbol->rev_dep.expr)
-		resolve_revdeps(packages, package, package->symbol->rev_dep.expr);
+	case E_SYMBOL:
+		dep = find_package(packages, expr->left.sym);
+		if (dep)
+			package_add_dependency(dep, package);
+		break;
 
-	return ret;
+	default:
+		break;
+	}
+}
+
+static void build_package_deps(struct list_head *packages, struct package *package)
+{
+	if (package->symbol->rev_dep.expr) {
+		struct expr_value *rd = &package->symbol->rev_dep;
+		build_package_deps_expr(packages, package, rd->expr);
+	}
+}
+
+static void build_deps(struct list_head *packages)
+{
+	struct package *package;
+
+	list_for_each_entry(package, packages, list)
+		build_package_deps(packages, package);
+}
+
+static void resolve_virtual(struct list_head *packages, struct expr *expr);
+
+static void resolve_terminal(struct list_head *packages, struct expr *child, struct expr *parent)
+{
+	struct package *package;
+
+	if (expr_is_terminal(child, parent)) {
+		package = find_package(packages, child->left.sym);
+		if (package) {
+			if (package_is_virtual(package)) {
+				struct symbol *sym = package->symbol;
+				struct expr *expr = sym->rev_dep.expr;
+				resolve_virtual(packages, expr);
+			}
+
+			package->numdeps++;
+		}
+	}
+
+	resolve_virtual(packages, child);
+}
+
+static void resolve_virtual(struct list_head *packages, struct expr *expr)
+{
+	if (!packages || !expr)
+		return;
+
+	switch (expr->type) {
+	case E_AND:
+	case E_OR:
+		resolve_terminal(packages, expr->left.expr, expr);
+		resolve_terminal(packages, expr->right.expr, expr);
+		break;
+
+	case E_SYMBOL:
+		break;
+
+	default:
+		break;
+	}
+}
+
+static void resolve_package_deps(struct list_head *packages, struct package *package)
+{
+	struct dependency *dep;
+
+	list_for_each_entry(dep, &package->deps, list) {
+		if (package_is_virtual(dep->package)) {
+			struct symbol *sym = dep->package->symbol;
+			struct expr *expr = sym->rev_dep.expr;
+			resolve_virtual(packages, expr);
+		}
+
+		resolve_package_deps(packages, dep->package);
+		dep->package->numdeps++;
+	}
+}
+
+static void resolve_deps(struct list_head *packages)
+{
+	struct package *package;
+
+	list_for_each_entry(package, packages, list)
+		resolve_package_deps(packages, package);
 }
 
 static int symbol_is_package(struct symbol *symbol)
@@ -256,6 +329,9 @@ static int symbol_is_package(struct symbol *symbol)
 		return 1;
 
 	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
+		return 1;
+
+	if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
 		return 1;
 
 	return 0;
@@ -279,7 +355,7 @@ static struct package *package_create_from_menu(struct menu *menu)
 		if (sym_get_tristate_value(symbol) == yes) {
 			package = package_create(symbol, menu->dep);
 			if (package) {
-				if (symbol->rev_dep.expr && !menu->prompt)
+				if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
 					package->flags |= PACKAGE_VIRTUAL;
 			}
 		}
@@ -428,13 +504,12 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	list_for_each_entry(package, &packages, list)
-		resolve_dependencies(&packages, package);
-
+	build_deps(&packages);
+	resolve_deps(&packages);
 	list_sort(&packages);
 
 	list_for_each_entry(package, &packages, list) {
-		if (package->flags & PACKAGE_VIRTUAL)
+		if (package_is_virtual(package))
 			continue;
 
 		fprintf(fp, _("CONFIG_%s=y\n"), package->symbol->name);
