@@ -1,8 +1,8 @@
 PACKAGE = libxcb
-VERSION = 1.2
+VERSION = 1.3
 
 LOCATION = http://xcb.freedesktop.org/dist
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = X C binding
 
@@ -54,7 +54,7 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/lib/libxcb.so.1.1.0 \
-	$(prefix)/lib/libxcb-*.so.0.0.0
+	$(prefix)/lib/libxcb-*.so.*
 
 include packages/cleanup.mk
 
