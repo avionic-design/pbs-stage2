@@ -100,7 +100,6 @@ b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805  download/groff
 709ca7402594acc1d80b99c20219112b5c00e6ac48ae6049fc626fbaf4ce49f6  download/rp-pppoe-3.10.tar.gz
 3e8225b4d7ace0a2039de752e11fd6922d3b89a7259a292c347391c4788739f6  download/binutils-2.19.1.tar.bz2
 cafe6431f9e6d561fb7b396bf94ff73a9cd0f4279f3eea2fc714ab90e345eee6  download/libpng-1.2.35.tar.bz2
-2d50a7b6f5a948ece84549c80872115bc7c2b7e6371f24b4742eb1c51bd259bd  download/xcb-proto-1.4.tar.bz2
 d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextproto-7.0.5.tar.bz2
 4fe14659ed0c5ceacec25ad6067a9521f85852280bc39c0375f5000ab133cb3f  download/libxcb-1.2.tar.bz2
 fd8cd0bc3e94d7416e6af9eddfa909b0e64246e0d2bb41c00f4e02bd85c76bee  download/xproto-7.0.15.tar.bz2
@@ -137,3 +136,4 @@ d7b9f19b92fd5c693c16cd62f441d051b699f28ec6a175d1b464e58bacd8c78f  download/linux
 476eb0d48981ea05e2f82955d59a3445e32be41c0afeb8a2827b9361bb560560  download/libusb-compat-0.1.2.tar.bz2
 9876b0e45a1bd3899222b916ab1d423e9efa3ad9374d55a6a301d5716f2d8a2f  download/usbutils-0.82.tar.gz
 8af6985471dc25f78a7c4abd9498221561dca44f4653ef9455698c5106eaa1bc  download/pixman-0.15.14.tar.bz2
+0cf35b258e8f32773bcbd397ef3aca3ee6cac152260c99d2bd851488884c4638  download/xcb-proto-1.5.tar.bz2
