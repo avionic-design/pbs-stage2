@@ -5,13 +5,12 @@ source "packages/xorg/lib/Kconfig"
 
 config PACKAGE_XORG_KDRIVE
 	bool "kdrive"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_XORG_XORG_SERVER
 	bool "xorg-server"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 endmenu
-

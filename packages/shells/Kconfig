@@ -2,8 +2,7 @@ menu "Shells"
 
 config PACKAGE_SHELLS_BASH
 	bool "bash"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 endmenu
-

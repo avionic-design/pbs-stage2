@@ -2,83 +2,82 @@ menu "Networking"
 
 config PACKAGE_NET_DHCP
 	bool "dhcp"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_DNSMASQ
 	bool "dnsmasq"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_DROPBEAR
 	bool "dropbear"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_ETHTOOL
 	bool "ethtool"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_IPERF
 	bool "iperf"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_IPUTILS
 	bool "iputils"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_NET_TOOLS
 	bool "net-tools"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_NETCAT
 	bool "netcat"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_OPENNTPD
 	bool "openntpd"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_OPENSSH
 	bool "openssh"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_PPP
 	bool "ppp"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_RP_PPPOE
 	bool "rp-pppoe"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_SWITCHCTRL
 	bool "switchctrl"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_TCPDUMP
 	bool "tcpdump"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_UDHCP
 	bool "udhcp"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config PACKAGE_NET_XORP
 	bool "xorp"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 endmenu
-

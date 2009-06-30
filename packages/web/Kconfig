@@ -2,8 +2,7 @@ menu "World-Wide Web Utilities"
 
 config PACKAGE_WEB_WEBKIT
 	bool "webkit"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 endmenu
-

@@ -1,8 +1,9 @@
 menu "Development Tools"
 
-config PACKAGE_DEVEL_LIBC
+config VIRTUAL_DEVEL_LIBC
 	bool
 	default n
+	select VIRTUAL_KERNEL_LINUX_LIBC
 
 #
 # C runtime library
@@ -12,18 +13,15 @@ choice
 
 config PACKAGE_DEVEL_UCLIBC
 	bool "uclibc: uClibc"
-	select PACKAGE_DEVEL_LIBC
-	depends on PACKAGE_KERNEL_LINUX_LIBC
+	select VIRTUAL_DEVEL_LIBC
 
 config PACKAGE_DEVEL_GLIBC
 	bool "glibc: GNU libc"
-	select PACKAGE_DEVEL_LIBC
-	depends on PACKAGE_KERNEL_LINUX_LIBC
+	select VIRTUAL_DEVEL_LIBC
 
 config PACKAGE_DEVEL_KLIBC
 	bool "klibc"
-	select PACKAGE_DEVEL_LIBC
-	depends on PACKAGE_KERNEL_LINUX_LIBC
+	select VIRTUAL_DEVEL_LIBC
 
 endchoice
 
@@ -33,13 +31,12 @@ source "packages/devel/klibc/Kconfig"
 
 config PACKAGE_DEVEL_GDB_SERVER
 	bool "gdb-server: GNU debugger server"
-	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_DEVEL_LIBC
 	default n
 
 config PACKAGE_DEVEL_STRACE
 	bool "strace"
-	depends on PACKAGE_DEVEL_LIBC
+	select PACKAGE_DEVEL_LIBC
 	default n
 
 endmenu
-

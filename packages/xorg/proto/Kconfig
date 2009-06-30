@@ -113,4 +113,3 @@ config PACKAGE_XORG_PROTO_XINERAMA
 	default n
 
 endmenu
-

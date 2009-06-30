@@ -1,12 +1,12 @@
 menu "Operating System Kernel"
 
-config PACKAGE_KERNEL_LINUX_LIBC
+config VIRTUAL_KERNEL_LINUX_LIBC
 	bool
 	default n
 
 config PACKAGE_KERNEL_LINUX_HEADERS
 	bool "linux-headers: Linux kernel headers"
-	select PACKAGE_KERNEL_LINUX_LIBC
+	select VIRTUAL_KERNEL_LINUX_LIBC
 	default n
 
 config PACKAGE_KERNEL_LINUX_MODULES
@@ -15,12 +15,12 @@ config PACKAGE_KERNEL_LINUX_MODULES
 
 config PACKAGE_KERNEL_LINUX_KERNEL
 	bool "linux: Linux kernel"
-	select PACKAGE_KERNEL_LINUX_LIBC
+	select VIRTUAL_KERNEL_LINUX_LIBC
 	default y
 
 config PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS
 	bool "module-init-tools: Linux kernel - module init tools"
-	depends on PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
 
 config KERNEL_CONFIG
@@ -29,9 +29,8 @@ config KERNEL_CONFIG
 
 endmenu
 
-if PACKAGE_DEVEL_LIBC
+if VIRTUAL_DEVEL_LIBC
 config OS
 	string
 	default "linux"
 endif
-
