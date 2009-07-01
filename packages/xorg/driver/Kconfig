@@ -17,4 +17,11 @@ config PACKAGE_XORG_DRIVER_INPUT_MOUSE
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+comment "Video Drivers"
+
+config PACKAGE_XORG_DRIVER_VIDEO_FBDEV
+	bool "fbdev"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 endmenu
