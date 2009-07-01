@@ -7,4 +7,9 @@ config PACKAGE_XORG_DRIVER_INPUT_EVDEV
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_XORG_DRIVER_INPUT_KEYBOARD
+	bool "keyboard"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 endmenu

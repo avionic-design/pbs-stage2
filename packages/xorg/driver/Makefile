@@ -1,1 +1,2 @@
 obj-$(CONFIG_PACKAGE_XORG_DRIVER_INPUT_EVDEV) += xf86-input-evdev
+obj-$(CONFIG_PACKAGE_XORG_DRIVER_INPUT_KEYBOARD) += xf86-input-keyboard
