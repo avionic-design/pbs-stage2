@@ -12,4 +12,9 @@ config PACKAGE_XORG_DRIVER_INPUT_KEYBOARD
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_XORG_DRIVER_INPUT_MOUSE
+	bool "mouse"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 endmenu
