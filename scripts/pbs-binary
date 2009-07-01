@@ -78,6 +78,10 @@ for package in $packages; do
 				dst=`dirname "$src"`
 			fi
 
+			if [ "x$dst" = "x/" ]; then
+				dst="$src"
+			fi
+
 			src=${src#/}
 			dst=${dst#/}
 
