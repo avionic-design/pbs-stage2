@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_XORG_DRIVER_INPUT_EVDEV) += xf86-input-evdev
