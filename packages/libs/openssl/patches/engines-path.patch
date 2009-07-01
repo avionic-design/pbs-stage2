@@ -1,0 +1,137 @@
+diff --git a/Configure b/Configure
+index c6dbfae..a6626b4 100755
+--- a/Configure
++++ b/Configure
+@@ -12,10 +12,13 @@ print STDERR "Warning: perl module strict not found.\n" if ($@);
+ 
+ # see INSTALL for instructions.
+ 
+-my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [enable-montasm] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
++my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [enable-montasm] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--enginesdir=ENGINESDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
+ 
+ # Options:
+ #
++# --enginesdir  install OpenSSL engines in ENGINESDIR (Default:
++#               DIR/lib/ssl/engines if the --prefix option is given;
++#               /usr/local/lib/ssl/engines otherwise)
+ # --openssldir  install OpenSSL in OPENSSLDIR (Default: DIR/ssl if the
+ #               --prefix option is given; /usr/local/ssl otherwise)
+ # --prefix      prefix for the OpenSSL include, lib and bin directories
+@@ -584,6 +589,7 @@ my $idx_arflags = $idx++;
+ 
+ my $prefix="";
+ my $openssldir="";
++my $enginesdir="";
+ my $exe_ext="";
+ my $install_prefix="";
+ my $fipslibdir="/usr/local/ssl/fips-1.0/lib/";
+@@ -822,6 +828,10 @@ PROCESS_ARGS:
+ 				{
+ 				$openssldir=$1;
+ 				}
++			elsif (/^--enginesdir=(.*)$/)
++				{
++				$enginesdir=$1;
++			}
+ 			elsif (/^--install.prefix=(.*)$/)
+ 				{
+ 				$install_prefix=$1;
+@@ -1080,16 +1090,23 @@ if ($openssldir eq "" and $prefix eq "")
+ 		}
+ 	}
+ $prefix=$openssldir if $prefix eq "";
++if ($enginesdir eq "" and $prefix eq "")
++	{
++	$enginesdir="/usr/local/lib/ssl/engines"
++	}
+ 
+ $default_ranlib= &which("ranlib") or $default_ranlib="true";
+ $perl=$ENV{'PERL'} or $perl=&which("perl5") or $perl=&which("perl")
+   or $perl="perl";
+ 
+ chop $openssldir if $openssldir =~ /\/$/;
++chop $enginesdir if $enginesdir =~ /\/$/;
+ chop $prefix if $prefix =~ /.\/$/;
+ 
+ $openssldir=$prefix . "/ssl" if $openssldir eq "";
+ $openssldir=$prefix . "/" . $openssldir if $openssldir !~ /(^\/|^[a-zA-Z]:[\\\/])/;
++$enginesdir=$prefix . "/lib/ssl/engines" if $enginesdir eq "";
++$enginesdir=$prefix . "/" . $enginesdir if $enginesdir !~ /(^\/|^[a-zA-Z]:[\\\/])/;
+ 
+ 
+ print "IsMK1MF=$IsMK1MF\n";
+@@ -1465,6 +1482,7 @@ while (<IN>)
+ 	s/^SHLIB_EXT=.*/SHLIB_EXT=$shared_extension/;
+ 	s/^INSTALLTOP=.*$/INSTALLTOP=$prefix/;
+ 	s/^OPENSSLDIR=.*$/OPENSSLDIR=$openssldir/;
++	s/^ENGINESDIR=.*$/ENGINESDIR=$enginesdir/;
+ 	s/^INSTALL_PREFIX=.*$/INSTALL_PREFIX=$install_prefix/;
+ 	s/^PLATFORM=.*$/PLATFORM=$target/;
+ 	s/^OPTIONS=.*$/OPTIONS=$options/;
+@@ -1647,7 +1665,7 @@ while (<IN>)
+ 	if	(/^#define\s+OPENSSLDIR/)
+ 		{ print OUT "#define OPENSSLDIR \"$openssldir\"\n"; }
+ 	elsif	(/^#define\s+ENGINESDIR/)
+-		{ print OUT "#define ENGINESDIR \"$prefix/lib/engines\"\n"; }
++		{ print OUT "#define ENGINESDIR \"$enginesdir\"\n"; }
+ 	elsif	(/^#((define)|(undef))\s+OPENSSL_EXPORT_VAR_AS_FUNCTION/)
+ 		{ printf OUT "#undef OPENSSL_EXPORT_VAR_AS_FUNCTION\n"
+ 			if $export_var_as_fn;
+diff --git a/Makefile.org b/Makefile.org
+index d1b56b2..81f09c7 100644
+--- a/Makefile.org
++++ b/Makefile.org
+@@ -28,6 +28,8 @@ INSTALLTOP=/usr/local/ssl
+ 
+ # Do not edit this manually. Use Configure --openssldir=DIR do change this!
+ OPENSSLDIR=/usr/local/ssl
++# Do not edit this manually. Use Configure --enginesdir=DIR to change this!
++ENGINESDIR=/usr/local/lib/ssl/engines
+ 
+ # NO_IDEA - Define to build without the IDEA algorithm
+ # NO_RC4  - Define to build without the RC4 algorithm
+@@ -203,6 +205,7 @@ BUILDENV=	PLATFORM='${PLATFORM}' PROCESSOR='${PROCESSOR}' \
+ 		SDIRS='${SDIRS}' LIBRPATH='${INSTALLTOP}/lib'	\
+ 		INSTALL_PREFIX='${INSTALL_PREFIX}'		\
+ 		INSTALLTOP='${INSTALLTOP}' OPENSSLDIR='${OPENSSLDIR}'	\
++		ENGINESDIR='${ENGINESDIR}' \
+ 		MAKEDEPEND='$$$${TOP}/util/domd $$$${TOP} -MD ${MAKEDEPPROG}' \
+ 		DEPFLAG='-DOPENSSL_NO_DEPRECATED ${DEPFLAG}'	\
+ 		MAKEDEPPROG='${MAKEDEPPROG}'			\
+@@ -616,12 +619,12 @@ install: all install_docs install_sw
+ install_sw:
+ 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib \
+-		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/pkgconfig \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl \
+ 		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
+ 		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
+-		$(INSTALL_PREFIX)$(OPENSSLDIR)/private
++		$(INSTALL_PREFIX)$(OPENSSLDIR)/private \
++		$(INSTALL_PREFIX)$(ENGINESDIR)
+ 	@set -e; headerlist="$(EXHEADER)"; for i in $$headerlist;\
+ 	do \
+ 	(cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i; \
+diff --git a/engines/Makefile b/engines/Makefile
+index 002d40c..e3efddd 100644
+--- a/engines/Makefile
++++ b/engines/Makefile
+@@ -100,13 +100,13 @@ install:
+ 				*DSO_DL*)	sfx="sl";;	\
+ 				*)		sfx="bad";;	\
+ 				esac; \
+-				cp lib$$l.$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
++				cp lib$$l.$$sfx $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
+ 			  else \
+ 			  	sfx="so"; \
+-				cp cyg$$l.dll $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
++				cp cyg$$l.dll $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
+ 			  fi; \
+-			  chmod 555 $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
+-			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx ); \
++			  chmod 555 $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
++			  mv -f $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx ); \
+ 		done; \
+ 	fi
+ 

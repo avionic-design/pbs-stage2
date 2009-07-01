@@ -17,7 +17,8 @@ $(pkgtree)/.setup:
 conf-args = \
 	shared \
 	--prefix=$(prefix) \
-	--openssldir=$(prefix)/lib/ssl \
+	--enginesdir=$(prefix)/lib/ssl/engines \
+	--openssldir=/etc/ssl \
 	no-idea no-mdc2 no-rc5 zlib-dynamic
 
 ifeq ($(ARCH),arm)
@@ -54,15 +55,14 @@ $(pkgtree)/.build:
 install-args = \
 	MANDIR=$(prefix)/share/man \
 	MANSUFFIX=ssl \
-	INSTALL_PREFIX=$(ROOTFS)
+	INSTALL_PREFIX=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) mv $(ROOTFS)$(prefix)/lib/ssl/openssl.cnf $(ROOTFS)/etc/ssl
 	$(call cmd,stamp)
 
-plugin = $(prefix)/lib/engines
+plugin = $(prefix)/lib/ssl/engines
 sover  = 0.9.8
 
 stripfiles = \
@@ -83,8 +83,16 @@ stripfiles = \
 include packages/cleanup.mk
 
 $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	@echo "$@: not implemented yet"
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
