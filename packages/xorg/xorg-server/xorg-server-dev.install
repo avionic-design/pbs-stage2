@@ -1,5 +1,3 @@
-/usr/include/xorg/*.h
+/usr/include/xorg
 /usr/lib/pkgconfig
-/usr/lib/xorg/protocol.txt
 /usr/share/aclocal
-/usr/share/X11
