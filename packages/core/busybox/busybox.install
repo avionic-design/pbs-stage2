@@ -1,4 +1,4 @@
-/bin/*
-/sbin/*
-/usr/bin/*
-/usr/sbin/*
+/bin
+/sbin
+/usr/bin
+/usr/sbin
