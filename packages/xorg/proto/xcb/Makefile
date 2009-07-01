@@ -10,6 +10,8 @@ DESCRIPTION = X C Binding
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
@@ -43,7 +45,7 @@ $(pkgtree)/.build:
 	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
@@ -51,8 +53,16 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary: $(pkgtree)/.do-install
-	@echo "$@: not implemented yet"
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
