@@ -4,24 +4,24 @@ comment "Input Drivers"
 
 config PACKAGE_XORG_DRIVER_INPUT_EVDEV
 	bool "evdev"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_XORG_SERVER
 	default n
 
 config PACKAGE_XORG_DRIVER_INPUT_KEYBOARD
 	bool "keyboard"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_XORG_SERVER
 	default n
 
 config PACKAGE_XORG_DRIVER_INPUT_MOUSE
 	bool "mouse"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_XORG_SERVER
 	default n
 
 comment "Video Drivers"
 
 config PACKAGE_XORG_DRIVER_VIDEO_FBDEV
 	bool "fbdev"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_XORG_SERVER
 	default n
 
 endmenu
