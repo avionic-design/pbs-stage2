@@ -75,6 +75,11 @@ config PACKAGE_XORG_LIB_XMU
 	select PACKAGE_XORG_LIB_XT
 	default n
 
+config PACKAGE_XORG_LIB_XPM
+	bool "xpm"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 config PACKAGE_XORG_LIB_XRENDER
 	bool "xrender"
 	select VIRTUAL_DEVEL_LIBC
