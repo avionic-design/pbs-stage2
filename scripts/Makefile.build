@@ -29,10 +29,13 @@ depends-file = $(objtree)/.depends
 packages-y = $(shell cat $(depends-file) | grep '^CONFIG_PACKAGE_' | xargs echo)
 
 PHONY += $(packages-y)
+ifeq ($(obj),packages)
+$(packages-y): category = $(shell echo $@ | cut -d_ -f3 | tr '[A-Z]' '[a-z]')
 $(packages-y):
 	@echo $@ > .package
-	$(Q)$(MAKE) $(build)=$(obj) package
+	$(Q)$(MAKE) $(build)=$(obj)/$(category) package
 	@rm .package
+endif
 
 PHONY += platforms
 platforms:
