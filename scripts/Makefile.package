@@ -30,7 +30,7 @@ chksum		:= $(addprefix $(chksum-prefix),$(tarballs))
 
 extprefix	:= $(pkgtree)/.extract-
 extract		:= $(addprefix $(extprefix),$(tarballs))
-extract-gz	:= $(filter %.tar.gz,$(extract))
+extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
 
@@ -66,7 +66,7 @@ quiet_cmd_tar_bz2 = TAR     $<
 quiet_cmd_tar_lzma = TAR     $<
       cmd_tar_lzma = cd $(pkgtree) && tar --lzma -xf $<
 
-$(extract-gz): $(extprefix)%.tar.gz: $(srctree)/download/%.tar.gz
+$(extract-gz): $(extprefix)%: $(srctree)/download/%
 	$(call cmd,tar_gz)
 	$(call cmd,stamp)
 
