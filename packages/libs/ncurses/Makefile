@@ -8,6 +8,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
@@ -40,24 +42,25 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-$(pkgtree)/.do-install: $(pkgtree)/.binary
+$(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 sover = 5.7
 
-prunefiles =
+prunefiles = \
+	$(prefix)/bin/ncurses5-config
+
 stripfiles = \
+	$(prefix)/bin/captoinfo \
 	$(prefix)/bin/clear \
 	$(prefix)/bin/infocmp \
+	$(prefix)/bin/infotocap \
+	$(prefix)/bin/reset \
 	$(prefix)/bin/tic \
 	$(prefix)/bin/toe \
 	$(prefix)/bin/tput \
@@ -69,5 +72,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
