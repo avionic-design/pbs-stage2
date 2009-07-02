@@ -1,16 +1,21 @@
 PACKAGE = glib
-VERSION = 2.20.0
+VERSION = 2.21.2
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.20
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 ##############################################################################
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -20,9 +25,9 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-vars = \
-	CC='$(CC) --sysroot $(ROOTFS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
 conf-vars += \
 	glib_cv_stack_grows=no \
@@ -31,23 +36,24 @@ conf-vars += \
 	ac_cv_func_posix_getpwuid_r=yes \
 	ac_cv_func_posix_getgrgid_r=yes
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args =
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 prunefiles = \
 	$(prefix)/lib/libgio-2.0.la \
@@ -56,7 +62,7 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la \
 
-sover = 0.2000.0
+sover = 0.2100.2
 
 stripfiles = \
 	$(prefix)/bin/glib-genmarshal \
@@ -70,9 +76,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

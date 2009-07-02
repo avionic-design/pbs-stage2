@@ -57,7 +57,8 @@ config PACKAGE_LIBS_GETTEXT
 
 config PACKAGE_LIBS_GLIB
 	bool "glib"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_ICONV
+	select PACKAGE_LIBS_GETTEXT
 	default n
 
 config PACKAGE_LIBS_GLIBMM
