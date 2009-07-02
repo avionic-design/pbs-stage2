@@ -7,7 +7,7 @@ config PACKAGE_LIBS_ATK
 
 config PACKAGE_LIBS_BLKID
 	bool "blkid"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_UUID
 	default n
 
 config PACKAGE_LIBS_CAIRO
