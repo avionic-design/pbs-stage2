@@ -1,0 +1,9 @@
+menu "X.Org - Applications"
+
+config PACKAGE_XORG_APPS_XTERM
+	bool "xterm"
+	select PACKAGE_LIBS_NCURSES
+	select PACKAGE_XORG_LIB_XAW
+	default n
+
+endmenu
