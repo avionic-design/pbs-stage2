@@ -1,0 +1,4 @@
+/usr/lib/charset.alias
+/usr/lib/libcharset.so.*
+/usr/lib/libiconv.so.*
+/usr/lib/preloadable_libiconv.so
