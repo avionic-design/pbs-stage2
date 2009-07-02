@@ -5,6 +5,11 @@ config PACKAGE_LIBS_ATK
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_LIBS_BLKID
+	bool "blkid"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 config PACKAGE_LIBS_CAIRO
 	bool "cairo"
 	select VIRTUAL_DEVEL_LIBC

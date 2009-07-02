@@ -1,4 +1,5 @@
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk
+obj-$(CONFIG_PACKAGE_LIBS_BLKID) += blkid
 obj-$(CONFIG_PACKAGE_LIBS_CAIRO_DFB) += cairo-dfb
 obj-$(CONFIG_PACKAGE_LIBS_CAIRO_X) += cairo-x
 obj-$(CONFIG_PACKAGE_LIBS_CURL) += curl

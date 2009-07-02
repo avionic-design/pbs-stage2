@@ -1,0 +1,159 @@
+diff --git a/Makefile.am b/Makefile.am
+index 8fea6fa..6b4d497 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,38 +1,12 @@
+ include $(top_srcdir)/config/include-Makefile.am
+ 
+ SUBDIRS = \
+-	include \
+-	disk-utils \
+-	fdisk \
+-	getopt \
+-	lib \
+-	libs \
+-	login-utils \
+-	misc-utils \
+-	po \
+-	schedutils \
+-	sys-utils \
+-	text-utils \
+-	tests
++	libs
+ 
+ 
+ RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o \
+ 		-name CVS -o -name .pc -o -name .hg -o -name .git \) -prune -o
+ 
+-if LINUX
+-SUBDIRS += \
+-	hwclock \
+-	partx
+-endif
+-
+-if BUILD_MOUNT
+-SUBDIRS += mount
+-endif
+-
+-if BUILD_FSCK
+-SUBDIRS += fsck
+-endif
+-
+ ACLOCAL_AMFLAGS = -I m4
+ 
+ EXTRA_DIST = \
+diff --git a/Makefile.in b/Makefile.in
+index 7cb6ed1..177c513 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -39,12 +39,7 @@ DIST_COMMON = README $(am__configure_deps) $(dist_noinst_DATA) \
+ 	TODO config/config.guess config/config.rpath config/config.sub \
+ 	config/depcomp config/install-sh config/ltmain.sh \
+ 	config/missing config/mkinstalldirs config/texinfo.tex
+-@LINUX_TRUE@am__append_1 = \
+-@LINUX_TRUE@	hwclock \
+-@LINUX_TRUE@	partx
+ 
+-@BUILD_MOUNT_TRUE@am__append_2 = mount
+-@BUILD_FSCK_TRUE@am__append_3 = fsck
+ subdir = .
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/gettext.m4 \
+@@ -251,9 +246,7 @@ dist_noinst_DATA = $(dist_man_MANS)
+ ul_libblkid_srcdir = $(top_srcdir)/libs/blkid/src
+ ul_libblkid_builddir = $(top_builddir)/libs/blkid/src
+ ul_libblkid_la = $(top_builddir)/libs/blkid/src/libblkid.la
+-SUBDIRS = include disk-utils fdisk getopt lib libs login-utils \
+-	misc-utils po schedutils sys-utils text-utils tests \
+-	$(am__append_1) $(am__append_2) $(am__append_3)
++SUBDIRS = libs
+ RCS_FIND_IGNORE := \( -name SCCS -o -name BitKeeper -o -name .svn -o \
+ 		-name CVS -o -name .pc -o -name .hg -o -name .git \) -prune -o
+ 
+diff --git a/libs/blkid/Makefile.am b/libs/blkid/Makefile.am
+index a27c852..9c552bf 100644
+--- a/libs/blkid/Makefile.am
++++ b/libs/blkid/Makefile.am
+@@ -1,6 +1,6 @@
+ include $(top_srcdir)/config/include-Makefile.am
+ 
+-SUBDIRS = src bin
++SUBDIRS = src
+ 
+ # pkg-config stuff
+ pkgconfigdir = $(usrlibexecdir)/pkgconfig
+diff --git a/libs/blkid/Makefile.in b/libs/blkid/Makefile.in
+index e41624e..10bc2ef 100644
+--- a/libs/blkid/Makefile.in
++++ b/libs/blkid/Makefile.in
+@@ -239,7 +239,7 @@ dist_noinst_DATA = $(dist_man_MANS)
+ ul_libblkid_srcdir = $(top_srcdir)/libs/blkid/src
+ ul_libblkid_builddir = $(top_builddir)/libs/blkid/src
+ ul_libblkid_la = $(top_builddir)/libs/blkid/src/libblkid.la
+-SUBDIRS = src bin
++SUBDIRS = src
+ 
+ # pkg-config stuff
+ pkgconfigdir = $(usrlibexecdir)/pkgconfig
+diff --git a/libs/blkid/src/Makefile.am b/libs/blkid/src/Makefile.am
+index 805d089..71bbba3 100644
+--- a/libs/blkid/src/Makefile.am
++++ b/libs/blkid/src/Makefile.am
+@@ -4,7 +4,7 @@ SUBDIRS = probers .
+ 
+ AM_CPPFLAGS += -I$(top_srcdir)/libs/blkid/src
+ 
+-common_ldadd =
++common_ldadd = @LIBINTL@
+ 
+ if HAVE_UUID
+ common_ldadd += -luuid	#TODO $(UUID_LIBS)
+@@ -25,8 +25,9 @@ libblkid_la_SOURCES = cache.c dev.c devname.c devno.c getsize.c llseek.c  \
+ 		     $(top_srcdir)/lib/canonicalize.c \
+ 		     $(top_srcdir)/lib/md5.c
+ 
+-libblkid_la_LIBADD = probers/libblkid_probers.la $(common_ldadd)
+-libblkid_la_DEPENDENCIES = $(libblkid_la_LIBADD) blkid.sym
++local_LIBADD = probers/libblkid_probers.la
++libblkid_la_LIBADD = $(local_LIBADD) $(common_ldadd)
++libblkid_la_DEPENDENCIES = $(local_LIBADD) blkid.sym
+ 
+ # TODO: for unknown reason "make distcheck" requires
+ #       full path to the version script
+diff --git a/libs/blkid/src/Makefile.in b/libs/blkid/src/Makefile.in
+index d38ddba..2aceb2a 100644
+--- a/libs/blkid/src/Makefile.in
++++ b/libs/blkid/src/Makefile.in
+@@ -266,7 +266,7 @@ ul_libblkid_srcdir = $(top_srcdir)/libs/blkid/src
+ ul_libblkid_builddir = $(top_builddir)/libs/blkid/src
+ ul_libblkid_la = $(top_builddir)/libs/blkid/src/libblkid.la
+ SUBDIRS = probers .
+-common_ldadd = $(am__append_1)
++common_ldadd = @LIBINTL@ $(am__append_1)
+ 
+ # includes
+ blkidincdir = $(includedir)/blkid
+@@ -282,8 +282,9 @@ libblkid_la_SOURCES = cache.c dev.c devname.c devno.c getsize.c llseek.c  \
+ 		     $(top_srcdir)/lib/canonicalize.c \
+ 		     $(top_srcdir)/lib/md5.c
+ 
+-libblkid_la_LIBADD = probers/libblkid_probers.la $(common_ldadd)
+-libblkid_la_DEPENDENCIES = $(libblkid_la_LIBADD) blkid.sym
++local_LIBADD = probers/libblkid_probers.la
++libblkid_la_LIBADD = $(local_LIBADD) $(common_ldadd)
++libblkid_la_DEPENDENCIES = $(local_LIBADD) blkid.sym
+ 
+ # TODO: for unknown reason "make distcheck" requires
+ #       full path to the version script
+diff --git a/libs/blkid/src/blkidP.h b/libs/blkid/src/blkidP.h
+index 4131c5b..fe96e92 100644
+--- a/libs/blkid/src/blkidP.h
++++ b/libs/blkid/src/blkidP.h
+@@ -17,6 +17,7 @@
+ #define CONFIG_BLKID_DEBUG 1
+ 
+ #include <sys/types.h>
++#include <stdarg.h>
+ #include <stdio.h>
+ 
+ #include "bitops.h"	/* $(top_srcdir)/include/ */
