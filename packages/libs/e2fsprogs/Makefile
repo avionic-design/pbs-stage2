@@ -24,6 +24,7 @@ conf-args += \
 	--with-linker='$(LD)' \
 	--with-ldopts='$(LDFLAGS)' \
 	--enable-elf-shlibs \
+	--disable-libblkid \
 	--disable-rpath \
 	--disable-tls
 
