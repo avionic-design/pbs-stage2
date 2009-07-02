@@ -77,7 +77,7 @@ config PACKAGE_XORG_LIB_XRENDER
 
 config PACKAGE_XORG_LIB_XT
 	bool "xt"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_LIB_SM
 	default n
 
 config PACKAGE_XORG_LIB_XTRANS

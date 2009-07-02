@@ -1,0 +1,43 @@
+commit 6d879e27e1a43bbcbea68d8d35e87eb1911e79dd
+Author: Thierry Reding <thierry.reding@avionic-design.de>
+Date:   Thu Jul 2 10:25:16 2009 +0200
+
+    Don't cross-compile build utilities.
+
+diff --git a/configure.ac b/configure.ac
+index b5bcf13..a14a4ed 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,6 +36,19 @@ AM_CONFIG_HEADER(config.h)
+ # Check for progs
+ AC_PROG_CC
+ AC_PROG_LIBTOOL
++AM_PROG_CC_C_O
++
++if test x"$CC_FOR_BUILD" = x; then
++	if test x"$cross_compiling" = xyes; then
++		AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
++	else
++		CC_FOR_BUILD="$CC"
++	fi
++fi
++AC_SUBST([CC_FOR_BUILD])
++AC_SUBST([CPPFLAGS_FOR_BUILD])
++AC_SUBST([CFLAGS_FOR_BUILD])
++AC_SUBST([LDFLAGS_FOR_BUILD])
+ 
+ PKG_CHECK_MODULES(XT, sm x11 xproto kbproto)
+ 
+diff --git a/util/Makefile.am b/util/Makefile.am
+index 2c13f0b..fd8c2f9 100644
+--- a/util/Makefile.am
++++ b/util/Makefile.am
+@@ -1,3 +1,8 @@
++CC = @CC_FOR_BUILD@
++CPPFLAGS = @CPPFLAGS_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
++
+ if INSTALL_MAKESTRS
+ bin_PROGRAMS = makestrs
+ else
