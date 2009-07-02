@@ -184,6 +184,11 @@ config PACKAGE_LIBS_TSLIB
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_LIBS_UUID
+	bool "uuid"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 config PACKAGE_LIBS_ZLIB
 	bool "zlib"
 	select VIRTUAL_DEVEL_LIBC
