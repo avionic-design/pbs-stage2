@@ -21,8 +21,10 @@ conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
+	--localstatedir=/var \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
+	--enable-config-hal \
 	--disable-kdrive \
 	--disable-xfbdev \
 	--disable-xinerama \
