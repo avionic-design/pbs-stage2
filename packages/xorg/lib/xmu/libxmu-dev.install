@@ -1,0 +1,4 @@
+/usr/include/X11/Xmu
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
