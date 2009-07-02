@@ -62,7 +62,7 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la \
 
-sover = 0.2100.2
+sover = 0.2102.0
 
 stripfiles = \
 	$(prefix)/bin/glib-genmarshal \
