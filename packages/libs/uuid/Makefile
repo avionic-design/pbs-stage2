@@ -16,7 +16,8 @@ conf-args = \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc
+	--sysconfdir=/etc \
+	--libdir=/lib
 
 conf-args += \
 	--with-cc='$(CC)' \
@@ -53,7 +54,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 prunefiles =
 stripfiles = \
-	$(prefix)/lib/libuuid.so.1.2
+	/lib/libuuid.so.1.2
 
 include packages/cleanup.mk
 
