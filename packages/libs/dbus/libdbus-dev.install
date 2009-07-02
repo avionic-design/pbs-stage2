@@ -1,0 +1,5 @@
+/usr/include/dbus-1.0
+/usr/lib/dbus-1.0
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
