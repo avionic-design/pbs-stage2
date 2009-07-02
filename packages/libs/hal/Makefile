@@ -1,23 +1,30 @@
 PACKAGE = hal
-VERSION = 0.5.11
+VERSION = 0.5.12
 
 LOCATION = http://hal.freedesktop.org/releases
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 ##############################################################################
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--libexecdir=$(prefix)/lib/hal \
 	--infodir=$(prefix)/share/info \
+	--libexecdir=$(prefix)/lib/hal \
 	--mandir=$(prefix)/share/man \
+	--with-udev-prefix=/lib \
+	--localstatedir=/var \
 	--sysconfdir=/etc
 
 conf-args += \
@@ -26,27 +33,28 @@ conf-args += \
 	--disable-usb-ids
 
 conf-vars = \
-	CC='$(CC) --sysroot $(ROOTFS)' \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args =
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 prunefiles = \
 	$(prefix)/lib/libhal-storage.la \
@@ -68,7 +76,6 @@ stripfiles = \
 	$(prefix)/bin/lshal \
 	$(prefix)/lib/libhal.so.$(sover) \
 	$(prefix)/lib/libhal-storage.so.$(sover) \
-	$(plugin)/hal-ipw-killswitch-linux \
 	$(plugin)/hal-storage-cleanup-all-mountpoints \
 	$(plugin)/hal-storage-cleanup-mountpoint \
 	$(plugin)/hal-storage-closetray \
@@ -81,10 +88,14 @@ stripfiles = \
 	$(plugin)/hal-system-sonypic \
 	$(plugin)/hald-addon-acpi \
 	$(plugin)/hald-addon-cpufreq \
+	$(plugin)/hald-addon-generic-backlight \
 	$(plugin)/hald-addon-hid-ups \
 	$(plugin)/hald-addon-input \
+	$(plugin)/hald-addon-ipw-killswitch \
+	$(plugin)/hald-addon-leds \
 	$(plugin)/hald-addon-omap-backlight \
 	$(plugin)/hald-addon-pmu \
+	$(plugin)/hald-addon-rfkill-killswitch \
 	$(plugin)/hald-addon-storage \
 	$(plugin)/hald-generate-fdi-cache \
 	$(plugin)/hald-probe-hiddev \
@@ -103,9 +114,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

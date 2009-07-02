@@ -83,7 +83,9 @@ config PACKAGE_LIBS_GTKMM
 
 config PACKAGE_LIBS_HAL
 	bool "hal"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_BLKID
+	select PACKAGE_LIBS_DBUS_GLIB
+	select PACKAGE_LIBS_EXPAT
 	default n
 
 config PACKAGE_LIBS_ICONV

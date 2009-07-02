@@ -1,0 +1,9 @@
+/etc/dbus-1
+/etc/hal
+/lib/udev
+/usr/bin
+/usr/lib/hal
+/usr/sbin
+/usr/share/hal
+/var/cache
+/var/run

@@ -1,2 +1,2 @@
-linux-2.6.28.patch -p1
+ltmain-sysroot.patch -p1
 glib-2.19.0.patch -p1

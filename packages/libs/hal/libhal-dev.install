@@ -1,0 +1,4 @@
+/usr/include/hal
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
