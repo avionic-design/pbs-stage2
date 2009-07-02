@@ -20,6 +20,11 @@ config PACKAGE_XORG_LIB_PTHREAD_STUBS
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_XORG_LIB_SM
+	bool "sm"
+	select PACKAGE_XORG_LIB_ICE
+	default n
+
 config PACKAGE_XORG_LIB_X11
 	bool "x11"
 	select VIRTUAL_DEVEL_LIBC
