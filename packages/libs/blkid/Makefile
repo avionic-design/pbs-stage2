@@ -47,10 +47,10 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 prunefiles = \
-	$(prefix)/lib/libblkid.la
+	/lib/libblkid.la
 
 stripfiles = \
-	$(prefix)/lib/libblkid.so.1.0.0
+	/lib/libblkid.so.1.0.0
 
 include packages/cleanup.mk
 
