@@ -5,6 +5,11 @@ config PACKAGE_XORG_LIB_FONTENC
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_XORG_LIB_ICE
+	bool "ICE"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
 config PACKAGE_XORG_LIB_PCIACCESS
 	bool "pciaccess"
 	select VIRTUAL_DEVEL_LIBC
