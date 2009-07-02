@@ -40,6 +40,13 @@ config PACKAGE_XORG_LIB_XAU
 	select PACKAGE_XORG_PROTO_X
 	default n
 
+config PACKAGE_XORG_LIB_XAW
+	bool "xaw - X Athena Widgets"
+	select PACKAGE_XORG_LIB_XEXT
+	select PACKAGE_XORG_LIB_XMU
+	select PACKAGE_XORG_LIB_XPM
+	default n
+
 config PACKAGE_XORG_LIB_XCB
 	bool "xcb"
 	select VIRTUAL_DEVEL_LIBC
