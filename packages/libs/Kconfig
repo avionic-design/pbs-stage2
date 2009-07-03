@@ -110,7 +110,7 @@ config PACKAGE_LIBS_LIBPCAP
 
 config PACKAGE_LIBS_LIBPNG
 	bool "libpng"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_ZLIB
 	default n
 
 config PACKAGE_LIBS_LIBSIGC++
