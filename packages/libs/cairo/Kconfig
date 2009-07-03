@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_CAIRO
+	bool "cairo"
+	select PACKAGE_LIBS_LIBPNG
+	select PACKAGE_LIBS_FONTCONFIG
+	default n

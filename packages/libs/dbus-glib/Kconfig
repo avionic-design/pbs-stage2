@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_DBUS_GLIB
+	bool "dbus-glib"
+	select PACKAGE_LIBS_DBUS
+	select PACKAGE_LIBS_GLIB
+	default n

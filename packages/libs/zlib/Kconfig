@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_ZLIB
+	bool "zlib"
+	select VIRTUAL_DEVEL_LIBC
+	default n

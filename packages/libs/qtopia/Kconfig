@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_QTOPIA
+	bool "qtopia"
+	select VIRTUAL_DEVEL_LIBC
+	default n

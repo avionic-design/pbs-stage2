@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBSIGC++
+	bool "libsigc++"
+	select VIRTUAL_DEVEL_LIBC
+	default n

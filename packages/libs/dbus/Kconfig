@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_DBUS
+	bool "dbus"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_BLKID
+	bool "blkid"
+	select PACKAGE_LIBS_UUID
+	default n

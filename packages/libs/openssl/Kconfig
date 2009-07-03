@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_OPENSSL
+	bool "openssl"
+	select PACKAGE_LIBS_ZLIB
+	default n

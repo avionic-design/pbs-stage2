@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_DIRECTFB
+	bool "directfb"
+	select VIRTUAL_DEVEL_LIBC
+	default n

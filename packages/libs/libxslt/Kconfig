@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBXSLT
+	bool "libxslt"
+	select VIRTUAL_DEVEL_LIBC
+	default n

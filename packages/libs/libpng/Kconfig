@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBPNG
+	bool "libpng"
+	select PACKAGE_LIBS_ZLIB
+	default n

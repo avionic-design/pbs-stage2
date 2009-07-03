@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_E2FSPROGS
+	bool "e2fsprogs"
+	select VIRTUAL_DEVEL_LIBC
+	default n

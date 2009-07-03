@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBUSB_COMPAT
+	bool "libusb-compat"
+	select PACKAGE_LIBS_LIBUSB
+	default n

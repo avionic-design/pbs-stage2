@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GTKMM
+	bool "gtkmm"
+	select PACKAGE_LIBS_GTK
+	default n

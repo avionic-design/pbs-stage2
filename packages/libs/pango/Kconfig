@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PANGO
+	bool "pango"
+	select PACKAGE_LIBS_CAIRO
+	default n

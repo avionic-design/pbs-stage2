@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBJPEG
+	bool "libjpeg"
+	select VIRTUAL_DEVEL_LIBC
+	default n

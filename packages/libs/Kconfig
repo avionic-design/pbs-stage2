@@ -1,198 +1,42 @@
 menu "Libraries"
 
-config PACKAGE_LIBS_ATK
-	bool "atk"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_BLKID
-	bool "blkid"
-	select PACKAGE_LIBS_UUID
-	default n
-
-config PACKAGE_LIBS_CAIRO
-	bool "cairo"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_CURL
-	bool "curl"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_DBUS
-	bool "dbus"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_DBUS_GLIB
-	bool "dbus-glib"
-	select PACKAGE_LIBS_DBUS
-	select PACKAGE_LIBS_GLIB
-	default n
-
-config PACKAGE_LIBS_DIRECTFB
-	bool "directfb"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_E2FSPROGS
-	bool "e2fsprogs"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_EXPAT
-	bool "expat"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_FONTCONFIG
-	bool "fontconfig"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_FREETYPE
-	bool "freetype"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_GETTEXT
-	bool "gettext"
-	select PACKAGE_LIBS_ICONV
-	default n
-
-config PACKAGE_LIBS_GLIB
-	bool "glib"
-	select PACKAGE_LIBS_GETTEXT
-	default n
-
-config PACKAGE_LIBS_GLIBMM
-	bool "glibmm"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_GTK
-	bool "gtk"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_GTKMM
-	bool "gtkmm"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_HAL
-	bool "hal"
-	select PACKAGE_LIBS_BLKID
-	select PACKAGE_LIBS_DBUS_GLIB
-	select PACKAGE_LIBS_EXPAT
-	default n
-
-config PACKAGE_LIBS_ICONV
-	bool "iconv"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_ICU
-	bool "icu"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBJPEG
-	bool "libjpeg"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBPCAP
-	bool "libpcap"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBPNG
-	bool "libpng"
-	select PACKAGE_LIBS_ZLIB
-	default n
-
-config PACKAGE_LIBS_LIBSIGC++
-	bool "libsigc++"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBUSB
-	bool "libusb"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBUSB_COMPAT
-	bool "libusb-compat"
-	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_LIBS_LIBUSB
-	default n
-
-config PACKAGE_LIBS_LIBXML2
-	bool "libxml2"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_LIBXSLT
-	bool "libxslt"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_NCURSES
-	bool "ncurses"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_OPENSSL
-	bool "openssl"
-	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_LIBS_ZLIB
-	default n
-
-config PACKAGE_LIBS_PANGO
-	bool "pango"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_PCRE
-	bool "pcre"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_PIXMAN
-	bool "pixman"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_QT
-	bool "qt"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_QTOPIA
-	bool "qtopia"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_SQLITE
-	bool "sqlite"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_TSLIB
-	bool "tslib"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_UUID
-	bool "uuid"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_LIBS_ZLIB
-	bool "zlib"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/libs/atk/Kconfig"
+source "packages/libs/blkid/Kconfig"
+source "packages/libs/cairo/Kconfig"
+source "packages/libs/curl/Kconfig"
+source "packages/libs/dbus/Kconfig"
+source "packages/libs/dbus-glib/Kconfig"
+source "packages/libs/directfb/Kconfig"
+source "packages/libs/e2fsprogs/Kconfig"
+source "packages/libs/expat/Kconfig"
+source "packages/libs/fontconfig/Kconfig"
+source "packages/libs/freetype/Kconfig"
+source "packages/libs/gettext/Kconfig"
+source "packages/libs/glib/Kconfig"
+source "packages/libs/glibmm/Kconfig"
+source "packages/libs/gtk/Kconfig"
+source "packages/libs/gtkmm/Kconfig"
+source "packages/libs/hal/Kconfig"
+source "packages/libs/iconv/Kconfig"
+source "packages/libs/icu/Kconfig"
+source "packages/libs/libjpeg/Kconfig"
+source "packages/libs/libpcap/Kconfig"
+source "packages/libs/libpng/Kconfig"
+source "packages/libs/libsigc++/Kconfig"
+source "packages/libs/libusb/Kconfig"
+source "packages/libs/libusb-compat/Kconfig"
+source "packages/libs/libxml2/Kconfig"
+source "packages/libs/libxslt/Kconfig"
+source "packages/libs/ncurses/Kconfig"
+source "packages/libs/openssl/Kconfig"
+source "packages/libs/pango/Kconfig"
+source "packages/libs/pcre/Kconfig"
+source "packages/libs/pixman/Kconfig"
+source "packages/libs/qt/Kconfig"
+source "packages/libs/qtopia/Kconfig"
+source "packages/libs/sqlite/Kconfig"
+source "packages/libs/tslib/Kconfig"
+source "packages/libs/uuid/Kconfig"
+source "packages/libs/zlib/Kconfig"
 
 endmenu

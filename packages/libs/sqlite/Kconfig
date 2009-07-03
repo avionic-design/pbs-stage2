@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_SQLITE
+	bool "sqlite"
+	select VIRTUAL_DEVEL_LIBC
+	default n

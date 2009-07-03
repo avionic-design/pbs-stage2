@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_FONTCONFIG
+	bool "fontconfig"
+	select PACKAGE_LIBS_FREETYPE
+	default n

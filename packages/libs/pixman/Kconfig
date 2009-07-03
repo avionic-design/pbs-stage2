@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PIXMAN
+	bool "pixman"
+	select VIRTUAL_DEVEL_LIBC
+	default n

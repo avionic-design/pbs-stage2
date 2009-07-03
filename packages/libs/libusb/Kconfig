@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBUSB
+	bool "libusb"
+	select VIRTUAL_DEVEL_LIBC
+	default n

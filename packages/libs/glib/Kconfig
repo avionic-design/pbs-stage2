@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GLIB
+	bool "glib"
+	select PACKAGE_LIBS_GETTEXT
+	default n

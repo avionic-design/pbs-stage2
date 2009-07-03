@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBPCAP
+	bool "libpcap"
+	select VIRTUAL_DEVEL_LIBC
+	default n
