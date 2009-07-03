@@ -1,5 +1,6 @@
 config PACKAGE_LIBS_GTK
 	bool "gtk"
 	select PACKAGE_LIBS_ATK
+	select PACKAGE_LIBS_LIBJPEG
 	select PACKAGE_LIBS_PANGO
 	default n

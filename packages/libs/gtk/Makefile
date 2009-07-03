@@ -1,8 +1,8 @@
 PACKAGE = gtk+
-VERSION = 2.16.0
+VERSION = 2.17.2
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.16
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.17
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = The GTK+ graphical user interface library
 
@@ -10,9 +10,15 @@ DESCRIPTION = The GTK+ graphical user interface library
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	cp $(srctree)/support/config.{guess,sub} $(pkgbuildtree)
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -30,31 +36,34 @@ conf-args += \
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)' \
 	gio_can_sniff=yes
 
-package-configure:
-	cp support/config.{guess,sub} $(pkgtree)
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1600.0
+sover  = 0.1702.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
@@ -88,9 +97,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

@@ -1,0 +1,4 @@
+/etc/gtk-2.0
+/usr/lib/gtk-2.0/2.10.0
+/usr/lib/gtk-2.0/modules
+/usr/lib/*.so.*
