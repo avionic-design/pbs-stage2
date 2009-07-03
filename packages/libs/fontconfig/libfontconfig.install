@@ -1,0 +1,3 @@
+/etc/fonts
+/usr/lib/*.so.*
+/var/cache
