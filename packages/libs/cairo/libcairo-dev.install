@@ -1,0 +1,4 @@
+/usr/include/cairo
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
