@@ -1,0 +1,4 @@
+/usr/include/pango-1.0
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig

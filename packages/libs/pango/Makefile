@@ -1,8 +1,8 @@
 PACKAGE = pango
-VERSION = 1.24.0
+VERSION = 1.24.4
 
 LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.24
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = Layout and rendering of internationalized text
 
@@ -10,9 +10,14 @@ DESCRIPTION = Layout and rendering of internationalized text
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -23,26 +28,30 @@ conf-args = \
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/pango/1.6.0/modules
 
@@ -53,7 +62,7 @@ prunefiles = \
 	$(prefix)/lib/libpangox-1.0.la \
 	$(plugin)/*.la
 
-sover = 0.2400.0
+sover = 0.2400.4
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
@@ -66,9 +75,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

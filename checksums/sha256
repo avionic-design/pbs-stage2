@@ -110,7 +110,6 @@ cfeb1429465e3c24debde1bf53ec35ef738fde5e80d2eed14f33e315e747bb8d  download/randr
 51a033bce9904d73e0821e8e2bba24bd319619d7d1b2e9eeccac611580242ab6  download/freetype-2.3.9.tar.bz2
 869e015257457c58209d5aaae0c0f1f41d124c53601bb74e4dbb637442ea5b33  download/udev-140.tar.bz2
 ff25cbf43dd5c5f8cddc1b2094505c1d079a576b873a6d3d6b62d95da1bdd1d7  download/gtk+-2.16.0.tar.bz2
-7a0af222b8f07defbf492246b7f7ba386025ab504f2ec4abc408d3d6fa4d4b95  download/pango-1.24.0.tar.bz2
 f7993d26c3606a9b0e32d1eebe716f2294ac37fac014c47744e986fc0ff5e6d1  download/atk-1.26.0.tar.bz2
 7e7cd4f3974199b729e6e3a0af08bd4279fde0370a1120c1a3b351ab090c6101  download/openssl-0.9.8k.tar.gz
 5420b0e558a69a53b36f2b2c70a69f547e075d98366a585fc80cbbcce1efe368  download/gmp-4.2.4.tar.bz2
@@ -152,3 +151,4 @@ d55e061a306051d5a89721a85c6924d907ed9302c8f138216da132ddc24423cf  download/glib-
 c1a6c0605d2baf84425fcca3beff2f5527caecad51b8d403b19a5ea10ec2a73f  download/libpng-1.2.36.tar.bz2
 d641d1cc3ec6d9a5dd5ed89c4b0982eb9be30be33b639a5fda22f3221dab6ee4  download/fontconfig-2.7.0.tar.gz
 3c51d3de5dc4596e01a6675acd3c86c2c99c00f02e8fad5493758a29fe451c90  download/cairo-1.8.8.tar.gz
+adbd11f182ec63939d6364cbb59e86991a48582e7d3641cda80529b40b399559  download/pango-1.24.4.tar.bz2
