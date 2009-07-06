@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_XORG_DATA_XKEYBOARD_CONFIG) += xkeyboard-config

@@ -4,6 +4,7 @@ source "packages/xorg/proto/Kconfig"
 source "packages/xorg/lib/Kconfig"
 source "packages/xorg/driver/Kconfig"
 source "packages/xorg/app/Kconfig"
+source "packages/xorg/data/Kconfig"
 
 config PACKAGE_XORG_KDRIVE
 	bool "kdrive"

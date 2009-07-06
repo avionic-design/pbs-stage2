@@ -1,0 +1,5 @@
+menu "X.Org - Data"
+
+source "package/xorg/data/xkeyboard-config/Kconfig"
+
+endmenu

@@ -1,0 +1,4 @@
+config PACKAGE_XORG_DATA_XKEYBOARD_CONFIG
+	bool "xkeyboard-config"
+	select VIRTUAL_DEVEL_LIBC
+	default n
