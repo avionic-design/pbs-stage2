@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.2.36
+VERSION = 1.2.37
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -50,8 +50,8 @@ prunefiles = \
 	$(prefix)/lib/libpng12.la
 
 stripfiles = \
-	$(prefix)/lib/libpng.so.3.36.0 \
-	$(prefix)/lib/libpng12.so.0.36.0
+	$(prefix)/lib/libpng.so.3.37.0 \
+	$(prefix)/lib/libpng12.so.0.37.0
 
 include packages/cleanup.mk
 
