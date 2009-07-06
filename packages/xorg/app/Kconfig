@@ -1,9 +1,5 @@
 menu "X.Org - Applications"
 
-config PACKAGE_XORG_APP_XTERM
-	bool "xterm"
-	select PACKAGE_LIBS_NCURSES
-	select PACKAGE_XORG_LIB_XAW
-	default n
+source "packages/xorg/app/xterm/Kconfig"
 
 endmenu
