@@ -3,7 +3,7 @@ menu "X.Org - X11 Windowing System"
 source "packages/xorg/proto/Kconfig"
 source "packages/xorg/lib/Kconfig"
 source "packages/xorg/driver/Kconfig"
-source "packages/xorg/apps/Kconfig"
+source "packages/xorg/app/Kconfig"
 
 config PACKAGE_XORG_KDRIVE
 	bool "kdrive"

@@ -1,1 +1,0 @@
-obj-$(CONFIG_PACKAGE_XORG_APPS_XTERM) += xterm
