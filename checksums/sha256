@@ -135,7 +135,6 @@ bba725daeb2a313b83f2b92855a9ae8aa72c4cc8581f9f62f101ebdf00ac359d  download/xf86-
 2fba2c850bf2f60fc2a423438188b04439d149a7e81d8433264f0613ebb7be3a  download/libICE-1.0.5.tar.bz2
 b6d9c9ec405ad1d644cf35d57f0f1e878fa6af6ad45b97683de847ff49cbdf84  download/e2fsprogs-libs-1.41.7.tar.gz
 7536ac382e1ff82014d3a0defba0c61b3a30984f4e5bc7707960d6debcb92a82  download/libSM-1.1.0.tar.bz2
-43c472ada59a04428a463225cd4cd42cb81bc43eb687cc1890f2f1c81a3e9cf4  download/libXt-1.0.5.tar.bz2
 f83c00d6ed8f4c08effa9dcc2d7f1ff6f5a753f2b9fe1babda16618c2afa18f0  download/libXmu-1.0.4.tar.bz2
 64701ae67ce5b0797307b75d8255bec3a0d371d0c50715ea618f5a68bcc92baa  download/libXpm-3.5.7.tar.bz2
 2503f3e3348ee3cf38368161dfab8112d3aea2a26deea34f3136898c13cfb88d  download/libXaw-1.0.5.tar.bz2
@@ -158,3 +157,4 @@ b7bf8b4b5167397da4ba520e7aeff0483d076dd419c9d47f27370405346e5bc2  download/input
 9479bca842ec9e7f72fa2cd94935f38aebf8d576bc3201ec9002827f6e0d8cc6  download/glib-2.21.3.tar.bz2
 6d9e2823beed876983dec29bfd41410ed6833129e5f056d38cf4bb15f0d07ef1  download/xorg-server-1.6.1.902.tar.bz2
 682960b55527b54bada90e959c2d42679444a1db43677c77eb645a29645f86d1  download/libpng-1.2.37.tar.bz2
+8d940251972ffe7e3caa41c4e82b6659ad4070aa2ec0d3e789c9fa39b79ff947  download/libXt-1.0.6.tar.bz2
