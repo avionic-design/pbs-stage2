@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.6.1
+VERSION = 1.6.1.902
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/xserver
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

@@ -128,7 +128,6 @@ d7b9f19b92fd5c693c16cd62f441d051b699f28ec6a175d1b464e58bacd8c78f  download/linux
 9bb1b65bdeccf448c5a3993fe4eabe12801851fc47933f854a64f674d84419e5  download/libxcb-1.3.tar.bz2
 d172e5a401a2607f4ff145db4e8e09c193a1980bbb2c5c7f824e61ee3fdfdff3  download/libX11-1.2.1.tar.bz2
 b9532db51a093221f82e6659ab2979d357eac770d6eb9e9361efead0aca709ce  download/libpciaccess-0.10.6.tar.bz2
-0edbaa994797cb7944a4129d33b634ad99164b21ec32355d56996a178d38bfcf  download/xorg-server-1.6.1.tar.bz2
 63606119e86c27b47bd7ec4b2b6048b76515df6755fc5dd8bcfc98f5fe53d994  download/xf86-input-evdev-2.2.2.tar.bz2
 33939ec65dbf56f49e1e7de854a1cf95446e40c533950431901567e67112aef2  download/xf86-input-keyboard-1.3.2.tar.bz2
 e6e1dbd64d41c826619a5881c5aeed46095bfdcb87c3e27d65292fc12a5bb7c7  download/xf86-input-mouse-1.4.0.tar.bz2
@@ -158,3 +157,4 @@ b103d2cf9e1cd8b049e28bb1109f3da3a14287bbce3ab8b2f427d55a6e5f4785  download/xinit
 4f9a751f4830d479fae8ccb68ed04896dc99612789310b7917bd15c04aa3351d  download/xsetroot-1.0.2.tar.bz2
 b7bf8b4b5167397da4ba520e7aeff0483d076dd419c9d47f27370405346e5bc2  download/inputproto-1.9.99.12.tar.bz2
 9479bca842ec9e7f72fa2cd94935f38aebf8d576bc3201ec9002827f6e0d8cc6  download/glib-2.21.3.tar.bz2
+6d9e2823beed876983dec29bfd41410ed6833129e5f056d38cf4bb15f0d07ef1  download/xorg-server-1.6.1.902.tar.bz2
