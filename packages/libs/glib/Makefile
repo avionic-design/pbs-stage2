@@ -1,5 +1,5 @@
 PACKAGE = glib
-VERSION = 2.21.2
+VERSION = 2.21.3
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -60,9 +60,9 @@ prunefiles = \
 	$(prefix)/lib/libglib-2.0.la \
 	$(prefix)/lib/libgmodule-2.0.la \
 	$(prefix)/lib/libgobject-2.0.la \
-	$(prefix)/lib/libgthread-2.0.la \
+	$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.2102.0
+sover = 0.2103.0
 
 stripfiles = \
 	$(prefix)/bin/glib-genmarshal \
