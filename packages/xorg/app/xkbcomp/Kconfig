@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XKBCOMP
+	bool "xkbcomp"
+	select VIRTUAL_DEVEL_LIBC
+	default n
