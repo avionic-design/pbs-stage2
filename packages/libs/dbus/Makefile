@@ -22,6 +22,7 @@ conf-args = \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
+	--localstatedir=/var \
 	--sysconfdir=/etc
 
 conf-vars = \
