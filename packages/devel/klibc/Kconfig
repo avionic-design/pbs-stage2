@@ -1,3 +1,7 @@
+if PACKAGE_DEVEL_KLIBC
+
 config LIBC
 	string
 	default "klibc"
+
+endif

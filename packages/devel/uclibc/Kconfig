@@ -1,3 +1,7 @@
+if PACKAGE_DEVEL_UCLIBC
+
 config LIBC
 	string
 	default "uclibc"
+
+endif

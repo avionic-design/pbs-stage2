@@ -1,3 +1,7 @@
+if PACKAGE_DEVEL_GLIBC
+
 config LIBC
 	string
 	default "gnu"
+
+endif
