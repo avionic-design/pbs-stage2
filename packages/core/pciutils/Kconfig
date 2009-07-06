@@ -1,0 +1,4 @@
+config PACKAGE_CORE_PCIUTILS
+	bool "pciutils"
+	select PACKAGE_LIBS_ZLIB
+	default n

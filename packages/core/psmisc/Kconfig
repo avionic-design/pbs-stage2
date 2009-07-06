@@ -1,0 +1,4 @@
+config PACKAGE_CORE_PSMISC
+	bool "psmisc"
+	select VIRTUAL_DEVEL_LIBC
+	default n

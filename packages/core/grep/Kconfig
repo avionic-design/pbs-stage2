@@ -1,0 +1,4 @@
+config PACKAGE_CORE_GREP
+	bool "grep"
+	select VIRTUAL_DEVEL_LIBC
+	default n

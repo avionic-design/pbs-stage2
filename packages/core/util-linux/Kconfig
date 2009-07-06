@@ -1,0 +1,4 @@
+config PACKAGE_CORE_UTIL_LINUX
+	bool "util-linux"
+	select VIRTUAL_DEVEL_LIBC
+	default n

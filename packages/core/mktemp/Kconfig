@@ -1,0 +1,4 @@
+config PACKAGE_CORE_MKTEMP
+	bool "mktemp"
+	select VIRTUAL_DEVEL_LIBC
+	default n

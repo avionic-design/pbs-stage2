@@ -1,0 +1,4 @@
+config PACKAGE_CORE_BUSYBOX_GIT
+	bool "busybox (git)"
+	select VIRTUAL_DEVEL_LIBC
+	default n

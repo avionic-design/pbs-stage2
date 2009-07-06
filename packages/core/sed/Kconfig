@@ -1,0 +1,4 @@
+config PACKAGE_CORE_SED
+	bool "sed"
+	select VIRTUAL_DEVEL_LIBC
+	default n

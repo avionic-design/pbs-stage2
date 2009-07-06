@@ -1,0 +1,4 @@
+config PACKAGE_CORE_BUSYBOX
+	bool "busybox"
+	select VIRTUAL_DEVEL_LIBC
+	default n

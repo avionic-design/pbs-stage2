@@ -1,0 +1,4 @@
+config PACKAGE_CORE_PROCPS
+	bool "procps"
+	select VIRTUAL_DEVEL_LIBC
+	default n

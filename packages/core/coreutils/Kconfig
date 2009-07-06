@@ -1,0 +1,4 @@
+config PACKAGE_CORE_COREUTILS
+	bool "coreutils"
+	select VIRTUAL_DEVEL_LIBC
+	default n

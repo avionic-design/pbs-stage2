@@ -1,95 +1,22 @@
 menu "Core System"
 
-config PACKAGE_CORE_BUSYBOX
-	bool "busybox"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_BUSYBOX_GIT
-	bool "busybox (git)"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_COREUTILS
-	bool "coreutils"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_DIFFUTILS
-	bool "diffutils"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_GREP
-	bool "grep"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_GROFF
-	bool "groff"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_LESS
-	bool "less"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_MKTEMP
-	bool "mktemp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_PCIUTILS
-	bool "pciutils"
-	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_LIBS_ZLIB
-	default n
-
-config PACKAGE_CORE_PROCPS
-	bool "procps"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_PSMISC
-	bool "psmisc"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_SED
-	bool "sed"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_START_STOP_DAEMON
-	bool "start-stop-daemon"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_SYSKLOGD
-	bool "sysklogd"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_SYSVINIT
-	bool "sysvinit"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_UDEV
-	bool "udev"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CORE_USBUTILS
-	bool "usbutils"
-	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_LIBS_LIBUSB_COMPAT
-	default n
-
-config PACKAGE_CORE_UTIL_LINUX
-	bool "util-linux"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/core/busybox/Kconfig"
+source "packages/core/busybox.git/Kconfig"
+source "packages/core/coreutils/Kconfig"
+source "packages/core/diffutils/Kconfig"
+source "packages/core/grep/Kconfig"
+source "packages/core/groff/Kconfig"
+source "packages/core/less/Kconfig"
+source "packages/core/mktemp/Kconfig"
+source "packages/core/pciutils/Kconfig"
+source "packages/core/procps/Kconfig"
+source "packages/core/psmisc/Kconfig"
+source "packages/core/sed/Kconfig"
+source "packages/core/start-stop-daemon/Kconfig"
+source "packages/core/sysklogd/Kconfig"
+source "packages/core/sysvinit/Kconfig"
+source "packages/core/udev/Kconfig"
+source "packages/core/usbutils/Kconfig"
+source "packages/core/util-linux/Kconfig"
 
 endmenu
