@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_CONSOLEKIT
+	bool "consolekit"
+	select VIRTUAL_DEVEL_LIBC
+	default n

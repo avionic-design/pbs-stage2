@@ -1,6 +1,7 @@
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk
 obj-$(CONFIG_PACKAGE_LIBS_BLKID) += blkid
 obj-$(CONFIG_PACKAGE_LIBS_CAIRO) += cairo
+obj-$(CONFIG_PACKAGE_LIBS_CONSOLEKIT) += consolekit
 obj-$(CONFIG_PACKAGE_LIBS_CURL) += curl
 obj-$(CONFIG_PACKAGE_LIBS_DBUS_GLIB) += dbus-glib
 obj-$(CONFIG_PACKAGE_LIBS_DBUS) += dbus
