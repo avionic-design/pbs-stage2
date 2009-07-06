@@ -1,107 +1,23 @@
 menu "X.Org - Libraries"
 
-config PACKAGE_XORG_LIB_FONTENC
-	bool "fontenc"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_ICE
-	bool "ICE"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_PCIACCESS
-	bool "pciaccess"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_PTHREAD_STUBS
-	bool "pthread-stubs"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_SM
-	bool "sm"
-	select PACKAGE_XORG_LIB_ICE
-	default n
-
-config PACKAGE_XORG_LIB_X11
-	bool "x11"
-	select PACKAGE_XORG_PROTO_INPUT
-	select PACKAGE_XORG_PROTO_XEXT
-	select PACKAGE_XORG_LIB_XCB
-	select PACKAGE_XORG_LIB_XTRANS
-	default n
-
-config PACKAGE_XORG_LIB_XAU
-	bool "xau"
-	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_XORG_PROTO_X
-	default n
-
-config PACKAGE_XORG_LIB_XAW
-	bool "xaw - X Athena Widgets"
-	select PACKAGE_XORG_LIB_XEXT
-	select PACKAGE_XORG_LIB_XMU
-	select PACKAGE_XORG_LIB_XPM
-	default n
-
-config PACKAGE_XORG_LIB_XCB
-	bool "xcb"
-	select PACKAGE_XORG_PROTO_XCB
-	select PACKAGE_XORG_LIB_PTHREAD_STUBS
-	select PACKAGE_XORG_LIB_XAU
-	default n
-
-config PACKAGE_XORG_LIB_XDMCP
-	bool "xdmcp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XEXT
-	bool "xext"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XFONT
-	bool "xfont"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XKBFILE
-	bool "xkbfile"
-	select PACKAGE_XORG_PROTO_KB
-	select PACKAGE_XORG_LIB_X11
-	default n
-
-config PACKAGE_XORG_LIB_XMU
-	bool "xmu"
-	select PACKAGE_XORG_LIB_XT
-	default n
-
-config PACKAGE_XORG_LIB_XPM
-	bool "xpm"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XRENDER
-	bool "xrender"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XT
-	bool "xt"
-	select PACKAGE_XORG_LIB_SM
-	default n
-
-config PACKAGE_XORG_LIB_XTRANS
-	bool "xtrans"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_XORG_LIB_XV
-	bool "xv"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/xorg/lib/fontenc/Kconfig"
+source "packages/xorg/lib/ice/Kconfig"
+source "packages/xorg/lib/pciaccess/Kconfig"
+source "packages/xorg/lib/pthread-stubs/Kconfig"
+source "packages/xorg/lib/sm/Kconfig"
+source "packages/xorg/lib/x11/Kconfig"
+source "packages/xorg/lib/xau/Kconfig"
+source "packages/xorg/lib/xaw/Kconfig"
+source "packages/xorg/lib/xcb/Kconfig"
+source "packages/xorg/lib/xdmcp/Kconfig"
+source "packages/xorg/lib/xext/Kconfig"
+source "packages/xorg/lib/xfont/Kconfig"
+source "packages/xorg/lib/xkbfile/Kconfig"
+source "packages/xorg/lib/xmu/Kconfig"
+source "packages/xorg/lib/xpm/Kconfig"
+source "packages/xorg/lib/xrender/Kconfig"
+source "packages/xorg/lib/xt/Kconfig"
+source "packages/xorg/lib/xtrans/Kconfig"
+source "packages/xorg/lib/xv/Kconfig"
 
 endmenu

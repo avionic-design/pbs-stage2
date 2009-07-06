@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_PTHREAD_STUBS
+	bool "pthread-stubs"
+	select VIRTUAL_DEVEL_LIBC
+	default n

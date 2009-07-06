@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XFONT
+	bool "xfont"
+	select VIRTUAL_DEVEL_LIBC
+	default n

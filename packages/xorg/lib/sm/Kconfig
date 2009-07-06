@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_SM
+	bool "sm"
+	select PACKAGE_XORG_LIB_ICE
+	default n

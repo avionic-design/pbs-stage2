@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XEXT
+	bool "xext"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_PCIACCESS
+	bool "pciaccess"
+	select VIRTUAL_DEVEL_LIBC
+	default n

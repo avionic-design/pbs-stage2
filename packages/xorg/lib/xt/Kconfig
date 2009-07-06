@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XT
+	bool "xt"
+	select PACKAGE_XORG_LIB_SM
+	default n

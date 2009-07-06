@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_ICE
+	bool "ICE"
+	select VIRTUAL_DEVEL_LIBC
+	default n
