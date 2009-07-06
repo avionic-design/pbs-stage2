@@ -8,6 +8,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
@@ -37,14 +39,10 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-$(pkgtree)/.do-install: $(pkgtree)/.binary
+$(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
@@ -59,5 +57,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)

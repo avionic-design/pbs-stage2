@@ -1,0 +1,4 @@
+/usr/include/libusb-1.0
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
