@@ -1,1 +1,2 @@
+obj-$(CONFIG_PACKAGE_XORG_APP_XINIT) += xinit
 obj-$(CONFIG_PACKAGE_XORG_APP_XTERM) += xterm
