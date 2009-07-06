@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XSETROOT
+	bool "xsetroot"
+	select PACKAGE_XORG_DATA_XBITMAPS
+	default n

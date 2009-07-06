@@ -2,6 +2,7 @@ menu "X.Org - Applications"
 
 source "packages/xorg/app/xinit/Kconfig"
 source "packages/xorg/app/xkbcomp/Kconfig"
+source "packages/xorg/app/xsetroot/Kconfig"
 source "packages/xorg/app/xterm/Kconfig"
 
 endmenu
