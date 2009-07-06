@@ -1,5 +1,6 @@
 menu "X.Org - Data"
 
+source "packages/xorg/data/xbitmaps/Kconfig"
 source "packages/xorg/data/xkeyboard-config/Kconfig"
 
 endmenu

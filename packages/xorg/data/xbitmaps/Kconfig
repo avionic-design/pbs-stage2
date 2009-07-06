@@ -1,0 +1,4 @@
+config PACKAGE_XORG_DATA_XBITMAPS
+	bool "xbitmaps"
+	select VIRTUAL_DEVEL_LIBC
+	default n
