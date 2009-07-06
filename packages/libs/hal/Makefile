@@ -97,6 +97,7 @@ stripfiles = \
 	$(plugin)/hald-addon-pmu \
 	$(plugin)/hald-addon-rfkill-killswitch \
 	$(plugin)/hald-addon-storage \
+	$(plugin)/hald-addon-usb-csr \
 	$(plugin)/hald-generate-fdi-cache \
 	$(plugin)/hald-probe-hiddev \
 	$(plugin)/hald-probe-ieee1394-unit \
