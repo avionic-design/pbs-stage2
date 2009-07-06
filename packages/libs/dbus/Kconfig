@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_DBUS
 	bool "dbus"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_EXPAT
+	select PACKAGE_XORG_LIB_X11
 	default n
