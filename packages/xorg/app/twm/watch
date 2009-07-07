@@ -1,2 +1,2 @@
 version=3
-http://xorg.freedesktop.org/releases/individual/app/twm-(.*).tar.bz2
+http://xorg.freedesktop.org/releases/individual/app/twm-(.*)\.tar\.bz2
