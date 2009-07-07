@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_TWM
+	bool "twm"
+	select VIRTUAL_DEVEL_LIBC
+	default n
