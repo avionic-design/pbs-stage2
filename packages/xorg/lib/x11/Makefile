@@ -3,8 +3,13 @@ VERSION = 1.2.1
 
 include packages/xorg/lib/common.mk
 
-conf-args += \
+ifeq ($(CONFIG_LIBC),uclibc)
+  conf-args += \
+	--enable-malloc0returnsnull
+else
+  conf-args += \
 	--disable-malloc0returnsnull
+endif
 
 prunefiles = \
 	$(prefix)/lib/libX11-xcb.la \
