@@ -24,6 +24,9 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
+conf-args += \
+	--with-libiconv=gnu
+
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
