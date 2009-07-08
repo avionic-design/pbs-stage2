@@ -1,0 +1,2 @@
+ltmain-sysroot.patch -p1
+gsize.patch -p1

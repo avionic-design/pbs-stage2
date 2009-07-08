@@ -1,0 +1,101 @@
+diff --git a/src/ispell/ispell_checker.cpp b/src/ispell/ispell_checker.cpp
+index 4d4f729..94f69e1 100644
+--- a/src/ispell/ispell_checker.cpp
++++ b/src/ispell/ispell_checker.cpp
+@@ -191,7 +191,7 @@ ISpellChecker::checkWord(const char * const utf8Word, size_t length)
+ 	else
+ 		{
+ 			/* convert to 8bit string and null terminate */
+-			size_t len_in, len_out, result;
++			gsize len_in, len_out, result;
+ 			// the 8bit encodings use precomposed forms
+ 			char *normalizedWord = g_utf8_normalize (utf8Word, length, G_NORMALIZE_NFC);
+ 			char *In = normalizedWord;
+@@ -201,7 +201,7 @@ ISpellChecker::checkWord(const char * const utf8Word, size_t length)
+ 			len_out = sizeof( szWord ) - 1;
+ 			result = g_iconv(m_translate_in, &In, &len_in, &Out, &len_out);
+ 			g_free(normalizedWord);
+-			if ((size_t)-1 == result)
++			if ((gsize)-1 == result)
+ 				return false;
+ 			*Out = '\0';
+ 		}
+@@ -239,7 +239,7 @@ ISpellChecker::suggestWord(const char * const utf8Word, size_t length,
+ 		{
+ 			/* convert to 8bit string and null terminate */
+ 			
+-			size_t len_in, len_out, result;
++			gsize len_in, len_out, result;
+ 			// the 8bit encodings use precomposed forms
+ 			char *normalizedWord = g_utf8_normalize (utf8Word, length, G_NORMALIZE_NFC);
+ 			char *In = normalizedWord;
+@@ -248,7 +248,7 @@ ISpellChecker::suggestWord(const char * const utf8Word, size_t length,
+ 			len_out = sizeof( word8 ) - 1;
+ 			result = g_iconv(m_translate_in, &In, &len_in, &Out, &len_out);
+ 			g_free(normalizedWord);
+-			if ((size_t)-1 == result)
++			if ((gsize)-1 == result)
+ 				return NULL;
+ 			*Out = '\0';
+ 		}
+@@ -281,13 +281,13 @@ ISpellChecker::suggestWord(const char * const utf8Word, size_t length,
+ 					{
+ 						/* convert to 32bit string and null terminate */
+ 						
+-						size_t len_in, len_out;
++						gsize len_in, len_out;
+ 						char *In = m_possibilities[c];
+ 						char *Out = reinterpret_cast<char *>(utf8Sugg);
+ 						
+ 						len_in = l;
+ 						len_out = INPUTWORDLEN + MAXAFFIXLEN;
+-						if ((size_t)-1 == g_iconv(m_translate_out, &In, &len_in, &Out, &len_out)) {
++						if ((gsize)-1 == g_iconv(m_translate_out, &In, &len_in, &Out, &len_out)) {
+ 							*out_n_suggestions = c;
+ 							return sugg_arr;
+ 						}
+diff --git a/src/myspell/myspell_checker.cpp b/src/myspell/myspell_checker.cpp
+index 84ab36c..ed166ab 100644
+--- a/src/myspell/myspell_checker.cpp
++++ b/src/myspell/myspell_checker.cpp
+@@ -155,11 +155,11 @@ MySpellChecker::checkWord(const char *utf8Word, size_t len)
+ 	char *in = normalizedWord;
+ 	char word8[MAXWORDLEN + 1];
+ 	char *out = word8;
+-	size_t len_in = strlen(in);
+-	size_t len_out = sizeof( word8 ) - 1;
+-	size_t result = g_iconv(m_translate_in, &in, &len_in, &out, &len_out);
++	gsize len_in = strlen(in);
++	gsize len_out = sizeof( word8 ) - 1;
++	gsize result = g_iconv(m_translate_in, &in, &len_in, &out, &len_out);
+ 	g_free(normalizedWord);
+-	if ((size_t)-1 == result)
++	if ((gsize)-1 == result)
+ 		return false;
+ 	*out = '\0';
+ 	if (myspell->spell(word8))
+@@ -181,11 +181,11 @@ MySpellChecker::suggestWord(const char* const utf8Word, size_t len, size_t *nsug
+ 	char *in = normalizedWord;
+ 	char word8[MAXWORDLEN + 1];
+ 	char *out = word8;
+-	size_t len_in = strlen(in);
+-	size_t len_out = sizeof(word8) - 1;
+-	size_t result = g_iconv(m_translate_in, &in, &len_in, &out, &len_out);
++	gsize len_in = strlen(in);
++	gsize len_out = sizeof(word8) - 1;
++	gsize result = g_iconv(m_translate_in, &in, &len_in, &out, &len_out);
+ 	g_free(normalizedWord);
+-	if ((size_t)-1 == result)
++	if ((gsize)-1 == result)
+ 		return NULL;
+ 
+ 	*out = '\0';
+@@ -199,7 +199,7 @@ MySpellChecker::suggestWord(const char* const utf8Word, size_t len, size_t *nsug
+ 			len_out = MAXWORDLEN;
+ 			char *word = g_new0(char, len_out + 1);
+ 			out = reinterpret_cast<char *>(word);
+-			if ((size_t)-1 == g_iconv(m_translate_out, &in, &len_in, &out, &len_out)) {
++			if ((gsize)-1 == g_iconv(m_translate_out, &in, &len_in, &out, &len_out)) {
+ 				for (size_t j = i; j < *nsug; j++)
+ 					free(sugMS[j]);
+ 				free(sugMS);

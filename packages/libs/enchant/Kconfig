@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_ENCHANT
+	bool "enchant"
+	select VIRTUAL_DEVEL_LIBC
+	default n
