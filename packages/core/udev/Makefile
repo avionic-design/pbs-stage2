@@ -58,7 +58,7 @@ prunefiles =
 stripfiles = \
 	/sbin/udevadm \
 	/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.4.1 \
+	/lib/libudev.so.0.4.1 \
 	$(prefix)/lib/libvolume_id.so.1.1.0 \
 	$(prefix)/lib/udev/ata_id \
 	$(prefix)/lib/udev/cdrom_id \
