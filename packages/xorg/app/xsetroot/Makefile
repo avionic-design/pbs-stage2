@@ -5,4 +5,4 @@ include packages/xorg/app/common.mk
 
 prunefiles =
 stripfiles = \
-	$(pkgtree)/bin/xsetroot
+	$(prefix)/bin/xsetroot
