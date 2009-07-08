@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XSETPOINTER
+	bool "xsetpointer"
+	select PACKAGE_XORG_LIB_XI
+	default n
