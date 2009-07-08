@@ -26,7 +26,7 @@
        # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
        # so, if we see these flags be careful not to treat them like -L
        -L[A-Z][A-Z]*:*)
-@@ -5097,7 +5109,7 @@
+@@ -5100,7 +5112,7 @@
  	  for searchdir in $searchdirs; do
  	    for search_ext in .la $std_shrext .so .a; do
  	      # Search the libtool library
@@ -35,7 +35,7 @@
  	      if test -f "$lib"; then
  		if test "$search_ext" = ".la"; then
  		  found=yes
-@@ -8125,6 +8137,11 @@
+@@ -8132,6 +8144,11 @@
  	  case $host,$output,$installed,$module,$dlname in
  	    *cygwin*,*lai,yes,no,*.dll | *mingw*,*lai,yes,no,*.dll | *cegcc*,*lai,yes,no,*.dll) tdlname=../bin/$dlname ;;
  	  esac

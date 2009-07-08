@@ -23,25 +23,30 @@ conf-args = \
 	--infodir=$(prefix)/share/info \
 	--localstatedir=/var \
 	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc \
+	--sysconfdir=/etc
+
+conf-args += \
+	--with-xkb-output=/var/lib/xkb \
+	--disable-null-root-cursor \
+	--disable-config-dbus \
 	--enable-config-hal \
 	--disable-kdrive \
 	--disable-xfbdev \
 	--disable-xinerama \
-	--disable-xprint \
-	--disable-dpms \
+	--disable-xvfb \
 	--disable-xv \
-	--disable-xgl \
 	--disable-glx \
 	--disable-dri \
 	--disable-dri2 \
 	--disable-dga \
+	--enable-dpms \
 	--enable-xv \
 	--enable-xorg
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.configure:
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
