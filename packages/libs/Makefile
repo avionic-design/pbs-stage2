@@ -23,6 +23,7 @@ obj-$(CONFIG_PACKAGE_LIBS_LIBJPEG) += libjpeg
 obj-$(CONFIG_PACKAGE_LIBS_LIBPCAP) += libpcap
 obj-$(CONFIG_PACKAGE_LIBS_LIBPNG) += libpng
 obj-$(CONFIG_PACKAGE_LIBS_LIBSIG++) += libsigc++
+obj-$(CONFIG_PACKAGE_LIBS_LIBSOUP) += libsoup
 obj-$(CONFIG_PACKAGE_LIBS_LIBUSB) += libusb
 obj-$(CONFIG_PACKAGE_LIBS_LIBUSB_COMPAT) += libusb-compat
 obj-$(CONFIG_PACKAGE_LIBS_LIBXML2) += libxml2

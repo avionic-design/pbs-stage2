@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBSOUP
+	bool "libsoup"
+	select VIRTUAL_DEVEL_LIBC
+	default n
