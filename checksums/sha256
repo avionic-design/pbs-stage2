@@ -144,7 +144,6 @@ f58c66e5117f0c66fbc51f99dd994c5e603baa5df2e3d7250a9d880f2b4e1a54  download/dbus-
 d641d1cc3ec6d9a5dd5ed89c4b0982eb9be30be33b639a5fda22f3221dab6ee4  download/fontconfig-2.7.0.tar.gz
 3c51d3de5dc4596e01a6675acd3c86c2c99c00f02e8fad5493758a29fe451c90  download/cairo-1.8.8.tar.gz
 adbd11f182ec63939d6364cbb59e86991a48582e7d3641cda80529b40b399559  download/pango-1.24.4.tar.bz2
-40bc9b04e4f72029f139c835d3222606037fd8d6144d8ad02259e7e290187c45  download/gtk+-2.17.2.tar.bz2
 cbcfbb3df2dc76855c99c1cdff04a257ec5270fa62e1d21b0d057b08d88c0fd4  download/ConsoleKit-0.3.0.tar.bz2
 50784b02a434887c5abd1b7e73986eb6cad8a7efa79248bfc192f1f1769a3f9a  download/xkeyboard-config-1.6.tar.bz2
 b103d2cf9e1cd8b049e28bb1109f3da3a14287bbce3ab8b2f427d55a6e5f4785  download/xinit-1.1.1.tar.bz2
@@ -163,3 +162,4 @@ a0cef8deaccedb877137782a7e77441c8231b2da848bd145788a12fe05034fc5  download/libXi
 1fd18b53fda74ea4649eb9577b1cf86538a25d171f10251eeb30d11cdd5bda8c  download/xauth-1.0.3.tar.bz2
 a356b705860c64e94d6329a444e0d84b09b8664a4bcbcfd0d4b42a4ca012c922  download/udev-144.tar.bz2
 495d88871eb5081e98bbae55f813f73cb3ce4145d6ca3e8f2826800166c04571  download/xsetpointer-1.0.1.tar.bz2
+e1f04b4571391a73126a67af8c8a989d6e7f5fbbedf14880db2abdfd5b085592  download/gtk+-2.17.3.tar.bz2
