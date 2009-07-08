@@ -52,17 +52,13 @@ install-args = \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	#$(call cmd,install_dir,$(DESTDIR)/etc/init.d)
-	#$(call cmd,install_dir,$(DESTDIR)/etc/rcS.d)
-	#$(call cmd,install_bin,$(pkgsrctree)/udev.init,$(DESTDIR)/etc/init.d/udev)
-	#$(call cmd,link,../init.d/udev,$(DESTDIR)/etc/rcS.d/S03udev)
 	$(call cmd,stamp)
 
 prunefiles =
 stripfiles = \
-	$(prefix)/sbin/udevadm \
-	$(prefix)/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.1.0 \
+	/sbin/udevadm \
+	/sbin/udevd \
+	$(prefix)/lib/libudev.so.0.4.1 \
 	$(prefix)/lib/libvolume_id.so.1.1.0 \
 	$(prefix)/lib/udev/ata_id \
 	$(prefix)/lib/udev/cdrom_id \
