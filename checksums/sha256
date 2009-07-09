@@ -71,7 +71,6 @@ ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/video
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 5ac4d4a308b032727c61fd56db5a2eaadaedfbce5bc9dc504320bff9d696b002  download/xf86dgaproto-2.0.3.tar.bz2
 4c71e92c4ace100bc7c5cdb0a9b603f0452df40f8f344f7570ad10e2b6bd28d2  download/DirectFB-1.3.0.tar.gz
-8ab16102fdf0a53c922483c0629bfd435263cb6c20374a64c9646fcf345457b8  download/libjpeg-6b.tar.bz2
 c0c10944841e9a79f29d409c6f8da0d1b1af0403eb3819c82c788dfa6a180b3e  download/libxslt-1.1.24.tar.gz
 60091fe65ad3aed9b5151cb4e8fcfaf56567c5ae705fdf4246854625eb91c272  download/curl-7.19.2.tar.bz2
 591d192da7e4ed7816f9f083ebcc38c9368c4d0995047ee584b752939658ea62  download/WebKit-r38698.tar.bz2
@@ -165,3 +164,4 @@ e1f04b4571391a73126a67af8c8a989d6e7f5fbbedf14880db2abdfd5b085592  download/gtk+-
 d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/enchant-1.5.0.tar.gz
 43b86121cafd19156bc018d6e59937868dd079c83b17aa3ae8a2bd189b4c881e  download/libsoup-2.27.2.tar.bz2
 0c6f3889da54767900bd5d434700ab5a289407ebd831d0f689a30bc44afb4dcd  download/sqlite-3.6.16.tar.gz
+75c3ec241e9996504fe02a9ed4d12f16b74ade713972f3db9e65ce95cd27e35d  download/jpegsrc.v6b.tar.gz

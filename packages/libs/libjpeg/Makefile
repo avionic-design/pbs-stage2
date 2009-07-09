@@ -2,13 +2,14 @@ PACKAGE = libjpeg
 VERSION = 6b
 
 LOCATION = ftp://ftp.uu.net/graphics/jpeg
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = jpegsrc.v$(VERSION).tar.gz
 
 ##############################################################################
 
 include packages/common.mk
 
 ARCH := $(shell echo $(CONFIG_ARCH))
+pkgbuildtree := $(pkgtree)/jpeg-6b
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -16,11 +17,13 @@ $(pkgtree)/.setup:
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
+conf-args += \
+	--enable-shared
+
 conf-vars = \
+	CC='$(CC)' \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
