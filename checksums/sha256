@@ -60,7 +60,6 @@ b3fe971ccc8152db6c78da7117c31fc4cd2fcb2b6a4df3db0f8fed13d4ceb08f  download/fixes
 004dae11e11598584939d66d26a5ab9b48d08a00ca2d00ae8d38ee3ac7a15d65  download/libpthread-stubs-0.1.tar.bz2
 79945d06de16736d14210139e8e68cf29f8ea312190d2375507511f367a2f872  download/qt-embedded-linux-opensource-src-4.4.0.tar.bz2
 08a0e072d6a05419a58124db864f0685e6ac96e71b2875bf15ac12714e983b53  download/pkg-config-0.23.tar.gz
-8f829aa8f4de91a8db203d07db907a3db17674b06576e521b92ba9a4470de9b1  download/icu4c-4.0d02.tar.bz2
 bbfac3ed6bfbc2823d3775ebb931087371e142bb0e9bb1bee51a76a6e0078690  download/libmad-0.15.1b.tar.gz
 c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2dec-0.4.1.tar.gz
 eedffd586bf41cf2ae2f77e6819545d6eb1e5062052320a27332fdfaaebdf818  download/gdb-6.8.tar.bz2
@@ -165,3 +164,4 @@ d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/encha
 43b86121cafd19156bc018d6e59937868dd079c83b17aa3ae8a2bd189b4c881e  download/libsoup-2.27.2.tar.bz2
 0c6f3889da54767900bd5d434700ab5a289407ebd831d0f689a30bc44afb4dcd  download/sqlite-3.6.16.tar.gz
 75c3ec241e9996504fe02a9ed4d12f16b74ade713972f3db9e65ce95cd27e35d  download/jpegsrc.v6b.tar.gz
+814de31e1413df945cdd34939b424c4cf7a94d1c481f2d44c99c8ca52b288063  download/icu4c-4_2_1-src.tgz

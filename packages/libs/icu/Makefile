@@ -1,59 +1,75 @@
 PACKAGE = icu4c
-VERSION = 4.0d02
+VERSION = 4.2.1
 
-LOCATION = http://download.icu-project.org/files/icu4c/4.0
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+PACKAGE_VERSION = $(shell echo $(VERSION) | tr '.' '_')-src
+
+LOCATION = http://download.icu-project.org/files/icu4c/$(VERSION)
+TARBALLS = $(PACKAGE)-$(PACKAGE_VERSION).tgz
 
 ##############################################################################
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+pkgbuildtree := $(pkgtree)/icu
+
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
+		cd $(pkgbuildtree)/obj-$(HOST) && \
+			env -i PATH=${PATH} ../source/configure
+	cd $(pkgbuildtree)/obj-$(HOST) && \
+		$(MAKE) MAKEFLAGS= TARGET=
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
 	--mandir=$(prefix)/share/man \
-	--infodir=$(prefix)/share/info
+	--infodir=$(prefix)/share/info \
+	--sysconfdir=/etc
+
+conf-args += \
+	--with-cross-build=$(pkgbuildtree)/obj-$(HOST) \
+	--disable-extras \
+	--disable-samples \
+	--disable-tests
 
 conf-vars = \
-	CFLAGS="$(CFLAGS)" \
-	CPPFLAGS="$(CPPFLAGS)" \
-	CXXFLAGS="$(CXXFLAGS)"
+	CFLAGS='$(CFLAGS)' \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CXXFLAGS='$(CXXFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-build && \
-		cd $(pkgtree)/obj-build && \
-			env -i PATH=${PATH} ../configure \
-				--cache-file=$(pkgtree)/obj-build/config.cache
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars) \
-				--cache-file=$(pkgtree)/obj-$(TARGET)/config.cache
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
+			$(env) ../source/configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args = \
-	BUILD_BINDIR=$(pkgtree)/obj-build/bin \
-	BUILD_LIBDIR=$(pkgtree)/obj-build/lib
-
-package-build:
-	cd $(pkgtree)/obj-build && \
-		env -i PATH=${PATH} $(MAKE)
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	BUILD_BINDIR=$(pkgtree)/obj-build/bin \
-	BUILD_LIBDIR=$(pkgtree)/obj-build/lib \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
-sover = 40.0
+sover = 42.1
 
 prunefiles =
 stripfiles = \
 	$(prefix)/bin/derb \
 	$(prefix)/bin/genbrk \
+	$(prefix)/bin/gencfu \
 	$(prefix)/bin/gencnval \
 	$(prefix)/bin/genctd \
 	$(prefix)/bin/genrb \
@@ -76,16 +92,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-package-install: package-do-install package-cleanup
-	tmpfile=`mktemp` && \
-		echo "Temporary file: $$tmpfile" && \
-		sed -e 's@default_prefix="\(.*\)"@default_prefix="$(ROOTFS)\1"@g' \
-				< $(ROOTFS)$(prefix)/bin/icu-config \
-				> $$tmpfile && \
-		$(priv) mv $$tmpfile $(ROOTFS)$(prefix)/bin/icu-config && \
-		$(priv) chmod a+rx $(ROOTFS)$(prefix)/bin/icu-config
-	@:
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-package-clean:
-	@:
-
+$(pkgtree)/.install:
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

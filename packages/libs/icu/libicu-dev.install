@@ -1,0 +1,4 @@
+/usr/include/layout
+/usr/include/unicode
+/usr/lib/icu
+/usr/lib/*.so
