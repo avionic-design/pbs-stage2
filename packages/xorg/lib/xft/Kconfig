@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XFT
+	bool "xft"
+	select VIRTUAL_DEVEL_LIBC
+	default n
