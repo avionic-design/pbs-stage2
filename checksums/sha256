@@ -148,7 +148,6 @@ b103d2cf9e1cd8b049e28bb1109f3da3a14287bbce3ab8b2f427d55a6e5f4785  download/xinit
 5aa5be594e77f772b85d39f0c25f61a61c7f6fa02ba940e614c5ee386deeb867  download/xbitmaps-1.0.1.tar.bz2
 4f9a751f4830d479fae8ccb68ed04896dc99612789310b7917bd15c04aa3351d  download/xsetroot-1.0.2.tar.bz2
 9479bca842ec9e7f72fa2cd94935f38aebf8d576bc3201ec9002827f6e0d8cc6  download/glib-2.21.3.tar.bz2
-6d9e2823beed876983dec29bfd41410ed6833129e5f056d38cf4bb15f0d07ef1  download/xorg-server-1.6.1.902.tar.bz2
 682960b55527b54bada90e959c2d42679444a1db43677c77eb645a29645f86d1  download/libpng-1.2.37.tar.bz2
 8d940251972ffe7e3caa41c4e82b6659ad4070aa2ec0d3e789c9fa39b79ff947  download/libXt-1.0.6.tar.bz2
 20c1ecad21474187b340cd6056b1083da8cfa5d919d208feac360644108db587  download/libXaw-1.0.6.tar.bz2
@@ -168,3 +167,4 @@ d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/encha
 4eb4fc4a3f47edbc18c9dc09d54fd2189954ebaa0e521b0ab97e21087d8c9855  download/webkit-1.1.10.tar.gz
 db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-bitstream-vera-1.10.tar.bz2
 ce7688258af34c14af421bcfb306d4310245b727d2417ac968b7f6b2facfde8c  download/libXft-2.1.13.tar.bz2
+893e92ad2ccd1bcd646bba9540dd9dfc53ccc95f8dc5fd69444afe54fae8c261  download/xorg-server-1.6.2.tar.bz2

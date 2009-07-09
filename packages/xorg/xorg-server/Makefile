@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.6.1.902
+VERSION = 1.6.2
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/xserver
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -53,8 +53,6 @@ $(pkgtree)/.configure:
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
-
-build-args =
 
 $(pkgtree)/.build:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
