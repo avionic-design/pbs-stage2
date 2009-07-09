@@ -1,0 +1,5 @@
+menu "Fonts"
+
+source "packages/fonts/ttf-bitstream-vera/Kconfig"
+
+endmenu

@@ -14,5 +14,6 @@ source "packages/multimedia/Kconfig"
 source "packages/web/Kconfig"
 source "packages/xorg/Kconfig"
 source "packages/util/Kconfig"
+source "packages/fonts/Kconfig"
 
 endmenu
