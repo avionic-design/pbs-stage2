@@ -11,6 +11,28 @@ index 6274134..f38393f 100644
      BITS_GOT=unknown
      
      # 'OK' here means, we can exit any further checking, everything's copa
+diff --git a/source/config/Makefile.inc.in b/source/config/Makefile.inc.in
+index d7dfdbe..f5e63ec 100644
+--- a/source/config/Makefile.inc.in
++++ b/source/config/Makefile.inc.in
+@@ -110,7 +110,7 @@ ICULIBS_ICUIO = -l$(ICUPREFIX)io$(ICULIBSUFFIX)$(ICULIBSUFFIX_VERSION)
+ ICULIBS_OBSOLETE = -l$(ICUPREFIX)obsolete$(ICULIBSUFFIX)$(ICULIBSUFFIX_VERSION)
+ ICULIBS_LAYOUT = -l$(ICUPREFIX)le$(ICULIBSUFFIX)$(ICULIBSUFFIX_VERSION)
+ ICULIBS_LAYOUTEX = -l$(ICUPREFIX)lx$(ICULIBSUFFIX)$(ICULIBSUFFIX_VERSION)
+-ICULIBS_BASE = $(LIBS) -L$(libdir)
++ICULIBS_BASE = $(LIBS)
+ 
+ # for icu-config to test with
+ ICULIBS_COMMON_LIB_NAME = ${LIBICU}uc${ICULIBSUFFIX}${ICULIBSUFFIX_VERSION}.${SO}
+@@ -182,7 +182,7 @@ AR = @AR@
+ CC = @CC@
+ CFLAGS = @CFLAGS@ 
+ CPP = @CPP@
+-CPPFLAGS = @CPPFLAGS@ $(LIBCPPFLAGS) -I$(prefix)/include
++CPPFLAGS = @CPPFLAGS@ $(LIBCPPFLAGS)
+ CXX = @CXX@
+ CXXFLAGS = @CXXFLAGS@ 
+ DEFAULT_MODE = @DATA_PACKAGING_MODE@
 diff --git a/source/configure b/source/configure
 index beef9de..49cbb95 100755
 --- a/source/configure
