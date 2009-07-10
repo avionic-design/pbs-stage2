@@ -1,0 +1,4 @@
+config PACKAGE_WM_MATCHBOX_WINDOW_MANAGER
+	bool "window manager"
+	select PACKAGE_WM_MATCHBOX_LIBMATCHBOX
+	default n

@@ -1,4 +1,6 @@
-config PACKAGE_WM_MATCHBOX
-	bool "matchbox"
-	select PACKAGE_WM_LIBMATCHBOX
-	default n
+menu "matchbox"
+
+source "packages/wm/matchbox/libmatchbox/Kconfig"
+source "packages/wm/matchbox/window-manager/Kconfig"
+
+endmenu
