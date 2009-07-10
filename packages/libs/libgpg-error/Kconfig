@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBGPG_ERROR
+	bool "libgpg-error"
+	select VIRTUAL_DEVEL_LIBC
+	default n
