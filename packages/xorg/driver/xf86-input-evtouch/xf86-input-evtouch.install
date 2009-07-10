@@ -1,0 +1,4 @@
+/etc/udev/rules.d
+/usr/lib/xf86-input-evtouch
+/usr/lib/xorg/modules
+/usr/share/xf86-input-evtouch

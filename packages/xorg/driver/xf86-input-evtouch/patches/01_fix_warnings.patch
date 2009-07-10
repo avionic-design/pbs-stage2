@@ -1,0 +1,32 @@
+Remove unused variables and code just to make gcc happy
+
+Index: xserver-xorg-input-evtouch/evtouch.c
+===================================================================
+--- xserver-xorg-input-evtouch.orig/evtouch.c	2009-01-21 20:06:50.647249439 +0900
++++ xserver-xorg-input-evtouch/evtouch.c	2009-01-21 20:07:39.518253785 +0900
+@@ -352,7 +352,6 @@ void EVTouchProcessAbs(EVTouchPrivatePtr
+ void EVTouchProcessRel(EVTouchPrivatePtr priv)
+ {
+         struct input_event *ev; /* packet being/just read */
+-        int dummy;
+ 
+         ev = &priv->ev;
+         if ( ev->code == REL_X ) {
+@@ -745,17 +744,6 @@ EVTouchNewPacket (EVTouchPrivatePtr priv
+ 
+ 
+ 
+-static unsigned char
+-EVTouchRead(EVTouchPrivatePtr priv)
+-{
+-        unsigned char c;
+-        XisbBlockDuration (priv->buffer, EV_TIMEOUT);
+-        c = XisbRead(priv->buffer);
+-        return (c);
+-}
+-
+-
+-
+ static Bool
+ EVTouchGetPacket (EVTouchPrivatePtr priv)
+ {
