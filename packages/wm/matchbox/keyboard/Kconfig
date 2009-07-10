@@ -1,0 +1,4 @@
+config PACKAGE_WM_MATCHBOX_KEYBOARD
+	bool "keyboard"
+	select PACKAGE_WM_MATCHBOX_LIBFAKEKEY
+	default n
