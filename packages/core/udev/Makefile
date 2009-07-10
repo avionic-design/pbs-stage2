@@ -25,6 +25,7 @@ conf-args = \
 	--includedir=$(prefix)/include \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
+	--libexecdir=/lib/udev \
 	--sysconfdir=/etc
 
 conf-args += \
