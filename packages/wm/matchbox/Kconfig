@@ -1,0 +1,4 @@
+config PACKAGE_WM_MATCHBOX
+	bool "matchbox"
+	select PACKAGE_WM_LIBMATCHBOX
+	default n
