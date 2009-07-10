@@ -1,5 +1,6 @@
 menu "World-Wide Web Utilities"
 
+source "packages/web/rdesktop/Kconfig"
 source "packages/web/webkit/Kconfig"
 source "packages/web/webkit-gtk/Kconfig"
 
