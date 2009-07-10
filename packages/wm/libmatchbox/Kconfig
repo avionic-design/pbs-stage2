@@ -1,0 +1,4 @@
+config PACKAGE_WM_LIBMATCHBOX
+	bool "libmatchbox"
+	select PACKAGE_XORG_LIB_XFT
+	default n

@@ -1,0 +1,5 @@
+menu "Window Managers"
+
+source "packages/wm/libmatchbox/Kconfig"
+
+endmenu

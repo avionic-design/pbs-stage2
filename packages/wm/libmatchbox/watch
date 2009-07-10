@@ -1,0 +1,2 @@
+version=3
+http://matchbox-project.org/sources/libmatchbox/(.*)/libmatchbox-(.*)\.tar\.bz2

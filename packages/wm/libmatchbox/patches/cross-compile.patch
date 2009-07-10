@@ -1,0 +1,76 @@
+diff --git a/configure.ac b/configure.ac
+index 36afdf3..74be206 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -86,8 +86,8 @@ if test $have_libx11pc = yes; then
+       AC_DEFINE(USE_XFT, [1], [Use Xft])	
+    fi
+ # XXX : xau is missing from x11.pc - workaround is too add here 
+-   PKG_CHECK_MODULES(XLIBS, x11 xext  $xft_pkg)
+-   XLIBS_REQUIRED="x11 xext"
++   PKG_CHECK_MODULES(XLIBS, x11 xext $xft_pkg)
++   XLIBS_REQUIRED="x11 xext $xft_pkg"
+ else
+ 
+ AC_PATH_XTRA
+@@ -129,14 +129,8 @@ fi
+ XLIBS_CFLAGS="$XLIBS_CLAGS $XFT_CFLAGS"
+ XLIBS_LIBS="$X_LIBS $XFT_LIBS -lX11 -lXext"
+ 
+-MB_EXTRA_LIBS="$MB_EXTRA_LIBS $XLIBS_LIBS"
+-
+ fi
+ 
+-# do this here for freetype include
+-MB_EXTRA_CFLAGS="$MB_EXTRA_CFLAGS $XLIBS_CFLAGS"
+-
+-
+ dnl ------ Check for Pango ---------------------------------------------------
+ 
+ if test x$enable_pango != xno; then
+@@ -316,7 +310,7 @@ dnl ------ 'check' for unit tests -------------------------------------------
+ have_check=no
+ 
+ if test x$enable_unit_tests = xyes; then
+-  AM_PATH_CHECK(,have_check=yes, have_check=no)
++  PKG_CHECK_MODULES([CHECK], [check >= 0.9.4])
+ fi
+ 
+ AM_CONDITIONAL(HAVE_CHECK, test x$have_check = xyes)
+diff --git a/libmb/Makefile.am b/libmb/Makefile.am
+index b9bd921..457fa01 100644
+--- a/libmb/Makefile.am
++++ b/libmb/Makefile.am
+@@ -18,7 +18,7 @@ source_c = mbmenu.c       \
+ 
+ DATADIR=$(datadir)
+ 
+-AM_CFLAGS = @GCC_WARNINGS@ @XLIBS_CFLAGS@ @PANGO_CFLAGS@ @PNG_CFLAGS@ @XSET_LIBS@ -DDATADIR=\"$(datadir)\"
++AM_CFLAGS = -I$(top_srcdir) @GCC_WARNINGS@ @XLIBS_CFLAGS@ @PANGO_CFLAGS@ @PNG_CFLAGS@ @XSET_LIBS@ -DDATADIR=\"$(datadir)\"
+ 
+ lib_LTLIBRARIES      = libmb.la
+ libmb_la_SOURCES     = $(source_c) $(source_h)
+diff --git a/tests/Makefile.am b/tests/Makefile.am
+index 0666ca4..5644229 100644
+--- a/tests/Makefile.am
++++ b/tests/Makefile.am
+@@ -2,8 +2,7 @@ SUBDIRS = menu
+ 
+ TESTS = dot-desktop pixbuf
+ 
+-AM_CPPFLAGS = @CHECK_CFLAGS@ -I../libmb @GCC_WARNINGS@ @XLIBS_CFLAGS@ @PANGO_CFLAGS@ @PNG_CFLAGS@
+-AM_LDFLAGS = -L../libmb -lmb
++AM_CPPFLAGS = -I$(top_srcdir) @CHECK_CFLAGS@ -I../libmb @GCC_WARNINGS@ @XLIBS_CFLAGS@ @PANGO_CFLAGS@ @PNG_CFLAGS@
+ 
+ if HAVE_CHECK
+ 
+@@ -18,7 +17,8 @@ pixbuf_LDADD= @CHECK_LIBS@
+ endif
+ 
+ noinst_PROGRAMS = dump-image
+-dump_image_SOURCES=dump-image.c
++dump_image_SOURCES = dump-image.c
++dump_image_LDADD = ../libmb/libmb.la
+ 
+ EXTRA_DIST = oh-overlayed.png oh.png oh-scaled.png overlay.png oh.jpg oh.xpm \
+              dot-desktop.c pixbuf.c oh.h

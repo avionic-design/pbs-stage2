@@ -13,6 +13,7 @@ source "packages/editors/Kconfig"
 source "packages/multimedia/Kconfig"
 source "packages/web/Kconfig"
 source "packages/xorg/Kconfig"
+source "packages/wm/Kconfig"
 source "packages/util/Kconfig"
 source "packages/fonts/Kconfig"
 

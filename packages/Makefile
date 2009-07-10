@@ -14,4 +14,5 @@ obj-y += sound/
 obj-y += toolchain/
 obj-y += util/
 obj-y += web/
+obj-y += wm/
 obj-y += xorg/
