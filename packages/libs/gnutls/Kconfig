@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GNUTLS
+	bool "gnutls"
+	select PACKAGE_LIBS_LIBGCRYPT
+	default n
