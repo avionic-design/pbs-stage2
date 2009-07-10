@@ -1,5 +1,6 @@
 menu "matchbox"
 
+source "packages/wm/matchbox/libfakekey/Kconfig"
 source "packages/wm/matchbox/libmatchbox/Kconfig"
 source "packages/wm/matchbox/window-manager/Kconfig"
 
