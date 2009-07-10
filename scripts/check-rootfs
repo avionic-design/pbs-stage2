@@ -1,0 +1,4 @@
+#!/bin/sh
+
+scripts/find-libtool-libs $1
+scripts/find-non-stripped $1

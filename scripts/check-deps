@@ -1,0 +1,45 @@
+#!/bin/sh -e
+
+if test x$1 = x; then
+	echo "usage: $0 binary [root]"
+	exit 1
+fi
+
+if test x$2 = x; then
+	root=`cd medcom/rootfs; pwd`
+else
+	root=`cd $2; pwd`
+fi
+
+function resolve()
+{
+	if test x$2 != x; then
+		indent=$2
+	else
+		indent=0
+	fi
+
+	for i in `seq 1 $indent`; do
+		echo -n " "
+	done
+
+	filename=`basename "$1"`
+	binary=`find $root -name "$filename"`
+	if test x$binary = x; then
+		echo "$filename: not found"
+		return
+	else
+		echo "$binary"
+	fi
+
+	needed=`objdump -p $binary | grep 'NEEDED'`
+	libs=`echo $needed | awk '{ print $2 }'`
+
+	objdump -p "$binary" | grep 'NEEDED' | awk '{ print $2 }' | (
+		while read dep; do
+			resolve "$dep" $[$indent + 2]
+		done
+	)
+}
+
+resolve "$1"
