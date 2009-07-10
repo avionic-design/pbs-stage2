@@ -1,0 +1,5 @@
+config PACKAGE_XORG_LIB_XTST
+	bool "xtst"
+	select PACKAGE_XORG_PROTO_RECORD
+	select PACKAGE_XORG_LIB_XEXT
+	default n

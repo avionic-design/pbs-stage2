@@ -19,6 +19,7 @@ source "packages/xorg/lib/xmu/Kconfig"
 source "packages/xorg/lib/xpm/Kconfig"
 source "packages/xorg/lib/xrender/Kconfig"
 source "packages/xorg/lib/xt/Kconfig"
+source "packages/xorg/lib/xtst/Kconfig"
 source "packages/xorg/lib/xtrans/Kconfig"
 source "packages/xorg/lib/xv/Kconfig"
 
