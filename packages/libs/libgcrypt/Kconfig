@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBGCRYPT
+	bool "libgcrypt"
+	select PACKAGE_LIBS_LIBGPG_ERROR
+	default n

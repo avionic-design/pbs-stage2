@@ -1,0 +1,2 @@
+version=3
+ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-(.*)\.tar\.bz2
