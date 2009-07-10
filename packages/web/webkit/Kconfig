@@ -1,0 +1,4 @@
+config PACKAGE_WEB_WEBKIT
+	bool "webkit"
+	select VIRTUAL_DEVEL_LIBC
+	default n
