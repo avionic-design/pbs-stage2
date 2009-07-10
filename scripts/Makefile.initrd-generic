@@ -5,6 +5,8 @@ priv = sudo
 INITRD_FILTER = \
 	-not -path '*/include*' \
 	-not -path '*$(prefix)/share/man*' \
+	-not -path '*$(prefix)/share/doc*' \
+	-not -path '*$(prefix)/share/X11/locale*' \
 	-not -name '*.a'
 
 $(obj)/initrd.img: $(obj)/rootfs FORCE
