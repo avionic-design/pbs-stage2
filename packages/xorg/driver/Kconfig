@@ -22,6 +22,12 @@ config PACKAGE_XORG_DRIVER_INPUT_MOUSE
 	select PACKAGE_XORG_XORG_SERVER
 	default n
 
+config PACKAGE_XORG_DRIVER_INPUT_TSLIB
+	bool "tslib"
+	select PACKAGE_XORG_XORG_SERVER
+	select PACKAGE_LIBS_TSLIB
+	default n
+
 comment "Video Drivers"
 
 config PACKAGE_XORG_DRIVER_VIDEO_FBDEV
