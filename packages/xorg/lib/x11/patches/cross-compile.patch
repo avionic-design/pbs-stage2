@@ -1,14 +1,8 @@
-commit a09561311308685886d19350a6efc126ce030ba1
-Author: Thierry Reding <thierry.reding@avionic-design.de>
-Date:   Tue Jun 30 12:56:01 2009 +0200
-
-    Fixes src/util for cross-compilation.
-
 diff --git a/configure.ac b/configure.ac
-index b4593f4..a4f0fb1 100644
+index ab6d5a3..8a45ffe 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -32,6 +32,9 @@ if test x"$CC_FOR_BUILD" = x; then
+@@ -37,6 +37,9 @@ if test x"$CC_FOR_BUILD" = x; then
  	fi
  fi
  AC_SUBST([CC_FOR_BUILD])

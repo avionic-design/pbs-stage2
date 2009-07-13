@@ -1,4 +1,3 @@
-libtool.patch -p1
 ltmain-sysroot.patch -p1
 cross-compile.patch -p1
 autoreconf.patch -p1
