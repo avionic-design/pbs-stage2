@@ -1,55 +1,78 @@
-PACKAGE = WebKit
-VERSION = r38698
+PACKAGE = webkit
+VERSION = git
 
-LOCATION = http://nightly.webkit.org/files/trunk/src
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
-
-##############################################################################
+webkitsrc = $(abspath $(srctree)/../WebKit.git)
 
 include packages/common.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
 
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
+	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
-	--infodir=$(prefix)/share/info
+	--sysconfdir=/etc
 
 conf-args += \
-	--with-target=directfb
+	--with-unicode-backend=icu \
+	--disable-video
+
+conf-vars = \
+	ac_cv_path_icu_config='$(ROOTFS)$(prefix)/bin/icu-config' \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
 conf-vars += \
-	ac_cv_path_icu_config="$(ROOTFS)$(prefix)/bin/icu-config" \
-	CC="$(CC) --sysroot $(ROOTFS)" \
-	CXX="$(CXX) --sysroot $(ROOTFS)" \
-	CPPFLAGS="$(CPPFLAGS)" \
-	CXXFLAGS="$(CXXFLAGS)" \
-	CFLAGS="$(CFLAGS)"
+	ac_cv_path_PKG_CONFIG=$(TARGET)-pkg-config
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../autogen.sh
-	install -m 755 support/ltmain-sysroot.sh $(pkgtree)/ltmain.sh
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) ../configure $(conf-args) $(conf-vars)
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
+			$(env) $(webkitsrc)/autogen.sh $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args =
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
-package-clean:
-	@:
+prunefiles = \
+	$(prefix)/lib/libwebkit-1.0.la
 
+stripfiles = \
+	$(prefix)/bin/jsc \
+	$(prefix)/lib/libwebkit-1.0.so.2.8.0
+
+include packages/cleanup.mk
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install:
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)
