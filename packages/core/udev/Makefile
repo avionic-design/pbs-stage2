@@ -57,19 +57,21 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 prunefiles =
 stripfiles = \
-	/sbin/udevadm \
-	/sbin/udevd \
 	/lib/libudev.so.0.4.1 \
+	/lib/udev/ata_id \
+	/lib/udev/cdrom_id \
+	/lib/udev/collect \
+	/lib/udev/create_floppy_devices \
+	/lib/udev/edd_id \
+	/lib/udev/fstab_import \
+	/lib/udev/path_id \
+	/lib/udev/scsi_id \
+	/lib/udev/usb_id \
+	/lib/udev/v4l_id \
+	/lib/udev/vol_id \
 	$(prefix)/lib/libvolume_id.so.1.1.0 \
-	$(prefix)/lib/udev/ata_id \
-	$(prefix)/lib/udev/cdrom_id \
-	$(prefix)/lib/udev/collect \
-	$(prefix)/lib/udev/create_floppy_devices \
-	$(prefix)/lib/udev/edd_id \
-	$(prefix)/lib/udev/fstab_import \
-	$(prefix)/lib/udev/scsi_id \
-	$(prefix)/lib/udev/usb_id \
-	$(prefix)/lib/udev/vol_id
+	/sbin/udevadm \
+	/sbin/udevd
 
 include packages/cleanup.mk
 
