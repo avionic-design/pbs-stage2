@@ -25,26 +25,26 @@ index 45f2972..ef860ab 100644
  TAR=tar
  
 diff --git a/lib/uuid/Makefile.in b/lib/uuid/Makefile.in
-index 35fc2e9..4a00fea 100644
+index e8c5a21..1fe7465 100644
 --- a/lib/uuid/Makefile.in
 +++ b/lib/uuid/Makefile.in
 @@ -129,7 +129,7 @@ installdirs::
- 	@echo "	MKINSTALLDIRS $(libdir) $(includedir)/uuid $(man3dir)"
- 	@$(MKINSTALLDIRS) $(DESTDIR)$(libdir)  \
+ 	$(E) "	MKINSTALLDIRS $(libdir) $(includedir)/uuid $(man3dir)"
+ 	$(Q) $(MKINSTALLDIRS) $(DESTDIR)$(libdir)  \
  		$(DESTDIR)$(includedir)/uuid $(DESTDIR)$(man3dir) \
 -		$(DESTDIR)$(libdir)/pkgconfig
 +		$(DESTDIR)$(prefix)/lib/pkgconfig
  
  install:: all installdirs 
- 	@echo "	INSTALL_DATA $(libdir)/libuuid.a"
+ 	$(E) "	INSTALL_DATA $(libdir)/libuuid.a"
 @@ -149,12 +149,12 @@ install:: all installdirs
- 	@$(LN) -f $(DESTDIR)$(man3dir)/uuid_generate.3 $(DESTDIR)$(man3dir)/uuid_generate_random.3
- 	@echo "	LINK $(man3dir)/uuid_generate_time.3"
- 	@$(LN) -f $(DESTDIR)$(man3dir)/uuid_generate.3 $(DESTDIR)$(man3dir)/uuid_generate_time.3
--	@echo "	INSTALL_DATA $(libdir)/pkgconfig/uuid.pc"
--	@$(INSTALL_DATA) uuid.pc $(DESTDIR)$(libdir)/pkgconfig/uuid.pc
-+	@echo "	INSTALL_DATA $(prefix)/lib/pkgconfig/uuid.pc"
-+	@$(INSTALL_DATA) uuid.pc $(DESTDIR)$(prefix)/lib/pkgconfig/uuid.pc
+ 	$(Q) $(LN) -f $(DESTDIR)$(man3dir)/uuid_generate.3 $(DESTDIR)$(man3dir)/uuid_generate_random.3
+ 	$(E) "	LINK $(man3dir)/uuid_generate_time.3"
+ 	$(Q) $(LN) -f $(DESTDIR)$(man3dir)/uuid_generate.3 $(DESTDIR)$(man3dir)/uuid_generate_time.3
+-	$(E) "	INSTALL_DATA $(libdir)/pkgconfig/uuid.pc"
+-	$(Q) $(INSTALL_DATA) uuid.pc $(DESTDIR)$(libdir)/pkgconfig/uuid.pc
++	$(E) "	INSTALL_DATA $(prefix)/lib/pkgconfig/uuid.pc"
++	$(Q) $(INSTALL_DATA) uuid.pc $(DESTDIR)$(prefix)/lib/pkgconfig/uuid.pc
  
  uninstall::
  	$(RM) -f $(DESTDIR)$(libdir)/libuuid.a \

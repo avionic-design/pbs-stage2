@@ -128,7 +128,6 @@ b9532db51a093221f82e6659ab2979d357eac770d6eb9e9361efead0aca709ce  download/libpc
 e6e1dbd64d41c826619a5881c5aeed46095bfdcb87c3e27d65292fc12a5bb7c7  download/xf86-input-mouse-1.4.0.tar.bz2
 bba725daeb2a313b83f2b92855a9ae8aa72c4cc8581f9f62f101ebdf00ac359d  download/xf86-video-fbdev-0.4.0.tar.bz2
 2fba2c850bf2f60fc2a423438188b04439d149a7e81d8433264f0613ebb7be3a  download/libICE-1.0.5.tar.bz2
-b6d9c9ec405ad1d644cf35d57f0f1e878fa6af6ad45b97683de847ff49cbdf84  download/e2fsprogs-libs-1.41.7.tar.gz
 7536ac382e1ff82014d3a0defba0c61b3a30984f4e5bc7707960d6debcb92a82  download/libSM-1.1.0.tar.bz2
 f83c00d6ed8f4c08effa9dcc2d7f1ff6f5a753f2b9fe1babda16618c2afa18f0  download/libXmu-1.0.4.tar.bz2
 64701ae67ce5b0797307b75d8255bec3a0d371d0c50715ea618f5a68bcc92baa  download/libXpm-3.5.7.tar.bz2
@@ -181,3 +180,4 @@ eafc4a09729a4b2b6120430c71e1954c5cac299ad6adf2f9a40aee8a7b51e476  download/xf86-
 2b8e7164b0c362d5c5e90275b25772514d76d5fda3d54c026445611e467d638e  download/freefont-ttf-20090104.tar.gz
 d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-input-tslib-0.0.5.tar.bz2
 11768553fa3c56441894ffc703a14a753ba07b5090fe496afbfec4d2dbf9ce80  download/libX11-1.2.2.tar.bz2
+90428106333a38b93b6f4a306fff17749243862883a06598ff6e6ea11f8d24d2  download/e2fsprogs-libs-1.41.8.tar.gz
