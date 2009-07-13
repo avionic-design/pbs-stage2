@@ -1,6 +1,0 @@
-#!/bin/sh
-
-for script in /etc/rcS.d/S*; do
-	$script start
-done
-
