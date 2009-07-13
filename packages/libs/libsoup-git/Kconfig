@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBSOUP_GIT
+	bool "libsoup (git)"
+	select PACKAGE_LIBS_GNUTLS
+	default n
