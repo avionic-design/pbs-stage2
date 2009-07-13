@@ -60,6 +60,7 @@ prunefiles = \
 	$(prefix)/lib/libpangocairo-1.0.la \
 	$(prefix)/lib/libpangoft2-1.0.la \
 	$(prefix)/lib/libpangox-1.0.la \
+	$(prefix)/lib/libpangoxft-1.0.la \
 	$(plugin)/*.la
 
 sover = 0.2400.4
@@ -71,6 +72,7 @@ stripfiles = \
 	$(prefix)/lib/libpango-1.0.so.$(sover) \
 	$(prefix)/lib/libpangoft2-1.0.so.$(sover) \
 	$(prefix)/lib/libpangox-1.0.so.$(sover) \
+	$(prefix)/lib/libpangoxft-1.0.so.$(sover) \
 	$(plugin)/*.so
 
 include packages/cleanup.mk
