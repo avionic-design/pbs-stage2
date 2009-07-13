@@ -13,4 +13,5 @@ prunefiles = \
 	$(prefix)/lib/xorg/modules/input/evtouch_drv.la
 
 stripfiles = \
-	$(prefix)/lib/xorg/modules/input/evtouch_drv.so
+	$(prefix)/lib/xorg/modules/input/evtouch_drv.so \
+	$(prefix)/lib/$(PACKAGE)/ev_calibrate
