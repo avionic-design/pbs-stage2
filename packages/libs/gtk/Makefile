@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.17.3
+VERSION = 2.17.4
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.17
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
