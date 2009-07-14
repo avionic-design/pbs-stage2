@@ -1,12 +1,17 @@
 PACKAGE = libmad
 VERSION = 0.15.1b
 
-LOCATION = http://downloads.sourceforge.net/mad
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+LOCATION = ftp://ftp.mars.org/pub/mpeg
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 ##############################################################################
 
 include packages/common.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -16,27 +21,48 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-vars = \
-	CFLAGS='$(CFLAGS)'
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args =
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libmad.la
+	$(call cmd,stamp)
 
-package-clean:
-	@:
+prunefiles = \
+	$(prefix)/lib/libmad.la
 
+stripfiles = \
+	$(prefix)/lib/libmad.so.0.2.1
+
+include packages/cleanup.mk
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)
