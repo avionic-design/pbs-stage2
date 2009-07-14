@@ -2,47 +2,73 @@ PACKAGE = mpeg2dec
 VERSION = 0.4.1
 
 LOCATION = http://libmpeg2.sourceforge.net/files
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-##############################################################################
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
 conf-args += \
 	--enable-shared \
-	--disable-sdl \
-	--without-x
+	--disable-sdl
 
 conf-vars = \
-	CFLAGS='$(CFLAGS)'
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-package-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args =
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libmpeg2.la
-	$(priv) rm $(ROOTFS)$(prefix)/lib/libmpeg2convert.la
+	$(call cmd,stamp)
 
-package-clean:
-	@:
+prunefiles = \
+	$(prefix)/lib/libmpeg2.la \
+	$(prefix)/lib/libmpeg2convert.la
 
+stripfiles = \
+	$(prefix)/bin/corrupt_mpeg2 \
+	$(prefix)/bin/extract_mpeg2 \
+	$(prefix)/bin/mpeg2dec \
+	$(prefix)/lib/libmpeg2.so.0.0.0 \
+	$(prefix)/lib/libmpeg2convert.so.0.0.0
+
+include packages/cleanup.mk
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)
