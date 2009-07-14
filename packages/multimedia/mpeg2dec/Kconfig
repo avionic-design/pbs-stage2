@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_MPEG2DEC
+	bool "mpeg2dec"
+	select VIRTUAL_DEVEL_LIBC
+	default n

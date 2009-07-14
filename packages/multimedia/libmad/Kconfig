@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBMAD
+	bool "libmad"
+	select VIRTUAL_DEVEL_LIBC
+	default n

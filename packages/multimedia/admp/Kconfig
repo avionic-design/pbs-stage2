@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_ADMP
+	bool "admp"
+	select VIRTUAL_DEVEL_LIBC
+	default n

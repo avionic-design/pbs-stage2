@@ -1,18 +1,7 @@
 menu "Multimedia Tools"
 
-config PACKAGE_MULTIMEDIA_ADMP
-	bool "admp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_MULTIMEDIA_LIBMAD
-	bool "libmad"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_MULTIMEDIA_MPEG2DEC
-	bool "mpeg2dec"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/multimedia/admp/Kconfig"
+source "packages/multimedia/libmad/Kconfig"
+source "packages/multimedia/mpeg2dec/Kconfig"
 
 endmenu
