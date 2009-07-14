@@ -1,0 +1,4 @@
+/usr/include/liboil-0.3
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig

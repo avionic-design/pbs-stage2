@@ -24,6 +24,7 @@ obj-$(CONFIG_PACKAGE_LIBS_ICU) += icu
 obj-$(CONFIG_PACKAGE_LIBS_LIBGCRYPT) += libgcrypt
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPG_ERROR) += libgpg-error
 obj-$(CONFIG_PACKAGE_LIBS_LIBJPEG) += libjpeg
+obj-$(CONFIG_PACKAGE_LIBS_LIBOIL) += liboil
 obj-$(CONFIG_PACKAGE_LIBS_LIBPCAP) += libpcap
 obj-$(CONFIG_PACKAGE_LIBS_LIBPNG) += libpng
 obj-$(CONFIG_PACKAGE_LIBS_LIBSIG++) += libsigc++
