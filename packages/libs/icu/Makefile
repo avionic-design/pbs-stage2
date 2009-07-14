@@ -18,11 +18,6 @@ env += \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
 
 $(pkgtree)/.setup:
-	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
-		cd $(pkgbuildtree)/obj-$(HOST) && \
-			env -i PATH=${PATH} ../source/configure
-	cd $(pkgbuildtree)/obj-$(HOST) && \
-		$(MAKE) MAKEFLAGS= TARGET=
 	$(call cmd,stamp)
 
 conf-args = \
@@ -44,7 +39,15 @@ conf-vars = \
 	CXXFLAGS='$(CXXFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
-$(pkgtree)/.configure:
+$(pkgtree)/.prepare: $(pkgtree)/.patch
+	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
+		cd $(pkgbuildtree)/obj-$(HOST) && \
+			env -i PATH=${PATH} ../source/configure
+	cd $(pkgbuildtree)/obj-$(HOST) && \
+		$(MAKE) MAKEFLAGS= TARGET=
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.prepare
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../source/configure $(conf-args) $(conf-vars)
