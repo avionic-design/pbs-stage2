@@ -1,8 +1,13 @@
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args += \
 	--host=$(TARGET) \
@@ -11,39 +16,43 @@ conf-args += \
 	--infodir=$(prefix)/share/info \
 	--sysconfdir=/etc
 
-# strip libraries and binaries
 conf-vars += \
-	$(call set-args, CC CPPFLAGS CFLAGS LD LDFLAGS)
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-autotools-configure:
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure:
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
-build-args +=
-build-vars +=
+$(pkgtree)/.build:
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
-autotools-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args) $(build-vars)
+install-args += \
+	DESTDIR=$(DESTDIR)
 
-install-args +=
-install-vars += \
-	DESTDIR=$(ROOTFS)
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
-autotools-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) $(install-vars) install
+include packages/cleanup.mk
 
-package-configure: package-pre-configure autotools-configure package-post-configure
-package-build: package-pre-build autotools-build package-post-build
-package-install: package-pre-install autotools-install package-post-install
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -v $(VERSION)
+	$(call cmd,stamp)
 
-# dummy targets that can be overridden
-package-pre-configure:
-package-post-configure:
-package-pre-build:
-package-post-build:
-package-pre-install:
-package-post-install:
-
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+	$(call cmd,stamp)

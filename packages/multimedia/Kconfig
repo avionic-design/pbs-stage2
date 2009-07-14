@@ -1,6 +1,7 @@
 menu "Multimedia Tools"
 
 source "packages/multimedia/admp/Kconfig"
+source "packages/multimedia/gstreamer/Kconfig"
 source "packages/multimedia/libmad/Kconfig"
 source "packages/multimedia/mpeg2dec/Kconfig"
 
