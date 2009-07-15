@@ -1,5 +1,6 @@
 menu "gstreamer"
 
 source "packages/multimedia/gstreamer/core/Kconfig"
+source "packages/multimedia/gstreamer/plugins/Kconfig"
 
 endmenu
