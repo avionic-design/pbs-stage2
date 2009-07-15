@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_ALSA_UTILS
+	bool "alsa-utils"
+	select PACKAGE_MULTIMEDIA_ALSA_CORE
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_ALSA_CORE
+	bool "alsa-lib"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -1,0 +1,5 @@
+/usr/include/alsa
+/usr/include/sys
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/aclocal

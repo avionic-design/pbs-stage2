@@ -1,3 +1,4 @@
+obj-y += alsa/
 obj-y += gstreamer/
 
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_ADMP) += admp.git

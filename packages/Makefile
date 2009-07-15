@@ -10,7 +10,6 @@ obj-y += libs/
 obj-y += multimedia/
 obj-y += net/
 obj-y += shells/
-obj-y += sound/
 obj-y += toolchain/
 obj-y += util/
 obj-y += web/
