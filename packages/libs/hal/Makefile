@@ -1,5 +1,5 @@
 PACKAGE = hal
-VERSION = 0.5.12
+VERSION = 0.5.13
 
 LOCATION = http://hal.freedesktop.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
