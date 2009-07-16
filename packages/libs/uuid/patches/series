@@ -1,1 +1,1 @@
-cross-compile.patch -p1
+shlibs.patch -p1

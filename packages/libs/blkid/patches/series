@@ -1,2 +1,2 @@
 ltmain-sysroot.patch -p1
-cross-compile.patch -p1
+shlibs.patch -p1

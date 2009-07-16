@@ -1,4 +1,2 @@
-/lib/*.a
-/lib/*.so
-/usr/include/blkid
-/usr/lib/pkgconfig
+/usr/include
+/usr/lib

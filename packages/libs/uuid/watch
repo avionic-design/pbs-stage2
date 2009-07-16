@@ -1,2 +1,2 @@
 version=3
-http://sf.net/e2fsprogs/e2fsprogs-libs-(.*)\.tar\.gz
+http://www.kernel.org/pub/linux/utils/util-linux-ng/v(\d.\d+)/util-linux-ng-(.*)\.tar\.bz2
