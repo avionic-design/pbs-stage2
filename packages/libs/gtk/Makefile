@@ -63,7 +63,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1703.0
+sover  = 0.1704.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
