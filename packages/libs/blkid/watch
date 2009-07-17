@@ -1,2 +1,2 @@
 version=3
-http://www.kernel.org/pub/linux/utils/util-linux-ng/v(\d.\d+)/util-linux-ng-(.*)\.tar\.bz2
+http://www.kernel.org/pub/linux/utils/util-linux-ng/v(\d.\d+)/util-linux-ng-([\d\.]+)\.tar\.bz2
