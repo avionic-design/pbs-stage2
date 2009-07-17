@@ -93,7 +93,6 @@ d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextp
 fd8cd0bc3e94d7416e6af9eddfa909b0e64246e0d2bb41c00f4e02bd85c76bee  download/xproto-7.0.15.tar.bz2
 1280af98466cb4484a89858ede3347ba9d7785baeb80b11f2066142dc2317d97  download/libXext-1.0.5.tar.bz2
 eafff0157f2c7172214449d4b6b0c72328cad7026ecace226189b511791c5f75  download/libXfont-1.4.0.tar.bz2
-b5330b91b3131757103da2b3147e211e71214475f5d77640022ea9bb587f645b  download/dbus-glib-0.80.tar.gz
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
 2d9769a02c46cff73f56a076268192da1ce91c913e2e4e31c120be098f704c8c  download/uClibc-0.9.30.1.tar.bz2
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
@@ -183,3 +182,4 @@ d47c9799c18929cffbce5bfa48f35c89657d7f630c6da682f193928697c71ab5  download/hal-0
 3bfae3386345b0650a30e35f071f2c830425d64eaf6ed4b113a8b463cd5db1fe  download/udev-145.tar.bz2
 a6365fcb2b34439faa52164e1a018086c2b6818f8a189c487c79e09dc3c62722  download/util-linux-ng-2.16.tar.bz2
 07b6e2d3dde4beb06dc8310daec1c5c82d67022e3c9aec35f3783e63aad3209e  download/libxcb-1.4.tar.bz2
+ddfb062797341b5c5a22555ffe80138953cc61a67ba805647b2746f519bfbde1  download/dbus-glib-0.82.tar.gz
