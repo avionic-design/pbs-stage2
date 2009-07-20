@@ -14,6 +14,9 @@ conf-args += \
 	--with-ccopts='$(CFLAGS)' \
 	--with-linker='$(LD)' \
 	--with-ldopts='$(LDFLAGS)' \
+	--without-ncurses \
+	--disable-mount \
+	--disable-fsck \
 	--disable-libblkid \
 	--enable-libuuid
 
