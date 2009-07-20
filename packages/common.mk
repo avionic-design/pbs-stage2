@@ -39,3 +39,9 @@ set-args = $(foreach arg, $(1), $(arg)='$($(arg))')
 priv = sudo
 env  = env -i PATH=$(TOOLCHAIN_PATH):$(PATH)
 export priv env
+
+NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
+ifeq ($(NUM_CPU),)
+  NUM_CPU = 1
+endif
+export NUM_CPU
