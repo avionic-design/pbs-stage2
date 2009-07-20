@@ -75,7 +75,7 @@ build-args = \
 
 $(pkgtree)/.build:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args) all
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args) all
 	$(call cmd,stamp)
 
 install-args = \
