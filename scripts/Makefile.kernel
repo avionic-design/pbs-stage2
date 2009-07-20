@@ -87,7 +87,7 @@ quiet_cmd_build_kernel_image = BUILD   $(image)
 			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 					CROSS_COMPILE=$(CROSS_COMPILE) \
 					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-					$(image)
+					-j $(NUM_CPU) $(image)
 
 PHONY += build-$(image)
 build-$(image): $(objtree)/.config
@@ -98,7 +98,7 @@ quiet_cmd_build_kernel_modules = BUILD   modules
 			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
 					CROSS_COMPILE=$(CROSS_COMPILE) \
 					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
-					modules
+					-j $(NUM_CPU) modules
 
 PHONY += build-modules
 build-modules: $(objtree)/.config
