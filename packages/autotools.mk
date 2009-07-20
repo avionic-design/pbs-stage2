@@ -14,6 +14,7 @@ conf-args += \
 	--prefix=$(prefix) \
 	--mandir=$(prefix)/share/man \
 	--infodir=$(prefix)/share/info \
+	--localstatedir=/var \
 	--sysconfdir=/etc
 
 conf-vars += \
@@ -29,7 +30,7 @@ $(pkgtree)/.configure:
 
 $(pkgtree)/.build:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args)
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args += \
