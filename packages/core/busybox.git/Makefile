@@ -44,7 +44,7 @@ build-args = \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args)
+	cd $(BUSYBOX_TREE) && $(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
