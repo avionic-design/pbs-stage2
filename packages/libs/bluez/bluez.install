@@ -1,0 +1,9 @@
+/etc/alsa
+/etc/bluetooth
+/etc/dbus-1
+/etc/udev
+/usr/lib/alsa-lib
+/usr/lib/bluetooth
+/usr/lib/gstreamer-0.10
+/usr/lib/*.so.*
+/var/lib/bluetooth

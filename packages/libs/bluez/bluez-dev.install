@@ -1,0 +1,3 @@
+/usr/include/bluetooth
+/usr/lib/*.so
+/usr/lib/pkgconfig

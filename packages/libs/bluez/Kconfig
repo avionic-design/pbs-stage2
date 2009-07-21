@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_BLUEZ
+	bool "bluez"
+	select PACKAGE_LIBS_DBUS_GLIB
+	default n
