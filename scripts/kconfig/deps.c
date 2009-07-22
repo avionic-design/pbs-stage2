@@ -432,6 +432,9 @@ static int list_sort(struct list_head *head)
 	LIST_HEAD(sorted);
 	int ret = 0;
 
+	if (list_empty(head))
+		return 0;
+
 	pivot = list_entry(head->next, struct package, list);
 	list_del_init(&pivot->list);
 	list_add(&pivot->list, &sorted);
