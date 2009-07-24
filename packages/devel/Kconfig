@@ -14,14 +14,17 @@ choice
 config PACKAGE_DEVEL_UCLIBC
 	bool "uclibc: uClibc"
 	select VIRTUAL_DEVEL_LIBC
+	select VIRTUAL_PROVIDES
 
 config PACKAGE_DEVEL_GLIBC
 	bool "glibc: GNU libc"
 	select VIRTUAL_DEVEL_LIBC
+	select VIRTUAL_PROVIDES
 
 config PACKAGE_DEVEL_KLIBC
 	bool "klibc"
 	select VIRTUAL_DEVEL_LIBC
+	select VIRTUAL_PROVIDES
 
 endchoice
 
