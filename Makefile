@@ -15,10 +15,6 @@ ifdef O
   ifeq ("$(origin O)", "command line")
     KBUILD_OUTPUT := $(O)
   endif
-else
-  ifneq ($(filter toolchain, $(MAKECMDGOALS)),)
-    KBUILD_OUTPUT = $(CURDIR)/toolchains/$(target)
-  endif
 endif
 ifndef KBUILD_OUTPUT
   KBUILD_OUTPUT = $(CURDIR)
@@ -105,7 +101,7 @@ scripts_basic:
 scripts/basic/%: scripts_basic ;
 
 no-dot-config-targets := clean mrproper distclean
-no-dot-config-targets += initrd toolchain
+no-dot-config-targets += initrd
 
 config-targets	:= 0
 mixed-targets	:= 0
@@ -196,12 +192,10 @@ PHONY += initrd
 initrd:
 	$(Q)$(MAKE) $(initrd)=$(objtree)
 
-PHONY += toolchain
-toolchain:
-	$(if $(target),,$(error toolchain target not defined))
-	$(Q)$(MAKE) $(toolchain)=toolchains/$(target)
-
 clean-dirs := $(dirs) scripts/basic scripts/kconfig
+ifneq ($(CURDIR),$(srctree))
+clean-dirs += $(obj)
+endif
 clean-dirs := $(addprefix _clean_-,$(clean-dirs))
 
 PHONY += $(clean-dirs)
@@ -222,4 +216,3 @@ PHONY += FORCE
 FORCE:
 
 .PHONY: $(PHONY)
-
