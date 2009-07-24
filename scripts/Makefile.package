@@ -9,10 +9,9 @@ obj-y :=
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-package		:= $(patsubst packages/%,%,$(obj))
+pkgtree		:= $(objtree)/build/$(obj)
 pkgsrctree	:= $(srctree)/$(obj)
-pkgtree		:= $(objtree)/$(package)
-export pkgsrctree pkgtree
+export pkgtree pkgsrctree
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)

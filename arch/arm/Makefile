@@ -1,16 +1,18 @@
-TARGET := $(CONFIG_ARCH)-
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU  := $(shell echo $(CONFIG_CPU))
+OS   := $(shell echo $(CONFIG_OS))
+LIBC := $(shell echo $(CONFIG_LIBC))
+ABI  := $(shell echo $(CONFIG_ABI))
 
-ifneq ($(CONFIG_CPU),)
-  TARGET := $(TARGET)$(CONFIG_CPU)-
+ifneq ($(CPU),)
+  CPU := $(CPU)-
 endif
 
-TARGET := $(TARGET)$(CONFIG_OS)-
-TARGET := $(TARGET)$(CONFIG_LIBC)
-
-ifneq ($(CONFIG_ABI),)
-  TARGET := $(TARGET)$(CONFIG_ABI)
+ifeq ($(LIBC),glibc)
+  LIBC := gnu
 endif
 
+TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)
 export TARGET
 
 CPPFLAGS = --sysroot $(objtree)/rootfs

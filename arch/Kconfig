@@ -18,6 +18,10 @@ config ARCH_MIPS
 
 endchoice
 
+config OS
+	string
+	default "linux"
+
 if ARCH_X86
 source "arch/x86/Kconfig"
 endif
@@ -38,7 +42,4 @@ if ARCH_MIPS
 source "arch/mips/Kconfig"
 endif
 
-config CROSS_COMPILE
-	string "cross-compilation toolchain"
-	default ""
-
+source "toolchains/Kconfig"

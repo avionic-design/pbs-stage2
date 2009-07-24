@@ -166,7 +166,8 @@ endif
 
 dirs := \
 	packages \
-	platforms
+	platforms \
+	toolchains
 
 build-dirs := $(addprefix build-,$(dirs))
 uscan-dirs := $(addprefix uscan-,$(dirs))

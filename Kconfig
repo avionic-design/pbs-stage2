@@ -13,5 +13,11 @@ menu "Target Configuration"
 source "arch/Kconfig"
 endmenu
 
+config VIRTUAL_PROVIDES
+	bool
+	default y
+
+if !TOOLCHAIN
 source "packages/Kconfig"
 source "platforms/Kconfig"
+endif

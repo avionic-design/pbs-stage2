@@ -10,8 +10,11 @@ obj-y += libs/
 obj-y += multimedia/
 obj-y += net/
 obj-y += shells/
-obj-y += toolchain/
 obj-y += util/
 obj-y += web/
 obj-y += wm/
 obj-y += xorg/
+
+ifeq ($(CONFIG_TOOLCHAIN),y)
+  obj-y :=
+endif

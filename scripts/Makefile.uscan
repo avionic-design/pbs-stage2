@@ -43,7 +43,7 @@ $(uscan-dirs): uscan-%: %
 	$(Q)$(MAKE) $(uscan)=$*
 
 PHONY += $(uscan-pkgs)
-$(uscan-pkgs): uscan-%: %
+$(uscan-pkgs): uscan-%:
 	$(Q)$(MAKE) $(uscan)=$*
 
 uscan: $(uscan-dirs) $(uscan-pkgs)

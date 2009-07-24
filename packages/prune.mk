@@ -4,7 +4,7 @@ export prunefiles
 export prunedirs
 
 $(pkgtree)/.prune:
-	$(Q)$(MAKE) $(prune-pkg)=$(package)
+	$(Q)$(MAKE) $(prune-pkg)=$(obj)
 	$(call cmd,stamp)
 
 .PHONY: $(PHONY)

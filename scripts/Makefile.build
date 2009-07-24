@@ -14,6 +14,7 @@ ifeq ($(findstring package, $(MAKECMDGOALS)),)
   include arch/$(ARCH)/Makefile
 endif
 
+#-include include/config/auto.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
@@ -27,6 +28,8 @@ include $(kbuild-file)
 
 depends-file = $(objtree)/.depends
 packages-y = $(shell cat $(depends-file) | grep '^CONFIG_PACKAGE_' | xargs echo)
+platform-y = $(shell cat $(depends-file) | grep '^CONFIG_PLATFORM' | xargs echo)
+build-targets = $(packages-y)
 
 PHONY += $(packages-y)
 ifeq ($(obj),packages)
@@ -37,13 +40,15 @@ $(packages-y):
 	@rm .package
 endif
 
+ifneq ($(platform-y),)
+build-targets += platforms
+
 PHONY += platforms
 platforms:
 	@cat $(depends-file) | grep '^CONFIG_PLATFORM_' > .package
 	$(Q)$(MAKE) $(build)=$(obj) package
 	@rm .package
-
-__build: $(packages-y) platforms
+endif
 
 dirs := $(filter %/,$(obj-y))
 dirs := $(addprefix $(obj)/, $(dirs))
@@ -53,6 +58,8 @@ pkgs := $(addprefix $(obj)/, $(pkgs))
 
 build-dirs := $(addprefix build-,$(dirs))
 build-pkgs := $(addprefix build-,$(pkgs))
+
+build-targets += $(build-dirs)
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
@@ -64,6 +71,9 @@ $(build-pkgs): build-%:
 
 PHONY += package
 package: $(build-dirs) $(build-pkgs)
+	@:
+
+__build: $(build-targets)
 	@:
 
 PHONY += FORCE

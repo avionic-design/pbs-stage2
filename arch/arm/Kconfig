@@ -49,4 +49,3 @@ config ABI
 	string
 	default "eabi"
 endif
-

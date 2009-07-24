@@ -1,0 +1,28 @@
+config TOOLCHAIN
+	bool "build toolchain"
+	default n
+
+if TOOLCHAIN
+
+#
+# C runtime library
+#
+choice
+	prompt "C runtime library"
+
+config UCLIBC
+	bool "uclibc: uClibc"
+
+config GLIBC
+	bool "glibc: GNU libc"
+
+config KLIBC_KLIBC
+	bool "klibc"
+
+endchoice
+
+source "toolchains/packages/uclibc/Kconfig"
+source "toolchains/packages/glibc/Kconfig"
+source "toolchains/packages/klibc/Kconfig"
+
+endif
