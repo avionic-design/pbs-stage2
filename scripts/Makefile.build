@@ -73,6 +73,21 @@ PHONY += package
 package: $(build-dirs) $(build-pkgs)
 	@:
 
+list-dirs := $(addprefix list-,$(dirs))
+list-pkgs := $(addprefix list-,$(pkgs))
+
+PHONY += $(list-dirs)
+$(list-dirs): list-%:
+	$(Q)$(MAKE) $(build)=$* list
+
+PHONY += $(list-pkgs)
+$(list-pkgs): list-%:
+	$(Q)$(MAKE) $(package)=$* list
+
+PHONY += list
+list: $(list-dirs) $(list-pkgs)
+	@:
+
 __build: $(build-targets)
 	@:
 

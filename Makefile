@@ -167,6 +167,16 @@ dirs := \
 
 build-dirs := $(addprefix build-,$(dirs))
 uscan-dirs := $(addprefix uscan-,$(dirs))
+list-dirs  := $(addprefix list-,$(dirs))
+
+PHONY += $(build-dirs)
+#$(build-dirs): quiet = silent_
+$(build-dirs): build-%: %
+	$(Q)$(MAKE) $(build)=$*
+
+PHONY += build
+build: $(build-dirs)
+	@:
 
 PHONY += $(uscan-dirs)
 $(uscan-dirs): uscan-%: %
@@ -176,13 +186,12 @@ PHONY += uscan
 uscan: $(uscan-dirs)
 	@:
 
-PHONY += $(build-dirs)
-#$(build-dirs): quiet = silent_
-$(build-dirs): build-%: %
-	$(Q)$(MAKE) $(build)=$*
+PHONY += $(list-dirs)
+$(list-dirs): list-%: %
+	$(Q)$(MAKE) $(build)=$* list
 
-PHONY += build
-build: $(build-dirs)
+PHONY += list
+list: $(list-dirs)
 	@:
 
 _all: build
