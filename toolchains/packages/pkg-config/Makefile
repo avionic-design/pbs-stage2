@@ -28,7 +28,8 @@ $(pkgtree)/.configure:
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-build-args =
+build-args = \
+	-j $(NUM_CPU)
 
 $(pkgtree)/.build:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \

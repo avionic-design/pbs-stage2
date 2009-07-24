@@ -37,13 +37,16 @@ else
 endif
 
 $(pkgtree)/.configure:
-	cd $(pkgbuildtree) && $(env) ./configure $(conf-args)
+	cd $(pkgbuildtree) && \
+		$(env) ./configure $(conf-args)
 	$(call cmd,stamp)
 
-build-args =
+build-args = \
+	-j $(NUM_CPU)
 
 $(pkgtree)/.build:
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary:
@@ -56,5 +59,6 @@ ifneq ($(SYSROOT),)
 endif
 
 $(pkgtree)/.install:
-	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
+	cd $(pkgbuildtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

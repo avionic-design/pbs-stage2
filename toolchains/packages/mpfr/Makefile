@@ -19,15 +19,14 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--with-gmp=$(SYSROOT)$(prefix)
 
-conf-vars =
-
 $(pkgtree)/.configure:
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-build-args =
+build-args = \
+	-j $(NUM_CPU)
 
 $(pkgtree)/.build:
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
