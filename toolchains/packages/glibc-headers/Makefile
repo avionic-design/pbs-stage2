@@ -56,7 +56,8 @@ $(pkgtree)/.binary:
 
 ifneq ($(SYSROOT),)
   install-args = \
-	install_root=$(SYSROOT)
+	install_root=$(SYSROOT) \
+	-j $(NUM_CPU)
 endif
 
 $(pkgtree)/.install:
