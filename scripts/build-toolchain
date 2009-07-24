@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkglist="make target=\$toolchain mode=list toolchain | sort -u"
+pkglist="make O=toolchains/\$toolchain list | sort -u"
 version="cut -d: -f2 | cut -d' ' -f2"
 tcroot="`pwd`/toolchains"
 date="date +%X"
@@ -97,7 +97,7 @@ fi
 
 if [ "x$command" = "xclean" ]; then
 	log_begin_msg -n "[`eval $date`] Removing $toolchain toolchain ... "
-	make target=$toolchain mode=clean toolchain > /dev/null 2>&1
+	make O=toolchains/$toolchain clean > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
 else
@@ -107,7 +107,7 @@ else
 
 	log_begin_msg -n "[`eval $date`]   Building toolchain ... "
 	CROSS_COMPILE="${arch}-${os}-gnu${abi}-" \
-		time make target=$toolchain toolchain > logs/$toolchain.log 2>&1
+		time make O=toolchains/$toolchain > logs/$toolchain.log 2>&1
 	ret=$?
 	log_end_msg $ret
 
@@ -119,13 +119,7 @@ else
 	log_end_msg $ret
 
 	log_begin_msg -n "[`eval $date`]   Cleaning up toolchain ... "
-	make target=$toolchain mode=clean toolchain > /dev/null 2>&1
-	ret=$?
-	log_end_msg $ret
-
-	log_begin_msg -n "[`eval $date`]   Installing toolchain ... "
-	tar xjf "$tcroot/archive/${toolchain}_${version}.tar.bz2" \
-		-C "$tcroot/${toolchain}" > /dev/null 2>&1
+	make O=toolchains/$toolchain clean > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
 

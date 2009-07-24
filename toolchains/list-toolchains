@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-find toolchains -mindepth 2 -maxdepth 2 -path '*/Makefile' | sort | (
+find toolchains -mindepth 2 -maxdepth 2 -path '*/.config' | sort | (
 	while read file; do
 		dir=`dirname $file`
 		toolchain=`basename $dir`
