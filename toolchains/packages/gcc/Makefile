@@ -65,6 +65,7 @@ $(pkgtree)/.configure:
 	$(call cmd,stamp)
 
 build-args = \
+	-j $(NUM_CPU) \
 	MAKEFLAGS=
 
 $(pkgtree)/.build:
