@@ -16,5 +16,5 @@ prefix	= /usr
 variant	= sysroot
 export SYSROOT prefix variant
 
-clean-dirs  := include scripts
-clean-files := .depends
+clean-dirs  := build include scripts
+clean-files := .depends kernel-release kernel-version
