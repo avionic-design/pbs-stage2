@@ -181,6 +181,6 @@ b772e4bdf1b28dd23cdb4c4d7f1d219ddb748226d0207e57c75992bf0100182d  download/glib-
 8d6066d5b3fee6edc9be77c0728cf2ceda2a04eed111da3a63f9e4b07cdedd0e  download/gtk+-2.17.5.tar.bz2
 fee7bb23ac12c85abb2da8bad58480f7420e97502eb2d550d693e26472373ac3  download/bluez-4.46.tar.bz2
 aa0295472854f2f9691db7c6892921452521b4d5def15223136f4733309db7c8  download/gmp-4.3.1.tar.bz2
-7b6b8537ad8b68ec7d4aa043faddfd69044953956986f6927c4cd0d1a79da8c8  download/linux-2.6.30.2.tar.bz2
 4fbd2a5e0212e9bb30a2ea8d3901d8a12c0e3edc9b29f3a4859298145152fc49  download/gcc-core-4.4.1.tar.bz2
 a41c3479ceadee24ec31c912db4b6008b3fae16361133b042011e0b9ef73cfdd  download/gcc-g++-4.4.1.tar.bz2
+b628c14683b9ab36f28edc69bfcbf1e463ee1af909899ad4f49cf052db1e80d2  download/linux-2.6.30.3.tar.bz2
