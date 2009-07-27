@@ -10,6 +10,7 @@ ifeq ($(findstring package, $(MAKECMDGOALS)),)
 
   # get rid of quotes
   ARCH := $(shell echo $(CONFIG_ARCH))
+  ARCH := $(subst bfin,blackfin,$(ARCH))
 
   include arch/$(ARCH)/Makefile
 endif
