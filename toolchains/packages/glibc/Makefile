@@ -13,6 +13,8 @@ include toolchains/packages/common.mk
 CROSS_COMPILE	:= $(SYSROOT)$(prefix)/bin/$(TARGET)-
 prefix		:= $(subst $(CURDIR),,$(prefix))
 SYSROOT		:= $(CURDIR)$(prefix)/$(TARGET)/sys-root
+ARCH		:= $(shell echo $(CONFIG_ARCH))
+CPU		:= $(shell echo $(CONFIG_CPU))
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports

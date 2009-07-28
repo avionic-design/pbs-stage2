@@ -14,6 +14,9 @@ SYSROOT		:= $(CURDIR)
 exec-prefix	 = $(prefix)/$(TARGET)
 sysroot		 = $(exec-prefix)/sys-root
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU  := $(shell echo $(CONFIG_CPU))
+ABI  := $(shell echo $(CONFIG_ABI))
 ARCH := $(subst bfin,blackfin,$(ARCH))
 
 ifneq ($(ABI),)
@@ -39,17 +42,20 @@ conf-args = \
 
 $(pkgtree)/.configure:
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	PREFIX=$(SYSROOT)$(sysroot) \
 	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=/usr/ \
+	-j $(NUM_CPU)
 
 $(pkgtree)/.build:
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.binary:
@@ -63,6 +69,7 @@ install-args = \
 	DEVEL_PREFIX=/usr/
 
 $(pkgtree)/.install:
-	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install
+	cd $(pkgbuildtree) && \
+		$(env) $(priv) $(MAKE) $(install-args) install
 	mv $(SYSROOT)$(sysroot)/usr/lib/*crt*.o $(SYSROOT)$(exec-prefix)/lib
 	$(call cmd,stamp)

@@ -9,6 +9,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include toolchains/packages/common.mk
 exec-prefix = $(prefix)/$(TARGET)
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU  := $(shell echo $(CONFIG_CPU))
+ABI  := $(shell echo $(CONFIG_ABI))
 ARCH := $(subst bfin,blackfin,$(ARCH))
 
 ifneq ($(ABI),)
