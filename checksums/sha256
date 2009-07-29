@@ -121,7 +121,6 @@ f83c00d6ed8f4c08effa9dcc2d7f1ff6f5a753f2b9fe1babda16618c2afa18f0  download/libXm
 64701ae67ce5b0797307b75d8255bec3a0d371d0c50715ea618f5a68bcc92baa  download/libXpm-3.5.7.tar.bz2
 2621e7362713b588d1ec035f969194f160896b77f6455a26fd81dcc6e29b9877  download/xterm-243.tgz
 55a36168306089009d054ccdd9d013041bfc3ab26be7033d107821f1c4949a49  download/libiconv-1.13.1.tar.gz
-d641d1cc3ec6d9a5dd5ed89c4b0982eb9be30be33b639a5fda22f3221dab6ee4  download/fontconfig-2.7.0.tar.gz
 3c51d3de5dc4596e01a6675acd3c86c2c99c00f02e8fad5493758a29fe451c90  download/cairo-1.8.8.tar.gz
 adbd11f182ec63939d6364cbb59e86991a48582e7d3641cda80529b40b399559  download/pango-1.24.4.tar.bz2
 cbcfbb3df2dc76855c99c1cdff04a257ec5270fa62e1d21b0d057b08d88c0fd4  download/ConsoleKit-0.3.0.tar.bz2
@@ -184,3 +183,4 @@ a41c3479ceadee24ec31c912db4b6008b3fae16361133b042011e0b9ef73cfdd  download/gcc-g
 b628c14683b9ab36f28edc69bfcbf1e463ee1af909899ad4f49cf052db1e80d2  download/linux-2.6.30.3.tar.bz2
 ff2edc3203a32d6e0d107978717997ff46d4a0bbc27618867933444ed4d9d1d6  download/pixman-0.15.18.tar.bz2
 fbded3505438c9cd3719636bff0535188913b3a2496feae06f70dd69302e9709  download/xorg-server-1.6.2.901.tar.bz2
+08502404aa451ddc5f9ca4bf45cc3b3f1e86e3f0779ff273c72e1c48e0c25b94  download/fontconfig-2.7.1.tar.gz
