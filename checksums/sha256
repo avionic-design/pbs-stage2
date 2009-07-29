@@ -145,7 +145,6 @@ d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/encha
 4eb4fc4a3f47edbc18c9dc09d54fd2189954ebaa0e521b0ab97e21087d8c9855  download/webkit-1.1.10.tar.gz
 db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-bitstream-vera-1.10.tar.bz2
 ce7688258af34c14af421bcfb306d4310245b727d2417ac968b7f6b2facfde8c  download/libXft-2.1.13.tar.bz2
-893e92ad2ccd1bcd646bba9540dd9dfc53ccc95f8dc5fd69444afe54fae8c261  download/xorg-server-1.6.2.tar.bz2
 cc6714454b88b3dd8086f99b42bbca77cd76bbeaef17a81070f22a21d75a168e  download/xkbcomp-1.1.0.tar.bz2
 db01e218e8d09540459c8f7c5698c159cd84c3d5b8caa9763bf0e5a35f6edf00  download/libmatchbox-1.9.tar.bz2
 81a23a4af797cf350759fd5ac738797015a66dd5dba2f3d9f3c6908506c1ceff  download/matchbox-window-manager-1.2.tar.bz2
@@ -184,3 +183,4 @@ aa0295472854f2f9691db7c6892921452521b4d5def15223136f4733309db7c8  download/gmp-4
 a41c3479ceadee24ec31c912db4b6008b3fae16361133b042011e0b9ef73cfdd  download/gcc-g++-4.4.1.tar.bz2
 b628c14683b9ab36f28edc69bfcbf1e463ee1af909899ad4f49cf052db1e80d2  download/linux-2.6.30.3.tar.bz2
 ff2edc3203a32d6e0d107978717997ff46d4a0bbc27618867933444ed4d9d1d6  download/pixman-0.15.18.tar.bz2
+fbded3505438c9cd3719636bff0535188913b3a2496feae06f70dd69302e9709  download/xorg-server-1.6.2.901.tar.bz2
