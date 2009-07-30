@@ -1,4 +1,4 @@
 config PACKAGE_WEB_RDESKTOP
 	bool "rdesktop"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_LIB_XRANDR
 	default n
