@@ -22,6 +22,7 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/ciptool \
 	$(prefix)/bin/hcitool \
+	$(prefix)/bin/hidd \
 	$(prefix)/bin/l2ping \
 	$(prefix)/bin/rfcomm \
 	$(prefix)/bin/sdptool \
