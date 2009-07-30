@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XRANDR
+	bool "xrandr"
+	select PACKAGE_XORG_PROTO_RANDR
+	default n
