@@ -11,6 +11,7 @@ pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 BUSYBOX_TREE = $(srctree)/../busybox.git
 ARCH := $(shell echo $(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
+LIBC := $(shell echo $(CONFIG_LIBC))
 DESTDIR := $(pkgtree)/install
 
 DEF_CONFIG = minimal
@@ -44,7 +45,7 @@ build-args = \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(BUSYBOX_TREE) && $(env) $(MAKE) -j $(NUM_CPU) $(build-args)
+	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
@@ -64,15 +65,15 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 $(pkgtree)/.binary: $(pkgtree)/.do-install
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
 	$(priv) mkdir -p $(ROOTFS)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)

@@ -16,6 +16,7 @@ include packages/common.mk
 CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
 ARCH := $(shell echo $(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
+LIBC := $(shell echo $(CONFIG_LIBC))
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -39,29 +40,23 @@ conf-vars += \
 	libc_cv_c_cleanup=yes
 
 ifeq ($(ARCH),arm)
-  ifeq ($(CPU),xscale)
-	conf-vars += \
-		ac_cv_sizeof_long_double=8
-  endif
+  conf-vars += ac_cv_sizeof_long_double=8
 endif
 
 ifeq ($(ARCH),x86)
+  conf-vars += ac_cv_sizeof_long_double=8
+
   ifeq ($(CPU),i686)
-	conf-vars += \
-		ac_cv_sizeof_long_double=8 \
-		CFLAGS='-march=i686 -O2 -g'
+    conf-vars += CFLAGS='-march=i686 -O2 -g'
   endif
 
   ifeq ($(CPU),i786)
-	conf-vars += \
-		ac_cv_sizeof_long_double=8 \
-		CFLAGS='-march=prescott -O2 -g'
+    conf-vars += CFLAGS='-march=prescott -O2 -g'
   endif
 endif
 
 ifeq ($(ARCH),x86_64)
-	conf-vars += \
-		ac_cv_sizeof_long_double=16
+  conf-vars += ac_cv_sizeof_long_double=16
 endif
 
 $(pkgtree)/.configure:
@@ -141,14 +136,14 @@ include packages/cleanup.mk
 $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)

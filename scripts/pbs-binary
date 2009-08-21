@@ -22,6 +22,11 @@ for arg in $@; do
 			shift
 			;;
 
+		-l | --libc)
+			prev=libc
+			shift
+			;;
+
 		-v | --version)
 			prev=version
 			shift
@@ -59,7 +64,7 @@ if [ ! -f "$base/Makefile" ]; then
 	exit 1
 fi
 
-binary="${base}/binary/${arch}/${pkg}"
+binary="${base}/binary/${arch}/${libc}/${pkg}"
 srcdir="${binary}/install"
 
 for package in $packages; do
