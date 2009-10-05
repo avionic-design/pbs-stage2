@@ -38,6 +38,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
 	$(call cmd,stamp)
 
+$(pkgtree)/.binary: VERSION = $(shell cat $(pkgtree)/.release)
 $(pkgtree)/.binary: $(pkgtree)/.do-install
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
@@ -47,6 +48,7 @@ $(pkgtree)/.binary: $(pkgtree)/.do-install
 			-a $(ARCH) -l $(LIBC) -v $(VERSION)
 	$(call cmd,stamp)
 
+$(pkgtree)/.install: VERSION = $(shell cat $(pkgtree)/.release)
 $(pkgtree)/.install: $(pkgtree)/.binary
 	$(priv) mkdir -p $(ROOTFS)
 	cd $(pkgsrctree) && \

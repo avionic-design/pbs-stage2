@@ -72,7 +72,10 @@ quiet_cmd_gen_kernel_release = GEN     $@
 $(KBUILD_OUTPUT)/include/config/kernel.release:
 	$(call cmd,prepare)
 
-$(objtree)/kernel-release: $(KBUILD_OUTPUT)/include/config/kernel.release
+$(pkgtree)/.release: $(KBUILD_OUTPUT)/include/config/kernel.release
+	$(call cmd,symlink)
+
+$(objtree)/kernel-release: $(pkgtree)/.release
 ifneq ($(CROSS_COMPILE),)
 	$(call cmd,symlink)
 endif
