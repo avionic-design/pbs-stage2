@@ -10,6 +10,9 @@ DESCRIPTION = Linux PCI Utilities
 
 include packages/common.mk
 
+ARCH := $(shell echo $(CONFIG_ARCH))
+LIBC := $(shell echo $(CONFIG_LIBC))
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
@@ -28,15 +31,31 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
 	PREFIX=$(prefix) \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-$(pkgtree)/.install:
+$(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
+
+stripfiles =
+prunefiles =
+
+include packages/cleanup.mk
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -l $(LIBC) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
