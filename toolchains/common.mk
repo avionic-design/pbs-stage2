@@ -9,7 +9,7 @@ BINUTILS_SNAPSHOT	= 2.19.51.0.9
 # C library versions
 newlib_VERSION		= 1.16.0
 uclibc_VERSION		= 0.9.30.1
-glibc_VERSION		= 2.9
+glibc_VERSION		= 2.10.1
 
 SYSROOT	= $(CURDIR)
 prefix	= /usr
