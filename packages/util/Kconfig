@@ -5,4 +5,10 @@ config PACKAGE_UTIL_ABOX
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+config PACKAGE_UTIL_HTOP
+	bool "htop"
+	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_NCURSES
+	default n
+
 endmenu
