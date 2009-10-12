@@ -1,0 +1,15 @@
+--- psb-kernel-source-4.41.1/drm_os_linux.h	2009-04-15 20:25:01.000000000 -0700
++++ psb-kernel-source-4.41.1/drm_os_linux.h.new	2009-08-24 17:08:44.896703277 -0700
+@@ -49,12 +49,6 @@
+ 
+ /** IRQ handler arguments and return type and values */
+ #define DRM_IRQ_ARGS		int irq, void *arg
+-/** backwards compatibility with old irq return values */
+-#ifndef IRQ_HANDLED
+-typedef void irqreturn_t;
+-#define IRQ_HANDLED		/* nothing */
+-#define IRQ_NONE		/* nothing */
+-#endif
+ 
+ /** AGP types */
+ #if __OS_HAS_AGP

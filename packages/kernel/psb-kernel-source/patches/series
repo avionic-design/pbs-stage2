@@ -1,0 +1,7 @@
+psb-kmod-4.34-current_euid.patch
+psb-kmod-4.41.1_irqreturn.patch
+psb-kmod-4.41.1_busid.patch
+psb-kernel-source-4.41.1-agp_memory.patch
+psb-kernel-source-4.41.1-drmpsb.patch
+psb-kernel-source-4.41.1-i2c-intelfb.patch
+psb-kernel-source-4.41.1-linux-2.6.32.patch

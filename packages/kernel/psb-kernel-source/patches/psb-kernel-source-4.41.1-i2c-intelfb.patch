@@ -1,0 +1,13 @@
+diff -ru psb-kernel-source-4.41.1/psb_i2c.c psb-kernel-source-4.41.2/psb_i2c.c
+--- psb-kernel-source-4.41.1/psb_i2c.c  2009-04-16 05:25:01.000000000 +0200
++++ psb-kernel-source-4.41.2/psb_i2c.c  2009-08-11 20:18:30.000000000 +0200
+@@ -36,6 +36,8 @@
+ #include "intel_drv.h"
+ #include "psb_drv.h"
+
++#define I2C_HW_B_INTELFB 0x010021; /* intel framebuffer driver */
++
+ /*
+  * Intel GPIO access functions
+  */
+

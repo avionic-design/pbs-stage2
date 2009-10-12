@@ -1,0 +1,13 @@
+diff -p -up build/drm_fops.c.current_euid build/drm_fops.c
+--- build/drm_fops.c.current_euid	2009-05-31 03:22:18.000000000 -0400
++++ build/drm_fops.c	2009-05-31 03:32:00.000000000 -0400
+@@ -252,7 +252,7 @@ static int drm_open_helper(struct inode 
+ 	memset(priv, 0, sizeof(*priv));
+ 	filp->private_data = priv;
+ 	priv->filp = filp;
+-	priv->uid = current->euid;
++	priv->uid = current_euid();
+ 	priv->pid = current->pid;
+ 	priv->minor = minor;
+ 	priv->head = drm_heads[minor];
+

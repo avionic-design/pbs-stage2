@@ -1,0 +1,44 @@
+diff -ru psb-kernel-source-4.41.1/drm_agpsupport.c psb-kernel-source-4.41.2/drm_agpsupport.c
+--- psb-kernel-source-4.41.1/drm_agpsupport.c	2009-04-16 05:25:01.000000000 +0200
++++ psb-kernel-source-4.41.2/drm_agpsupport.c	2009-08-11 20:18:30.000000000 +0200
+@@ -524,7 +524,7 @@
+ 	DRM_DEBUG("Current page count is %ld\n", (long) mem->page_count);
+ 	mem->page_count = 0;
+ 	for (cur_page = pages; cur_page < last_page; ++cur_page)
+-		mem->memory[mem->page_count++] = phys_to_gart(page_to_phys(*cur_page));
++		mem->pages[mem->page_count++] = phys_to_gart(page_to_phys(*cur_page));
+ 	agp_be->mem = mem;
+ 	return 0;
+ }
+diff -ru psb-kernel-source-4.41.1/drm_memory.c psb-kernel-source-4.41.2/drm_memory.c
+--- psb-kernel-source-4.41.1/drm_memory.c	2009-04-16 05:25:01.000000000 +0200
++++ psb-kernel-source-4.41.2/drm_memory.c	2009-08-11 20:18:30.000000000 +0200
+@@ -264,7 +264,7 @@
+ 		return NULL;
+ 
+ 	phys_addr_map =
+-	    agpmem->memory->memory + (offset - agpmem->bound) / PAGE_SIZE;
++	    agpmem->memory->pages + (offset - agpmem->bound) / PAGE_SIZE;
+ 	for (i = 0; i < num_pages; ++i)
+ 		page_map[i] = pfn_to_page(phys_addr_map[i] >> PAGE_SHIFT);
+ 	addr = vmap(page_map, num_pages, VM_IOREMAP, PAGE_AGP);
+diff -ru psb-kernel-source-4.41.1/drm_vm.c psb-kernel-source-4.41.2/drm_vm.c
+--- psb-kernel-source-4.41.1/drm_vm.c	2009-04-16 05:25:01.000000000 +0200
++++ psb-kernel-source-4.41.2/drm_vm.c	2009-08-11 20:18:30.000000000 +0200
+@@ -145,13 +145,13 @@
+ 		 * Get the page, inc the use count, and return it
+ 		 */
+ 		offset = (baddr - agpmem->bound) >> PAGE_SHIFT;
+-		page = virt_to_page(__va(agpmem->memory->memory[offset]));
++		page = virt_to_page(__va(agpmem->memory->pages[offset]));
+ 		get_page(page);
+ 		vmf->page = page;
+ 
+ 		DRM_DEBUG
+ 		    ("baddr = 0x%lx page = 0x%p, offset = 0x%lx, count=%d\n",
+-		     baddr, __va(agpmem->memory->memory[offset]), offset,
++		     baddr, __va(agpmem->memory->pages[offset]), offset,
+ 		     page_count(page));
+ 		return 0;
+ 	}
+
