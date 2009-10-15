@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 145
+VERSION = 146
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -56,9 +56,11 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-prunefiles =
+prunefiles = \
+	/lib/libudev.la
+
 stripfiles = \
-	/lib/libudev.so.0.4.2 \
+	/lib/libudev.so.0.5.0 \
 	/lib/udev/ata_id \
 	/lib/udev/cdrom_id \
 	/lib/udev/collect \
