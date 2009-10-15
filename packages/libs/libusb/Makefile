@@ -9,7 +9,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/common.mk
 
 ARCH := $(shell echo $(CONFIG_ARCH))
-LIBC := $(Shell echo $(CONFIG_LIBC))
+LIBC := $(shell echo $(CONFIG_LIBC))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
