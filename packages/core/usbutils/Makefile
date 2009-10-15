@@ -1,5 +1,5 @@
 PACKAGE = usbutils
-VERSION = 0.82
+VERSION = 0.86
 
 LOCATION = http://mesh.dl.sourceforge.net/sourceforge/linux-usb
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -9,6 +9,9 @@ DESCRIPTION = Linux USB utilities
 ##############################################################################
 
 include packages/common.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
+LIBC := $(shell echo $(CONFIG_LIBC))
 
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
@@ -43,14 +46,10 @@ $(pkgtree)/.build:
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
-	DESTDIR=$(ROOTFS)
+	DESTDIR=$(DESTDIR)
 
-$(pkgtree)/.do-install: $(pkgtree)/.binary
+$(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
@@ -61,5 +60,17 @@ stripfiles = \
 
 include packages/cleanup.mk
 
-$(pkgtree)/.install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -l $(LIBC) -v $(VERSION)
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
