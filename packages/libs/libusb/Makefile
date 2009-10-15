@@ -9,6 +9,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/common.mk
 
 ARCH := $(shell echo $(CONFIG_ARCH))
+LIBC := $(Shell echo $(CONFIG_LIBC))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -60,14 +61,14 @@ include packages/cleanup.mk
 $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
+			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
 	$(call cmd,stamp)
