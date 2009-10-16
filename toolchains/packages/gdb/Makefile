@@ -1,5 +1,5 @@
 PACKAGE = gdb
-VERSION = 6.8
+VERSION = 7.0
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

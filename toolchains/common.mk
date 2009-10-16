@@ -1,7 +1,7 @@
 # release versions
-LINUX_VERSION		= 2.6.31
+LINUX_VERSION		= 2.6.31.4
 BINUTILS_VERSION	= 2.19.1
-GCC_VERSION		= 4.4.1
+GCC_VERSION		= 4.4.2
 
 # snapshot versions
 BINUTILS_SNAPSHOT	= 2.19.51.0.9
