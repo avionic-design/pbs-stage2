@@ -97,7 +97,7 @@ fi
 
 if [ "x$command" = "xclean" ]; then
 	log_begin_msg -n "[`eval $date`] Removing $toolchain toolchain ... "
-	make O=toolchains/$toolchain clean > /dev/null 2>&1
+	make O=toolchains/$toolchain distclean > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
 else

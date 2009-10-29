@@ -215,8 +215,24 @@ PHONY += clean
 clean: $(clean-dirs)
 	@:
 
+mrproper-dirs := $(patsubst _clean_-%,_mrproper_-%,$(clean-dirs))
+
+PHONY += $(mrproper-dirs)
+$(mrproper-dirs): _mrproper_-%:%
+	$(Q)$(MAKE) $(clean)=$* mrproper
+
 PHONY += mrproper
-mrproper: clean
+mrproper: clean $(mrproper-dirs)
+	@:
+
+distclean-dirs := $(patsubst _clean_-%,_distclean_-%,$(clean-dirs))
+
+PHONY += $(distclean-dirs)
+$(distclean-dirs): _distclean_-%:%
+	$(Q)$(MAKE) $(clean)=$* distclean
+
+PHONY += distclean
+distclean: clean $(distclean-dirs)
 	@:
 
 endif # skip-makefile

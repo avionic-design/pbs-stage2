@@ -79,6 +79,49 @@ ifneq ($(strip $(clean-rule)),)
 endif
 	@:
 
+quiet_cmd_mrproper    = CLEAN   $(obj)
+      cmd_mrproper    = rm -f $(__mrproper-files)
+quiet_cmd_mrproperdir = CLEAN   $(__mrproper-dirs)
+      cmd_mrproperdir = rm -rf $(__mrproper-dirs)
+
+__mrproper-files := $(wildcard							\
+                    $(addprefix $(obj)/, $(filter-out /%, $(__mrproper-files)))	\
+                    $(filter /%, $(__mrproper-files)))
+__mrproper-dirs  := $(wildcard							\
+                    $(addprefix $(obj)/, $(filter-out /%, $(mrproper-dirs)))	\
+                    $(filter /%, $(mrproper-dirs)))
+
+PHONY += mrproper
+mrproper:
+ifneq ($(strip $(__mrproper-files)),)
+	$(call cmd,mrproper)
+endif
+ifneq ($(strip $(__mrproper-dirs)),)
+	$(call cmd,mrproperdir)
+endif
+	@:
+
+quiet_cmd_distclean    = CLEAN   $(obj)
+      cmd_distclean    = rm -f $(__distclean-files)
+quiet_cmd_distcleandir = CLEAN   $(__distclean-dirs)
+      cmd_distcleandir = rm -rf $(__distclean-dirs)
+
+__distclean-files := $(wildcard							\
+                     $(addprefix $(obj)/, $(filter-out /%, $(distclean-files)))	\
+                     $(filter /%, $(distclean-files)))
+__distclean-dirs  := $(wildcard							\
+                     $(addprefix $(obj)/, $(filter-out /%, $(distclean-dirs)))	\
+                     $(filter /%, $(distclean-dirs)))
+
+PHONY += distclean
+distclean:
+ifneq ($(strip $(__distclean-files)),)
+	$(call cmd,distclean)
+endif
+ifneq ($(strip $(__distclean-dirs)),)
+	$(call cmd,distcleandir)
+endif
+	@:
 
 # ===========================================================================
 # Generic stuff
