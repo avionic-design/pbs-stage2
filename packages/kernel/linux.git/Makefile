@@ -1,7 +1,7 @@
 PACKAGE = linux-2.6.git
 VERSION = 000
 
-KERNELSRC ?= $(srctree)/../linux-2.6.git
+KERNELSRC ?= $(srctree)/../kernel/linux-2.6.git
 export KERNELSRC
 
 DESCRIPTION = Linux kernel
