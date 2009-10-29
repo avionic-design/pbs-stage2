@@ -1,1 +1,2 @@
+detect-cross-compiler.patch -p1
 ltmain-sysroot.patch -p1

@@ -156,7 +156,6 @@ d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
 cf750821040102d2c9fbfed56472a86fd0d8c24ada37901c41867c88438a776d  download/gstreamer-0.10.23.tar.bz2
 009115b0fc888dfe28903fecfe806707c544ccad6554ebabdeb3a1d88ec1e9d1  download/liboil-0.3.16.tar.gz
-15f8d0eef1da10c62136107e7b585bc8beb9c9e9b7ad177654097f8c15e57a63  download/alsa-lib-1.0.20.tar.bz2
 07f08286b3860f60d1794cc0de4407a53adcd4b6f065531d6dcef02b0c56a0cf  download/alsa-utils-1.0.20.tar.bz2
 1c11d98eb9a1b1bc54becf465e74c2aa4019bb57a31dd70686269af6a9b9e93b  download/gst-plugins-base-0.10.23.tar.bz2
 968a31c16a6c4bbbdb603cbaa3d60d6d19bc8ae30c0ed55d7f8c2e254413e4c8  download/dbus-1.2.16.tar.gz
@@ -187,3 +186,4 @@ d5f354fb02663ec3f07d31588f072b9418e9ed798e173d17b90ae295d6d88f0d  download/gcc-c
 4186baa85447c7897670c3f62eea56108b4a865f43ac6e7c90a06cd2ed1b822a  download/gcc-g++-4.4.2.tar.bz2
 c750c695c8029da60688fc6584207fd1ea741a6b9e79e4ad03715bfbc2113ecd  download/gdb-7.0.tar.bz2
 e1df09f0aa3b50154ef93bfefe86d65d01c22cfb44d73299ad95e772133a75b0  download/binutils-2.20.tar.bz2
+a6ce09afadc5428b09667cef32f7eba4ce0ea45aca27819edbe188e076d70074  download/alsa-lib-1.0.21a.tar.bz2
