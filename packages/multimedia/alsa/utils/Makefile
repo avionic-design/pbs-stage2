@@ -1,5 +1,5 @@
 PACKAGE = alsa-utils
-VERSION = 1.0.20
+VERSION = 1.0.21
 
 LOCATION = ftp://ftp.alsa-project.org/pub/utils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-vars += \
-	ac_cv_prog_ncurses5_config=$(srctree)/support/ncurses5-config
+	ac_cv_prog_ncursesw5_config=no \
+	ac_cv_prog_ncurses5_config=no
 
 stripfiles = \
 	$(prefix)/bin/aconnect \

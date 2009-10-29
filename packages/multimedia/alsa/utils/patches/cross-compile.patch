@@ -1,0 +1,23 @@
+diff --git a/alsamixer/Makefile.am b/alsamixer/Makefile.am
+index 1de47c6..40593f1 100644
+--- a/alsamixer/Makefile.am
++++ b/alsamixer/Makefile.am
+@@ -1,4 +1,5 @@
+ AM_CFLAGS = @CURSES_CFLAGS@ -DCURSESINC="@CURSESINC@"
++INCLUDES = -I$(top_srcdir)/include
+ LDADD = @CURSESLIB@
+ 
+ bin_PROGRAMS = alsamixer
+diff --git a/alsamixer/Makefile.in b/alsamixer/Makefile.in
+index 8455506..f91df44 100644
+--- a/alsamixer/Makefile.in
++++ b/alsamixer/Makefile.in
+@@ -63,7 +63,7 @@ am_alsamixer_OBJECTS = card_select.$(OBJEXT) cli.$(OBJEXT) \
+ alsamixer_OBJECTS = $(am_alsamixer_OBJECTS)
+ alsamixer_LDADD = $(LDADD)
+ alsamixer_DEPENDENCIES =
+-DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/include
++DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/include -I$(top_srcdir)/include
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
