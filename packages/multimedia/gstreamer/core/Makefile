@@ -1,5 +1,5 @@
 PACKAGE = gstreamer
-VERSION = 0.10.23
+VERSION = 0.10.25
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -11,12 +11,13 @@ conf-args += \
 
 plugin = $(prefix)/lib/gstreamer-0.10
 versuf = -0.10
-sover  = 0.20.0
+sover  = 0.22.0
 
 prunefiles = \
 	$(plugin)/libgstcoreelements.la \
 	$(plugin)/libgstcoreindexers.la \
 	$(prefix)/lib/libgstbase$(versuf).la \
+	$(prefix)/lib/libgstcheck$(versuf).la \
 	$(prefix)/lib/libgstcontroller$(versuf).la \
 	$(prefix)/lib/libgstdataprotocol$(versuf).la \
 	$(prefix)/lib/libgstnet$(versuf).la \
@@ -37,6 +38,7 @@ stripfiles = \
 	$(plugin)/libgstcoreelements.so \
 	$(plugin)/libgstcoreindexers.so \
 	$(prefix)/lib/libgstbase$(versuf).so.$(sover) \
+	$(prefix)/lib/libgstcheck$(versuf).so.$(sover) \
 	$(prefix)/lib/libgstcontroller$(versuf).so.$(sover) \
 	$(prefix)/lib/libgstdataprotocol$(versuf).so.$(sover) \
 	$(prefix)/lib/libgstnet$(versuf).so.$(sover) \
