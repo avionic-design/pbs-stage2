@@ -154,7 +154,6 @@ d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-
 90428106333a38b93b6f4a306fff17749243862883a06598ff6e6ea11f8d24d2  download/e2fsprogs-libs-1.41.8.tar.gz
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
 009115b0fc888dfe28903fecfe806707c544ccad6554ebabdeb3a1d88ec1e9d1  download/liboil-0.3.16.tar.gz
-1c11d98eb9a1b1bc54becf465e74c2aa4019bb57a31dd70686269af6a9b9e93b  download/gst-plugins-base-0.10.23.tar.bz2
 968a31c16a6c4bbbdb603cbaa3d60d6d19bc8ae30c0ed55d7f8c2e254413e4c8  download/dbus-1.2.16.tar.gz
 c4d1d6d9b0b6ed9a328a94890c171d534f62708f0982d071ccd443322bedffc2  download/renderproto-0.11.tar.bz2
 d47c9799c18929cffbce5bfa48f35c89657d7f630c6da682f193928697c71ab5  download/hal-0.5.13.tar.bz2
@@ -187,3 +186,4 @@ a4a41d02fc2d3f5effa1fc3466918e0b3ab60e9eb0a08139b997f2649cbacca3  download/glib-
 238c4f0203c012e5776522640c0fb3ac532c4064981c1ce3e74c00b75501d761  download/libxml2-2.7.6.tar.gz
 6df349518b930714ca4664d8aaaf3ea949de1e33bcfd3df8ee7e0446b3c357a6  download/alsa-utils-1.0.21.tar.bz2
 39b2ba7b3bfa8df6d998a9461e7091c27757e36a53e93969d7d9982a56526578  download/gstreamer-0.10.25.tar.bz2
+0ab2f7e1d818e7af1be99c4eae02ba69d4a1b8f7e3527929a6426f1daa0d4607  download/gst-plugins-base-0.10.25.tar.bz2

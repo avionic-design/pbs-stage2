@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-base
-VERSION = 0.10.23
+VERSION = 0.10.25
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,12 +7,14 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--disable-ogg \
+	--disable-pango \
 	--disable-vorbis \
-	--disable-ogg
+	--disable-x
 
 plugin = $(prefix)/lib/gstreamer-0.10
 
-sover = 0.16.0
+sover = 0.18.0
 
 prunefiles = \
 	$(plugin)/*.la \
