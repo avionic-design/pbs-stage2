@@ -118,6 +118,7 @@ stripfiles = \
 	$(prefix)/bin/getconf \
 	$(prefix)/bin/getent \
 	$(prefix)/bin/iconv \
+	$(prefix)/bin/lddlibc4 \
 	$(prefix)/bin/locale \
 	$(prefix)/bin/localedef \
 	$(prefix)/bin/pcprofiledump \
