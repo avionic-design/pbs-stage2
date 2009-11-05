@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBID3TAG
+	bool "libid3tag"
+	select PACKAGE_LIBS_ZLIB
+	default n
