@@ -3,5 +3,6 @@ menu "gstreamer - Plugins"
 source "packages/multimedia/gstreamer/plugins/base/Kconfig"
 source "packages/multimedia/gstreamer/plugins/good/Kconfig"
 source "packages/multimedia/gstreamer/plugins/bad/Kconfig"
+source "packages/multimedia/gstreamer/plugins/ugly/Kconfig"
 
 endmenu
