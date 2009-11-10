@@ -12,9 +12,11 @@ conf-args += \
 	--disable-x
 
 plugin = $(prefix)/lib/gstreamer-0.10
+sover  = 0.0.0
 
 prunefiles = \
 	$(plugin)/*.la
 
 stripfiles = \
-	$(plugin)/*.so
+	$(plugin)/*.so \
+	$(prefix)/lib/*.so.$(sover)
