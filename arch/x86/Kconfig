@@ -30,4 +30,3 @@ endif
 if ARCH_X86_I786
 source "arch/x86/i786/Kconfig"
 endif
-
