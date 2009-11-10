@@ -10,6 +10,7 @@ conf-args += \
 	--disable-aalib \
 	--disable-annodex \
 	--disable-esd \
+	--disable-gst_v4l2 \
 	--disable-shout2 \
 	--disable-x
 

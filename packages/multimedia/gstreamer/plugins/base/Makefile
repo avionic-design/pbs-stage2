@@ -7,6 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--disable-gst_v4l \
 	--disable-ogg \
 	--disable-pango \
 	--disable-vorbis \
