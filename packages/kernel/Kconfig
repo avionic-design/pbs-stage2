@@ -20,14 +20,18 @@ config PACKAGE_KERNEL_LINUX_KERNEL
 	select VIRTUAL_PROVIDES
 	default y
 
-config PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS
-	bool "module-init-tools: Linux kernel - module init tools"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+config KERNEL_SOURCE
+	string "Kernel source tree"
+	default "../kernel/linux-2.6.git"
 
 config KERNEL_CONFIG
 	string "Kernel configuration"
 	default "defconfig"
+
+config PACKAGE_KERNEL_LINUX_MODULE_INIT_TOOLS
+	bool "module-init-tools: Linux kernel - module init tools"
+	select VIRTUAL_DEVEL_LIBC
+	default n
 
 config PACKAGE_KERNEL_PSB_KERNEL_SOURCE
 	bool "Intel SCH (Poulsbo) DRM module"
