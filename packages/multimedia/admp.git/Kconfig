@@ -1,0 +1,5 @@
+config PACKAGE_MULTIMEDIA_ADMP
+	bool "admp"
+	select PACKAGE_MULTIMEDIA_LIBMAD
+	select PACKAGE_MULTIMEDIA_MPEG2DEC
+	default n

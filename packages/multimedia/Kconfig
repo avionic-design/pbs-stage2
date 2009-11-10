@@ -1,6 +1,6 @@
 menu "Multimedia Tools"
 
-source "packages/multimedia/admp/Kconfig"
+source "packages/multimedia/admp.git/Kconfig"
 source "packages/multimedia/alsa/Kconfig"
 source "packages/multimedia/gstreamer/Kconfig"
 source "packages/multimedia/libid3tag/Kconfig"
