@@ -17,8 +17,7 @@ conf-args = \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc \
-	--with-sdkdir=$(prefix)/include/xorg
+	--sysconfdir=/etc
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
