@@ -1,5 +1,5 @@
 PACKAGE = libpthread-stubs
-VERSION = 0.1
+VERSION = 0.3
 
 LOCATION = http://xcb.freedesktop.org/dist
 
