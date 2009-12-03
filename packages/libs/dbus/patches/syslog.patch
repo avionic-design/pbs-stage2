@@ -2,7 +2,7 @@ diff --git a/dbus/dbus-sysdeps-util-unix.c b/dbus/dbus-sysdeps-util-unix.c
 index 6ca662b..12f5f83 100644
 --- a/dbus/dbus-sysdeps-util-unix.c
 +++ b/dbus/dbus-sysdeps-util-unix.c
-@@ -49,6 +49,7 @@
+@@ -50,6 +50,7 @@
  #include <sys/capability.h>
  #include <libaudit.h>
  #endif /* HAVE_LIBAUDIT */
