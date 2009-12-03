@@ -1,7 +1,7 @@
 PACKAGE = glib
-VERSION = 2.22.2
+VERSION = 2.23.0
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.22
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.23
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -23,7 +23,7 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.2200.2
+sover = 0.2300.0
 
 stripfiles = \
 	$(prefix)/bin/glib-genmarshal \
