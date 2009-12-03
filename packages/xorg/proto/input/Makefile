@@ -1,4 +1,4 @@
 PACKAGE = inputproto
-VERSION = 1.5.1
+VERSION = 2.0
 
 include packages/xorg/proto/common.mk
