@@ -1,5 +1,5 @@
 PACKAGE = libxkbfile
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 include packages/xorg/lib/common.mk
 

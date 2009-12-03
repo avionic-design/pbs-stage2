@@ -40,7 +40,6 @@ af7c1e8871789b028fea2290036138917c6fdc6f5b2aea0c134f702da42f409b  download/debia
 be8bf33afb5adc2377e45d94693ffd46b75f267f9b808df0c7006e51211f9deb  download/tar-1.20.tar.bz2
 ff32a0d3bc696cadc3457be9c85e9818af2b6daa2f159188bb01aad7e932a0e1  download/trapproto-3.4.3.tar.bz2
 0b85113a9770083715927f9c7a7d0ab354c8a508a91cb6e8e11130851494d125  download/evieext-1.0.2.tar.bz2
-0ab628271fc9cb6d05f861d9823573088d81d510aca95b87ac0504b2e558965f  download/libxkbfile-1.0.5.tar.bz2
 48063ed49b200927376645f9ffe65faa39af84d59ba6f60f2abb2f9c6fa3d9f9  download/fontcacheproto-0.1.2.tar.bz2
 5682d343dd4e7ef291a6577e956c331946ce5801d8fa076284a01b41de3017ec  download/libXrender-0.9.4.tar.bz2
 209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba  download/gettext-0.17.tar.gz
@@ -192,3 +191,4 @@ de17c06b7005c5e9ab469e324e76c5c3b8baa2dfc3c1dc7e93438c197facf68e  download/xcmis
 5ccb9683b8be76edfceab4bf006e1cce9018e0d3dea5e54aa72e82798213fead  download/libpciaccess-0.10.9.tar.bz2
 d8033a2fae20fed6de4f16b73ad69ca1c511e7da31c88e9bc6e75976187378cb  download/libXdmcp-1.0.3.tar.bz2
 112bfc30820b98deec4c9914536c5aa2f8b5162bd2b0bdb342343168e06f7679  download/libXfont-1.4.1.tar.bz2
+2ca43c1f6b2782994167a328471aa859d366cd7303c6dcbc8bda951a84a06039  download/libxkbfile-1.0.6.tar.bz2
