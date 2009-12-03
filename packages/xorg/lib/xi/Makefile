@@ -1,5 +1,5 @@
 PACKAGE = libXi
-VERSION = 1.2.1
+VERSION = 1.3
 
 include packages/xorg/lib/common.mk
 
@@ -15,4 +15,4 @@ prunefiles = \
 	$(prefix)/lib/libXi.la
 
 stripfiles = \
-	$(prefix)/lib/libXi.so.6.0.0
+	$(prefix)/lib/libXi.so.6.1.0
