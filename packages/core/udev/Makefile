@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 147
+VERSION = 148
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -31,6 +31,7 @@ stripfiles = \
 	/lib/udev/create_floppy_devices \
 	/lib/udev/edd_id \
 	/lib/udev/fstab_import \
+	/lib/udev/input_id \
 	/lib/udev/path_id \
 	/lib/udev/scsi_id \
 	/lib/udev/usb_id \
