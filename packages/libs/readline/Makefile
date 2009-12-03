@@ -6,6 +6,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-curses
+
+build-args += \
+	SHLIB_LIBS="-lncurses"
+
 prunefiles =
 stripfiles = \
 	$(prefix)/lib/libhistory.so.6.0 \

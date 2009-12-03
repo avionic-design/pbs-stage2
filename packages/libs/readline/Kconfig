@@ -1,4 +1,4 @@
 config PACKAGE_LIBS_READLINE
 	bool "readline"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_NCURSES
 	default n
