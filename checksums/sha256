@@ -90,7 +90,6 @@ b103d2cf9e1cd8b049e28bb1109f3da3a14287bbce3ab8b2f427d55a6e5f4785  download/xinit
 4f9a751f4830d479fae8ccb68ed04896dc99612789310b7917bd15c04aa3351d  download/xsetroot-1.0.2.tar.bz2
 daa088f9ae231508929b7bd4746e942212b53f2802ca4cee450139fabc8de1fa  download/twm-1.0.4.tar.bz2
 1d0eea944cc9dedc5c155c5453d67b6e61bea54b9633ced8e62b448bd7140e05  download/xinput-1.4.99.1.tar.bz2
-1fd18b53fda74ea4649eb9577b1cf86538a25d171f10251eeb30d11cdd5bda8c  download/xauth-1.0.3.tar.bz2
 495d88871eb5081e98bbae55f813f73cb3ce4145d6ca3e8f2826800166c04571  download/xsetpointer-1.0.1.tar.bz2
 d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/enchant-1.5.0.tar.gz
 43b86121cafd19156bc018d6e59937868dd079c83b17aa3ae8a2bd189b4c881e  download/libsoup-2.27.2.tar.bz2
@@ -192,3 +191,4 @@ f50d184d8c6a031b3ff4f0d52efcfd4ffa811b0362b166a9ff9ba4c2e9aa7ce0  download/libSM
 842d36cfca68ddab4f2c562c73bfd43ba76de2d490d60034f0c5dd524aa6d6a5  download/xf86-input-keyboard-1.4.0.tar.bz2
 f303e20872ab2fb20e07a7f734d17723346d2b4b8687ea2086f7a7468d1ab397  download/xf86-input-mouse-1.5.0.tar.bz2
 2bf857179523433a9cc6c6eea059298db4c865e649aa58dfc67c828f28b7288f  download/xf86-video-fbdev-0.4.1.tar.bz2
+f91190c8b8bb18270b86b00f30da5684bb5e5bd1ed0ccf352322f8145e076a59  download/xauth-1.0.4.tar.bz2
