@@ -67,7 +67,6 @@ b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805  download/groff
 5046f573e7dd77f689c33c5f0aa0f2b7f96c79e0b37d6ecc78bae74c094fb4c6  download/ethtool-6.tar.gz
 709ca7402594acc1d80b99c20219112b5c00e6ac48ae6049fc626fbaf4ce49f6  download/rp-pppoe-3.10.tar.gz
 1280af98466cb4484a89858ede3347ba9d7785baeb80b11f2066142dc2317d97  download/libXext-1.0.5.tar.bz2
-eafff0157f2c7172214449d4b6b0c72328cad7026ecace226189b511791c5f75  download/libXfont-1.4.0.tar.bz2
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
 2d9769a02c46cff73f56a076268192da1ce91c913e2e4e31c120be098f704c8c  download/uClibc-0.9.30.1.tar.bz2
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
@@ -192,3 +191,4 @@ de17c06b7005c5e9ab469e324e76c5c3b8baa2dfc3c1dc7e93438c197facf68e  download/xcmis
 7f3cde0331e9ad3da720b1a8255e121673701199df0802b62380436e74222700  download/libfontenc-1.0.5.tar.bz2
 5ccb9683b8be76edfceab4bf006e1cce9018e0d3dea5e54aa72e82798213fead  download/libpciaccess-0.10.9.tar.bz2
 d8033a2fae20fed6de4f16b73ad69ca1c511e7da31c88e9bc6e75976187378cb  download/libXdmcp-1.0.3.tar.bz2
+112bfc30820b98deec4c9914536c5aa2f8b5162bd2b0bdb342343168e06f7679  download/libXfont-1.4.1.tar.bz2
