@@ -1,4 +1,4 @@
 config PACKAGE_XORG_LIB_XPM
 	bool "xpm"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_LIB_XEXT
 	default n
