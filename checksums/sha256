@@ -58,7 +58,6 @@ b3fe971ccc8152db6c78da7117c31fc4cd2fcb2b6a4df3db0f8fed13d4ceb08f  download/fixes
 08a0e072d6a05419a58124db864f0685e6ac96e71b2875bf15ac12714e983b53  download/pkg-config-0.23.tar.gz
 bbfac3ed6bfbc2823d3775ebb931087371e142bb0e9bb1bee51a76a6e0078690  download/libmad-0.15.1b.tar.gz
 c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2dec-0.4.1.tar.gz
-10d3ffa5f00d0c0a4083309ba68bdfa01dfdf912ef4cf2141e3f260b2edeb22c  download/libXau-1.0.4.tar.bz2
 ab088478830cd30c2fe34fb7f44ffd4d177af7711c225c24676d3e9e9f24780c  download/videoproto-2.2.2.tar.bz2
 4d3cc49b6f4da6d396196054eca23a91df1a41001c736dcfd22fec5a5c7428c8  download/libXv-1.0.4.tar.bz2
 95e7b7470e04f22c3ec8dc6d0b1fdd8944306cb5313c84c4545cd83abada26d0  download/strace-4.5.18.tar.bz2
@@ -192,3 +191,4 @@ eb104bec734640d8c180e02185c431e566baa2562990c323510f64396119835b  download/gst-p
 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  download/kbproto-1.0.4.tar.bz2
 8224da1ce19c0ded4e07a325f3ed62bb4453782db97fd175cb3ffd1acaeb9672  download/xproto-7.0.16.tar.bz2
 35b6d54e3cc6f3ba28061da81af64b9a92b7b757319098172488a660e3d87299  download/libpthread-stubs-0.3.tar.bz2
+a503b3e88d29fa9c45cce1b2d1af54106c2ce21491348c394e251a071d8108ee  download/libXau-1.0.5.tar.bz2
