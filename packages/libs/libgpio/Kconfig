@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_LIBGPIO
+	bool "libgpio"
+	select PACKAGE_LIBS_READLINE
+	select PACKAGE_LIBS_LIBSH
+	default n
