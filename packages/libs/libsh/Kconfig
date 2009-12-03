@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBSH
+	bool "libsh"
+	select VIRTUAL_DEVEL_LIBC
+	default n
