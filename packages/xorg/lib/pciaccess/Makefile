@@ -1,5 +1,5 @@
 PACKAGE = libpciaccess
-VERSION = 0.10.6
+VERSION = 0.10.9
 
 include packages/xorg/lib/common.mk
 
@@ -7,4 +7,4 @@ prunefiles = \
 	$(prefix)/lib/libpciaccess.la
 
 stripfiles = \
-	$(prefix)/lib/libpciaccess.so.0.10.2
+	$(prefix)/lib/libpciaccess.so.0.10.8
