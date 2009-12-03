@@ -1,4 +1,2 @@
-cross-compile.patch -p1
-libtool.patch -p1
 ltmain-sysroot.patch -p1
-autoreconf.patch -p1
+xextproto.patch -p1
