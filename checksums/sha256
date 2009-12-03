@@ -143,7 +143,6 @@ a0300966a9761444b1e583c676f6c5c81e916897ea7d2e44d0c732c9d6e9c1ea  download/gnutl
 eafc4a09729a4b2b6120430c71e1954c5cac299ad6adf2f9a40aee8a7b51e476  download/xf86-input-evtouch-0.8.8.tar.bz2
 2b8e7164b0c362d5c5e90275b25772514d76d5fda3d54c026445611e467d638e  download/freefont-ttf-20090104.tar.gz
 d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-input-tslib-0.0.5.tar.bz2
-11768553fa3c56441894ffc703a14a753ba07b5090fe496afbfec4d2dbf9ce80  download/libX11-1.2.2.tar.bz2
 90428106333a38b93b6f4a306fff17749243862883a06598ff6e6ea11f8d24d2  download/e2fsprogs-libs-1.41.8.tar.gz
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
 009115b0fc888dfe28903fecfe806707c544ccad6554ebabdeb3a1d88ec1e9d1  download/liboil-0.3.16.tar.gz
@@ -192,3 +191,4 @@ a503b3e88d29fa9c45cce1b2d1af54106c2ce21491348c394e251a071d8108ee  download/libXa
 472f57f7928ab20a1303a25982c4091db9674c2729bbd692c9a7204e23ea1af4  download/inputproto-2.0.tar.bz2
 6d0abd31ddd57c2cb24cecf5fd90b4c29a276e20e3e03ca3c2c57d074f964d99  download/xextproto-7.1.1.tar.bz2
 cc71a391f4da8176e5daeeac1ddf5137ba5e8d2263cb93a49f9e2a9976b90899  download/xtrans-1.2.5.tar.bz2
+4def4d5c9fce85d690f1f29d675154594acdea3d3fe792d0cb513732c7b4bcb2  download/libX11-1.3.2.tar.bz2

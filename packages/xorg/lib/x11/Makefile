@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.2.2
+VERSION = 1.3.2
 
 include packages/xorg/lib/common.mk
 
@@ -17,4 +17,4 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/lib/libX11-xcb.so.1.0.0 \
-	$(prefix)/lib/libX11.so.6.2.0
+	$(prefix)/lib/libX11.so.6.3.0
