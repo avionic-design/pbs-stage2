@@ -28,13 +28,13 @@ $(pkgtree)/.build:
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(MAKE) LINUXDIR=$(kerneltree)/build \
+		$(priv) $(MAKE) LINUXDIR=$(kerneltree)/build \
 			O=$(pkgtree)/build \
 			DRM_MODULES="psb" \
 			INSTALL_MOD_PATH=$(DESTDIR) \
 			install
-	mkdir -p $(DESTDIR)/lib/firmware && \
-		install -m 644 $(pkgsrctree)/msvdx_fw.bin \
+	$(priv) mkdir -p $(DESTDIR)/lib/firmware && \
+		$(priv) install -m 644 $(pkgsrctree)/msvdx_fw.bin \
 			$(DESTDIR)/lib/firmware
 	$(call cmd,stamp)
 
