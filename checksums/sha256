@@ -38,7 +38,6 @@ dbbd87554d66e438245487ac31aa4a542a1c6c1ec8273cfacbbfeda09eb44a93  download/iputi
 634e2b596bc6fc6a9143e00387ae79941980f548c9a20ea651ce755cc4e35f6a  download/sudo-1.6.9p16.tar.gz
 af7c1e8871789b028fea2290036138917c6fdc6f5b2aea0c134f702da42f409b  download/debianutils_2.28.6.tar.gz
 be8bf33afb5adc2377e45d94693ffd46b75f267f9b808df0c7006e51211f9deb  download/tar-1.20.tar.bz2
-b2807e96a9d632b7bbf1782a43095de51f3feae3d2e25374d3df00c6c68792ab  download/xcmiscproto-1.1.2.tar.bz2
 ff32a0d3bc696cadc3457be9c85e9818af2b6daa2f159188bb01aad7e932a0e1  download/trapproto-3.4.3.tar.bz2
 0b85113a9770083715927f9c7a7d0ab354c8a508a91cb6e8e11130851494d125  download/evieext-1.0.2.tar.bz2
 0ab628271fc9cb6d05f861d9823573088d81d510aca95b87ac0504b2e558965f  download/libxkbfile-1.0.5.tar.bz2
@@ -192,3 +191,4 @@ d93ca3c0ae710a45da6a27e1eeadfb3c9d4aee47f23657c996e1124c0d9985ca  download/randr
 408d9ab067e4141d1bb844d2d0d7d26ad177567384190c32a913131cf549b36b  download/resourceproto-1.1.0.tar.bz2
 deaf0a3212617e0dab353a3c3a66e0a1f2398306eca0fd882ac15996b0e44d99  download/scrnsaverproto-1.2.0.tar.bz2
 4f2bc94e5a1b60d6f35a9a2589ca98949e8841997f6a9acf4e85f46c1f34045f  download/videoproto-2.3.0.tar.bz2
+de17c06b7005c5e9ab469e324e76c5c3b8baa2dfc3c1dc7e93438c197facf68e  download/xcmiscproto-1.2.0.tar.bz2
