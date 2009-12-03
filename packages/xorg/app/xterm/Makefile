@@ -1,5 +1,5 @@
 PACKAGE = xterm
-VERSION = 243
+VERSION = 251
 
 LOCATION = ftp://invisible-island.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tgz
