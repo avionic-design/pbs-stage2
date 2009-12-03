@@ -147,7 +147,6 @@ d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
 009115b0fc888dfe28903fecfe806707c544ccad6554ebabdeb3a1d88ec1e9d1  download/liboil-0.3.16.tar.gz
 c4d1d6d9b0b6ed9a328a94890c171d534f62708f0982d071ccd443322bedffc2  download/renderproto-0.11.tar.bz2
-d47c9799c18929cffbce5bfa48f35c89657d7f630c6da682f193928697c71ab5  download/hal-0.5.13.tar.bz2
 a6365fcb2b34439faa52164e1a018086c2b6818f8a189c487c79e09dc3c62722  download/util-linux-ng-2.16.tar.bz2
 07b6e2d3dde4beb06dc8310daec1c5c82d67022e3c9aec35f3783e63aad3209e  download/libxcb-1.4.tar.bz2
 ddfb062797341b5c5a22555ffe80138953cc61a67ba805647b2746f519bfbde1  download/dbus-glib-0.82.tar.gz
@@ -192,3 +191,4 @@ cc71a391f4da8176e5daeeac1ddf5137ba5e8d2263cb93a49f9e2a9976b90899  download/xtran
 4def4d5c9fce85d690f1f29d675154594acdea3d3fe792d0cb513732c7b4bcb2  download/libX11-1.3.2.tar.bz2
 fe32b49667894cf91b0a97503163be5c4814ecf67259e8feb26d1ba57cb03dae  download/dbus-1.3.0.tar.gz
 24002573dd17bc31c099cfa37853ccb0b510f2f6cf54222c3681b9b0ed5e9288  download/glib-2.23.0.tar.bz2
+c4c5ecc5d50d5d9c061dc06c405461b1f71c12f2c60ed062350b2e6db2f1c51e  download/hal-0.5.14.tar.bz2
