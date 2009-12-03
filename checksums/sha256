@@ -80,7 +80,6 @@ eee233d08274feb2d3fc93a674d6045b94167375d86ff9b54c3c60cae047095e  download/conso
 23f977f55da5c1bbfdcf5db9ada641cfd94819f7452113c3be40fd7dfe200a46  download/dnsmasq-2.47.tar.lzma
 9f5737019f3e4c14f68a2f829deb690330e89b634d1337683e453b94137669f1  download/libusb-1.0.2.tar.bz2
 476eb0d48981ea05e2f82955d59a3445e32be41c0afeb8a2827b9361bb560560  download/libusb-compat-0.1.2.tar.bz2
-bba725daeb2a313b83f2b92855a9ae8aa72c4cc8581f9f62f101ebdf00ac359d  download/xf86-video-fbdev-0.4.0.tar.bz2
 2621e7362713b588d1ec035f969194f160896b77f6455a26fd81dcc6e29b9877  download/xterm-243.tgz
 55a36168306089009d054ccdd9d013041bfc3ab26be7033d107821f1c4949a49  download/libiconv-1.13.1.tar.gz
 3c51d3de5dc4596e01a6675acd3c86c2c99c00f02e8fad5493758a29fe451c90  download/cairo-1.8.8.tar.gz
@@ -192,3 +191,4 @@ f50d184d8c6a031b3ff4f0d52efcfd4ffa811b0362b166a9ff9ba4c2e9aa7ce0  download/libSM
 462f2ae2fd389a87e09fa764a236cd04dcbf85bcfcd8000aa9a3810055511d8f  download/xf86-input-evdev-2.3.1.tar.bz2
 842d36cfca68ddab4f2c562c73bfd43ba76de2d490d60034f0c5dd524aa6d6a5  download/xf86-input-keyboard-1.4.0.tar.bz2
 f303e20872ab2fb20e07a7f734d17723346d2b4b8687ea2086f7a7468d1ab397  download/xf86-input-mouse-1.5.0.tar.bz2
+2bf857179523433a9cc6c6eea059298db4c865e649aa58dfc67c828f28b7288f  download/xf86-video-fbdev-0.4.1.tar.bz2

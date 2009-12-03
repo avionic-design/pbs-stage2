@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-fbdev
-VERSION = 0.4.0
+VERSION = 0.4.1
 
 include packages/xorg/driver/common.mk
 
