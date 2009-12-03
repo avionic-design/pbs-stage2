@@ -8,9 +8,14 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+NUM_CPU := 1
+
 conf-args += \
 	--disable-openmp \
 	--disable-rpath
+
+conf-vars += \
+	am_cv_func_iconv_works=yes
 
 prunefiles = \
 	$(prefix)/lib/libasprintf.la \
