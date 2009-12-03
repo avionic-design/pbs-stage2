@@ -1,5 +1,5 @@
 PACKAGE = pixman
-VERSION = 0.15.18
+VERSION = 0.17.2
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
