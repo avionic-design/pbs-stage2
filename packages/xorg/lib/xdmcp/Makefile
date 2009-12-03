@@ -1,5 +1,5 @@
 PACKAGE = libXdmcp
-VERSION = 1.0.2
+VERSION = 1.0.3
 
 include packages/xorg/lib/common.mk
 
