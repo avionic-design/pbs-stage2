@@ -1,4 +1,4 @@
 PACKAGE = xproto
-VERSION = 7.0.15
+VERSION = 7.0.16
 
 include packages/xorg/proto/common.mk
