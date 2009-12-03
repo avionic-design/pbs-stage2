@@ -80,7 +80,6 @@ eee233d08274feb2d3fc93a674d6045b94167375d86ff9b54c3c60cae047095e  download/conso
 23f977f55da5c1bbfdcf5db9ada641cfd94819f7452113c3be40fd7dfe200a46  download/dnsmasq-2.47.tar.lzma
 9f5737019f3e4c14f68a2f829deb690330e89b634d1337683e453b94137669f1  download/libusb-1.0.2.tar.bz2
 476eb0d48981ea05e2f82955d59a3445e32be41c0afeb8a2827b9361bb560560  download/libusb-compat-0.1.2.tar.bz2
-33939ec65dbf56f49e1e7de854a1cf95446e40c533950431901567e67112aef2  download/xf86-input-keyboard-1.3.2.tar.bz2
 e6e1dbd64d41c826619a5881c5aeed46095bfdcb87c3e27d65292fc12a5bb7c7  download/xf86-input-mouse-1.4.0.tar.bz2
 bba725daeb2a313b83f2b92855a9ae8aa72c4cc8581f9f62f101ebdf00ac359d  download/xf86-video-fbdev-0.4.0.tar.bz2
 2621e7362713b588d1ec035f969194f160896b77f6455a26fd81dcc6e29b9877  download/xterm-243.tgz
@@ -192,3 +191,4 @@ f50d184d8c6a031b3ff4f0d52efcfd4ffa811b0362b166a9ff9ba4c2e9aa7ce0  download/libSM
 740aaee9b09586b1c80f80890381c5ee70ea11efa4b6159f707c0f3684c6f328  download/libXaw-1.0.7.tar.bz2
 362b8c0c60386841063bd7e01afa72e37eb87ada6e64e539d960f88c780a944b  download/libXi-1.3.tar.bz2
 462f2ae2fd389a87e09fa764a236cd04dcbf85bcfcd8000aa9a3810055511d8f  download/xf86-input-evdev-2.3.1.tar.bz2
+842d36cfca68ddab4f2c562c73bfd43ba76de2d490d60034f0c5dd524aa6d6a5  download/xf86-input-keyboard-1.4.0.tar.bz2
