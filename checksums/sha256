@@ -84,7 +84,6 @@ eee233d08274feb2d3fc93a674d6045b94167375d86ff9b54c3c60cae047095e  download/conso
 33939ec65dbf56f49e1e7de854a1cf95446e40c533950431901567e67112aef2  download/xf86-input-keyboard-1.3.2.tar.bz2
 e6e1dbd64d41c826619a5881c5aeed46095bfdcb87c3e27d65292fc12a5bb7c7  download/xf86-input-mouse-1.4.0.tar.bz2
 bba725daeb2a313b83f2b92855a9ae8aa72c4cc8581f9f62f101ebdf00ac359d  download/xf86-video-fbdev-0.4.0.tar.bz2
-f83c00d6ed8f4c08effa9dcc2d7f1ff6f5a753f2b9fe1babda16618c2afa18f0  download/libXmu-1.0.4.tar.bz2
 64701ae67ce5b0797307b75d8255bec3a0d371d0c50715ea618f5a68bcc92baa  download/libXpm-3.5.7.tar.bz2
 2621e7362713b588d1ec035f969194f160896b77f6455a26fd81dcc6e29b9877  download/xterm-243.tgz
 55a36168306089009d054ccdd9d013041bfc3ab26be7033d107821f1c4949a49  download/libiconv-1.13.1.tar.gz
@@ -192,3 +191,4 @@ a8346859505d2aa27ecc4531f1c86d72801936d96c31c5beaeff4587441b568b  download/libIC
 f50d184d8c6a031b3ff4f0d52efcfd4ffa811b0362b166a9ff9ba4c2e9aa7ce0  download/libSM-1.1.1.tar.bz2
 110ce3bc7fb3a86659556994d0801c74bedcbd8ba8d1f90ee33d4c47a91e9bb3  download/libXext-1.1.1.tar.bz2
 706d5248b061c8455f74ce5269ecc5ef59c27d0f52d22b07138f781928dda9ec  download/libXt-1.0.7.tar.bz2
+0692b6b0ec1019cfaa8418020b1127bfb0975f5a579a0b1f9eb7fd8f2f7126d7  download/libXmu-1.0.5.tar.bz2
