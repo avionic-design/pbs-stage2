@@ -41,7 +41,6 @@ be8bf33afb5adc2377e45d94693ffd46b75f267f9b808df0c7006e51211f9deb  download/tar-1
 ff32a0d3bc696cadc3457be9c85e9818af2b6daa2f159188bb01aad7e932a0e1  download/trapproto-3.4.3.tar.bz2
 0b85113a9770083715927f9c7a7d0ab354c8a508a91cb6e8e11130851494d125  download/evieext-1.0.2.tar.bz2
 48063ed49b200927376645f9ffe65faa39af84d59ba6f60f2abb2f9c6fa3d9f9  download/fontcacheproto-0.1.2.tar.bz2
-5682d343dd4e7ef291a6577e956c331946ce5801d8fa076284a01b41de3017ec  download/libXrender-0.9.4.tar.bz2
 209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba  download/gettext-0.17.tar.gz
 79945d06de16736d14210139e8e68cf29f8ea312190d2375507511f367a2f872  download/qt-embedded-linux-opensource-src-4.4.0.tar.bz2
 08a0e072d6a05419a58124db864f0685e6ac96e71b2875bf15ac12714e983b53  download/pkg-config-0.23.tar.gz
@@ -194,3 +193,4 @@ a84728e34bb5edd36ecc1b5489f48ad1467ad5aab1f74f1b7789f826a1ffcaf9  download/xinpu
 9775bcfd43d9ffa41e2865e5b2c933f419bf983d7a529b3103656c76fd82e663  download/xkbcomp-1.1.1.tar.bz2
 91055e4d2d7c05f9cab6084eed623f9a25010e0ea772c66ce6125df385edbe04  download/libdrm-poulsbo-2.3.0.tar.bz2
 d23f12deffd03e582e897ed6a7df3ea7f66ee8577f0f61374dcdf2ebffdce1be  download/xf86driproto-2.1.0.tar.bz2
+bc0590438a4be2b674cbac6f4ad46e5a89acd02aa94817da0fa8eb3ef05ed5d5  download/libXrender-0.9.5.tar.bz2
