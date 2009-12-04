@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBDRM_POULSBO
+	bool "libdrm-poulsbo"
+	select VIRTUAL_DEVEL_LIBC
+	default n

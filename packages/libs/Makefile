@@ -22,6 +22,7 @@ obj-$(CONFIG_PACKAGE_LIBS_GTKMM) += gtkmm
 obj-$(CONFIG_PACKAGE_LIBS_HAL) += hal
 obj-$(CONFIG_PACKAGE_LIBS_ICONV) += iconv
 obj-$(CONFIG_PACKAGE_LIBS_ICU) += icu
+obj-$(CONFIG_PACKAGE_LIBS_LIBDRM_POULSBO) += libdrm-poulsbo
 obj-$(CONFIG_PACKAGE_LIBS_LIBGCRYPT) += libgcrypt
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPG_ERROR) += libgpg-error
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPIO) += libgpio
