@@ -1,0 +1,79 @@
+diff --git a/src/Xpsb.h b/src/Xpsb.h
+index 4c2da70..0a2c6a6 100644
+--- a/src/Xpsb.h
++++ b/src/Xpsb.h
+@@ -38,7 +38,7 @@
+ #include "xf86drm.h"
+ #include "xf86.h"
+ #include "xf86_OSproc.h"
+-#include "xf86Resources.h"
++//#include "xf86Resources.h"
+ #include "compiler.h"
+ 
+ #define XPSB_VOFFSET_X 0
+diff --git a/src/psb_driver.h b/src/psb_driver.h
+index dc04092..e000935 100644
+--- a/src/psb_driver.h
++++ b/src/psb_driver.h
+@@ -34,7 +34,7 @@
+ 
+ #include "xf86.h"
+ #include "xf86_OSproc.h"
+-#include "xf86Resources.h"
++//#include "xf86Resources.h"
+ #include "compiler.h"
+ #include "xf86PciInfo.h"
+ #include "vgaHW.h"
+@@ -46,8 +46,8 @@
+ #include "xf86int10.h"
+ #include "mibank.h"
+ #include "dgaproc.h"
+-#include "xf86Resources.h"
+-#include "xf86RAC.h"
++//#include "xf86Resources.h"
++//#include "xf86RAC.h"
+ #include "fb.h"
+ #include "xaa.h"
+ #include "xf86xv.h"
+diff --git a/src/i830_i2c.c b/src/i830_i2c.c
+index e37e4b1..cd41981 100644
+--- a/src/i830_i2c.c
++++ b/src/i830_i2c.c
+@@ -31,8 +31,6 @@ USE OR OTHER DEALINGS IN THE SOFTWARE.
+ 
+ #include "xf86.h"
+ #include "xf86_OSproc.h"
+-#include "xf86Resources.h"
+-#include "xf86RAC.h"
+ #include "xf86cmap.h"
+ #include "compiler.h"
+ #include "mibstore.h"
+diff --git a/src/psb_driver.c b/src/psb_driver.c
+index 1c39dc9..812a974 100644
+--- a/src/psb_driver.c
++++ b/src/psb_driver.c
+@@ -1023,12 +1023,6 @@ psbDeviceInit(PsbDevicePtr pDevice, int scrnIndex)
+ 
+     PSB_DEBUG(scrnIndex, 3, "Initializing device\n");
+ 
+-    if (xf86RegisterResources(pDevice->pEnt->index, NULL, ResExclusive)) {
+-	xf86DrvMsg(scrnIndex, X_ERROR,
+-		   "Could not registrer device. Resource conflict.\n");
+-	return FALSE;
+-    }
+-
+     if (!xf86LoadSubModule(pDevice->pScrns[0], "vgahw"))
+ 	return FALSE;
+     xf86LoaderReqSymLists(psbvgahwSymbols, NULL);
+diff --git a/src/psb_video.c b/src/psb_video.c
+index 063b1b5..083e087 100755
+--- a/src/psb_video.c
++++ b/src/psb_video.c
+@@ -36,7 +36,6 @@
+ 
+ #include "xf86.h"
+ #include "xf86_OSproc.h"
+-#include "xf86Resources.h"
+ #include "compiler.h"
+ 
+ #include "xf86xv.h"

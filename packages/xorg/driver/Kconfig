@@ -35,4 +35,6 @@ config PACKAGE_XORG_DRIVER_VIDEO_FBDEV
 	select PACKAGE_XORG_XORG_SERVER
 	default n
 
+source "packages/xorg/driver/xf86-video-psb/Kconfig"
+
 endmenu
