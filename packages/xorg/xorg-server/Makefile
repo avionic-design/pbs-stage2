@@ -17,8 +17,8 @@ conf-args += \
 	--disable-xvfb \
 	--disable-xv \
 	--disable-glx \
-	--disable-dri \
-	--disable-dri2 \
+	--enable-dri \
+	--enable-dri2 \
 	--disable-dga \
 	--enable-dpms \
 	--enable-xv \
