@@ -34,9 +34,7 @@ config PACKAGE_XORG_PROTO_FONTS
 	bool "fonts"
 	default n
 
-config PACKAGE_XORG_PROTO_GL
-	bool "gl"
-	default n
+source "packages/xorg/proto/gl/Kconfig"
 
 config PACKAGE_XORG_PROTO_INPUT
 	bool "input"
