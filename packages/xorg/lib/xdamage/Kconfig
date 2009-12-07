@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XDAMAGE
+	bool "xdamage"
+	select PACKAGE_XORG_LIB_XFIXES
+	default n
