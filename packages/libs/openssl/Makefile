@@ -10,6 +10,7 @@ include packages/common.mk
 
 ARCH := $(patsubst i%86,x86,$(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
+LIBC := $(shell echo $(CONFIG_LIBC))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -81,18 +82,4 @@ stripfiles = \
 	$(plugin)/libubsec.so
 
 include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/binary.mk

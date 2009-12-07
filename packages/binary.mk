@@ -1,3 +1,7 @@
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU := $(shell echo $(CONFIG_CPU))
+LIBC := $(shell echo $(CONFIG_LIBC))
+
 $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
