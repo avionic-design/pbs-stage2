@@ -1,0 +1,64 @@
+PACKAGE = MesaLib
+VERSION = 7.7-rc1
+
+LOCATION = ftp://ftp.freedesktop.org/pub/mesa/7.7
+TARBALLS = $(PACKAGE)-$(VERSION)-devel.tar.bz2
+
+include packages/common.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
+LIBC := $(shell echo $(CONFIG_LIBC))
+pkgbuildtree := $(pkgtree)/Mesa-7.7-devel
+
+env += \
+	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
+conf-args += \
+	--host=$(TARGET) \
+	--prefix=$(prefix) \
+	--mandir=$(prefix)/share/man \
+	--infodir=$(prefix)/share/info \
+	--localstatedir=/var \
+	--sysconfdir=/etc
+
+conf-args += \
+	--with-dri-drivers=swrast \
+	--disable-gallium \
+	--disable-egl
+
+conf-vars += \
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
+
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && \
+		$(env) ./configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
+
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
+	$(call cmd,stamp)
+
+install-args += \
+	DESTDIR=$(DESTDIR)
+
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
+
+prunefiles =
+stripfiles = \
+	$(prefix)/lib/libGL.so.1.2 \
+	$(prefix)/lib/libGLU.so.1.3.070700 \
+	$(prefix)/lib/libGLw.so.1.0.0 \
+	$(prefix)/lib/dri/*.so
+
+include packages/cleanup.mk
+include packages/binary.mk

@@ -1,0 +1,5 @@
+/usr/include/GL/GLwDrawA.h
+/usr/include/GL/GLwMDrawA.h
+/usr/lib/libGLw.a
+/usr/lib/libGLw.so
+/usr/lib/pkgconfig/glw.pc

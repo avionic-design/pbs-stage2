@@ -1,0 +1,2 @@
+version=3
+ftp://ftp.freedesktop.org/pub/mesa/(.*)/MesaLib-(.*)-devel\.tar\.bz2

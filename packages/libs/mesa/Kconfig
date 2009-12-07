@@ -1,0 +1,6 @@
+config PACKAGE_LIBS_MESA
+	bool "mesa"
+	select PACKAGE_LIBS_LIBDRM
+	select PACKAGE_XORG_LIB_XDAMAGE
+	select PACKAGE_XORG_LIB_XXF86VM
+	default n
