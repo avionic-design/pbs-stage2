@@ -7,4 +7,4 @@ prunefiles = \
 	$(prefix)/lib/libXxf86vm.la
 
 stripfiles = \
-	$(prefix)/lib/libXxf86vm.so.0.0.0
+	$(prefix)/lib/libXxf86vm.so.1.0.0
