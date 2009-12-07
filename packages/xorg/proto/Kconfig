@@ -73,6 +73,8 @@ config PACKAGE_XORG_PROTO_VIDEO
 	bool "video"
 	default n
 
+source "packages/xorg/proto/vidmode/Kconfig"
+
 config PACKAGE_XORG_PROTO_X
 	bool "x"
 	default n
