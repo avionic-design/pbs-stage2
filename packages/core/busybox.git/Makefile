@@ -8,7 +8,7 @@ DESCRIPTION = tiny utilities for small and embedded systems
 include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
-BUSYBOX_TREE = $(srctree)/../busybox.git
+BUSYBOX_TREE = $(srctree)/../core/busybox.git
 ARCH := $(shell echo $(CONFIG_ARCH))
 CPU := $(shell echo $(CONFIG_CPU))
 LIBC := $(shell echo $(CONFIG_LIBC))
@@ -45,7 +45,7 @@ build-args = \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args)
+	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args) -j $(NUM_CPU)
 	$(call cmd,stamp)
 
 install-args = \
