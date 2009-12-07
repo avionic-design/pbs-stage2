@@ -17,6 +17,7 @@ config PACKAGE_XORG_PROTO_DGA
 	default n
 
 source "packages/xorg/proto/dri/Kconfig"
+source "packages/xorg/proto/dri2/Kconfig"
 
 config PACKAGE_XORG_PROTO_EVIE
 	bool "evie"
