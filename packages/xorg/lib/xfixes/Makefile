@@ -7,4 +7,4 @@ prunefiles = \
 	$(prefix)/lib/libXfixes.la
 
 stripfiles = \
-	$(prefix)/lib/libXfixes.so.0.0.0
+	$(prefix)/lib/libXfixes.so.3.1.0

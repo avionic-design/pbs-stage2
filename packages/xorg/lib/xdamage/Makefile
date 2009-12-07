@@ -7,4 +7,4 @@ prunefiles = \
 	$(prefix)/lib/libXdamage.la
 
 stripfiles = \
-	$(prefix)/lib/libXdamage.so.0.0.0
+	$(prefix)/lib/libXdamage.so.1.1.0

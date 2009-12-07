@@ -10,4 +10,4 @@ prunefiles = \
 	$(prefix)/lib/libdrm.la
 
 stripfiles = \
-	$(prefix)/lib/libdrm.so.$(VERSION)
+	$(prefix)/lib/libdrm.so.2.4.0
