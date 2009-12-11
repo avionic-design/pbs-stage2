@@ -1,5 +1,6 @@
 menu "Core System"
 
+source "packages/core/acpitool/Kconfig"
 source "packages/core/busybox/Kconfig"
 source "packages/core/busybox.git/Kconfig"
 source "packages/core/coreutils/Kconfig"

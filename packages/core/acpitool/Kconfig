@@ -1,0 +1,4 @@
+config PACKAGE_CORE_ACPITOOL
+	bool "acpitool"
+	select VIRTUAL_DEVEL_LIBC
+	default n

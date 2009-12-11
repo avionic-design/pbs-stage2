@@ -1,3 +1,4 @@
+obj-$(CONFIG_PACKAGE_CORE_ACPITOOL) += acpitool
 obj-$(CONFIG_PACKAGE_CORE_BASE) += base
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX) += busybox
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX_GIT) += busybox.git
