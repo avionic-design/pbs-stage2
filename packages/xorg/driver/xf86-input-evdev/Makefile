@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-evdev
-VERSION = 2.3.1
+VERSION = 2.3.2
 
 include packages/xorg/driver/common.mk
 
