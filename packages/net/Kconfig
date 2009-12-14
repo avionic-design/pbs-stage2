@@ -1,85 +1,21 @@
 menu "Networking"
 
-config PACKAGE_NET_DHCP
-	bool "dhcp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_DNSMASQ
-	bool "dnsmasq"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_DROPBEAR
-	bool "dropbear"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_ETHTOOL
-	bool "ethtool"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_IPERF
-	bool "iperf"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_IPUTILS
-	bool "iputils"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
+source "packages/net/dhcp/Kconfig"
+source "packages/net/dnsmasq/Kconfig"
+source "packages/net/dropbear/Kconfig"
+source "packages/net/ethtool/Kconfig"
+source "packages/net/iperf/Kconfig"
+source "packages/net/iputils/Kconfig"
 source "packages/net/lldpd/Kconfig"
-
-config PACKAGE_NET_NET_TOOLS
-	bool "net-tools"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_NETCAT
-	bool "netcat"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_OPENNTPD
-	bool "openntpd"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_OPENSSH
-	bool "openssh"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_PPP
-	bool "ppp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_RP_PPPOE
-	bool "rp-pppoe"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_SWITCHCTRL
-	bool "switchctrl"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_TCPDUMP
-	bool "tcpdump"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_UDHCP
-	bool "udhcp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_NET_XORP
-	bool "xorp"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/net/net-tools/Kconfig"
+source "packages/net/netcat/Kconfig"
+source "packages/net/openntpd/Kconfig"
+source "packages/net/openssh/Kconfig"
+source "packages/net/ppp/Kconfig"
+source "packages/net/rp-pppoe/Kconfig"
+source "packages/net/switchctrl/Kconfig"
+source "packages/net/tcpdump/Kconfig"
+source "packages/net/udhcp/Kconfig"
+source "packages/net/xorp/Kconfig"
 
 endmenu

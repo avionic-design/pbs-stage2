@@ -1,0 +1,4 @@
+config PACKAGE_NET_ETHTOOL
+	bool "ethtool"
+	select VIRTUAL_DEVEL_LIBC
+	default n

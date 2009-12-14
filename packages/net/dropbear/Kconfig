@@ -1,0 +1,4 @@
+config PACKAGE_NET_DROPBEAR
+	bool "dropbear"
+	select VIRTUAL_DEVEL_LIBC
+	default n

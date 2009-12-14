@@ -1,0 +1,4 @@
+config PACKAGE_NET_PPP
+	bool "ppp"
+	select VIRTUAL_DEVEL_LIBC
+	default n

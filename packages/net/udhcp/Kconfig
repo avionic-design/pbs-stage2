@@ -1,0 +1,4 @@
+config PACKAGE_NET_UDHCP
+	bool "udhcp"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_NET_DNSMASQ
+	bool "dnsmasq"
+	select VIRTUAL_DEVEL_LIBC
+	default n

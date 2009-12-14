@@ -1,0 +1,4 @@
+config PACKAGE_NET_NETCAT
+	bool "netcat"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_NET_TCPDUMP
+	bool "tcpdump"
+	select VIRTUAL_DEVEL_LIBC
+	default n
