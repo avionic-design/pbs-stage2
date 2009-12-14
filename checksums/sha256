@@ -123,7 +123,6 @@ cbad3e637eab613184405a87a2bf08a41991a0e512a3ced60d120effc73de667  download/glibc
 b1f1ec9720036a3a33598b8478eef102535444a083d5b5813a6981ed74ab4071  download/glibc-ports-2.10.1.tar.bz2
 12fe32e61b313882bd72a1eeda87afceb5b5b326761392edddf294b404efb5cd  download/psb-kernel-source_4.41.1.orig.tar.gz
 f03bac8999c57c399cbf4332831bcce905d0393d0f97f7e32a1407b48890dd9d  download/htop-0.8.3.tar.gz
-2dab1d6eb34e52f10fb2c4b468bfbc55dab6b73c982b58567371005c9a0dd9e1  download/busybox-1.15.2.tar.bz2
 b3b2bea6d2cd87660c8201a47071bf2a9889d8ed90c7203cc768b597799c12f4  download/usbutils-0.86.tar.gz
 e63041db1ef666ca43293762c8aaec27bd4b54b6d86aee68ebb090c1b66584f4  download/linux-2.6.31.4.tar.bz2
 d5f354fb02663ec3f07d31588f072b9418e9ed798e173d17b90ae295d6d88f0d  download/gcc-core-4.4.2.tar.bz2
@@ -204,3 +203,4 @@ a56a10acb34827c4d1a0ee282a338cbb04baa03d7fc7bc69e5690915c8fc7c0a  download/libXd
 004fb6cd43102918b6302cf537a2db7ceadda04aef2e0906ddf230f820dad34f  download/acpitool-0.5.1.tar.bz2
 029bf469bd013bcc3e384c1297a05a59e4b9b3ba90a26c022b32c0819d115e28  download/xf86-input-evdev-2.3.2.tar.bz2
 2f01dd9460d816b6c1cd67927a88831704a0ca08e086bb30c116b21f1e099f53  download/xterm-253.tgz
+d74020ad2cc5a4dcc5109c44dbd0e22582d6ce42954b0f1ff29763c8c0ff03cb  download/busybox-1.15.3.tar.bz2
