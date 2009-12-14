@@ -30,6 +30,8 @@ config PACKAGE_NET_IPUTILS
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+source "packages/net/lldpd/Kconfig"
+
 config PACKAGE_NET_NET_TOOLS
 	bool "net-tools"
 	select VIRTUAL_DEVEL_LIBC
