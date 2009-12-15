@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBIDL
+	bool "libIDL"
+	select VIRTUAL_DEVEL_LIBC
+	default n

@@ -27,6 +27,7 @@ obj-$(CONFIG_PACKAGE_LIBS_LIBDRM_POULSBO) += libdrm-poulsbo
 obj-$(CONFIG_PACKAGE_LIBS_LIBGCRYPT) += libgcrypt
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPG_ERROR) += libgpg-error
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPIO) += libgpio
+obj-$(CONFIG_PACKAGE_LIBS_LIBIDL) += libidl
 obj-$(CONFIG_PACKAGE_LIBS_LIBJPEG) += libjpeg
 obj-$(CONFIG_PACKAGE_LIBS_LIBOIL) += liboil
 obj-$(CONFIG_PACKAGE_LIBS_LIBPCAP) += libpcap
