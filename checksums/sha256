@@ -86,7 +86,6 @@ daa088f9ae231508929b7bd4746e942212b53f2802ca4cee450139fabc8de1fa  download/twm-1
 d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/enchant-1.5.0.tar.gz
 43b86121cafd19156bc018d6e59937868dd079c83b17aa3ae8a2bd189b4c881e  download/libsoup-2.27.2.tar.bz2
 0c6f3889da54767900bd5d434700ab5a289407ebd831d0f689a30bc44afb4dcd  download/sqlite-3.6.16.tar.gz
-75c3ec241e9996504fe02a9ed4d12f16b74ade713972f3db9e65ce95cd27e35d  download/jpegsrc.v6b.tar.gz
 814de31e1413df945cdd34939b424c4cf7a94d1c481f2d44c99c8ca52b288063  download/icu4c-4_2_1-src.tgz
 4eb4fc4a3f47edbc18c9dc09d54fd2189954ebaa0e521b0ab97e21087d8c9855  download/webkit-1.1.10.tar.gz
 db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-bitstream-vera-1.10.tar.bz2
@@ -205,3 +204,4 @@ f509f19068cb7bc0ba37613b9023f0069d734edae658da38dfd5a9bebe8a9957  download/lldpd
 fa2a1c6eea654d9fce7a4b1220f10c99cdec848dccaf1625c01f076b31382335  download/fontconfig-2.8.0.tar.gz
 a172c5afe4668a31eb090d14be7fc2811a9fec8568a785badd30280f47a27e00  download/libpng-1.2.41.tar.bz2
 fc67ed25ea41c797e0974ae26acfeb2d7e7838fe97bd87e617376077d25ef302  download/atk-1.29.3.tar.bz2
+50b7866206c5be044c4a2b0d7895898f5a58d31b50e16e79cf7dea3b90337ebf  download/jpegsrc.v7.tar.gz
