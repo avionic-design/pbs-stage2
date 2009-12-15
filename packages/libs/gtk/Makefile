@@ -1,10 +1,8 @@
 PACKAGE = gtk+
-VERSION = 2.17.6
+VERSION = 2.19.1
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.17
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.19
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
-DESCRIPTION = The GTK+ graphical user interface library
 
 include packages/autotools.mk
 
@@ -12,17 +10,15 @@ conf-args += \
 	--with-gdktarget=x11 \
 	--without-libjasper \
 	--without-libtiff \
+	--disable-glibtest \
 	--disable-cups
-
-conf-vars += \
-	gio_can_sniff=yes
 
 build-args += \
 	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1706.0
+sover  = 0.1901.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
@@ -41,6 +37,7 @@ stripfiles = \
 	$(prefix)/bin/gdk-pixbuf-csource \
 	$(prefix)/bin/gdk-pixbuf-query-loaders \
 	$(prefix)/bin/gtk-query-immodules-2.0 \
+	$(prefix)/bin/gtk-demo \
 	$(prefix)/bin/gtk-update-icon-cache \
 	$(prefix)/lib/libgailutil.so.18.0.1 \
 	$(prefix)/lib/libgdk-x11-2.0.so.$(sover) \
