@@ -163,7 +163,6 @@ deaf0a3212617e0dab353a3c3a66e0a1f2398306eca0fd882ac15996b0e44d99  download/scrns
 4f2bc94e5a1b60d6f35a9a2589ca98949e8841997f6a9acf4e85f46c1f34045f  download/videoproto-2.3.0.tar.bz2
 de17c06b7005c5e9ab469e324e76c5c3b8baa2dfc3c1dc7e93438c197facf68e  download/xcmiscproto-1.2.0.tar.bz2
 7f3cde0331e9ad3da720b1a8255e121673701199df0802b62380436e74222700  download/libfontenc-1.0.5.tar.bz2
-5ccb9683b8be76edfceab4bf006e1cce9018e0d3dea5e54aa72e82798213fead  download/libpciaccess-0.10.9.tar.bz2
 d8033a2fae20fed6de4f16b73ad69ca1c511e7da31c88e9bc6e75976187378cb  download/libXdmcp-1.0.3.tar.bz2
 112bfc30820b98deec4c9914536c5aa2f8b5162bd2b0bdb342343168e06f7679  download/libXfont-1.4.1.tar.bz2
 2ca43c1f6b2782994167a328471aa859d366cd7303c6dcbc8bda951a84a06039  download/libxkbfile-1.0.6.tar.bz2
@@ -205,3 +204,4 @@ a56a10acb34827c4d1a0ee282a338cbb04baa03d7fc7bc69e5690915c8fc7c0a  download/libXd
 2f01dd9460d816b6c1cd67927a88831704a0ca08e086bb30c116b21f1e099f53  download/xterm-253.tgz
 d74020ad2cc5a4dcc5109c44dbd0e22582d6ce42954b0f1ff29763c8c0ff03cb  download/busybox-1.15.3.tar.bz2
 f509f19068cb7bc0ba37613b9023f0069d734edae658da38dfd5a9bebe8a9957  download/lldpd-0.4.1.tar.gz
+6e38be12b656c83c66a6fd8ba56c041d8188218278219c88ee635242ec1c7dab  download/libpciaccess-0.11.0.tar.bz2

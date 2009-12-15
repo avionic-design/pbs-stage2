@@ -1,5 +1,5 @@
 PACKAGE = libpciaccess
-VERSION = 0.10.9
+VERSION = 0.11.0
 
 include packages/xorg/lib/common.mk
 
