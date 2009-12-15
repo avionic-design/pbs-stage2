@@ -13,4 +13,5 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/gpioctl \
+	$(prefix)/bin/gpiospy \
 	$(prefix)/lib/libgpio.so.0.0.0
