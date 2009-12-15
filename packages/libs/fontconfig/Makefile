@@ -1,5 +1,5 @@
 PACKAGE = fontconfig
-VERSION = 2.7.1
+VERSION = 2.8.0
 
 LOCATION = http://fontconfig.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -19,4 +19,4 @@ stripfiles = \
 	$(prefix)/bin/fc-match \
 	$(prefix)/bin/fc-query \
 	$(prefix)/bin/fc-scan \
-	$(prefix)/lib/libfontconfig.so.1.4.1
+	$(prefix)/lib/libfontconfig.so.1.4.4

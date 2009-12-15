@@ -1,3 +1,1 @@
 ltmain-sysroot.patch -p1
-000-cflags-for-build.patch -p1
-999-autoreconf.patch -p1
