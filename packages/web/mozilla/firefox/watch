@@ -1,0 +1,2 @@
+version=3
+ftp://ftp.mozilla.org/pub/mozilla.org/firefox/releases/((\d+\.)+(\d+))/source/firefox-(.*)\.source\.tar\.bz2

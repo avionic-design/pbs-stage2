@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_WEB_MOZILLA_FIREFOX) += firefox

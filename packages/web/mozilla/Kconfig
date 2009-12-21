@@ -1,0 +1,5 @@
+menu "Mozilla"
+
+source "packages/web/mozilla/firefox/Kconfig"
+
+endmenu
