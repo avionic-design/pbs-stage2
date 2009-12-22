@@ -1,27 +1,13 @@
---- a/Makefile.in	2007-07-19 12:44:32.000000000 +0200
-+++ b/Makefile.in	2007-07-19 12:46:27.000000000 +0200
-@@ -108,7 +108,7 @@
- 	$(nodist_libpcre_la_OBJECTS)
- libpcre_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
- 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
--	$(libpcre_la_LDFLAGS) $(LDFLAGS) -o $@
-+	$(libpcre_la_LDFLAGS) $(LDFLAGS) -o $@i
- @WITH_PCRE_CPP_TRUE@libpcrecpp_la_DEPENDENCIES = libpcre.la
- am__libpcrecpp_la_SOURCES_DIST = pcrecpp.cc pcre_scanner.cc \
- 	pcre_stringpiece.cc
-@@ -117,13 +117,13 @@
- libpcrecpp_la_OBJECTS = $(am_libpcrecpp_la_OBJECTS)
- libpcrecpp_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
- 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
--	$(CXXFLAGS) $(libpcrecpp_la_LDFLAGS) $(LDFLAGS) -o $@
-+	$(CXXFLAGS) $(libpcrecpp_la_LDFLAGS) $(LDFLAGS) -o $@i
- libpcreposix_la_DEPENDENCIES = libpcre.la
- am_libpcreposix_la_OBJECTS = pcreposix.lo
- libpcreposix_la_OBJECTS = $(am_libpcreposix_la_OBJECTS)
- libpcreposix_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
- 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
--	$(libpcreposix_la_LDFLAGS) $(LDFLAGS) -o $@
-+	$(libpcreposix_la_LDFLAGS) $(LDFLAGS) -o $@i
- binPROGRAMS_INSTALL = $(INSTALL_PROGRAM)
- @WITH_REBUILD_CHARTABLES_TRUE@am__EXEEXT_1 = dftables$(EXEEXT)
- @WITH_PCRE_CPP_TRUE@am__EXEEXT_2 = pcrecpp_unittest$(EXEEXT) \
+diff --git a/ltmain.sh b/ltmain.sh
+index b36c4ad..7872c62 100755
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -2079,7 +2079,7 @@ func_mode_install ()
+ 	# Install the pseudo-library for information purposes.
+ 	func_basename "$file"
+ 	name="$func_basename_result"
+-	instname="$dir/$name"i
++	instname="$dir/$name"
+ 	func_show_eval "$install_prog $instname $destdir/$name" 'exit $?'
+ 
+ 	# Maybe install the static library, too.

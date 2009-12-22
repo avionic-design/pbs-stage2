@@ -1,11 +1,19 @@
 PACKAGE = pcre
-VERSION = 7.2
+VERSION = 8.00
 
 LOCATION = ftp://ftp.csx.cam.ac.uk/pub/software/programming/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
 conf-args += \
 	--enable-unicode-properties
 
+prunefiles = \
+	$(prefix)/lib/libpcrecpp.la \
+	$(prefix)/lib/libpcre.la \
+	$(prefix)/lib/libpcreposix.la
+
+stripfiles = \
+	$(prefix)/bin/pcregrep \
+	$(prefix)/bin/pcretest
