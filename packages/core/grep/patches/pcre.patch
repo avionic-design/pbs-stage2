@@ -1,0 +1,44 @@
+diff --git a/configure b/configure
+index 1342891..ae32a28 100755
+--- a/configure
++++ b/configure
+@@ -10623,9 +10623,14 @@ _ACEOF
+ 
+ # support for pcre
+ if test x"$testpcre" = x"yes"; then
+-	if pcre-config --cflags >/dev/null 2>&1; then
+-		CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
+-		LIBS="$LIBS `pcre-config --libs`"
++	if test ! "x$PCRE_CPPFLAGS" = "x" -a ! "x$PCRE_LIBS" = "x"; then
++		CPPFLAGS="$CPPFLAGS $PCRE_CPPFLAGS"
++		LIBS="$LIBS $PCRE_LIBS"
++	else
++		if pcre-config --cflags >/dev/null 2>&1; then
++			CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
++			LIBS="$LIBS `pcre-config --libs`"
++		fi
+ 	fi
+ 
+ { echo "$as_me:$LINENO: checking for pcre_exec in -lpcre" >&5
+diff --git a/configure.ac b/configure.ac
+index e7ba9c3..5db2f4c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -153,9 +153,14 @@ jm_FUNC_REALLOC
+ 
+ # support for pcre
+ if test x"$testpcre" = x"yes"; then
+-	if pcre-config --cflags >/dev/null 2>&1; then
+-		CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
+-		LIBS="$LIBS `pcre-config --libs`"
++	if test ! "x$PCRE_CPPFLAGS" = "x" -a ! "x$PCRE_LIBS" = "x"; then
++		CPPFLAGS="$CPPFLAGS $PCRE_CPPFLAGS"
++		LIBS="$LIBS $PCRE_LIBS"
++	else
++		if pcre-config --cflags >/dev/null 2>&1; then
++			CPPFLAGS="$CPPFLAGS `pcre-config --cflags`"
++			LIBS="$LIBS `pcre-config --libs`"
++		fi
+ 	fi
+ 	AC_CHECK_LIB(pcre, pcre_exec)
+ fi
