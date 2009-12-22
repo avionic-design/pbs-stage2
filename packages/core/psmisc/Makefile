@@ -1,15 +1,13 @@
 PACKAGE = psmisc
-VERSION = 22.6
+VERSION = 22.8
 
-LOCATION = http://mesh.dl.sourceforge.net/sourceforge/psmisc
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-DESCRIPTION = utilities that use the proc filesystem
-
-##############################################################################
+LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-package-clean:
-	@:
-
+prunefiles =
+stripfiles = \
+	$(prefix)/bin/fuser \
+	$(prefix)/bin/killall \
+	$(prefix)/bin/pstree
