@@ -1,18 +1,13 @@
 PACKAGE = less
-VERSION = 382
+VERSION = 418
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-##############################################################################
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-LDFLAGS += --sysroot $(ROOTFS)
-
-install-vars += \
-	prefix=$(ROOTFS)$(prefix)
-
-package-clean:
-	@:
-
+prunefiles =
+stripfiles = \
+	$(prefix)/bin/less \
+	$(prefix)/bin/lessecho \
+	$(prefix)/bin/lesskey
