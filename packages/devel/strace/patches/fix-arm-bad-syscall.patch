@@ -1,6 +1,6 @@
 --- a/syscall.c	2005-06-08 21:45:28.000000000 +0100
 +++ b/syscall.c	2005-10-25 19:26:39.000000000 +0100
-@@ -1045,6 +1045,15 @@ struct tcb *tcp;
+@@ -1022,6 +1022,14 @@ struct tcb *tcp;
  		/*
  		 * Note: we only deal with only 32-bit CPUs here.
  		 */
@@ -11,7 +11,6 @@
 +			tcp->flags &= ~TCB_WAITEXECVE;
 +			return 0;
 +		}
-+ 
 +
  		if (regs.ARM_cpsr & 0x20) {
  			/*

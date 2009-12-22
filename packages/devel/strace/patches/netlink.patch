@@ -1,0 +1,26 @@
+diff --git a/configure b/configure
+index 80c1abb..6d8caf0 100755
+--- a/configure
++++ b/configure
+@@ -5880,7 +5880,7 @@ for ac_header in linux/icmp.h linux/in6.h linux/netlink.h linux/if_packet.h
+ do :
+   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "#include <stddef.h>
+-#include <linux/socket.h>
++#include <sys/socket.h>
+ "
+ eval as_val=\$$as_ac_Header
+    if test "x$as_val" = x""yes; then :
+diff --git a/configure.ac b/configure.ac
+index c8450cd..96c1c24 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -258,7 +258,7 @@ AC_CHECK_HEADERS([ \
+ ], [], [])
+ AC_CHECK_HEADERS([linux/icmp.h linux/in6.h linux/netlink.h linux/if_packet.h],
+                  [], [], [#include <stddef.h>
+-#include <linux/socket.h>])
++#include <sys/socket.h>])
+ AC_CHECK_HEADERS([asm/sigcontext.h], [], [], [#include <signal.h>])
+ AC_CHECK_TYPES([struct sigcontext_struct,
+ 		struct sigcontext],,, [#include <signal.h>])
