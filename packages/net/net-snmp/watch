@@ -1,0 +1,2 @@
+version=3
+http://sf.net/net-snmp/((\d+\.)+(\d+))/net-snmp-([\d\.]+)\.tar\.gz
