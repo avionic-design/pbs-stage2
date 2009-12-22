@@ -1,7 +1,187 @@
+diff --git a/addrtoname.c b/addrtoname.c
+index e67d114..087e873 100644
+--- a/addrtoname.c
++++ b/addrtoname.c
+@@ -54,8 +54,8 @@ extern int ether_ntohost(char *, const struct ether_addr *);
+ 
+ #endif /* USE_ETHER_NTOHOST */
+ 
+-#include <pcap.h>
+-#include <pcap-namedb.h>
++#include <pcap/pcap.h>
++#include <pcap/namedb.h>
+ #include <signal.h>
+ #include <stdio.h>
+ #include <string.h>
+diff --git a/bpf_dump.c b/bpf_dump.c
+index f509b7e..6c19eca 100644
+--- a/bpf_dump.c
++++ b/bpf_dump.c
+@@ -29,7 +29,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ 
+ #include "interface.h"
+diff --git a/interface.h b/interface.h
+index 1f03123..832b8dd 100644
+--- a/interface.h
++++ b/interface.h
+@@ -171,7 +171,7 @@ extern u_int16_t create_osi_cksum(const u_int8_t *, int, int);
+ 
+ /* The printer routines. */
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ extern int print_unknown_data(const u_char *, const char *,int);
+ extern void ascii_print(const u_char *, u_int);
+diff --git a/netdissect.h b/netdissect.h
+index cd6f2f1..6856ec0 100644
+--- a/netdissect.h
++++ b/netdissect.h
+@@ -249,7 +249,7 @@ extern const char *dnnum_string(netdissect_options *, u_short);
+ 
+ /* The printer routines. */
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ 
+ extern void eap_print(netdissect_options *,const u_char *, u_int);
+diff --git a/pcap_dump_ftell.c b/pcap_dump_ftell.c
+index 6eb3a4a..f07edb1 100644
+--- a/pcap_dump_ftell.c
++++ b/pcap_dump_ftell.c
+@@ -25,7 +25,7 @@ static const char rcsid[] _U_ =
+ #endif
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "pcap-missing.h"
+ 
+diff --git a/print-802_11.c b/print-802_11.c
+index 835d21b..4edf746 100644
+--- a/print-802_11.c
++++ b/print-802_11.c
+@@ -32,7 +32,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <string.h>
+ 
+ #include "interface.h"
+diff --git a/print-ap1394.c b/print-ap1394.c
+index dd9bc5a..931aeec 100644
+--- a/print-ap1394.c
++++ b/print-ap1394.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-arcnet.c b/print-arcnet.c
+index 48a4303..4f9e467 100644
+--- a/print-arcnet.c
++++ b/print-arcnet.c
+@@ -32,7 +32,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "arcnet.h"
+diff --git a/print-atalk.c b/print-atalk.c
+index 6ea1361..04bce41 100644
+--- a/print-atalk.c
++++ b/print-atalk.c
+@@ -35,7 +35,7 @@ static const char rcsid[] _U_ =
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-atm.c b/print-atm.c
+index f50918b..05209dd 100644
+--- a/print-atm.c
++++ b/print-atm.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <string.h>
+ 
+ #include "interface.h"
+diff --git a/print-bt.c b/print-bt.c
+index 498440c..66dff33 100644
+--- a/print-bt.c
++++ b/print-bt.c
+@@ -28,7 +28,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-chdlc.c b/print-chdlc.c
+index 238e91a..201755b 100644
+--- a/print-chdlc.c
++++ b/print-chdlc.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ 
+ #include "interface.h"
+diff --git a/print-cip.c b/print-cip.c
+index e9d672f..8becdeb 100644
+--- a/print-cip.c
++++ b/print-cip.c
+@@ -34,7 +34,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
 diff --git a/print-enc.c b/print-enc.c
-index 9569534..9876d6d 100644
+index 9569534..d1c6422 100644
 --- a/print-enc.c
 +++ b/print-enc.c
+@@ -32,7 +32,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
 @@ -77,9 +77,11 @@ enc_if_print(const struct pcap_pkthdr *h, register const u_char *p)
  	case AF_INET:
  		ip_print(gndo, p, length);
@@ -14,3 +194,250 @@ index 9569534..9876d6d 100644
  	}
  
  out:
+diff --git a/print-ether.c b/print-ether.c
+index b66e885..2d38e75 100644
+--- a/print-ether.c
++++ b/print-ether.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-fddi.c b/print-fddi.c
+index 1e7d554..7ead97e 100644
+--- a/print-fddi.c
++++ b/print-fddi.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-fr.c b/print-fr.c
+index f71aee6..4e3b86f 100644
+--- a/print-fr.c
++++ b/print-fr.c
+@@ -32,7 +32,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <stdio.h>
+ #include <string.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "addrtoname.h"
+ #include "interface.h"
+diff --git a/print-ipfc.c b/print-ipfc.c
+index c980765..9fa35ab 100644
+--- a/print-ipfc.c
++++ b/print-ipfc.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-juniper.c b/print-juniper.c
+index 08a929f..18488fe 100644
+--- a/print-juniper.c
++++ b/print-juniper.c
+@@ -28,7 +28,7 @@ __RCSID("NetBSD: print-juniper.c,v 1.3 2007/07/25 06:31:32 dogcow Exp ");
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ 
+ #include "interface.h"
+diff --git a/print-lane.c b/print-lane.c
+index 33723aa..c786bc0 100644
+--- a/print-lane.c
++++ b/print-lane.c
+@@ -32,7 +32,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-nfs.c b/print-nfs.c
+index fb09e30..c940251 100644
+--- a/print-nfs.c
++++ b/print-nfs.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-null.c b/print-null.c
+index a69997d..fa5dff4 100644
+--- a/print-null.c
++++ b/print-null.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-pflog.c b/print-pflog.c
+index 972cb4b..a3a2e1d 100644
+--- a/print-pflog.c
++++ b/print-pflog.c
+@@ -40,7 +40,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-ppp.c b/print-ppp.c
+index 708e934..248a329 100644
+--- a/print-ppp.c
++++ b/print-ppp.c
+@@ -45,7 +45,7 @@ static const char rcsid[] _U_ =
+ #include <net/if_ppp.h>
+ #endif
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ 
+diff --git a/print-raw.c b/print-raw.c
+index 8e376ce..b21a555 100644
+--- a/print-raw.c
++++ b/print-raw.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-sl.c b/print-sl.c
+index f00d394..d4683e8 100644
+--- a/print-sl.c
++++ b/print-sl.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ 
+ #include "interface.h"
+diff --git a/print-sll.c b/print-sll.c
+index d96b3de..3cd12db 100644
+--- a/print-sll.c
++++ b/print-sll.c
+@@ -31,7 +31,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <stdio.h>
+ #include <string.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-sunatm.c b/print-sunatm.c
+index e6f19e8..2cd9e4e 100644
+--- a/print-sunatm.c
++++ b/print-sunatm.c
+@@ -44,7 +44,7 @@ struct mbuf;
+ struct rtentry;
+  
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "extract.h"
+diff --git a/print-symantec.c b/print-symantec.c
+index ebb62cd..1fe800c 100644
+--- a/print-symantec.c
++++ b/print-symantec.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "interface.h"
+ #include "addrtoname.h"
+diff --git a/print-token.c b/print-token.c
+index 04defa9..c0a384d 100644
+--- a/print-token.c
++++ b/print-token.c
+@@ -34,7 +34,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-vjc.c b/print-vjc.c
+index 2dc89aa..e58d25c 100644
+--- a/print-vjc.c
++++ b/print-vjc.c
+@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ 
+ #include "interface.h"
+diff --git a/tcpdump.c b/tcpdump.c
+index 4328b30..73ee635 100644
+--- a/tcpdump.c
++++ b/tcpdump.c
+@@ -60,7 +60,7 @@ extern int SIZE_BUF;
+ #include <smi.h>
+ #endif
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <signal.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+diff --git a/util.c b/util.c
+index 6b723e5..47d545c 100644
+--- a/util.c
++++ b/util.c
+@@ -36,7 +36,7 @@ static const char rcsid[] _U_ =
+ #ifdef HAVE_FCNTL_H
+ #include <fcntl.h>
+ #endif
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <stdarg.h>
+ #include <stdlib.h>
