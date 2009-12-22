@@ -1,4 +1,0 @@
-config PACKAGE_LIBS_UUID
-	bool "uuid"
-	select VIRTUAL_DEVEL_LIBC
-	default n

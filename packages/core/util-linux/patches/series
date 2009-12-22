@@ -1,2 +1,1 @@
-arm-fixes.patch -p1
-no-llseek.patch -p1
+ltmain-sysroot.patch
