@@ -6,7 +6,6 @@ c5001748b069224dd98bf1bb9ee877321c7de8b332c8aad5af3e2a7372d23f5a  download/diffu
 035f98fae17d9cff002993c564ccc83dc4ed136127172caeff872b6abdb679d8  download/sysvinit-2.86.tar.gz
 e865de2c1f559fff0d3fc936e660c0efaf7afe662064f2fb97ccad1ec28d208a  download/sysfsutils-2.1.0.tar.gz
 e3b9950851a19904d642c4dec518623382cf4d2ac24f70a76510c944330d28ca  download/zlib-1.2.3.tar.bz2
-b439e04adab9b1e66e11f59c4331680da48f1722f2123123f7c16dfbed2c38dc  download/procps-3.2.7.tar.gz
 d3d70ebf15458ac15bd9930cbe516bedebfdb7ac4c679c456668eb0d56eddb2c  download/util-linux-2.12r.tar.gz
 036c694caa1aeb6639f7e2c1b10c78b7133e51b322a7123578e7709fe6190240  download/module-init-tools-3.2.tar.bz2
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
@@ -207,3 +206,4 @@ a89f13b166b412930fe418ff50032dd2cde8bb181d8b47b5ca6f848d218fdcf2  download/xorg-
 88576f10eb18e170b151c8c89cff6b26863df01b7f96de33700d2efe825ca5d4  download/pcre-8.00.tar.bz2
 0abec64e01458fbd032e33351d8071602a959529ea796965e98338ee83a40020  download/grep-2.5.4.tar.bz2
 f532fcd61b012379d3258196a8588fd9d51ecdfb5c795485ab2f78d439b103b4  download/less-418.tar.gz
+11ed68d8a4433b91cd833deb714a3aa849c02aea738c42e6b4557982419c1535  download/procps-3.2.8.tar.gz

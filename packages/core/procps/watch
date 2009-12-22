@@ -1,3 +1,2 @@
 version=3
-http://sf.net/procps/procps-(.+)\.tar\.gz
-
+http://procps.sourceforge.net/procps-(.+)\.tar\.gz
