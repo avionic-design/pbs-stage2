@@ -1,22 +1,15 @@
 PACKAGE = glibc
-VERSION = 2.10.1
+VERSION = 2.11
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
 	$(PACKAGE)-$(VERSION).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
-DESCRIPTION = the GNU C library
-
-##############################################################################
-
 include packages/common.mk
 
 # always optimize glibc for speed (it won't even compile with -Os)
 CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
-ARCH := $(shell echo $(CONFIG_ARCH))
-CPU := $(shell echo $(CONFIG_CPU))
-LIBC := $(shell echo $(CONFIG_LIBC))
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -94,6 +87,7 @@ stripfiles = \
 	/lib/libanl-$(VERSION).so \
 	/lib/libBrokenLocale-$(VERSION).so \
 	/lib/libc-$(VERSION).so \
+	/lib/libcidn-$(VERSION).so \
 	/lib/libcrypt-$(VERSION).so \
 	/lib/libdl-$(VERSION).so \
 	/lib/libm-$(VERSION).so \
@@ -133,18 +127,4 @@ stripfiles = \
 	$(plugin)/*.so
 
 include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/binary.mk
