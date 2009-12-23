@@ -1,2 +1,3 @@
 obj-$(CONFIG_PACKAGE_UTIL_ABOX) += abox
 obj-$(CONFIG_PACKAGE_UTIL_HTOP) += htop
+obj-$(CONFIG_PACKAGE_UTIL_I2C_TOOLS) += i2c-tools

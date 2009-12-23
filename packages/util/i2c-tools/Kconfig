@@ -1,0 +1,4 @@
+config PACKAGE_UTIL_I2C_TOOLS
+	bool "i2c-tools"
+	select VIRTUAL_DEVEL_LIBC
+	default n
