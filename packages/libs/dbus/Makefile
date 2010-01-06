@@ -6,6 +6,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+ifeq ($(CONFIG_PACKAGE_LIBS_DBUS_X11),y)
+  conf-args += --with-x
+else
+  conf-args += --without-x
+endif
+
 conf-vars += \
 	ac_cv_have_abstract_sockets=yes
 
