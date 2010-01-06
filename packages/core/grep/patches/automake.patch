@@ -1,0 +1,62 @@
+diff --git a/Makefile.am b/Makefile.am
+index efec9aa..e6e4e7a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -22,21 +22,7 @@ SUBDIRS = intl po lib doc src tests m4 vms bootstrap
+ 
+ EXTRA_DIST = TODO README README-alpha
+ 
+-# We should be able to just define `ACLOCAL_AMFLAGS = --acdir=m4',
+-# but this runs afoul of a bug in automake 1.
+-# The following hack works around this bug by creating acinclude.m4 manually.
+-ACLOCAL_AMFLAGS =
+-M4DIR = $(srcdir)/m4
+-ACINCLUDE_INPUTS = $(M4DIR)/decl.m4 $(M4DIR)/djgpp.m4 $(M4DIR)/dosfile.m4 \
+-  $(M4DIR)/envsep.m4 $(M4DIR)/error.m4 $(M4DIR)/gettext.m4 $(M4DIR)/glibc.m4 \
+-  $(M4DIR)/header.m4 $(M4DIR)/init.m4 $(M4DIR)/install.m4 \
+-  $(M4DIR)/inttypes_h.m4 $(M4DIR)/isc-posix.m4 $(M4DIR)/largefile.m4 \
+-  $(M4DIR)/lcmessage.m4 $(M4DIR)/malloc.m4 $(M4DIR)/mbstate_t.m4 \
+-  $(M4DIR)/missing.m4 $(M4DIR)/progtest.m4 $(M4DIR)/realloc.m4 \
+-  $(M4DIR)/regex.m4 $(M4DIR)/sanity.m4 $(M4DIR)/strerror_r.m4 \
+-  $(M4DIR)/uintmax_t.m4 $(M4DIR)/ulonglong.m4 $(M4DIR)/xstrtoumax.m4
+-$(srcdir)/acinclude.m4 : $(ACINCLUDE_INPUTS)
+-	cat $(ACINCLUDE_INPUTS) >$(srcdir)/acinclude.m4
++ACLOCAL_AMFLAGS = -I m4
+ 
+ # make cvs-clean blatantly stolen from KDE CVS ;)
+ cvs-clean:
+diff --git a/Makefile.in b/Makefile.in
+index 6387db0..81150f3 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -226,19 +226,7 @@ AUTOMAKE_OPTIONS = no-dependencies
+ SUBDIRS = intl po lib doc src tests m4 vms bootstrap
+ EXTRA_DIST = TODO README README-alpha
+ 
+-# We should be able to just define `ACLOCAL_AMFLAGS = --acdir=m4',
+-# but this runs afoul of a bug in automake 1.
+-# The following hack works around this bug by creating acinclude.m4 manually.
+-ACLOCAL_AMFLAGS = 
+-M4DIR = $(srcdir)/m4
+-ACINCLUDE_INPUTS = $(M4DIR)/decl.m4 $(M4DIR)/djgpp.m4 $(M4DIR)/dosfile.m4 \
+-  $(M4DIR)/envsep.m4 $(M4DIR)/error.m4 $(M4DIR)/gettext.m4 $(M4DIR)/glibc.m4 \
+-  $(M4DIR)/header.m4 $(M4DIR)/init.m4 $(M4DIR)/install.m4 \
+-  $(M4DIR)/inttypes_h.m4 $(M4DIR)/isc-posix.m4 $(M4DIR)/largefile.m4 \
+-  $(M4DIR)/lcmessage.m4 $(M4DIR)/malloc.m4 $(M4DIR)/mbstate_t.m4 \
+-  $(M4DIR)/missing.m4 $(M4DIR)/progtest.m4 $(M4DIR)/realloc.m4 \
+-  $(M4DIR)/regex.m4 $(M4DIR)/sanity.m4 $(M4DIR)/strerror_r.m4 \
+-  $(M4DIR)/uintmax_t.m4 $(M4DIR)/ulonglong.m4 $(M4DIR)/xstrtoumax.m4
++ACLOCAL_AMFLAGS = -I m4
+ 
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+@@ -680,9 +668,6 @@ uninstall-am:
+ 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+ 	pdf-am ps ps-am tags tags-recursive uninstall uninstall-am
+ 
+-$(srcdir)/acinclude.m4 : $(ACINCLUDE_INPUTS)
+-	cat $(ACINCLUDE_INPUTS) >$(srcdir)/acinclude.m4
+-
+ # make cvs-clean blatantly stolen from KDE CVS ;)
+ cvs-clean:
+ 	@if test ! -d CVS; then \
