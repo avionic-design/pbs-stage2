@@ -1,0 +1,64 @@
+diff --git a/snmplib/snmp_api.c b/snmplib/snmp_api.c
+index dbe9e22..a854e86 100644
+--- a/snmplib/snmp_api.c
++++ b/snmplib/snmp_api.c
+@@ -347,6 +347,7 @@ int             snmp_build(u_char ** pkt, size_t * pkt_len,
+                            netsnmp_pdu *pdu);
+ static int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
+                            u_char *, size_t);
++static void *   snmp_sess_pointer_unlocked(netsnmp_session *);
+ 
+ static void     snmpv3_calc_msg_flags(int, int, u_char *);
+ static int      snmpv3_verify_msg(netsnmp_request_list *, netsnmp_pdu *);
+@@ -4896,7 +4897,7 @@ int
+ snmp_async_send(netsnmp_session * session,
+                 netsnmp_pdu *pdu, snmp_callback callback, void *cb_data)
+ {
+-    void           *sessp = snmp_sess_pointer(session);
++    void           *sessp = snmp_sess_pointer_unlocked(session);
+     return snmp_sess_async_send(sessp, pdu, callback, cb_data);
+ }
+ 
+@@ -7433,17 +7434,15 @@ snmp_add_var(netsnmp_pdu *pdu,
+  * which guarantee action will occur ONLY for this given session.
+  */
+ void           *
+-snmp_sess_pointer(netsnmp_session * session)
++snmp_sess_pointer_unlocked(netsnmp_session * session)
+ {
+     struct session_list *slp;
+ 
+-    snmp_res_lock(MT_LIBRARY_ID, MT_LIB_SESSION);
+     for (slp = Sessions; slp; slp = slp->next) {
+         if (slp->session == session) {
+             break;
+         }
+     }
+-    snmp_res_unlock(MT_LIBRARY_ID, MT_LIB_SESSION);
+ 
+     if (slp == NULL) {
+         snmp_errno = SNMPERR_BAD_SESSION;       /*MTCRITICAL_RESOURCE */
+@@ -7453,6 +7452,23 @@ snmp_sess_pointer(netsnmp_session * session)
+ }
+ 
+ /*
++ * returns NULL or internal pointer to session
++ * use this pointer for the other snmp_sess* routines,
++ * which guarantee action will occur ONLY for this given session.
++ */
++void           *
++snmp_sess_pointer(netsnmp_session * session)
++{
++    void *ret;
++
++    snmp_res_lock(MT_LIBRARY_ID, MT_LIB_SESSION);
++    ret = snmp_sess_pointer_unlocked(session);
++    snmp_res_unlock(MT_LIBRARY_ID, MT_LIB_SESSION);
++
++    return ret;
++}
++
++/*
+  * Input : an opaque pointer, returned by snmp_sess_open.
+  * returns NULL or pointer to session.
+  */

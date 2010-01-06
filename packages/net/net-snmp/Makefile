@@ -7,14 +7,25 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
-	--with-default-snmp-version=3 \
+	--enable-reentrant \
+	--enable-ipv6 \
+	--with-default-snmp-version=2 \
 	--with-logfile=/var/log/snmpd.log \
 	--with-persistent-directory=/var/run/net-snmp \
 	--with-sys-contact="support@avionic-design.de" \
 	--with-sys-location="Unknown"
 
+conf-vars += \
+	LIBS="-lpthread"
+
 prunefiles = \
-	$(prefix)/lib/libnetsnmp.la
+	$(prefix)/lib/libnetsnmp.la \
+	$(prefix)/lib/libnetsnmpagent.la \
+	$(prefix)/lib/libnetsnmphelpers.la \
+	$(prefix)/lib/libnetsnmpmibs.la \
+	$(prefix)/lib/libnetsnmptrapd.la
+
+sover = 20.0.0
 
 stripfiles = \
 	$(prefix)/bin/encode_keychange \
@@ -34,6 +45,10 @@ stripfiles = \
 	$(prefix)/bin/snmpusm \
 	$(prefix)/bin/snmpvacm \
 	$(prefix)/bin/snmpwalk \
-	$(prefix)/lib/libnetsnmp.so.20.0.0 \
+	$(prefix)/lib/libnetsnmp.so.$(sover) \
+	$(prefix)/lib/libnetsnmpagent.so.$(sover) \
+	$(prefix)/lib/libnetsnmphelpers.so.$(sover) \
+	$(prefix)/lib/libnetsnmpmibs.so.$(sover) \
+	$(prefix)/lib/libnetsnmptrapd.so.$(sover) \
 	$(prefix)/sbin/snmpd \
 	$(prefix)/sbin/snmptrapd
