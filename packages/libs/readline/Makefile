@@ -1,5 +1,5 @@
 PACKAGE = readline
-VERSION = 6.0
+VERSION = 6.1
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -14,5 +14,5 @@ build-args += \
 
 prunefiles =
 stripfiles = \
-	$(prefix)/lib/libhistory.so.6.0 \
-	$(prefix)/lib/libreadline.so.6.0
+	$(prefix)/lib/libhistory.so.$(VERSION) \
+	$(prefix)/lib/libreadline.so.$(VERSION)

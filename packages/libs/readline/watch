@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnu.org/pub/gnu/readline/readline-(.*)\.tar\.gz
+http://ftp.gnu.org/pub/gnu/readline/readline-([\d\.]+)\.tar\.gz
