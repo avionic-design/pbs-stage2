@@ -1,3 +1,2 @@
 version=3
-http://alioth.debian.org/download.php/1806/minicom-(.+)\.tar\.gz
-
+http://alioth.debian.org/project/showfiles.php?group_id=30018 .*/minicom-([\d\.]+)\.tar\.gz
