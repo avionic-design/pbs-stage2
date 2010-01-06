@@ -32,6 +32,7 @@ extract		:= $(addprefix $(extprefix),$(tarballs))
 extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
+extract-xz      := $(filter %.tar.xz,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/, $(tarballs))
 remote-files	:= $(addprefix $(subst ://,//,$(location))/, $(tarballs))
@@ -65,6 +66,9 @@ quiet_cmd_tar_bz2 = TAR     $<
 quiet_cmd_tar_lzma = TAR     $<
       cmd_tar_lzma = cd $(pkgtree) && tar --lzma -xf $<
 
+quiet_cmd_tar_xz = TAR     $<
+      cmd_tar_xz = cd $(pkgtree) && tar xJf $<
+
 $(extract-gz): $(extprefix)%: $(srctree)/download/%
 	$(call cmd,tar_gz)
 	$(call cmd,stamp)
@@ -75,6 +79,10 @@ $(extract-bz2): $(extprefix)%.tar.bz2: $(srctree)/download/%.tar.bz2
 
 $(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
 	$(call cmd,tar_lzma)
+	$(call cmd,stamp)
+
+$(extract-xz): $(extprefix)%.tar.xz: $(srctree)/download/%.tar.xz
+	$(call cmd,tar_xz)
 	$(call cmd,stamp)
 
 $(pkgtree)/.directory:
