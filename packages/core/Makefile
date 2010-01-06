@@ -4,6 +4,7 @@ obj-$(CONFIG_PACKAGE_CORE_BUSYBOX) += busybox
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX_GIT) += busybox.git
 obj-$(CONFIG_PACKAGE_CORE_COREUTILS) += coreutils
 obj-$(CONFIG_PACKAGE_CORE_DIFFUTILS) += diffutils
+obj-$(CONFIG_PACKAGE_CORE_DPKG) += dpkg
 obj-$(CONFIG_PACKAGE_CORE_GREP) += grep
 obj-$(CONFIG_PACKAGE_CORE_GROFF) += groff
 obj-$(CONFIG_PACKAGE_CORE_LESS) += less

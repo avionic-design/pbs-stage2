@@ -1,0 +1,4 @@
+config PACKAGE_CORE_DPKG
+	bool "dpkg"
+	select VIRTUAL_DEVEL_LIBC
+	default n
