@@ -2,7 +2,7 @@ PACKAGE = uClibc
 VERSION = $(uclibc_VERSION)
 
 LOCATION = http://uclibc.org/downloads
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 ##############################################################################
 

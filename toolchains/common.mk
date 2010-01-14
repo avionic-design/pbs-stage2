@@ -8,7 +8,7 @@ BINUTILS_SNAPSHOT	= 2.19.51.0.9
 
 # C library versions
 newlib_VERSION		= 1.16.0
-uclibc_VERSION		= 0.9.30.1
+uclibc_VERSION		= 0.9.30.2
 glibc_VERSION		= 2.11
 
 SYSROOT	= $(CURDIR)
