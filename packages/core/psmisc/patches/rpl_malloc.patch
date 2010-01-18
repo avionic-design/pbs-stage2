@@ -27,9 +27,9 @@ diff --git a/src/killall.c b/src/killall.c
 index e9a47b7..94e7192 100644
 --- a/src/killall.c
 +++ b/src/killall.c
-@@ -59,6 +59,34 @@ static int verbose = 0, exact = 0, interactive = 0, reg = 0,
-            quiet = 0, wait_until_dead = 0, process_group = 0,
+@@ -87,6 +87,34 @@ static int verbose = 0, exact = 0, interactive = 0, reg = 0,
             ignore_case = 0, pidof;
+ static long younger_than = 0, older_than = 0;
  
 +#if malloc == rpl_malloc
 +#undef malloc
@@ -66,9 +66,9 @@ diff --git a/src/pstree.c b/src/pstree.c
 index a85c7bc..6dfd139 100644
 --- a/src/pstree.c
 +++ b/src/pstree.c
-@@ -138,6 +138,34 @@ static char last_char = 0;
- static int dumped = 0;		/* used by dump_by_user */
- static int charlen = 0;     /* length of character */
+@@ -133,6 +133,34 @@ static char last_char = 0;
+ static int dumped = 0;                /* used by dump_by_user */
+ static int charlen = 0;                /* length of character */
  
 +#if malloc == rpl_malloc
 +#undef malloc
