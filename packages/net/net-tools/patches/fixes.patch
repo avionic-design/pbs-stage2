@@ -8,6 +8,19 @@
      }
  
      /* Fill in the other fields. */
+diff --git a/lib/x25_sr.c b/lib/x25_sr.c
+index 8637c98..3537629 100644
+--- a/lib/x25_sr.c
++++ b/lib/x25_sr.c
+@@ -77,7 +77,7 @@ static int X25_setroute(int action, int options, char **args)
+   rt.sigdigits=sigdigits;
+ 
+   /* x25_route_struct.address isn't type struct sockaddr_x25, Why? */
+-  memcpy(&rt.address, &sx25.sx25_addr, sizeof(x25_address));
++  memcpy(&rt.address, &sx25.sx25_addr, sizeof(sx25.sx25_addr));
+ 
+   while (*args) {
+ 	if (!strcmp(*args,"device") || !strcmp(*args,"dev")) {
 --- a/hostname.c	2007-03-21 11:46:51.000000000 +0100
 +++ b/hostname.c	2007-03-21 11:47:12.000000000 +0100
 @@ -31,6 +31,7 @@

@@ -2,32 +2,46 @@ PACKAGE = net-tools
 VERSION = 1.60
 
 LOCATION  = http://www.tazenda.demon.co.uk/phil/$(PACKAGE)
-TARBALLS  = $(PACKAGE_FULLNAME).tar.bz2
-DOTCONFIG = packages/$(package)/$(PACKAGE_FULLNAME)
-
-##############################################################################
+TARBALLS  = $(PACKAGE)-$(VERSION).tar.bz2
+DOTCONFIG = $(pkgsrctree)/$(PACKAGE)-$(VERSION)
 
 include packages/common.mk
 
-env = env -i $(call set-args, CC)
+conf-args = \
+	CC='$(CC)'
 
-package-configure:
+$(pkgtree)/.configure:
 	cp $(DOTCONFIG) $(pkgtree)/config.status
-	cd $(pkgtree) && yes '' | $(env) $(MAKE) $(conf-args) config
+	cd $(pkgbuildtree) && yes '' | \
+		$(env) $(MAKE) $(conf-args) config
 
 build-args = \
+	CC='$(CC)' \
 	COPTS='$(CFLAGS)' \
-	LOPTS='$(CFLAGS) $(LDFLAGS)'
+	LOPTS='$(LDFLAGS)'
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build: $(pkgtree)/.configure
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(build-args)
 
 install-args = \
-	BASEDIR=$(ROOTFS)
+	BASEDIR=$(DESTDIR)
 
-package-install:
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install
 
-package-clean:
-	@:
+prunefiles =
+stripfiles = \
+	/bin/hostname \
+	/bin/netstat \
+	/sbin/arp \
+	/sbin/ifconfig \
+	/sbin/nameif \
+	/sbin/plipconfig \
+	/sbin/rarp \
+	/sbin/route \
+	/sbin/slattach
 
+include packages/cleanup.mk
+include packages/binary.mk
