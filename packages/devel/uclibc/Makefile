@@ -1,9 +1,9 @@
-LIBC_VERSION ?= 0.9.30.1
+LIBC_VERSION ?= 0.9.30.2
 PACKAGE = uClibc
 VERSION = $(LIBC_VERSION)
 
 LOCATION = http://www.uclibc.org/downloads
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 DESCRIPTION = small C library for embedded systems
 
