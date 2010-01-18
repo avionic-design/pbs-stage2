@@ -12,5 +12,6 @@ config PACKAGE_UTIL_HTOP
 	default n
 
 source "packages/util/i2c-tools/Kconfig"
+source "packages/util/superiotool/Kconfig"
 
 endmenu

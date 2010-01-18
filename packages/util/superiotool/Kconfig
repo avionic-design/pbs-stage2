@@ -1,0 +1,4 @@
+config PACKAGE_UTIL_SUPERIOTOOL
+	bool "superiotool"
+	select VIRTUAL_DEVEL_LIBC
+	default n
