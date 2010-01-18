@@ -31,6 +31,7 @@ stripfiles = \
 	$(prefix)/bin/cut \
 	$(prefix)/bin/date \
 	$(prefix)/bin/dd \
+	$(prefix)/bin/df \
 	$(prefix)/bin/dir \
 	$(prefix)/bin/dircolors \
 	$(prefix)/bin/dirname \
