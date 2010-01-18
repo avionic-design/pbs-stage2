@@ -25,11 +25,13 @@ stripfiles = \
 	/sbin/fdisk \
 	/sbin/findfs \
 	/sbin/fsck \
+	/sbin/fsck.cramfs \
 	/sbin/fsck.minix \
 	/sbin/hwclock \
 	/sbin/losetup \
 	/sbin/mkfs \
 	/sbin/mkfs.bfs \
+	/sbin/mkfs.cramfs \
 	/sbin/mkfs.minix \
 	/sbin/mkswap \
 	/sbin/pivot_root \
