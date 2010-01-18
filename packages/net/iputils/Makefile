@@ -2,26 +2,38 @@ PACKAGE = iputils
 VERSION = s20071127
 
 LOCATION = http://www.skbuff.net/iputils
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
-
-##############################################################################
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-LDFLAGS := $(CFLAGS) $(LDFLAGS)
-env = env -i
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure:
+	$(call cmd,stamp)
 
 build-args = \
-	$(call set-args, CC CFLAGS LDFLAGS) \
+	CC=$(CC) \
+	CFLAGS="$(CFLAGS) -D_GNU_SOURCE" \
+	LDFLAGS="$(LDFLAGS)" \
 	IPV4_TARGETS='ping arping' \
 	IPV6_TARGETS='ping6'
 
-package-build:
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+$(pkgtree)/.build: $(pkgtree)/.configure
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
-package-install:
-	cd $(pkgtree) && $(priv) install -t $(ROOTFS)/usr/bin ping arping ping6
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	$(priv) install -d $(DESTDIR)$(prefix)/bin
+	cd $(pkgbuildtree) && \
+		$(priv) install -t $(DESTDIR)$(prefix)/bin ping arping ping6
+	$(call cmd,stamp)
 
-package-clean:
-	@:
+prunefiles =
+stripfiles = \
+	$(prefix)/bin/arping \
+	$(prefix)/bin/ping \
+	$(prefix)/bin/ping6
 
+include packages/cleanup.mk
+include packages/binary.mk
