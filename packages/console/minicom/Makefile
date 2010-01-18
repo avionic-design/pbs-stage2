@@ -8,6 +8,9 @@ DESCRIPTION = friendly menu-driven serial communication program
 
 include packages/autotools.mk
 
+conf-vars += \
+	LIBS='-liconv'
+
 stripfiles = \
 	$(prefix)/bin/ascii-xfr \
 	$(prefix)/bin/minicom \

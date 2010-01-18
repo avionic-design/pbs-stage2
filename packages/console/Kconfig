@@ -12,8 +12,8 @@ config PACKAGE_CONSOLE_FBSET
 
 config PACKAGE_CONSOLE_MINICOM
 	bool "minicom"
-	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_LIBS_NCURSES
+	select PACKAGE_LIBS_ICONV
 	default n
 
 endmenu
