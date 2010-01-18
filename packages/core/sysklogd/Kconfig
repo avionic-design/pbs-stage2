@@ -1,4 +1,0 @@
-config PACKAGE_CORE_SYSKLOGD
-	bool "sysklogd"
-	select VIRTUAL_DEVEL_LIBC
-	default n

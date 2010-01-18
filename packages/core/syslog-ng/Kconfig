@@ -1,0 +1,5 @@
+config PACKAGE_CORE_SYSLOG_NG
+	bool "syslog-ng"
+	select PACKAGE_LIBS_GLIB
+	select PACKAGE_LIBS_EVENTLOG
+	default n

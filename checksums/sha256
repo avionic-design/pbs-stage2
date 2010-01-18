@@ -9,7 +9,6 @@ e3b9950851a19904d642c4dec518623382cf4d2ac24f70a76510c944330d28ca  download/zlib-
 036c694caa1aeb6639f7e2c1b10c78b7133e51b322a7123578e7709fe6190240  download/module-init-tools-3.2.tar.bz2
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
 be955bef7a81d69222e929689e0de0ecf64c13dc5b15b2ee5696d5ef66fdeec0  download/sed-4.1.5.tar.gz
-44357e0fae8c8f0e315bf130b4e86a4f96b91d66eeb4e473def4ce8336fff102  download/sysklogd-1.4.1.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
 da0ca1e821e3fa7cfbe73ddb1480b921002ee992f5e5fbc611422c103b907443  download/udhcp-0.9.8.tar.gz
 40ff4ab0247b75138a0887ed40f81c1a6184f340b77126c16d074b1075b41c20  download/fbset-2.1.tar.gz
@@ -210,3 +209,4 @@ f3e526deff4c9e0fad53a283add6a6f553d59c62274c1fd02cbb240090114d9b  download/dpkg_
 e8c2a520549ec86deeccd55fd30cbb46fca20e57d7dfde240ee49df1c6dca053  download/psmisc-22.10.tar.gz
 5074df427a0640fb37b73cb692f233907fa2015af3be8594cd235a28ed1605a6  download/glib-2.23.1.tar.bz2
 15146cb72e322766bb8f93b7b0d254d4b9a53826ee65de335dc6ac4376cd51b1  download/eventlog_0.2.9.tar.gz
+2b509acbb8fdd3a07cf41b8ae7734792f297697f1c6dd72879ce87dda279b303  download/syslog-ng_3.0.5.tar.gz
