@@ -1,61 +1,19 @@
 PACKAGE = bash
-VERSION = 4.0-rc1
+VERSION = 4.1
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-##############################################################################
-
-include packages/common.mk
-
-conf-args = \
-	--host=$(TARGET) \
-	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/info \
-	--sysconfdir=/etc \
-	--bindir=/bin
+include packages/autotools.mk
 
 conf-args += \
-	--disable-nls
-
-conf-vars = \
-	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)'
+	--bindir=/bin
 
 ifeq ($(ARCH),blackfin)
 conf-args += \
 	--with-bash-malloc=no
 endif
 
-package-configure:
-	cp support/config.{guess,sub} $(pkgtree)/support
-	chmod a+x $(pkgtree)/configure
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
-
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args)
-
-install-args = \
-	DESTDIR=$(ROOTFS)
-
-package-do-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) ln -sf bash $(ROOTFS)/bin/sh
-
 prunefiles =
 stripfiles = \
 	/bin/bash
-
-include packages/cleanup.mk
-
-package-install: package-do-install package-cleanup
-	@:
-
-package-clean:
-	@:
-
