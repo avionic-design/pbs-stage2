@@ -1,0 +1,4 @@
+config PACKAGE_CORE_RSYSLOG
+	bool "rsyslog"
+	select VIRTUAL_DEVEL_LIBC
+	default n

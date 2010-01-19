@@ -12,6 +12,7 @@ obj-$(CONFIG_PACKAGE_CORE_MKTEMP) += mktemp
 obj-$(CONFIG_PACKAGE_CORE_PCIUTILS) += pciutils
 obj-$(CONFIG_PACKAGE_CORE_PROCPS) += procps
 obj-$(CONFIG_PACKAGE_CORE_PSMISC) += psmisc
+obj-$(CONFIG_PACKAGE_CORE_RSYSLOG) += rsyslog
 obj-$(CONFIG_PACKAGE_CORE_SED) += sed
 obj-$(CONFIG_PACKAGE_CORE_START_STOP_DAEMON) += start-stop-daemon
 obj-$(CONFIG_PACKAGE_CORE_SYSLOG_NG) += syslog-ng
