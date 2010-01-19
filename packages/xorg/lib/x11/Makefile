@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.3.2
+VERSION = 1.3.3
 
 include packages/xorg/lib/common.mk
 
