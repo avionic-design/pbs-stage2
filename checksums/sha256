@@ -160,7 +160,6 @@ a84728e34bb5edd36ecc1b5489f48ad1467ad5aab1f74f1b7789f826a1ffcaf9  download/xinpu
 d23f12deffd03e582e897ed6a7df3ea7f66ee8577f0f61374dcdf2ebffdce1be  download/xf86driproto-2.1.0.tar.bz2
 bc0590438a4be2b674cbac6f4ad46e5a89acd02aa94817da0fa8eb3ef05ed5d5  download/libXrender-0.9.5.tar.bz2
 d549afdf22feefb97cca85dee12242af9f08c4d2435255dc7c30bd17d1d96010  download/libXv-1.0.5.tar.bz2
-7fb83a28ae24d4f56eca88bc48f0fe414faee1afb2574bfb6257b52e8c716fcf  download/glproto-1.4.10.tar.bz2
 ca8e95d1c93c302b25cd2899040ea8eb0987f7d1d02eb658274243d9ada933ca  download/libdrm-2.4.16.tar.bz2
 ba31d7e5c5c1907c30cba50bfd669aa7fe860555287c29f6e786612e4be33b48  download/libXfixes-4.0.4.tar.bz2
 a56a10acb34827c4d1a0ee282a338cbb04baa03d7fc7bc69e5690915c8fc7c0a  download/libXdamage-1.1.2.tar.bz2
@@ -210,3 +209,4 @@ e8c2a520549ec86deeccd55fd30cbb46fca20e57d7dfde240ee49df1c6dca053  download/psmis
 3f627124a83c6d34db503a923e20710d370573a29dd5d11d6f116d1aee7be1da  download/bash-4.1.tar.gz
 8c7f867918a3739dc7cabe955179539d4a7ecc52cb42becfd261e5dfbff511ac  download/libX11-1.3.3.tar.bz2
 f352950ffee4437d9da3e216d9a348ba0c7cf80c8c0fb30385c77ce3b780b2a1  download/dri2proto-2.2.tar.bz2
+fe481d89d74f01db4f3a671ef1f29df29da74dff5b678517ee659a6f9d819451  download/glproto-1.4.11.tar.bz2
