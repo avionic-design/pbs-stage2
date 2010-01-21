@@ -1,4 +1,4 @@
 PACKAGE = xineramaproto
-VERSION = 1.1.2
+VERSION = 1.2
 
 include packages/xorg/proto/common.mk
