@@ -8,7 +8,7 @@
  libpcreposix_la_DEPENDENCIES = libpcre.la
  am_libpcreposix_la_OBJECTS = pcreposix.lo
  libpcreposix_la_OBJECTS = $(am_libpcreposix_la_OBJECTS)
-@@ -678,11 +677,11 @@
+@@ -679,11 +678,11 @@
  	  rm -f "$${dir}/so_locations"; \
  	done
  libpcre.la: $(libpcre_la_OBJECTS) $(libpcre_la_DEPENDENCIES)
