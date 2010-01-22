@@ -86,6 +86,8 @@ for package in $packages; do
 	echo "Installing $package "
 	cat "$package.install" | (
 		while read line; do
+			[ "x${line#\#}" = "x$line" ] || continue
+
 			src=`echo "$line" | awk '{ print $1 }'`
 			dst=`echo "$line" | awk '{ print $2 }'`
 
