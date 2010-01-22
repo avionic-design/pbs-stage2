@@ -2,12 +2,13 @@
 # Kernel configuration targets
 # These targets are used from top-level makefile
 
-PHONY += oldconfig xconfig gconfig menuconfig config silentoldconfig update-po-config
+PHONY += oldconfig xconfig gconfig menuconfig config silentoldconfig update-po-config \
+	localmodconfig localyesconfig
 
 ifdef KBUILD_KCONFIG
 Kconfig := $(KBUILD_KCONFIG)
 else
-Kconfig := Kconfig
+Kconfig := arch/$(SRCARCH)/Kconfig
 endif
 
 xconfig: $(obj)/qconf $(obj)/deps
@@ -24,14 +25,47 @@ menuconfig: $(obj)/mconf $(obj)/deps
 
 config: $(obj)/conf $(obj)/deps
 	$< $(Kconfig)
+	$(obj)/deps $(Kconfig)
 
 oldconfig: $(obj)/conf $(obj)/deps
 	$< -o $(Kconfig)
 	$(obj)/deps $(Kconfig)
 
 silentoldconfig: $(obj)/conf $(obj)/deps
+	$(Q)mkdir -p include/generated
 	$< -s $(Kconfig)
 	$(obj)/deps $(Kconfig)
+
+localmodconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
+	$(Q)perl $< $(srctree) $(Kconfig) > .tmp.config
+	$(Q)if [ -f .config ]; then 				\
+			cmp -s .tmp.config .config ||		\
+			(mv -f .config .config.old.1;		\
+			 mv -f .tmp.config .config;		\
+			 $(obj)/conf -s $(Kconfig);		\
+			 mv -f .config.old.1 .config.old)	\
+	else							\
+			mv -f .tmp.config .config;		\
+			$(obj)/conf -s $(Kconfig);		\
+	fi
+	$(Q)rm -f .tmp.config
+	$(Q)$(obj)/deps $(Kconfig)
+
+localyesconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
+	$(Q)perl $< $(srctree) $(Kconfig) > .tmp.config
+	$(Q)sed -i s/=m/=y/ .tmp.config
+	$(Q)if [ -f .config ]; then 				\
+			cmp -s .tmp.config .config ||		\
+			(mv -f .config .config.old.1;		\
+			 mv -f .tmp.config .config;		\
+			 $(obj)/conf -s $(Kconfig);		\
+			 mv -f .config.old.1 .config.old)	\
+	else							\
+			mv -f .tmp.config .config;		\
+			$(obj)/conf -s $(Kconfig);		\
+	fi
+	$(Q)rm -f .tmp.config
+	$(Q)$(obj)/deps $(Kconfig)
 
 # Create new linux.pot file
 # Adjust charset to UTF-8 in .po file to accept UTF-8 in Kconfig files
@@ -85,7 +119,7 @@ endif
 
 %_defconfig: $(obj)/conf $(obj)/deps
 	$(Q)$< -D arch/$(SRCARCH)/configs/$@ $(Kconfig)
-	$(obj)/deps $(Kconfig)
+	$(Q)$(obj)/deps $(Kconfig)
 
 # Help text used by make help
 help:
@@ -94,7 +128,9 @@ help:
 	@echo  '  xconfig	  - Update current config utilising a QT based front-end'
 	@echo  '  gconfig	  - Update current config utilising a GTK based front-end'
 	@echo  '  oldconfig	  - Update current config utilising a provided .config as base'
-	@echo  '  silentoldconfig - Same as oldconfig, but quietly'
+	@echo  '  localmodconfig  - Update current config disabling modules not loaded'
+	@echo  '  localyesconfig  - Update current config converting local mods to core'
+	@echo  '  silentoldconfig - Same as oldconfig, but quietly, additionally update deps'
 	@echo  '  randconfig	  - New config with random answer to all options'
 	@echo  '  defconfig	  - New config with default answer to all options'
 	@echo  '  allmodconfig	  - New config selecting modules when possible'
@@ -115,7 +151,7 @@ HOST_EXTRACFLAGS += -DLOCALE
 # ===========================================================================
 # Shared Makefile for the various kconfig executables:
 # conf:	  Used for defconfig, oldconfig and related targets
-# mconf:  Used for the mconfig target.
+# mconf:  Used for the menuconfig target
 #         Utilizes the lxdialog package
 # qconf:  Used for the xconfig target
 #         Based on QT which needs to be installed to compile it
@@ -158,10 +194,6 @@ clean-files	:= lkc_defs.h qconf.moc .tmp_qtcheck \
 		   .tmp_gtkcheck zconf.tab.c lex.zconf.c zconf.hash.c gconf.glade.h
 clean-files     += mconf qconf gconf
 clean-files     += config.pot linux.pot
-clean-files	+= $(patsubst %,.%.cmd,$(hostprogs-y))
-clean-files	+= $(kxgettext-objs) $(patsubst %,.%.cmd,$(kxgettext-objs))
-clean-files	+= $(conf-objs) $(patsubst %,.%.cmd,$(conf-objs))
-clean-files	+= $(deps-objs) $(patsubst %,.%.cmd,$(deps-objs))
 
 # Check that we have the required ncurses stuff installed for lxdialog (menuconfig)
 PHONY += $(obj)/dochecklxdialog
