@@ -1,1 +1,2 @@
-OPTFLAGS = -O2 -g
+OPTFLAGS := -march=i686
+OPTFLAGS += -O2 -g
