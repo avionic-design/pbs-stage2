@@ -1,0 +1,43 @@
+diff --git a/progs/Makefile b/progs/Makefile
+index c99f4ee..321eb33 100644
+--- a/progs/Makefile
++++ b/progs/Makefile
+@@ -21,8 +21,12 @@ subdirs:
+ 		fi \
+ 	done
+ 
+-# Dummy install target
+ install:
++	@for dir in $(SUBDIRS) ; do \
++		if [ -d $$dir ] ; then \
++			(cd $$dir && $(MAKE) install) ; \
++		fi \
++	done
+ 
+ clean:
+ 	-@for dir in $(SUBDIRS) tests ; do \
+diff --git a/progs/xdemos/Makefile b/progs/xdemos/Makefile
+index 6581df8..3b18e89 100644
+--- a/progs/xdemos/Makefile
++++ b/progs/xdemos/Makefile
+@@ -10,7 +10,7 @@ LIB_DEP = $(TOP)/$(LIB_DIR)/$(GL_LIB_NAME)
+ 
+ LIBS = -L$(TOP)/$(LIB_DIR) -l$(GL_LIB) $(APP_LIB_DEPS)
+ 
+-PROGS = \
++PROGS ?= \
+ 	corender \
+ 	glsync \
+ 	glthreads \
+@@ -62,6 +62,11 @@ default: $(PROGS)
+ extra: $(EXTRA_PROGS)
+ 
+ 
++install: $(PROGS)
++	$(INSTALL) -d $(DESTDIR)$(INSTALL_DIR)/bin
++	$(INSTALL) -m 755 $(PROGS) $(DESTDIR)$(INSTALL_DIR)/bin
++
++
+ clean:
+ 	-rm -f $(PROGS) $(EXTRA_PROGS)
+ 	-rm -f *.o *~

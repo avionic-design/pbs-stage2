@@ -1,14 +1,20 @@
-PACKAGE = MesaLib
-VERSION = 7.7-rc1
+PACKAGE = mesa
+VERSION = 7.7
+SOVER = 070700
 
-LOCATION = ftp://ftp.freedesktop.org/pub/mesa/7.7
-TARBALLS = $(PACKAGE)-$(VERSION)-devel.tar.bz2
+ifeq ($(CONFIG_XORG_IEGD),y)
+VERSION = 7.5.2
+SOVER = 070502
+endif
+
+LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(VERSION)
+TARBALLS = \
+	MesaLib-$(VERSION).tar.bz2 \
+	MesaDemos-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-ARCH := $(shell echo $(CONFIG_ARCH))
-LIBC := $(shell echo $(CONFIG_LIBC))
-pkgbuildtree := $(pkgtree)/Mesa-7.7-devel
+pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
 
 env += \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
@@ -27,6 +33,7 @@ conf-args += \
 
 conf-args += \
 	--with-dri-drivers=swrast \
+	--with-demos=xdemos \
 	--disable-gallium \
 	--disable-egl
 
@@ -56,7 +63,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 prunefiles =
 stripfiles = \
 	$(prefix)/lib/libGL.so.1.2 \
-	$(prefix)/lib/libGLU.so.1.3.070700 \
+	$(prefix)/lib/libGLU.so.1.3.$(SOVER) \
 	$(prefix)/lib/libGLw.so.1.0.0 \
 	$(prefix)/lib/dri/*.so
 

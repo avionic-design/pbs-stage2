@@ -35,6 +35,7 @@ d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/encha
 847660b4df86e707c9150e33cd8c25bc5cd828f708c7418e765e3e983a2e5e93  download/expat-2.0.1.tar.gz
 40ff4ab0247b75138a0887ed40f81c1a6184f340b77126c16d074b1075b41c20  download/fbset-2.1.tar.gz
 60462020c1935702cf87928a886778b3b52e73b0121a8264630b72d370ea3fd1  download/firefox-3.5.6.source.tar.bz2
+b3fe971ccc8152db6c78da7117c31fc4cd2fcb2b6a4df3db0f8fed13d4ceb08f  download/fixesproto-4.0.tar.bz2
 e72a32916ad4bbd03847f8945c55582bdbafc039d286ded7365d402a7ff164ef  download/fixesproto-4.1.1.tar.bz2
 53b56a62ea9409b99b7a0ac4a5204fac16ca7eaf39b9374164c346d6badc6914  download/flex-2.5.33.tar.bz2
 48063ed49b200927376645f9ffe65faa39af84d59ba6f60f2abb2f9c6fa3d9f9  download/fontcacheproto-0.1.2.tar.bz2
@@ -67,6 +68,7 @@ f03bac8999c57c399cbf4332831bcce905d0393d0f97f7e32a1407b48890dd9d  download/htop-
 0b4d6455a30a3264a60b4d3be55855d996d52ea4f162a2f04ffff378e24f98a2  download/i2c-tools-3.0.2.tar.bz2
 814de31e1413df945cdd34939b424c4cf7a94d1c481f2d44c99c8ca52b288063  download/icu4c-4_2_1-src.tgz
 72c26de590471f93fe60db8d621d6d4776d281e42fd11cc7ec87fe8ce389a95a  download/iegd-10.2.2.tar.bz2
+099ed7863409551b0e02c2e2c36f4e8d4cb4981babc2159f592fe936ffc07e1d  download/inputproto-1.5.1.tar.bz2
 472f57f7928ab20a1303a25982c4091db9674c2729bbd692c9a7204e23ea1af4  download/inputproto-2.0.tar.bz2
 e9baea8cb516b5d83013f746f9fa104abb45fcf15d444a03add06769916e41d6  download/iperf-2.0.2.tar.gz
 405743e1ba320ed6095d42a898f1486e3af1d745cae2bd45dfe1d8403a4d8995  download/ipkg-0.99.163.tar.gz
@@ -103,11 +105,14 @@ a503b3e88d29fa9c45cce1b2d1af54106c2ce21491348c394e251a071d8108ee  download/libXa
 3bf062e4ae585610c3e45b6ffe3035edf8b535b0e34f08068f0532a3d4381133  download/libxcb-1.5.tar.bz2
 a56a10acb34827c4d1a0ee282a338cbb04baa03d7fc7bc69e5690915c8fc7c0a  download/libXdamage-1.1.2.tar.bz2
 d8033a2fae20fed6de4f16b73ad69ca1c511e7da31c88e9bc6e75976187378cb  download/libXdmcp-1.0.3.tar.bz2
+1280af98466cb4484a89858ede3347ba9d7785baeb80b11f2066142dc2317d97  download/libXext-1.0.5.tar.bz2
 110ce3bc7fb3a86659556994d0801c74bedcbd8ba8d1f90ee33d4c47a91e9bb3  download/libXext-1.1.1.tar.bz2
 ba31d7e5c5c1907c30cba50bfd669aa7fe860555287c29f6e786612e4be33b48  download/libXfixes-4.0.4.tar.bz2
 112bfc30820b98deec4c9914536c5aa2f8b5162bd2b0bdb342343168e06f7679  download/libXfont-1.4.1.tar.bz2
 ce7688258af34c14af421bcfb306d4310245b727d2417ac968b7f6b2facfde8c  download/libXft-2.1.13.tar.bz2
+a0cef8deaccedb877137782a7e77441c8231b2da848bd145788a12fe05034fc5  download/libXi-1.2.1.tar.bz2
 362b8c0c60386841063bd7e01afa72e37eb87ada6e64e539d960f88c780a944b  download/libXi-1.3.tar.bz2
+07b3564cd56154c20580b56230b7a95d74fe6582c80cedf0550d8d7955181219  download/libXinerama-1.0.3.tar.bz2
 e0d39e74c2e131b44cc98dd4910165c9b8d937df93be58e6afb7c2a56772bf34  download/libXinerama-1.1.tar.bz2
 2ca43c1f6b2782994167a328471aa859d366cd7303c6dcbc8bda951a84a06039  download/libxkbfile-1.0.6.tar.bz2
 238c4f0203c012e5776522640c0fb3ac532c4064981c1ce3e74c00b75501d761  download/libxml2-2.7.6.tar.gz
@@ -126,7 +131,10 @@ f509f19068cb7bc0ba37613b9023f0069d734edae658da38dfd5a9bebe8a9957  download/lldpd
 16b77de9f013bcd536b7bc1efbe314223aedfe250f9063e33cbb4dfd347215a2  download/make-3.81.tar.gz
 682614fa3682c4bd31e26b6f76e04bb579c2e70dbf060083e20077f4e93fb4b3  download/matchbox-keyboard-0.1.tar.bz2
 81a23a4af797cf350759fd5ac738797015a66dd5dba2f3d9f3c6908506c1ceff  download/matchbox-window-manager-1.2.tar.bz2
-4c2ea49a200631f40ea3aa8a5a3845d3d73144775e53a6192f4f49c321ba41c8  download/MesaLib-7.7-rc1-devel.tar.bz2
+b8f5746d143619846d3de70ad57841327741482bb4c14d29b76a0f3b61b2a4b6  download/MesaDemos-7.5.2.tar.bz2
+8b232fd2e7d8de5e4778f27ef11f7ff8c42c3815efc92144215734378b55e1ad  download/MesaLib-7.5.2.tar.bz2
+38dbcce59fcc457b53ff6d4e2d5a400d41c02f093bb1fae141e99e032729ab14  download/MesaDemos-7.7.tar.bz2
+6252d7d4190b47f70d0e4ec0edbd5a70f2261c5f6e66859e5fd2572c1df6357a  download/MesaLib-7.7.tar.bz2
 4f4d19f3e15fdf00957932211be609b6bf4e689ad5938ce7bff666a638bde0e7  download/mingwrt-3.15.1-mingw32-src.tar.gz
 6b7af240b073ba847b091fd75aed4bf720eb94d30e188d23bb098d016bf40a48  download/minicom-2.4.tar.gz
 cdd1506b5bc85697723961db525f2ff57548e5ba3977a56c110220a0ff28bf75  download/mktemp-1.5.tar.gz
@@ -190,6 +198,7 @@ f91190c8b8bb18270b86b00f30da5684bb5e5bd1ed0ccf352322f8145e076a59  download/xauth
 5aa5be594e77f772b85d39f0c25f61a61c7f6fa02ba940e614c5ee386deeb867  download/xbitmaps-1.0.1.tar.bz2
 f52bc1159b12496f002404eb5793c01277b20c82cb72c5ff076d7b25da9b5ca2  download/xcb-proto-1.6.tar.bz2
 de17c06b7005c5e9ab469e324e76c5c3b8baa2dfc3c1dc7e93438c197facf68e  download/xcmiscproto-1.2.0.tar.bz2
+d33e1f3c96daad78667b2dfc14a1ce2ee3bdce19409f82cd5ede6c696ca5b042  download/xextproto-7.0.5.tar.bz2
 6d0abd31ddd57c2cb24cecf5fd90b4c29a276e20e3e03ca3c2c57d074f964d99  download/xextproto-7.1.1.tar.bz2
 ac5ef65108e1f2146286e53080975683dae49fc94680042e04bd1e2010e99050  download/xf86dgaproto-2.1.tar.bz2
 d23f12deffd03e582e897ed6a7df3ea7f66ee8577f0f61374dcdf2ebffdce1be  download/xf86driproto-2.1.0.tar.bz2
@@ -201,11 +210,13 @@ d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-
 2bf857179523433a9cc6c6eea059298db4c865e649aa58dfc67c828f28b7288f  download/xf86-video-fbdev-0.4.1.tar.bz2
 524b045c0d0f87ee77080c2479748671a1683291201f14bea9263f75fb679c7a  download/xf86-video-psb-0.31.0.tar.bz2
 8f704613a5407b31c594d05cf8e053f2b05777172a44e7cd2abd8090bd2ac247  download/xf86vidmodeproto-2.3.tar.bz2
+e8a62b1cafbcfc3b9fed147612ed4320233d0c9d6de30c991c2cd0c691c40910  download/xineramaproto-1.1.2.tar.bz2
 58e88087ceec7201d918f94d6b1247325adca2a9903fed11291b412427a7ba64  download/xineramaproto-1.2.tar.bz2
 ab61663a4421753132d4aac97a873ed20697c4761cb434640f48f350fb65087f  download/xinit-1.2.0.tar.bz2
 a84728e34bb5edd36ecc1b5489f48ad1467ad5aab1f74f1b7789f826a1ffcaf9  download/xinput-1.5.0.tar.bz2
 9775bcfd43d9ffa41e2865e5b2c933f419bf983d7a529b3103656c76fd82e663  download/xkbcomp-1.1.1.tar.bz2
 2597bd5ad1a4b9f1f1a763fbde1fc86629a77476860eb21bd80d36973867e440  download/xkeyboard-config-1.7.tar.bz2
+f3c0e43cf73e7d438350016cabd9957dc000ded9c5fdeebf84a02df61963b2ce  download/xorg-server-1.6.5.tar.bz2
 a89f13b166b412930fe418ff50032dd2cde8bb181d8b47b5ca6f848d218fdcf2  download/xorg-server-1.7.99.2.tar.bz2
 ec34cd5be7f0bf532fc18df148047e011279d29df025df12a3eb2cee671cab91  download/xorp-1.4.tar.gz
 8224da1ce19c0ded4e07a325f3ed62bb4453782db97fd175cb3ffd1acaeb9672  download/xproto-7.0.16.tar.bz2

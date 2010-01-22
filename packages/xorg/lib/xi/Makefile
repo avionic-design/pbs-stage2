@@ -1,5 +1,11 @@
 PACKAGE = libXi
 VERSION = 1.3
+SOVER = 6.1.0
+
+ifeq ($(CONFIG_XORG_IEGD),y)
+patchdir = $(pkgsrctree)/patches-$(VERSION)
+VERSION = 1.2.1
+endif
 
 include packages/xorg/lib/common.mk
 
@@ -15,4 +21,4 @@ prunefiles = \
 	$(prefix)/lib/libXi.la
 
 stripfiles = \
-	$(prefix)/lib/libXi.so.6.1.0
+	$(prefix)/lib/libXi.so.$(SOVER)
