@@ -1,3 +1,4 @@
 config PACKAGE_LIBS_LIBDRM
 	bool "libdrm"
+	select VIRTUAL_DEVEL_LIBC
 	default n
