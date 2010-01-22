@@ -1,0 +1,86 @@
+#!/bin/sh -e
+
+arch=
+libc=
+version=
+
+for arg in $@; do
+	if [ "x$prev" != "x" ]; then
+		if [ "x${arg#-}" != "x$arg" ]; then
+			echo "WARNING: missing argument for parameter: $opt"
+		else
+			eval $prev=$arg
+			prev=
+			shift; continue
+		fi
+	fi
+
+	opt=$arg
+
+	case $arg in
+		-a | --arch)
+			prev=arch
+			shift
+			;;
+
+		-l | --libc)
+			prev=libc
+			shift
+			;;
+
+		-v | --version)
+			prev=version
+			shift
+			;;
+
+		*)
+			packages="$@"
+			break
+			;;
+	esac
+done
+
+if [ "x$prev" != "x" ]; then
+	echo "WARNING: missing argument for parameter: $opt"
+fi
+
+if test "x$arch" = "x"; then
+	echo "ERROR: architecture not defined (try --arch ARCH)"
+	exit 1
+fi
+
+if test "x$libc" = "x"; then
+	echo "ERROR: C runtime library not defined (try --libc LIBC)"
+	exit 1
+fi
+
+bindir="`pwd`/$arch/$libc"
+
+if test ! -d "$bindir"; then
+	echo "ERROR: directory \"$bindir\" does not exist"
+	exit 1
+fi
+
+for package in $packages; do
+	if test "x$version" = "x"; then
+		version='*'
+	fi
+
+	directory="${package%/*}"
+
+	if test "x$directory" != "x$package"; then
+		directory="$bindir/$directory"
+	else
+		directory="$bindir"
+	fi
+
+	package="${package##*/}"
+	pattern="${package}_${version}_${arch}.*"
+
+	find "$directory" -name "${pattern}" 2> /dev/null | \
+		sort -V | tail -1 | (
+		if read package; then
+			echo "${package%_${arch}.*}_${arch}"
+		fi
+	)
+done

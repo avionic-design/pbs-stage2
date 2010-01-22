@@ -1,0 +1,40 @@
+#!/bin/sh -e
+
+basedir=`cd ${0%/*}; pwd`
+source=
+
+for arg in $@; do
+	if test "x$prev" != "x"; then
+		if test "x${arg#-}" != "x$arg"; then
+			echo "WARNING: missing argument for parameter: $opt"
+		else
+			eval $prev=$arg
+			prev=
+			shift; continue
+		fi
+	fi
+
+	opt=$arg
+
+	case $arg in
+		-s | --source)
+			prev=source
+			shift
+			;;
+
+		*)
+			args="$args $arg"
+			;;
+	esac
+done
+
+if test "x$prev" != "x"; then
+	echo "WARNING: missing argument for parameter: $opt"
+fi
+
+if test "x$source" = "x"; then
+	echo "ERROR: source directory not defined (try --source DIR)"
+	exit 1
+fi
+
+( cd "$source" && ${basedir}/find-package $args )

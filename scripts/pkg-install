@@ -1,0 +1,77 @@
+#!/bin/sh -e
+
+extensions=".tar.xz .tar.bz2 .tar.gz"
+packages=
+destdir=
+
+for arg in $@; do
+	if test "x$prev" != "x"; then
+		if test "x${arg#-}" != "x$arg"; then
+			echo "WARNING: missing argument for parameter: $opt"
+		else
+			eval $prev=$arg
+			prev=
+			shift; continue
+		fi
+	fi
+
+	opt=$arg
+
+	case $arg in
+		-d | --destdir)
+			prev=destdir
+			shift
+			;;
+
+		*)
+			packages="$packages $arg"
+			;;
+	esac
+done
+
+if test "x$prev" != "x"; then
+	echo "WARNING: missing argument for parameter: $opt"
+fi
+
+if test "x$destdir" = "x"; then
+	echo "ERROR: destination directory not defined (try --destdir DIR)"
+	exit 1
+fi
+
+if test "x$packages" = "x"; then
+	echo "ERROR: no packages specified"
+	exit 1
+fi
+
+for package in $packages; do
+	directory="${package%/*}"
+	basename="${package##*/}"
+
+	for ext in $extensions; do
+		package="${directory}/${basename}${ext}"
+		#basename="${package##*/}"
+
+		if test -f "$package"; then
+			case "$package" in
+			*.tar.xz)
+				echo "  TAR     ${package##*/}"
+				sudo tar xJf "$package" -C "$destdir"
+				;;
+
+			*.tar.bz2)
+				echo "  TAR     ${package##*/}"
+				sudo tar xjf "$package" -C "$destdir"
+				;;
+
+			*.tar.gz)
+				echo "  TAR     ${package##*/}"
+				sudo tar xzf "$package" -C "$destdir"
+				;;
+
+			*)
+				echo "ERROR: unknown package format \`$package\'"
+				;;
+		esac
+		fi
+	done
+done

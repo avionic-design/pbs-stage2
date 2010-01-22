@@ -1,0 +1,8 @@
+#!/bin/sh
+
+source="$1"
+name="$2"
+
+version=`awk '/Version:/ { print $2 }' ${source}/DEBIAN/control`
+arch=`awk '/Architecture:/ { print $2 }' ${source}/DEBIAN/control`
+dpkg-deb --build "${source}" "${name}_${version}_${arch}.deb"

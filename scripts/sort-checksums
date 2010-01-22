@@ -1,0 +1,8 @@
+#!/bin/sh
+
+if test "x$1" = "x"; then
+	echo "usage: $0 FILE"
+	exit 1
+fi
+
+awk '{ print $2 " " $1 }' "$1" | sort | awk '{ print $2 "  " $1 }'
