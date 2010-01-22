@@ -1,0 +1,1 @@
+obj-$(CONFIG_PLATFORM_GENERIC_INITRD) += initrd
