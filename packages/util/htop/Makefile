@@ -9,3 +9,7 @@ include packages/autotools.mk
 conf-vars += \
 	ac_cv_file__proc_stat=yes \
 	ac_cv_file__proc_meminfo=yes
+
+prunefiles =
+stripfiles = \
+	$(prefix)/bin/htop
