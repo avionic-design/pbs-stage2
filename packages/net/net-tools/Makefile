@@ -10,19 +10,24 @@ include packages/common.mk
 conf-args = \
 	CC='$(CC)'
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 $(pkgtree)/.configure:
 	cp $(DOTCONFIG) $(pkgtree)/config.status
 	cd $(pkgbuildtree) && yes '' | \
 		$(env) $(MAKE) $(conf-args) config
+	$(call cmd,stamp)
 
 build-args = \
 	CC='$(CC)' \
 	COPTS='$(CFLAGS)' \
 	LOPTS='$(LDFLAGS)'
 
-$(pkgtree)/.build: $(pkgtree)/.configure
+$(pkgtree)/.build:
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
 	BASEDIR=$(DESTDIR)
@@ -30,6 +35,7 @@ install-args = \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 prunefiles =
 stripfiles = \
