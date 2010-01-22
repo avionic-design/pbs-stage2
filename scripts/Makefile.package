@@ -11,7 +11,8 @@ include scripts/Makefile.lib
 
 pkgtree		:= $(objtree)/build/$(obj)
 pkgsrctree	:= $(srctree)/$(obj)
-export pkgtree pkgsrctree
+patchdir	:= $(pkgsrctree)/patches
+export pkgtree pkgsrctree patchdir
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
@@ -96,12 +97,12 @@ $(pkgtree)/.setup: $(pkgtree)/.extract
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
       cmd_quilt_patch = cd $(pkgbuildtree) && \
-				QUILT_PATCHES=$(pkgsrctree)/patches \
+				QUILT_PATCHES=$(patchdir) \
 				quilt --quiltrc /dev/null push -a || \
 				test $$? = 2
 
 $(pkgtree)/.patch: $(pkgtree)/.setup
-	$(if $(wildcard $(pkgsrctree)/patches/series),$(call cmd,quilt_patch))
+	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch))
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
