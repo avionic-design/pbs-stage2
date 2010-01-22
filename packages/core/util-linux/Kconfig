@@ -1,4 +1,4 @@
 config PACKAGE_CORE_UTIL_LINUX
 	bool "util-linux-ng"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_NCURSES
 	default n
