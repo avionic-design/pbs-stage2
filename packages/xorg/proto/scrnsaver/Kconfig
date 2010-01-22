@@ -1,0 +1,3 @@
+config PACKAGE_XORG_PROTO_SCRNSAVER
+	bool "scrnsaver"
+	default n

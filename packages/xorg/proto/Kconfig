@@ -1,116 +1,35 @@
 menu "X.Org - Protocols"
 
-config PACKAGE_XORG_PROTO_BIGREQS
-	bool "bigreqs"
-	default n
-
-config PACKAGE_XORG_PROTO_COMPOSITE
-	bool "composite"
-	default n
-
-config PACKAGE_XORG_PROTO_DAMAGE
-	bool "damage"
-	default n
-
-config PACKAGE_XORG_PROTO_DGA
-	bool "dga"
-	default n
-
+source "packages/xorg/proto/bigreqs/Kconfig"
+source "packages/xorg/proto/composite/Kconfig"
+source "packages/xorg/proto/damage/Kconfig"
+source "packages/xorg/proto/dga/Kconfig"
 source "packages/xorg/proto/dri/Kconfig"
 source "packages/xorg/proto/dri2/Kconfig"
-
-config PACKAGE_XORG_PROTO_EVIE
-	bool "evie"
-	default n
-
-config PACKAGE_XORG_PROTO_FIXES
-	bool "fixes"
-	default n
-
-config PACKAGE_XORG_PROTO_FONTCACHE
-	bool "fontcache"
-	default n
-
-config PACKAGE_XORG_PROTO_FONTS
-	bool "fonts"
-	default n
-
+source "packages/xorg/proto/evie/Kconfig"
+source "packages/xorg/proto/fixes/Kconfig"
+source "packages/xorg/proto/fontcache/Kconfig"
+source "packages/xorg/proto/fonts/Kconfig"
 source "packages/xorg/proto/gl/Kconfig"
-
-config PACKAGE_XORG_PROTO_INPUT
-	bool "input"
-	default n
-
-config PACKAGE_XORG_PROTO_KB
-	bool "kb"
-	default n
-
-config PACKAGE_XORG_PROTO_RANDR
-	bool "randr"
-	default n
-
-config PACKAGE_XORG_PROTO_RECORD
-	bool "record"
-	default n
-
-config PACKAGE_XORG_PROTO_RENDER
-	bool "render"
-	default n
-
-config PACKAGE_XORG_PROTO_RESOURCE
-	bool "resource"
-	default n
-
-config PACKAGE_XORG_PROTO_SCRNSAVER
-	bool "scrnsaver"
-	default n
-
-config PACKAGE_XORG_PROTO_TRAP
-	bool "trap"
-	default n
-
-config PACKAGE_XORG_PROTO_VIDEO
-	bool "video"
-	default n
-
+source "packages/xorg/proto/input/Kconfig"
+source "packages/xorg/proto/kb/Kconfig"
+source "packages/xorg/proto/randr/Kconfig"
+source "packages/xorg/proto/record/Kconfig"
+source "packages/xorg/proto/render/Kconfig"
+source "packages/xorg/proto/resource/Kconfig"
+source "packages/xorg/proto/scrnsaver/Kconfig"
+source "packages/xorg/proto/trap/Kconfig"
+source "packages/xorg/proto/video/Kconfig"
 source "packages/xorg/proto/vidmode/Kconfig"
-
-config PACKAGE_XORG_PROTO_X
-	bool "x"
-	default n
-
-config PACKAGE_XORG_PROTO_XCB
-	bool "xcb"
-	default n
-
-config PACKAGE_XORG_PROTO_XCMISC
-	bool "xcmisc"
-	default n
-
-config PACKAGE_XORG_PROTO_XEXT
-	bool "xext"
-	default n
-
-config PACKAGE_XORG_PROTO_XF86BIGFONT
-	bool "xf86bigfont"
-	default n
-
-config PACKAGE_XORG_PROTO_XF86DGA
-	bool "xf86dga"
-	default n
-
-config PACKAGE_XORG_PROTO_XF86DRI
-	bool "xf86dri"
-	default n
-
-config PACKAGE_XORG_PROTO_XF86MISC
-	bool "xf86misc"
-	default n
-
-config PACKAGE_XORG_PROTO_XF86VIDMODE
-	bool "xf86vidmode"
-	default n
-
+source "packages/xorg/proto/x/Kconfig"
+source "packages/xorg/proto/xcb/Kconfig"
+source "packages/xorg/proto/xcmisc/Kconfig"
+source "packages/xorg/proto/xext/Kconfig"
+source "packages/xorg/proto/xf86bigfont/Kconfig"
+source "packages/xorg/proto/xf86dga/Kconfig"
+source "packages/xorg/proto/xf86dri/Kconfig"
+source "packages/xorg/proto/xf86misc/Kconfig"
+source "packages/xorg/proto/xf86vidmode/Kconfig"
 source "packages/xorg/proto/xinerama/Kconfig"
 
 endmenu
