@@ -1,3 +1,4 @@
+obj-$(CONFIG_PACKAGE_NET_CUPS) += cups
 obj-$(CONFIG_PACKAGE_NET_DHCP) += dhcp
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
 obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear

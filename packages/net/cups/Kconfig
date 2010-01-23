@@ -1,0 +1,4 @@
+config PACKAGE_NET_CUPS
+	bool "cups"
+	select VIRTUAL_DEVEL_LIBC
+	default n
