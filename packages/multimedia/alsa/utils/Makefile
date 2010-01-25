@@ -1,5 +1,5 @@
 PACKAGE = alsa-utils
-VERSION = 1.0.21
+VERSION = 1.0.22
 
 LOCATION = ftp://ftp.alsa-project.org/pub/utils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
