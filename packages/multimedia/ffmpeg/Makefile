@@ -16,6 +16,9 @@ conf-args = \
 	--enable-cross-compile \
 	--sysroot=$(ROOTFS) \
 	--enable-shared \
+	--enable-gpl \
+	--enable-postproc \
+	--enable-swscale \
 	--disable-stripping
 
 conf-vars =
