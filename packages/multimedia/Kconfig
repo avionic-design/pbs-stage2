@@ -7,5 +7,6 @@ source "packages/multimedia/gstreamer/Kconfig"
 source "packages/multimedia/libid3tag/Kconfig"
 source "packages/multimedia/libmad/Kconfig"
 source "packages/multimedia/mpeg2dec/Kconfig"
+source "packages/multimedia/vlc/Kconfig"
 
 endmenu

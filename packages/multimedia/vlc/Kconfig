@@ -1,0 +1,5 @@
+config PACKAGE_MULTIMEDIA_VLC
+	bool "vlc"
+	select PACKAGE_LIBS_ICONV
+	select PACKAGE_MULTIMEDIA_FFMPEG
+	default n
