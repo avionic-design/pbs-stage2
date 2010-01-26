@@ -1,5 +1,5 @@
 PACKAGE = glib
-VERSION = 2.23.1
+VERSION = 2.23.2
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.23
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,6 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--build=$(shell $(srctree)/support/config.guess) \
 	--with-libiconv=gnu
 
 conf-vars += \
@@ -23,9 +24,10 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.2300.1
+sover = 0.2302.0
 
 stripfiles = \
+	$(prefix)/bin/gio-querymodules \
 	$(prefix)/bin/glib-genmarshal \
 	$(prefix)/bin/gobject-query \
 	$(prefix)/bin/gtester \
