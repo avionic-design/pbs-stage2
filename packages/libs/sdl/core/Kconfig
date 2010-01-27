@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_SDL_CORE
+	bool "sdl"
+	select VIRTUAL_DEVEL_LIBC
+	default n

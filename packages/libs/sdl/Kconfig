@@ -1,4 +1,5 @@
-config PACKAGE_LIBS_SDL
-	bool "sdl"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+menu "Simple DirectMedia Layer"
+
+source "packages/libs/sdl/core/Kconfig"
+
+endmenu

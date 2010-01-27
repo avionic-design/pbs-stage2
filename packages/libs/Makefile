@@ -1,3 +1,5 @@
+obj-y += sdl/
+
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk
 obj-$(CONFIG_PACKAGE_LIBS_BLUEZ) += bluez
 obj-$(CONFIG_PACKAGE_LIBS_BOOST) += boost
@@ -51,7 +53,6 @@ obj-$(CONFIG_PACKAGE_LIBS_PIXMAN) += pixman
 obj-$(CONFIG_PACKAGE_LIBS_QT) += qt
 obj-$(CONFIG_PACKAGE_LIBS_QTOPIA) += qtopia
 obj-$(CONFIG_PACKAGE_LIBS_READLINE) += readline
-obj-$(CONFIG_PACKAGE_LIBS_SDL) += sdl
 obj-$(CONFIG_PACKAGE_LIBS_SQLITE) += sqlite
 obj-$(CONFIG_PACKAGE_LIBS_SYSFSUTILS) += sysfsutils
 obj-$(CONFIG_PACKAGE_LIBS_TSLIB) += tslib
