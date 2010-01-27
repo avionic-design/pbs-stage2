@@ -1,5 +1,6 @@
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk
 obj-$(CONFIG_PACKAGE_LIBS_BLUEZ) += bluez
+obj-$(CONFIG_PACKAGE_LIBS_BZIP2) += bzip2
 obj-$(CONFIG_PACKAGE_LIBS_CAIRO) += cairo
 obj-$(CONFIG_PACKAGE_LIBS_CONSOLEKIT) += consolekit
 obj-$(CONFIG_PACKAGE_LIBS_CURL) += curl

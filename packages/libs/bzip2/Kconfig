@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_BZIP2
+	bool "bzip2"
+	select VIRTUAL_DEVEL_LIBC
+	default n
