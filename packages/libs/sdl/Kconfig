@@ -2,4 +2,13 @@ menu "Simple DirectMedia Layer"
 
 source "packages/libs/sdl/core/Kconfig"
 
+if PACKAGE_LIBS_SDL_CORE
+
+comment "SDL modules"
+	depends on PACKAGE_LIBS_SDL_CORE
+
+source "packages/libs/sdl/image/Kconfig"
+
+endif
+
 endmenu

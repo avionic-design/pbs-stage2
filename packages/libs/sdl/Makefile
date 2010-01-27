@@ -1,1 +1,2 @@
 obj-$(CONFIG_PACKAGE_LIBS_SDL_CORE) += core
+obj-$(CONFIG_PACKAGE_LIBS_SDL_IMAGE) += image
