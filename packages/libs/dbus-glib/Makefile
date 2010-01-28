@@ -1,5 +1,5 @@
 PACKAGE = dbus-glib
-VERSION = 0.82
+VERSION = 0.84
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
