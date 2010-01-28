@@ -1,5 +1,6 @@
 menu "Games"
 
+source "packages/games/pingus/Kconfig"
 source "packages/games/teeworlds/Kconfig"
 
 endmenu

@@ -1,0 +1,51 @@
+diff --git a/src/editor/context_menu.hpp b/src/editor/context_menu.hpp
+index 3c066f4..bdb1e40 100644
+--- a/src/editor/context_menu.hpp
++++ b/src/editor/context_menu.hpp
+@@ -32,7 +32,7 @@ class LevelObj;
+ class EditorViewport;
+ class ContextMenu;
+ 
+-typedef enum ItemModifier { REMOVE, ROTATE, SET_OWNER, SET_DIRECTION, 
++enum ItemModifier { REMOVE, ROTATE, SET_OWNER, SET_DIRECTION, 
+                             STRETCH, SET_Z_POS };
+ 
+ class ContextItem {
+diff --git a/src/editor/editor_screen.hpp b/src/editor/editor_screen.hpp
+index 5f11ca1..2ac1bed 100644
+--- a/src/editor/editor_screen.hpp
++++ b/src/editor/editor_screen.hpp
+@@ -27,7 +27,7 @@
+ 
+ class DrawingContext;
+ class FileDialog;
+-class GUI::GUIManager;
++namespace GUI { class GUIManager; };
+ class Pathname;
+ 
+ namespace Editor {
+diff --git a/src/input/evdev_device.cpp b/src/input/evdev_device.cpp
+index ac1cf01..0f8a6f0 100644
+--- a/src/input/evdev_device.cpp
++++ b/src/input/evdev_device.cpp
+@@ -25,6 +25,8 @@
+ #include <stdexcept>
+ #include <iostream>
+ #include <errno.h>
++#include <stdio.h>
++#include <string.h>
+ 
+ #include "evdev_device.hpp"
+ 
+diff --git a/src/tinygettext/po_file_reader.cpp b/src/tinygettext/po_file_reader.cpp
+index afe1ddc..8a6ed93 100644
+--- a/src/tinygettext/po_file_reader.cpp
++++ b/src/tinygettext/po_file_reader.cpp
+@@ -23,6 +23,7 @@
+ #include <errno.h>
+ #include <sstream>
+ #include <stdexcept>
++#include <stdio.h>
+ #include <string.h>
+ #include "iconv.hpp"
+ #include "po_file_reader.hpp"

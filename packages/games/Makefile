@@ -1,1 +1,2 @@
+obj-$(CONFIG_PACKAGE_GAMES_PINGUS) += pingus
 obj-$(CONFIG_PACKAGE_GAMES_TEEWORLDS) += teeworlds

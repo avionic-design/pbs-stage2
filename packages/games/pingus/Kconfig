@@ -1,0 +1,8 @@
+config PACKAGE_GAMES_PINGUS
+	bool "pingus"
+	select PACKAGE_LIBS_BOOST
+	select PACKAGE_LIBS_LIBPNG
+	select PACKAGE_LIBS_SDL_CORE
+	select PACKAGE_LIBS_SDL_IMAGE
+	select PACKAGE_LIBS_SDL_MIXER
+	default n
