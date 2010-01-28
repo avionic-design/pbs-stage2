@@ -1,16 +1,13 @@
 PACKAGE = dnsmasq
-VERSION = 2.47
+VERSION = 2.52
 
 LOCATION = http://www.thekelleys.org.uk/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.lzma
 
-DESCRIPTION = a small caching DNS proxy and DHCP/TFTP server
-
-##############################################################################
-
 include packages/common.mk
 
-pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 $(pkgtree)/.configure:
 	$(call cmd,stamp)
@@ -25,12 +22,8 @@ $(pkgtree)/.build:
 	cd $(pkgbuildtree) && $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
 install-args = \
-	DESTDIR=$(ROOTFS) \
+	DESTDIR=$(DESTDIR) \
 	PREFIX=$(prefix)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
@@ -43,9 +36,4 @@ stripfiles = \
 	$(prefix)/sbin/dnsmasq
 
 include packages/cleanup.mk
-
-$(pkgtree)/.package-install: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.package-install
-	$(call cmd,stamp)
+include packages/binary.mk
