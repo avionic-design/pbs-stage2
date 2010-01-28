@@ -10,4 +10,5 @@ prunefiles = \
 	$(prefix)/lib/libdrm.la
 
 stripfiles = \
+	$(prefix)/lib/libdrm_intel.so.1.0.0 \
 	$(prefix)/lib/libdrm.so.2.4.0
