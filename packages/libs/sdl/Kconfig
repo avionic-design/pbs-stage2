@@ -8,6 +8,7 @@ comment "SDL modules"
 	depends on PACKAGE_LIBS_SDL_CORE
 
 source "packages/libs/sdl/image/Kconfig"
+source "packages/libs/sdl/mixer/Kconfig"
 
 endif
 

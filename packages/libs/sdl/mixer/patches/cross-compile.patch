@@ -1,0 +1,17 @@
+diff --git a/Makefile.in b/Makefile.in
+index 76fdd3c..c1791c3 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -75,10 +75,10 @@ $(objects)/$(TARGET): $(OBJECTS) $(VERSION_OBJECTS)
+ 	$(LIBTOOL) --mode=link $(CC) -o $@ $(OBJECTS) $(VERSION_OBJECTS) $(LDFLAGS) $(EXTRA_LDFLAGS) $(LT_LDFLAGS)
+ 
+ $(objects)/playwave$(EXE): $(objects)/playwave.lo $(objects)/$(TARGET)
+-	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playwave.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
++	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playwave.lo $(LDFLAGS) $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
+ 
+ $(objects)/playmus$(EXE): $(objects)/playmus.lo $(objects)/$(TARGET)
+-	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playmus.lo $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
++	$(LIBTOOL) --mode=link $(CC) -o $@ $(objects)/playmus.lo $(LDFLAGS) $(SDL_CFLAGS) $(SDL_LIBS) $(objects)/$(TARGET)
+ 
+ install: all install-hdrs install-lib #install-bin
+ install-hdrs:
