@@ -1,4 +1,0 @@
-config PACKAGE_NET_RP_PPPOE
-	bool "rp-pppoe"
-	select VIRTUAL_DEVEL_LIBC
-	default n

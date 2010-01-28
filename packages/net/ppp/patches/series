@@ -1,1 +1,2 @@
-no-strip.patch -p1
+#no-strip.patch -p1
+cross-compile.patch

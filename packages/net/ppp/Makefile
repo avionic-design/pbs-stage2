@@ -1,58 +1,52 @@
 PACKAGE = ppp
-VERSION = 2.4.4
+VERSION = 2.4.5
 
-LOCATION = ftp://ftp.samba.org/pub/ppp
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-##############################################################################
+LOCATION = ftp://ftp.samba.org/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 conf-args = \
-	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc
 
-conf-vars =
-
-package-configure:
-#	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
-	cd $(pkgtree) && $(env) ./configure $(conf-args) $(conf-vars)
+$(pkgtree)/.configure:
+	cd $(pkgbuildtree) && \
+		$(env) ./configure $(conf-args)
+	$(call cmd,stamp)
 
 build-args = \
-	CC='$(CC) $(CPPFLAGS) $(CFLAGS)'
+	CC=$(CC) \
+	EXTRA_CFLAGS="$(CFLAGS)" \
+	EXTRA_LDFLAGS="$(LDFLAGS)"
 
-package-build:
-#	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build:
+	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
-	cd $(pkgtree) && $(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	INSTROOT=$(ROOTFS) \
-	DESTDIR=$(ROOTFS)$(prefix)
+	INSTROOT=$(DESTDIR)
 
-package-do-install:
-#	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	cd $(pkgtree) && $(priv) $(env) $(MAKE) $(install-args) install
-	cd $(pkgtree) && $(priv) $(env) install -m 755 \
-		scripts/pon scripts/plog scripts/poff \
-		$(ROOTFS)$(prefix)/bin
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/pppd/$(VERSION)
 
-prunefiles =
 stripfiles = \
 	$(plugin)/minconn.so \
 	$(plugin)/passprompt.so \
 	$(plugin)/passwordfd.so \
+	$(plugin)/pppoatm.so \
 	$(plugin)/radattr.so \
 	$(plugin)/radius.so \
 	$(plugin)/radrealms.so \
+	$(plugin)/rp-pppoe.so \
 	$(plugin)/winbind.so \
 	$(prefix)/sbin/chat \
 	$(prefix)/sbin/pppd \
@@ -61,10 +55,4 @@ stripfiles = \
 	$(prefix)/sbin/pppstats
 
 include packages/cleanup.mk
-
-package-install: package-do-install package-cleanup
-	@:
-
-package-clean:
-	@:
-
+include packages/binary.mk
