@@ -1,10 +1,8 @@
 PACKAGE = udev
-VERSION = 150
+VERSION = 151
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
-DESCRIPTION = /dev and hotplug management daemon
 
 include packages/autotools.mk
 
@@ -40,5 +38,5 @@ stripfiles = \
 	/lib/udev/vol_id \
 	/sbin/udevadm \
 	/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.6.0 \
+	$(prefix)/lib/libudev.so.0.6.1 \
 	$(prefix)/lib/libvolume_id.so.1.1.0
