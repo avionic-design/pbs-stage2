@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-good
-VERSION = 0.10.16
+VERSION = 0.10.17
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
