@@ -1,5 +1,5 @@
 PACKAGE = xkeyboard-config
-VERSION = 1.7
+VERSION = 1.8
 
 LOCATION = http://xlibs.freedesktop.org/xkbdesc
 
