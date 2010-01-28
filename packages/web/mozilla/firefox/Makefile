@@ -9,9 +9,6 @@ include packages/common.mk
 GECKO_VERSION = 1.9.1
 pkgbuildtree = $(pkgtree)/mozilla-$(GECKO_VERSION)
 
-ARCH := $(shell echo $(CONFIG_ARCH))
-LIBC := $(shell echo $(CONFIG_LIBC))
-
 env += \
 	CROSS_COMPILE=1 \
 	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
@@ -69,19 +66,15 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(DESTDIR)$(prefix)/share/idl/firefox
 	$(call cmd,stamp)
 
+sdkdir = $(prefix)/lib/firefox-devel/sdk
+
+stripfiles = \
+	$(sdkdir)/lib/libmozjs.so \
+	$(sdkdir)/lib/libnspr4.so \
+	$(sdkdir)/lib/libplc4.so \
+	$(sdkdir)/lib/libplds4.so \
+	$(sdkdir)/lib/libxpcom.so \
+	$(sdkdir)/lib/libxul.so
+
 include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/binary.mk
