@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_GAMES_TEEWORLDS) += teeworlds

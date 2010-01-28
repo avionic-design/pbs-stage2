@@ -1,0 +1,5 @@
+menu "Games"
+
+source "packages/games/teeworlds/Kconfig"
+
+endmenu

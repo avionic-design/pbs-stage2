@@ -1,0 +1,4 @@
+config PACKAGE_GAMES_TEEWORLDS
+	bool "teeworlds"
+	select PACKAGE_LIBS_SDL_CORE
+	default n

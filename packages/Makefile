@@ -4,6 +4,7 @@ obj-y += devel/
 obj-y += disk/
 obj-y += editors/
 obj-y += fonts/
+obj-y += games/
 obj-y += initrd/
 obj-y += kernel/
 obj-y += libs/
