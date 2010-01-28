@@ -25,6 +25,20 @@ source "arch/arm/xscale/Kconfig"
 endif
 
 #
+# Endianness configuration
+#
+choice
+	prompt "Endianness"
+
+config ARCH_ARM_ENDIAN_LITTLE
+	bool "little endian"
+
+config ARCH_ARM_ENDIAN_BIG
+	bool "big endian"
+
+endchoice
+
+#
 # ABI configuration
 #
 choice
