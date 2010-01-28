@@ -6,4 +6,6 @@ choice
 config PLATFORM_GENERIC_INITRD
 	bool "Generic Initial Ramdisk"
 
+endchoice
+
 endif
