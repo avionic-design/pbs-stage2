@@ -1,4 +1,4 @@
 config PACKAGE_LIBS_SDL_CORE
 	bool "sdl"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_LIB_XEXT
 	default n
