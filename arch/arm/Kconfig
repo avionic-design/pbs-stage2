@@ -14,6 +14,9 @@ config ARCH_ARM_CPU_GENERIC
 config ARCH_ARM_CPU_XSCALE
 	bool "Xscale"
 
+config ARCH_ARM_CPU_CORTEX_A9
+	bool "Cortex-A9"
+
 endchoice
 
 if ARCH_ARM_CPU_GENERIC
@@ -22,6 +25,10 @@ endif
 
 if ARCH_ARM_CPU_XSCALE
 source "arch/arm/xscale/Kconfig"
+endif
+
+if ARCH_ARM_CPU_CORTEX_A9
+source "arch/arm/cortex-a9/Kconfig"
 endif
 
 #

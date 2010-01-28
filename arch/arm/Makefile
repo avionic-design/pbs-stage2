@@ -33,12 +33,10 @@ ABIFLAGS = $(abiflags-y)
 # CPU specific configuration
 #
 
-CPU := $(shell echo $(CONFIG_CPU))
-ifeq ($(CPU),)
-  CPU := generic
-endif
-
-include arch/arm/$(CPU)/Makefile
+cpu-$(CONFIG_ARCH_ARM_CPU_GENERIC) := arch/arm/generic/Makefile
+cpu-$(CONFIG_ARCH_ARM_CPU_XSCALE) := arch/arm/xscale/Makefile
+cpu-$(CONFIG_ARCH_ARM_CPU_CORTEX_A9) := arch/arm/cortex-a9/Makefile
+include $(cpu-y)
 
 #
 # default flags
