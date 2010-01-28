@@ -62,6 +62,10 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 prunefiles =
 stripfiles = \
+	$(prefix)/bin/glxdemo \
+	$(prefix)/bin/glxgears \
+	$(prefix)/bin/glxheads \
+	$(prefix)/bin/glxinfo \
 	$(prefix)/lib/libGL.so.1.2 \
 	$(prefix)/lib/libGLU.so.1.3.$(SOVER) \
 	$(prefix)/lib/libGLw.so.1.0.0 \
