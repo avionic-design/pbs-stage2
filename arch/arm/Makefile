@@ -18,11 +18,9 @@ export TARGET
 CPPFLAGS = --sysroot $(objtree)/rootfs
 export CPPFLAGS
 
-ifeq ($(ABI),eabi)
-  ABIFLAGS = -mlittle-endian -mapcs -mabi=aapcs-linux -mno-thumb-interwork
-else
-  ABIFLAGS = -mlittle-endian
-endif
+abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+
+ABIFLAGS = $(abiflags-y)
 
 CPU := $(shell echo $(CONFIG_CPU))
 ifeq ($(CPU),)
