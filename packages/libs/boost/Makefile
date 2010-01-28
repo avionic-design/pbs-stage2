@@ -27,7 +27,7 @@ $(pkgtree)/.build:
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) ./bjam --prefix=$(DESTDIR)$(prefix) \
+		$(priv) $(env) ./bjam --prefix=$(DESTDIR)$(prefix) \
 			--without-mpi --without-python \
 			install
 	$(call cmd,stamp)
