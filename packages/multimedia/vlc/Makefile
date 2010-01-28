@@ -8,6 +8,7 @@ include packages/autotools.mk
 
 conf-args += \
 	--without-libiconv-prefix \
+	--enable-run-as-root \
 	--disable-a52 \
 	--disable-dvdnav \
 	--disable-libgcrypt \
