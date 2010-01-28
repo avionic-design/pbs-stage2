@@ -32,6 +32,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 stripfiles = \
 	$(prefix)/bin/bzip2 \
+	$(prefix)/bin/bzip2recover \
 	$(prefix)/lib/libbz2.so.1.0.4
 
 include packages/cleanup.mk
