@@ -1,5 +1,5 @@
 PACKAGE = xsetroot
-VERSION = 1.0.2
+VERSION = 1.0.3
 
 include packages/xorg/app/common.mk
 
