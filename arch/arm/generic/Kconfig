@@ -1,3 +1,7 @@
+if ARCH_ARM_CPU_GENERIC
+
 config CPU
 	string
 	default ""
+
+endif

@@ -1,4 +1,7 @@
+if ARCH_ARM_CPU_XSCALE
+
 config CPU
 	string
 	default "xscale"
 
+endif

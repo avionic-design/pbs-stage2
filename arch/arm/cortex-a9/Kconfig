@@ -1,0 +1,2 @@
+if ARCH_ARM_CPU_CORTEX_A9
+endif
