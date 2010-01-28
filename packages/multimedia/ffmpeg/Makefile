@@ -38,7 +38,7 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(install-args) install
+		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 stripfiles = \
@@ -48,6 +48,8 @@ stripfiles = \
 	$(prefix)/lib/libavdevice.so.52.1.0 \
 	$(prefix)/lib/libavformat.so.52.31.0 \
 	$(prefix)/lib/libavutil.so.49.15.0 \
+	$(prefix)/lib/libpostproc.so.51.2.0 \
+	$(prefix)/lib/libswscale.so.0.7.1 \
 	$(prefix)/lib/vhook/*.so
 
 include packages/cleanup.mk
