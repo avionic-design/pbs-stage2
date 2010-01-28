@@ -24,37 +24,37 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
-	mkdir -p $(DESTDIR)$(drvdstdir)
-	mkdir -p $(DESTDIR)$(moddstdir)
-	mkdir -p $(DESTDIR)$(libdstdir)
-	mkdir -p $(DESTDIR)$(mandstdir)/man4
-	mkdir -p $(DESTDIR)$(mandstdir)/man3x
-	mkdir -p $(DESTDIR)$(dridstdir)
+	$(priv) mkdir -p $(DESTDIR)$(drvdstdir)
+	$(priv) mkdir -p $(DESTDIR)$(moddstdir)
+	$(priv) mkdir -p $(DESTDIR)$(libdstdir)
+	$(priv) mkdir -p $(DESTDIR)$(mandstdir)/man4
+	$(priv) mkdir -p $(DESTDIR)$(mandstdir)/man3x
+	$(priv) mkdir -p $(DESTDIR)$(dridstdir)
 	# X.Org driver
-	install $(drvsrcdir)/iegd_drv.so $(DESTDIR)$(drvdstdir)
-	install $(drvsrcdir)/libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)
-	ln -s libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)/libXiegd_escape.so.2
-	ln -s libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)/libXiegd_escape.so
+	$(priv) install $(drvsrcdir)/iegd_drv.so $(DESTDIR)$(drvdstdir)
+	$(priv) install $(drvsrcdir)/libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)
+	$(priv) ln -s libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)/libXiegd_escape.so.2
+	$(priv) ln -s libXiegd_escape.so.2.0.0 $(DESTDIR)$(libdstdir)/libXiegd_escape.so
 	# port drivers
-	install $(drvsrcdir)/analog.so $(DESTDIR)$(moddstdir)
-	install $(drvsrcdir)/hdmi.so $(DESTDIR)$(moddstdir)
-	install $(drvsrcdir)/lvds.so $(DESTDIR)$(moddstdir)
-	install $(drvsrcdir)/sdvo.so $(DESTDIR)$(moddstdir)
-	install $(drvsrcdir)/softpd.so $(DESTDIR)$(moddstdir)
-	install $(drvsrcdir)/tv.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/analog.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/hdmi.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/lvds.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/sdvo.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/softpd.so $(DESTDIR)$(moddstdir)
+	$(priv) install $(drvsrcdir)/tv.so $(DESTDIR)$(moddstdir)
 	# manpages
-	install $(drvsrcdir)/iegd.4.gz $(DESTDIR)$(mandstdir)/man4
-	install $(drvsrcdir)/iegd_escape.3x.gz $(DESTDIR)$(mandstdir)/man3x
+	$(priv) install $(drvsrcdir)/iegd.4.gz $(DESTDIR)$(mandstdir)/man4
+	$(priv) install $(drvsrcdir)/iegd_escape.3x.gz $(DESTDIR)$(mandstdir)/man3x
 	# OpenGL
-	install $(drvsrcdir)/iegd_dri.so $(DESTDIR)$(dridstdir)
-	install $(drvsrcdir)/libGL_ga.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so.1.2
-	ln -s libGL.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so.1
-	ln -s libGL.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so
+	$(priv) install $(drvsrcdir)/iegd_dri.so $(DESTDIR)$(dridstdir)
+	$(priv) install $(drvsrcdir)/libGL_ga.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so.1.2
+	$(priv) ln -s libGL.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so.1
+	$(priv) ln -s libGL.so.1.2 $(DESTDIR)$(libdstdir)/libGL.so
 	# video decode files
-	install $(drvsrcdir)/iegd_drv_video.so $(DESTDIR)$(drvdstdir)
-	install $(drvsrcdir)/libva.so.0.29.0 $(DESTDIR)$(libdstdir)
-	ln -s libva.so.0.29.0 $(DESTDIR)$(libdstdir)/libva.so.0
-	ln -s libva.so.0.29.0 $(DESTDIR)$(libdstdir)/libva.so
+	$(priv) install $(drvsrcdir)/iegd_drv_video.so $(DESTDIR)$(drvdstdir)
+	$(priv) install $(drvsrcdir)/libva.so.0.29.0 $(DESTDIR)$(libdstdir)
+	$(priv) ln -s libva.so.0.29.0 $(DESTDIR)$(libdstdir)/libva.so.0
+	$(priv) ln -s libva.so.0.29.0 $(DESTDIR)$(libdstdir)/libva.so
 	$(call cmd,stamp)
 
 prunefiles =
