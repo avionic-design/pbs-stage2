@@ -5,6 +5,7 @@ SOVER = 6.1.0
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
 VERSION = 1.2.1
+SOVER = 6.0.0
 endif
 
 include packages/xorg/lib/common.mk
