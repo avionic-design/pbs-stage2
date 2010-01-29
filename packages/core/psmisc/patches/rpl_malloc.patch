@@ -1,8 +1,8 @@
 diff --git a/src/fuser.c b/src/fuser.c
-index b88b7a8..43ab4be 100644
+index 25dd9fd..78cacd1 100644
 --- a/src/fuser.c
 +++ b/src/fuser.c
-@@ -95,6 +95,20 @@ static void scan_knfsd(struct names *names_head, struct device_list *dev_head);
+@@ -95,6 +95,20 @@ static void debug_match_lists(struct names *names_head,
  			      struct device_list *dev_head);
  #endif
  
@@ -24,7 +24,7 @@ index b88b7a8..43ab4be 100644
  {
  	if (errormsg != NULL)
 diff --git a/src/killall.c b/src/killall.c
-index e9a47b7..94e7192 100644
+index dd9a7f2..ad23083 100644
 --- a/src/killall.c
 +++ b/src/killall.c
 @@ -87,6 +87,34 @@ static int verbose = 0, exact = 0, interactive = 0, reg = 0,
@@ -62,8 +62,58 @@ index e9a47b7..94e7192 100644
  static int
  ask (char *name, pid_t pid, const int signal)
  {
+diff --git a/src/peekfd.c b/src/peekfd.c
+index 64ee546..df4e0cb 100644
+--- a/src/peekfd.c
++++ b/src/peekfd.c
+@@ -63,6 +63,20 @@
+ int num_attached_pids = 0;
+ pid_t attached_pids[MAX_ATTACHED_PIDS];
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ void detach(void) {
+ 	int i;
+ 	for (i = 0; i < num_attached_pids; i++)	
+diff --git a/src/prtstat.c b/src/prtstat.c
+index 4178a25..d67bba4 100644
+--- a/src/prtstat.c
++++ b/src/prtstat.c
+@@ -43,6 +43,20 @@
+ 
+ static long sc_clk_tck;
+ 
++#if malloc == rpl_malloc
++#undef malloc
++extern void *malloc(size_t size);
++
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ static void usage(const char *errormsg) NORETURN;
+ 
+ static void usage(const char *errormsg)
 diff --git a/src/pstree.c b/src/pstree.c
-index a85c7bc..6dfd139 100644
+index d6c6970..813f6ae 100644
 --- a/src/pstree.c
 +++ b/src/pstree.c
 @@ -133,6 +133,34 @@ static char last_char = 0;
@@ -101,28 +151,3 @@ index a85c7bc..6dfd139 100644
  /*
   * Allocates additional buffer space for width and more as needed.
   * The first call will allocate the first buffer.
-diff --git a/src/peekfd.c b/src/peekfd.c
-index 4c3a570..229e147 100644
---- a/src/peekfd.c
-+++ b/src/peekfd.c
-@@ -63,6 +63,20 @@
- int num_attached_pids = 0;
- pid_t attached_pids[MAX_ATTACHED_PIDS];
- 
-+#if malloc == rpl_malloc
-+#undef malloc
-+extern void *malloc(size_t size);
-+
-+void *rpl_malloc(size_t size)
-+{
-+	if (size == 0)
-+		size = 1;
-+
-+	return malloc(size);
-+}
-+#define malloc rpl_malloc
-+#endif
-+
- void detach(void) {
- 	int i;
- 	for (i = 0; i < num_attached_pids; i++)	
