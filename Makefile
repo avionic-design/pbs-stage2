@@ -1,3 +1,10 @@
+VERSION = 0
+PATCHLEVEL = 0
+SUBLEVEL = 0
+EXTRAVERSION =
+NAME =
+export VERSION PATCHLEVEL SUBLEVEL EXTRAVERSION NAME
+
 MAKEFLAGS += -rR --no-print-directory
 
 ifdef V
@@ -96,9 +103,17 @@ include $(srctree)/scripts/Makefile.lib
 
 PHONY += scripts_basic
 scripts_basic:
-	$(Q)$(MAKE) $(host)=scripts/basic
+	$(Q)$(MAKE) $(build)=scripts/basic
 
 scripts/basic/%: scripts_basic ;
+
+PHONY += outputmakefile
+outputmakefile:
+ifneq ($(KBUILD_SRC),)
+	$(Q)ln -fsn $(srctree) source
+	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
+		$(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
+endif
 
 no-dot-config-targets := clean mrproper distclean
 no-dot-config-targets += initrd
@@ -126,19 +141,19 @@ ifeq ($(mixed-targets),1)
 else
   ifeq ($(config-targets),1)
 
-config: scripts_basic FORCE
+config: scripts_basic outputmakefile FORCE
 	$(Q)mkdir -p include/config include/linux
-	$(Q)$(MAKE) $(host)=scripts/kconfig $@
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
 
-%config: scripts_basic FORCE
+%config: scripts_basic outputmakefile FORCE
 	$(Q)mkdir -p include/config include/linux
-	$(Q)$(MAKE) $(host)=scripts/kconfig $@
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
 
   else
 
 PHONY += scripts
 scripts: scripts_basic include/config/auto.conf
-	$(Q)$(MAKE) $(host)=$@
+	$(Q)$(MAKE) $(build)=$@
 
     ifeq ($(dot-config),1)
       -include include/config/auto.conf
@@ -172,7 +187,7 @@ list-dirs  := $(addprefix list-,$(dirs))
 PHONY += $(build-dirs)
 #$(build-dirs): quiet = silent_
 $(build-dirs): build-%: %
-	$(Q)$(MAKE) $(build)=$*
+	$(Q)$(MAKE) $(platform)=$*
 
 PHONY += build
 build: $(build-dirs)
@@ -188,7 +203,7 @@ uscan: $(uscan-dirs)
 
 PHONY += $(list-dirs)
 $(list-dirs): list-%: %
-	$(Q)$(MAKE) $(build)=$* list
+	$(Q)$(MAKE) $(platform)=$* list
 
 PHONY += list
 list: $(list-dirs)
