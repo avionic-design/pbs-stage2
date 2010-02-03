@@ -1,5 +1,5 @@
 PACKAGE = pciutils
-VERSION = 3.1.6
+VERSION = 3.1.7
 
 LOCATION = http://www.kernel.org/pub/software/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
