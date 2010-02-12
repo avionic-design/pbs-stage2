@@ -1,5 +1,5 @@
 PACKAGE = libdrm
-VERSION = 2.4.16
+VERSION = 2.4.17
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,6 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 prunefiles = \
+	$(prefix)/lib/libdrm_intel.la \
 	$(prefix)/lib/libdrm.la
 
 stripfiles = \
