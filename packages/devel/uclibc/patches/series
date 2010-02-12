@@ -1,1 +1,2 @@
 arm-eabi.patch -p1
+inotify.patch
