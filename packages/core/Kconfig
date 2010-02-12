@@ -19,6 +19,7 @@ source "packages/core/start-stop-daemon/Kconfig"
 source "packages/core/syslog-ng/Kconfig"
 source "packages/core/sysvinit/Kconfig"
 source "packages/core/udev/Kconfig"
+source "packages/core/upstart/Kconfig"
 source "packages/core/usbutils/Kconfig"
 source "packages/core/util-linux/Kconfig"
 

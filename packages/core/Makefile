@@ -18,5 +18,6 @@ obj-$(CONFIG_PACKAGE_CORE_START_STOP_DAEMON) += start-stop-daemon
 obj-$(CONFIG_PACKAGE_CORE_SYSLOG_NG) += syslog-ng
 obj-$(CONFIG_PACKAGE_CORE_SYSVINIT) += sysvinit
 obj-$(CONFIG_PACKAGE_CORE_UDEV) += udev
+obj-$(CONFIG_PACKAGE_CORE_UPSTART) += upstart
 obj-$(CONFIG_PACKAGE_CORE_USBUTILS) += usbutils
 obj-$(CONFIG_PACKAGE_CORE_UTIL_LINUX) += util-linux
