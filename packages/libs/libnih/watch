@@ -1,0 +1,2 @@
+version=3
+http://upstart.ubuntu.com/download/libnih/([\d\.]+)/libnih-([\d\.]+)\.tar\.gz
