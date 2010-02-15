@@ -4,12 +4,7 @@ VERSION = 1.2.3
 LOCATION = http://www.zlib.net
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-##############################################################################
-
 include packages/common.mk
-
-ARCH := $(shell echo $(CONFIG_ARCH))
-LIBC := $(shell echo $(CONFIG_LIBC))
 
 env += \
 	CC='$(CC) --sysroot $(ROOTFS)' \
@@ -40,23 +35,8 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-prunefiles =
 stripfiles = \
 	$(prefix)/lib/libz.so.1.2.3
 
 include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/binary.mk

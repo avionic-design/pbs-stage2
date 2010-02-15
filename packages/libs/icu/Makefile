@@ -1,16 +1,11 @@
 PACKAGE = icu4c
 VERSION = 4.2.1
 
-PACKAGE_VERSION = $(shell echo $(VERSION) | tr '.' '_')-src
-
 LOCATION = http://download.icu-project.org/files/icu4c/$(VERSION)
-TARBALLS = $(PACKAGE)-$(PACKAGE_VERSION).tgz
-
-##############################################################################
+TARBALLS = $(PACKAGE)-$(subst .,_,$(VERSION))-src.tgz
 
 include packages/common.mk
 
-ARCH := $(shell echo $(CONFIG_ARCH))
 pkgbuildtree := $(pkgtree)/icu
 
 env += \
@@ -68,7 +63,6 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 sover = 42.1
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/derb \
 	$(prefix)/bin/genbrk \
@@ -94,18 +88,4 @@ stripfiles = \
 	$(prefix)/sbin/icuswap
 
 include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install:
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/binary.mk

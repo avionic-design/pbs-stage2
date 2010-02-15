@@ -20,7 +20,7 @@ KBUILD_SRC =
 KBUILD_OUTPUT =
 unexport MAKEFLAGS KBUILD_SRC KBUILD_OUTPUT
 
-include packages/common.mk
+include $(srctree)/packages/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -38,23 +38,12 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary: VERSION = $(shell cat $(pkgtree)/.release)
-$(pkgtree)/.binary: $(pkgtree)/.do-install
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION)
-	$(call cmd,stamp)
+version = $(if $(wildcard $(pkgtree)/.release),$(shell cat $(pkgtree)/.release),)
+$(pkgtree)/.binary:  VERSION = $(call version)
+$(pkgtree)/.install: VERSION = $(call version)
 
-$(pkgtree)/.install: VERSION = $(shell cat $(pkgtree)/.release)
-$(pkgtree)/.install: $(pkgtree)/.binary
-	$(priv) mkdir -p $(ROOTFS)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include $(srctree)/packages/cleanup.mk
+include $(srctree)/packages/binary.mk
 
 kernel-version:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build version

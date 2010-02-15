@@ -46,21 +46,9 @@ prunefiles = \
 	/lib/modules/$(VERSION)/modules.dep \
 	/lib/modules/$(VERSION)/modules.dep.bin
 
-include packages/prune.mk
+version = $(if $(wildcard $(kerneltree)/.release),$(shell cat $(kerneltree)/.release),)
+$(pkgtree)/.binary:  VERSION = $(call version)
+$(pkgtree)/.install: VERSION = $(call version)
 
-$(pkgtree)/.binary: VERSION = $(shell cat $(kerneltree)/.release)
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.prune
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(LIBC) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: VERSION = $(shell cat $(kerneltree)/.release)
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(LIBC) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/cleanup.mk
+include packages/binary.mk

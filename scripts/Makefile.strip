@@ -7,7 +7,7 @@ all: strip
 	@:
 
 -include include/config/auto.conf
-include $(package)/Makefile
+include $(srctree)/$(package)/Makefile
 
 # add the and rootfs prefix and expand wildcards
 stripfiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(stripfiles)))

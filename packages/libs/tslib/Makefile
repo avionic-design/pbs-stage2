@@ -4,33 +4,9 @@ VERSION = 1.0.0-svn70
 LOCATION = http://download.berlios.de/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-##############################################################################
+include packages/autotools.mk
 
-include packages/common.mk
-
-ARCH := $(shell echo $(CONFIG_ARCH))
-
-env += \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
-
-$(pkgtree)/.setup:
-	$(call cmd,stamp)
-
-CPPFLAGS += \
-	-DUSE_INPUT_API=1
-
-conf-args = \
-	--host=$(TARGET) \
-	--prefix=$(prefix) \
-	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man \
-	--sysconfdir=/etc
-
-conf-vars = \
-	CFLAGS='$(CFLAGS)' \
-	CPPFLAGS='$(CPPFLAGS)' \
-	LDFLAGS='$(LDFLAGS)'
+CPPFLAGS += -DUSE_INPUT_API=1
 
 ifeq ($(CONFIG_LIBC),uclibc)
   conf-vars += \
@@ -39,25 +15,6 @@ else
   conf-vars += \
 	ac_cv_func_malloc_0_nonnull=no
 endif
-
-$(pkgtree)/.configure:
-	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
-		cd $(pkgbuildtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
-	$(call cmd,stamp)
-
-$(pkgtree)/.build:
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-install-args = \
-	DESTDIR=$(DESTDIR)
-
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/ts
 
@@ -74,20 +31,3 @@ stripfiles = \
 	$(prefix)/bin/ts_print \
 	$(prefix)/lib/libts-1.0.so.0.0.0 \
 	$(plugin)/*.so
-
-include packages/cleanup.mk
-
-$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)

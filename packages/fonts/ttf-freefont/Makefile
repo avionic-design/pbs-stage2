@@ -6,7 +6,6 @@ TARBALLS = freefont-ttf-$(VERSION).tar.gz
 
 include packages/common.mk
 
-ARCH := $(shell echo $(CONFIG_ARCH))
 pkgbuildtree = $(pkgtree)/freefont-$(VERSION)
 fontsdir = $(prefix)/share/fonts
 ttfdir = $(fontsdir)/truetype
@@ -25,17 +24,5 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(priv) cp $(pkgbuildtree)/*.ttf $(DESTDIR)$(ttfdir)/$(PACKAGE)
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary: $(pkgtree)/.do-install
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -s $(DESTDIR)
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -v $(VERSION)
-	$(call cmd,stamp)
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-	cd $(pkgsrctree) && \
-		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -v $(VERSION) -r $(ROOTFS)
-	$(call cmd,stamp)
+include packages/cleanup.mk
+include packages/binary.mk
