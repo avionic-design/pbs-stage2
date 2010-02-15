@@ -6,6 +6,14 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
+  conf-args += --without-ncurses
+endif
+
+ifneq ($(CONFIG_LIBC),gnu)
+  conf-args += --disable-tls
+endif
+
 prunefiles = \
 	$(prefix)/lib/libblkid.la \
 	$(prefix)/lib/libuuid.la

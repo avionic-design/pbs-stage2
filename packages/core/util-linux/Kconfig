@@ -1,4 +1,9 @@
 config PACKAGE_CORE_UTIL_LINUX
 	bool "util-linux-ng"
-	select PACKAGE_LIBS_NCURSES
+	select PACKAGE_LIBS_NCURSES if PACKAGE_CORE_UTIL_LINUX_NCURSES
 	default n
+
+config PACKAGE_CORE_UTIL_LINUX_NCURSES
+	bool "ncurses support"
+	depends on PACKAGE_CORE_UTIL_LINUX
+	default y
