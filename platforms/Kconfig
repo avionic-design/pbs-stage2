@@ -12,10 +12,14 @@ config PLATFORM_SOEKRIS
 config PLATFORM_AVIONIC_DESIGN
 	bool "Avionic Design"
 
+config PLATFORM_NVIDIA
+	bool "NVIDIA"
+
 endchoice
 
 source "platforms/generic/Kconfig"
 source "platforms/soekris/Kconfig"
 source "platforms/avionic-design/Kconfig"
+source "platforms/nvidia/Kconfig"
 
 endmenu
