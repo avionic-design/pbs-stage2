@@ -1,0 +1,73 @@
+diff --git a/extras/ata_id/ata_id.c b/extras/ata_id/ata_id.c
+index 25c7710..bfb7caf 100644
+--- a/extras/ata_id/ata_id.c
++++ b/extras/ata_id/ata_id.c
+@@ -45,6 +45,10 @@
+ #include "libudev.h"
+ #include "libudev-private.h"
+ 
++#if defined(__UCLIBC__)
++#define le16toh(x) __le16_to_cpu(x)
++#endif
++
+ #define COMMAND_TIMEOUT 2000
+ 
+ /* Sends a SCSI command block */
+diff --git a/libudev/libudev-monitor.c b/libudev/libudev-monitor.c
+index 96c153f..adf6a61 100644
+--- a/libudev/libudev-monitor.c
++++ b/libudev/libudev-monitor.c
+@@ -24,6 +24,10 @@
+ #include <linux/netlink.h>
+ #include <linux/filter.h>
+ 
++#ifndef SOCK_CLOEXEC
++#define SOCK_CLOEXEC 02000000
++#endif
++
+ #include "libudev.h"
+ #include "libudev-private.h"
+ 
+diff --git a/udev/udev-node.c b/udev/udev-node.c
+index a70c147..bc17ee1 100644
+--- a/udev/udev-node.c
++++ b/udev/udev-node.c
+@@ -57,7 +57,11 @@ int udev_node_mknod(struct udev_device *dev, const char *file, dev_t devnum, mod
+ 			preserve = 1;
+ 			udev_selinux_lsetfilecon(udev, file, mode);
+ 			/* update time stamp when we re-use the node, like on media change events */
++#if defined(__UCLIBC__)
++			utime(file, NULL);
++#else
+ 			utimes(file, NULL);
++#endif
+ 		} else {
+ 			char file_tmp[UTIL_PATH_SIZE + sizeof(TMP_FILE_EXT)];
+ 
+@@ -178,7 +182,11 @@ static int node_symlink(struct udev *udev, const char *node, const char *slink)
+ 					info(udev, "preserve already existing symlink '%s' to '%s'\n",
+ 					     slink, target);
+ 					udev_selinux_lsetfilecon(udev, slink, S_IFLNK);
++#if defined(__UCLIBC__)
++					utime(slink, NULL);
++#else
+ 					lutimes(slink, NULL);
++#endif
+ 					goto exit;
+ 				}
+ 			}
+diff --git a/udev/udevd.c b/udev/udevd.c
+index fe3352c..21ebce8 100644
+--- a/udev/udevd.c
++++ b/udev/udevd.c
+@@ -42,6 +42,10 @@
+ #include <sys/ioctl.h>
+ #include <sys/inotify.h>
+ 
++#ifndef SOCK_CLOEXEC
++#define SOCK_CLOEXEC 02000000
++#endif
++
+ #include "udev.h"
+ 
+ #define UDEVD_PRIORITY			-4
