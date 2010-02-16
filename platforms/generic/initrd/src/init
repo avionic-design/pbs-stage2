@@ -12,8 +12,19 @@ mkdir -p /sys
 mount -t sysfs none /sys
 log_action_end_msg $?
 
+log_action_begin_msg "Mounting /dev filesystem"
+mount -o size=256K,mode=0755 -t tmpfs udev /dev
+log_action_end_msg $?
+
+log_action_begin_msg "Creating devices"
+[ -e /dev/console ] || mknod -m 0600 /dev/console c 5 1
+[ -e /dev/null ] || mknod /dev/null c 1 3
+log_action_end_msg $?
+
 log_action_begin_msg "Populating /dev filesystem ... "
-mdev -s
+/sbin/udevd --daemon --resolve-names=never
+/sbin/udevadm trigger
+/sbin/udevadm settle || true
 log_action_end_msg $?
 
 cmdline=`cat /proc/cmdline`
@@ -29,12 +40,12 @@ for arg in $cmdline; do
 		root=`echo $arg | cut -d= -f2-`
 		case $root in
 		LABEL=*)
-			root=`echo $arg | cut -d= -f2-`
-			root="/dev/disk/by-label/$root"
+			label=`echo $arg | cut -d= -f3-`
+			root="/dev/disk/by-label/$label"
 			;;
 
 		UUID=*)
-			root=`echo $arg | cut -d= -f2-`
+			uuid=`echo $arg | cut -d= -f3-`
 			root="/dev/disk/by-uuid/$root"
 			;;
 		esac
@@ -64,7 +75,6 @@ log_action_begin_msg "Waiting for root device: $dev"
 # wait for boot device
 while ! test -e "$dev"; do
 	sleep 1
-	mdev -s
 done
 log_action_end_msg $?
 
@@ -93,17 +103,9 @@ fi
 
 log_action_end_msg $?
 
-log_action_begin_msg "Mounting /dev filesystem"
-mount -o rw,mode=0755,size=256K -t tmpfs udev "$mp/dev"
-log_action_end_msg $?
-
-log_action_begin_msg "Creating devices"
-[ -e "$mp/dev/console" ] || mknod "$mp/dev/console" c 5 1
-log_action_end_msg $?
-
 if [ "x$img" != "x" ]; then
 	mkdir -p "${mp}${disk}"
-	mount -o move "$disk" "${mp}${disk}"
+	mount --move "$disk" "${mp}${disk}"
 fi
 
 while [ ! -x "${mp}${init}" ]; do
@@ -117,10 +119,13 @@ if [ "x$ro" = "xremount" ]; then
 	log_action_end_msg $?
 fi
 
-log_action_begin_msg "Moving filesystems to root filesystem"
-mount -o move /sys  "$mp/sys"
-mount -o move /proc "$mp/proc"
-mount -o move /media/disk "$mp/media/disk"
+log_action_begin_msg "Stopping udevd"
+for proc in /proc/[0-9]*; do
+	[ -x $proc/exe ] || continue
+	if [ "`readlink $proc/exe`" = /sbin/udevd ]; then
+		kill ${proc#/proc/} 2> /dev/null || true
+	fi
+done
 log_action_end_msg $?
 
 exec switch_root "$mp" "$init" "$@"

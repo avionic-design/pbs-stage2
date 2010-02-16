@@ -3,8 +3,7 @@ if PLATFORM_GENERIC
 choice
 	prompt "Generic"
 
-config PLATFORM_GENERIC_INITRD
-	bool "Generic Initial Ramdisk"
+source "platforms/generic/initrd/Kconfig"
 
 endchoice
 

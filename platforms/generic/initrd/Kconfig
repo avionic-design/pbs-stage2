@@ -1,2 +1,5 @@
-if PLATFORM_GENERIC_INITRD
-endif
+config PLATFORM_GENERIC_INITRD
+	bool "Generic Initial Ramdisk"
+	select PACKAGE_CORE_BUSYBOX
+	select PACKAGE_CORE_UDEV
+	select PACKAGE_CORE_UTIL_LINUX
