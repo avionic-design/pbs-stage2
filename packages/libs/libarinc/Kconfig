@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBARINC
+	bool "libarinc"
+	select VIRTUAL_DEVEL_LIBC
+	default n
