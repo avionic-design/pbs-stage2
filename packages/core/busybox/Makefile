@@ -37,7 +37,7 @@ build-args = \
 	ARCH=$(ARCH)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
+	cd $(pkgbuildtree) && $(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
