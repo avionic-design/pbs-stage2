@@ -32,6 +32,11 @@ for arg in $@; do
 			shift
 			;;
 
+		-b | --binary)
+			prev=binary
+			shift
+			;;
+
 		*)
 			packages="$@"
 			break
@@ -64,7 +69,8 @@ if [ ! -f "$base/Makefile" ]; then
 	exit 1
 fi
 
-binary="${base}/binary/${arch}/${libc}/${pkg}"
+[ "x$binary" = "x" ] && binary="${base}/binary"
+binary="${binary}/${arch}/${libc}/${pkg}"
 srcdir="${binary}/install"
 
 for package in $packages; do

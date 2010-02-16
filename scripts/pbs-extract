@@ -37,6 +37,11 @@ for arg in $@; do
 			shift
 			;;
 
+		-b | --binary)
+			prev=binary
+			shift
+			;;
+
 		*)
 			packages="$@"
 			break
@@ -54,8 +59,8 @@ if [ "x$root" = "x" ]; then
 fi
 
 if [ ! -d "$root" ]; then
-	echo "ERROR: root directory $root does not exist"
-	exit 1
+	echo "WARNING: root directory $root does not exist"
+	mkdir -p "$root"
 fi
 
 cwd=`pwd`
@@ -79,7 +84,8 @@ if [ ! -f "$base/Makefile" ]; then
 	exit 1
 fi
 
-binary="${base}/binary/${arch}/${libc}/${pkg}"
+[ "x$binary" = "x" ] && binary="${base}/binary"
+binary="${binary}/${arch}/${libc}/${pkg}"
 
 for package in $packages; do
 	package="${package%.install}"
