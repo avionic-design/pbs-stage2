@@ -31,8 +31,25 @@ conf-args += \
 	--localstatedir=/var \
 	--sysconfdir=/etc
 
+dri-drivers-y := swrast
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_I810) += i810
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_I915) += i915
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_I965) += i965
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_MACH64) += mach64
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_MGA) += mga
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_R128) += r128
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_R200) += r200
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_R300) += r300
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_R600) += r600
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_RADEON) += radeon
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_SAVAGE) += savage
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_SIS) += sis
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_TDFX) += tdfx
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_UNICHROME) += unichrome
+dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_FFB) += ffb
+
 conf-args += \
-	--with-dri-drivers=swrast \
+	--with-dri-drivers="$(dri-drivers-y)" \
 	--with-demos=xdemos \
 	--disable-gallium \
 	--disable-egl
