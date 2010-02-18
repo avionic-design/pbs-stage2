@@ -1,0 +1,4 @@
+config PACKAGE_CORE_DMIDECODE
+	bool "dmidecode"
+	select VIRTUAL_DEVEL_LIBC
+	default n
