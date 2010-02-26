@@ -1,3 +1,4 @@
+PACKAGE = generic-initrd
 VERSION = 0.0.0
 
 scripts = \
