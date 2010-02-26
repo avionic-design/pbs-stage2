@@ -1,5 +1,5 @@
 PACKAGE = gmp
-VERSION = 5.0.0
+VERSION = 5.0.1
 
 LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
