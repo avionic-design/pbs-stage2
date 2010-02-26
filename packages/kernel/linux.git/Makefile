@@ -39,11 +39,28 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 version = $(if $(wildcard $(pkgtree)/.release),$(shell cat $(pkgtree)/.release),)
-$(pkgtree)/.binary:  VERSION = $(call version)
-$(pkgtree)/.install: VERSION = $(call version)
 
 include $(srctree)/packages/cleanup.mk
-include $(srctree)/packages/binary.mk
+
+ARCH := $(shell echo $(CONFIG_ARCH))
+CPU := $(shell echo $(CONFIG_CPU))
+LIBC := $(shell echo $(CONFIG_LIBC))
+ABI := $(shell echo $(CONFIG_ABI))
+
+$(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-install \
+			-a $(ARCH) -l $(LIBC) -s $(DESTDIR) -b $(objtree)/binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-binary \
+			-a $(ARCH) -l $(LIBC) -v $(call version) -b $(objtree)/binary
+	$(call cmd,stamp)
+
+$(pkgtree)/.install: $(pkgtree)/.binary
+	cd $(pkgsrctree) && \
+		$(priv) $(srctree)/scripts/pbs-extract \
+			-a $(ARCH) -l $(LIBC) -v $(call version) -r $(ROOTFS) -b $(objtree)/binary
+	$(call cmd,stamp)
 
 kernel-version:
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build version
