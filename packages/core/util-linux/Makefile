@@ -1,5 +1,5 @@
 PACKAGE = util-linux-ng
-VERSION = 2.17
+VERSION = 2.17.1
 
 LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v2.17
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
