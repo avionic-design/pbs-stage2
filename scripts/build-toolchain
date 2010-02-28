@@ -113,7 +113,7 @@ else
 
 	log_begin_msg -n "[`eval $date`]   Archiving toolchain ... "
 	mkdir -p "$tcroot/archive"
-	tar cjf "$tcroot/archive/${toolchain}_${version}.tar.bz2" \
+	tar cJf "$tcroot/archive/${toolchain}_${version}.tar.xz" \
 		-C "$tcroot/$toolchain" usr > /dev/null 2>&1
 	ret=$?
 	log_end_msg $ret
