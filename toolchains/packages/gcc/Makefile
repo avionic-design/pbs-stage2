@@ -78,11 +78,19 @@ $(pkgtree)/.binary:
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
+  CC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcc
   install-args = \
 	DESTDIR=$(SYSROOT)
+else
+  CC = $(prefix)/bin/$(TARGET)-gcc
 endif
 
 $(pkgtree)/.install:
 	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
+	# install wrapper script
+	rm $(CC) && \
+		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \
+			> $(CC) && \
+		chmod a+x $(CC)
 	$(call cmd,stamp)

@@ -90,6 +90,11 @@ $(pkgtree)/.install:
 		$(env) $(priv) $(MAKE) $(install-args) install-gcc
 	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(priv) $(MAKE) $(install-args) install-target-libgcc
+	# install wrapper script
+	rm $(CC) && \
+		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \
+			> $(CC) && \
+		chmod a+x $(CC)
 	# link missing fixed headers
 	$(priv) ln -sf ../include-fixed/limits.h \
 		`$(CC) -print-file-name=include`/limits.h

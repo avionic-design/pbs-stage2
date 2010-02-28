@@ -4,7 +4,7 @@ BUILD	:= $(shell echo $$MACHTYPE)
 HOST	:= $(shell echo $$MACHTYPE)
 
 PATH	:= $(SYSROOT)$(prefix)/bin:$(PATH)
-env	:= env -i PATH=$(PATH)
+env	:= env -i PATH=$(PATH) LD_LIBRARY_PATH=$(SYSROOT)$(prefix)/lib
 export PATH env
 
 prefix	:= $(SYSROOT)$(prefix)
