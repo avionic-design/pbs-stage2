@@ -17,7 +17,7 @@ variant	= sysroot
 export SYSROOT prefix variant
 
 clean-dirs  := build include scripts
-clean-files := .config.old .depends
+clean-files := .config.old .depends source
 clean-files += kernel-release kernel-version
 
 mrproper-dirs  :=
