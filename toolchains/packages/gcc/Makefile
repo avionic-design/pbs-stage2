@@ -79,10 +79,14 @@ $(pkgtree)/.binary:
 
 ifneq ($(SYSROOT),)
   CC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcc
+  CXX = $(SYSROOT)$(prefix)/bin/$(TARGET)-g++
+  CPP = $(SYSROOT)$(prefix)/bin/$(TARGET)-cpp
   install-args = \
 	DESTDIR=$(SYSROOT)
 else
   CC = $(prefix)/bin/$(TARGET)-gcc
+  CXX = $(prefix)/bin/$(TARGET)-g++
+  CPP = $(prefix)/bin/$(TARGET)-cpp
 endif
 
 $(pkgtree)/.install:
@@ -93,4 +97,6 @@ $(pkgtree)/.install:
 		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \
 			> $(CC) && \
 		chmod a+x $(CC)
+	mv $(CXX) $(CXX)-$(VERSION) && ln -s $(TARGET)-gcc $(CXX)
+	mv $(CPP) $(CPP)-$(VERSION) && ln -s $(TARGET)-cpp $(CPP)
 	$(call cmd,stamp)
