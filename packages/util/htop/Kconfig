@@ -1,0 +1,4 @@
+config PACKAGE_UTIL_HTOP
+	bool "htop"
+	select PACKAGE_LIBS_NCURSES
+	default n

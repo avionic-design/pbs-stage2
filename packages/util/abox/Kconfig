@@ -1,0 +1,4 @@
+config PACKAGE_UTIL_ABOX
+	bool "abox"
+	select VIRTUAL_DEVEL_LIBC
+	default n
