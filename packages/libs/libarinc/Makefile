@@ -7,6 +7,7 @@ TARBALLS =
 GITTREE = $(srctree)/../avionic-design/libarinc.git
 
 include packages/autotools-git.mk
+NUM_CPU = 1
 
 prunefiles = \
 	$(prefix)/lib/libarinc.la
