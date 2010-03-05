@@ -1,0 +1,5 @@
+config PACKAGE_UTIL_FLASHTOOL
+	bool "flashtool"
+	select PACKAGE_LIBS_LIBSH
+	select PACKAGE_LIBS_READLINE
+	default n
