@@ -1,5 +1,5 @@
 PACKAGE = xinput
-VERSION = 1.5.0
+VERSION = 1.5.1
 
 include packages/xorg/app/common.mk
 
