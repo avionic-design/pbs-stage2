@@ -7,6 +7,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 NUM_CPU = 1
 
+conf-args += \
+	--disable-music-mod \
+	--disable-music-mp3
+
 prunefiles = \
 	$(prefix)/lib/libSDL_mixer.la
 
