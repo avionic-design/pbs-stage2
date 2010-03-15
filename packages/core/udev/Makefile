@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args = \
-	--host=$(TARGET) \
+	--build=$(BUILD_GNU_TYPE) \
+	--host=$(HOST_GNU_TYPE) \
 	--prefix= \
 	--includedir=$(prefix)/include \
 	--datarootdir=$(prefix)/share \
