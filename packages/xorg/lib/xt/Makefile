@@ -11,6 +11,10 @@ else
 	--disable-malloc0returnsnull
 endif
 
+conf-vars += \
+	CFLAGS_FOR_BUILD="-O2 -g" \
+	LDFLAGS_FOR_BUILD=""
+
 prunefiles = \
 	$(prefix)/lib/libXt.la
 
