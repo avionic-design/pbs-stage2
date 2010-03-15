@@ -56,6 +56,9 @@ else
   conf-args += --disable-xinerama
 endif
 
+conf-vars += \
+	ac_cv_file__etc_X11_fontpath_d=yes
+
 module = $(prefix)/lib/xorg/modules
 
 prunefiles = \
