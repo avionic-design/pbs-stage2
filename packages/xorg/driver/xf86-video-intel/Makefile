@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.10.901
+VERSION = 2.10.902
 
 include packages/xorg/driver/common.mk
 
