@@ -1,7 +1,7 @@
 PACKAGE = gtk+
-VERSION = 2.19.1
+VERSION = 2.20.0
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.19
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.20
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -13,12 +13,15 @@ conf-args += \
 	--disable-glibtest \
 	--disable-cups
 
+conf-vars += \
+	gio_can_sniff=yes
+
 build-args += \
 	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.1901.0
+sover  = 0.2000.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
