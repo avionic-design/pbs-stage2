@@ -1,5 +1,5 @@
 PACKAGE = libjpeg
-VERSION = 7
+VERSION = 8a
 
 LOCATION = http://www.ijg.org/files
 TARBALLS = jpegsrc.v$(VERSION).tar.gz
@@ -17,4 +17,4 @@ stripfiles = \
 	$(prefix)/bin/jpegtran \
 	$(prefix)/bin/rdjpgcom \
 	$(prefix)/bin/wrjpgcom \
-	$(prefix)/lib/libjpeg.so.7.0.0
+	$(prefix)/lib/libjpeg.so.8.0.1
