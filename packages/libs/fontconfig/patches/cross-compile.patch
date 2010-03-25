@@ -1,0 +1,223 @@
+diff --git a/configure b/configure
+index 7489ec9..a1d0ba6 100755
+--- a/configure
++++ b/configure
+@@ -817,6 +817,8 @@ ICONV_LIBS
+ ARCHITECTURE
+ EXEEXT_FOR_BUILD
+ CC_FOR_BUILD
++CFLAGS_FOR_BUILD
++LDFLAGS_FOR_BUILD
+ CROSS_COMPILING_FALSE
+ CROSS_COMPILING_TRUE
+ WARN_CFLAGS
+@@ -11903,8 +11905,12 @@ fi
+   test -n "$CC_FOR_BUILD" && break
+ done
+ 
++  CFLAGS_FOR_BUILD="-O2 -g"
++  LDFLAGS_FOR_BUILD=""
+ else
+   CC_FOR_BUILD=$CC
++  CFLAGS_FOR_BUILD=$CFLAGS
++  LDFLAGS_FOR_BUILD=$LDFLAGS
+ fi
+ { $as_echo "$as_me:$LINENO: result: $CC_FOR_BUILD" >&5
+ $as_echo "$CC_FOR_BUILD" >&6; }
+diff --git a/configure.in b/configure.in
+index 589b0c4..87df067 100644
+--- a/configure.in
++++ b/configure.in
+@@ -103,11 +103,17 @@ dnl ==========================================================================
+ AC_MSG_CHECKING([for a C compiler for build tools])
+ if test $cross_compiling = yes; then
+   AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
++  CFLAGS_FOR_BUILD="-O2 -g"
++  LDFLAGS_FOR_BUILD=""
+ else
+   CC_FOR_BUILD=$CC
++  CFLAGS_FOR_BUILD="$CFLAGS"
++  LDFLAGS_FOR_BUILD="$LDFLAGS"
+ fi
+ AC_MSG_RESULT([$CC_FOR_BUILD])
+ AC_SUBST(CC_FOR_BUILD)
++AC_SUBST(CFLAGS_FOR_BUILD)
++AC_SUBST(LDFLAGS_FOR_BUILD)
+ 
+ AC_MSG_CHECKING([for suffix of executable build tools])
+ if test $cross_compiling = yes; then
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index 49e00e1..fd9aaf5 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -22,6 +22,8 @@
+ # PERFORMANCE OF THIS SOFTWARE.
+ 
+ CC = @CC_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ 
+diff --git a/doc/Makefile.in b/doc/Makefile.in
+index 1ac8f4c..db6f004 100644
+--- a/doc/Makefile.in
++++ b/doc/Makefile.in
+@@ -145,7 +145,7 @@ AWK = @AWK@
+ CC = @CC_FOR_BUILD@
+ CCDEPMODE = @CCDEPMODE@
+ CC_FOR_BUILD = @CC_FOR_BUILD@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS_FOR_BUILD@
+ CONFDIR = @CONFDIR@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+@@ -185,7 +185,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+diff --git a/fc-arch/Makefile.am b/fc-arch/Makefile.am
+index 806c730..26fed35 100644
+--- a/fc-arch/Makefile.am
++++ b/fc-arch/Makefile.am
+@@ -23,6 +23,8 @@
+ #
+ 
+ CC = @CC_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ 
+diff --git a/fc-arch/Makefile.in b/fc-arch/Makefile.in
+index a362e2e..ecf31d5 100644
+--- a/fc-arch/Makefile.in
++++ b/fc-arch/Makefile.in
+@@ -114,7 +114,7 @@ AWK = @AWK@
+ CC = @CC_FOR_BUILD@
+ CCDEPMODE = @CCDEPMODE@
+ CC_FOR_BUILD = @CC_FOR_BUILD@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS_FOR_BUILD@
+ CONFDIR = @CONFDIR@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+@@ -154,7 +154,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+diff --git a/fc-case/Makefile.am b/fc-case/Makefile.am
+index bf01984..81b8025 100644
+--- a/fc-case/Makefile.am
++++ b/fc-case/Makefile.am
+@@ -23,6 +23,8 @@
+ #
+ 
+ CC = @CC_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ 
+diff --git a/fc-case/Makefile.in b/fc-case/Makefile.in
+index e8e9a92..fffe0e4 100644
+--- a/fc-case/Makefile.in
++++ b/fc-case/Makefile.in
+@@ -117,7 +117,7 @@ AWK = @AWK@
+ CC = @CC_FOR_BUILD@
+ CCDEPMODE = @CCDEPMODE@
+ CC_FOR_BUILD = @CC_FOR_BUILD@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS_FOR_BUILD@
+ CONFDIR = @CONFDIR@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+@@ -157,7 +157,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+diff --git a/fc-glyphname/Makefile.am b/fc-glyphname/Makefile.am
+index bcb4d07..7d91604 100644
+--- a/fc-glyphname/Makefile.am
++++ b/fc-glyphname/Makefile.am
+@@ -23,6 +23,8 @@
+ #
+ 
+ CC = @CC_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ 
+diff --git a/fc-glyphname/Makefile.in b/fc-glyphname/Makefile.in
+index 992c823..5fd9098 100644
+--- a/fc-glyphname/Makefile.in
++++ b/fc-glyphname/Makefile.in
+@@ -114,7 +114,7 @@ AWK = @AWK@
+ CC = @CC_FOR_BUILD@
+ CCDEPMODE = @CCDEPMODE@
+ CC_FOR_BUILD = @CC_FOR_BUILD@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS_FOR_BUILD@
+ CONFDIR = @CONFDIR@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+@@ -154,7 +154,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
+diff --git a/fc-lang/Makefile.am b/fc-lang/Makefile.am
+index 923a4ff..15dead1 100644
+--- a/fc-lang/Makefile.am
++++ b/fc-lang/Makefile.am
+@@ -23,6 +23,8 @@
+ #
+ 
+ CC = @CC_FOR_BUILD@
++CFLAGS = @CFLAGS_FOR_BUILD@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ EXEEXT = @EXEEXT_FOR_BUILD@
+ LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ 
+diff --git a/fc-lang/Makefile.in b/fc-lang/Makefile.in
+index 465b27d..c05c0a8 100644
+--- a/fc-lang/Makefile.in
++++ b/fc-lang/Makefile.in
+@@ -114,7 +114,7 @@ AWK = @AWK@
+ CC = @CC_FOR_BUILD@
+ CCDEPMODE = @CCDEPMODE@
+ CC_FOR_BUILD = @CC_FOR_BUILD@
+-CFLAGS = @CFLAGS@
++CFLAGS = @CFLAGS_FOR_BUILD@
+ CONFDIR = @CONFDIR@
+ CPP = @CPP@
+ CPPFLAGS = @CPPFLAGS@
+@@ -154,7 +154,7 @@ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ LD = @LD@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS_FOR_BUILD@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
