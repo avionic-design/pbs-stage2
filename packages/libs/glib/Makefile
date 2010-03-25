@@ -1,5 +1,5 @@
 PACKAGE = glib
-VERSION = 2.23.5
+VERSION = 2.23.6
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.23
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -24,7 +24,7 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.2305.0
+sover = 0.2306.0
 
 stripfiles = \
 	$(prefix)/bin/gio-querymodules \
