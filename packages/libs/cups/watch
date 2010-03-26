@@ -1,0 +1,2 @@
+version=3
+ftp://ftp.cups.org/pub/cups/([\d\.]+[\d])/cups-(.*)-source\.tar\.bz2
