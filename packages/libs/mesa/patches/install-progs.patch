@@ -15,21 +15,21 @@ index c99f4ee..321eb33 100644
 +	done
  
  clean:
- 	-@for dir in $(SUBDIRS) tests ; do \
+ 	@list='$(SUBDIRS)'; for dir in $$list tests ; do \
 diff --git a/progs/xdemos/Makefile b/progs/xdemos/Makefile
 index 6581df8..3b18e89 100644
 --- a/progs/xdemos/Makefile
 +++ b/progs/xdemos/Makefile
-@@ -10,7 +10,7 @@ LIB_DEP = $(TOP)/$(LIB_DIR)/$(GL_LIB_NAME)
+@@ -13,7 +13,7 @@ LIB_DEP = $(TOP)/$(LIB_DIR)/$(GL_LIB_NAME)
  
- LIBS = -L$(TOP)/$(LIB_DIR) -l$(GL_LIB) $(APP_LIB_DEPS)
+ LIBS = -L$(TOP)/$(LIB_DIR) -l$(GL_LIB) -L$(libdir) $(APP_LIB_DEPS)
  
 -PROGS = \
 +PROGS ?= \
  	corender \
  	glsync \
  	glthreads \
-@@ -62,6 +62,11 @@ default: $(PROGS)
+@@ -68,6 +68,11 @@ default: $(PROGS)
  extra: $(EXTRA_PROGS)
  
  

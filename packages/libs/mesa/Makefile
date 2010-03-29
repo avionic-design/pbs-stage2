@@ -1,6 +1,6 @@
 PACKAGE = mesa
-VERSION = 7.7
-SOVER = 070700
+VERSION = 7.8
+SOVER = 070800
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2
@@ -79,10 +79,34 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 prunefiles =
 stripfiles = \
+	$(prefix)/bin/corender \
+	$(prefix)/bin/glsync \
+	$(prefix)/bin/glthreads \
+	$(prefix)/bin/glxcontexts \
 	$(prefix)/bin/glxdemo \
 	$(prefix)/bin/glxgears \
+	$(prefix)/bin/glxgears_fbconfig \
+	$(prefix)/bin/glxgears_pixmap \
 	$(prefix)/bin/glxheads \
 	$(prefix)/bin/glxinfo \
+	$(prefix)/bin/glxpbdemo \
+	$(prefix)/bin/glxpixmap \
+	$(prefix)/bin/glxsnoop \
+	$(prefix)/bin/glxswapcontrol \
+	$(prefix)/bin/manywin \
+	$(prefix)/bin/msctest \
+	$(prefix)/bin/multictx \
+	$(prefix)/bin/offset \
+	$(prefix)/bin/omlsync \
+	$(prefix)/bin/overlay \
+	$(prefix)/bin/pbdemo \
+	$(prefix)/bin/pbinfo \
+	$(prefix)/bin/sharedtex \
+	$(prefix)/bin/sharedtex_mt \
+	$(prefix)/bin/texture_from_pixmap \
+	$(prefix)/bin/wincopy \
+	$(prefix)/bin/xfont \
+	$(prefix)/bin/xrotfontdemo \
 	$(prefix)/lib/libGL.so.1.2 \
 	$(prefix)/lib/libGLU.so.1.3.$(SOVER) \
 	$(prefix)/lib/libGLw.so.1.0.0 \

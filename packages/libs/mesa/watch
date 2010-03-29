@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.freedesktop.org/pub/mesa/(.*)/MesaLib-(.*)\.tar\.bz2
+ftp://ftp.freedesktop.org/pub/mesa/([\d\.]+[\d])/MesaLib-(.*)\.tar\.bz2
