@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.7.99.2
+VERSION = 1.7.99.902
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 1.6.5
@@ -13,8 +13,6 @@ include packages/autotools.mk
 conf-args += \
 	--with-xkb-output=/var/lib/xkb \
 	--disable-null-root-cursor \
-	--disable-config-dbus \
-	--enable-config-hal \
 	--disable-kdrive \
 	--disable-xfbdev \
 	--disable-xvfb \
