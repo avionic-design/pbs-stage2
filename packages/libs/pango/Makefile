@@ -1,7 +1,7 @@
 PACKAGE = pango
-VERSION = 1.27.1
+VERSION = 1.28.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.27
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.28
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -23,7 +23,7 @@ prunefiles = \
 	$(prefix)/lib/libpangoxft-1.0.la \
 	$(plugin)/*.la
 
-sover = 0.2701.0
+sover = 0.2800.0
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
