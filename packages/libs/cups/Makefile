@@ -1,5 +1,5 @@
 PACKAGE = cups
-VERSION = 1.4.2
+VERSION = 1.4.3
 
 LOCATION = ftp://ftp.cups.org/pub/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION)-source.tar.bz2
