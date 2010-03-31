@@ -157,7 +157,7 @@ b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netca
 db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
 4023710c37d0b3d79e6299cb79b6de2a31db7d581fe59e775a5351784034ecae  download/openssh-5.2p1.tar.gz
-7e7cd4f3974199b729e6e3a0af08bd4279fde0370a1120c1a3b351ab090c6101  download/openssl-0.9.8k.tar.gz
+1bbf9afc5a6215121ac094147d0a84178294fe4c3d0a231731038fd3717ba7ca  download/openssl-1.0.0.tar.gz
 c9e67477309fee9d3cdc3f751ab9cd2965834a177a72786a44d9b371cd2f6760  download/pango-1.27.1.tar.bz2
 d8fe23b6966c1abf29b3b38b08b0cf33f731cd6e6a89d9b8d2b8d5e982c3f544  download/pciutils-3.1.7.tar.bz2
 3a0f6a592b78448ab9afc57e7a087fba1b7657c6467f7037946a96caa3ce10da  download/pcre-8.01.tar.bz2

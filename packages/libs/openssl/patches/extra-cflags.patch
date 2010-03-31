@@ -36,14 +36,14 @@ index 6557f2b..6a14c20 100644
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDE) $(CFLAG) $(EXTRA_CFLAGS)
  ASFLAGS= $(INCLUDE) $(ASFLAG)
  AFLAGS=$(ASFLAGS)
- 
+ CPUID_OBJ=mem_clr.o
 diff --git a/crypto/aes/Makefile b/crypto/aes/Makefile
 index 9d174f4..795d1b9 100644
 --- a/crypto/aes/Makefile
 +++ b/crypto/aes/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
  
- AES_ASM_OBJ=aes_core.o aes_cbc.o
+ AES_ENC=aes_core.o aes_cbc.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -67,9 +67,9 @@ diff --git a/crypto/bf/Makefile b/crypto/bf/Makefile
 index 7f4f03e..a5ef4f7 100644
 --- a/crypto/bf/Makefile
 +++ b/crypto/bf/Makefile
-@@ -15,7 +15,7 @@ BF_ENC=		bf_enc.o
- # or use
- #DES_ENC=	bx86-elf.o
+@@ -13,7 +13,7 @@ BF_ENC=		bf_enc.o
+ 
+ BF_ENC=		bf_enc.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -93,9 +93,9 @@ diff --git a/crypto/bn/Makefile b/crypto/bn/Makefile
 index f5e8f65..eb183d0 100644
 --- a/crypto/bn/Makefile
 +++ b/crypto/bn/Makefile
-@@ -15,7 +15,7 @@ BN_ASM=		bn_asm.o
- # or use
- #BN_ASM=	bn86-elf.o
+@@ -13,7 +13,7 @@ BN_ASM=		bn_asm.o
+ 
+ BN_ASM=		bn_asm.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -121,7 +121,7 @@ index dfb1295..6a66eb6 100644
 +++ b/crypto/camellia/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
  
- CAMELLIA_ASM_OBJ=
+ CMLL_ENC= camellia.o cmll_misc.o cmll_cbc.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -184,9 +184,9 @@ diff --git a/crypto/des/Makefile b/crypto/des/Makefile
 index 786e688..75bd72c 100644
 --- a/crypto/des/Makefile
 +++ b/crypto/des/Makefile
-@@ -15,7 +15,7 @@ DES_ENC=	des_enc.o fcrypt_b.o
- # or use
- #DES_ENC=	dx86-elf.o yx86-elf.o
+@@ -13,7 +13,7 @@ DES_ENC=	des_enc.o fcrypt_b.o
+ RANLIB=		ranlib
+ DES_ENC=	des_enc.o fcrypt_b.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -550,9 +550,9 @@ diff --git a/crypto/rc5/Makefile b/crypto/rc5/Makefile
 index b4e21c9..e316ed4 100644
 --- a/crypto/rc5/Makefile
 +++ b/crypto/rc5/Makefile
-@@ -15,7 +15,7 @@ RC5_ENC=		rc5_enc.o
- # or use
- #DES_ENC=	r586-elf.o
+@@ -13,7 +13,7 @@ RC5_ENC=		rc5_enc.o
+ 
+ RC5_ENC=		rc5_enc.o
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
@@ -693,7 +693,7 @@ diff --git a/engines/Makefile b/engines/Makefile
 index 002d40c..93f74ae 100644
 --- a/engines/Makefile
 +++ b/engines/Makefile
-@@ -13,7 +13,7 @@ AR=		ar r
+@@ -19,7 +19,7 @@ AR=		ar r
  PEX_LIBS=
  EX_LIBS=
  

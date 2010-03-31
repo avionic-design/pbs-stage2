@@ -1,10 +1,8 @@
 PACKAGE = openssl
-VERSION = 0.9.8k
+VERSION = 1.0.0
 
 LOCATION = http://www.openssl.org/source
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
-##############################################################################
 
 include packages/common.mk
 
@@ -16,11 +14,10 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	shared \
+	--cross-compile-prefix=$(TARGET)- \
 	--prefix=$(prefix) \
-	--enginesdir=$(prefix)/lib/ssl/engines \
 	--openssldir=/etc/ssl \
-	no-idea no-mdc2 no-rc5 zlib-dynamic
+	shared zlib-dynamic
 
 ifeq ($(ARCH),arm)
   ifeq ($(CPU),xscale)
@@ -43,8 +40,6 @@ $(pkgtree)/.configure:
 	$(call cmd,stamp)
 
 build-vars = \
-	CC='$(CC)' \
-	LD='$(LD)' \
 	EXTRA_CPPFLAGS='$(CPPFLAGS)' \
 	EXTRA_CFLAGS='$(CFLAGS)'
 
@@ -64,7 +59,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/ssl/engines
-sover  = 0.9.8
+sover  = 1.0.0
 
 stripfiles = \
 	$(prefix)/bin/openssl \

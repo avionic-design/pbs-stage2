@@ -1,13 +1,13 @@
 diff --git a/Configure b/Configure
-index c6dbfae..a6626b4 100755
+index d15b689..6977ee4 100755
 --- a/Configure
 +++ b/Configure
-@@ -12,10 +12,13 @@ print STDERR "Warning: perl module strict not found.\n" if ($@);
+@@ -10,10 +10,13 @@ use strict;
  
  # see INSTALL for instructions.
  
--my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [enable-montasm] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
-+my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [enable-montasm] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--enginesdir=ENGINESDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
+-my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
++my $usage="Usage: Configure [no-<cipher> ...] [enable-<cipher> ...] [experimental-<cipher> ...] [-Dxxx] [-lxxx] [-Lxxx] [-fxxx] [-Kxxx] [no-hw-xxx|no-hw] [[no-]threads] [[no-]shared] [[no-]zlib|zlib-dynamic] [no-asm] [no-dso] [no-krb5] [386] [--prefix=DIR] [--openssldir=OPENSSLDIR] [--enginesdir=ENGINESDIR] [--with-xxx[=vvv]] [--test-sanity] os/compiler[:flags]\n";
  
  # Options:
  #
@@ -17,15 +17,15 @@ index c6dbfae..a6626b4 100755
  # --openssldir  install OpenSSL in OPENSSLDIR (Default: DIR/ssl if the
  #               --prefix option is given; /usr/local/ssl otherwise)
  # --prefix      prefix for the OpenSSL include, lib and bin directories
-@@ -584,6 +589,7 @@ my $idx_arflags = $idx++;
- 
+@@ -622,6 +625,7 @@ my $idx_multilib = $idx++;
  my $prefix="";
+ my $libdir="";
  my $openssldir="";
 +my $enginesdir="";
  my $exe_ext="";
- my $install_prefix="";
- my $fipslibdir="/usr/local/ssl/fips-1.0/lib/";
-@@ -822,6 +828,10 @@ PROCESS_ARGS:
+ my $install_prefix= "$ENV{'INSTALL_PREFIX'}";
+ my $cross_compile_prefix="";
+@@ -833,6 +837,10 @@ PROCESS_ARGS:
  				{
  				$openssldir=$1;
  				}
@@ -36,9 +36,9 @@ index c6dbfae..a6626b4 100755
  			elsif (/^--install.prefix=(.*)$/)
  				{
  				$install_prefix=$1;
-@@ -1080,16 +1090,23 @@ if ($openssldir eq "" and $prefix eq "")
- 		}
- 	}
+@@ -1040,6 +1048,10 @@ $exe_ext=".nlm" if ($target =~ /netware/);
+ $exe_ext=".pm"  if ($target =~ /vos/);
+ $openssldir="/usr/local/ssl" if ($openssldir eq "" and $prefix eq "");
  $prefix=$openssldir if $prefix eq "";
 +if ($enginesdir eq "" and $prefix eq "")
 +	{
@@ -47,7 +47,8 @@ index c6dbfae..a6626b4 100755
  
  $default_ranlib= &which("ranlib") or $default_ranlib="true";
  $perl=$ENV{'PERL'} or $perl=&which("perl5") or $perl=&which("perl")
-   or $perl="perl";
+@@ -1049,10 +1061,13 @@ my $make = $ENV{'MAKE'} || "make";
+ $cross_compile_prefix=$ENV{'CROSS_COMPILE'} if $cross_compile_prefix eq "";
  
  chop $openssldir if $openssldir =~ /\/$/;
 +chop $enginesdir if $enginesdir =~ /\/$/;
@@ -60,25 +61,25 @@ index c6dbfae..a6626b4 100755
  
  
  print "IsMK1MF=$IsMK1MF\n";
-@@ -1465,6 +1482,7 @@ while (<IN>)
- 	s/^SHLIB_EXT=.*/SHLIB_EXT=$shared_extension/;
+@@ -1485,6 +1500,7 @@ while (<IN>)
  	s/^INSTALLTOP=.*$/INSTALLTOP=$prefix/;
+ 	s/^MULTILIB=.*$/MULTILIB=$multilib/;
  	s/^OPENSSLDIR=.*$/OPENSSLDIR=$openssldir/;
 +	s/^ENGINESDIR=.*$/ENGINESDIR=$enginesdir/;
+ 	s/^LIBDIR=.*$/LIBDIR=$libdir/;
  	s/^INSTALL_PREFIX=.*$/INSTALL_PREFIX=$install_prefix/;
  	s/^PLATFORM=.*$/PLATFORM=$target/;
- 	s/^OPTIONS=.*$/OPTIONS=$options/;
-@@ -1647,7 +1665,7 @@ while (<IN>)
- 	if	(/^#define\s+OPENSSLDIR/)
- 		{ print OUT "#define OPENSSLDIR \"$openssldir\"\n"; }
+@@ -1673,7 +1689,7 @@ while (<IN>)
+ 		}
  	elsif	(/^#define\s+ENGINESDIR/)
--		{ print OUT "#define ENGINESDIR \"$prefix/lib/engines\"\n"; }
-+		{ print OUT "#define ENGINESDIR \"$enginesdir\"\n"; }
- 	elsif	(/^#((define)|(undef))\s+OPENSSL_EXPORT_VAR_AS_FUNCTION/)
- 		{ printf OUT "#undef OPENSSL_EXPORT_VAR_AS_FUNCTION\n"
- 			if $export_var_as_fn;
+ 		{
+-		my $foo = "$prefix/$libdir/engines";
++		my $foo = "$enginesdir";
+ 		$foo =~ s/\\/\\\\/g;
+ 		print OUT "#define ENGINESDIR \"$foo\"\n";
+ 		}
 diff --git a/Makefile.org b/Makefile.org
-index d1b56b2..81f09c7 100644
+index fb0af7e..567f978 100644
 --- a/Makefile.org
 +++ b/Makefile.org
 @@ -28,6 +28,8 @@ INSTALLTOP=/usr/local/ssl
@@ -90,20 +91,20 @@ index d1b56b2..81f09c7 100644
  
  # NO_IDEA - Define to build without the IDEA algorithm
  # NO_RC4  - Define to build without the RC4 algorithm
-@@ -203,6 +205,7 @@ BUILDENV=	PLATFORM='${PLATFORM}' PROCESSOR='${PROCESSOR}' \
- 		SDIRS='${SDIRS}' LIBRPATH='${INSTALLTOP}/lib'	\
- 		INSTALL_PREFIX='${INSTALL_PREFIX}'		\
- 		INSTALLTOP='${INSTALLTOP}' OPENSSLDIR='${OPENSSLDIR}'	\
+@@ -186,6 +188,7 @@ BUILDENV=	PLATFORM='$(PLATFORM)' PROCESSOR='$(PROCESSOR)' \
+ 		INSTALL_PREFIX='$(INSTALL_PREFIX)'		\
+ 		INSTALLTOP='$(INSTALLTOP)' OPENSSLDIR='$(OPENSSLDIR)'	\
+ 		LIBDIR='$(LIBDIR)'				\
 +		ENGINESDIR='${ENGINESDIR}' \
- 		MAKEDEPEND='$$$${TOP}/util/domd $$$${TOP} -MD ${MAKEDEPPROG}' \
- 		DEPFLAG='-DOPENSSL_NO_DEPRECATED ${DEPFLAG}'	\
- 		MAKEDEPPROG='${MAKEDEPPROG}'			\
-@@ -616,12 +619,12 @@ install: all install_docs install_sw
+ 		MAKEDEPEND='$$$${TOP}/util/domd $$$${TOP} -MD $(MAKEDEPPROG)' \
+ 		DEPFLAG='-DOPENSSL_NO_DEPRECATED $(DEPFLAG)'	\
+ 		MAKEDEPPROG='$(MAKEDEPPROG)'			\
+@@ -497,12 +500,12 @@ install: all install_docs install_sw
  install_sw:
  	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib \
--		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines \
- 		$(INSTALL_PREFIX)$(INSTALLTOP)/lib/pkgconfig \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR) \
+-		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines \
+ 		$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/pkgconfig \
  		$(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/misc \
  		$(INSTALL_PREFIX)$(OPENSSLDIR)/certs \
@@ -114,24 +115,63 @@ index d1b56b2..81f09c7 100644
  	do \
  	(cp $$i $(INSTALL_PREFIX)$(INSTALLTOP)/include/openssl/$$i; \
 diff --git a/engines/Makefile b/engines/Makefile
-index 002d40c..e3efddd 100644
+index e024205..dc07118 100644
 --- a/engines/Makefile
 +++ b/engines/Makefile
-@@ -100,13 +100,13 @@ install:
- 				*DSO_DL*)	sfx="sl";;	\
- 				*)		sfx="bad";;	\
+@@ -107,7 +107,7 @@ install:
+ 	@[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
+ 	@if [ -n "$(SHARED_LIBS)" ]; then \
+ 		set -e; \
+-		$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines; \
++		$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(ENGINESDIR); \
+ 		for l in $(LIBNAMES); do \
+ 			( echo installing $$l; \
+ 			  pfx=lib; \
+@@ -119,13 +119,13 @@ install:
+ 				*DSO_WIN32*)	sfx="eay32.dll"; pfx=;;	\
+ 				*)		sfx=".bad";;	\
  				esac; \
--				cp lib$$l.$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
-+				cp lib$$l.$$sfx $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
+-				cp $$pfx$$l$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new; \
++				cp $$pfx$$l$$sfx $(INSTALL_PREFIX)$(ENGINESDIR)/$$pfx$$l$$sfx.new; \
  			  else \
- 			  	sfx="so"; \
--				cp cyg$$l.dll $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
-+				cp cyg$$l.dll $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
+ 				sfx=".so"; \
+-				cp cyg$$l.dll $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new; \
++				cp cyg$$l.dll $(INSTALL_PREFIX)$(ENGINESDIR)/$$pfx$$l$$sfx.new; \
  			  fi; \
--			  chmod 555 $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new; \
--			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/lib/engines/lib$$l.$$sfx ); \
-+			  chmod 555 $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new; \
-+			  mv -f $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx.new $(INSTALL_PREFIX)$(ENGINESDIR)/lib$$l.$$sfx ); \
+-			  chmod 555 $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new; \
+-			  mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$$pfx$$l$$sfx ); \
++			  chmod 555 $(INSTALL_PREFIX)$(ENGINESDIR)/$$pfx$$l$$sfx.new; \
++			  mv -f $(INSTALL_PREFIX)$(ENGINESDIR)/$$pfx$$l$$sfx.new $(INSTALL_PREFIX)$(ENGINESDIR)/$$pfx$$l$$sfx ); \
  		done; \
  	fi
+ 	@target=install; $(RECURSIVE_MAKE)
+diff --git a/engines/ccgost/Makefile b/engines/ccgost/Makefile
+index 64be962..438ac96 100644
+--- a/engines/ccgost/Makefile
++++ b/engines/ccgost/Makefile
+@@ -43,6 +43,7 @@ install:
+ 	[ -n "$(INSTALLTOP)" ] # should be set by top Makefile...
+ 	if [ -n "$(SHARED_LIBS)" ]; then \
+ 		set -e; \
++		$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(ENGINESDIR); \
+ 		echo installing $(LIBNAME); \
+ 		pfx=lib; \
+ 		if [ "$(PLATFORM)" != "Cygwin" ]; then \
+@@ -53,13 +54,13 @@ install:
+ 			*DSO_WIN32*) sfx="eay32.dll"; pfx=;; \
+ 			*) sfx=".bad";; \
+ 			esac; \
+-			cp $${pfx}$(LIBNAME)$$sfx $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx.new; \
++			cp $${pfx}$(LIBNAME)$$sfx $(INSTALL_PREFIX)$(ENGINESDIR)/$${pfx}$(LIBNAME)$$sfx.new; \
+ 		else \
+ 			sfx=".so"; \
+-			cp cyg$(LIBNAME).dll $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx.new; \
++			cp cyg$(LIBNAME).dll $(INSTALL_PREFIX)$(ENGINESDIR)/$${pfx}$(LIBNAME)$$sfx.new; \
+ 		fi; \
+-		chmod 555 $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx.new; \
+-		mv -f $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx.new $(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)/engines/$${pfx}$(LIBNAME)$$sfx; \
++		chmod 555 $(INSTALL_PREFIX)$(ENGINESDIR)/$${pfx}$(LIBNAME)$$sfx.new; \
++		mv -f $(INSTALL_PREFIX)$(ENGINESDIR)/$${pfx}$(LIBNAME)$$sfx.new $(INSTALL_PREFIX)$(ENGINESDIR)/$${pfx}$(LIBNAME)$$sfx; \
+ 	fi
  
+ links:
