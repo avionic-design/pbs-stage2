@@ -1,5 +1,6 @@
 menu "Mozilla"
 
 source "packages/web/mozilla/firefox/Kconfig"
+source "packages/web/mozilla/xulrunner/Kconfig"
 
 endmenu
