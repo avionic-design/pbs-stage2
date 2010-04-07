@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBNOTIFY
+	bool "libnotify"
+	select VIRTUAL_DEVEL_LIBC
+	default n
