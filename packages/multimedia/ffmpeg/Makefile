@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 0.5
+VERSION = 0.5.1
 
 LOCATION = http://ffmpeg.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -44,7 +44,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 stripfiles = \
 	$(prefix)/bin/ffmpeg \
 	$(prefix)/bin/ffserver \
-	$(prefix)/lib/libavcodec.so.52.20.0 \
+	$(prefix)/lib/libavcodec.so.52.20.1 \
 	$(prefix)/lib/libavdevice.so.52.1.0 \
 	$(prefix)/lib/libavformat.so.52.31.0 \
 	$(prefix)/lib/libavutil.so.49.15.0 \

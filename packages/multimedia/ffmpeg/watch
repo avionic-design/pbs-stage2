@@ -1,2 +1,2 @@
 version=3
-http://ffmpeg.org/releases/ffmpeg-(.*)\.tar\.bz2
+http://ffmpeg.org/releases/ffmpeg-([\d.]+)\.tar\.bz2
