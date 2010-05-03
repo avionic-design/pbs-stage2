@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBOGG
+	bool "libogg"
+	select VIRTUAL_DEVEL_LIBC
+	default n
