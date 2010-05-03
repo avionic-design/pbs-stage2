@@ -1,2 +1,3 @@
-no-libgcc_eh.patch -p1
-arm.patch -p1
+no-libgcc_eh.patch
+arm.patch
+i686.patch

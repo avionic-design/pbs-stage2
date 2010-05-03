@@ -4,7 +4,7 @@
 92b9b1213cafc68fe9c3806273b968c26423237d7b1f631dd83dc5270b8c268c  download/atk-1.30.0.tar.bz2
 3f627124a83c6d34db503a923e20710d370573a29dd5d11d6f116d1aee7be1da  download/bash-4.1.tar.gz
 4864e12d3c5a99b0a9ee4704822455299345e6c65b23c688a4e4bf11481107bd  download/bigreqsproto-1.1.0.tar.bz2
-e1df09f0aa3b50154ef93bfefe86d65d01c22cfb44d73299ad95e772133a75b0  download/binutils-2.20.tar.bz2
+228b84722d87e88e7fdd36869e590e649ab523a0800a7d53df906498afe6f6f8  download/binutils-2.20.1.tar.bz2
 b10d7e9e354be72aee4e4911cf19dd27b5c527d4e7200857365b5fcdeea0dffb  download/bison-2.3.tar.bz2
 fee7bb23ac12c85abb2da8bad58480f7420e97502eb2d550d693e26472373ac3  download/bluez-4.46.tar.bz2
 1ef94e6749eaf13318284b4f629be063544c7015b45e38113b975ac1945cc726  download/boost_1_41_0.tar.bz2
@@ -48,9 +48,9 @@ fa2a1c6eea654d9fce7a4b1220f10c99cdec848dccaf1625c01f076b31382335  download/fontc
 2b8e7164b0c362d5c5e90275b25772514d76d5fda3d54c026445611e467d638e  download/freefont-ttf-20090104.tar.gz
 3b96438f016a62b676c1d2089c00ca777f710d19f6aefa66ccf068d360db3e92  download/freetype-2.3.12.tar.bz2
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
-92f311e6be22a2096c765bc8be72bd7fef56bba73f053b3de025b9c92d308356  download/gcc-core-4.4.3.tar.bz2
-7bce500e6f37d8a5df80606278e12f5444d872feeeb64045752f13eb2ef2bfe8  download/gcc-g++-4.4.3.tar.bz2
-560c3fd0053ade6549e71bd045f70282feb88db73b35e401bbad601a311e3c1b  download/gdb-7.0.1.tar.bz2
+0fe450365347638dac2a19e853fe103a409626553ac3a8e9baa4a1919affd3a7  download/gcc-core-4.5.0.tar.bz2
+9356e54ed515a62bb44919b299fcff3ea7757e81a69390e93c118a4d68a42a42  download/gcc-g++-4.5.0.tar.bz2
+142c27d7970a4e652dc225d61d887777ae00cf22fdd75cd1e8e4e13bfbd85352  download/gdb-7.1.tar.bz2
 209638bb8e162f22c281145a34e220c66f1f6e9ff5e4c50c6f2ef2ded59537ba  download/gettext-0.17.tar.gz
 e1c1ced9c5bc8f93ef0faf0a8c7717abf784d10a7b270d2285e8e1f3b93f2bed  download/giflib-4.1.6.tar.bz2
 7b6aa2cf21e734a6092a711bf196b8d2ddc589b971f93337610c10fa4f23400d  download/glib-2.24.0.tar.bz2
@@ -198,7 +198,7 @@ ff32a0d3bc696cadc3457be9c85e9818af2b6daa2f159188bb01aad7e932a0e1  download/trapp
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
 db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-bitstream-vera-1.10.tar.bz2
 daa088f9ae231508929b7bd4746e942212b53f2802ca4cee450139fabc8de1fa  download/twm-1.0.4.tar.bz2
-5b1f879b463f071e41f4d416b145a40a218d76dd83dd7baee3e131c898a9c4be  download/uClibc-0.9.30.2.tar.xz
+b8caab8e7ba29432344b8134d2e47bdd451bee64cd5863f6a7bb2f7b0ac8ecfb  download/uClibc-0.9.31.tar.xz
 d37a94e75b962182ce940e4a839f07b1c7024dbe7e4b870a120bf0fe9ed0d55d  download/udev-151.tar.bz2
 da0ca1e821e3fa7cfbe73ddb1480b921002ee992f5e5fbc611422c103b907443  download/udhcp-0.9.8.tar.gz
 9c0690b90c9f5cca221cd5e2d5882233ab43b7462196ca06e73759b67117d2cf  download/upstart-0.6.5.tar.gz

@@ -34,11 +34,10 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(SYSROOT)$(sysroot) \
 	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/ \
-	MAKEFLAGS=
+	DEVEL_PREFIX=/usr/
 
 $(pkgtree)/.configure:
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
@@ -47,7 +46,7 @@ $(pkgtree)/.configure:
 	$(call cmd,stamp)
 
 build-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(SYSROOT)$(sysroot) \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
@@ -63,7 +62,7 @@ $(pkgtree)/.binary:
 	$(call cmd,stamp)
 
 install-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(SYSROOT)$(sysroot) \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/

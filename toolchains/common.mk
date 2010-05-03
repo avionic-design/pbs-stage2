@@ -1,14 +1,14 @@
 # release versions
 LINUX_VERSION		= 2.6.33
-BINUTILS_VERSION	= 2.20
-GCC_VERSION		= 4.4.3
+BINUTILS_VERSION	= 2.20.1
+GCC_VERSION		= 4.5.0
 
 # snapshot versions
 BINUTILS_SNAPSHOT	= 2.19.51.0.9
 
 # C library versions
 newlib_VERSION		= 1.16.0
-uclibc_VERSION		= 0.9.30.2
+uclibc_VERSION		= 0.9.31
 glibc_VERSION		= 2.11
 
 SYSROOT	= $(CURDIR)
