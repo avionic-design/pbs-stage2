@@ -1,6 +1,5 @@
-LIBC_VERSION ?= 0.9.30.2
 PACKAGE = uClibc
-VERSION = $(LIBC_VERSION)
+VERSION = 0.9.31
 
 LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -27,9 +26,7 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
-	KERNEL_HEADERS="$(ROOTFS)$(prefix)/include" \
-	MAKEFLAGS=
+	KERNEL_HEADERS="$(ROOTFS)$(prefix)/include"
 
 $(pkgtree)/.configure:
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
@@ -37,7 +34,7 @@ $(pkgtree)/.configure:
 	$(call cmd,stamp)
 
 build-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
 	PREFIX=$(ROOTFS) \
 	RUNTIME_PREFIX=/ \
@@ -48,7 +45,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
 	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(DESTDIR) \

@@ -157,9 +157,9 @@ index a3b6fc4..cca32b8 100644
  	aeabi_memmove.c aeabi_memset.c find_exidx.c
 -SSRC += syscall-eabi.S
 +SSRC += syscall-eabi.S aeabi_read_tp.S
+ ARCH_OBJ_FILTEROUT := syscall.c
  ifeq ($(UCLIBC_HAS_WCHAR),y)
  CSRC += aeabi_mb_cur_max.c
- endif
 diff --git a/libc/sysdeps/linux/arm/aeabi_read_tp.S b/libc/sysdeps/linux/arm/aeabi_read_tp.S
 new file mode 100644
 index 0000000..44e1a77
