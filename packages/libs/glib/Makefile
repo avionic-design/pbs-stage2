@@ -1,7 +1,7 @@
 PACKAGE = glib
-VERSION = 2.24.0
+VERSION = 2.25.3
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.24
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.25
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -24,12 +24,14 @@ prunefiles = \
 	$(prefix)/lib/libgobject-2.0.la \
 	$(prefix)/lib/libgthread-2.0.la
 
-sover = 0.2400.0
+sover = 0.2503.0
 
 stripfiles = \
 	$(prefix)/bin/gio-querymodules \
+	$(prefix)/bin/glib-compile-schemas \
 	$(prefix)/bin/glib-genmarshal \
 	$(prefix)/bin/gobject-query \
+	$(prefix)/bin/gsettings \
 	$(prefix)/bin/gtester \
 	$(prefix)/lib/libgthread-2.0.so.$(sover) \
 	$(prefix)/lib/libgmodule-2.0.so.$(sover) \
