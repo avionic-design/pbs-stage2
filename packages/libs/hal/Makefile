@@ -49,6 +49,7 @@ stripfiles = \
 	$(plugin)/hald-addon-cpufreq \
 	$(plugin)/hald-addon-generic-backlight \
 	$(plugin)/hald-addon-hid-ups \
+	$(plugin)/hald-addon-imac-backlight \
 	$(plugin)/hald-addon-input \
 	$(plugin)/hald-addon-ipw-killswitch \
 	$(plugin)/hald-addon-leds \
