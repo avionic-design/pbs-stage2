@@ -1,0 +1,4 @@
+/usr/include/ortp
+/usr/lib/libortp.a
+/usr/lib/libortp.so
+/usr/lib/pkgconfig/ortp.pc
