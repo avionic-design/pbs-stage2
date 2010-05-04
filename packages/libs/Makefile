@@ -32,6 +32,7 @@ obj-$(CONFIG_PACKAGE_LIBS_LIBDRM) += libdrm
 obj-$(CONFIG_PACKAGE_LIBS_LIBDRM_POULSBO) += libdrm-poulsbo
 obj-$(CONFIG_PACKAGE_LIBS_LIBGCRYPT) += libgcrypt
 obj-$(CONFIG_PACKAGE_LIBS_LIBGIF) += libgif
+obj-$(CONFIG_PACKAGE_LIBS_LIBGLADE) += libglade
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPG_ERROR) += libgpg-error
 obj-$(CONFIG_PACKAGE_LIBS_LIBGPIO) += libgpio
 obj-$(CONFIG_PACKAGE_LIBS_LIBIDL) += libidl
