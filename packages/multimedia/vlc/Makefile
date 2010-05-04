@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -52,7 +52,7 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/vlc \
 	$(prefix)/bin/vlc-wrapper \
-	$(prefix)/lib/libvlccore.so.2.1.1 \
+	$(prefix)/lib/libvlccore.so.2.1.2 \
 	$(prefix)/lib/libvlc.so.2.2.1 \
 	$(plugin)/access/*.so \
 	$(plugin)/access_output/*.so \
