@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_ORTP
+	bool "ortp"
+	select VIRTUAL_DEVEL_LIBC
+	default n
