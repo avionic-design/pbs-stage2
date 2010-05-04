@@ -9,6 +9,7 @@ source "packages/multimedia/libmad/Kconfig"
 source "packages/multimedia/libogg/Kconfig"
 source "packages/multimedia/mpeg2dec/Kconfig"
 source "packages/multimedia/mplayer/Kconfig"
+source "packages/multimedia/speex/Kconfig"
 source "packages/multimedia/vlc/Kconfig"
 
 endmenu
