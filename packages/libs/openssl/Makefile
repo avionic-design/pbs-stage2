@@ -72,7 +72,9 @@ stripfiles = \
 	$(plugin)/libchil.so \
 	$(plugin)/libcswift.so \
 	$(plugin)/libgmp.so \
+	$(plugin)/libgost.so \
 	$(plugin)/libnuron.so \
+	$(plugin)/libpadlock.so \
 	$(plugin)/libsureware.so \
 	$(plugin)/libubsec.so
 
