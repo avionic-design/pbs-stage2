@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBOSIP2
+	bool "libosip2"
+	select VIRTUAL_DEVEL_LIBC
+	default n
