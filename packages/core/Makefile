@@ -3,6 +3,7 @@ obj-$(CONFIG_PACKAGE_CORE_BASE) += base
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX) += busybox
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX_GIT) += busybox.git
 obj-$(CONFIG_PACKAGE_CORE_COREUTILS) += coreutils
+obj-$(CONFIG_PACKAGE_CORE_CPUFREQUTILS) += cpufrequtils
 obj-$(CONFIG_PACKAGE_CORE_DIFFUTILS) += diffutils
 obj-$(CONFIG_PACKAGE_CORE_DMIDECODE) += dmidecode
 obj-$(CONFIG_PACKAGE_CORE_DPKG) += dpkg

@@ -1,0 +1,4 @@
+config PACKAGE_CORE_CPUFREQUTILS
+	bool "cpufrequtils"
+	select VIRTUAL_DEVEL_LIBC
+	default n
