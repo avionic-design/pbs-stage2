@@ -1,0 +1,88 @@
+diff --git a/Makedefs.in b/Makedefs.in
+index f88957d..24a344e 100644
+--- a/Makedefs.in
++++ b/Makedefs.in
+@@ -20,6 +20,7 @@
+ AR		=	@AR@
+ AWK		=	@AWK@
+ CC		=	@LIBTOOL@ @CC@
++CC_FOR_BUILD	=	gcc
+ CHMOD		=	@CHMOD@
+ CXX		=	@LIBTOOL@ @CXX@
+ DSO		=	@DSO@
+@@ -120,6 +121,7 @@ ALL_CFLAGS	=	-I.. -D_CUPS_SOURCE $(CFLAGS) $(SSLFLAGS) \
+ ALL_CXXFLAGS	=	-I.. -D_CUPS_SOURCE $(CXXFLAGS) $(SSLFLAGS) \
+ 			@LARGEFILE@ @PTHREAD_FLAGS@ $(OPTIONS)
+ ARCHFLAGS	=	@ARCHFLAGS@
++ARCHFLAGS_FOR_BUILD =	
+ ARFLAGS		=	@ARFLAGS@
+ BACKLIBS	=	@BACKLIBS@
+ BANNERTOPS	=	@BANNERTOPS@
+@@ -141,6 +143,7 @@ LAUNCHDLIBS	=	@LAUNCHDLIBS@
+ LDFLAGS		=	-L../cgi-bin -L../cups -L../filter -L../ppdc \
+ 			-L../scheduler @LDARCHFLAGS@ \
+ 			@LDFLAGS@ @RELROFLAGS@ @PIEFLAGS@ $(OPTIM)
++LDFLAGS_FOR_BUILD =	
+ LEGACY_BACKENDS	=	@LEGACY_BACKENDS@
+ LIBCUPSORDER	=	@LIBCUPSORDER@
+ LIBCUPSIMAGEORDER =	@LIBCUPSIMAGEORDER@
+diff --git a/man/Makefile b/man/Makefile
+index 7b7840e..6bd25f0 100644
+--- a/man/Makefile
++++ b/man/Makefile
+@@ -226,8 +226,8 @@ html:	$(MAN1) $(MAN5) $(MAN7) $(MAN8) mantohtml
+ 		./mantohtml `basename $$file .$(MAN8EXT)`.man >../doc/help/man-`basename $$file .$(MAN8EXT)`.html; \
+ 	done
+ 
+-mantohtml:	mantohtml.o
+-	$(CC) $(ARCHFLAGS) $(LDFLAGS) -o $@ mantohtml.o
++mantohtml:	mantohtml.c
++	$(CC_FOR_BUILD) $(ARCHFLAGS_FOR_BUILD) -I.. $(LDFLAGS_FOR_BUILD) -o $@ $<
+ 
+ 
+ #
+diff --git a/ppdc/Makefile b/ppdc/Makefile
+index ee0f0e2..d3c62e1 100644
+--- a/ppdc/Makefile
++++ b/ppdc/Makefile
+@@ -46,7 +46,6 @@ LIBOBJS =	\
+ 		ppdc-variable.o
+ OBJS =		\
+ 		$(LIBOBJS) \
+-		genstrings.o \
+ 		ppdc.o \
+ 		ppdhtml.o \
+ 		ppdi.o \
+@@ -69,8 +68,7 @@ EXECTARGETS =	\
+ 
+ TARGETS	=	\
+ 		$(LIBTARGETS) \
+-		$(EXECTARGETS) \
+-		genstrings
++		$(EXECTARGETS)
+ 
+ 
+ #
+@@ -237,14 +235,14 @@ framedhelp:
+ # genstrings - generate GNU gettext strings.
+ #
+ 
+-genstrings:		genstrings.o libcupsppdc.a ../cups/libcups.a \
+-			sample.drv ../data/media.defs
+-	echo Linking $@...
+-	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o genstrings genstrings.o \
+-		libcupsppdc.a ../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) \
+-		$(DNSSDLIBS) $(COMMONLIBS) $(LIBZ)
+-	echo Generating localization strings...
+-	./genstrings >sample.c
++#genstrings:		genstrings.o libcupsppdc.a ../cups/libcups.a \
++#			sample.drv ../data/media.defs
++#	echo Linking $@...
++#	$(CXX) $(ARCHFLAGS) $(LDFLAGS) -o genstrings genstrings.o \
++#		libcupsppdc.a ../cups/libcups.a $(LIBGSSAPI) $(SSLLIBS) \
++#		$(DNSSDLIBS) $(COMMONLIBS) $(LIBZ)
++#	echo Generating localization strings...
++#	./genstrings >sample.c
+ 
+ 
+ #

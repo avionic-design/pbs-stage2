@@ -26,7 +26,8 @@ conf-args += \
 	--localstatedir=/var \
 	--sysconfdir=/etc \
 	--disable-gssapi \
-	--disable-ssl
+	--disable-ssl \
+	--enable-debug
 
 conf-vars += \
 	CPPFLAGS='$(CPPFLAGS)' \
@@ -49,7 +50,7 @@ install-args += \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
+		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 stripfiles = \
