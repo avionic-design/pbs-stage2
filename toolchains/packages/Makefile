@@ -17,6 +17,7 @@ obj-y += gcc
 obj-y += $(LIBC)-cleanup
 obj-y += gdb
 obj-y += pkg-config
+obj-y += make
 
 obj-$(CONFIG_PACKAGE_TOOLCHAIN_LIBFLOAT) += libfloat
 obj-$(CONFIG_PACKAGE_TOOLCHAIN_MINGWRT) += mingwrt
