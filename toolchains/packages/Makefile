@@ -8,6 +8,7 @@ endif
 
 obj-y += gmp
 obj-y += mpfr
+obj-y += mpc
 obj-y += linux-headers
 obj-y += $(LIBC)-headers
 obj-y += binutils
