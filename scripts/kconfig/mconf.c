@@ -849,10 +849,6 @@ int main(int ac, char **av)
 				"\n\n"));
 			return 1;
 		}
-		if (conf_write_autoconf()) {
-			fprintf(stderr, _("\n*** Error during update of the kernel configuration.\n\n"));
-			return 1;
-		}
 	case -1:
 		printf(_("\n\n"
 			"*** End of Linux kernel configuration.\n"
