@@ -1,5 +1,5 @@
 PACKAGE = strace
-VERSION = 4.5.19
+VERSION = 4.5.20
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
