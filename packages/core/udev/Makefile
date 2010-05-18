@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 153
+VERSION = 154
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -39,5 +39,5 @@ stripfiles = \
 	/lib/udev/vol_id \
 	/sbin/udevadm \
 	/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.7.0 \
+	$(prefix)/lib/libudev.so.0.8.0 \
 	$(prefix)/lib/libvolume_id.so.1.1.0
