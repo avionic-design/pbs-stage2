@@ -1,3 +1,4 @@
+obj-y += pcsc/
 obj-y += sdl/
 
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk

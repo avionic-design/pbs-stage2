@@ -1,0 +1,5 @@
+menu "Drivers"
+
+source "packages/libs/pcsc/drivers/ifdokrfid/Kconfig"
+
+endmenu

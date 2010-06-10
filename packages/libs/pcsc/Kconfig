@@ -1,0 +1,7 @@
+menu "PC/SC"
+
+source "packages/libs/pcsc/lite/Kconfig"
+source "packages/libs/pcsc/tools/Kconfig"
+source "packages/libs/pcsc/drivers/Kconfig"
+
+endmenu

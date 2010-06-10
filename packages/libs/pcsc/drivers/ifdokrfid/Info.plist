@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+  <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>English</string>
+    <key>CFBundleExecutable</key>
+    <string>ifdokrfid.so</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundlePackageType</key>
+    <string>BNDL</string>
+    <key>CFBundleSignature</key>
+    <string>????</string>
+    <key>CFBundleVersion</key>
+    <string>1.0.0d2</string>
+    <key>CSResourcesFileMapped</key>
+    <true/>
+    <key>ManufacturerURL</key>
+    <string>http://www.hidglobal.com</string>
+    <key>ManufacturerString</key>
+    <string>HID Global</string>
+    <key>ifdProductString</key>
+    <string>HID Global OMNIKEY RFID</string>
+    <key>ifdFriendlyName</key>
+    <string>OMNIKEY CardMan 5x21</string>
+    <string>OMNIKEY CardMan 5x21 CL</string>
+    <string>OMNIKEY CardMan 5x21</string>
+    <string>OMNIKEY CardMan 5x21 CL</string>
+    <string>OMNIKEY CardMan 5x25</string>
+    <string>OMNIKEY 5325</string>
+    <string>OMNIKEY 5x25 CL</string>
+    <string>OMNIKEY CardMan 5x21 CLi</string>
+    <string>OMNIKEY 6321</string>
+    <string>OMNIKEY 6321 CL</string>
+    <string>OMNIKEY 6321 CLi</string>
+    <key>ifdVendorID</key>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <string>0x076B</string>
+    <key>ifdProductID</key>
+    <string>0x5121</string>
+    <string>0x5120</string>
+    <string>0x5321</string>
+    <string>0x5320</string>
+    <string>0x5125</string>
+    <string>0x5325</string>
+    <string>0x5124</string>
+    <string>0x532A</string>
+    <string>0x6321</string>
+    <string>0x6320</string>
+    <string>0x632A</string>
+    <key>ifdCapabilities</key>
+    <string>0x00000001</string>
+    <key>ifdMaxSpeed</key>
+    <string>115200</string>
+    <key>ifdProtocolSupport</key>
+    <string>0x00000011</string>
+  </dict>
+</plist>

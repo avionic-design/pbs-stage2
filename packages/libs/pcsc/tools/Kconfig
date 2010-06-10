@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PCSC_TOOLS
+	bool "PC/SC Tools"
+	select PACKAGE_LIBS_PCSC_LITE
+	default n
