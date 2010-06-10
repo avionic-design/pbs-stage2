@@ -1,0 +1,4 @@
+/usr/lib/libffi-*
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
