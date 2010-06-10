@@ -1,0 +1,2 @@
+obj-$(CONFIG_PACKAGE_JAVA_ICEDTEA) += icedtea
+obj-$(CONFIG_PACKAGE_JAVA_ICEDTEA_BUILD) += icedtea-build

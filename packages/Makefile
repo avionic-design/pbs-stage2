@@ -6,6 +6,7 @@ obj-y += editors/
 obj-y += fonts/
 obj-y += games/
 obj-y += initrd/
+obj-y += java/
 obj-y += kernel/
 obj-y += libs/
 obj-y += multimedia/

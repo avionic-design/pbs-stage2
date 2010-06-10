@@ -1,0 +1,6 @@
+menu "Java"
+
+source "packages/java/icedtea/Kconfig"
+source "packages/java/icedtea-build/Kconfig"
+
+endmenu

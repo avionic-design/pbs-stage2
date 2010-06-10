@@ -1,0 +1,46 @@
+#!/bin/sh
+
+install=no
+
+for arg in $@; do
+	case $arg in
+		-i | --install)
+			install=yes
+			;;
+
+		*)
+			arch=$arg
+			;;
+	esac
+done
+
+if test "x$arch" = "x"; then
+	arch=`uname -m`
+fi
+
+case $arch in
+	i686 | i686-* | i786 | i786-*)
+		arch=i586
+		;;
+
+	x86_64 | x86_64-*)
+		arch=amd64
+		;;
+
+	*)
+		arch=`echo $arch | cut -d- -f1`
+		;;
+esac
+
+if test "x$install" = "xyes"; then
+	case $arch in
+		i586)
+			arch=i386
+			;;
+
+		*)
+			;;
+	esac
+fi
+
+echo $arch
