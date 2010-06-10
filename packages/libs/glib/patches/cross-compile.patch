@@ -1,0 +1,69 @@
+diff --git a/Makefile.am b/Makefile.am
+index ace9c9a..baff460 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -3,8 +3,8 @@ include $(top_srcdir)/Makefile.decl
+ 
+ AUTOMAKE_OPTIONS = 1.7
+ 
+-SUBDIRS = . m4macros glib gmodule gthread gobject gio tests po docs
+-DIST_SUBDIRS = $(SUBDIRS) build
++SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs
++DIST_SUBDIRS = $(SUBDIRS) tests build
+ 
+ bin_SCRIPTS = glib-gettextize
+ 
+diff --git a/Makefile.in b/Makefile.in
+index f0672b9..9518383 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -410,8 +410,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
+ 	gio-2.0-uninstalled.pc.in gio-unix-2.0-uninstalled.pc.in
+ TEST_PROGS = 
+ AUTOMAKE_OPTIONS = 1.7
+-SUBDIRS = . m4macros glib gmodule gthread gobject gio tests po docs
+-DIST_SUBDIRS = $(SUBDIRS) build
++SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs
++DIST_SUBDIRS = $(SUBDIRS) tests build
+ bin_SCRIPTS = glib-gettextize
+ AM_CPPFLAGS = \
+ 	-DG_LOG_DOMAIN=g_log_domain_glib 	\
+diff --git a/gio/Makefile.am b/gio/Makefile.am
+index b0af5df..3c84f62 100644
+--- a/gio/Makefile.am
++++ b/gio/Makefile.am
+@@ -264,8 +264,6 @@ giowin32include_HEADERS = \
+ 
+ endif
+ 
+-SUBDIRS += tests
+-
+ libgio_2_0_la_SOURCES =		\
+ 	gappinfo.c 		\
+ 	gapplication.c		\
+diff --git a/gio/Makefile.in b/gio/Makefile.in
+index 4d426a0..5fe8a81 100644
+--- a/gio/Makefile.in
++++ b/gio/Makefile.in
+@@ -583,7 +583,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+ TEST_PROGS = 
+ NULL = 
+ SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
+-	$(am__append_9) . $(am__append_12) tests
++	$(am__append_9) . $(am__append_12)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gio-2.0.lib
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
+ @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib
+diff --git a/glib/gthread.h b/glib/gthread.h
+index 82d40c0..a563e0b 100644
+--- a/glib/gthread.h
++++ b/glib/gthread.h
+@@ -344,7 +344,7 @@ void                    g_once_init_leave       (volatile gsize *value_location,
+ G_INLINE_FUNC gboolean
+ g_once_init_enter (volatile gsize *value_location)
+ {
+-  if G_LIKELY ((gpointer) g_atomic_pointer_get (value_location) != NULL)
++  if G_LIKELY ((gpointer) g_atomic_pointer_get ((volatile gpointer *)value_location) != NULL)
+     return FALSE;
+   else
+     return g_once_init_enter_impl (value_location);
