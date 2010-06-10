@@ -24,7 +24,10 @@ install-args = \
 	DESTDIR=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && $(MAKE) $(install-args) install
+	cd $(pkgbuildtree) && $(priv) $(MAKE) $(install-args) install
+	$(priv) chown root:root \
+		$(DESTDIR)$(prefix)/lib/libcpufreq.so.0.0.0 \
+		$(DESTDIR)$(prefix)/lib/libcpufreq.so.0
 	$(call cmd,stamp)
 
 include packages/cleanup.mk
