@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.21.1
+VERSION = 2.21.2
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -21,7 +21,7 @@ build-args += \
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.2101.0
+sover  = 0.2102.0
 
 prunefiles = \
 	$(prefix)/lib/libgtk-x11-2.0.la \
