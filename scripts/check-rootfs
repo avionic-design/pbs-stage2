@@ -1,4 +1,7 @@
 #!/bin/sh
 
-scripts/find-libtool-libs $1
-scripts/find-non-stripped $1
+topdir=`dirname $0`
+topdir=`cd $topdir; pwd`
+
+$topdir/find-libtool-libs $1
+$topdir/find-non-stripped $1
