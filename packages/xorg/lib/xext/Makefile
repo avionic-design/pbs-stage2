@@ -1,5 +1,5 @@
 PACKAGE = libXext
-VERSION = 1.1.1
+VERSION = 1.1.2
 SOVER = 6.4.0
 
 ifeq ($(CONFIG_XORG_IEGD),y)
