@@ -1,5 +1,5 @@
 PACKAGE = libXrender
-VERSION = 0.9.5
+VERSION = 0.9.6
 
 include packages/xorg/lib/common.mk
 
