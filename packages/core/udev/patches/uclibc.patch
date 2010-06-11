@@ -32,9 +32,9 @@ diff --git a/udev/udevd.c b/udev/udevd.c
 index fe3352c..21ebce8 100644
 --- a/udev/udevd.c
 +++ b/udev/udevd.c
-@@ -42,6 +42,10 @@
- #include <sys/ioctl.h>
+@@ -43,6 +43,10 @@
  #include <sys/inotify.h>
+ #include <sys/utsname.h>
  
 +#ifndef SOCK_CLOEXEC
 +#define SOCK_CLOEXEC 02000000
