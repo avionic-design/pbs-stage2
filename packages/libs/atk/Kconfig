@@ -1,4 +1,4 @@
 config PACKAGE_LIBS_ATK
 	bool "atk"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_GLIB
 	default n
