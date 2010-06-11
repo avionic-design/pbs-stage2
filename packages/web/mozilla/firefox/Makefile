@@ -1,12 +1,12 @@
 PACKAGE = firefox
-VERSION = 3.5.6
+VERSION = 3.6.3
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
 
 include packages/common.mk
 
-GECKO_VERSION = 1.9.1
+GECKO_VERSION = 1.9.2
 pkgbuildtree = $(pkgtree)/mozilla-$(GECKO_VERSION)
 
 env += \
@@ -37,6 +37,7 @@ conf-args = \
 conf-args += \
 	--enable-application=browser \
 	--disable-crashreporter \
+	--disable-necko-wifi \
 	--disable-ogg
 
 $(pkgtree)/.configure:

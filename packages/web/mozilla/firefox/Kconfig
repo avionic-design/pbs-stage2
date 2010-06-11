@@ -2,5 +2,6 @@ config PACKAGE_WEB_MOZILLA_FIREFOX
 	bool "Mozilla Firefox"
 	select PACKAGE_LIBS_GTK
 	select PACKAGE_LIBS_LIBIDL
+	select PACKAGE_LIBS_LIBNOTIFY
 	select PACKAGE_MULTIMEDIA_ALSA_CORE
 	default n
