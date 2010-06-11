@@ -22,11 +22,15 @@ ifeq ($(pkgbuildtree),)
   pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 endif
 
+url-filename	= $(lastword $(subst /, ,$(subst ;filename=, ,$(1))))
+url-pathname	= $(firstword $(subst ;filename=, ,$(1)))
+
 location	:= $(LOCATION)
-tarballs	:= $(TARBALLS)
+tarballs	:= $(foreach file,$(TARBALLS),$(call url-filename,$(file)))
+files		:= $(foreach file,$(FILES),$(call url-filename,$(file)))
 
 chksum-prefix	:= $(pkgtree)/.chksum-
-chksum		:= $(addprefix $(chksum-prefix),$(tarballs))
+chksum		:= $(addprefix $(chksum-prefix),$(tarballs) $(files))
 
 extprefix	:= $(pkgtree)/.extract-
 extract		:= $(addprefix $(extprefix),$(tarballs))
@@ -35,14 +39,17 @@ extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
 extract-xz      := $(filter %.tar.xz,$(extract))
 
-local-files	:= $(addprefix $(srctree)/download/, $(tarballs))
-remote-files	:= $(addprefix $(subst ://,//,$(location))/, $(tarballs))
+local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
+remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS))) $(FILES)
 
 quiet_cmd_stamp = STAMP   $@
       cmd_stamp = mkdir -p $(@D); touch $@
 
-quiet_cmd_wget = WGET    $(patsubst %,$(location)/%,$*)
-      cmd_wget = wget -q $(patsubst %,$(location)/%,$*) -O $@
+dlurl = $(call url-pathname,$(filter %$*,$(remote-files)))
+destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
+
+quiet_cmd_wget = WGET    $(dlurl) $(destination)
+      cmd_wget = wget -q $(dlurl) -O $@
 
 $(local-files): $(srctree)/download/%:
 	$(call cmd,wget)
