@@ -40,7 +40,7 @@ extract-lzma	:= $(filter %.tar.lzma,$(extract))
 extract-xz      := $(filter %.tar.xz,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
-remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS))) $(FILES)
+remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS)) $(FILES)
 
 quiet_cmd_stamp = STAMP   $@
       cmd_stamp = mkdir -p $(@D); touch $@
