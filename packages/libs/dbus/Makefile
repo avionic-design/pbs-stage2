@@ -1,5 +1,5 @@
 PACKAGE = dbus
-VERSION = 1.3.0
+VERSION = 1.3.1
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -25,4 +25,4 @@ stripfiles = \
 	$(prefix)/bin/dbus-monitor \
 	$(prefix)/bin/dbus-send \
 	$(prefix)/bin/dbus-uuidgen \
-	$(prefix)/lib/libdbus-1.so.3.5.0
+	$(prefix)/lib/libdbus-1.so.3.5.1
