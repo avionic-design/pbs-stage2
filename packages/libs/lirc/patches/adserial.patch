@@ -1,0 +1,444 @@
+Add support for the Avionic Design serial IR module.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.ac          |   14 ++
+ daemons/Makefile.am   |    1 
+ daemons/hw-types.c    |    2 
+ daemons/hw_adserial.c |  347 +++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 362 insertions(+), 2 deletions(-)
+ create mode 100644 daemons/hw_adserial.c
+
+diff --git a/configure.ac b/configure.ac
+index f8b2cd7..3e44166 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -127,6 +127,7 @@ AC_MSG_RESULT()
+ possible_drivers="(none) \
+ 	(userspace) \
+ 	(accent) \
++	(adserial) \
+ 	(bte) \
+ 	(creative) \
+ 	(ea65) \
+@@ -431,8 +432,8 @@ dnl here we see what driver the user wants.
+ AC_ARG_WITH(driver,
+ [  --with-driver=X         specify the driver to use, where X is one of:
+                           all, none, userspace, accent, act200l,
+-                          act220l, adaptec, alsa_usb, animax, asusdh,
+-                          atilibusb, atiusb, audio, audio_alsa
++                          act220l, adaptec, adserial, alsa_usb, animax,
++                          asusdh, atilibusb, atiusb, audio, audio_alsa,
+                           avermedia, avermedia_vdomate, avermedia98,
+                           awlibusb, bestbuy, bestbuy2, breakoutbox,
+                           bte, bw6130, caraca, chronos, commandir,
+@@ -497,6 +498,9 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
+ 	accent)
+ 		hw_module="${hw_module} hw_accent.o serial.o"
+ 		;;
++	adserial)
++		hw_module="${hw_module} hw_adserial.o serial.o"
++		;;
+ 	alsa_usb)
+ 		hw_module="${hw_module} hw_alsa_usb.o"
+ 		alsa_lib=-lasound
+@@ -726,6 +730,12 @@ if test "$driver" = "adaptec"; then
+ #  lircmd_conf="adaptec/lircmd.conf.AVC-2410"
+ fi
+ 
++if test "$driver" = "adserial"; then
++  lirc_driver="none"
++  hw_module="hw_adserial.o serial.o"
++  HW_DEFAULT="hw_adserial"
++fi
++
+ if test "$driver" = "alsa_usb"; then
+   lirc_driver="alsa_usb"
+   hw_module="hw_alsa_usb.o"
+diff --git a/daemons/Makefile.am b/daemons/Makefile.am
+index 0952ea3..38adb13 100644
+--- a/daemons/Makefile.am
++++ b/daemons/Makefile.am
+@@ -17,6 +17,7 @@ libhw_module_a_SOURCES = \
+ 
+ EXTRA_libhw_module_a_SOURCES = \
+ 			hw_accent.c hw_accent.h \
++			hw_adserial.c \
+ 			hw_alsa_usb.c \
+ 			hw_atilibusb.c \
+ 			hw_audio.c \
+diff --git a/daemons/hw-types.c b/daemons/hw-types.c
+index c64b67c..23ca97c 100644
+--- a/daemons/hw-types.c
++++ b/daemons/hw-types.c
+@@ -7,6 +7,7 @@
+ #include "hw-types.h"
+ /* Hardware types */
+ extern struct hardware hw_accent;
++extern struct hardware hw_adserial;
+ extern struct hardware hw_alsa_usb;
+ extern struct hardware hw_asusdh;
+ extern struct hardware hw_atilibusb;
+@@ -79,6 +80,7 @@ struct hardware *hw_list[] =
+ {
+ #ifdef LIRC_DRIVER_ANY
+ 	&hw_accent,
++	&hw_adserial,
+ #ifdef HAVE_ALSA_SB_RC
+ 	&hw_alsa_usb,
+ #endif
+diff --git a/daemons/hw_adserial.c b/daemons/hw_adserial.c
+new file mode 100644
+index 0000000..e5343c2
+--- /dev/null
++++ b/daemons/hw_adserial.c
+@@ -0,0 +1,347 @@
++#ifdef HAVE_CONFIG_H
++#include <config.h>
++#endif
++
++#include <ctype.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <fcntl.h>
++#include <unistd.h>
++#include <limits.h>
++#include <signal.h>
++#include <sys/stat.h>
++#include <sys/types.h>
++#include <sys/ioctl.h>
++#include <errno.h>
++#include <termios.h>
++
++#include "hardware.h"
++#include "receive.h"
++#include "serial.h"
++#include "ir_remote.h"
++#include "lircd.h"
++
++#if !defined(ARRAY_SIZE)
++#  define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
++#endif
++
++#if defined(DEBUG)
++#  define dprintf(level, format, args...) \
++	logprintf(level, "adserial: " format, ##args)
++#else
++#  define dprintf(level, format, args...) \
++	do { (void)0; } while (0)
++#endif
++
++enum ir_mode {
++	IR_MODE_SIRCS = 0x1,
++	IR_MODE_NEC = 0x2,
++	IR_MODE_SAMSUNG = 0x3,
++	IR_MODE_MATSUSHITA = 0x4,
++	IR_MODE_KASEIKYO = 0x5,
++	IR_MODE_RECS80 = 0x6,
++	IR_MODE_RC5 = 0x7,
++	IR_MODE_DENON = 0x8,
++	IR_MODE_RC6 = 0x9,
++	IR_MODE_SAMSUNG32 = 0xa,
++	IR_MODE_APPLE = 0xb,
++	IR_MODE_RECS80EXT = 0xc,
++	IR_MODE_NUBERT = 0xd,
++	IR_MODE_BANG_OLUFSEN = 0xe,
++	IR_MODE_GRUNDIG = 0xf,
++	IR_MODE_NOKIA = 0x10,
++	IR_MODE_SIEMENS = 0x11,
++	IR_MODE_FDC = 0x12,
++};
++
++enum ir_event_type {
++	IR_EVENT_UNKNOWN,
++	IR_EVENT_RECEIVE,
++};
++
++struct ir_event_name {
++	enum ir_event_type type;
++	const char *name;
++};
++
++static const struct ir_event_name ir_event_names[] = {
++	{ IR_EVENT_RECEIVE, "RCV" },
++};
++
++static const char IR_EVENT[] = "!IR-";
++typedef enum { false, true } bool;
++
++static struct timeval start, end, last;
++static ir_code code;
++
++struct ir_event_receive {
++	enum ir_mode mode;
++	uint8_t data[8];
++	size_t size;
++};
++
++struct ir_event {
++	enum ir_event_type type;
++	union {
++		struct ir_event_receive receive;
++	};
++};
++
++static uint8_t hex(uint8_t ascii)
++{
++	if ((ascii >= '0') && (ascii <= '9'))
++		return ascii - '0';
++
++	if ((ascii >= 'a') && (ascii <= 'f'))
++		return (ascii - 'a') + 10;
++
++	if ((ascii >= 'A') && (ascii <= 'F'))
++		return (ascii - 'A') + 10;
++
++	return 0;
++}
++
++static int ir_get_code(const struct ir_event_receive *event, ir_code *codep)
++{
++	if (!event || !codep)
++		return -EINVAL;
++
++	*codep = (event->data[event->size - 2] << 8) |
++	          event->data[event->size - 1];
++
++	return 0;
++}
++
++/**
++ * ir_readline() - read one line (ended by CR/LF) of data
++ * @buffer: pointer to memory where the line data is stored
++ * @count: size of memory area
++ *
++ * TODO: This function currently assumes that the call to read() will never
++ *       consume data past the CR/LF at the end of the line.
++ */
++static ssize_t ir_readline(char *buffer, size_t count)
++{
++	bool crlf = false;
++	ssize_t ret = 0;
++	size_t num = 0;
++
++	while (!crlf && (num < (count - 1))) {
++		size_t i;
++
++		if (!waitfordata(20000)) {
++			tcflush(hw.fd, TCIFLUSH);
++			ret = -ETIMEDOUT;
++			break;
++		}
++
++		ret = read(hw.fd, &buffer[num], count - num - 1);
++		if (ret < 0) {
++			ret = -errno;
++			break;
++		}
++
++		for (i = 0; i < ret; i++) {
++			if (((num + i) > 0) && (buffer[num + i] == '\n')) {
++				if (buffer[num + i - 1] == '\r')
++					crlf = true;
++			}
++		}
++
++		num += ret;
++	}
++
++	if (ret >= 0)
++		ret = num;
++
++	return ret;
++}
++
++static int ir_parse_event_receive(const char *payload, size_t len,
++		struct ir_event *event)
++{
++	char *ptr = (char *)payload;
++	char *end = NULL;
++	size_t i, j;
++
++	if (!payload || !len || !event)
++		return -EINVAL;
++
++	event->receive.mode = strtoul(ptr, &end, 0);
++	if (end == ptr)
++		return -EIO;
++
++	j = end - ptr + 1;
++
++	for (i = 0; i < sizeof(event->receive.data); i++) {
++		if ((j + 1) >= len)
++			break;
++
++		if (isxdigit(ptr[j]) && isxdigit(ptr[j + 1])) {
++			event->receive.data[i] = hex(ptr[j]) << 4;
++			event->receive.data[i] |= hex(ptr[j + 1]);
++		}
++
++		j += 2;
++	}
++
++	event->receive.size = i;
++	return 0;
++}
++
++static int ir_parse_event(const char *line, size_t len, struct ir_event *event)
++{
++	size_t num = strlen(IR_EVENT);
++	const char *ptr;
++	size_t i;
++	int ret;
++
++	event->type = IR_EVENT_UNKNOWN;
++
++	if (strncmp(line, IR_EVENT, num) != 0)
++		return -EBADF;
++
++	ptr = &line[num];
++	len -= num;
++
++	for (i = 0; i < ARRAY_SIZE(ir_event_names); i++) {
++		num = strlen(ir_event_names[i].name);
++
++		if (strncmp(ir_event_names[i].name, ptr, num) == 0) {
++			event->type = ir_event_names[i].type;
++			num++;
++			break;
++		}
++	}
++
++	switch (event->type) {
++	case IR_EVENT_RECEIVE:
++		ret = ir_parse_event_receive(&ptr[num], len - num, event);
++		break;
++
++	default:
++		ret = -EBADF;
++		break;
++	}
++
++	return ret;
++}
++
++static int ir_process_event_receive(const struct ir_event *event)
++{
++	return ir_get_code(&event->receive, &code);
++}
++
++static int ir_process_event(const struct ir_event *event)
++{
++	int ret;
++
++	switch (event->type) {
++	case IR_EVENT_RECEIVE:
++		ret = ir_process_event_receive(event);
++		break;
++
++	default:
++		ret = -EBADF;
++		break;
++	}
++
++	return ret;
++}
++
++static int adserial_exit(void)
++{
++	close(hw.fd);
++	tty_delete_lock();
++	return 1;
++}
++
++static int adserial_init(void)
++{
++	if (!tty_create_lock(hw.device)) {
++		logprintf(LOG_ERR, "failed to create lock files");
++		return 0;
++	}
++
++	hw.fd = open(hw.device, O_RDWR | O_NONBLOCK | O_NOCTTY);
++	if (hw.fd < 0) {
++		logprintf(LOG_ERR, "failed to open device '%s': %s",
++				hw.device, strerror(errno));
++		tty_delete_lock();
++		return 0;
++	}
++
++	dprintf(LOG_DEBUG, "device '%s' opened", hw.device);
++
++	if (!tty_reset(hw.fd) || !tty_setbaud(hw.fd, 115200) || !tty_setrtscts(hw.fd, 0)) {
++		logprintf(LOG_ERR, "failed to configure '%s'", hw.device);
++		adserial_exit();
++		return 0;
++	}
++
++	return 1;
++}
++
++static char *adserial_rec(struct ir_remote *remotes)
++{
++	struct ir_event event;
++	char *ret = NULL;
++	char buf[256];
++	ssize_t num;
++	int err;
++
++	last = end;
++	gettimeofday(&start, NULL);
++
++	num = ir_readline(buf, sizeof(buf));
++	if (num < 0)
++		return NULL;
++
++	gettimeofday(&end, NULL);
++
++	err = ir_parse_event(buf, num, &event);
++	if (err == 0) {
++		err = ir_process_event(&event);
++		if (err < 0) {
++		}
++
++		ret = decode_all(remotes);
++	}
++
++	return ret;
++}
++
++static int adserial_decode(struct ir_remote *remote, ir_code *prep,
++		ir_code *codep, ir_code *postp, int *repeat_flagp,
++		lirc_t *min_remaining_gapp, lirc_t *max_remaining_gapp)
++{
++	int ret = 0;
++
++	ret = map_code(remote, prep, codep, postp, 0, 0, 16, code, 0, 0);
++	if (!ret)
++		return ret;
++
++	map_gap(remote, &start, &last, 0, repeat_flagp, min_remaining_gapp,
++			max_remaining_gapp);
++
++	return 1;
++}
++
++struct hardware hw_adserial = {
++	"/dev/ttyS0",		/* default device */
++	-1,			/* fd */
++	LIRC_CAN_REC_LIRCCODE,	/* features */
++	0,			/* send_mode */
++	LIRC_MODE_LIRCCODE,	/* rec_mode */
++	16,			/* code length */
++	adserial_init,		/* init function */
++	NULL,			/* config function */
++	adserial_exit,		/* deinit function */
++	NULL,			/* send function */
++	adserial_rec,		/* rec function */
++	adserial_decode,	/* decode function */
++	NULL,			/* ioctl function */
++	NULL,			/* readdata */
++	"adserial",
++};
