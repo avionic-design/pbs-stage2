@@ -1,11 +1,39 @@
 PACKAGE = icedtea
-VERSION = git
+VERSION = 854406ecaf7f
 
-LOCATION = http://icedtea.classpath.org/download/source
-TARBALLS =
+LOCATION = http://icedtea.classpath.org/hg/icedtea/archive
+TARBALLS = $(VERSION).tar.bz2;filename=icedtea-$(VERSION).tar.bz2
+
+OPENJDK_CHANGESET = 195fcceefddc
+HOTSPOT_CHANGESET = de6965fd4cc5
+CORBA_CHANGESET = e805b4155d76
+JAXP_CHANGESET = 826bafcb6c4a
+JAXWS_CHANGESET = 1661166c82dc
+LANGTOOLS_CHANGESET = 681f1f51926f
+JDK_CHANGESET = 3d1a836736bf
+
+HG_URL = http://hg.openjdk.java.net/icedtea/jdk7
+JAXP_DROP_URL = https://jaxp.dev.java.net/files/documents/913/147490
+JAXP_DROP_ZIP = jdk7-jaxp-m6.zip
+JAF_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
+JAF_DROP_ZIP = jdk7-jaf-2009_08_28.zip
+JAXWS_DROP_URL = http://kenai.com/projects/jdk7-drops/downloads/download
+JAXWS_DROP_ZIP = jdk7-jaxws-2009_09_28.zip
+
+FILES = \
+	$(HG_URL)/archive/$(OPENJDK_CHANGESET).tar.gz;filename=openjdk-$(OPENJDK_CHANGESET).tar.gz \
+	$(HG_URL)/hotspot/archive/$(HOTSPOT_CHANGESET).tar.gz;filename=hotspot-$(HOTSPOT_CHANGESET).tar.gz \
+	$(HG_URL)/corba/archive/$(CORBA_CHANGESET).tar.gz;filename=corba-$(CORBA_CHANGESET).tar.gz \
+	$(HG_URL)/jaxp/archive/$(JAXP_CHANGESET).tar.gz;filename=jaxp-$(JAXP_CHANGESET).tar.gz \
+	$(HG_URL)/jaxws/archive/$(JAXWS_CHANGESET).tar.gz;filename=jaxws-$(JAXWS_CHANGESET).tar.gz \
+	$(HG_URL)/langtools/archive/$(LANGTOOLS_CHANGESET).tar.gz;filename=langtools-$(LANGTOOLS_CHANGESET).tar.gz \
+	$(HG_URL)/jdk/archive/$(JDK_CHANGESET).tar.gz;filename=jdk-$(JDK_CHANGESET).tar.gz \
+	$(JAXP_DROP_URL)/$(JAXP_DROP_ZIP) \
+	$(JAF_DROP_URL)/$(JAF_DROP_ZIP) \
+	$(JAXWS_DROP_URL)/$(JAXWS_DROP_ZIP)
 
 JDK_ARCH = $(shell $(srctree)/support/openjdk-arch $(CONFIG_CPU))
-GITTREE = $(srctree)/../java/icedtea.hg
+JDK_LIBARCH = $(shell $(srctree)/support/openjdk-arch --install $(CONFIG_CPU))
 
 include packages/common.mk
 
@@ -29,16 +57,16 @@ conf-args += \
 	--sysconfdir=/etc
 
 conf-args += \
-	--with-openjdk-src-zip=$(srctree)/build/openjdk.tar.gz \
-	--with-hotspot-src-zip=$(srctree)/build/hotspot.tar.gz \
-	--with-corba-src-zip=$(srctree)/build/corba.tar.gz \
-	--with-jaxp-src-zip=$(srctree)/build/jaxp.tar.gz \
-	--with-jaxws-src-zip=$(srctree)/build/jaxws.tar.gz \
-	--with-langtools-src-zip=$(srctree)/build/langtools.tar.gz \
-	--with-jdk-src-zip=$(srctree)/build/jdk.tar.gz \
-	--with-jaxp-drop-zip=$(srctree)/build/drops/jdk7-jaxp-m6.zip \
-	--with-jaf-drop-zip=$(srctree)/build/drops/jdk7-jaf-2009_08_28.zip \
-	--with-jaxws-drop-zip=$(srctree)/build/drops/jdk7-jaxws-2009_09_28.zip
+	--with-openjdk-src-zip=$(srctree)/download/openjdk-$(OPENJDK_CHANGESET).tar.gz \
+	--with-hotspot-src-zip=$(srctree)/download/hotspot-$(HOTSPOT_CHANGESET).tar.gz \
+	--with-corba-src-zip=$(srctree)/download/corba-$(CORBA_CHANGESET).tar.gz \
+	--with-jaxp-src-zip=$(srctree)/download/jaxp-$(JAXP_CHANGESET).tar.gz \
+	--with-jaxws-src-zip=$(srctree)/download/jaxws-$(JAXWS_CHANGESET).tar.gz \
+	--with-langtools-src-zip=$(srctree)/download/langtools-$(LANGTOOLS_CHANGESET).tar.gz \
+	--with-jdk-src-zip=$(srctree)/download/jdk-$(JDK_CHANGESET).tar.gz \
+	--with-jaxp-drop-zip=$(srctree)/download/$(JAXP_DROP_ZIP) \
+	--with-jaf-drop-zip=$(srctree)/download/$(JAF_DROP_ZIP) \
+	--with-jaxws-drop-zip=$(srctree)/download/$(JAXWS_DROP_ZIP)
 
 conf-args += \
 	--with-jdk-home=$(objtree)/tools/j2sdk-image \
@@ -55,20 +83,11 @@ conf-vars += \
 	CXXFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
-collapse = $(shell printf "%u%02u%02u%02u" $1 $2 $3 $4)
-XUL_VERSION = $(shell $(env) pkg-config --modversion mozilla-plugin)
-XUL_VERSION_MAJOR = $(shell echo $(XUL_VERSION) | cut -d. -f1)
-XUL_VERSION_MINOR = $(shell echo $(XUL_VERSION) | cut -d. -f2)
-XUL_VERSION_MICRO = $(shell echo $(XUL_VERSION) | cut -d. -f3)
-XUL_VERSION_PATCH = $(shell echo $(XUL_VERSION) | cut -d. -f4)
-
-conf-vars += \
-	xulrunner_cv_collapsed_version=$(call collapse, $(XUL_VERSION_MAJOR), $(XUL_VERSION_MINOR), $(XUL_VERSION_MICRO), $(XUL_VERSION_PATCH))
-
 $(pkgtree)/.configure:
+	cd $(pkgbuildtree) && ./autogen.sh
 	mkdir -p $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
-			$(env) $(GITTREE)/configure $(conf-args) $(conf-vars)
+			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
 $(pkgtree)/.build:
@@ -77,6 +96,8 @@ $(pkgtree)/.build:
 	$(call cmd,stamp)
 
 srcdir = $(pkgbuildtree)/obj-$(HOST_GNU_TYPE)/openjdk/build/linux-$(JDK_ARCH)
+jdk = $(prefix)/lib/jvm/java-7-openjdk
+jre = $(jdk)/jre
 
 install-args += \
 	DESTDIR=$(DESTDIR)
@@ -84,14 +105,15 @@ install-args += \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) mkdir -p $(DESTDIR)$(prefix)/lib/jvm/java-7-openjdk && \
-		$(priv) cp -dpR $(srcdir)/j2sdk-image/* \
-			$(DESTDIR)$(prefix)/lib/jvm/java-7-openjdk && \
+ifneq ($(JDK_ARCH),$(JDK_LIBARCH))
+	$(priv) mv $(srcdir)/j2sdk-image/jre/lib/$(JDK_LIBARCH)/IcedTeaNPPlugin.so \
+		$(srcdir)/j2sdk-image/jre/lib/$(JDK_ARCH)
+	$(priv) rm -r $(srcdir)/j2sdk-image/jre/lib/$(JDK_LIBARCH)
+endif
+	$(priv) mkdir -p $(DESTDIR)$(jdk) && \
+		$(priv) cp -dpR $(srcdir)/j2sdk-image/* $(DESTDIR)$(jdk) && \
 		$(priv) chown -R root:root $(DESTDIR)
 	$(call cmd,stamp)
-
-jdk = $(prefix)/lib/jvm/java-7-openjdk
-jre = $(jdk)/jre
 
 prunefiles =
 stripfiles = \
@@ -122,6 +144,7 @@ stripfiles = \
 	$(jdk)/bin/native2ascii \
 	$(jdk)/bin/orbd \
 	$(jdk)/bin/pack200 \
+	$(jdk)/bin/pluginappletviewer \
 	$(jdk)/bin/policytool \
 	$(jdk)/bin/rmic \
 	$(jdk)/bin/rmid \
@@ -148,6 +171,7 @@ stripfiles = \
 	$(jre)/bin/keytool \
 	$(jre)/bin/orbd \
 	$(jre)/bin/pack200 \
+	$(jre)/bin/pluginappletviewer \
 	$(jre)/bin/policytool \
 	$(jre)/bin/rmid \
 	$(jre)/bin/rmiregistry \
@@ -156,6 +180,7 @@ stripfiles = \
 	$(jre)/bin/unpack200 \
 	$(jre)/lib/$(JDK_ARCH)/client/libjvm.so \
 	$(jre)/lib/$(JDK_ARCH)/headless/libmawt.so \
+	$(jre)/lib/$(JDK_ARCH)/IcedTeaNPPlugin.so \
 	$(jre)/lib/$(JDK_ARCH)/jli/libjli.so \
 	$(jre)/lib/$(JDK_ARCH)/libattach.so \
 	$(jre)/lib/$(JDK_ARCH)/libawt.so \

@@ -1,0 +1,577 @@
+diff -r 854406ecaf7f Makefile.am
+--- a/Makefile.am	Mon Jun 07 21:03:36 2010 +0100
++++ b/Makefile.am	Tue Jun 08 13:57:55 2010 +0200
+@@ -385,11 +385,13 @@
+ ICEDTEA_PATCHES += patches/icedtea-nss-not-enabled-config.patch
+ endif
+ 
++ICEDTEA_PATCHES += patches/icedtea-cross-compile.patch
+ ICEDTEA_PATCHES += $(DISTRIBUTION_PATCHES)
+ 
+ # Bootstrapping patches
+ 
+ ICEDTEA_BOOT_PATCHES = patches/boot/ant-javac.patch \
++	patches/boot/corba-bootstrap.patch \
+ 	patches/boot/corba-defs.patch \
+ 	patches/boot/corba-idlj.patch \
+ 	patches/boot/corba-libgcj.patch \
+@@ -504,8 +506,8 @@
+ 	LLVM_CFLAGS="$(LLVM_CFLAGS)" \
+ 	LLVM_LDFLAGS="$(LLVM_LDFLAGS)" \
+ 	LLVM_LIBS="$(LLVM_LIBS)" \
+-	FREETYPE2_HEADERS="$(FREETYPE2_CFLAGS)" \
+-	FT2_LIB="$(FREETYPE2_LIBS)" \
++	FREETYPE2_CFLAGS="$(FREETYPE2_CFLAGS)" \
++	FREETYPE2_LIBS="$(FREETYPE2_LIBS)" \
+ 	ALT_PARALLEL_COMPILE_JOBS="$(PARALLEL_JOBS)" \
+ 	HOTSPOT_BUILD_JOBS="$(PARALLEL_JOBS)" \
+ 	JAVAC="" \
+@@ -554,6 +556,22 @@
+ 	RHINO_JAR="$(abs_top_builddir)/rhino/rhino.jar"
+ endif
+ 
++ICEDTEA_ENV += \
++	CC_FOR_BUILD='$(CC_FOR_BUILD)' \
++	CFLAGS_FOR_BUILD='$(CFLAGS_FOR_BUILD)'
++
++if CROSS_COMPILING
++ICEDTEA_ENV += \
++	CC='$(CC)' EXTRA_CFLAGS='$(CPPFLAGS) $(CFLAGS)' \
++	CPP='$(CPP)' EXTRA_CPPFLAGS='$(CPPFLAGS)' \
++	CXX='$(CXX)' EXTRA_CXXFLAGS='$(CPPFLAGS) $(CXXFLAGS)' \
++	LD='$(LD)' EXTRA_LDFLAGS='$(LDFLAGS)' \
++	ALT_OUTPUTDIR='$(BUILD_OUTPUT_DIR)' \
++	BUILD_ARCH_DIR='$(BUILD_ARCH_DIR)' \
++	LIBARCH='$(BUILD_ARCH_DIR)' \
++	CROSS_COMPILING=yes
++endif
++
+ # OpenJDK boot build environment.
+ ICEDTEA_ENV_BOOT = $(ICEDTEA_ENV) \
+ 	BOOTCLASSPATH_CLS_RT="-bootclasspath $(ICEDTEA_CLS_DIR_BOOT):$(ICEDTEA_RT)" \
+diff -r 854406ecaf7f acinclude.m4
+--- a/acinclude.m4	Wed Jun 23 00:15:52 2010 +0100
++++ b/acinclude.m4	Thu Jun 24 10:52:11 2010 +0200
+@@ -1759,42 +1759,10 @@
+   CPPFLAGS="$CPPFLAGS $MOZILLA_CFLAGS"
+ 
+   AC_CACHE_CHECK([for xulrunner version], [xulrunner_cv_collapsed_version],
+-      [AC_RUN_IFELSE(
+-        [AC_LANG_PROGRAM([[
+-#include <mozilla-config.h>
+-#include <math.h>
+-#include <string.h>
+-#include <stdlib.h>
+-#include <stdio.h>
+-]],[[
+-int version = 0;
+-const char* token = NULL;
+-int power=6;
+-FILE *datafile;
+-
+-datafile = fopen ("conftest.vdata", "w");
+-if (!datafile) return 1;
+-
+-// 32 chars is more than enough to hold version
+-char* mozilla_version = (char*) malloc(32*sizeof(char));
+-snprintf(mozilla_version, 32, "%s", MOZILLA_VERSION);
+-
+-token = strtok(mozilla_version, ".");
+-while (token)
+-{
+-    version += atoi(token)*(pow(10, power));
+-    power -=2;
+-    token = strtok(NULL, ".");
+-}
+-
+-fprintf (datafile, "%d\n", version);
+-free(mozilla_version);
+-if (fclose(datafile)) return 1;
+-
+-return EXIT_SUCCESS;
+-]])],
+-    [xulrunner_cv_collapsed_version="$(cat conftest.vdata)"],
+-    [AC_MSG_FAILURE([cannot determine xulrunner version])])],
++      [
++        xulrunner_cv_collapsed_version=`$PKG_CONFIG --modversion mozilla-plugin | \
++          $AWK -F . '{ printf("%u%02u%02u%02u", $ 1, $ 2, $ 3, $ 4); }'`
++      ],
+   [xulrunner_cv_collapsed_version="190000"])
+ 
+   CPPFLAGS="$OLDCPPFLAGS"
+diff -r 854406ecaf7f configure.ac
+--- a/configure.ac	Mon Jun 07 21:03:36 2010 +0100
++++ b/configure.ac	Tue Jun 08 13:57:55 2010 +0200
+@@ -18,6 +18,17 @@
+ AC_PROG_CC
+ AC_PROG_CXX
+ 
++AM_CONDITIONAL(CROSS_COMPILING, test "x$cross_compiling" = xyes)
++if test "x$cross_compiling" = xyes; then
++	AC_CHECK_PROGS(CC_FOR_BUILD, gcc cc)
++	CFLAGS_FOR_BUILD="$CFLAGS_FOR_BUILD -D_GNU_SOURCE"
++else
++	CC_FOR_BUILD=$CC
++	CFLAGS_FOR_BUILD="$CFLAGS -D_GNU_SOURCE"
++fi
++AC_SUBST(CC_FOR_BUILD)
++AC_SUBST(CFLAGS_FOR_BUILD)
++
+ FIND_TOOL([MAKE], [make])
+ FIND_TOOL([GZIP], [gzip])
+ FIND_TOOL([ANT], [ant])
+diff -r 854406ecaf7f patches/boot/corba-bootstrap.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/boot/corba-bootstrap.patch	Tue Jun 08 13:57:55 2010 +0200
+@@ -0,0 +1,43 @@
++Index: openjdk-boot/Makefile
++===================================================================
++--- openjdk-boot.orig/Makefile	2010-06-08 08:11:49.000000000 +0200
+++++ openjdk-boot/Makefile	2010-06-08 08:12:06.000000000 +0200
++@@ -130,6 +130,11 @@
++   clobber:: langtools-clobber
++ endif
++ 
+++ifeq ($(BUILD_CORBA), true)
+++  generic_build_repo_series:: corba
+++  clobber:: corba-clobber
+++endif
+++
++ ifeq ($(BUILD_JAXP), true)
++   generic_build_repo_series:: jaxp
++   clobber:: jaxp-clobber
++@@ -150,11 +155,6 @@
++   clobber:: jdk-clobber
++ endif
++ 
++-ifeq ($(BUILD_CORBA), true)
++-  generic_build_repo_series:: corba
++-  clobber:: corba-clobber
++-endif
++-
++ ifeq ($(BUILD_DEPLOY), true)
++   generic_build_repo_series:: $(DEPLOY)
++   clobber:: deploy-clobber
++Index: openjdk-boot/corba/make/common/Defs-linux.gmk
++===================================================================
++--- openjdk-boot.orig/corba/make/common/Defs-linux.gmk	2010-06-08 08:13:04.000000000 +0200
+++++ openjdk-boot/corba/make/common/Defs-linux.gmk	2010-06-08 08:13:34.000000000 +0200
++@@ -271,8 +271,8 @@
++ # the library itself should not.
++ #
++ VM_NAME         = server
++-JVMLIB          = -L$(OUTPUTDIR)/../lib/$(LIBARCH)/$(VM_NAME) -ljvm
++-JAVALIB         = -L$(OUTPUTDIR)/../lib/$(LIBARCH) -ljava $(JVMLIB)
+++JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
+++JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
++ 
++ #
++ # We want to privatize JVM symbols on Solaris. This is so the user can
+diff -r 854406ecaf7f patches/icedtea-cross-compile.patch
+--- /dev/null	Thu Jan 01 00:00:00 1970 +0000
++++ b/patches/icedtea-cross-compile.patch	Tue Jun 08 13:57:55 2010 +0200
+@@ -0,0 +1,395 @@
++Index: openjdk/hotspot/make/linux/makefiles/gcc.make
++===================================================================
++--- openjdk.orig/hotspot/make/linux/makefiles/gcc.make	2010-06-07 17:10:50.000000000 +0200
+++++ openjdk/hotspot/make/linux/makefiles/gcc.make	2010-06-07 19:30:27.000000000 +0200
++@@ -22,12 +22,7 @@
++ #  
++ #
++ 
++-#------------------------------------------------------------------------
++-# CC, CPP & AS
++-
++-CPP = g++$(GCC_SUFFIX)
++-CC  = gcc$(GCC_SUFFIX)
++-AS  = $(CC) -c
+++AS = $(CC) -c
++ 
++ # -dumpversion in gcc-2.91 shows "egcs-2.91.66". In later version, it only
++ # prints the numbers (e.g. "2.95", "3.2.1")
++Index: openjdk/hotspot/make/linux/makefiles/rules.make
++===================================================================
++--- openjdk.orig/hotspot/make/linux/makefiles/rules.make	2010-06-07 17:10:36.000000000 +0200
+++++ openjdk/hotspot/make/linux/makefiles/rules.make	2010-06-07 17:11:21.000000000 +0200
++@@ -27,18 +27,12 @@
++ # Tell make that .cpp is important
++ .SUFFIXES: .cpp $(SUFFIXES)
++ 
++-# For now.  Other makefiles use CPP as the c++ compiler, but that should really
++-# name the preprocessor.
++-ifeq    ($(CCC),)
++-CCC             = $(CPP)
++-endif
++-
++ DEMANGLER       = c++filt
++ DEMANGLE        = $(DEMANGLER) < $@ > .$@ && mv -f .$@ $@
++ 
++ # $(CC) is the c compiler (cc/gcc), $(CCC) is the c++ compiler (CC/g++).
++ C_COMPILE       = $(CC) $(CPPFLAGS) $(CFLAGS)
++-CC_COMPILE      = $(CCC) $(CPPFLAGS) $(CFLAGS)
+++CXX_COMPILE     = $(CXX) $(CPPFLAGS) $(CFLAGS) $(CXXFLAGS)
++ 
++ AS.S            = $(AS) $(ASFLAGS)
++ 
++@@ -48,22 +42,22 @@
++ LINK_LIB.c      = $(CC) $(LFLAGS) $(SHARED_FLAG)
++ PREPROCESS.c    = $(C_COMPILE) -E
++ 
++-COMPILE.CC      = $(CC_COMPILE) -c
++-GENASM.CC       = $(CC_COMPILE) -S
++-LINK.CC         = $(CCC) $(LFLAGS) $(AOUT_FLAGS) $(PROF_AOUT_FLAGS)
++-LINK_NOPROF.CC  = $(CCC) $(LFLAGS) $(AOUT_FLAGS)
++-LINK_LIB.CC     = $(CCC) $(LFLAGS) $(SHARED_FLAG)
++-PREPROCESS.CC   = $(CC_COMPILE) -E
+++COMPILE.CXX     = $(CXX_COMPILE) -c
+++GENASM.CXX      = $(CXX_COMPILE) -S
+++LINK.CXX        = $(CXX) $(LFLAGS) $(AOUT_FLAGS) $(PROF_AOUT_FLAGS)
+++LINK_NOPROF.CXX = $(CXX) $(LFLAGS) $(AOUT_FLAGS)
+++LINK_LIB.CXX    = $(CXX) $(LFLAGS) $(SHARED_FLAG)
+++PREPROCESS.CXX  = $(CXX_COMPILE) -E
++ 
++ # Effect of REMOVE_TARGET is to delete out-of-date files during "gnumake -k".
++ REMOVE_TARGET   = rm -f $@
++ 
++ # Synonyms.
++-COMPILE.cpp     = $(COMPILE.CC)
++-GENASM.cpp      = $(GENASM.CC)
++-LINK.cpp        = $(LINK.CC)
++-LINK_LIB.cpp    = $(LINK_LIB.CC)
++-PREPROCESS.cpp  = $(PREPROCESS.CC)
+++COMPILE.cpp     = $(COMPILE.CXX)
+++GENASM.cpp      = $(GENASM.CXX)
+++LINK.cpp        = $(LINK.CXX)
+++LINK_LIB.cpp    = $(LINK_LIB.CXX)
+++PREPROCESS.cpp  = $(PREPROCESS.CXX)
++ 
++ # Note use of ALT_BOOTDIR to explicitly specify location of java and
++ # javac; this is the same environment variable used in the J2SE build
++@@ -149,7 +143,7 @@
++ %.o: %.cpp
++ 	@echo Compiling $<
++ 	$(QUIETLY) $(REMOVE_TARGET)
++-	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+++	$(QUIETLY) $(COMPILE.CXX) -o $@ $< $(COMPILE_DONE)
++ 
++ %.o: %.s
++ 	@echo Assembling $<
++@@ -158,13 +152,13 @@
++ 
++ %.s: %.cpp
++ 	@echo Generating assembly for $<
++-	$(QUIETLY) $(GENASM.CC) -o $@ $<
+++	$(QUIETLY) $(GENASM.CXX) -o $@ $<
++ 	$(QUIETLY) $(DEMANGLE) $(COMPILE_DONE)
++ 
++ # Intermediate files (for debugging macros)
++ %.i: %.cpp
++ 	@echo Preprocessing $< to $@
++-	$(QUIETLY) $(PREPROCESS.CC) $< > $@ $(COMPILE_DONE)
+++	$(QUIETLY) $(PREPROCESS.CXX) $< > $@ $(COMPILE_DONE)
++ 
++ #  Override gnumake built-in rules which do sccs get operations badly.
++ #  (They put the checked out code in the current directory, not in the
++Index: openjdk/hotspot/make/linux/makefiles/vm.make
++===================================================================
++--- openjdk.orig/hotspot/make/linux/makefiles/vm.make	2010-06-08 07:41:59.000000000 +0200
+++++ openjdk/hotspot/make/linux/makefiles/vm.make	2010-06-08 07:42:10.000000000 +0200
++@@ -190,7 +190,7 @@
++ $(PRECOMPILED_HEADER): $(Precompiled_Files)
++ 	$(QUIETLY) echo Generating precompiled header $@
++ 	$(QUIETLY) mkdir -p $(PRECOMPILED_HEADER_DIR)/incls
++-	$(QUIETLY) $(COMPILE.CC) -x c++-header -c $(GENERATED)/incls/_precompiled.incl -o $@ $(COMPILE_DONE)
+++	$(QUIETLY) $(COMPILE.CXX) -x c++-header -c $(GENERATED)/incls/_precompiled.incl -o $@ $(COMPILE_DONE)
++ 
++ # making the library:
++ 
++Index: openjdk/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp
++===================================================================
++--- openjdk.orig/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp	2010-05-14 17:02:53.000000000 +0200
+++++ openjdk/hotspot/src/cpu/zero/vm/stubRoutines_zero.hpp	2010-06-07 17:11:21.000000000 +0200
++@@ -41,6 +41,10 @@
++     code_size2 = 0       // if these are too small.  Simply increase
++   };                     // them if that happens.
++ 
+++  enum method_handles_platform_dependent_constants {
+++    method_handles_adapters_code_size = 0
+++  };
+++
++ #ifdef IA32
++   class x86 {
++     friend class VMStructs;
++Index: openjdk/jdk/make/tools/freetypecheck/Makefile
++===================================================================
++--- openjdk.orig/jdk/make/tools/freetypecheck/Makefile	2010-06-07 17:15:23.000000000 +0200
+++++ openjdk/jdk/make/tools/freetypecheck/Makefile	2010-06-07 17:11:21.000000000 +0200
++@@ -44,23 +44,17 @@
++   FT_LD_OPTIONS += /manifest
++ endif
++ else
++-  FT_OPTIONS  = $(CFLAGS)
++-  FT_LD_OPTIONS = -L$(FREETYPE_LIB_PATH)
++-  # Add runtime lib search path to ensure test will be runnable
++-  ifeq ($(PLATFORM), solaris)
++-    FT_LD_OPTIONS += -R $(FREETYPE_LIB_PATH) -lfreetype
++-  else #linux
++-      FT_LD_OPTIONS += -Wl,-rpath -Wl,$(FREETYPE_LIB_PATH) $(FT2_LIB)
++-  endif
+++  FT_OPTIONS = $(CFLAGS) $(FREETYPE2_CFLAGS)
+++  FT_LD_OPTIONS = $(FREETYPE2_LIBS)
++ endif
++-FT_OPTIONS += -I$(FREETYPE_HEADERS_PATH)
++-FT_OPTIONS += -I$(FREETYPE_HEADERS_PATH)/freetype2
++ FT_OPTIONS += -DREQUIRED_FREETYPE_VERSION=$(REQUIRED_FREETYPE_VERSION)
++ FT_LD_OPTIONS += $(LFLAGS_$(COMPILER_VERSION))
++ 
++ # Create test program
++ all: $(FT_TEST)
+++ifneq ($(CROSS_COMPILING),yes)
++ 	$(FT_TEST)
+++endif
++ 
++ # On windows we need to copy dll to test dir to ensure it will be found
++ #   at runtime
++Index: openjdk/jdk/make/common/Defs.gmk
++===================================================================
++--- openjdk.orig/jdk/make/common/Defs.gmk	2010-05-19 20:30:53.000000000 +0200
+++++ openjdk/jdk/make/common/Defs.gmk	2010-06-07 17:11:21.000000000 +0200
++@@ -623,11 +623,14 @@
++ # Tool flags
++ #
++ ASFLAGS         = $(ASFLAGS_$(VARIANT)) $(ASFLAGS_COMMON) $(OTHER_ASFLAGS)
++-CFLAGS          = $(CFLAGS_$(VARIANT)/BYFILE)   $(CFLAGS_COMMON) $(OTHER_CFLAGS)
++-CXXFLAGS        = $(CXXFLAGS_$(VARIANT)/BYFILE) $(CXXFLAGS_COMMON) $(OTHER_CXXFLAGS)
+++CFLAGS          = $(CFLAGS_$(VARIANT)/BYFILE) $(CFLAGS_COMMON) \
+++		  $(OTHER_CFLAGS) $(EXTRA_CFLAGS)
+++CXXFLAGS        = $(CXXFLAGS_$(VARIANT)/BYFILE) $(CXXFLAGS_COMMON) \
+++		  $(OTHER_CXXFLAGS) $(EXTRA_CXXFLAGS)
++ CPPFLAGS        = $(CPPFLAGS_$(VARIANT)) $(CPPFLAGS_COMMON) $(OTHER_CPPFLAGS) \
++-		  $(DEFINES) $(OPTIONS:%=-D%)
++-LDFLAGS         = $(LDFLAGS_$(VARIANT)) $(LDFLAGS_COMMON) $(OTHER_LDFLAGS)
+++		  $(DEFINES) $(OPTIONS:%=-D%) $(EXTRA_CPPFLAGS)
+++LDFLAGS         = $(LDFLAGS_$(VARIANT)) $(LDFLAGS_COMMON) $(OTHER_LDFLAGS) \
+++		  $(EXTRA_LDFLAGS)
++ LDLIBS          = $(OTHER_LDLIBS) $(LDLIBS_$(VARIANT)) $(LDLIBS_COMMON)
++ LINTFLAGS       = $(LINTFLAGS_$(VARIANT)) $(LINTFLAGS_COMMON) \
++ 		  $(OTHER_LINTFLAGS)
++Index: openjdk/jdk/make/java/nio/Makefile
++===================================================================
++--- openjdk.orig/jdk/make/java/nio/Makefile	2010-06-07 17:10:49.000000000 +0200
+++++ openjdk/jdk/make/java/nio/Makefile	2010-06-07 17:11:21.000000000 +0200
++@@ -829,7 +829,7 @@
++ 
++ $(GENSOR_EXE) : $(TEMPDIR)/$(GENSOR_SRC)
++ 	$(prep-target)
++-	($(CD) $(TEMPDIR); $(CC) $(CPPFLAGS) $(LDDFLAGS) \
+++	($(CD) $(TEMPDIR); $(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) \
++ 	   -o genSocketOptionRegistry$(EXE_SUFFIX) $(GENSOR_SRC))
++ 
++ $(SCH_GEN)/SocketOptionRegistry.java: $(GENSOR_EXE)
++@@ -860,7 +860,7 @@
++ 
++ $(GENUC_EXE) : $(GENUC_SRC)
++ 	$(prep-target)
++-	$(CC) $(CPPFLAGS) -o $@ $(GENUC_SRC)
+++	$(CC_FOR_BUILD) $(CFLAGS_FOR_BUILD) -o $@ $(GENUC_SRC)
++ 
++ $(SFS_GEN)/UnixConstants.java: $(GENUC_EXE)
++ 	$(prep-target)
++Index: openjdk/jdk/make/sun/xawt/Makefile
++===================================================================
++--- openjdk.orig/jdk/make/sun/xawt/Makefile	2010-06-07 17:10:50.000000000 +0200
+++++ openjdk/jdk/make/sun/xawt/Makefile	2010-06-07 17:11:21.000000000 +0200
++@@ -92,13 +92,13 @@
++                    $(LDFLAGS_COMMON) $(AWT_RUNPATH) $(OTHER_LDFLAGS) -lXtst -lXi
++ 
++ ifeq  ($(PLATFORM), solaris)
++-CPPFLAGS += -DFUNCPROTO=15
+++DEFINES += -DFUNCPROTO=15
++ dummy := $(shell $(MKDIR) -p $(LIB_LOCATION))
++ endif
++ 
++-CPPFLAGS += -I$(CUPS_HEADERS_PATH)
++-
++-CPPFLAGS += -DXAWT -DXAWT_HACK \
+++DEFINES  += -DXAWT -DXAWT_HACK
+++INCLUDES += \
+++        -I$(CUPS_HEADERS_PATH) \
++         -I$(TEMPDIR)/../../sun.awt/awt/CClassHeaders \
++         -I$(PLATFORM_SRC)/native/sun/awt \
++ 	-I$(PLATFORM_SRC)/native/sun/xawt \
++@@ -126,19 +126,21 @@
++ 
++ ifeq ($(PLATFORM), linux)
++ # Allows for builds on Debian GNU Linux, X11 is in a different place 
++-  CPPFLAGS += -I/usr/X11R6/include/X11/extensions \
+++  INCLUDES += -I/usr/X11R6/include/X11/extensions \
++               -I/usr/include/X11/extensions \
++               -I$(OPENWIN_HOME)/include 
++ endif
++ 
++ ifeq ($(PLATFORM), solaris)
++-  CPPFLAGS += -I$(OPENWIN_HOME)/include/X11/extensions
+++  INCLUDES += -I$(OPENWIN_HOME)/include/X11/extensions
++ endif
++ 
++ ifeq ($(MILESTONE), internal)
++-  CPPFLAGS += -DINTERNAL_BUILD
+++  DEFINES += -DINTERNAL_BUILD
++ endif
++ 
+++CPPFLAGS += $(DEFINES) $(INCLUDES)
+++
++ #
++ # Generation of wrappers
++ #
++@@ -146,8 +148,8 @@
++ SIZER = $(SIZER_DIR)/sizer
++ SIZER_32_C = $(SIZER).32.c
++ SIZER_64_C = $(SIZER).64.c
++-CFLAGS_32=$(CFLAGS)
++-CFLAGS_64=$(CFLAGS)
+++CFLAGS_32=$(CFLAGS_FOR_BUILD)
+++CFLAGS_64=$(CFLAGS_FOR_BUILD)
++ 
++ ifeq ($(PLATFORM), solaris)
++ 
++@@ -156,20 +158,20 @@
++ ifneq (,$(findstring sparcv9, $(isalist)))
++ # On sparcv9 we generate both 32 and 64-bit sizers in spite of ARCH_DATA_MODEL.
++ # On sparcv9 CFLAGS already contain $(XARCH_OPTION/64), so to generate 32-bit sizer we need to change this option.
++-CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS))
+++CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS_FOR_BUILD))
++ SIZERS = $(SIZER).32 $(SIZER).64
++ SIZERS_C = $(SIZER_32_C) $(SIZER_64_C)
++ SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32 $(WRAPPER_GENERATOR_DIR)/sizes.64
++-CFLAGS_64=$(CFLAGS) $(XARCH_OPTION/64)
+++CFLAGS_64=$(CFLAGS_FOR_BUILD) $(XARCH_OPTION/64)
++ else
++ ifneq (,$(findstring amd64, $(isalist)))
++ # On amd64 we generate both 32 and 64-bit sizers in spite of ARCH_DATA_MODEL.
++ # On amd64 CFLAGS already contain $(XARCH_OPTION/64), so to generate 32-bit sizer we need to change this option.
++-CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS))
+++CFLAGS_32=$(subst $(XARCH_OPTION/64),$(XARCH_OPTION/32),$(CFLAGS_FOR_BUILD))
++ SIZERS = $(SIZER).32 $(SIZER).64
++ SIZERS_C = $(SIZER_32_C) $(SIZER_64_C)
++ SIZES = $(WRAPPER_GENERATOR_DIR)/sizes.32 $(WRAPPER_GENERATOR_DIR)/sizes.64
++-CFLAGS_64=$(CFLAGS) $(XARCH_OPTION/64)
+++CFLAGS_64=$(CFLAGS_FOR_BUILD) $(XARCH_OPTION/64)
++ else # !sparcv9 : includes (32-bit) sparc, i586
++ SIZERS = $(SIZER).32
++ SIZERS_C = $(SIZER_32_C)
++@@ -224,7 +226,8 @@
++ 
++ $(SIZERS): $(SIZERS_C) 
++ 	$(prep-target)
++-	$(CC) $(CFLAGS_$(subst .,,$(suffix $@))) $(CPPFLAGS) -o $@ $(SIZER)$(suffix $@).c
+++	$(CC_FOR_BUILD) $(CFLAGS_$(subst .,,$(suffix $@))) $(DEFINES) \
+++		$(INCLUDES) -o $@ $(SIZER)$(suffix $@).c
++ 
++ $(WRAPPER_GENERATOR_CLASS): $(WRAPPER_GENERATOR_JAVA)
++ 	$(prep-target)
++Index: openjdk/jdk/make/sun/font/Makefile
++===================================================================
++--- openjdk.orig/jdk/make/sun/font/Makefile	2010-06-07 17:54:32.000000000 +0200
+++++ openjdk/jdk/make/sun/font/Makefile	2010-06-07 17:11:21.000000000 +0200
++@@ -130,7 +130,7 @@
++   ifeq ($(USING_SYSTEM_FT_LIB), false)
++     FREETYPE_LIB = $(LIB_LOCATION)/$(LIB_PREFIX)freetype.$(LIBRARY_SUFFIX).6
++   endif
++-  OTHER_LDLIBS += -L$(FREETYPE_LIB_PATH) $(FT2_LIB)
+++  OTHER_LDLIBS += $(FREETYPE2_LIBS)
++ endif 
++ 
++ library:: $(FREETYPE_LIB)
++@@ -165,8 +165,7 @@
++ ifndef OPENJDK
++   CPPFLAGS += -I$(CLOSED_SRC)/share/native/$(PKGDIR)/t2k
++ else
++-  CPPFLAGS += $(FREETYPE_HEADERS) $(FREETYPE_HEADERS)/freetype2 \
++-	-I$(FREETYPE_HEADERS_PATH) -I$(FREETYPE_HEADERS_PATH)/freetype2
+++  CPPFLAGS += $(FREETYPE2_CFLAGS)
++ endif
++ 
++ ifeq ($(PLATFORM), windows)
++Index: openjdk/Makefile
++===================================================================
++--- openjdk.orig/Makefile	2010-04-28 23:05:14.000000000 +0200
+++++ openjdk/Makefile	2010-06-07 17:11:21.000000000 +0200
++@@ -130,11 +130,6 @@
++   clobber:: langtools-clobber
++ endif
++ 
++-ifeq ($(BUILD_CORBA), true)
++-  generic_build_repo_series:: corba
++-  clobber:: corba-clobber
++-endif
++-
++ ifeq ($(BUILD_JAXP), true)
++   generic_build_repo_series:: jaxp
++   clobber:: jaxp-clobber
++@@ -155,6 +150,11 @@
++   clobber:: jdk-clobber
++ endif
++ 
+++ifeq ($(BUILD_CORBA), true)
+++  generic_build_repo_series:: corba
+++  clobber:: corba-clobber
+++endif
+++
++ ifeq ($(BUILD_DEPLOY), true)
++   generic_build_repo_series:: $(DEPLOY)
++   clobber:: deploy-clobber
++Index: openjdk/corba/make/common/Defs-linux.gmk
++===================================================================
++--- openjdk.orig/corba/make/common/Defs-linux.gmk	2010-06-07 17:10:50.000000000 +0200
+++++ openjdk/corba/make/common/Defs-linux.gmk	2010-06-07 20:27:27.000000000 +0200
++@@ -271,8 +271,8 @@
++ # the library itself should not.
++ #
++ VM_NAME         = server
++-JVMLIB          = -L$(BOOTDIR)/jre/lib/$(LIBARCH)/$(VM_NAME) -ljvm
++-JAVALIB         = -L$(BOOTDIR)/jre/lib/$(LIBARCH) -ljava $(JVMLIB)
+++JVMLIB          = -L$(OUTPUTDIR)/../lib/$(LIBARCH)/$(VM_NAME) -ljvm
+++JAVALIB         = -L$(OUTPUTDIR)/../lib/$(LIBARCH) -ljava $(JVMLIB)
++ 
++ #
++ # We want to privatize JVM symbols on Solaris. This is so the user can
++Index: openjdk/hotspot/make/linux/makefiles/adlc.make
++===================================================================
++--- openjdk.orig/hotspot/make/linux/makefiles/adlc.make	2010-06-07 18:15:21.000000000 +0200
+++++ openjdk/hotspot/make/linux/makefiles/adlc.make	2010-06-07 18:15:42.000000000 +0200
++@@ -103,7 +103,7 @@
++ 
++ $(EXEC) : $(OBJECTS)
++ 	@echo Making adlc
++-	$(QUIETLY) $(LINK_NOPROF.CC) -o $(EXEC) $(OBJECTS)
+++	$(QUIETLY) $(LINK_NOPROF.CXX) -o $(EXEC) $(OBJECTS)
++ 
++ # Random dependencies:
++ $(OBJECTS): opcodes.hpp classes.hpp adlc.hpp adlcVMDeps.hpp adlparse.hpp archDesc.hpp arena.hpp dict2.hpp filebuff.hpp forms.hpp formsopt.hpp formssel.hpp
++@@ -198,14 +198,14 @@
++ $(OUTDIR)/%.o: %.cpp
++ 	@echo Compiling $<
++ 	$(QUIETLY) $(REMOVE_TARGET)
++-	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+++	$(QUIETLY) $(COMPILE.CXX) -o $@ $< $(COMPILE_DONE)
++ 
++ # Some object files are given a prefix, to disambiguate
++ # them from objects of the same name built for the VM.
++ $(OUTDIR)/adlc-%.o: %.cpp
++ 	@echo Compiling $<
++ 	$(QUIETLY) $(REMOVE_TARGET)
++-	$(QUIETLY) $(COMPILE.CC) -o $@ $< $(COMPILE_DONE)
+++	$(QUIETLY) $(COMPILE.CXX) -o $@ $< $(COMPILE_DONE)
++ 
++ # #########################################################################
++ 
+diff -r 854406ecaf7f ports/hotspot/make/linux/platform_zero.in
+--- a/ports/hotspot/make/linux/platform_zero.in	Mon Jun 07 21:03:36 2010 +0100
++++ b/ports/hotspot/make/linux/platform_zero.in	Tue Jun 08 13:57:55 2010 +0200
+@@ -14,4 +14,4 @@
+ 
+ gnu_dis_arch = zero
+ 
+-sysdefs = -DLINUX -D_GNU_SOURCE -DCC_INTERP -DZERO -D@ZERO_ARCHDEF@ -DZERO_LIBARCH=\"@ZERO_LIBARCH@\"
++sysdefs = -DLINUX -D_GNU_SOURCE -DCC_INTERP -DZERO -DZERO_LIBARCH=\"@ZERO_LIBARCH@\"
