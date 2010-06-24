@@ -1,12 +1,12 @@
 PACKAGE = pango
-VERSION = 1.28.0
+VERSION = 1.28.1
 
 LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.28
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-# pange configure does not detect the C++ cross-compiler correctly
+# pango configure does not detect the C++ cross-compiler correctly
 conf-vars += \
 	CXX=$(TARGET)-g++
 
@@ -23,7 +23,7 @@ prunefiles = \
 	$(prefix)/lib/libpangoxft-1.0.la \
 	$(plugin)/*.la
 
-sover = 0.2800.0
+sover = 0.2800.1
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
