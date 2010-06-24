@@ -2,7 +2,7 @@ diff --git a/extras/ata_id/ata_id.c b/extras/ata_id/ata_id.c
 index 25c7710..bfb7caf 100644
 --- a/extras/ata_id/ata_id.c
 +++ b/extras/ata_id/ata_id.c
-@@ -45,6 +45,10 @@
+@@ -44,6 +44,10 @@
  #include "libudev.h"
  #include "libudev-private.h"
  
@@ -32,7 +32,7 @@ diff --git a/udev/udevd.c b/udev/udevd.c
 index fe3352c..21ebce8 100644
 --- a/udev/udevd.c
 +++ b/udev/udevd.c
-@@ -43,6 +43,10 @@
+@@ -44,6 +44,10 @@
  #include <sys/inotify.h>
  #include <sys/utsname.h>
  
