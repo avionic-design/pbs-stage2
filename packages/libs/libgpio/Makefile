@@ -1,12 +1,10 @@
 PACKAGE = libgpio
-VERSION = git
+VERSION = 0.3.2
 
-LOCATION = http://www.avionic-design.de/pub/$(PACKAGE)
-TARBALLS =
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-GITTREE = $(srctree)/../avionic-design/libgpio.git
-
-include packages/autotools-git.mk
+include packages/autotools.mk
 
 prunefiles = \
 	$(prefix)/lib/libgpio.la
