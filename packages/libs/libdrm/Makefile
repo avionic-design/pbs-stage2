@@ -1,5 +1,5 @@
 PACKAGE = libdrm
-VERSION = 2.4.20
+VERSION = 2.4.21
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
