@@ -11,7 +11,7 @@
 #define LKC_DIRECT_LINK
 #include "lkc.h"
 
-static const char depfile[] = ".depends";
+static const char depfile[] = "include/config/depends.conf";
 
 struct list_head {
 	struct list_head *prev;
@@ -515,11 +515,13 @@ int main(int argc, char *argv[])
 	resolve_deps(&packages);
 	list_sort(&packages);
 
+	fprintf(fp, _("depends ="));
+
 	list_for_each_entry(package, &packages, list) {
 		if (package_is_virtual(package))
 			continue;
 
-		fprintf(fp, _("CONFIG_%s=y\n"), package->symbol->name);
+		fprintf(fp, _(" \\\n\tCONFIG_%s"), package->symbol->name);
 	}
 
 	printf("#\n");

@@ -15,7 +15,7 @@ ifeq ($(findstring package, $(MAKECMDGOALS)),)
   include arch/$(ARCH)/Makefile
 endif
 
-#-include include/config/auto.conf
+include include/config/depends.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
@@ -27,29 +27,9 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-depends-file = $(objtree)/.depends
-packages-y = $(shell cat $(depends-file) | grep '^CONFIG_PACKAGE_' | xargs echo)
-platform-y = $(shell cat $(depends-file) | grep '^CONFIG_PLATFORM' | xargs echo)
-build-targets = $(packages-y)
-
-PHONY += $(packages-y)
-ifeq ($(obj),packages)
-$(packages-y): category = $(shell echo $@ | cut -d_ -f3 | tr '[A-Z]' '[a-z]')
-$(packages-y):
-	@echo $@ > .package
-	$(Q)$(MAKE) $(platform)=$(obj)/$(category) package
-	@rm .package
-endif
-
-ifneq ($(platform-y),)
-build-targets += platforms
-
-PHONY += platforms
-platforms:
-	@cat $(depends-file) | grep '^CONFIG_PLATFORM_' > .package
-	$(Q)$(MAKE) $(platform)=$(obj) package
-	@rm .package
-endif
+PHONY += $(depends)
+$(depends):
+	$(Q)$(MAKE) $(platform)=$(obj) $@=y package
 
 dirs := $(filter %/,$(obj-y))
 dirs := $(addprefix $(obj)/, $(dirs))
@@ -59,8 +39,6 @@ pkgs := $(addprefix $(obj)/, $(pkgs))
 
 build-dirs := $(addprefix build-,$(dirs))
 build-pkgs := $(addprefix build-,$(pkgs))
-
-build-targets += $(build-dirs)
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
@@ -89,7 +67,7 @@ PHONY += list
 list: $(list-dirs) $(list-pkgs)
 	@:
 
-__build: $(build-targets)
+__build: $(depends)
 	@:
 
 PHONY += FORCE
