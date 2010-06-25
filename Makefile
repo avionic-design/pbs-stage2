@@ -32,8 +32,6 @@ _all:
 
 $(CURDIR)/Makefile Makefile: ;
 
-KCONFIG_CONFIG ?= .config
-
 ifneq ($(KBUILD_OUTPUT),)
 
 saved-output := $(KBUILD_OUTPUT)
@@ -69,6 +67,8 @@ export srctree objtree VPATH
 
 SRCARCH := $(ARCH)
 export SRCARCH
+
+KCONFIG_CONFIG ?= .config
 
 HOSTCC = gcc
 HOSTCXX = g++

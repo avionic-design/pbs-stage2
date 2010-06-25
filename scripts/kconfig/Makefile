@@ -11,32 +11,26 @@ else
 Kconfig := Kconfig
 endif
 
-xconfig: $(obj)/qconf $(obj)/deps
+xconfig: $(obj)/qconf
 	$< $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-gconfig: $(obj)/gconf $(obj)/deps
+gconfig: $(obj)/gconf
 	$< $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-menuconfig: $(obj)/mconf $(obj)/deps
+menuconfig: $(obj)/mconf
 	$< $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-config: $(obj)/conf $(obj)/deps
+config: $(obj)/conf
 	$< $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-oldconfig: $(obj)/conf $(obj)/deps
+oldconfig: $(obj)/conf
 	$< -o $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
 silentoldconfig: $(obj)/conf $(obj)/deps
 	$(Q)mkdir -p include/generated
 	$< -s $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-localmodconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
+localmodconfig: $(obj)/streamline_config.pl $(obj)/conf
 	$(Q)perl $< $(srctree) $(Kconfig) > .tmp.config
 	$(Q)if [ -f .config ]; then 				\
 			cmp -s .tmp.config .config ||		\
@@ -49,9 +43,8 @@ localmodconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
 			$(obj)/conf -s $(Kconfig);		\
 	fi
 	$(Q)rm -f .tmp.config
-	$(Q)$(obj)/deps $(Kconfig)
 
-localyesconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
+localyesconfig: $(obj)/streamline_config.pl $(obj)/conf
 	$(Q)perl $< $(srctree) $(Kconfig) > .tmp.config
 	$(Q)sed -i s/=m/=y/ .tmp.config
 	$(Q)if [ -f .config ]; then 				\
@@ -65,7 +58,6 @@ localyesconfig: $(obj)/streamline_config.pl $(obj)/conf $(obj)/deps
 			$(obj)/conf -s $(Kconfig);		\
 	fi
 	$(Q)rm -f .tmp.config
-	$(Q)$(obj)/deps $(Kconfig)
 
 # Create new linux.pot file
 # Adjust charset to UTF-8 in .po file to accept UTF-8 in Kconfig files
@@ -92,34 +84,28 @@ update-po-config: $(obj)/kxgettext $(obj)/gconf.glade.h
 
 PHONY += randconfig allyesconfig allnoconfig allmodconfig defconfig
 
-randconfig: $(obj)/conf $(obj)/deps
+randconfig: $(obj)/conf
 	$< -r $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-allyesconfig: $(obj)/conf $(obj)/deps
+allyesconfig: $(obj)/conf
 	$< -y $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-allnoconfig: $(obj)/conf $(obj)/deps
+allnoconfig: $(obj)/conf
 	$< -n $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-allmodconfig: $(obj)/conf $(obj)/deps
+allmodconfig: $(obj)/conf
 	$< -m $(Kconfig)
-	$(obj)/deps $(Kconfig)
 
-defconfig: $(obj)/conf $(obj)/deps
+defconfig: $(obj)/conf
 ifeq ($(KBUILD_DEFCONFIG),)
 	$< -d $(Kconfig)
 else
 	@echo "*** Default configuration is based on '$(KBUILD_DEFCONFIG)'"
 	$(Q)$< -D arch/$(SRCARCH)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
 endif
-	$(obj)/deps $(Kconfig)
 
-%_defconfig: $(obj)/conf $(obj)/deps
+%_defconfig: $(obj)/conf
 	$(Q)$< -D arch/$(SRCARCH)/configs/$@ $(Kconfig)
-	$(Q)$(obj)/deps $(Kconfig)
 
 # Help text used by make help
 help:
