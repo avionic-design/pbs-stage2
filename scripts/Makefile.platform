@@ -1,69 +1,38 @@
 src = $(obj)
 
-PHONY := __build
-__build:
+PHONY := build
+build:
 
-obj-y :=
-
-ifeq ($(findstring package, $(MAKECMDGOALS)),)
-  include $(objtree)/include/config/auto.conf
-
-  # get rid of quotes
-  ARCH := $(shell echo $(CONFIG_ARCH))
-  ARCH := $(subst bfin,blackfin,$(ARCH))
-
-  include arch/$(ARCH)/Makefile
-endif
-
-include include/config/depends.conf
+include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
-kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
-include $(kbuild-file)
-
-PHONY += $(depends)
-$(depends):
-	$(Q)$(MAKE) $(platform)=$(obj) $@=y package
-
-dirs := $(filter %/,$(obj-y))
-dirs := $(addprefix $(obj)/, $(dirs))
-
-pkgs := $(filter-out %/,$(obj-y))
-pkgs := $(addprefix $(obj)/, $(pkgs))
-
-build-dirs := $(addprefix build-,$(dirs))
-build-pkgs := $(addprefix build-,$(pkgs))
+build-dirs := $(addprefix build-,$(depends-dirs))
+uscan-dirs := $(addprefix uscan-,$(depends-dirs))
+print-dirs := $(addprefix print-,$(depends-dirs))
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
-	$(Q)$(MAKE) $(platform)=$* package
+	$(Q)$(MAKE) $(package)=$* install
 
-PHONY += $(build-pkgs)
-$(build-pkgs): build-%:
-	$(Q)$(MAKE) $(package)=$*
-
-PHONY += package
-package: $(build-dirs) $(build-pkgs)
+PHONY += build
+build: $(build-dirs)
 	@:
 
-list-dirs := $(addprefix list-,$(dirs))
-list-pkgs := $(addprefix list-,$(pkgs))
+PHONY += $(uscan-dirs)
+$(uscan-dirs): uscan-%:
+	$(Q)$(MAKE) $(uscan)=$* uscan
 
-PHONY += $(list-dirs)
-$(list-dirs): list-%:
-	$(Q)$(MAKE) $(platform)=$* list
-
-PHONY += $(list-pkgs)
-$(list-pkgs): list-%:
-	$(Q)$(MAKE) $(package)=$* list
-
-PHONY += list
-list: $(list-dirs) $(list-pkgs)
+PHONY += uscan
+uscan: $(uscan-dirs)
 	@:
 
-__build: $(depends)
+PHONY += $(print-dirs)
+$(print-dirs): print-%:
+	$(Q)$(MAKE) $(package)=$* print
+
+PHONY += print
+print: $(print-dirs)
 	@:
 
 PHONY += FORCE

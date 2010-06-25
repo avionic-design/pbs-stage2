@@ -179,34 +179,41 @@ obj-y := packages/
 obj-y += platforms/
 obj-y += toolchains/
 
-build-dirs  := $(addprefix build-,$(obj-y))
-uscan-dirs  := $(addprefix uscan-,$(obj-y))
-list-dirs   := $(addprefix list-,$(obj-y))
+depend-dirs := $(addprefix depend-,$(obj-y))
 
-PHONY += $(build-dirs)
-#$(build-dirs): quiet = silent_
-$(build-dirs): build-%: %
-	$(Q)$(MAKE) $(platform)=$*
+PHONY += $(depend-dirs)
+$(depend-dirs): depend-%: %
+	$(Q)$(MAKE) $(depend)=$*
+
+PHONY += depend
+depend: $(depend-dirs)
+	@:
+
+quiet_cmd_gen_depends = GEN     $@
+      cmd_gen_depends = $< $(src)/Kconfig
+
+include/config/depends.conf: scripts/kconfig/deps \
+		include/config/auto.conf
+	$(call cmd,gen_depends)
+
+quiet_cmd_gen_depends_dirs = GEN     $@
+      cmd_gen_depends_dirs = $(MAKE) -C $(srctree) KBUILD_SRC= V=0 depend | \
+				$(srctree)/scripts/depends-dirs > $@
+
+include/config/depends-dirs.conf: include/config/depends.conf
+	$(call cmd,gen_depends_dirs)
 
 PHONY += build
-build: $(build-dirs)
-	@:
-
-PHONY += $(uscan-dirs)
-$(uscan-dirs): uscan-%: %
-	$(Q)$(MAKE) $(uscan)=$*
+build: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) build
 
 PHONY += uscan
-uscan: $(uscan-dirs)
-	@:
+uscan: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) uscan
 
-PHONY += $(list-dirs)
-$(list-dirs): list-%: %
-	$(Q)$(MAKE) $(platform)=$* list
-
-PHONY += list
-list: $(list-dirs)
-	@:
+PHONY += print
+print: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) print
 
 _all: build
 	@:

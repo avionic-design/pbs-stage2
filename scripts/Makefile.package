@@ -1,7 +1,7 @@
 src = $(obj)
 
-PHONY := __all
-__all:
+PHONY := all
+all: install
 
 obj-y :=
 
@@ -120,28 +120,25 @@ $(pkgtree)/.binary: $(pkgtree)/.build
 
 $(pkgtree)/.install: $(pkgtree)/.binary
 
-PHONY += __build
-__build: $(pkgtree)/.build
+PHONY += build
+build: $(pkgtree)/.build
 	@:
 
-PHONY += __binary
-__binary: $(pkgtree)/.binary
+PHONY += binary
+binary: $(pkgtree)/.binary
 	@:
 
-PHONY += __install
-__install: $(pkgtree)/.install
+PHONY += install
+install: $(pkgtree)/.install
 	@:
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 $(pkgtree)/.binary: $(pkgtree)/.build
 $(pkgtree)/.install: $(pkgtree)/.binary
 
-PHONY += list
-list:
+PHONY += print
+print:
 	@echo "$(PACKAGE): $(VERSION)"
-
-PHONY += __all
-__all: __install
 
 PHONY += FORCE
 FORCE: ;

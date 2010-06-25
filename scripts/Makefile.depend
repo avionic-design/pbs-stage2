@@ -5,7 +5,7 @@ __depend:
 
 obj-y :=
 
-include include/config/auto.conf
+include include/config/depends.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
@@ -13,20 +13,25 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-obj-y := $(patsubst %,$(obj)/%,$(obj-y))
-pkgdir-y := $(sort $(filter-out %/, $(obj-y)))
-subdir-y := $(sort $(filter %/, $(obj-y)))
+$(depends):
+	$(Q)$(MAKE) $(depend)=$(obj) $@=y depend
 
-__depend: $(subdir-y) $(pkgdir-y)
-	@:
+__depend: $(depends)
+
+obj-y := $(patsubst %,$(obj)/%,$(obj-y))
+pkgdir-y := $(sort $(filter-out %/,$(obj-y)))
+subdir-y := $(sort $(filter %/,$(obj-y)))
 
 PHONY += $(subdir-y)
 $(subdir-y):
-	$(Q)$(MAKE) $(depend)=$@
+	$(Q)$(MAKE) $(depend)=$@ depend
 
 PHONY += $(pkgdir-y)
 $(pkgdir-y):
-	$(call cmd,add_dep)
+	@echo $@
+
+depend: $(subdir-y) $(pkgdir-y)
+	@:
 
 PHONY += FORCE
 FORCE:
