@@ -19,10 +19,6 @@ include include/config/depends.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-ifneq ($(wildcard .package),)
-include .package
-endif
-
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
