@@ -524,10 +524,6 @@ int main(int argc, char *argv[])
 		fprintf(fp, _(" \\\n\tCONFIG_%s"), package->symbol->name);
 	}
 
-	printf("#\n");
-	printf("# package dependency list written to %s\n", depfile);
-	printf("#\n");
-
 	destroy_package_list(&packages);
 	fclose(fp);
 	return 0;
