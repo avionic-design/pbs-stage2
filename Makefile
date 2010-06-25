@@ -175,14 +175,13 @@ include/config/auto.conf:
   endif
 endif
 
-dirs := \
-	packages \
-	platforms \
-	toolchains
+obj-y := packages/
+obj-y += platforms/
+obj-y += toolchains/
 
-build-dirs := $(addprefix build-,$(dirs))
-uscan-dirs := $(addprefix uscan-,$(dirs))
-list-dirs  := $(addprefix list-,$(dirs))
+build-dirs  := $(addprefix build-,$(obj-y))
+uscan-dirs  := $(addprefix uscan-,$(obj-y))
+list-dirs   := $(addprefix list-,$(obj-y))
 
 PHONY += $(build-dirs)
 #$(build-dirs): quiet = silent_
