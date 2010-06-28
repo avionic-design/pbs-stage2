@@ -1,6 +1,7 @@
 menu "Libraries"
 
 source "packages/libs/atk/Kconfig"
+source "packages/libs/atkmm/Kconfig"
 source "packages/libs/bluez/Kconfig"
 source "packages/libs/boost/Kconfig"
 source "packages/libs/bzip2/Kconfig"

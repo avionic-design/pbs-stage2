@@ -1,0 +1,4 @@
+/usr/include
+/usr/lib/atkmm-1.6
+/usr/lib/*.so
+/usr/lib/pkgconfig
