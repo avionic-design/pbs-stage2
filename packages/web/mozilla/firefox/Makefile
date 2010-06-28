@@ -1,5 +1,5 @@
 PACKAGE = firefox
-VERSION = 3.6.4
+VERSION = 3.6.6
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
