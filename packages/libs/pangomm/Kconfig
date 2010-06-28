@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PANGOMM
+	bool "pangomm"
+	select PACKAGE_LIBS_CAIROMM
+	default n
