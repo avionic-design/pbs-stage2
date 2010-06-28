@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.4.2
+VERSION = 1.4.3
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -11,4 +11,4 @@ prunefiles = \
 	$(prefix)/lib/libpng14.la
 
 stripfiles = \
-	$(prefix)/lib/libpng14.so.14.2.0
+	$(prefix)/lib/libpng14.so.14.3.0
