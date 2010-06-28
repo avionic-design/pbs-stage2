@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.8.0
+VERSION = 1.8.99.903
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 1.6.5
