@@ -1,11 +1,12 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.11.0
+VERSION = 2.12.0
 
 include packages/xorg/driver/common.mk
 
 sdkdir := $(ROOTFS)$(prefix)/include/xorg
 sdkdir := $(subst /,_,$(sdkdir))
 sdkdir := $(subst .,_,$(sdkdir))
+sdkdir := $(subst -,_,$(sdkdir))
 
 conf-vars += \
 	ac_cv_file_$(sdkdir)_dri_h=yes \
