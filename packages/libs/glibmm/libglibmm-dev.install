@@ -1,0 +1,6 @@
+/usr/include
+/usr/lib/giomm-2.4
+/usr/lib/glibmm-2.4
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/aclocal
