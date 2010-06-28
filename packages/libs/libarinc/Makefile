@@ -1,13 +1,10 @@
 PACKAGE = libarinc
-VERSION = git
+VERSION = 0.2.2
 
-LOCATION = http://www.avionic-design.de/pub/$(PACKAGE)
-TARBALLS =
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-GITTREE = $(srctree)/../avionic-design/libarinc.git
-
-include packages/autotools-git.mk
-NUM_CPU = 1
+include packages/autotools.mk
 
 prunefiles = \
 	$(prefix)/lib/libarinc.la
@@ -15,4 +12,5 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/arincdump \
 	$(prefix)/bin/arincsend \
+	$(prefix)/bin/arincsh \
 	$(prefix)/lib/libarinc.so.0.0.0
