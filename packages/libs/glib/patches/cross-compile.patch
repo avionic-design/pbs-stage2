@@ -17,7 +17,7 @@ diff --git a/Makefile.in b/Makefile.in
 index f0672b9..9518383 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -411,8 +411,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
+@@ -413,8 +413,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
  	gio-2.0-uninstalled.pc.in gio-unix-2.0-uninstalled.pc.in
  TEST_PROGS = 
  AUTOMAKE_OPTIONS = 1.7
@@ -32,7 +32,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index b0af5df..3c84f62 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -262,8 +262,6 @@ giowin32include_HEADERS = \
+@@ -263,8 +263,6 @@ giowin32include_HEADERS = \
  
  endif
  
@@ -45,7 +45,7 @@ diff --git a/gio/Makefile.in b/gio/Makefile.in
 index 4d426a0..5fe8a81 100644
 --- a/gio/Makefile.in
 +++ b/gio/Makefile.in
-@@ -584,7 +584,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+@@ -585,7 +585,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
  TEST_PROGS = 
  NULL = 
  SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
