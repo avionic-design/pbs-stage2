@@ -1,0 +1,6 @@
+/usr/include/gdkmm-2.4
+/usr/include/gtkmm-2.4
+/usr/lib/gdkmm-2.4
+/usr/lib/gtkmm-2.4
+/usr/lib/*.so
+/usr/lib/pkgconfig

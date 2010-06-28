@@ -1,4 +1,7 @@
 config PACKAGE_LIBS_GTKMM
 	bool "gtkmm"
 	select PACKAGE_LIBS_GTK
+	select PACKAGE_LIBS_ATKMM
+	select PACKAGE_LIBS_GLIBMM
+	select PACKAGE_LIBS_PANGOMM
 	default n
