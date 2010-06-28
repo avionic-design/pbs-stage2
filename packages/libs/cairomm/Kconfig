@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_CAIROMM
+	bool "cairomm"
+	select PACKAGE_LIBS_CAIRO
+	default n
