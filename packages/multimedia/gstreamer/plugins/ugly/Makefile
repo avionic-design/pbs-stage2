@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 0.10.13
+VERSION = 0.10.15
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
