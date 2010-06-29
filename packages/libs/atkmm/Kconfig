@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_ATKMM
 	bool "atkmm"
 	select PACKAGE_LIBS_ATK
+	select PACKAGE_LIBS_GLIBMM
 	default n

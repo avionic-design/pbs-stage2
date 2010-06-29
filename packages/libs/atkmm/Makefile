@@ -1,5 +1,5 @@
 PACKAGE = atkmm
-VERSION = 2.21.1
+VERSION = 2.21.2
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
