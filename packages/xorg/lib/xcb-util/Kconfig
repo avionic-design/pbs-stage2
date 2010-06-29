@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XCB_UTIL
+	bool "XCB util"
+	select PACKAGE_XORG_LIB_XCB
+	default n
