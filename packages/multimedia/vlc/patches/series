@@ -1,2 +1,1 @@
-ltmain-sysroot.patch -p1
-libpng.patch
+ltmain-sysroot.patch

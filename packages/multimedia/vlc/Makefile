@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.0.6
+VERSION = 1.1.0
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,28 +7,21 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--without-libiconv-prefix \
 	--enable-run-as-root \
 	--disable-a52 \
 	--disable-dvdnav \
 	--disable-libgcrypt \
+	--disable-lua \
 	--disable-qt4 \
 	--disable-remoteosd \
-	--disable-rpath \
-	--disable-sdl \
-	--disable-skins2 \
-	--disable-static
+	--disable-skins2
 
-conf-vars += \
-	am_cv_func_iconv=yes \
-	am_cv_lib_iconv=yes \
-	am_cv_func_iconv_works=yes
-
-plugin = $(prefix)/lib/vlc
+plugin = $(prefix)/lib/vlc/plugins
 
 prunefiles = \
 	$(prefix)/lib/libvlccore.la \
 	$(prefix)/lib/libvlc.la \
+	$(plugin)/3dnow/*.la \
 	$(plugin)/access/*.la \
 	$(plugin)/access_output/*.la \
 	$(plugin)/audio_filter/*.la \
@@ -39,9 +32,12 @@ prunefiles = \
 	$(plugin)/demux/*.la \
 	$(plugin)/meta_engine/*.la \
 	$(plugin)/misc/*.la \
+	$(plugin)/mmx/*.la \
+	$(plugin)/mmxext/*.la \
 	$(plugin)/mux/*.la \
 	$(plugin)/packetizer/*.la \
 	$(plugin)/services_discovery/*.la \
+	$(plugin)/sse2/*.la \
 	$(plugin)/stream_filter/*.la \
 	$(plugin)/stream_out/*.la \
 	$(plugin)/video_chroma/*.la \
@@ -52,8 +48,8 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/vlc \
 	$(prefix)/bin/vlc-wrapper \
-	$(prefix)/lib/libvlccore.so.2.1.2 \
-	$(prefix)/lib/libvlc.so.2.2.1 \
+	$(prefix)/lib/*.so.* \
+	$(plugin)/3dnow/*.so \
 	$(plugin)/access/*.so \
 	$(plugin)/access_output/*.so \
 	$(plugin)/audio_filter/*.so \
@@ -64,12 +60,16 @@ stripfiles = \
 	$(plugin)/demux/*.so \
 	$(plugin)/meta_engine/*.so \
 	$(plugin)/misc/*.so \
+	$(plugin)/mmx/*.so \
+	$(plugin)/mmxext/*.so \
 	$(plugin)/mux/*.so \
 	$(plugin)/packetizer/*.so \
 	$(plugin)/services_discovery/*.so \
+	$(plugin)/sse2/*.so \
 	$(plugin)/stream_filter/*.so \
 	$(plugin)/stream_out/*.so \
 	$(plugin)/video_chroma/*.so \
 	$(plugin)/video_filter/*.so \
 	$(plugin)/video_output/*.so \
-	$(plugin)/visualization/*.so
+	$(plugin)/visualization/*.so \
+	$(prefix)/lib/vlc/vlc-cache-gen
