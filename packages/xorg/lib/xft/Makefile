@@ -1,10 +1,10 @@
 PACKAGE = libXft
-VERSION = 2.1.13
+VERSION = 2.1.14
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXft.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXft.so.$(VERSION)
+	$(prefix)/lib/*.so.*

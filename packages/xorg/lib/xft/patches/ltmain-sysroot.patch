@@ -2,7 +2,7 @@ diff --git a/ltmain.sh b/ltmain.sh
 index 8e5a930..c0f9b9d 100644
 --- a/ltmain.sh
 +++ b/ltmain.sh
-@@ -1283,6 +1283,13 @@ EOF
+@@ -1291,6 +1291,13 @@ EOF
  	  prev=
  	  continue
  	  ;;
@@ -16,7 +16,7 @@ index 8e5a930..c0f9b9d 100644
  	precious_regex)
  	  precious_files_regex="$arg"
  	  prev=
-@@ -1538,6 +1545,11 @@ EOF
+@@ -1546,6 +1553,11 @@ EOF
  	continue
  	;;
  
@@ -28,8 +28,8 @@ index 8e5a930..c0f9b9d 100644
        # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
        # so, if we see these flags be careful not to treat them like -L
        -L[A-Z][A-Z]*:*)
-@@ -2152,7 +2164,7 @@ EOF
- 	  for searchdir in $newlib_search_path $lib_search_path $sys_lib_search_path $shlib_search_path; do
+@@ -2170,7 +2182,7 @@ EOF
+ 	  for searchdir in $searchdirs; do
  	    for search_ext in .la $std_shrext .so .a; do
  	      # Search the libtool library
 -	      lib="$searchdir/lib${name}${search_ext}"
@@ -37,7 +37,7 @@ index 8e5a930..c0f9b9d 100644
  	      if test -f "$lib"; then
  		if test "$search_ext" = ".la"; then
  		  found=yes
-@@ -5723,6 +5735,11 @@ fi\
+@@ -5749,6 +5761,11 @@ fi\
  	  case $host,$output,$installed,$module,$dlname in
  	    *cygwin*,*lai,yes,no,*.dll | *mingw*,*lai,yes,no,*.dll) tdlname=../bin/$dlname ;;
  	  esac
