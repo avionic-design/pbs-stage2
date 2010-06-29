@@ -1,5 +1,5 @@
 PACKAGE = libxslt
-VERSION = 1.1.24
+VERSION = 1.1.26
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -7,14 +7,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
-	--without-python \
-	--without-crypto
+	--without-crypto \
+	--without-python
 
 prunefiles = \
-	$(prefix)/lib/libexslt.la \
-	$(prefix)/lib/libxslt.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/xsltproc \
-	$(prefix)/lib/libexslt.so.0.8.13 \
-	$(prefix)/lib/libxslt.so.1.1.24
+	$(prefix)/lib/*.so.*
