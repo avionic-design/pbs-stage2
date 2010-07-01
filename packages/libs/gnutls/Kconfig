@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_GNUTLS
 	bool "gnutls"
 	select PACKAGE_LIBS_LIBGCRYPT
+	select PACKAGE_LIBS_LIBTASN1
 	default n
