@@ -1,7 +1,7 @@
 PACKAGE = util-linux-ng
-VERSION = 2.17.2
+VERSION = 2.18
 
-LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v2.17
+LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v2.18
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -15,16 +15,15 @@ ifneq ($(CONFIG_LIBC),gnu)
 endif
 
 prunefiles = \
-	$(prefix)/lib/libblkid.la \
-	$(prefix)/lib/libuuid.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	/bin/dmesg \
+	/bin/findmnt \
 	/bin/more \
 	/bin/mount \
 	/bin/umount \
-	/lib/libblkid.so.1.1.0 \
-	/lib/libuuid.so.1.3.0 \
+	/lib/*.so.* \
 	/sbin/agetty \
 	/sbin/blkid \
 	/sbin/blockdev \
@@ -35,6 +34,7 @@ stripfiles = \
 	/sbin/fsck \
 	/sbin/fsck.cramfs \
 	/sbin/fsck.minix \
+	/sbin/fsfreeze \
 	/sbin/hwclock \
 	/sbin/losetup \
 	/sbin/mkfs \
@@ -44,6 +44,7 @@ stripfiles = \
 	/sbin/mkswap \
 	/sbin/pivot_root \
 	/sbin/sfdisk \
+	/sbin/swaplabel \
 	/sbin/swapon \
 	/sbin/switch_root \
 	/sbin/wipefs \
