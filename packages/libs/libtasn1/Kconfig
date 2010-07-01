@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBTASN1
+	bool "libtasn1"
+	select VIRTUAL_DEVEL_LIBC
+	default n
