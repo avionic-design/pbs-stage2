@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBVORBIS
+	bool "libvorbis"
+	select PACKAGE_MULTIMEDIA_LIBOGG
+	default n
