@@ -1,15 +1,13 @@
 PACKAGE = sed
-VERSION = 4.1.5
+VERSION = 4.2.1
 
-LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-DESCRIPTION = the GNU sed stream editor
-
-##############################################################################
+LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-package-clean:
-	@:
+conf-args += \
+	--prefix=/
 
+stripfiles = \
+	/bin/sed
