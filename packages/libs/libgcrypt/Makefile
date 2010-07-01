@@ -1,15 +1,18 @@
 PACKAGE = libgcrypt
-VERSION = 1.4.4
+VERSION = 1.4.5
 
 LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--disable-asm
+
 prunefiles = \
-	$(prefix)/lib/libgcrypt.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/dumpsexp \
 	$(prefix)/bin/hmac256 \
-	$(prefix)/lib/libgcrypt.so.11.5.2
+	$(prefix)/lib/*.so.*
