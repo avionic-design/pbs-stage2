@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnome.org/pub/gnome/sources/libsoup/(.*)/libsoup-(.*)\.tar\.bz2
+http://ftp.gnome.org/pub/gnome/sources/libsoup/([\d\.]+)/libsoup-(.*)\.tar\.bz2
