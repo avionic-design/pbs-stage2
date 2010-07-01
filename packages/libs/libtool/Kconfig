@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBTOOL
+	bool "libtool"
+	select VIRTUAL_DEVEL_LIBC
+	default n
