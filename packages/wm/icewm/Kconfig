@@ -1,0 +1,4 @@
+config PACKAGE_WM_ICEWM
+	bool "icewm"
+	select PACKAGE_XORG_LIB_XRANDR
+	default n
