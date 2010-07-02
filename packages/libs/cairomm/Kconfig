@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_CAIROMM
 	bool "cairomm"
 	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_LIBS_LIBSIGCPP
 	default n
