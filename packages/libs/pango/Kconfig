@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_PANGO
 	bool "pango"
 	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_XORG_LIB_XFT
 	default n
