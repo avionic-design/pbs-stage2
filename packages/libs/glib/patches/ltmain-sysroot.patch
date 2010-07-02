@@ -48,6 +48,15 @@ index a6a1965..0557124 100644
  	      if test -f "$lib"; then
  		if test "$search_ext" = ".la"; then
  		  found=yes
+@@ -5476,7 +5492,7 @@
+ 
+ 	  linkalldeplibs=no
+ 	  if test "$link_all_deplibs" != no || test -z "$library_names" ||
+-	     test "$build_libtool_libs" = no; then
++	     test "$build_libtool_libs" = no || test -n "$sysroot"; then
+ 	    linkalldeplibs=yes
+ 	  fi
+ 
 @@ -8132,6 +8148,9 @@ fi\
  	  case $host,$output,$installed,$module,$dlname in
  	    *cygwin*,*lai,yes,no,*.dll | *mingw*,*lai,yes,no,*.dll | *cegcc*,*lai,yes,no,*.dll) tdlname=../bin/$dlname ;;
