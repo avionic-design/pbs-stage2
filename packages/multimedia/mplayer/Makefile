@@ -27,8 +27,8 @@ conf-args += \
 	--extra-ldflags='$(LDFLAGS)'
 
 conf-args += \
-	--disable-live \
 	--disable-iconv \
+	--disable-live \
 	--enable-xv
 
 ifeq ($(CONFIG_CPU),xscale)
