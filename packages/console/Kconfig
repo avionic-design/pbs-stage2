@@ -13,7 +13,7 @@ config PACKAGE_CONSOLE_FBSET
 config PACKAGE_CONSOLE_MINICOM
 	bool "minicom"
 	select PACKAGE_LIBS_NCURSES
-	select PACKAGE_LIBS_ICONV
+	select PACKAGE_LIBS_ICONV if !PACKAGE_DEVEL_GLIBC
 	default n
 
 endmenu
