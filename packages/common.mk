@@ -31,6 +31,7 @@ CXX    = $(CROSS_COMPILE)g++
 LD     = $(CROSS_COMPILE)ld
 AS     = $(CROSS_COMPILE)as
 AR     = $(CROSS_COMPILE)ar
+NM     = $(CROSS_COMPILE)nm
 RANLIB = $(CROSS_COMPILE)ranlib
 STRIP  = $(CROSS_COMPILE)strip
 
