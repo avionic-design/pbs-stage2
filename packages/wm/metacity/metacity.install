@@ -1,0 +1,3 @@
+/etc/gconf
+/usr/bin
+/usr/lib/*.so.*

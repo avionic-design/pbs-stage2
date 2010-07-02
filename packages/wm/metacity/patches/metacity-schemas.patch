@@ -1,0 +1,26 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index bd3420f..542b939 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -141,7 +141,7 @@ schema_bindings_SOURCES =       \
+ schema_bindings_LDADD = @METACITY_LIBS@
+ metacity.schemas.in: schema_bindings ${srcdir}/metacity.schemas.in.in
+ 	@echo Generating keybinding schemas... ${srcdir}/metacity.schemas.in.in
+-	${builddir}/schema_bindings ${srcdir}/metacity.schemas.in.in ${builddir}/metacity.schemas.in
++	cp ${srcdir}/metacity.schemas.in ${builddir}/metacity.schemas.in
+ 
+ bin_PROGRAMS=metacity metacity-theme-viewer
+ 
+diff --git a/src/Makefile.in b/src/Makefile.in
+index b527c61..53bbd98 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -1901,7 +1901,7 @@ uninstall-am: uninstall-binPROGRAMS uninstall-desktopfilesDATA \
+ 
+ metacity.schemas.in: schema_bindings ${srcdir}/metacity.schemas.in.in
+ 	@echo Generating keybinding schemas... ${srcdir}/metacity.schemas.in.in
+-	${builddir}/schema_bindings ${srcdir}/metacity.schemas.in.in ${builddir}/metacity.schemas.in
++	cp ${srcdir}/metacity.schemas.in ${builddir}/metacity.schemas.in
+ 
+ @INTLTOOL_DESKTOP_RULE@
+ 
