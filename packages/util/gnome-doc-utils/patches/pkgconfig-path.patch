@@ -1,0 +1,26 @@
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index 04ea4c3..4053179 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -10,7 +10,7 @@ bin_SCRIPTS = gnome-doc-prepare gnome-doc-tool
+ 
+ endif
+ 
+-pkgconfigdir = $(datadir)/pkgconfig
++pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = gnome-doc-utils.pc
+ 
+ EXTRA_DIST =			\
+diff --git a/tools/Makefile.in b/tools/Makefile.in
+index 36e269d..4f729e6 100644
+--- a/tools/Makefile.in
++++ b/tools/Makefile.in
+@@ -215,7 +215,7 @@ top_srcdir = @top_srcdir@
+ @ENABLE_BUILD_UTILS_TRUE@sharedir = $(datadir)/gnome-doc-utils
+ @ENABLE_BUILD_UTILS_TRUE@share_DATA = gnome-doc-utils.make
+ @ENABLE_BUILD_UTILS_TRUE@bin_SCRIPTS = gnome-doc-prepare gnome-doc-tool
+-pkgconfigdir = $(datadir)/pkgconfig
++pkgconfigdir = $(libdir)/pkgconfig
+ pkgconfig_DATA = gnome-doc-utils.pc
+ EXTRA_DIST = \
+ 	gnome-doc-tool.in	\

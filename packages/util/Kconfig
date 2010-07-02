@@ -2,6 +2,7 @@ menu "Miscellaneous Utilities"
 
 source "packages/util/abox/Kconfig"
 source "packages/util/flashtool/Kconfig"
+source "packages/util/gnome-doc-utils/Kconfig"
 source "packages/util/htop/Kconfig"
 source "packages/util/i2c-tools/Kconfig"
 source "packages/util/superiotool/Kconfig"
