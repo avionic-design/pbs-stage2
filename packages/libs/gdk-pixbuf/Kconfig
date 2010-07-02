@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_GDK_PIXBUF
 	bool "gdk-pixbuf"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_GLIB
+	select PACKAGE_LIBS_LIBJPEG
 	default n
