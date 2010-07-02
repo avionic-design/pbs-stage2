@@ -1,0 +1,4 @@
+config PACKAGE_CONSOLE_FBSET
+	bool "fbset"
+	select VIRTUAL_DEVEL_LIBC
+	default n

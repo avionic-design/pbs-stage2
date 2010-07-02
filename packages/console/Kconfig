@@ -1,19 +1,7 @@
 menu "Console Utilities"
 
-config PACKAGE_CONSOLE_CONSOLE_TOOLS
-	bool "console-tools"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CONSOLE_FBSET
-	bool "fbset"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_CONSOLE_MINICOM
-	bool "minicom"
-	select PACKAGE_LIBS_NCURSES
-	select PACKAGE_LIBS_ICONV if !PACKAGE_DEVEL_GLIBC
-	default n
+source "packages/console/console-tools/Kconfig"
+source "packages/console/fbset/Kconfig"
+source "packages/console/minicom/Kconfig"
 
 endmenu

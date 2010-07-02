@@ -1,0 +1,4 @@
+config PACKAGE_CONSOLE_CONSOLE_TOOLS
+	bool "console-tools"
+	select VIRTUAL_DEVEL_LIBC
+	default n
