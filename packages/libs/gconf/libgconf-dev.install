@@ -1,0 +1,6 @@
+/usr/include/gconf
+/usr/lib/GConf/2/*.a
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/aclocal

@@ -1,0 +1,6 @@
+/etc/gconf
+/usr/lib/GConf/2/*.so
+/usr/lib/*.so.*
+/usr/libexec
+/usr/share/dbus-1
+/usr/share/sgml
