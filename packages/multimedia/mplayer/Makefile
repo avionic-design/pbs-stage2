@@ -1,9 +1,8 @@
-PACKAGE = mplayer
-VERSION = snapshot
+PACKAGE = MPlayer
+VERSION = 1.0rc3
 
 LOCATION = http://www.mplayerhq.hu/MPlayer/releases
-TARBALLS = $(PACKAGE)-export-$(VERSION).tar.bz2
-pkgbuildtree := $(pkgtree)/mplayer-export-2010-01-27
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
@@ -28,7 +27,9 @@ conf-args += \
 	--extra-ldflags='$(LDFLAGS)'
 
 conf-args += \
-	--disable-iconv
+	--disable-live \
+	--disable-iconv \
+	--enable-xv
 
 ifeq ($(CONFIG_CPU),xscale)
 conf-args += \

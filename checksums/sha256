@@ -184,7 +184,7 @@ d012ab07ea26721467a85a775f34747c1c8897e37f16bec5317d8a72ef8b4f17  download/modul
 ae79f8d41d8a86456b68607e9ca398d00f8b7342d1d83bcf4428178ac45380c7  download/mpc-0.8.2.tar.gz
 c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2dec-0.4.1.tar.gz
 95e507b26bac3b64215bc3cf1463525781582d40358b09becdb24d058b31def8  download/mpfr-2.4.1.tar.lzma
-ebcf430d97d4b0dae1b1fd3d4c22dfd7ef2bda5399a2de25c65d2150e80e64e0  download/mplayer-export-snapshot.tar.bz2
+df062ee23a5e873bc72518edf35cc30d133da78d57989fbbe934f6b31fa850ee  download/MPlayer-1.0rc3.tar.bz2
 a74b0cc7ec668418389d9f56f85ca8a4619b8674a2d90f5e51bfb8ae9a0667de  download/mtd-utils-1.1.0.tar.bz2
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
 b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netcat-0.7.1.tar.bz2
