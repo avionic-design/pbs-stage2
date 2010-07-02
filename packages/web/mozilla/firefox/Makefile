@@ -57,14 +57,6 @@ install-args += \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) mv $(DESTDIR)$(prefix)/include/firefox-$(VERSION) \
-		$(DESTDIR)$(prefix)/include/firefox
-	$(priv) mv $(DESTDIR)$(prefix)/lib/firefox-$(VERSION) \
-		$(DESTDIR)$(prefix)/lib/firefox
-	$(priv) mv $(DESTDIR)$(prefix)/lib/firefox-devel-$(VERSION) \
-		$(DESTDIR)$(prefix)/lib/firefox-devel
-	$(priv) mv $(DESTDIR)$(prefix)/share/idl/firefox-$(VERSION) \
-		$(DESTDIR)$(prefix)/share/idl/firefox
 	$(call cmd,stamp)
 
 sdkdir = $(prefix)/lib/firefox-devel/sdk
