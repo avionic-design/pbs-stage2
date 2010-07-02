@@ -1,0 +1,6 @@
+/usr/include/orbit-2.0
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/aclocal
+/usr/share/idl
