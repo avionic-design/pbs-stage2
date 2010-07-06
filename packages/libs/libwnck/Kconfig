@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_LIBWNCK
+	bool "libwnck"
+	select PACKAGE_LIBS_STARTUP_NOTIFICATION
+	select PACKAGE_XORG_LIB_XRES
+	default n
