@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_STARTUP_NOTIFICATION
+	bool "startup-notification"
+	select PACKAGE_XORG_LIB_XCB_UTIL
+	default n
