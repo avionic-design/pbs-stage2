@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_XFCE4_SESSION
+	bool "xfce4-session"
+	select PACKAGE_DESKTOP_XFCE_LIBXFCEGUI4
+	default n

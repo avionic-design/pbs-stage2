@@ -14,6 +14,7 @@ obj-y += net/
 obj-y += shells/
 obj-y += util/
 obj-y += web/
+obj-y += desktop/
 obj-y += wm/
 obj-y += xorg/
 

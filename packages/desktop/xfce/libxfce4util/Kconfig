@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_LIBXFCE4UTIL
+	bool "libxfce4util"
+	select PACKAGE_LIBS_GLIB
+	default n

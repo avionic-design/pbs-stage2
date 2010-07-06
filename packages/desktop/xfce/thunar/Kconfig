@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_THUNAR
+	bool "thunar"
+	select PACKAGE_DESKTOP_XFCE_XFCE4_PANEL
+	default n

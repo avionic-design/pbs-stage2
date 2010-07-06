@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_EXO
+	bool "exo"
+	select PACKAGE_LIBS_LIBNOTIFY
+	default n

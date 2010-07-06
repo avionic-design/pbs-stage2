@@ -1,0 +1,15 @@
+menu "XFCE"
+
+source "packages/desktop/xfce/exo/Kconfig"
+source "packages/desktop/xfce/libxfcegui4/Kconfig"
+source "packages/desktop/xfce/libxfce4menu/Kconfig"
+source "packages/desktop/xfce/libxfce4util/Kconfig"
+source "packages/desktop/xfce/thunar/Kconfig"
+source "packages/desktop/xfce/xfce4-panel/Kconfig"
+source "packages/desktop/xfce/xfce4-session/Kconfig"
+source "packages/desktop/xfce/xfce-utils/Kconfig"
+source "packages/desktop/xfce/xfconf/Kconfig"
+source "packages/desktop/xfce/xfdesktop/Kconfig"
+source "packages/desktop/xfce/xfwm4/Kconfig"
+
+endmenu

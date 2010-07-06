@@ -1,0 +1,2 @@
+version=3
+http://mocha.xfce.org/archive/src/xfce/xfce4-panel/([\d\.]+)/xfce4-panel-(.*)\.tar\.bz2

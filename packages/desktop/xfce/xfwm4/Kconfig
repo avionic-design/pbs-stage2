@@ -1,0 +1,5 @@
+config PACKAGE_DESKTOP_XFCE_XFWM4
+	bool "xfwm4"
+	select PACKAGE_LIBS_LIBWNCK
+	select PACKAGE_DESKTOP_XFCE_LIBXFCEGUI4
+	default n

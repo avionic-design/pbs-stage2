@@ -1,0 +1,121 @@
+diff --git a/configure b/configure
+index 397c88f..51e9a1d 100755
+--- a/configure
++++ b/configure
+@@ -12835,7 +12835,13 @@ fi
+ done
+ 
+ 
+-if test "$cross_compiling" = yes; then :
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether strftime supports %E and %O modifiers." >&5
++$as_echo_n "checking whether strftime supports %E and %O modifiers.... " >&6; }
++if test "${ac_cv_strftime_extension+set}" = set; then :
++  $as_echo_n "(cached) " >&6
++else
++
++		if test "$cross_compiling" = yes; then :
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+ as_fn_error "cannot run test program while cross compiling
+@@ -12844,31 +12850,36 @@ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+ 
+-  #include <string.h>
+-  #include <time.h>
+-  int
+-  main (int argc, char **argv)
+-  {
+-    struct tm tm;
+-    char      buffer[16];
+-    tm.tm_year = 81;
+-    if (strftime (buffer, 16, "%EY", &tm) == 4 && strcmp (buffer, "1981") == 0)
+-      return 0;
+-    return 1;
+-  }
+-
++		  #include <string.h>
++		  #include <time.h>
++		  int
++		  main (int argc, char **argv)
++		  {
++		    struct tm tm;
++		    char      buffer[16];
++		    tm.tm_year = 81;
++		    if (strftime (buffer, 16, "%EY", &tm) == 4 && strcmp (buffer, "1981") == 0)
++		      return 0;
++		    return 1;
++		  }
+ _ACEOF
+ if ac_fn_c_try_run "$LINENO"; then :
+-
+-
+-$as_echo "#define HAVE_STRFTIME_EXTENSION 1" >>confdefs.h
+-
+-
++  ac_cv_strftime_extension=yes
++else
++  ac_cv_strftime_extension=no
+ fi
+ rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+   conftest.$ac_objext conftest.beam conftest.$ac_ext
+ fi
+ 
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_strftime_extension" >&5
++$as_echo "$ac_cv_strftime_extension" >&6; }
++if test "x$ac_cv_strftime_extension" = "xyes"; then
++
++$as_echo "#define HAVE_STRFTIME_EXTENSION 1" >>confdefs.h
++
++fi
+ 
+ 
+     GETTEXT_PACKAGE=libexo-0.3
+diff --git a/configure.in b/configure.in
+index d349d43..3c555d6 100644
+--- a/configure.in
++++ b/configure.in
+@@ -134,22 +134,27 @@ AC_CHECK_FUNCS([getfsstat getmntent getvfsstat regexec setfsent setmntent])
+ dnl ***************************************
+ dnl *** Check for strftime() extensions ***
+ dnl ***************************************
+-AC_TRY_RUN([
+-  #include <string.h>
+-  #include <time.h>
+-  int
+-  main (int argc, char **argv)
+-  {
+-    struct tm tm;
+-    char      buffer[16];
+-    tm.tm_year = 81;
+-    if (strftime (buffer, 16, "%EY", &tm) == 4 && strcmp (buffer, "1981") == 0)
+-      return 0;
+-    return 1;
+-  }
+-], [
++AC_CACHE_CHECK([whether strftime supports %E and %O modifiers.],
++	ac_cv_strftime_extension,[
++		AC_TRY_RUN([
++		  #include <string.h>
++		  #include <time.h>
++		  int
++		  main (int argc, char **argv)
++		  {
++		    struct tm tm;
++		    char      buffer[16];
++		    tm.tm_year = 81;
++		    if (strftime (buffer, 16, "%EY", &tm) == 4 && strcmp (buffer, "1981") == 0)
++		      return 0;
++		    return 1;
++		  }],
++		  [ac_cv_strftime_extension=yes],
++		  [ac_cv_strftime_extension=no],
++		  [])])
++if test "x$ac_cv_strftime_extension" = "xyes"; then
+   AC_DEFINE([HAVE_STRFTIME_EXTENSION], 1, [Define if strftime supports %E and %O modifiers.])
+-])
++fi
+ 
+ dnl ******************************
+ dnl *** Check for i18n support ***

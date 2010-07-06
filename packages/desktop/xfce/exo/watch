@@ -1,0 +1,2 @@
+version=3
+http://mocha.xfce.org/archive/src/xfce/exo/([\d\.]+)/exo-(.*)\.tar\.bz2

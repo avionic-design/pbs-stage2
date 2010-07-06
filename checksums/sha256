@@ -39,6 +39,7 @@ d4285aec9a57ee9c2b6ab1ddb76a67f717183e27e3ebc6c54838a34760e9e7bb  download/encha
 5046f573e7dd77f689c33c5f0aa0f2b7f96c79e0b37d6ecc78bae74c094fb4c6  download/ethtool-6.tar.gz
 15146cb72e322766bb8f93b7b0d254d4b9a53826ee65de335dc6ac4376cd51b1  download/eventlog_0.2.9.tar.gz
 0b85113a9770083715927f9c7a7d0ab354c8a508a91cb6e8e11130851494d125  download/evieext-1.0.2.tar.bz2
+0a12ac124bad67c8de7135f7052641239ed640884a71612930f99c425bede2a3  download/exo-0.3.107.tar.bz2
 847660b4df86e707c9150e33cd8c25bc5cd828f708c7418e765e3e983a2e5e93  download/expat-2.0.1.tar.gz
 40ff4ab0247b75138a0887ed40f81c1a6184f340b77126c16d074b1075b41c20  download/fbset-2.1.tar.gz
 6730baa6750f0cbffaf5f4c04f8ddcf1ebe6c651a6eeb12ae947a228de4c8120  download/ffmpeg-0.6.tar.bz2
@@ -150,6 +151,9 @@ bc6169c826d3cb17435ca84e1b479d65e4b51df1e48bbc3ec39a9cabf842c7a8  download/libXd
 d8033a2fae20fed6de4f16b73ad69ca1c511e7da31c88e9bc6e75976187378cb  download/libXdmcp-1.0.3.tar.bz2
 1280af98466cb4484a89858ede3347ba9d7785baeb80b11f2066142dc2317d97  download/libXext-1.0.5.tar.bz2
 ac6a0ff69c52c9b6e2096e5f74e22c8b5eef11ade4e30411cffeb7df32fe4f74  download/libXext-1.1.2.tar.bz2
+c37e407dc00fb87dc16758d53e69edeac7b32aa76c5fcad2b784cf22f58af421  download/libxfcegui4-4.6.4.tar.bz2
+62352be57318d6f241c4f6e4b6f9303d0b80246ea8f6e4753a962360a9965162  download/libxfce4menu-4.6.2.tar.bz2
+ae2e7ed1000bb0b3589643a39a65e6ab64c9ee198045e7b272604986f2e18c83  download/libxfce4util-4.6.2.tar.bz2
 2e6cd020460e4ef5d5a1d9b5d21143e9f5e580036a79c7de26ae539d7bcb8d74  download/libXfixes-4.0.5.tar.bz2
 d05f5a8599cbfd29f683768b037a5a4b8c9065578e6ac4d6323e89ef604e495b  download/libXfont-1.4.2.tar.bz2
 700e9d594b81cad3dfd5fac4a5cfd0c4cf7780c812507ef04eb40139ebf5175e  download/libXft-2.1.14.tar.bz2
@@ -242,6 +246,7 @@ e865de2c1f559fff0d3fc936e660c0efaf7afe662064f2fb97ccad1ec28d208a  download/sysfs
 035f98fae17d9cff002993c564ccc83dc4ed136127172caeff872b6abdb679d8  download/sysvinit-2.86.tar.gz
 be8bf33afb5adc2377e45d94693ffd46b75f267f9b808df0c7006e51211f9deb  download/tar-1.20.tar.bz2
 5fe99efe0274b5764c9974417c96a38b5f94e21096d8a94cc1fa172a42035284  download/tcpdump-4.0.0.tar.gz
+75829b34a68346b33f66882bedc9794d580c200d11af22541885750459b55c03  download/Thunar-1.0.2.tar.bz2
 ff32a0d3bc696cadc3457be9c85e9818af2b6daa2f159188bb01aad7e932a0e1  download/trapproto-3.4.3.tar.bz2
 d4e64f4ac1dafbcba559428bc85da4b59a709c66f91928b4ace8608db200e621  download/tslib-1.0.0-svn70.tar.bz2
 db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-bitstream-vera-1.10.tar.bz2
@@ -276,6 +281,12 @@ d70c64f3f4fe931e12d5af7f91ff04cd0d16dd7459061c50b3149f9e35de8091  download/xf86-
 e16b7fb91f72af825bd26693d5329e3a8f42801a0c31858836b59408f8fdffdf  download/xf86-video-intel-2.12.0.tar.bz2
 524b045c0d0f87ee77080c2479748671a1683291201f14bea9263f75fb679c7a  download/xf86-video-psb-0.31.0.tar.bz2
 8f704613a5407b31c594d05cf8e053f2b05777172a44e7cd2abd8090bd2ac247  download/xf86vidmodeproto-2.3.tar.bz2
+cc9b70bdc73ab80f46655a34cdbaf876a67cd90b50230cbf4d77a3106a5c54e7  download/xfce4-panel-4.6.4.tar.bz2
+725e269254c34c530acb670f5ccd0fd69b57cbe9f2176abd8499fc5d6dcd30a8  download/xfce4-session-4.6.2.tar.bz2
+54efc2038bfbd5acaadfc91ed91fb3dfd6cec64f9402f364accce7bcafe2ba7a  download/xfce-utils-4.6.2.tar.bz2
+7b2635abc33ae6a76145238ed27557bc1ff91b1a5ee0757962f798a66d56f478  download/xfconf-4.6.2.tar.bz2
+cd760f95486ba3f1c6d0179bb10a4c21c99c1d459dd8265823fed85f7376a3fb  download/xfdesktop-4.6.2.tar.bz2
+212819ee03c24635f79d50930284c422469e22489952d0b286e6fe5af2155828  download/xfwm4-4.6.2.tar.bz2
 e8a62b1cafbcfc3b9fed147612ed4320233d0c9d6de30c991c2cd0c691c40910  download/xineramaproto-1.1.2.tar.bz2
 58e88087ceec7201d918f94d6b1247325adca2a9903fed11291b412427a7ba64  download/xineramaproto-1.2.tar.bz2
 16bcc73ae81b6d80fd1a9419ea757f38870d1043d440b6d56fcaa79d4c6c9b07  download/xinit-1.2.1.tar.bz2

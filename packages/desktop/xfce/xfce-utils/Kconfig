@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_XFCE_UTILS
+	bool "xfce-utils"
+	select PACKAGE_DESKTOP_XFCE_LIBXFCE4UTIL
+	default n

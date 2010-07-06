@@ -1,0 +1,5 @@
+config PACKAGE_DESKTOP_XFCE_XFCE4_PANEL
+	bool "xfce4-panel"
+	select PACKAGE_DESKTOP_XFCE_EXO
+	select PACKAGE_DESKTOP_XFCE_LIBXFCEGUI4
+	default n
