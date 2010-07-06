@@ -73,6 +73,7 @@ source "packages/libs/readline/Kconfig"
 source "packages/libs/sdl/Kconfig"
 source "packages/libs/sqlite/Kconfig"
 source "packages/libs/startup-notification/Kconfig"
+source "packages/libs/sysfsutils/Kconfig"
 source "packages/libs/tslib/Kconfig"
 source "packages/libs/zlib/Kconfig"
 

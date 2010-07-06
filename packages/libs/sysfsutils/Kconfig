@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_SYSFSUTILS
+	bool "sysfsutils"
+	select VIRTUAL_DEVEL_LIBC
+	default n
