@@ -1,0 +1,57 @@
+diff --git a/Makefile.in b/Makefile.in
+index a904c51..de17c93 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -4,6 +4,8 @@
+ # Copyright (C) Matthew Chapman 1999-2007
+ #
+ 
++srcdir      = @srcdir@
++
+ prefix      = @prefix@
+ exec_prefix = @exec_prefix@
+ bindir      = @bindir@
+@@ -63,18 +65,18 @@ installbin: rdesktop
+ 	chmod 755 $(DESTDIR)$(bindir)/rdesktop
+ 
+ .PHONY: installman
+-installman: doc/rdesktop.1
++installman: $(srcdir)/doc/rdesktop.1
+ 	mkdir -p $(DESTDIR)$(mandir)/man1
+-	cp doc/rdesktop.1 $(DESTDIR)$(mandir)/man1
++	cp $< $(DESTDIR)$(mandir)/man1
+ 	chmod 644 $(DESTDIR)$(mandir)/man1/rdesktop.1
+ 
+ .PHONY: installkeymaps
+ installkeymaps:
+ 	mkdir -p $(DESTDIR)$(KEYMAP_PATH)
+ # Prevent copying the CVS directory
+-	cp keymaps/?? keymaps/??-?? $(DESTDIR)$(KEYMAP_PATH)
+-	cp keymaps/common $(DESTDIR)$(KEYMAP_PATH)
+-	cp keymaps/modifiers $(DESTDIR)$(KEYMAP_PATH)
++	cp $(srcdir)/keymaps/?? $(srcdir)/keymaps/??-?? $(DESTDIR)$(KEYMAP_PATH)
++	cp $(srcdir)/keymaps/common $(DESTDIR)$(KEYMAP_PATH)
++	cp $(srcdir)/keymaps/modifiers $(DESTDIR)$(KEYMAP_PATH)
+ 	chmod 644 $(DESTDIR)$(KEYMAP_PATH)/*
+ 
+ .PHONY: proto
+@@ -147,15 +149,12 @@ rdesktop.tar.gz: rdesktop-$(VERSION).tar.gz
+ 	tar zcvf $@ -C /tmp/rdesktop-make-dist-dir rdesktop
+ 	rm -rf /tmp/rdesktop-make-dist-dir
+ 
+-Makefile: Makefile.in configure
++Makefile: $(srcdir)/Makefile.in $(srcdir)/configure
+ 	./config.status
+ 
+-configure: configure.ac
+-	./bootstrap
+-
+-.SUFFIXES:
+-.SUFFIXES: .c .o
++$(srcdir)/configure: $(srcdir)/configure.ac
++	$(srcdir)/bootstrap
+ 
+-.c.o:
++%.o: $(srcdir)/%.c
+ 	$(CC) $(CFLAGS) -o $@ -c $<
+ 

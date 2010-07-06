@@ -6,5 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-openssl=$(ROOTFS)$(prefix)
+
 stripfiles = \
 	$(prefix)/bin/rdesktop
