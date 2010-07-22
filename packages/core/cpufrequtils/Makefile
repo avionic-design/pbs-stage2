@@ -1,5 +1,5 @@
 PACKAGE = cpufrequtils
-VERSION = 007
+VERSION = 008
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/cpufreq
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -16,7 +16,7 @@ build-args = \
 	CROSS=$(CROSS_COMPILE)
 
 $(pkgtree)/.build:
-	cd $(pkgbuildtree) && $(MAKE) $(build-args)
+	cd $(pkgbuildtree) && $(priv) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
@@ -25,9 +25,6 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(priv) $(MAKE) $(install-args) install
-	$(priv) chown root:root \
-		$(DESTDIR)$(prefix)/lib/libcpufreq.so.0.0.0 \
-		$(DESTDIR)$(prefix)/lib/libcpufreq.so.0
 	$(call cmd,stamp)
 
 include packages/cleanup.mk
@@ -38,4 +35,4 @@ stripfiles = \
 	$(prefix)/bin/cpufreq-aperf \
 	$(prefix)/bin/cpufreq-info \
 	$(prefix)/bin/cpufreq-set \
-	$(prefix)/lib/libcpufreq.so.0.0.0
+	$(prefix)/lib/*.so.*
