@@ -1,0 +1,5 @@
+config PACKAGE_XORG_LIB_XCURSOR
+	bool "libXcursor"
+	select PACKAGE_XORG_LIB_XFIXES
+	select PACKAGE_XORG_LIB_XRENDER
+	default n
