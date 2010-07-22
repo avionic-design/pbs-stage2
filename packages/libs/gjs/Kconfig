@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GJS
+	bool "gjs"
+	select PACKAGE_WEB_MOZILLA_XULRUNNER
+	default n

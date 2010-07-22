@@ -1,0 +1,3 @@
+/usr/lib/*.so.*
+/usr/lib/gjs-1.0
+/usr/share/gjs-1.0

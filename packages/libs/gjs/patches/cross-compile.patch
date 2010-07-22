@@ -1,0 +1,2006 @@
+diff --git a/Makefile-gi.am b/Makefile-gi.am
+index 08a6c08..80e91c7 100644
+--- a/Makefile-gi.am
++++ b/Makefile-gi.am
+@@ -1,3 +1,4 @@
++if HAVE_GOBJECT_INTROSPECTION
+ gjsgiincludedir = $(includedir)/gjs-1.0/gjs
+ 
+ lib_LTLIBRARIES += libgjs-gi.la
+@@ -57,3 +58,4 @@ pkgconfig_DATA += gjs-gi-1.0.pc
+ 
+ EXTRA_DIST += 			\
+ 	gjs-gi-1.0.pc.in
++endif
+diff --git a/Makefile-modules.am b/Makefile-modules.am
+index 17ae1ca..d83dc40 100644
+--- a/Makefile-modules.am
++++ b/Makefile-modules.am
+@@ -12,7 +12,7 @@ dist_gjsjs_DATA +=		\
+ 	modules/dbus.js		\
+ 	modules/promise.js
+ 
+-gjsnative_LTLIBRARIES += console.la debugger.la gi.la langNative.la mainloop.la gettextNative.la dbusNative.la cairoNative.la
++gjsnative_LTLIBRARIES += console.la langNative.la gettextNative.la
+ 
+ JS_NATIVE_MODULE_CFLAGS =	\
+         $(AM_CFLAGS)		\
+@@ -23,6 +23,9 @@ JS_NATIVE_MODULE_LIBADD =	\
+ JS_NATIVE_MODULE_LDFLAGS =	\
+         -module -avoid-version -no-undefined -rdynamic
+ 
++if HAVE_GOBJECT_INTROSPECTION
++gjsnative_LTLIBRARIES += gi.la
++
+ gi_la_CFLAGS = 					\
+ 	$(JS_NATIVE_MODULE_CFLAGS) 		\
+ 	$(GJS_GI_CFLAGS)
+@@ -36,6 +39,7 @@ gi_la_LDFLAGS = 				\
+ gi_la_SOURCES =		\
+ 	modules/gi.h	\
+ 	modules/gi.c
++endif
+ 
+ langNative_la_CFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -49,6 +53,9 @@ langNative_la_SOURCES =				\
+ 	modules/lang.h				\
+ 	modules/lang.c
+ 
++if HAVE_GOBJECT_INTROSPECTION
++gjsnative_LTLIBRARIES += mainloop.la
++
+ mainloop_la_CFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+ mainloop_la_LIBADD = \
+@@ -60,6 +67,7 @@ mainloop_la_LDFLAGS = 				\
+ mainloop_la_SOURCES =		\
+ 	modules/mainloop.h	\
+ 	modules/mainloop.c
++endif
+ 
+ gettextNative_la_CFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -73,6 +81,9 @@ gettextNative_la_SOURCES =		\
+ 	modules/gettext-native.h	\
+ 	modules/gettext-native.c
+ 
++if HAVE_GOBJECT_INTROSPECTION
++gjsnative_LTLIBRARIES += cairoNative.la
++
+ cairoNative_la_CFLAGS =                         \
+         $(JS_NATIVE_MODULE_CFLAGS)              \
+         $(GJS_CAIRO_CFLAGS)                     \
+@@ -101,7 +112,7 @@ cairoNative_la_SOURCES =                        \
+ 	modules/cairo-surface-pattern.c         \
+ 	modules/cairo-solid-pattern.c           \
+ 	modules/cairo.c
+-
++endif
+ 
+ console_la_CFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -115,6 +126,9 @@ console_la_SOURCES =		\
+ 	modules/console.h	\
+ 	modules/console.c
+ 
++if HAVE_GOBJECT_INTROSPECTION
++gjsnative_LTLIBRARIES += debugger.la
++
+ debugger_la_CFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+ debugger_la_LIBADD = \
+@@ -126,6 +140,10 @@ debugger_la_LDFLAGS = 				\
+ debugger_la_SOURCES =		\
+ 	modules/debugger.h	\
+ 	modules/debugger.c
++endif
++
++if HAVE_GOBJECT_INTROSPECTION
++gjsnative_LTLIBRARIES += dbusNative.la
+ 
+ dbusNative_la_SOURCES =	\
+ 	modules/dbus-exports.h	\
+@@ -144,3 +162,4 @@ dbusNative_la_LIBADD = \
+ 	$(GJS_DBUS_LIBS)
+ dbusNative_la_LDFLAGS = 				\
+ 	$(JS_NATIVE_MODULE_LDFLAGS)
++endif
+diff --git a/Makefile.in b/Makefile.in
+index 3d08272..3369e4e 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -40,20 +40,30 @@ host_triplet = @host@
+ bin_PROGRAMS = gjs-console$(EXEEXT)
+ check_PROGRAMS = $(am__EXEEXT_1)
+ @ENABLE_SYSTEMTAP_TRUE@am__append_1 = $(tapset_in_files)
+-DIST_COMMON = README $(am__configure_deps) $(dist_gjsjs_DATA) \
++DIST_COMMON = README $(am__configure_deps) \
++	$(am__nobase_gjsgiinclude_HEADERS_DIST) $(dist_gjsjs_DATA) \
+ 	$(dist_gjstweener_DATA) $(gjs_dbusheader_HEADERS) \
+-	$(nobase_gjsgiinclude_HEADERS) $(nobase_gjsinclude_HEADERS) \
+-	$(noinst_HEADERS) $(srcdir)/Makefile-examples.am \
+-	$(srcdir)/Makefile-gi.am $(srcdir)/Makefile-gjs-dbus.am \
+-	$(srcdir)/Makefile-modules.am $(srcdir)/Makefile-test.am \
+-	$(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+-	$(srcdir)/config.h.in $(srcdir)/gjs-1.0.pc.in \
+-	$(srcdir)/gjs-dbus-1.0.pc.in $(srcdir)/gjs-gi-1.0.pc.in \
+-	$(top_srcdir)/configure AUTHORS COPYING ChangeLog INSTALL NEWS \
+-	compile config.guess config.sub depcomp install-sh ltmain.sh \
+-	missing
+-@ENABLE_DTRACE_TRUE@am__append_2 = gjs_gi_probes.h gjs_gi_probes.o
+-@ENABLE_DTRACE_TRUE@am__append_3 = gjs_gi_probes.o
++	$(nobase_gjsinclude_HEADERS) $(noinst_HEADERS) \
++	$(srcdir)/Makefile-examples.am $(srcdir)/Makefile-gi.am \
++	$(srcdir)/Makefile-gjs-dbus.am $(srcdir)/Makefile-modules.am \
++	$(srcdir)/Makefile-test.am $(srcdir)/Makefile.am \
++	$(srcdir)/Makefile.in $(srcdir)/config.h.in \
++	$(srcdir)/gjs-1.0.pc.in $(srcdir)/gjs-dbus-1.0.pc.in \
++	$(srcdir)/gjs-gi-1.0.pc.in $(top_srcdir)/configure AUTHORS \
++	COPYING ChangeLog INSTALL NEWS compile config.guess config.sub \
++	depcomp install-sh ltmain.sh missing
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_2 = libgjs-gi.la
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_3 = gjs_gi_probes.h gjs_gi_probes.o
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_4 = gjs_gi_probes.o
++
++########################################################################
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_5 = gjs-gi-1.0.pc
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_6 = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gjs-gi-1.0.pc.in
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am__append_7 = gi.la mainloop.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative.la debugger.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	dbusNative.la
+ subdir = .
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+@@ -95,57 +105,91 @@ LTLIBRARIES = $(gjsnative_LTLIBRARIES) $(lib_LTLIBRARIES) \
+ 	$(noinst_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+ am__DEPENDENCIES_2 = libgjs.la $(am__DEPENDENCIES_1)
+-cairoNative_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2) \
+-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+-am_cairoNative_la_OBJECTS = cairoNative_la-cairo-context.lo \
+-	cairoNative_la-cairo-path.lo cairoNative_la-cairo-surface.lo \
+-	cairoNative_la-cairo-image-surface.lo \
+-	cairoNative_la-cairo-ps-surface.lo \
+-	cairoNative_la-cairo-pdf-surface.lo \
+-	cairoNative_la-cairo-svg-surface.lo \
+-	cairoNative_la-cairo-pattern.lo \
+-	cairoNative_la-cairo-gradient.lo \
+-	cairoNative_la-cairo-linear-gradient.lo \
+-	cairoNative_la-cairo-radial-gradient.lo \
+-	cairoNative_la-cairo-surface-pattern.lo \
+-	cairoNative_la-cairo-solid-pattern.lo cairoNative_la-cairo.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@cairoNative_la_DEPENDENCIES =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_2) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_1) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_1)
++am__cairoNative_la_SOURCES_DIST = modules/cairo-private.h \
++	modules/cairo-context.c modules/cairo-path.c \
++	modules/cairo-surface.c modules/cairo-image-surface.c \
++	modules/cairo-ps-surface.c modules/cairo-pdf-surface.c \
++	modules/cairo-svg-surface.c modules/cairo-pattern.c \
++	modules/cairo-gradient.c modules/cairo-linear-gradient.c \
++	modules/cairo-radial-gradient.c \
++	modules/cairo-surface-pattern.c modules/cairo-solid-pattern.c \
++	modules/cairo.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_cairoNative_la_OBJECTS = cairoNative_la-cairo-context.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-path.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-surface.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-image-surface.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-ps-surface.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-pdf-surface.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-svg-surface.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-pattern.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-gradient.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-linear-gradient.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-radial-gradient.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-surface-pattern.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo-solid-pattern.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	cairoNative_la-cairo.lo
+ cairoNative_la_OBJECTS = $(am_cairoNative_la_OBJECTS)
+ cairoNative_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(cairoNative_la_CFLAGS) \
+ 	$(CFLAGS) $(cairoNative_la_LDFLAGS) $(LDFLAGS) -o $@
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_cairoNative_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(gjsnativedir)
+ console_la_DEPENDENCIES = $(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+ am_console_la_OBJECTS = console_la-console.lo
+ console_la_OBJECTS = $(am_console_la_OBJECTS)
+ console_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(console_la_CFLAGS) \
+ 	$(CFLAGS) $(console_la_LDFLAGS) $(LDFLAGS) -o $@
+-dbusNative_la_DEPENDENCIES = libgjs-gi.la libgjs-dbus.la \
+-	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1)
+-am_dbusNative_la_OBJECTS = dbusNative_la-dbus-exports.lo \
+-	dbusNative_la-dbus-values.lo dbusNative_la-dbus.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@dbusNative_la_DEPENDENCIES =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la libgjs-dbus.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_2) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_1)
++am__dbusNative_la_SOURCES_DIST = modules/dbus-exports.h \
++	modules/dbus-values.h modules/dbus.h modules/dbus-exports.c \
++	modules/dbus-values.c modules/dbus.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_dbusNative_la_OBJECTS = dbusNative_la-dbus-exports.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	dbusNative_la-dbus-values.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	dbusNative_la-dbus.lo
+ dbusNative_la_OBJECTS = $(am_dbusNative_la_OBJECTS)
+ dbusNative_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(dbusNative_la_CFLAGS) \
+ 	$(CFLAGS) $(dbusNative_la_LDFLAGS) $(LDFLAGS) -o $@
+-debugger_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2)
+-am_debugger_la_OBJECTS = debugger_la-debugger.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_dbusNative_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(gjsnativedir)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@debugger_la_DEPENDENCIES =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_2)
++am__debugger_la_SOURCES_DIST = modules/debugger.h modules/debugger.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_debugger_la_OBJECTS =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	debugger_la-debugger.lo
+ debugger_la_OBJECTS = $(am_debugger_la_OBJECTS)
+ debugger_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(debugger_la_CFLAGS) \
+ 	$(CFLAGS) $(debugger_la_LDFLAGS) $(LDFLAGS) -o $@
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_debugger_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(gjsnativedir)
+ gettextNative_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2)
+ am_gettextNative_la_OBJECTS = gettextNative_la-gettext-native.lo
+ gettextNative_la_OBJECTS = $(am_gettextNative_la_OBJECTS)
+ gettextNative_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(gettextNative_la_CFLAGS) \
+ 	$(CFLAGS) $(gettextNative_la_LDFLAGS) $(LDFLAGS) -o $@
+-gi_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2) \
+-	$(am__DEPENDENCIES_1)
+-am_gi_la_OBJECTS = gi_la-gi.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gi_la_DEPENDENCIES = libgjs-gi.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_2) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_1)
++am__gi_la_SOURCES_DIST = modules/gi.h modules/gi.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_gi_la_OBJECTS = gi_la-gi.lo
+ gi_la_OBJECTS = $(am_gi_la_OBJECTS)
+ gi_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
+ 	--mode=link $(CCLD) $(gi_la_CFLAGS) $(CFLAGS) $(gi_la_LDFLAGS) \
+ 	$(LDFLAGS) -o $@
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_gi_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(gjsnativedir)
+ langNative_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2)
+ am_langNative_la_OBJECTS = langNative_la-lang.lo
+ langNative_la_OBJECTS = $(am_langNative_la_OBJECTS)
+@@ -159,19 +203,34 @@ libgjs_dbus_la_OBJECTS = $(am_libgjs_dbus_la_OBJECTS)
+ libgjs_dbus_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libgjs_dbus_la_CFLAGS) \
+ 	$(CFLAGS) $(libgjs_dbus_la_LDFLAGS) $(LDFLAGS) -o $@
+-libgjs_gi_la_DEPENDENCIES = libgjs.la $(am__DEPENDENCIES_1) \
+-	$(am__append_3)
+-am_libgjs_gi_la_OBJECTS = libgjs_gi_la-arg.lo libgjs_gi_la-boxed.lo \
+-	libgjs_gi_la-closure.lo libgjs_gi_la-enumeration.lo \
+-	libgjs_gi_la-function.lo libgjs_gi_la-keep-alive.lo \
+-	libgjs_gi_la-ns.lo libgjs_gi_la-object.lo \
+-	libgjs_gi_la-foreign.lo libgjs_gi_la-param.lo \
+-	libgjs_gi_la-repo.lo libgjs_gi_la-union.lo \
+-	libgjs_gi_la-value.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@libgjs_gi_la_DEPENDENCIES =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_1) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__append_4)
++am__libgjs_gi_la_SOURCES_DIST = gi/arg.c gi/boxed.c gi/closure.c \
++	gi/enumeration.c gi/function.c gi/keep-alive.c gi/ns.c \
++	gi/object.c gi/foreign.c gi/param.c gi/repo.c gi/union.c \
++	gi/value.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_libgjs_gi_la_OBJECTS =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-arg.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-boxed.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-closure.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-enumeration.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-function.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-keep-alive.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-ns.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-object.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-foreign.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-param.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-repo.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-union.lo \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs_gi_la-value.lo
+ libgjs_gi_la_OBJECTS = $(am_libgjs_gi_la_OBJECTS)
+ libgjs_gi_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libgjs_gi_la_CFLAGS) \
+ 	$(CFLAGS) $(libgjs_gi_la_LDFLAGS) $(LDFLAGS) -o $@
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_libgjs_gi_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(libdir)
+ libgjs_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+ am_libgjs_la_OBJECTS = libgjs_la-byteArray.lo libgjs_la-context.lo \
+ 	libgjs_la-importer.lo libgjs_la-jsapi-private.lo \
+@@ -184,12 +243,18 @@ libgjs_la_OBJECTS = $(am_libgjs_la_OBJECTS)
+ libgjs_la_LINK = $(LIBTOOL) --tag=CXX $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
+ 	$(CXXFLAGS) $(libgjs_la_LDFLAGS) $(LDFLAGS) -o $@
+-mainloop_la_DEPENDENCIES = libgjs-gi.la $(am__DEPENDENCIES_2)
+-am_mainloop_la_OBJECTS = mainloop_la-mainloop.lo
++@HAVE_GOBJECT_INTROSPECTION_TRUE@mainloop_la_DEPENDENCIES =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__DEPENDENCIES_2)
++am__mainloop_la_SOURCES_DIST = modules/mainloop.h modules/mainloop.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_mainloop_la_OBJECTS =  \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	mainloop_la-mainloop.lo
+ mainloop_la_OBJECTS = $(am_mainloop_la_OBJECTS)
+ mainloop_la_LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(mainloop_la_CFLAGS) \
+ 	$(CFLAGS) $(mainloop_la_LDFLAGS) $(LDFLAGS) -o $@
++@HAVE_GOBJECT_INTROSPECTION_TRUE@am_mainloop_la_rpath = -rpath \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(gjsnativedir)
+ am__EXEEXT_1 = gjs-tests$(EXEEXT) gjs-unit$(EXEEXT)
+ PROGRAMS = $(bin_PROGRAMS)
+ am_gjs_console_OBJECTS = gjs_console-console.$(OBJEXT)
+@@ -246,15 +311,20 @@ SOURCES = $(cairoNative_la_SOURCES) $(console_la_SOURCES) \
+ 	$(mainloop_la_SOURCES) $(gjs_console_SOURCES) \
+ 	$(gjs_tests_SOURCES) $(nodist_gjs_tests_SOURCES) \
+ 	$(gjs_unit_SOURCES)
+-DIST_SOURCES = $(cairoNative_la_SOURCES) $(console_la_SOURCES) \
+-	$(dbusNative_la_SOURCES) $(debugger_la_SOURCES) \
+-	$(gettextNative_la_SOURCES) $(gi_la_SOURCES) \
+-	$(langNative_la_SOURCES) $(libgjs_dbus_la_SOURCES) \
+-	$(libgjs_gi_la_SOURCES) $(libgjs_la_SOURCES) \
+-	$(mainloop_la_SOURCES) $(gjs_console_SOURCES) \
+-	$(gjs_tests_SOURCES) $(gjs_unit_SOURCES)
++DIST_SOURCES = $(am__cairoNative_la_SOURCES_DIST) \
++	$(console_la_SOURCES) $(am__dbusNative_la_SOURCES_DIST) \
++	$(am__debugger_la_SOURCES_DIST) $(gettextNative_la_SOURCES) \
++	$(am__gi_la_SOURCES_DIST) $(langNative_la_SOURCES) \
++	$(libgjs_dbus_la_SOURCES) $(am__libgjs_gi_la_SOURCES_DIST) \
++	$(libgjs_la_SOURCES) $(am__mainloop_la_SOURCES_DIST) \
++	$(gjs_console_SOURCES) $(gjs_tests_SOURCES) \
++	$(gjs_unit_SOURCES)
+ DATA = $(dist_gjsjs_DATA) $(dist_gjstweener_DATA) $(pkgconfig_DATA) \
+ 	$(tapset_DATA)
++am__nobase_gjsgiinclude_HEADERS_DIST = gi/arg.h gi/boxed.h \
++	gi/closure.h gi/enumeration.h gi/function.h gi/keep-alive.h \
++	gi/gjs_gi_trace.h gi/ns.h gi/object.h gi/foreign.h gi/param.h \
++	gi/repo.h gi/union.h gi/value.h
+ HEADERS = $(gjs_dbusheader_HEADERS) $(nobase_gjsgiinclude_HEADERS) \
+ 	$(nobase_gjsinclude_HEADERS) $(noinst_HEADERS)
+ ETAGS = etags
+@@ -415,7 +485,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ 
+ ########################################################################
+-lib_LTLIBRARIES = libgjs.la libgjs-dbus.la libgjs-gi.la
++lib_LTLIBRARIES = libgjs.la libgjs-dbus.la $(am__append_2)
+ noinst_HEADERS = gjs/compat.h gjs/context-jsapi.h gjs/jsapi-private.h \
+ 	gjs/profiler.h util/crash.h util/error.h util/glib.h \
+ 	util/log.h util/misc.h
+@@ -423,14 +493,14 @@ noinst_LTLIBRARIES =
+ dist_gjsjs_DATA = modules/gettext.js modules/lang.js modules/jsUnit.js \
+ 	modules/signals.js modules/cairo.js modules/dbus.js \
+ 	modules/promise.js
+-gjsnative_LTLIBRARIES = console.la debugger.la gi.la langNative.la \
+-	mainloop.la gettextNative.la dbusNative.la cairoNative.la
+-BUILT_SOURCES = $(am__append_2) $(nodist_gjs_tests_SOURCES)
++gjsnative_LTLIBRARIES = console.la langNative.la gettextNative.la \
++	$(am__append_7)
++BUILT_SOURCES = $(am__append_3) $(nodist_gjs_tests_SOURCES)
+ CLEANFILES = $(nodist_gjs_tests_SOURCES) gjstest.c.stamp \
+ 	gjstest.h.stamp $(TEST_PROGS:%=valgrind.%.log) \
+ 	uninstalled-test-bus.conf uninstalled-system-test-bus.conf
+ EXTRA_DIST = gjs-1.0.pc.in $(am__append_1) gjs-dbus-1.0.pc.in \
+-	gjs-gi-1.0.pc.in examples/clutter.js examples/gio-cat.js \
++	$(am__append_6) examples/clutter.js examples/gio-cat.js \
+ 	examples/gtk.js examples/http-server.js examples/test.jpg \
+ 	scripts/make-tests test/js/modules/alwaysThrows.js \
+ 	test/js/modules/foobar.js test/js/modules/mutualImport/a.js \
+@@ -471,9 +541,7 @@ nobase_gjsinclude_HEADERS = \
+ pkgconfigdir = $(libdir)/pkgconfig
+ 
+ ########################################################################
+-
+-########################################################################
+-pkgconfig_DATA = gjs-1.0.pc gjs-dbus-1.0.pc gjs-gi-1.0.pc
++pkgconfig_DATA = gjs-1.0.pc gjs-dbus-1.0.pc $(am__append_5)
+ 
+ ########################################################################
+ gjs_directory_defines = \
+@@ -545,45 +613,47 @@ libgjs_dbus_la_LIBADD = \
+ 	libgjs.la					\
+ 	$(GJS_DBUS_LIBS)
+ 
+-gjsgiincludedir = $(includedir)/gjs-1.0/gjs
+-libgjs_gi_la_CFLAGS = \
+-        $(AM_CFLAGS)			\
+-        $(GJS_GI_CFLAGS)
+-
+-libgjs_gi_la_LIBADD = libgjs.la $(GJS_GI_LIBS) $(am__append_3)
+-libgjs_gi_la_LDFLAGS = \
+-	-export-symbols-regex "^[^_].*" -version-info 0:0:0 -rdynamic -no-undefined
+-
+-nobase_gjsgiinclude_HEADERS = \
+-	gi/arg.h	\
+-	gi/boxed.h	\
+-	gi/closure.h	\
+-	gi/enumeration.h	\
+-	gi/function.h	\
+-	gi/keep-alive.h	\
+-	gi/gjs_gi_trace.h \
+-	gi/ns.h	        \
+-	gi/object.h	\
+-	gi/foreign.h	\
+-	gi/param.h	\
+-	gi/repo.h	\
+-	gi/union.h	\
+-	gi/value.h
+-
+-libgjs_gi_la_SOURCES = \
+-	gi/arg.c	\
+-	gi/boxed.c	\
+-	gi/closure.c	\
+-	gi/enumeration.c	\
+-	gi/function.c	\
+-	gi/keep-alive.c	\
+-	gi/ns.c	\
+-	gi/object.c	\
+-	gi/foreign.c	\
+-	gi/param.c	\
+-        gi/repo.c	\
+-	gi/union.c	\
+-        gi/value.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gjsgiincludedir = $(includedir)/gjs-1.0/gjs
++@HAVE_GOBJECT_INTROSPECTION_TRUE@libgjs_gi_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(AM_CFLAGS)			\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(GJS_GI_CFLAGS)
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@libgjs_gi_la_LIBADD = libgjs.la \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(GJS_GI_LIBS) \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(am__append_4)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@libgjs_gi_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	-export-symbols-regex "^[^_].*" -version-info 0:0:0 -rdynamic -no-undefined
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@nobase_gjsgiinclude_HEADERS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/arg.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/boxed.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/closure.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/enumeration.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/function.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/keep-alive.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/gjs_gi_trace.h \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/ns.h	        \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/object.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/foreign.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/param.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/repo.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/union.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/value.h
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@libgjs_gi_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/arg.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/boxed.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/closure.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/enumeration.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/function.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/keep-alive.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/ns.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/object.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/foreign.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/param.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        gi/repo.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	gi/union.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        gi/value.c
+ 
+ dist_gjstweener_DATA = \
+ 	modules/tweener/equations.js	\
+@@ -601,21 +671,21 @@ JS_NATIVE_MODULE_LIBADD = \
+ JS_NATIVE_MODULE_LDFLAGS = \
+         -module -avoid-version -no-undefined -rdynamic
+ 
+-gi_la_CFLAGS = \
+-	$(JS_NATIVE_MODULE_CFLAGS) 		\
+-	$(GJS_GI_CFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gi_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_CFLAGS) 		\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(GJS_GI_CFLAGS)
+ 
+-gi_la_LIBADD = \
+-	libgjs-gi.la				\
+-	$(JS_NATIVE_MODULE_LIBADD) 		\
+-	$(GJS_GI_LIBS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gi_la_LIBADD = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la				\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LIBADD) 		\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(GJS_GI_LIBS)
+ 
+-gi_la_LDFLAGS = \
+-	$(JS_NATIVE_MODULE_LDFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gi_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LDFLAGS)
+ 
+-gi_la_SOURCES = \
+-	modules/gi.h	\
+-	modules/gi.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@gi_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/gi.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/gi.c
+ 
+ langNative_la_CFLAGS = \
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -631,19 +701,19 @@ langNative_la_SOURCES = \
+ 	modules/lang.h				\
+ 	modules/lang.c
+ 
+-mainloop_la_CFLAGS = \
+-	$(JS_NATIVE_MODULE_CFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@mainloop_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_CFLAGS)
+ 
+-mainloop_la_LIBADD = \
+-	libgjs-gi.la				\
+-	$(JS_NATIVE_MODULE_LIBADD)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@mainloop_la_LIBADD = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la				\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LIBADD)
+ 
+-mainloop_la_LDFLAGS = \
+-	$(JS_NATIVE_MODULE_LDFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@mainloop_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LDFLAGS)
+ 
+-mainloop_la_SOURCES = \
+-	modules/mainloop.h	\
+-	modules/mainloop.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@mainloop_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/mainloop.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/mainloop.c
+ 
+ gettextNative_la_CFLAGS = \
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -659,36 +729,36 @@ gettextNative_la_SOURCES = \
+ 	modules/gettext-native.h	\
+ 	modules/gettext-native.c
+ 
+-cairoNative_la_CFLAGS = \
+-        $(JS_NATIVE_MODULE_CFLAGS)              \
+-        $(GJS_CAIRO_CFLAGS)                     \
+-        $(GJS_GI_CFLAGS)
+-
+-cairoNative_la_LIBADD = \
+-        libgjs-gi.la                            \
+-        $(JS_NATIVE_MODULE_LIBADD)              \
+-        $(GJS_CAIRO_LIBS)                       \
+-        $(GJS_GI_LIBS)
+-
+-cairoNative_la_LDFLAGS = \
+-        $(JS_NATIVE_MODULE_LDFLAGS)
+-
+-cairoNative_la_SOURCES = \
+-	modules/cairo-private.h                 \
+-	modules/cairo-context.c                 \
+-	modules/cairo-path.c                 \
+-	modules/cairo-surface.c                 \
+-	modules/cairo-image-surface.c           \
+-	modules/cairo-ps-surface.c              \
+-	modules/cairo-pdf-surface.c             \
+-	modules/cairo-svg-surface.c             \
+-	modules/cairo-pattern.c                 \
+-	modules/cairo-gradient.c                \
+-	modules/cairo-linear-gradient.c         \
+-	modules/cairo-radial-gradient.c         \
+-	modules/cairo-surface-pattern.c         \
+-	modules/cairo-solid-pattern.c           \
+-	modules/cairo.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@cairoNative_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(JS_NATIVE_MODULE_CFLAGS)              \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(GJS_CAIRO_CFLAGS)                     \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(GJS_GI_CFLAGS)
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@cairoNative_la_LIBADD = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        libgjs-gi.la                            \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(JS_NATIVE_MODULE_LIBADD)              \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(GJS_CAIRO_LIBS)                       \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(GJS_GI_LIBS)
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@cairoNative_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@        $(JS_NATIVE_MODULE_LDFLAGS)
++
++@HAVE_GOBJECT_INTROSPECTION_TRUE@cairoNative_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-private.h                 \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-context.c                 \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-path.c                 \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-surface.c                 \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-image-surface.c           \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-ps-surface.c              \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-pdf-surface.c             \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-svg-surface.c             \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-pattern.c                 \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-gradient.c                \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-linear-gradient.c         \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-radial-gradient.c         \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-surface-pattern.c         \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo-solid-pattern.c           \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/cairo.c
+ 
+ console_la_CFLAGS = \
+ 	$(JS_NATIVE_MODULE_CFLAGS)
+@@ -704,40 +774,40 @@ console_la_SOURCES = \
+ 	modules/console.h	\
+ 	modules/console.c
+ 
+-debugger_la_CFLAGS = \
+-	$(JS_NATIVE_MODULE_CFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@debugger_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_CFLAGS)
+ 
+-debugger_la_LIBADD = \
+-	libgjs-gi.la				\
+-	$(JS_NATIVE_MODULE_LIBADD)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@debugger_la_LIBADD = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la				\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LIBADD)
+ 
+-debugger_la_LDFLAGS = \
+-	$(JS_NATIVE_MODULE_LDFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@debugger_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LDFLAGS)
+ 
+-debugger_la_SOURCES = \
+-	modules/debugger.h	\
+-	modules/debugger.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@debugger_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/debugger.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/debugger.c
+ 
+-dbusNative_la_SOURCES = \
+-	modules/dbus-exports.h	\
+-	modules/dbus-values.h	\
+-	modules/dbus.h		\
+-	modules/dbus-exports.c	\
+-	modules/dbus-values.c	\
+-	modules/dbus.c
++@HAVE_GOBJECT_INTROSPECTION_TRUE@dbusNative_la_SOURCES = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus-exports.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus-values.h	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus.h		\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus-exports.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus-values.c	\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	modules/dbus.c
+ 
+-dbusNative_la_CFLAGS = \
+-	$(JS_NATIVE_MODULE_CFLAGS) 		\
+-	$(GJS_DBUS_CFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@dbusNative_la_CFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_CFLAGS) 		\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(GJS_DBUS_CFLAGS)
+ 
+-dbusNative_la_LIBADD = \
+-	libgjs-gi.la				\
+-	libgjs-dbus.la				\
+-	$(JS_NATIVE_MODULE_LIBADD) 		\
+-	$(GJS_DBUS_LIBS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@dbusNative_la_LIBADD = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-gi.la				\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	libgjs-dbus.la				\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LIBADD) 		\
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(GJS_DBUS_LIBS)
+ 
+-dbusNative_la_LDFLAGS = \
+-	$(JS_NATIVE_MODULE_LDFLAGS)
++@HAVE_GOBJECT_INTROSPECTION_TRUE@dbusNative_la_LDFLAGS = \
++@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(JS_NATIVE_MODULE_LDFLAGS)
+ 
+ gjs_console_CFLAGS = \
+ 	$(AM_CFLAGS)		\
+@@ -930,27 +1000,27 @@ clean-noinstLTLIBRARIES:
+ 	  rm -f "$${dir}/so_locations"; \
+ 	done
+ cairoNative.la: $(cairoNative_la_OBJECTS) $(cairoNative_la_DEPENDENCIES) 
+-	$(cairoNative_la_LINK) -rpath $(gjsnativedir) $(cairoNative_la_OBJECTS) $(cairoNative_la_LIBADD) $(LIBS)
++	$(cairoNative_la_LINK) $(am_cairoNative_la_rpath) $(cairoNative_la_OBJECTS) $(cairoNative_la_LIBADD) $(LIBS)
+ console.la: $(console_la_OBJECTS) $(console_la_DEPENDENCIES) 
+ 	$(console_la_LINK) -rpath $(gjsnativedir) $(console_la_OBJECTS) $(console_la_LIBADD) $(LIBS)
+ dbusNative.la: $(dbusNative_la_OBJECTS) $(dbusNative_la_DEPENDENCIES) 
+-	$(dbusNative_la_LINK) -rpath $(gjsnativedir) $(dbusNative_la_OBJECTS) $(dbusNative_la_LIBADD) $(LIBS)
++	$(dbusNative_la_LINK) $(am_dbusNative_la_rpath) $(dbusNative_la_OBJECTS) $(dbusNative_la_LIBADD) $(LIBS)
+ debugger.la: $(debugger_la_OBJECTS) $(debugger_la_DEPENDENCIES) 
+-	$(debugger_la_LINK) -rpath $(gjsnativedir) $(debugger_la_OBJECTS) $(debugger_la_LIBADD) $(LIBS)
++	$(debugger_la_LINK) $(am_debugger_la_rpath) $(debugger_la_OBJECTS) $(debugger_la_LIBADD) $(LIBS)
+ gettextNative.la: $(gettextNative_la_OBJECTS) $(gettextNative_la_DEPENDENCIES) 
+ 	$(gettextNative_la_LINK) -rpath $(gjsnativedir) $(gettextNative_la_OBJECTS) $(gettextNative_la_LIBADD) $(LIBS)
+ gi.la: $(gi_la_OBJECTS) $(gi_la_DEPENDENCIES) 
+-	$(gi_la_LINK) -rpath $(gjsnativedir) $(gi_la_OBJECTS) $(gi_la_LIBADD) $(LIBS)
++	$(gi_la_LINK) $(am_gi_la_rpath) $(gi_la_OBJECTS) $(gi_la_LIBADD) $(LIBS)
+ langNative.la: $(langNative_la_OBJECTS) $(langNative_la_DEPENDENCIES) 
+ 	$(langNative_la_LINK) -rpath $(gjsnativedir) $(langNative_la_OBJECTS) $(langNative_la_LIBADD) $(LIBS)
+ libgjs-dbus.la: $(libgjs_dbus_la_OBJECTS) $(libgjs_dbus_la_DEPENDENCIES) 
+ 	$(libgjs_dbus_la_LINK) -rpath $(libdir) $(libgjs_dbus_la_OBJECTS) $(libgjs_dbus_la_LIBADD) $(LIBS)
+ libgjs-gi.la: $(libgjs_gi_la_OBJECTS) $(libgjs_gi_la_DEPENDENCIES) 
+-	$(libgjs_gi_la_LINK) -rpath $(libdir) $(libgjs_gi_la_OBJECTS) $(libgjs_gi_la_LIBADD) $(LIBS)
++	$(libgjs_gi_la_LINK) $(am_libgjs_gi_la_rpath) $(libgjs_gi_la_OBJECTS) $(libgjs_gi_la_LIBADD) $(LIBS)
+ libgjs.la: $(libgjs_la_OBJECTS) $(libgjs_la_DEPENDENCIES) 
+ 	$(libgjs_la_LINK) -rpath $(libdir) $(libgjs_la_OBJECTS) $(libgjs_la_LIBADD) $(LIBS)
+ mainloop.la: $(mainloop_la_OBJECTS) $(mainloop_la_DEPENDENCIES) 
+-	$(mainloop_la_LINK) -rpath $(gjsnativedir) $(mainloop_la_OBJECTS) $(mainloop_la_LIBADD) $(LIBS)
++	$(mainloop_la_LINK) $(am_mainloop_la_rpath) $(mainloop_la_OBJECTS) $(mainloop_la_LIBADD) $(LIBS)
+ install-binPROGRAMS: $(bin_PROGRAMS)
+ 	@$(NORMAL_INSTALL)
+ 	test -z "$(bindir)" || $(MKDIR_P) "$(DESTDIR)$(bindir)"
+@@ -2160,10 +2230,10 @@ uninstall-am: uninstall-binPROGRAMS uninstall-dist_gjsjsDATA \
+ @ENABLE_SYSTEMTAP_TRUE@gjs/gjs.stp: gjs/gjs.stp.in Makefile
+ @ENABLE_SYSTEMTAP_TRUE@	sed -e s,@EXPANDED_LIBDIR@,$(libdir), < $< > $@.tmp && mv $@.tmp $@
+ 
+-@ENABLE_DTRACE_TRUE@gjs_gi_probes.h: gi/gjs_gi_probes.d
+-@ENABLE_DTRACE_TRUE@	$(DTRACE) -C -h -s $< -o $@
+-@ENABLE_DTRACE_TRUE@gjs_gi_probes.o: gi/gjs_gi_probes.d
+-@ENABLE_DTRACE_TRUE@	$(DTRACE) -G -s $< -o $@
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@gjs_gi_probes.h: gi/gjs_gi_probes.d
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(DTRACE) -C -h -s $< -o $@
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@gjs_gi_probes.o: gi/gjs_gi_probes.d
++@ENABLE_DTRACE_TRUE@@HAVE_GOBJECT_INTROSPECTION_TRUE@	$(DTRACE) -G -s $< -o $@
+ 
+ install-exec-hook:
+ 	(cd $(DESTDIR)$(bindir) && ln -sf gjs-console$(EXEEXT) gjs$(EXEEXT))
+diff --git a/configure b/configure
+index d2a3101..5a6eec7 100755
+--- a/configure
++++ b/configure
+@@ -1,13 +1,13 @@
+ #! /bin/sh
+ # Guess values for system-dependent variables and create Makefiles.
+-# Generated by GNU Autoconf 2.66 for gjs 0.7.1.
++# Generated by GNU Autoconf 2.65 for gjs 0.7.1.
+ #
+ # Report bugs to <http://bugzilla.gnome.org/enter_bug.cgi?product=gjs>.
+ #
+ #
+ # Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,
+-# 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free Software
+-# Foundation, Inc.
++# 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation,
++# Inc.
+ #
+ #
+ # This configure script is free software; the Free Software Foundation
+@@ -328,7 +328,7 @@ $as_echo X"$as_dir" |
+       test -d "$as_dir" && break
+     done
+     test -z "$as_dirs" || eval "mkdir $as_dirs"
+-  } || test -d "$as_dir" || as_fn_error $? "cannot create directory $as_dir"
++  } || test -d "$as_dir" || as_fn_error "cannot create directory $as_dir"
+ 
+ 
+ } # as_fn_mkdir_p
+@@ -368,19 +368,19 @@ else
+ fi # as_fn_arith
+ 
+ 
+-# as_fn_error STATUS ERROR [LINENO LOG_FD]
+-# ----------------------------------------
++# as_fn_error ERROR [LINENO LOG_FD]
++# ---------------------------------
+ # Output "`basename $0`: error: ERROR" to stderr. If LINENO and LOG_FD are
+ # provided, also output the error to LOG_FD, referencing LINENO. Then exit the
+-# script with STATUS, using 1 if that was 0.
++# script with status $?, using 1 if that was 0.
+ as_fn_error ()
+ {
+-  as_status=$1; test $as_status -eq 0 && as_status=1
+-  if test "$4"; then
+-    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
++  as_status=$?; test $as_status -eq 0 && as_status=1
++  if test "$3"; then
++    as_lineno=${as_lineno-"$2"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++    $as_echo "$as_me:${as_lineno-$LINENO}: error: $1" >&$3
+   fi
+-  $as_echo "$as_me: error: $2" >&2
++  $as_echo "$as_me: error: $1" >&2
+   as_fn_exit $as_status
+ } # as_fn_error
+ 
+@@ -544,7 +544,7 @@ test -n "$DJDIR" || exec 7<&0 </dev/null
+ exec 6>&1
+ 
+ # Name of the host.
+-# hostname on some systems (SVR3.2, old GNU/Linux) returns a bogus exit status,
++# hostname on some systems (SVR3.2, Linux) returns a bogus exit status,
+ # so uname gets run too.
+ ac_hostname=`(hostname || uname -n) 2>/dev/null | sed 1q`
+ 
+@@ -620,6 +620,8 @@ HAVE_READLINE
+ READLINE_LIBS
+ HAVE_READLINE_FALSE
+ HAVE_READLINE_TRUE
++HAVE_GOBJECT_INTROSPECTION_FALSE
++HAVE_GOBJECT_INTROSPECTION_TRUE
+ GJSTESTS_LIBS
+ GJSTESTS_CFLAGS
+ GJS_DBUS_LIBS
+@@ -910,7 +912,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*disable-\(.*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error $? "invalid feature name: $ac_useropt"
++      as_fn_error "invalid feature name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -936,7 +938,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*enable-\([^=]*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error $? "invalid feature name: $ac_useropt"
++      as_fn_error "invalid feature name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1140,7 +1142,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*with-\([^=]*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error $? "invalid package name: $ac_useropt"
++      as_fn_error "invalid package name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1156,7 +1158,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*without-\(.*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error $? "invalid package name: $ac_useropt"
++      as_fn_error "invalid package name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1186,8 +1188,8 @@ do
+   | --x-librar=* | --x-libra=* | --x-libr=* | --x-lib=* | --x-li=* | --x-l=*)
+     x_libraries=$ac_optarg ;;
+ 
+-  -*) as_fn_error $? "unrecognized option: \`$ac_option'
+-Try \`$0 --help' for more information"
++  -*) as_fn_error "unrecognized option: \`$ac_option'
++Try \`$0 --help' for more information."
+     ;;
+ 
+   *=*)
+@@ -1195,7 +1197,7 @@ Try \`$0 --help' for more information"
+     # Reject names that are not valid shell variable names.
+     case $ac_envvar in #(
+       '' | [0-9]* | *[!_$as_cr_alnum]* )
+-      as_fn_error $? "invalid variable name: \`$ac_envvar'" ;;
++      as_fn_error "invalid variable name: \`$ac_envvar'" ;;
+     esac
+     eval $ac_envvar=\$ac_optarg
+     export $ac_envvar ;;
+@@ -1213,13 +1215,13 @@ done
+ 
+ if test -n "$ac_prev"; then
+   ac_option=--`echo $ac_prev | sed 's/_/-/g'`
+-  as_fn_error $? "missing argument to $ac_option"
++  as_fn_error "missing argument to $ac_option"
+ fi
+ 
+ if test -n "$ac_unrecognized_opts"; then
+   case $enable_option_checking in
+     no) ;;
+-    fatal) as_fn_error $? "unrecognized options: $ac_unrecognized_opts" ;;
++    fatal) as_fn_error "unrecognized options: $ac_unrecognized_opts" ;;
+     *)     $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2 ;;
+   esac
+ fi
+@@ -1242,7 +1244,7 @@ do
+     [\\/$]* | ?:[\\/]* )  continue;;
+     NONE | '' ) case $ac_var in *prefix ) continue;; esac;;
+   esac
+-  as_fn_error $? "expected an absolute directory name for --$ac_var: $ac_val"
++  as_fn_error "expected an absolute directory name for --$ac_var: $ac_val"
+ done
+ 
+ # There might be people who depend on the old broken behavior: `$host'
+@@ -1256,8 +1258,8 @@ target=$target_alias
+ if test "x$host_alias" != x; then
+   if test "x$build_alias" = x; then
+     cross_compiling=maybe
+-    $as_echo "$as_me: WARNING: if you wanted to set the --build type, don't use --host.
+-    If a cross compiler is detected then cross compile mode will be used" >&2
++    $as_echo "$as_me: WARNING: If you wanted to set the --build type, don't use --host.
++    If a cross compiler is detected then cross compile mode will be used." >&2
+   elif test "x$build_alias" != "x$host_alias"; then
+     cross_compiling=yes
+   fi
+@@ -1272,9 +1274,9 @@ test "$silent" = yes && exec 6>/dev/null
+ ac_pwd=`pwd` && test -n "$ac_pwd" &&
+ ac_ls_di=`ls -di .` &&
+ ac_pwd_ls_di=`cd "$ac_pwd" && ls -di .` ||
+-  as_fn_error $? "working directory cannot be determined"
++  as_fn_error "working directory cannot be determined"
+ test "X$ac_ls_di" = "X$ac_pwd_ls_di" ||
+-  as_fn_error $? "pwd does not report name of working directory"
++  as_fn_error "pwd does not report name of working directory"
+ 
+ 
+ # Find the source files, if location was not specified.
+@@ -1313,11 +1315,11 @@ else
+ fi
+ if test ! -r "$srcdir/$ac_unique_file"; then
+   test "$ac_srcdir_defaulted" = yes && srcdir="$ac_confdir or .."
+-  as_fn_error $? "cannot find sources ($ac_unique_file) in $srcdir"
++  as_fn_error "cannot find sources ($ac_unique_file) in $srcdir"
+ fi
+ ac_msg="sources are in $srcdir, but \`cd $srcdir' does not work"
+ ac_abs_confdir=`(
+-	cd "$srcdir" && test -r "./$ac_unique_file" || as_fn_error $? "$ac_msg"
++	cd "$srcdir" && test -r "./$ac_unique_file" || as_fn_error "$ac_msg"
+ 	pwd)`
+ # When building in place, set srcdir=.
+ if test "$ac_abs_confdir" = "$ac_pwd"; then
+@@ -1357,7 +1359,7 @@ Configuration:
+       --help=short        display options specific to this package
+       --help=recursive    display the short help of all the included packages
+   -V, --version           display version information and exit
+-  -q, --quiet, --silent   do not print \`checking ...' messages
++  -q, --quiet, --silent   do not print \`checking...' messages
+       --cache-file=FILE   cache test results in FILE [disabled]
+   -C, --config-cache      alias for \`--cache-file=config.cache'
+   -n, --no-create         do not create output files
+@@ -1546,9 +1548,9 @@ test -n "$ac_init_help" && exit $ac_status
+ if $ac_init_version; then
+   cat <<\_ACEOF
+ gjs configure 0.7.1
+-generated by GNU Autoconf 2.66
++generated by GNU Autoconf 2.65
+ 
+-Copyright (C) 2010 Free Software Foundation, Inc.
++Copyright (C) 2009 Free Software Foundation, Inc.
+ This configure script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it.
+ _ACEOF
+@@ -1769,7 +1771,7 @@ ac_fn_c_check_header_compile ()
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if eval "test \"\${$3+set}\"" = set; then :
++if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -1799,7 +1801,7 @@ ac_fn_c_check_func ()
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if eval "test \"\${$3+set}\"" = set; then :
++if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -1949,10 +1951,10 @@ fi
+ ac_fn_c_check_header_mongrel ()
+ {
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-  if eval "test \"\${$3+set}\"" = set; then :
++  if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if eval "test \"\${$3+set}\"" = set; then :
++if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ fi
+ eval ac_res=\$$3
+@@ -2011,15 +2013,17 @@ $as_echo "$as_me: WARNING: $2: see the Autoconf documentation" >&2;}
+ $as_echo "$as_me: WARNING: $2:     section \"Present But Cannot Be Compiled\"" >&2;}
+     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: proceeding with the compiler's result" >&5
+ $as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
+-( $as_echo "## ------------------------------------------------------------------ ##
++( cat <<\_ASBOX
++## ------------------------------------------------------------------ ##
+ ## Report this to http://bugzilla.gnome.org/enter_bug.cgi?product=gjs ##
+-## ------------------------------------------------------------------ ##"
++## ------------------------------------------------------------------ ##
++_ASBOX
+      ) | sed "s/^/$as_me: WARNING:     /" >&2
+     ;;
+ esac
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if eval "test \"\${$3+set}\"" = set; then :
++if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ else
+   eval "$3=\$ac_header_compiler"
+@@ -2036,7 +2040,7 @@ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
+ 
+ It was created by gjs $as_me 0.7.1, which was
+-generated by GNU Autoconf 2.66.  Invocation command line was
++generated by GNU Autoconf 2.65.  Invocation command line was
+ 
+   $ $0 $@
+ 
+@@ -2146,9 +2150,11 @@ trap 'exit_status=$?
+   {
+     echo
+ 
+-    $as_echo "## ---------------- ##
++    cat <<\_ASBOX
++## ---------------- ##
+ ## Cache variables. ##
+-## ---------------- ##"
++## ---------------- ##
++_ASBOX
+     echo
+     # The following way of writing the cache mishandles newlines in values,
+ (
+@@ -2182,9 +2188,11 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
+ )
+     echo
+ 
+-    $as_echo "## ----------------- ##
++    cat <<\_ASBOX
++## ----------------- ##
+ ## Output variables. ##
+-## ----------------- ##"
++## ----------------- ##
++_ASBOX
+     echo
+     for ac_var in $ac_subst_vars
+     do
+@@ -2197,9 +2205,11 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
+     echo
+ 
+     if test -n "$ac_subst_files"; then
+-      $as_echo "## ------------------- ##
++      cat <<\_ASBOX
++## ------------------- ##
+ ## File substitutions. ##
+-## ------------------- ##"
++## ------------------- ##
++_ASBOX
+       echo
+       for ac_var in $ac_subst_files
+       do
+@@ -2213,9 +2223,11 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
+     fi
+ 
+     if test -s confdefs.h; then
+-      $as_echo "## ----------- ##
++      cat <<\_ASBOX
++## ----------- ##
+ ## confdefs.h. ##
+-## ----------- ##"
++## ----------- ##
++_ASBOX
+       echo
+       cat confdefs.h
+       echo
+@@ -2270,12 +2282,7 @@ _ACEOF
+ ac_site_file1=NONE
+ ac_site_file2=NONE
+ if test -n "$CONFIG_SITE"; then
+-  # We do not want a PATH search for config.site.
+-  case $CONFIG_SITE in #((
+-    -*)  ac_site_file1=./$CONFIG_SITE;;
+-    */*) ac_site_file1=$CONFIG_SITE;;
+-    *)   ac_site_file1=./$CONFIG_SITE;;
+-  esac
++  ac_site_file1=$CONFIG_SITE
+ elif test "x$prefix" != xNONE; then
+   ac_site_file1=$prefix/share/config.site
+   ac_site_file2=$prefix/etc/config.site
+@@ -2290,11 +2297,7 @@ do
+     { $as_echo "$as_me:${as_lineno-$LINENO}: loading site script $ac_site_file" >&5
+ $as_echo "$as_me: loading site script $ac_site_file" >&6;}
+     sed 's/^/| /' "$ac_site_file" >&5
+-    . "$ac_site_file" \
+-      || { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "failed to load site script $ac_site_file
+-See \`config.log' for more details" "$LINENO" 5; }
++    . "$ac_site_file"
+   fi
+ done
+ 
+@@ -2370,7 +2373,7 @@ if $ac_cache_corrupted; then
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+   { $as_echo "$as_me:${as_lineno-$LINENO}: error: changes in the environment can compromise the build" >&5
+ $as_echo "$as_me: error: changes in the environment can compromise the build" >&2;}
+-  as_fn_error $? "run \`make distclean' and/or \`rm $cache_file' and start over" "$LINENO" 5
++  as_fn_error "run \`make distclean' and/or \`rm $cache_file' and start over" "$LINENO" 5
+ fi
+ ## -------------------- ##
+ ## Main body of script. ##
+@@ -2387,22 +2390,16 @@ am__api_version='1.11'
+ 
+ ac_aux_dir=
+ for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
+-  if test -f "$ac_dir/install-sh"; then
+-    ac_aux_dir=$ac_dir
+-    ac_install_sh="$ac_aux_dir/install-sh -c"
+-    break
+-  elif test -f "$ac_dir/install.sh"; then
+-    ac_aux_dir=$ac_dir
+-    ac_install_sh="$ac_aux_dir/install.sh -c"
+-    break
+-  elif test -f "$ac_dir/shtool"; then
+-    ac_aux_dir=$ac_dir
+-    ac_install_sh="$ac_aux_dir/shtool install -c"
+-    break
+-  fi
++  for ac_t in install-sh install.sh shtool; do
++    if test -f "$ac_dir/$ac_t"; then
++      ac_aux_dir=$ac_dir
++      ac_install_sh="$ac_aux_dir/$ac_t -c"
++      break 2
++    fi
++  done
+ done
+ if test -z "$ac_aux_dir"; then
+-  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
++  as_fn_error "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
+ fi
+ 
+ # These three variables are undocumented and unsupported,
+@@ -2518,11 +2515,11 @@ am_lf='
+ '
+ case `pwd` in
+   *[\\\"\#\$\&\'\`$am_lf]*)
+-    as_fn_error $? "unsafe absolute working directory name" "$LINENO" 5;;
++    as_fn_error "unsafe absolute working directory name" "$LINENO" 5;;
+ esac
+ case $srcdir in
+   *[\\\"\#\$\&\'\`$am_lf\ \	]*)
+-    as_fn_error $? "unsafe srcdir value: \`$srcdir'" "$LINENO" 5;;
++    as_fn_error "unsafe srcdir value: \`$srcdir'" "$LINENO" 5;;
+ esac
+ 
+ # Do `set' in a subshell so we don't clobber the current shell's
+@@ -2544,7 +2541,7 @@ if (
+       # if, for instance, CONFIG_SHELL is bash and it inherits a
+       # broken ls alias from the environment.  This has actually
+       # happened.  Such a system could not be considered "sane".
+-      as_fn_error $? "ls -t appears to fail.  Make sure there is not a broken
++      as_fn_error "ls -t appears to fail.  Make sure there is not a broken
+ alias in your environment" "$LINENO" 5
+    fi
+ 
+@@ -2554,7 +2551,7 @@ then
+    # Ok.
+    :
+ else
+-   as_fn_error $? "newly created file is older than distributed files!
++   as_fn_error "newly created file is older than distributed files!
+ Check your system clock" "$LINENO" 5
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+@@ -2792,7 +2789,7 @@ done
+ $as_echo_n "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
+ set x ${MAKE-make}
+ ac_make=`$as_echo "$2" | sed 's/+/p/g; s/[^a-zA-Z0-9_]/_/g'`
+-if eval "test \"\${ac_cv_prog_make_${ac_make}_set+set}\"" = set; then :
++if { as_var=ac_cv_prog_make_${ac_make}_set; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat >conftest.make <<\_ACEOF
+@@ -2800,7 +2797,7 @@ SHELL = /bin/sh
+ all:
+ 	@echo '@@@%%%=$(MAKE)=@@@%%%'
+ _ACEOF
+-# GNU make sometimes prints "make[1]: Entering ...", which would confuse us.
++# GNU make sometimes prints "make[1]: Entering...", which would confuse us.
+ case `${MAKE-make} -f conftest.make 2>/dev/null` in
+   *@@@%%%=?*=@@@%%%*)
+     eval ac_cv_prog_make_${ac_make}_set=yes;;
+@@ -2834,7 +2831,7 @@ if test "`cd $srcdir && pwd`" != "`pwd`"; then
+   am__isrc=' -I$(srcdir)'
+   # test to see if srcdir already configured
+   if test -f $srcdir/config.status; then
+-    as_fn_error $? "source directory already configured; run \"make distclean\" there first" "$LINENO" 5
++    as_fn_error "source directory already configured; run \"make distclean\" there first" "$LINENO" 5
+   fi
+ fi
+ 
+@@ -3347,8 +3344,8 @@ fi
+ 
+ test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "no acceptable C compiler found in \$PATH
+-See \`config.log' for more details" "$LINENO" 5; }
++as_fn_error "no acceptable C compiler found in \$PATH
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ # Provide some information about the compiler.
+ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
+@@ -3462,8 +3459,9 @@ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error 77 "C compiler cannot create executables
+-See \`config.log' for more details" "$LINENO" 5; }
++{ as_fn_set_status 77
++as_fn_error "C compiler cannot create executables
++See \`config.log' for more details." "$LINENO" 5; }; }
+ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+@@ -3505,8 +3503,8 @@ done
+ else
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot compute suffix of executables: cannot compile and link
+-See \`config.log' for more details" "$LINENO" 5; }
++as_fn_error "cannot compute suffix of executables: cannot compile and link
++See \`config.log' for more details." "$LINENO" 5; }
+ fi
+ rm -f conftest conftest$ac_cv_exeext
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
+@@ -3563,9 +3561,9 @@ $as_echo "$ac_try_echo"; } >&5
+     else
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run C compiled programs.
++as_fn_error "cannot run C compiled programs.
+ If you meant to cross compile, use \`--host'.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+     fi
+   fi
+ fi
+@@ -3616,8 +3614,8 @@ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot compute suffix of object files: cannot compile
+-See \`config.log' for more details" "$LINENO" 5; }
++as_fn_error "cannot compute suffix of object files: cannot compile
++See \`config.log' for more details." "$LINENO" 5; }
+ fi
+ rm -f conftest.$ac_cv_objext conftest.$ac_ext
+ fi
+@@ -4035,7 +4033,7 @@ $as_echo_n "checking whether cc understands -c and -o together... " >&6; }
+ fi
+ set dummy $CC; ac_cc=`$as_echo "$2" |
+ 		      sed 's/[^a-zA-Z0-9_]/_/g;s/^[0-9]/_/'`
+-if eval "test \"\${ac_cv_prog_cc_${ac_cc}_c_o+set}\"" = set; then :
++if { as_var=ac_cv_prog_cc_${ac_cc}_c_o; eval "test \"\${$as_var+set}\" = set"; }; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -4720,8 +4718,8 @@ if $ac_preproc_ok; then :
+ else
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "C preprocessor \"$CPP\" fails sanity check
+-See \`config.log' for more details" "$LINENO" 5; }
++as_fn_error "C preprocessor \"$CPP\" fails sanity check
++See \`config.log' for more details." "$LINENO" 5; }
+ fi
+ 
+ ac_ext=c
+@@ -4782,7 +4780,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_GREP"; then
+-    as_fn_error $? "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_GREP=$GREP
+@@ -4848,7 +4846,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_EGREP"; then
+-    as_fn_error $? "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_EGREP=$EGREP
+@@ -5034,7 +5032,7 @@ ltmain="$ac_aux_dir/ltmain.sh"
+ 
+ # Make sure we can run config.sub.
+ $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
+-  as_fn_error $? "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
++  as_fn_error "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking build system type" >&5
+ $as_echo_n "checking build system type... " >&6; }
+@@ -5045,16 +5043,16 @@ else
+ test "x$ac_build_alias" = x &&
+   ac_build_alias=`$SHELL "$ac_aux_dir/config.guess"`
+ test "x$ac_build_alias" = x &&
+-  as_fn_error $? "cannot guess build type; you must specify one" "$LINENO" 5
++  as_fn_error "cannot guess build type; you must specify one" "$LINENO" 5
+ ac_cv_build=`$SHELL "$ac_aux_dir/config.sub" $ac_build_alias` ||
+-  as_fn_error $? "$SHELL $ac_aux_dir/config.sub $ac_build_alias failed" "$LINENO" 5
++  as_fn_error "$SHELL $ac_aux_dir/config.sub $ac_build_alias failed" "$LINENO" 5
+ 
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_build" >&5
+ $as_echo "$ac_cv_build" >&6; }
+ case $ac_cv_build in
+ *-*-*) ;;
+-*) as_fn_error $? "invalid value of canonical build" "$LINENO" 5;;
++*) as_fn_error "invalid value of canonical build" "$LINENO" 5;;
+ esac
+ build=$ac_cv_build
+ ac_save_IFS=$IFS; IFS='-'
+@@ -5079,7 +5077,7 @@ else
+   ac_cv_host=$ac_cv_build
+ else
+   ac_cv_host=`$SHELL "$ac_aux_dir/config.sub" $host_alias` ||
+-    as_fn_error $? "$SHELL $ac_aux_dir/config.sub $host_alias failed" "$LINENO" 5
++    as_fn_error "$SHELL $ac_aux_dir/config.sub $host_alias failed" "$LINENO" 5
+ fi
+ 
+ fi
+@@ -5087,7 +5085,7 @@ fi
+ $as_echo "$ac_cv_host" >&6; }
+ case $ac_cv_host in
+ *-*-*) ;;
+-*) as_fn_error $? "invalid value of canonical host" "$LINENO" 5;;
++*) as_fn_error "invalid value of canonical host" "$LINENO" 5;;
+ esac
+ host=$ac_cv_host
+ ac_save_IFS=$IFS; IFS='-'
+@@ -5229,7 +5227,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_SED"; then
+-    as_fn_error $? "no acceptable sed could be found in \$PATH" "$LINENO" 5
++    as_fn_error "no acceptable sed could be found in \$PATH" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_SED=$SED
+@@ -5308,7 +5306,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_FGREP"; then
+-    as_fn_error $? "no acceptable fgrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error "no acceptable fgrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_FGREP=$FGREP
+@@ -5424,7 +5422,7 @@ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ fi
+-test -z "$LD" && as_fn_error $? "no acceptable ld found in \$PATH" "$LINENO" 5
++test -z "$LD" && as_fn_error "no acceptable ld found in \$PATH" "$LINENO" 5
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the linker ($LD) is GNU ld" >&5
+ $as_echo_n "checking if the linker ($LD) is GNU ld... " >&6; }
+ if test "${lt_cv_prog_gnu_ld+set}" = set; then :
+@@ -7658,7 +7656,8 @@ do :
+   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default
+ "
+-if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
++eval as_val=\$$as_ac_Header
++   if test "x$as_val" = x""yes; then :
+   cat >>confdefs.h <<_ACEOF
+ #define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+ _ACEOF
+@@ -11586,8 +11585,8 @@ if $ac_preproc_ok; then :
+ else
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "C++ preprocessor \"$CXXCPP\" fails sanity check
+-See \`config.log' for more details" "$LINENO" 5; }
++as_fn_error "C++ preprocessor \"$CXXCPP\" fails sanity check
++See \`config.log' for more details." "$LINENO" 5; }
+ fi
+ 
+ ac_ext=c
+@@ -11809,7 +11808,7 @@ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ fi
+-test -z "$LD" && as_fn_error $? "no acceptable ld found in \$PATH" "$LINENO" 5
++test -z "$LD" && as_fn_error "no acceptable ld found in \$PATH" "$LINENO" 5
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the linker ($LD) is GNU ld" >&5
+ $as_echo_n "checking if the linker ($LD) is GNU ld... " >&6; }
+ if test "${lt_cv_prog_gnu_ld+set}" = set; then :
+@@ -14619,7 +14618,7 @@ fi
+ 
+ if test x$enable_coverage = xyes; then
+     if test x$GCC != xyes; then
+-        as_fn_error $? "GCC is required for --enable-coverage" "$LINENO" 5
++        as_fn_error "GCC is required for --enable-coverage" "$LINENO" 5
+     fi
+ 
+     if test -n "$ac_tool_prefix"; then
+@@ -14820,7 +14819,7 @@ fi
+ 
+ 
+     if test x$LCOV = x || test x$GENHTML = x; then
+-        as_fn_error $? "lcov and genhtml are required for --enable-coverage" "$LINENO" 5
++        as_fn_error "lcov and genhtml are required for --enable-coverage" "$LINENO" 5
+     fi
+ 
+     CFLAGS="$CFLAGS -g -O0 -fprofile-arcs -ftest-coverage"
+@@ -14980,7 +14979,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$JS_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($JS_PACKAGE) were not met:
++	as_fn_error "Package requirements ($JS_PACKAGE) were not met:
+ 
+ $JS_PKG_ERRORS
+ 
+@@ -14996,7 +14995,7 @@ elif test $pkg_failed = untried; then
+ $as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15005,7 +15004,7 @@ and JS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ else
+ 	JS_CFLAGS=$pkg_cv_JS_CFLAGS
+@@ -15035,7 +15034,7 @@ fi
+ fi
+ 
+ if test x"$FIREFOX_JS_LIBDIR" = x ; then
+-   as_fn_error $? "Could not figure out where Firefox JavaScript library lives" "$LINENO" 5
++   as_fn_error "Could not figure out where Firefox JavaScript library lives" "$LINENO" 5
+ fi
+ 
+ 
+@@ -15080,7 +15079,7 @@ $as_echo "$ac_cv_lib_mozjs_JS_CallTracer" >&6; }
+ if test "x$ac_cv_lib_mozjs_JS_CallTracer" = x""yes; then :
+   :
+ else
+-  as_fn_error $? "SpiderMonkey is too old, Firefox 3 is required" "$LINENO" 5
++  as_fn_error "SpiderMonkey is too old, Firefox 3 is required" "$LINENO" 5
+ fi
+ 
+ 
+@@ -15141,7 +15140,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+     CFLAGS="$save_CFLAGS"
+ 
+     if test x"$JS_EXTRA_CFLAGS" = x; then
+-        as_fn_error $? "Unable to determine extra compiler flags needed" "$LINENO" 5
++        as_fn_error "Unable to determine extra compiler flags needed" "$LINENO" 5
+     fi
+ fi
+ 
+@@ -15211,7 +15210,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GJS_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($gjs_packages) were not met:
++	as_fn_error "Package requirements ($gjs_packages) were not met:
+ 
+ $GJS_PKG_ERRORS
+ 
+@@ -15227,7 +15226,7 @@ elif test $pkg_failed = untried; then
+ $as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15236,7 +15235,7 @@ and GJS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ else
+ 	GJS_CFLAGS=$pkg_cv_GJS_CFLAGS
+@@ -15302,39 +15301,17 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GJS_GI_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($gjs_gi_packages) were not met:
+-
+-$GJS_GI_PKG_ERRORS
+-
+-Consider adjusting the PKG_CONFIG_PATH environment variable if you
+-installed software in a non-standard prefix.
+-
+-Alternatively, you may set the environment variables GJS_GI_CFLAGS
+-and GJS_GI_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details." "$LINENO" 5
+-
++	use_gi=no
+ elif test $pkg_failed = untried; then
+      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+-	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+-is in your PATH or set the PKG_CONFIG environment variable to the full
+-path to pkg-config.
+-
+-Alternatively, you may set the environment variables GJS_GI_CFLAGS
+-and GJS_GI_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
+-
++	use_gi=no
+ else
+ 	GJS_GI_CFLAGS=$pkg_cv_GJS_GI_CFLAGS
+ 	GJS_GI_LIBS=$pkg_cv_GJS_GI_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-
++	use_gi=yes
+ fi
+ 
+ pkg_failed=no
+@@ -15393,7 +15370,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GJS_CAIRO_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($gjs_cairo_packages) were not met:
++	as_fn_error "Package requirements ($gjs_cairo_packages) were not met:
+ 
+ $GJS_CAIRO_PKG_ERRORS
+ 
+@@ -15409,7 +15386,7 @@ elif test $pkg_failed = untried; then
+ $as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15418,7 +15395,7 @@ and GJS_CAIRO_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ else
+ 	GJS_CAIRO_CFLAGS=$pkg_cv_GJS_CAIRO_CFLAGS
+@@ -15484,7 +15461,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GJS_DBUS_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($gjs_dbus_packages) were not met:
++	as_fn_error "Package requirements ($gjs_dbus_packages) were not met:
+ 
+ $GJS_DBUS_PKG_ERRORS
+ 
+@@ -15500,7 +15477,7 @@ elif test $pkg_failed = untried; then
+ $as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15509,7 +15486,7 @@ and GJS_DBUS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ else
+ 	GJS_DBUS_CFLAGS=$pkg_cv_GJS_DBUS_CFLAGS
+@@ -15592,7 +15569,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GJSTESTS_PKG_ERRORS" >&5
+ 
+-	as_fn_error $? "Package requirements ($gjstests_packages) were not met:
++	as_fn_error "Package requirements ($gjstests_packages) were not met:
+ 
+ $GJSTESTS_PKG_ERRORS
+ 
+@@ -15608,7 +15585,7 @@ elif test $pkg_failed = untried; then
+ $as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15617,7 +15594,7 @@ and GJSTESTS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
++See \`config.log' for more details." "$LINENO" 5; }
+ 
+ else
+ 	GJSTESTS_CFLAGS=$pkg_cv_GJSTESTS_CFLAGS
+@@ -15627,6 +15604,15 @@ $as_echo "yes" >&6; }
+ 
+ fi
+ 
++ if test "x$use_gi" = "xyes"; then
++  HAVE_GOBJECT_INTROSPECTION_TRUE=
++  HAVE_GOBJECT_INTROSPECTION_FALSE='#'
++else
++  HAVE_GOBJECT_INTROSPECTION_TRUE='#'
++  HAVE_GOBJECT_INTROSPECTION_FALSE=
++fi
++
++
+ if test x"$JS_PACKAGE" = x; then
+     # if JS_PACKAGE is undefined, pkg-config modules don't include
+     # SpiderMonkey and we need to deal with it ourselves
+@@ -15825,14 +15811,14 @@ fi
+ done
+ 
+   if test -z "$DTRACE"; then
+-    as_fn_error $? "dtrace not found" "$LINENO" 5
++    as_fn_error "dtrace not found" "$LINENO" 5
+   fi
+   ac_fn_c_check_header_mongrel "$LINENO" "sys/sdt.h" "ac_cv_header_sys_sdt_h" "$ac_includes_default"
+ if test "x$ac_cv_header_sys_sdt_h" = x""yes; then :
+   SDT_H_FOUND='yes'
+ else
+   SDT_H_FOUND='no';
+-                   as_fn_error $? "tracing support needs sys/sdt.h header" "$LINENO" 5
++                   as_fn_error "tracing support needs sys/sdt.h header" "$LINENO" 5
+ fi
+ 
+ 
+@@ -16013,7 +15999,6 @@ DEFS=-DHAVE_CONFIG_H
+ 
+ ac_libobjs=
+ ac_ltlibobjs=
+-U=
+ for ac_i in : $LIBOBJS; do test "x$ac_i" = x: && continue
+   # 1. Remove the extension, and $U if already installed.
+   ac_script='s/\$U\././;s/\.o$//;s/\.obj$//'
+@@ -16037,35 +16022,39 @@ else
+ fi
+ 
+ if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
+-  as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
++  as_fn_error "conditional \"MAINTAINER_MODE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
+-  as_fn_error $? "conditional \"AMDEP\" was never defined.
++  as_fn_error "conditional \"AMDEP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
+-  as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
++  as_fn_error "conditional \"am__fastdepCC\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
+-  as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
++  as_fn_error "conditional \"am__fastdepCXX\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${ENABLE_COVERAGE_TRUE}" && test -z "${ENABLE_COVERAGE_FALSE}"; then
+-  as_fn_error $? "conditional \"ENABLE_COVERAGE\" was never defined.
++  as_fn_error "conditional \"ENABLE_COVERAGE\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${HAVE_GOBJECT_INTROSPECTION_TRUE}" && test -z "${HAVE_GOBJECT_INTROSPECTION_FALSE}"; then
++  as_fn_error "conditional \"HAVE_GOBJECT_INTROSPECTION\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${HAVE_READLINE_TRUE}" && test -z "${HAVE_READLINE_FALSE}"; then
+-  as_fn_error $? "conditional \"HAVE_READLINE\" was never defined.
++  as_fn_error "conditional \"HAVE_READLINE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${ENABLE_SYSTEMTAP_TRUE}" && test -z "${ENABLE_SYSTEMTAP_FALSE}"; then
+-  as_fn_error $? "conditional \"ENABLE_SYSTEMTAP\" was never defined.
++  as_fn_error "conditional \"ENABLE_SYSTEMTAP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${ENABLE_DTRACE_TRUE}" && test -z "${ENABLE_DTRACE_FALSE}"; then
+-  as_fn_error $? "conditional \"ENABLE_DTRACE\" was never defined.
++  as_fn_error "conditional \"ENABLE_DTRACE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ 
+@@ -16215,19 +16204,19 @@ export LANGUAGE
+ (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+ 
+ 
+-# as_fn_error STATUS ERROR [LINENO LOG_FD]
+-# ----------------------------------------
++# as_fn_error ERROR [LINENO LOG_FD]
++# ---------------------------------
+ # Output "`basename $0`: error: ERROR" to stderr. If LINENO and LOG_FD are
+ # provided, also output the error to LOG_FD, referencing LINENO. Then exit the
+-# script with STATUS, using 1 if that was 0.
++# script with status $?, using 1 if that was 0.
+ as_fn_error ()
+ {
+-  as_status=$1; test $as_status -eq 0 && as_status=1
+-  if test "$4"; then
+-    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
++  as_status=$?; test $as_status -eq 0 && as_status=1
++  if test "$3"; then
++    as_lineno=${as_lineno-"$2"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++    $as_echo "$as_me:${as_lineno-$LINENO}: error: $1" >&$3
+   fi
+-  $as_echo "$as_me: error: $2" >&2
++  $as_echo "$as_me: error: $1" >&2
+   as_fn_exit $as_status
+ } # as_fn_error
+ 
+@@ -16423,7 +16412,7 @@ $as_echo X"$as_dir" |
+       test -d "$as_dir" && break
+     done
+     test -z "$as_dirs" || eval "mkdir $as_dirs"
+-  } || test -d "$as_dir" || as_fn_error $? "cannot create directory $as_dir"
++  } || test -d "$as_dir" || as_fn_error "cannot create directory $as_dir"
+ 
+ 
+ } # as_fn_mkdir_p
+@@ -16477,7 +16466,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+ # values after options handling.
+ ac_log="
+ This file was extended by gjs $as_me 0.7.1, which was
+-generated by GNU Autoconf 2.66.  Invocation command line was
++generated by GNU Autoconf 2.65.  Invocation command line was
+ 
+   CONFIG_FILES    = $CONFIG_FILES
+   CONFIG_HEADERS  = $CONFIG_HEADERS
+@@ -16543,10 +16532,10 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ ac_cs_config="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`"
+ ac_cs_version="\\
+ gjs config.status 0.7.1
+-configured by $0, generated by GNU Autoconf 2.66,
++configured by $0, generated by GNU Autoconf 2.65,
+   with options \\"\$ac_cs_config\\"
+ 
+-Copyright (C) 2010 Free Software Foundation, Inc.
++Copyright (C) 2009 Free Software Foundation, Inc.
+ This config.status script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it."
+ 
+@@ -16602,7 +16591,7 @@ do
+     ac_need_defaults=false;;
+   --he | --h)
+     # Conflict between --help and --header
+-    as_fn_error $? "ambiguous option: \`$1'
++    as_fn_error "ambiguous option: \`$1'
+ Try \`$0 --help' for more information.";;
+   --help | --hel | -h )
+     $as_echo "$ac_cs_usage"; exit ;;
+@@ -16611,7 +16600,7 @@ Try \`$0 --help' for more information.";;
+     ac_cs_silent=: ;;
+ 
+   # This is an error.
+-  -*) as_fn_error $? "unrecognized option: \`$1'
++  -*) as_fn_error "unrecognized option: \`$1'
+ Try \`$0 --help' for more information." ;;
+ 
+   *) as_fn_append ac_config_targets " $1"
+@@ -17033,7 +17022,7 @@ do
+     "gjs-gi-1.0.pc") CONFIG_FILES="$CONFIG_FILES gjs-gi-1.0.pc" ;;
+     "gjs-dbus-1.0.pc") CONFIG_FILES="$CONFIG_FILES gjs-dbus-1.0.pc" ;;
+ 
+-  *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
++  *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
+   esac
+ done
+ 
+@@ -17071,7 +17060,7 @@ $debug ||
+ {
+   tmp=./conf$$-$RANDOM
+   (umask 077 && mkdir "$tmp")
+-} || as_fn_error $? "cannot create a temporary directory in ." "$LINENO" 5
++} || as_fn_error "cannot create a temporary directory in ." "$LINENO" 5
+ 
+ # Set up the scripts for CONFIG_FILES section.
+ # No need to generate them if there are no CONFIG_FILES.
+@@ -17088,7 +17077,7 @@ if test "x$ac_cr" = x; then
+ fi
+ ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
+ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then
+-  ac_cs_awk_cr='\\r'
++  ac_cs_awk_cr='\r'
+ else
+   ac_cs_awk_cr=$ac_cr
+ fi
+@@ -17102,18 +17091,18 @@ _ACEOF
+   echo "$ac_subst_vars" | sed 's/.*/&!$&$ac_delim/' &&
+   echo "_ACEOF"
+ } >conf$$subs.sh ||
+-  as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
+-ac_delim_num=`echo "$ac_subst_vars" | grep -c '^'`
++  as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
++ac_delim_num=`echo "$ac_subst_vars" | grep -c '$'`
+ ac_delim='%!_!# '
+ for ac_last_try in false false false false false :; do
+   . ./conf$$subs.sh ||
+-    as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
++    as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
+ 
+   ac_delim_n=`sed -n "s/.*$ac_delim\$/X/p" conf$$subs.awk | grep -c X`
+   if test $ac_delim_n = $ac_delim_num; then
+     break
+   elif $ac_last_try; then
+-    as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
++    as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
+   else
+     ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+   fi
+@@ -17202,28 +17191,20 @@ if sed "s/$ac_cr//" < /dev/null > /dev/null 2>&1; then
+ else
+   cat
+ fi < "$tmp/subs1.awk" > "$tmp/subs.awk" \
+-  || as_fn_error $? "could not setup config files machinery" "$LINENO" 5
++  || as_fn_error "could not setup config files machinery" "$LINENO" 5
+ _ACEOF
+ 
+-# VPATH may cause trouble with some makes, so we remove sole $(srcdir),
+-# ${srcdir} and @srcdir@ entries from VPATH if srcdir is ".", strip leading and
++# VPATH may cause trouble with some makes, so we remove $(srcdir),
++# ${srcdir} and @srcdir@ from VPATH if srcdir is ".", strip leading and
+ # trailing colons and then remove the whole line if VPATH becomes empty
+ # (actually we leave an empty line to preserve line numbers).
+ if test "x$srcdir" = x.; then
+-  ac_vpsub='/^[	 ]*VPATH[	 ]*=[	 ]*/{
+-h
+-s///
+-s/^/:/
+-s/[	 ]*$/:/
+-s/:\$(srcdir):/:/g
+-s/:\${srcdir}:/:/g
+-s/:@srcdir@:/:/g
+-s/^:*//
++  ac_vpsub='/^[	 ]*VPATH[	 ]*=/{
++s/:*\$(srcdir):*/:/
++s/:*\${srcdir}:*/:/
++s/:*@srcdir@:*/:/
++s/^\([^=]*=[	 ]*\):*/\1/
+ s/:*$//
+-x
+-s/\(=[	 ]*\).*/\1/
+-G
+-s/\n//
+ s/^[^=]*=[	 ]*$//
+ }'
+ fi
+@@ -17251,7 +17232,7 @@ for ac_last_try in false false :; do
+   if test -z "$ac_t"; then
+     break
+   elif $ac_last_try; then
+-    as_fn_error $? "could not make $CONFIG_HEADERS" "$LINENO" 5
++    as_fn_error "could not make $CONFIG_HEADERS" "$LINENO" 5
+   else
+     ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+   fi
+@@ -17336,7 +17317,7 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ _ACAWK
+ _ACEOF
+ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+-  as_fn_error $? "could not setup config headers machinery" "$LINENO" 5
++  as_fn_error "could not setup config headers machinery" "$LINENO" 5
+ fi # test -n "$CONFIG_HEADERS"
+ 
+ 
+@@ -17349,7 +17330,7 @@ do
+   esac
+   case $ac_mode$ac_tag in
+   :[FHL]*:*);;
+-  :L* | :C*:*) as_fn_error $? "invalid tag \`$ac_tag'" "$LINENO" 5;;
++  :L* | :C*:*) as_fn_error "invalid tag \`$ac_tag'" "$LINENO" 5;;
+   :[FH]-) ac_tag=-:-;;
+   :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
+   esac
+@@ -17377,7 +17358,7 @@ do
+ 	   [\\/$]*) false;;
+ 	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
+ 	   esac ||
+-	   as_fn_error 1 "cannot find input file: \`$ac_f'" "$LINENO" 5;;
++	   as_fn_error "cannot find input file: \`$ac_f'" "$LINENO" 5;;
+       esac
+       case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
+       as_fn_append ac_file_inputs " '$ac_f'"
+@@ -17404,7 +17385,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
+ 
+     case $ac_tag in
+     *:-:* | *:-) cat >"$tmp/stdin" \
+-      || as_fn_error $? "could not create $ac_file" "$LINENO" 5 ;;
++      || as_fn_error "could not create $ac_file" "$LINENO" 5 ;;
+     esac
+     ;;
+   esac
+@@ -17541,22 +17522,22 @@ s&@MKDIR_P@&$ac_MKDIR_P&;t t
+ $ac_datarootdir_hack
+ "
+ eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$tmp/subs.awk" >$tmp/out \
+-  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
++  || as_fn_error "could not create $ac_file" "$LINENO" 5
+ 
+ test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
+   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
+   { ac_out=`sed -n '/^[	 ]*datarootdir[	 ]*:*=/p' "$tmp/out"`; test -z "$ac_out"; } &&
+   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $ac_file contains a reference to the variable \`datarootdir'
+-which seems to be undefined.  Please make sure it is defined" >&5
++which seems to be undefined.  Please make sure it is defined." >&5
+ $as_echo "$as_me: WARNING: $ac_file contains a reference to the variable \`datarootdir'
+-which seems to be undefined.  Please make sure it is defined" >&2;}
++which seems to be undefined.  Please make sure it is defined." >&2;}
+ 
+   rm -f "$tmp/stdin"
+   case $ac_file in
+   -) cat "$tmp/out" && rm -f "$tmp/out";;
+   *) rm -f "$ac_file" && mv "$tmp/out" "$ac_file";;
+   esac \
+-  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
++  || as_fn_error "could not create $ac_file" "$LINENO" 5
+  ;;
+   :H)
+   #
+@@ -17567,19 +17548,19 @@ which seems to be undefined.  Please make sure it is defined" >&2;}
+       $as_echo "/* $configure_input  */" \
+       && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs"
+     } >"$tmp/config.h" \
+-      || as_fn_error $? "could not create $ac_file" "$LINENO" 5
++      || as_fn_error "could not create $ac_file" "$LINENO" 5
+     if diff "$ac_file" "$tmp/config.h" >/dev/null 2>&1; then
+       { $as_echo "$as_me:${as_lineno-$LINENO}: $ac_file is unchanged" >&5
+ $as_echo "$as_me: $ac_file is unchanged" >&6;}
+     else
+       rm -f "$ac_file"
+       mv "$tmp/config.h" "$ac_file" \
+-	|| as_fn_error $? "could not create $ac_file" "$LINENO" 5
++	|| as_fn_error "could not create $ac_file" "$LINENO" 5
+     fi
+   else
+     $as_echo "/* $configure_input  */" \
+       && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs" \
+-      || as_fn_error $? "could not create -" "$LINENO" 5
++      || as_fn_error "could not create -" "$LINENO" 5
+   fi
+ # Compute "$ac_file"'s index in $config_headers.
+ _am_arg="$ac_file"
+@@ -18540,7 +18521,7 @@ _ACEOF
+ ac_clean_files=$ac_clean_files_save
+ 
+ test $ac_write_fail = 0 ||
+-  as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5
++  as_fn_error "write failure creating $CONFIG_STATUS" "$LINENO" 5
+ 
+ 
+ # configure is writing to config.log, and then calls config.status.
+@@ -18561,7 +18542,7 @@ if test "$no_create" != yes; then
+   exec 5>>config.log
+   # Use ||, not &&, to avoid exiting from the if with $? = 1, which
+   # would make configure fail if this is the last instruction.
+-  $ac_cs_success || as_fn_exit 1
++  $ac_cs_success || as_fn_exit $?
+ fi
+ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
+diff --git a/configure.ac b/configure.ac
+index 4c1db50..fe3a285 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -180,7 +180,7 @@ gjs_dbus_packages="dbus-glib-1 $common_packages"
+ gjstests_packages="$gjstests_packages $gjs_packages"
+ 
+ PKG_CHECK_MODULES([GJS], [$gjs_packages])
+-PKG_CHECK_MODULES([GJS_GI], [$gjs_gi_packages])
++PKG_CHECK_MODULES([GJS_GI], [$gjs_gi_packages], [use_gi=yes], [use_gi=no])
+ PKG_CHECK_MODULES([GJS_CAIRO], [$gjs_cairo_packages])
+ PKG_CHECK_MODULES([GJS_DBUS], [$gjs_dbus_packages])
+ saved_CFLAGS=$CFLAGS
+@@ -192,6 +192,8 @@ CFLAGS=$saved_CFLAGS
+ LIBS=$saved_LIBS
+ PKG_CHECK_MODULES([GJSTESTS], [$gjstests_packages])
+ 
++AM_CONDITIONAL([HAVE_GOBJECT_INTROSPECTION], test "x$use_gi" = "xyes")
++
+ if test x"$JS_PACKAGE" = x; then
+     # if JS_PACKAGE is undefined, pkg-config modules don't include
+     # SpiderMonkey and we need to deal with it ourselves
