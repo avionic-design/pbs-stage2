@@ -1,5 +1,5 @@
 PACKAGE = gdk-pixbuf
-VERSION = 2.21.5
+VERSION = 2.21.6
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
