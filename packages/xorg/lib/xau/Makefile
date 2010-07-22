@@ -1,10 +1,10 @@
 PACKAGE = libXau
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXau.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXau.so.6.0.0
+	$(prefix)/lib/*.so.*
