@@ -1,5 +1,5 @@
 PACKAGE = firefox
-VERSION = 3.6.6
+VERSION = 3.6.7
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
@@ -62,12 +62,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 sdkdir = $(prefix)/lib/firefox-devel/sdk
 
 stripfiles = \
-	$(sdkdir)/lib/libmozjs.so \
-	$(sdkdir)/lib/libnspr4.so \
-	$(sdkdir)/lib/libplc4.so \
-	$(sdkdir)/lib/libplds4.so \
-	$(sdkdir)/lib/libxpcom.so \
-	$(sdkdir)/lib/libxul.so
+	$(sdkdir)/lib/*.so
 
 include packages/cleanup.mk
 include packages/binary.mk
