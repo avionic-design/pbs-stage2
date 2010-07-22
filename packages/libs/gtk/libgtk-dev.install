@@ -1,5 +1,6 @@
 /usr/include
 /usr/lib/gtk-2.0/include
+/usr/lib/*.la
 /usr/lib/*.so
 /usr/lib/pkgconfig
 /usr/share/aclocal

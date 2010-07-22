@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.21.4
+VERSION = 2.21.5
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -16,15 +16,6 @@ build-args += \
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
-sover  = 0.2104.0
-
-prunefiles = \
-	$(prefix)/lib/*.la \
-	$(module)/*.la \
-	$(plugin)/engines/*.la \
-	$(plugin)/loaders/*.la \
-	$(plugin)/immodules/*.la \
-	$(plugin)/printbackends/*.la
 
 stripfiles = \
 	$(prefix)/bin/gdk-pixbuf-csource \
