@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 158
+VERSION = 160
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -21,7 +21,7 @@ conf-args += \
 	--disable-introspection
 
 prunefiles = \
-	$(prefix)/lib/libudev.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	/lib/udev/ata_id \
@@ -39,5 +39,4 @@ stripfiles = \
 	/lib/udev/vol_id \
 	/sbin/udevadm \
 	/sbin/udevd \
-	$(prefix)/lib/libudev.so.0.8.3 \
-	$(prefix)/lib/libvolume_id.so.1.1.0
+	$(prefix)/lib/*.so.*
