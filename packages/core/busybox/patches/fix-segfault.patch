@@ -9,7 +9,7 @@ index ea019c2..3275aa3 100644
 -	char **names;
  	int    cur;
  	char  *cmd[1];
- };
+ } FIX_ALIASING;
  #define G (*(struct globals*)&bb_common_bufsiz1)
 -#define names (G.names)
  #define cur   (G.cur  )
@@ -48,7 +48,7 @@ index ea019c2..3275aa3 100644
  	unsigned n;
  	int ret;
  
-@@ -140,7 +141,7 @@ int run_parts_main(int argc UNUSED_PARAM, char **argv)
+@@ -139,7 +140,7 @@ int run_parts_main(int argc UNUSED_PARAM, char **argv)
  			ACTION_RECURSE|ACTION_FOLLOWLINKS,
  			act,            /* file action */
  			act,            /* dir action */
