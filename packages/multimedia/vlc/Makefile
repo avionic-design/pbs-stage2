@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.1.0
+VERSION = 1.1.1
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -19,8 +19,7 @@ conf-args += \
 plugin = $(prefix)/lib/vlc/plugins
 
 prunefiles = \
-	$(prefix)/lib/libvlccore.la \
-	$(prefix)/lib/libvlc.la \
+	$(prefix)/lib/*.la \
 	$(plugin)/3dnow/*.la \
 	$(plugin)/access/*.la \
 	$(plugin)/access_output/*.la \
