@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.3.12
+VERSION = 2.4.1
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libfreetype.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libfreetype.so.6.4.0
+	$(prefix)/lib/*.so.*

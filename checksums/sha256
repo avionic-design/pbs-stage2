@@ -53,7 +53,7 @@ e72a32916ad4bbd03847f8945c55582bdbafc039d286ded7365d402a7ff164ef  download/fixes
 fa2a1c6eea654d9fce7a4b1220f10c99cdec848dccaf1625c01f076b31382335  download/fontconfig-2.8.0.tar.gz
 5a9af61dc9142488c9ba6e4ae30a9d970ea0f889a1ab7f59de1c1898c83aeb35  download/fontsproto-2.1.0.tar.bz2
 2b8e7164b0c362d5c5e90275b25772514d76d5fda3d54c026445611e467d638e  download/freefont-ttf-20090104.tar.gz
-3b96438f016a62b676c1d2089c00ca777f710d19f6aefa66ccf068d360db3e92  download/freetype-2.3.12.tar.bz2
+45c954e96f52737c0cc62e9a538a4df850c7d1dd73fb25ffe131ae7cb899be3e  download/freetype-2.4.1.tar.bz2
 49cf91586e48b52fe25872ff66c1da0dff0daac2593f9f300e2af12f44f64177  download/fribidi-0.19.2.tar.gz
 0fe450365347638dac2a19e853fe103a409626553ac3a8e9baa4a1919affd3a7  download/gcc-core-4.5.0.tar.bz2
 9356e54ed515a62bb44919b299fcff3ea7757e81a69390e93c118a4d68a42a42  download/gcc-g++-4.5.0.tar.bz2
