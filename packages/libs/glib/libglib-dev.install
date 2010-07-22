@@ -1,6 +1,6 @@
 /usr/include
 /usr/lib/glib-2.0
-/usr/lib/*.a
+/usr/lib/*.la
 /usr/lib/*.so
 /usr/lib/pkgconfig
 /usr/share/aclocal

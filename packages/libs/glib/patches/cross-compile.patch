@@ -2,9 +2,9 @@ diff --git a/Makefile.am b/Makefile.am
 index ace9c9a..baff460 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -3,8 +3,8 @@ include $(top_srcdir)/Makefile.decl
+@@ -5,8 +5,8 @@ include $(top_srcdir)/Makefile.decl
  
- AUTOMAKE_OPTIONS = 1.7
+ ACLOCAL_AMFLAGS = -I m4macros
  
 -SUBDIRS = . m4macros glib gmodule gthread gobject gio tests po docs
 -DIST_SUBDIRS = $(SUBDIRS) build
@@ -17,10 +17,10 @@ diff --git a/Makefile.in b/Makefile.in
 index f0672b9..9518383 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -413,8 +413,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
- 	gio-2.0-uninstalled.pc.in gio-unix-2.0-uninstalled.pc.in
+@@ -415,8 +415,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
  TEST_PROGS = 
  AUTOMAKE_OPTIONS = 1.7
+ ACLOCAL_AMFLAGS = -I m4macros
 -SUBDIRS = . m4macros glib gmodule gthread gobject gio tests po docs
 -DIST_SUBDIRS = $(SUBDIRS) build
 +SUBDIRS = . m4macros glib gmodule gthread gobject gio po docs
@@ -32,7 +32,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index b0af5df..3c84f62 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -263,8 +263,6 @@ giowin32include_HEADERS = \
+@@ -255,8 +255,6 @@ giowin32include_HEADERS = \
  
  endif
  
@@ -45,7 +45,7 @@ diff --git a/gio/Makefile.in b/gio/Makefile.in
 index 4d426a0..5fe8a81 100644
 --- a/gio/Makefile.in
 +++ b/gio/Makefile.in
-@@ -585,7 +585,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+@@ -584,7 +584,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
  TEST_PROGS = 
  NULL = 
  SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
