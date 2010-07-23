@@ -1,0 +1,7 @@
+menu "GNOME"
+
+source "packages/desktop/gnome/gnome-menus/Kconfig"
+source "packages/desktop/gnome/gnome-shell/Kconfig"
+source "packages/desktop/gnome/mutter/Kconfig"
+
+endmenu

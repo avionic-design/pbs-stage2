@@ -71,6 +71,8 @@ f83cdc74b9a0a8514c496c68f3d4887d38d5de64ffb9b8cdede7e94bb140b16f  download/glib-
 fe481d89d74f01db4f3a671ef1f29df29da74dff5b678517ee659a6f9d819451  download/glproto-1.4.11.tar.bz2
 a2a610f01fd3298dc08c87bf30498c2402590e1bcb227fc40b15ee6d280939fb  download/gmp-5.0.1.tar.bz2
 2a744dc0561fc9e2d8b1fc1c2dcf6e5dd07663affb3e908cd1fe5b1dd3cca26b  download/gnome-doc-utils-0.20.1.tar.bz2
+3cfb41586cda5892aea929ff9b327cbabc37a15971fdc6c6d4334d2488bb3233  download/gnome-menus-2.30.2.tar.bz2
+cc7ffed03d889175586519c16916b55260171c6ae1a0c94155d4fe15b0b16e2c  download/gnome-shell-2.31.4.tar.bz2
 8596643ce143bf6dd933594dd12da10024b4284cdd1fde758aeff65cbaf68c88  download/gnutls-2.10.0.tar.bz2
 0abec64e01458fbd032e33351d8071602a959529ea796965e98338ee83a40020  download/grep-2.5.4.tar.bz2
 b645878135cb620c6c417c5601bfe96172245af12045540d7344938b4c2cd805  download/groff-1.20.1.tar.gz
@@ -199,6 +201,7 @@ c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2
 95e507b26bac3b64215bc3cf1463525781582d40358b09becdb24d058b31def8  download/mpfr-2.4.1.tar.lzma
 df062ee23a5e873bc72518edf35cc30d133da78d57989fbbe934f6b31fa850ee  download/MPlayer-1.0rc3.tar.bz2
 a74b0cc7ec668418389d9f56f85ca8a4619b8674a2d90f5e51bfb8ae9a0667de  download/mtd-utils-1.1.0.tar.bz2
+518df8d359acd7ec91e8ffcce1c3420fce5bcf85fefba6f4571ad3f6c419d398  download/mutter-2.31.5.tar.bz2
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
 b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netcat-0.7.1.tar.bz2
 95936c6a95bef929e7ae0d9144c3fa20ffe62291dff94835bde88c5b5d2bf347  download/net-snmp-5.5.tar.gz

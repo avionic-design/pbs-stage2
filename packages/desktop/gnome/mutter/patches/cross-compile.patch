@@ -1,0 +1,56 @@
+diff --git a/src/Makefile.am b/src/Makefile.am
+index cc1c3a4..939a1d5 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -336,19 +336,19 @@ mutter-marshal.c: Makefile mutter-marshal.list
+ 
+ mutter-enum-types.h: stamp-mutter-enum-types.h Makefile
+ 	@true
+-stamp-mutter-enum-types.h: $(libmutterinclude_base_headers) mutter-enum-types.h.in
++stamp-mutter-enum-types.h: $(libmutterinclude_base_headers) $(srcdir)/mutter-enum-types.h.in
+ 	$(AM_V_GEN) ( cd $(srcdir) && \
+ 	  $(GLIB_MKENUMS) \
+-	    --template $(srcdir)/mutter-enum-types.h.in \
++	    --template mutter-enum-types.h.in \
+ 	  $(libmutterinclude_base_headers) ) >> xgen-teth && \
+ 	(cmp -s xgen-teth mutter-enum-types.h || cp xgen-teth mutter-enum-types.h) && \
+ 	rm -f xgen-teth && \
+ 	echo timestamp > $(@F)
+ 
+-mutter-enum-types.c: stamp-mutter-enum-types.h mutter-enum-types.c.in
++mutter-enum-types.c: stamp-mutter-enum-types.h $(srcdir)/mutter-enum-types.c.in
+ 	  $(AM_V_GEN) ( cd $(srcdir) && \
+ 	  $(GLIB_MKENUMS) \
+-	    --template $(srcdir)/mutter-enum-types.c.in \
++	    --template mutter-enum-types.c.in \
+ 	  $(libmutterinclude_base_headers) ) >> xgen-tetc && \
+ 	cp xgen-tetc mutter-enum-types.c && \
+ 	rm -f xgen-tetc
+diff --git a/src/Makefile.in b/src/Makefile.in
+index b19d43c..9634fab 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -2325,19 +2325,19 @@ mutter-marshal.c: Makefile mutter-marshal.list
+ 
+ mutter-enum-types.h: stamp-mutter-enum-types.h Makefile
+ 	@true
+-stamp-mutter-enum-types.h: $(libmutterinclude_base_headers) mutter-enum-types.h.in
++stamp-mutter-enum-types.h: $(libmutterinclude_base_headers) $(srcdir)/mutter-enum-types.h.in
+ 	$(AM_V_GEN) ( cd $(srcdir) && \
+ 	  $(GLIB_MKENUMS) \
+-	    --template $(srcdir)/mutter-enum-types.h.in \
++	    --template mutter-enum-types.h.in \
+ 	  $(libmutterinclude_base_headers) ) >> xgen-teth && \
+ 	(cmp -s xgen-teth mutter-enum-types.h || cp xgen-teth mutter-enum-types.h) && \
+ 	rm -f xgen-teth && \
+ 	echo timestamp > $(@F)
+ 
+-mutter-enum-types.c: stamp-mutter-enum-types.h mutter-enum-types.c.in
++mutter-enum-types.c: stamp-mutter-enum-types.h $(srcdir)/mutter-enum-types.c.in
+ 	  $(AM_V_GEN) ( cd $(srcdir) && \
+ 	  $(GLIB_MKENUMS) \
+-	    --template $(srcdir)/mutter-enum-types.c.in \
++	    --template mutter-enum-types.c.in \
+ 	  $(libmutterinclude_base_headers) ) >> xgen-tetc && \
+ 	cp xgen-tetc mutter-enum-types.c && \
+ 	rm -f xgen-tetc

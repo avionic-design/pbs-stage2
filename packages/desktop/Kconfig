@@ -1,5 +1,6 @@
 menu "Desktop Environments"
 
+source "packages/desktop/gnome/Kconfig"
 source "packages/desktop/xfce/Kconfig"
 
 endmenu

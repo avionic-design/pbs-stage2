@@ -1,0 +1,150 @@
+diff --git a/configure b/configure
+index 3f4e254..b84c7d5 100755
+--- a/configure
++++ b/configure
+@@ -12800,24 +12800,20 @@ if test -n "$MUTTER_PLUGIN_CFLAGS"; then
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= \$GTK_MIN_VERSION
+                                  mutter-plugins >= \$MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= \$GJS_MIN_VERSION
+ 				 libgnome-menu \$recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= \$CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= \$CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= \$GOBJECT_INTROSPECTION_MIN_VERSION\""; } >&5
++                                 libstartup-notification-1.0\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "gio-2.0 >= $GIO_MIN_VERSION
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION") 2>&5
++                                 libstartup-notification-1.0") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+@@ -12825,13 +12821,11 @@ if test -n "$MUTTER_PLUGIN_CFLAGS"; then
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION" 2>/dev/null`
++                                 libstartup-notification-1.0" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+@@ -12846,24 +12840,20 @@ if test -n "$MUTTER_PLUGIN_LIBS"; then
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= \$GTK_MIN_VERSION
+                                  mutter-plugins >= \$MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= \$GJS_MIN_VERSION
+ 				 libgnome-menu \$recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= \$CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= \$CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= \$GOBJECT_INTROSPECTION_MIN_VERSION\""; } >&5
++                                 libstartup-notification-1.0\""; } >&5
+   ($PKG_CONFIG --exists --print-errors "gio-2.0 >= $GIO_MIN_VERSION
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION") 2>&5
++                                 libstartup-notification-1.0") 2>&5
+   ac_status=$?
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+   test $ac_status = 0; }; then
+@@ -12871,13 +12861,11 @@ if test -n "$MUTTER_PLUGIN_LIBS"; then
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION" 2>/dev/null`
++                                 libstartup-notification-1.0" 2>/dev/null`
+ else
+   pkg_failed=yes
+ fi
+@@ -12899,25 +12887,21 @@ fi
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION" 2>&1`
++                                 libstartup-notification-1.0" 2>&1`
+         else
+ 	        MUTTER_PLUGIN_PKG_ERRORS=`$PKG_CONFIG --print-errors "gio-2.0 >= $GIO_MIN_VERSION
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION" 2>&1`
++                                 libstartup-notification-1.0" 2>&1`
+         fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$MUTTER_PLUGIN_PKG_ERRORS" >&5
+@@ -12926,13 +12910,11 @@ fi
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION) were not met:
++                                 libstartup-notification-1.0) were not met:
+ 
+ $MUTTER_PLUGIN_PKG_ERRORS
+ 
+diff --git a/configure.ac b/configure.ac
+index 50fb9a0..7225379 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -69,13 +69,11 @@ PKG_CHECK_MODULES(MUTTER_PLUGIN, gio-2.0 >= $GIO_MIN_VERSION
+                                  gio-unix-2.0 dbus-glib-1
+                                  gtk+-2.0 >= $GTK_MIN_VERSION
+                                  mutter-plugins >= $MUTTER_MIN_VERSION
+-                                 gjs-gi-1.0 >= $GJS_MIN_VERSION
+ 				 libgnome-menu $recorder_modules gconf-2.0
+                                  gdk-x11-2.0
+ 				 clutter-x11-1.0 >= $CLUTTER_MIN_VERSION
+ 				 clutter-glx-1.0 >= $CLUTTER_MIN_VERSION
+-                                 libstartup-notification-1.0
+-                                 gobject-introspection-1.0 >= $GOBJECT_INTROSPECTION_MIN_VERSION)
++                                 libstartup-notification-1.0)
+ 
+ # This is for the newly added application id bits, we can replace this with
+ # a version check later

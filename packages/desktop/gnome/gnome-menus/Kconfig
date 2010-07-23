@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_GNOME_GNOME_MENUS
+	bool "gnome-menus"
+	select PACKAGE_LIBS_GLIB
+	default n
