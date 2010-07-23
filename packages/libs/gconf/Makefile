@@ -1,5 +1,5 @@
 PACKAGE = GConf
-VERSION = 2.31.5
+VERSION = 2.31.6
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.31
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
