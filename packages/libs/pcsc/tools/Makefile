@@ -31,7 +31,7 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
+		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 stripfiles = \
