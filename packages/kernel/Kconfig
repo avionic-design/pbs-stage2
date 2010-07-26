@@ -1,5 +1,9 @@
 menu "Operating System Kernel"
 
+config OS
+	string
+	default "linux"
+
 config VIRTUAL_KERNEL_LINUX_LIBC
 	bool
 	select PACKAGE_KERNEL_LINUX_KERNEL
@@ -27,9 +31,3 @@ config PACKAGE_KERNEL_PSB_KERNEL_SOURCE
 	default n
 
 endmenu
-
-if VIRTUAL_DEVEL_LIBC
-config OS
-	string
-	default "linux"
-endif
