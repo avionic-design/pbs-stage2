@@ -49,7 +49,7 @@ dlurl = $(call url-pathname,$(filter %$*,$(remote-files)))
 destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
 
 quiet_cmd_wget = WGET    $(dlurl) $(destination)
-      cmd_wget = wget -q $(dlurl) -O $@
+      cmd_wget = wget -q $(dlurl) -O $@ || ( rm $@ ; false )
 
 $(local-files): $(srctree)/download/%:
 	$(call cmd,wget)
