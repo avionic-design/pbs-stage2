@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_LIBFLOAT
+	bool "libfloat"
+	depends on PACKAGE_TOOLCHAIN
+	default n

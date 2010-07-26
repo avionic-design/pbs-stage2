@@ -1,7 +1,0 @@
-source "toolchains/packages/Kconfig"
-
-if !TOOLCHAIN
-config CROSS_COMPILE
-	string "cross-compilation toolchain"
-	default ""
-endif

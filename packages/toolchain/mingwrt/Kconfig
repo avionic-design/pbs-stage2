@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_MINGWRT
+	bool "MinGW runtime"
+	depends on PACKAGE_TOOLCHAIN
+	default n

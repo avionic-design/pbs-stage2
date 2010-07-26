@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_MAKE
+	bool "GNU make"
+	depends on PACKAGE_TOOLCHAIN
+	default n

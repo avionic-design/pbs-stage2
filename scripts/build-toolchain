@@ -1,6 +1,6 @@
 #!/bin/sh
 
-pkglist="make O=toolchains/\$toolchain list | sort -u"
+pkglist="make O=toolchains/\$toolchain print | sort -u"
 version="cut -d: -f2 | cut -d' ' -f2"
 tcroot="`pwd`/toolchains"
 date="date +%X"

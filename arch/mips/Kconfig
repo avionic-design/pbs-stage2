@@ -1,4 +1,7 @@
+if ARCH_MIPS
+
 config ARCH
 	string
 	default "mips"
 
+endif

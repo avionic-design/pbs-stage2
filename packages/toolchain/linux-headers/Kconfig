@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_LINUX_HEADERS
+	bool "Linux kernel headers"
+	depends on PACKAGE_TOOLCHAIN
+	default n

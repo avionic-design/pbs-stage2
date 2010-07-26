@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_NEWLIB
+	bool "newlib"
+	depends on PACKAGE_TOOLCHAIN
+	default n

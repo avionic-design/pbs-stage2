@@ -1,5 +1,6 @@
 menu "Packages"
 
+source "packages/toolchain/Kconfig"
 source "packages/kernel/Kconfig"
 source "packages/devel/Kconfig"
 source "packages/core/Kconfig"

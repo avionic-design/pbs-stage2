@@ -18,28 +18,26 @@ config ARCH_MIPS
 
 endchoice
 
+source "arch/x86/Kconfig"
+source "arch/x86_64/Kconfig"
+source "arch/arm/Kconfig"
+source "arch/blackfin/Kconfig"
+source "arch/mips/Kconfig"
+
 config OS
 	string
 	default "linux"
 
-if ARCH_X86
-source "arch/x86/Kconfig"
-endif
+choice
+	prompt "C runtime library"
 
-if ARCH_X86_64
-source "arch/x86_64/Kconfig"
-endif
+config UCLIBC
+	bool "uclibc: uClibc"
 
-if ARCH_ARM
-source "arch/arm/Kconfig"
-endif
+config GLIBC
+	bool "glibc: GNU libc"
 
-if ARCH_BLACKFIN
-source "arch/blackfin/Kconfig"
-endif
+config KLIBC
+	bool "klibc"
 
-if ARCH_MIPS
-source "arch/mips/Kconfig"
-endif
-
-source "toolchains/Kconfig"
+endchoice

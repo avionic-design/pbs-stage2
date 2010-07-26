@@ -177,7 +177,6 @@ endif
 
 obj-y := packages/
 obj-y += platforms/
-obj-y += toolchains/
 
 depend-dirs := $(addprefix depend-,$(obj-y))
 

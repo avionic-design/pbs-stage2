@@ -1,0 +1,3 @@
+config PLATFORM_GENERIC_TOOLCHAIN
+	bool "Generic Toolchain"
+	select PACKAGE_TOOLCHAIN

@@ -1,4 +1,7 @@
+if ARCH_BLACKFIN
+
 config ARCH
 	string
-	default "bfin"
+	default "blackfin"
 
+endif

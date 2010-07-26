@@ -1,7 +1,0 @@
-if UCLIBC
-
-config LIBC
-	string
-	default "uclibc"
-
-endif

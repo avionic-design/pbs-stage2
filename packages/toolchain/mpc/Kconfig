@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_MPC
+	bool "MPC - multiple precision complex floating-point library"
+	depends on PACKAGE_TOOLCHAIN
+	default n

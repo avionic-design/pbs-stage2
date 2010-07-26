@@ -1,7 +1,0 @@
-if GLIBC
-
-config LIBC
-	string
-	default "glibc"
-
-endif

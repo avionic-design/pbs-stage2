@@ -1,7 +1,0 @@
-if KLIBC
-
-config LIBC
-	string
-	default "klibc"
-
-endif

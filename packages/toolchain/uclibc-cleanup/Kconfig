@@ -1,0 +1,6 @@
+config PACKAGE_TOOLCHAIN_UCLIBC_CLEANUP
+	bool "uClibc - cleanup"
+	depends on PACKAGE_TOOLCHAIN
+	depends on UCLIBC
+	select PACKAGE_TOOLCHAIN_GCC
+	default n

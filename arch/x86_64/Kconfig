@@ -1,3 +1,5 @@
+if ARCH_X86_64
+
 config ARCH
 	string
 	default "x86_64"
@@ -13,7 +15,6 @@ config ARCH_X86_64_GENERIC
 
 endchoice
 
-if ARCH_X86_64_GENERIC
 source "arch/x86_64/generic/Kconfig"
-endif
 
+endif

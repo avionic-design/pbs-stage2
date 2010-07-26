@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_PKGCONFIG
+	bool "pkg-config"
+	depends on PACKAGE_TOOLCHAIN
+	default n
