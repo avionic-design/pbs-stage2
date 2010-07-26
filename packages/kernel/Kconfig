@@ -4,16 +4,6 @@ config VIRTUAL_KERNEL_LINUX_LIBC
 	bool
 	default n
 
-config PACKAGE_KERNEL_LINUX_HEADERS
-	bool "linux-headers: Linux kernel headers"
-	select VIRTUAL_KERNEL_LINUX_LIBC
-	select VIRTUAL_PROVIDES
-	default n
-
-config PACKAGE_KERNEL_LINUX_MODULES
-	bool "linux-modules: Linux kernel modules"
-	default n
-
 config PACKAGE_KERNEL_LINUX_KERNEL
 	bool "linux: Linux kernel"
 	select VIRTUAL_KERNEL_LINUX_LIBC
