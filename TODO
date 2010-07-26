@@ -1,14 +1,48 @@
-+ The binutils --lib-path and gcc's specs file probably needs to make the
++ Allow creating a build chroot, which has all the build tools in /core or
+  /tools. This would allow maximum isolation from the build system.
+
+  The binutils --lib-path and gcc's specs file probably needs to make the
   linker use libraries and loader from /tools, not /core. /core is supposed
   to build /tools, but not be shipped with a final tarball or anything.
-
-+ Add package-binary target to build binary packages. (Install into different
-  ROOTFS, then tar that directory up). <package>-<version>_<arch>.tar.bz2?
-
-  make install can then check whether a binary package exists and use it
-  instead of rebuilding the package.
 
 + Add support for building in a clean build chroot (f.e. debootstrap chroot).
 
 + Add automatic inter-package dependency handling.
 
++ Enable building of static compiler libraries
+  (toolchains/packages/gcc/Makefile, --enable-static)
+
+  It looks like icedtea/OpenJDK may require this, but it can possibly be
+  worked around by patching the OpenJDK sources. grep the OpenJDK sources for
+  STATIC_LIBCXX or something like that.
+
++ Remove VIRTUAL_PROVIDES and VIRTUAL_* hacks from Kconfig. Virtual packages
+  can be provided by selecting the providing packages from the virtual package
+  like this:
+
+	config PACKAGE_DEVEL_LIBC
+		bool "C runtime library"
+		select PACKAGE_DEVEL_GLIBC if GLIBC
+		select PACKAGE_DEVEL_KLIBC if KLIBC
+		select PACKAGE_DEVEL_UCLIBC if UCLIBC
+		default n
+
+  For VIRTUAL_KERNEL_LINUX_LIBC something like this should be possible:
+
+	config PACKAGE_KERNEL_LINUX_LIBC
+		bool "Linux kernel headers"
+		select PACKAGE_KERNEL_LINUX_KERNEL
+		default n
+
+  This is mostly implemented now, so t should be safe to remove the special
+  handling for VIRTUAL_PROVIDES from scripts/kconfig.
+
++ Automatically create the download directory for new repository clones. In
+  other words, the directory should be automatically created when the first
+  tarball is downloaded.
+
++ Add additional functionality to fetch tarballs from a local proxy. This
+  prevents problems when an upstream mirror is down or (re)moves content.
+
+--
+vim: tw=78

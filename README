@@ -1,26 +1,120 @@
+What is PBS:
+------------
+
+PBS is the Platform Build System. It is a set of scripts that automatically
+build a defined set of software packages that can be installed in a root
+filesystem or as an initial ramdisk.
+
+PBS builds everything from source. To do this, it downloads software tarballs
+from the internet and runs the contained build system to configure, build and
+install each package.
+
+The source tree contains the following directories:
+
+	* arch: Architecture-specific definitions.
+	* checksums: Checksum files to verify downloaded files against.
+	* download: Destination directory for downloaded files.
+	* packages: Package build scripts.
+	* platforms: Platform build scripts.
+	* scripts: PBS-related scripts and makefiles.
+	* support: Miscellaneous support files.
+	* toolchains: Cross-compilation toolchains.
+
+In order to keep this tree clean, platforms should be built in separate build
+directories. Typically, such a build directory would reside below the build
+subdirectory in the source tree.
+
+By passing the path (absolute or relative) to the build directory in the "O"
+(output) variable, the PBS will know where to put temporary files.
+
+Packages and platforms:
+-----------------------
+
+A package is any software component that can be built in an automated way.
+
+A platform is a collection of packages and some additional files and scripts
+to complete the root filesystem.
+
+Configuring a platform:
+-----------------------
+
+A platform can be configured with the following command:
+
+	$ make O=<build directory> menuconfig
+
+When this command executes, it shows a dialog where the target hardware can be
+configured and individual packages be selected for later inclusion in the root
+filesystem.
+
+PBS uses Kconfig to allow easy selection of software packages that are to be
+built. Based on this configuration it generates a dependency list to make sure
+that packets are built in the correct order.
+
 Building a platform:
 --------------------
 
-To build a platform, enter the following command:
+Build a platform is done with the following command:
 
-	$ make platform=<platform-name> install
+	$ make O=<build directory>
 
-Where <platform-name> is the path below the platform subdirectory of the
-platform you wish to build (e.g. platform=adx-abox/initrd).
+Where <build directory> is the directory where you already ran the menuconfig
+command.
 
-A rootfs subdirectory will be created where all the software for the selected
-platform will be installed.
-
+A subdirectory (rootfs) will be created where all the software for the
+selected platform will be installed. Binary packages will also be created and
+later installed to a root filesystem with more fine-grained control.
 
 Building a toolchain:
 ---------------------
 
-Toolchains are sort of "special" platforms. They are located in the
-platform/toolchain subdirectory. They are built in the same way as other
-platforms.
+Toolchains are sort of "special" platforms. They are located in the toolchains
+subdirectory and are already pre-configured.
 
-If for instance you want to build a uClibc-based platform for the Xscale, run
-the following command:
+To build a toolchain for the ARM architecture and uClibc support with the
+EABI, use the following command:
 
-	$ make platform=toolchain/arm-xscale-linux-uclibc install
+	$ make O=toolchains/arm-unknown-linux-uclibceabi
 
+A utility script exists which can be used for toolchain batch builds and also
+archives the toolchain binaries for later use, or for deployment on other
+systems. The script is "toolchains/build-toolchains". It reads lines of
+toolchain names from standard input and builds the corresponding toolchain.
+It keeps a log of all activities in "logs/<toolchain>.log". After the build is
+finished, an tarball with the tools built can be found in "toolchains/archive"
+(named after the toolchain and the binutils, gcc, Linux kernel and libc
+versions). The script will automatically clean up after the build, so that
+only the finished cross-compile tools remain in the "usr" subdirectory of the
+toolchain base "toolchains/<toolchain>".
+
+	$ echo arm-unknown-linux-uclibceabi | sh toolchains/build-toolchains
+
+To completely remove a built toolchain, the "clean" command line argument can
+be passed to the script:
+
+	$ echo bfin-linux-uclibc | sh toolchains/build-toolchains clean
+
+This will completely remove any temporary files and also the finished
+binaries.
+
+A list of all available toolchains can be obtained by running the
+"toolchains/list-toolchains" script, which doesn't do much more than just list
+the subdirectories in "toolchains" that contain toolchain configuration files.
+The output of this script can be piped to the "build-toolchains" script to
+build all available toolchains:
+
+	$ sh toolchains/list-toolchains | sh toolchains/build-toolchains
+
+Note that this may take a very long time to complete. A single toolchain needs
+about 2 hours to build on a 2 GHz Intel Dual-Core machine.
+
+Of course, all toolchains can also be remove like this:
+
+	$ sh toolchains/list-toolchains | sh toolchains/build-toolchains clean
+
+If you only want to build i686 toolchains, you could do something like this:
+
+	$ sh toolchains/list-toolchains | grep '^i686' | \
+		toolchains/build-toolchains
+
+--
+vim: tw=78
