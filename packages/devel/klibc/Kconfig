@@ -1,4 +1,8 @@
-if PACKAGE_DEVEL_KLIBC
+if KLIBC
+
+config PACKAGE_DEVEL_KLIBC
+	bool
+	default n
 
 config LIBC
 	string
