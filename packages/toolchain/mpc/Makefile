@@ -12,7 +12,9 @@ $(pkgtree)/.setup:
 conf-args = \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
-	--mandir=$(prefix)/share/man
+	--mandir=$(prefix)/share/man \
+	--with-mpfr=$(prefix) \
+	--with-gmp=$(prefix)
 
 $(pkgtree)/.configure:
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
