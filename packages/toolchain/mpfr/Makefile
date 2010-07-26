@@ -1,7 +1,7 @@
 PACKAGE = mpfr
 VERSION = 2.4.1
 
-LOCATION = http://www.mpfr.org/mpfr-current
+LOCATION = http://www.mpfr.org/$(PACKAGE)-$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.lzma
 
 include packages/toolchain/common.mk
