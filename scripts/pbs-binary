@@ -53,7 +53,7 @@ base=`dirname $cwd`
 name=`basename $cwd`
 
 while [ "x$name" != "xpackages" ] && [ "x$name" != "xplatforms" ]; do
-	if [ "x$name" == "x$base" ]; then
+	if [ "x$name" = "x$base" ]; then
 		break;
 	fi
 
