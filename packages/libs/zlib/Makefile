@@ -1,7 +1,7 @@
 PACKAGE = zlib
 VERSION = 1.2.3
 
-LOCATION = http://www.zlib.net
+LOCATION = http://downloads.sourceforge.net/project/libpng/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
