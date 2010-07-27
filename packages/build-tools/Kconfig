@@ -1,0 +1,5 @@
+menu "Build tools"
+
+source "packages/build-tools/glib/Kconfig"
+
+endmenu
