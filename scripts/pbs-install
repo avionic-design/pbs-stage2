@@ -103,7 +103,12 @@ for package in $packages; do
 
 			[ "x${src#/}" = "x$src" ] && src="/$src"
 			[ "x${dst#/}" = "x$dst" ] && dst="/$dst"
-
+			# Skip shell paterns expanding to nothing
+			if echo "${srcdir}${src}" | grep -qF -e '*' -e '?' && \
+			   [ "x$(echo ${srcdir}${src})" = "x${srcdir}${src}" ] ; then
+				echo "  skipping empty install patern: ${src}"
+				continue
+			fi
 			echo "  installing: ${src}"
 			mkdir -p "${dstdir}/${package}${dst}"
 			cp -dpR ${srcdir}${src} "${dstdir}/${package}${dst}"
