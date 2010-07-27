@@ -2,7 +2,7 @@ PACKAGE = dropbear
 VERSION = 0.52
 
 LOCATION = http://matt.ucc.asn.au/$(PACKAGE)/releases
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 DESCRIPTION = tiny SSH server and client
 
