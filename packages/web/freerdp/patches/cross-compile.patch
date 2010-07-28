@@ -1,0 +1,141 @@
+diff --git a/channels/cliprdr/Makefile.am b/channels/cliprdr/Makefile.am
+index 639e27b..54ae4c5 100644
+--- a/channels/cliprdr/Makefile.am
++++ b/channels/cliprdr/Makefile.am
+@@ -8,7 +8,7 @@ cliprdr_LTLIBRARIES = cliprdr.la
+ cliprdr_la_SOURCES = \
+ 	cliprdr_main.h cliprdr_main.c
+ 
+-cliprdr_la_CFLAGS = -I../../include -I../common
++cliprdr_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../common
+ 
+ cliprdr_la_LDFLAGS = -avoid-version -module
+ 
+diff --git a/channels/cliprdr/Makefile.in b/channels/cliprdr/Makefile.in
+index 028117b..3cf8044 100644
+--- a/channels/cliprdr/Makefile.in
++++ b/channels/cliprdr/Makefile.in
+@@ -251,7 +251,8 @@ top_srcdir = @top_srcdir@
+ cliprdrdir = $(PLUGIN_PATH)
+ cliprdr_LTLIBRARIES = cliprdr.la
+ cliprdr_la_SOURCES = cliprdr_main.h cliprdr_main.c $(am__append_1)
+-cliprdr_la_CFLAGS = -I../../include -I../common $(am__append_2)
++cliprdr_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../common \
++	$(am__append_2)
+ cliprdr_la_LDFLAGS = -avoid-version -module
+ cliprdr_la_LIBADD = ../common/libcommon.la $(am__append_3)
+ 
+diff --git a/channels/rdpdr/Makefile.am b/channels/rdpdr/Makefile.am
+index 3fb151e..c01ec65 100644
+--- a/channels/rdpdr/Makefile.am
++++ b/channels/rdpdr/Makefile.am
+@@ -13,7 +13,7 @@ rdpdr_la_SOURCES = \
+ 	devman.c devman.h \
+ 	irp.c irp.h
+ 
+-rdpdr_la_CFLAGS = -I../../include -I../common -I. \
++rdpdr_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../common -I. \
+ 	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ rdpdr_la_LDFLAGS = -avoid-version -module
+diff --git a/channels/rdpdr/Makefile.in b/channels/rdpdr/Makefile.in
+index ca15c12..7cd3d2b 100644
+--- a/channels/rdpdr/Makefile.in
++++ b/channels/rdpdr/Makefile.in
+@@ -253,7 +253,7 @@ rdpdr_la_SOURCES = \
+ 	devman.c devman.h \
+ 	irp.c irp.h
+ 
+-rdpdr_la_CFLAGS = -I../../include -I../common -I. \
++rdpdr_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../common -I. \
+ 	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ rdpdr_la_LDFLAGS = -avoid-version -module
+diff --git a/channels/rdpdr/disk/Makefile.am b/channels/rdpdr/disk/Makefile.am
+index 10a16d0..37acfc4 100644
+--- a/channels/rdpdr/disk/Makefile.am
++++ b/channels/rdpdr/disk/Makefile.am
+@@ -8,8 +8,8 @@ disk_LTLIBRARIES = disk.la
+ disk_la_SOURCES = \
+ 	disk_main.c
+ 
+-disk_la_CFLAGS = -I../../../include -I../../common -I../ \
+-	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
++disk_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../../common \
++	-I$(srcdir)/.. -DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ disk_la_LDFLAGS = -avoid-version -module
+ 
+diff --git a/channels/rdpdr/disk/Makefile.in b/channels/rdpdr/disk/Makefile.in
+index 2b22535..a7deb5d 100644
+--- a/channels/rdpdr/disk/Makefile.in
++++ b/channels/rdpdr/disk/Makefile.in
+@@ -246,8 +246,8 @@ disk_LTLIBRARIES = disk.la
+ disk_la_SOURCES = \
+ 	disk_main.c
+ 
+-disk_la_CFLAGS = -I../../../include -I../../common -I../ \
+-	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
++disk_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../../common \
++	-I$(srcdir)/.. -DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ disk_la_LDFLAGS = -avoid-version -module
+ disk_la_LIBADD = ../../common/libcommon.la
+diff --git a/channels/rdpdr/printer/Makefile.am b/channels/rdpdr/printer/Makefile.am
+index 98d06ad..59bf75e 100644
+--- a/channels/rdpdr/printer/Makefile.am
++++ b/channels/rdpdr/printer/Makefile.am
+@@ -8,8 +8,8 @@ printer_LTLIBRARIES = printer.la
+ printer_la_SOURCES = \
+ 	printer_main.c printer_main.h
+ 
+-printer_la_CFLAGS = -I../../../include -I../../common -I../ \
+-	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
++printer_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../../common \
++	-I$(srcdir)/.. -DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ printer_la_LDFLAGS = -avoid-version -module
+ 
+diff --git a/channels/rdpdr/printer/Makefile.in b/channels/rdpdr/printer/Makefile.in
+index cb9f1f4..28fef7a 100644
+--- a/channels/rdpdr/printer/Makefile.in
++++ b/channels/rdpdr/printer/Makefile.in
+@@ -252,8 +252,9 @@ top_srcdir = @top_srcdir@
+ printerdir = $(PLUGIN_PATH)
+ printer_LTLIBRARIES = printer.la
+ printer_la_SOURCES = printer_main.c printer_main.h $(am__append_1)
+-printer_la_CFLAGS = -I../../../include -I../../common -I../ \
+-	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\" $(am__append_2)
++printer_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../../common \
++	-I$(srcdir)/.. -DPLUGIN_PATH=\"$(PLUGIN_PATH)\" \
++	$(am__append_2)
+ printer_la_LDFLAGS = -avoid-version -module
+ printer_la_LIBADD = ../../common/libcommon.la $(am__append_3)
+ 
+diff --git a/channels/rdpsnd/Makefile.am b/channels/rdpsnd/Makefile.am
+index 2ee045f..55fa9d7 100644
+--- a/channels/rdpsnd/Makefile.am
++++ b/channels/rdpsnd/Makefile.am
+@@ -11,7 +11,7 @@ rdpsnd_la_SOURCES = \
+ 	rdpsnd_dsp.h rdpsnd.h \
+ 	rdpsnd_main.c
+ 
+-rdpsnd_la_CFLAGS = -I../../include -I../common \
++rdpsnd_la_CFLAGS = -I$(top_srcdir)/include -I$(srcdir)/../common \
+ 	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\"
+ 
+ rdpsnd_la_LDFLAGS = -avoid-version -module
+diff --git a/channels/rdpsnd/Makefile.in b/channels/rdpsnd/Makefile.in
+index 02e682d..dbe1731 100644
+--- a/channels/rdpsnd/Makefile.in
++++ b/channels/rdpsnd/Makefile.in
+@@ -256,7 +256,8 @@ top_srcdir = @top_srcdir@
+ @WITH_RDPSND_TRUE@rdpsnd_LTLIBRARIES = rdpsnd.la
+ @WITH_RDPSND_TRUE@rdpsnd_la_SOURCES = rdpsnd_dsp.h rdpsnd.h \
+ @WITH_RDPSND_TRUE@	rdpsnd_main.c $(am__append_1)
+-@WITH_RDPSND_TRUE@rdpsnd_la_CFLAGS = -I../../include -I../common \
++@WITH_RDPSND_TRUE@rdpsnd_la_CFLAGS = -I$(top_srcdir)/include \
++@WITH_RDPSND_TRUE@	-I$(srcdir)/../common \
+ @WITH_RDPSND_TRUE@	-DPLUGIN_PATH=\"$(PLUGIN_PATH)\" \
+ @WITH_RDPSND_TRUE@	$(am__append_2)
+ @WITH_RDPSND_TRUE@rdpsnd_la_LDFLAGS = -avoid-version -module

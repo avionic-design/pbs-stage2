@@ -1,0 +1,5 @@
+config PACKAGE_WEB_FREERDP
+	bool "freerdp"
+	select PACKAGE_LIBS_OPENSSL
+	select PACKAGE_XORG_LIB_XCURSOR
+	default n
