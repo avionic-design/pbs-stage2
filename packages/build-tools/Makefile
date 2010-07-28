@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_BUILD_TOOLS_GLIB) += glib

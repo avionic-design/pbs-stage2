@@ -1,3 +1,4 @@
+obj-y += build-tools/
 obj-y += console/
 obj-y += core/
 obj-y += devel/
