@@ -1,5 +1,5 @@
 PACKAGE = make
-VERSION = 3.81
+VERSION = 3.82
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
