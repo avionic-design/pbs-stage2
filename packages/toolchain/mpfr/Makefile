@@ -1,8 +1,8 @@
 PACKAGE = mpfr
-VERSION = 2.4.1
+VERSION = 3.0.0
 
 LOCATION = http://www.mpfr.org/$(PACKAGE)-$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.lzma
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
 
