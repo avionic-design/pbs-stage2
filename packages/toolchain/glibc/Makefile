@@ -1,7 +1,7 @@
 PACKAGE = glibc
 VERSION = 2.11
 
-LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
+LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
 	$(PACKAGE)-$(VERSION).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2

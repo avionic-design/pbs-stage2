@@ -1,7 +1,7 @@
 PACKAGE = gmp
 VERSION = 5.0.1
 
-LOCATION = ftp://ftp.gnu.org/gnu/$(PACKAGE)
+LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
