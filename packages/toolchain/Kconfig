@@ -1,5 +1,7 @@
-menuconfig PACKAGE_TOOLCHAIN
+menuconfig TOOLCHAIN
 	bool "Toolchain"
+
+if TOOLCHAIN
 
 source "packages/toolchain/binutils/Kconfig"
 source "packages/toolchain/gcc-core/Kconfig"
@@ -24,3 +26,5 @@ source "packages/toolchain/uclibc-cleanup/Kconfig"
 source "packages/toolchain/uclibc-headers/Kconfig"
 source "packages/toolchain/uclibc/Kconfig"
 source "packages/toolchain/w32api/Kconfig"
+
+endif

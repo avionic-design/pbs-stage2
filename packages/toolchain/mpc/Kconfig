@@ -1,6 +1,5 @@
 config PACKAGE_TOOLCHAIN_MPC
 	bool "MPC - multiple precision complex floating-point library"
-	depends on PACKAGE_TOOLCHAIN
 	select PACKAGE_TOOLCHAIN_GMP
 	select PACKAGE_TOOLCHAIN_MPFR
 	default n

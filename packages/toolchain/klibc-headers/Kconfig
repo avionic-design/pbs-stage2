@@ -1,6 +1,5 @@
 config PACKAGE_TOOLCHAIN_KLIBC_HEADERS
 	bool "klibc - headers"
-	depends on PACKAGE_TOOLCHAIN
 	depends on KLIBC
 	select PACKAGE_TOOLCHAIN_LINUX_HEADERS
 	default n

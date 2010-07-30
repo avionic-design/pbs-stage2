@@ -1,6 +1,5 @@
 config PACKAGE_TOOLCHAIN_UCLIBC
 	bool "uClibc"
-	depends on PACKAGE_TOOLCHAIN
 	depends on UCLIBC
 	select PACKAGE_TOOLCHAIN_GCC_CORE
 	default n

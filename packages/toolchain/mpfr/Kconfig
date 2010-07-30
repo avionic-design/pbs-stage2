@@ -1,4 +1,3 @@
 config PACKAGE_TOOLCHAIN_MPFR
 	bool "MPFR - multiple precision floating-point library"
-	depends on PACKAGE_TOOLCHAIN
 	default n
