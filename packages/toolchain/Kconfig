@@ -3,6 +3,30 @@ menuconfig TOOLCHAIN
 
 if TOOLCHAIN
 
+menu "Language support"
+
+config TOOLCHAIN_LANG_C
+	bool "C"
+	default y
+
+config TOOLCHAIN_LANG_CXX
+	bool "C++"
+	default y
+
+config TOOLCHAIN_LANG_OBJC
+	bool "Objective-C"
+	default n
+
+config TOOLCHAIN_LANG_OBJCXX
+	bool "Objective-C++"
+	default n
+
+config TOOLCHAIN_LANG_JAVA
+	bool "Java"
+	default n
+
+endmenu
+
 source "packages/toolchain/binutils/Kconfig"
 source "packages/toolchain/gcc-core/Kconfig"
 source "packages/toolchain/gcc/Kconfig"

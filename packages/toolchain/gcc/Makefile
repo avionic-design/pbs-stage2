@@ -15,18 +15,12 @@ sysroot = $(exec-prefix)/sys-root
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-ARCH := $(shell echo $(CONFIG_ARCH))
-ifeq ($(ARCH),bfin)
-  CONFIG_ARCH_HAS_JAVA = n
-else
-  CONFIG_ARCH_HAS_JAVA = y
-endif
-
-languages-y := c c++
-languages-y += objc obj-c++
-languages-$(CONFIG_ARCH_HAS_JAVA) += java
-
-languages := $(shell echo $(languages-y) | tr ' ' ',')
+languages-$(CONFIG_TOOLCHAIN_LANG_C) += c
+languages-$(CONFIG_TOOLCHAIN_LANG_CXX) += c++
+languages-$(CONFIG_TOOLCHAIN_LANG_OBJC) += objc
+languages-$(CONFIG_TOOLCHAIN_LANG_OBJCXX) += obj-c++
+languages-$(CONFIG_TOOLCHAIN_LANG_JAVA) += java
+languages := $(subst $(space),$(comma),$(languages-y))
 
 conf-args = \
 	--target=$(TARGET) \
@@ -65,10 +59,12 @@ else
 endif
 
 # Java-specific arguments
-conf-args += \
+conf-args-$(CONFIG_TOOLCHAIN_LANG_JAVA) += \
 	--with-jvm-jar-dir=$(exec-prefix)/lib/jvm-exports \
 	--with-jvm-root-dir=$(exec-prefix)/lib/jvm \
 	--enable-java-home
+
+conf-args += $(conf-args-y)
 
 $(pkgtree)/.configure:
 	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
