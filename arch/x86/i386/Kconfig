@@ -2,6 +2,6 @@ if ARCH_X86_GENERIC
 
 config CPU
 	string
-	default ""
+	default "i386"
 
 endif

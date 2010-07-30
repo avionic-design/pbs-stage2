@@ -1,7 +1,7 @@
-ARCH := $(shell echo $(CONFIG_ARCH))
-CPU  := $(shell echo $(CONFIG_CPU))
-OS   := $(shell echo $(CONFIG_OS))
-LIBC := $(shell echo $(CONFIG_LIBC))
+ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+CPU := $(subst $(quote),,$(CONFIG_CPU))
+OS := $(subst $(quote),,$(CONFIG_OS))
+LIBC := $(subst $(quote),,$(CONFIG_LIBC))
 
 ifeq ($(LIBC),glibc)
   LIBC := gnu
@@ -12,11 +12,6 @@ export TARGET
 
 CPPFLAGS = --sysroot $(objtree)/rootfs
 export CPPFLAGS
-
-CPU := $(shell echo $(CONFIG_CPU))
-ifeq ($(CPU),)
-  CPU := generic
-endif
 
 include arch/x86/$(CPU)/Makefile
 

@@ -10,8 +10,8 @@ config ARCH
 choice
 	prompt "CPU"
 
-config ARCH_X86_GENERIC
-	bool "generic"
+config ARCH_X86_I386
+	bool "i386"
 
 config ARCH_X86_I686
 	bool "i686"
@@ -21,7 +21,7 @@ config ARCH_X86_I786
 
 endchoice
 
-source "arch/x86/generic/Kconfig"
+source "arch/x86/i386/Kconfig"
 source "arch/x86/i686/Kconfig"
 source "arch/x86/i786/Kconfig"
 
