@@ -10,7 +10,7 @@ conf-args += \
 	--disable-video
 
 conf-vars += \
-	ac_cv_path_icu_config='$(ROOTFS)$(prefix)/bin/icu-config' \
+	ac_cv_path_icu_config='$(SYSROOT)$(prefix)/bin/icu-config' \
 	ac_cv_path_PKG_CONFIG=$(TARGET)-pkg-config
 
 prunefiles = \

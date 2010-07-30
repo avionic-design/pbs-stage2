@@ -21,7 +21,7 @@ conf-args = \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
-	--with-headers=$(ROOTFS)$(prefix)/include \
+	--with-headers=$(SYSROOT)$(prefix)/include \
 	--enable-addons=ports
 
 ifeq ($(FLOAT),soft)

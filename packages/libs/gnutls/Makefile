@@ -7,8 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--with-libgcrypt-prefix=$(ROOTFS)$(prefix) \
-	--with-libtasn1-prefix=$(ROOTFS)$(prefix)
+	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \
+	--with-libtasn1-prefix=$(SYSROOT)$(prefix)
 
 prunefiles = \
 	$(prefix)/lib/*.la

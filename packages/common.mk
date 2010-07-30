@@ -1,10 +1,11 @@
 # common definitions for packages
 
 INSTALL  = /usr/bin/install
-ROOTFS  ?= $(objtree)/rootfs
+SYSROOT ?= $(objtree)/sysroot
 DESTDIR ?= $(pkgtree)/install
+ROOTFS  ?= $(objtree)/rootfs
 prefix  ?= /usr
-export ROOTFS DESTDIR prefix
+export SYSROOT DESTDIR ROOTFS prefix
 
 CONFIG_ARCH := $(shell echo $(CONFIG_ARCH))
 CONFIG_CPU := $(shell echo $(CONFIG_CPU))

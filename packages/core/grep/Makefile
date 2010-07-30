@@ -14,7 +14,7 @@ conf-args += \
 #	--disable-perl-regexp
 
 conf-vars += \
-	PCRE_CPPFLAGS="--sysroot $(ROOTFS)" \
+	PCRE_CPPFLAGS="--sysroot $(SYSROOT)" \
 	PCRE_LIBS="-lpcre"
 
 ifneq ($(LIBC),gnu)

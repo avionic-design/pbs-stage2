@@ -3,7 +3,7 @@ VERSION = 2.12.0
 
 include packages/xorg/driver/common.mk
 
-sdkdir := $(ROOTFS)$(prefix)/include/xorg
+sdkdir := $(SYSROOT)$(prefix)/include/xorg
 sdkdir := $(subst /,_,$(sdkdir))
 sdkdir := $(subst .,_,$(sdkdir))
 sdkdir := $(subst -,_,$(sdkdir))

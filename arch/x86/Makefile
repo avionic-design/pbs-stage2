@@ -10,7 +10,7 @@ endif
 TARGET := $(CPU)-pc-$(OS)-$(LIBC)
 export TARGET
 
-CPPFLAGS = --sysroot $(objtree)/rootfs
+CPPFLAGS = --sysroot $(SYSROOT)
 export CPPFLAGS
 
 include arch/x86/$(CPU)/Makefile
@@ -18,5 +18,5 @@ include arch/x86/$(CPU)/Makefile
 CFLAGS = $(CPPFLAGS) $(ABIFLAGS) $(OPTFLAGS)
 export CFLAGS
 
-LDFLAGS = --sysroot $(objtree)/rootfs
+LDFLAGS = --sysroot $(SYSROOT)
 export LDFLAGS

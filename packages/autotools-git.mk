@@ -8,8 +8,8 @@ HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
 BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
 
 env += \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS)
+	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)

@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/common.mk
 
 env += \
-	CC='$(CC) --sysroot $(ROOTFS)' \
+	CC='$(CC) --sysroot $(SYSROOT)' \
 	CFLAGS='$(CFLAGS)'
 
 $(pkgtree)/.setup:

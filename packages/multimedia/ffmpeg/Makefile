@@ -16,7 +16,7 @@ conf-args = \
 	--enable-cross-compile \
 	--target-os=$(CONFIG_OS) \
 	--arch=$(CONFIG_ARCH) \
-	--sysroot=$(ROOTFS) \
+	--sysroot=$(SYSROOT) \
 	--enable-shared \
 	--enable-gpl \
 	--enable-postproc \

@@ -10,8 +10,8 @@ pkgbuildtree = $(pkgtree)/mozilla-$(VERSION)
 
 env += \
 	CROSS_COMPILE=1 \
-	PKG_CONFIG_LIBDIR=$(ROOTFS)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(ROOTFS) \
+	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT) \
 	CC="$(CC)" \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)" \

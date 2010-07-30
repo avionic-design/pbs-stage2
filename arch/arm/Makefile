@@ -15,7 +15,7 @@ endif
 TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)
 export TARGET
 
-CPPFLAGS = --sysroot $(objtree)/rootfs
+CPPFLAGS = --sysroot $(SYSROOT)
 export CPPFLAGS
 
 #
@@ -45,5 +45,5 @@ include $(cpu-y)
 CFLAGS = $(CPPFLAGS) $(ABIFLAGS) $(OPTFLAGS)
 export CFLAGS
 
-LDFLAGS = --sysroot $(objtree)/rootfs
+LDFLAGS = --sysroot $(SYSROOT)
 export LDFLAGS

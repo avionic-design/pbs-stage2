@@ -26,7 +26,7 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	KERNEL_HEADERS="$(ROOTFS)$(prefix)/include"
+	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include"
 
 $(pkgtree)/.configure:
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
@@ -35,8 +35,8 @@ $(pkgtree)/.configure:
 
 build-args = \
 	CROSS=$(CROSS_COMPILE) \
-	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
-	PREFIX=$(ROOTFS) \
+	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
+	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=$(prefix)/
 
@@ -46,7 +46,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 install-args = \
 	CROSS=$(CROSS_COMPILE) \
-	KERNEL_HEADERS=$(ROOTFS)$(prefix)/include \
+	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
 	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \

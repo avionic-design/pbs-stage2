@@ -6,9 +6,6 @@ include packages/xorg/lib/common.mk
 conf-args += \
 	--disable-malloc0returnsnull
 
-#conf-vars += \
-	CC='$(CC) --sysroot $(ROOTFS)'
-
 prunefiles = \
 	$(prefix)/lib/libXv.la
 
