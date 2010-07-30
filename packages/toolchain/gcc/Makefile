@@ -38,6 +38,7 @@ conf-args = \
 	--libexecdir=$(exec-prefix)/lib \
 	--includedir=$(sysroot)/usr/include \
 	--with-gxx-include-dir=$(sysroot)/usr/include/c++/$(VERSION) \
+	--with-pkgversion="PBS $(subst $(quote),,$(CONFIG_VERSION))" \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(SYSROOT)$(prefix) \
 	--with-gmp=$(SYSROOT)$(prefix) \

@@ -20,6 +20,7 @@ conf-args = \
 	--libdir=$(sysroot)/usr/lib \
 	--libexecdir=$(sysroot)/usr/lib \
 	--includedir=$(sysroot)/usr/include \
+	--with-pkgversion="PBS $(subst $(quote),,$(CONFIG_VERSION))" \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(SYSROOT)$(prefix) \
 	--with-gmp=$(SYSROOT)$(prefix) \
