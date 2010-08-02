@@ -49,5 +49,5 @@ endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

@@ -74,9 +74,9 @@ endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST) && \
-		$(env) $(priv) $(MAKE) $(install-args) install-gcc
+		$(env) $(MAKE) $(install-args) install-gcc
 	cd $(pkgbuildtree)/obj-$(HOST) && \
-		$(env) $(priv) $(MAKE) $(install-args) install-target-libgcc
+		$(env) $(MAKE) $(install-args) install-target-libgcc
 	# install wrapper script
 	rm $(CC) && \
 		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \

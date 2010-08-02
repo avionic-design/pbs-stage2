@@ -63,6 +63,6 @@ install-args = \
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(priv) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(install-args) install
 	mv $(SYSROOT)$(sysroot)/usr/lib/*crt*.o $(SYSROOT)$(exec-prefix)/lib
 	$(call cmd,stamp)

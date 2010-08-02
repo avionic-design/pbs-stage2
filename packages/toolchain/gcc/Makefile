@@ -97,7 +97,7 @@ endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST) && \
-		$(env) $(priv) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(install-args) install
 	# install wrapper script
 	rm $(CC) && \
 		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \

@@ -45,5 +45,5 @@ install-args = \
 	PREFIX=$(SYSROOT)
 
 $(pkgtree)/.install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(install-args) install_headers
 	$(call cmd,stamp)

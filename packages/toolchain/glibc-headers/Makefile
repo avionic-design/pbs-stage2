@@ -56,7 +56,7 @@ endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install-headers
+		$(env) $(MAKE) $(install-args) install-headers
 	cp $(pkgbuildtree)/obj-$(TARGET)/bits/stdio_lim.h \
 		$(SYSROOT)$(sysroot)/usr/include/bits
 	touch $(SYSROOT)$(sysroot)/usr/include/gnu/stubs.h
