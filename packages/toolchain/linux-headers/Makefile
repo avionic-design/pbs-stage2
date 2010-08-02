@@ -27,19 +27,15 @@ export DESTDIR prefix
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(Q)$(MAKE) $(kernel)=$(pkgtree) config
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(Q)$(MAKE) $(kernel)=$(pkgtree) headers-check
 	$(call cmd,stamp)
 
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
-	$(call cmd,stamp)
-
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree) headers-install
 	$(call cmd,stamp)
 

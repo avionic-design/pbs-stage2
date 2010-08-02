@@ -66,7 +66,7 @@ conf-args-$(CONFIG_TOOLCHAIN_LANG_JAVA) += \
 
 conf-args += $(conf-args-y)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
 		cd $(pkgbuildtree)/obj-$(HOST) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -76,13 +76,9 @@ build-args = \
 	-j $(NUM_CPU) \
 	MAKEFLAGS=
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
@@ -99,7 +95,7 @@ else
   JC = $(prefix)/bin/$(TARGET)-gcj
 endif
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
 	# install wrapper script

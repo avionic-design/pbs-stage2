@@ -9,13 +9,10 @@ exec-prefix = $(SYSROOT)$(prefix)/$(TARGET)
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 prunefiles = \
@@ -53,7 +50,7 @@ include packages/cleanup.mk
 
 includedir = $(shell $(CROSS_COMPILE)gcc -print-file-name=include)
 
-$(pkgtree)/.install: $(pkgtree)/.cleanup
+$(pkgtree)/.install: $(pkgtree)/.build $(pkgtree)/.cleanup
 	ln -sf ../../../../../sys-root/usr/include/byteswap.h \
 		$(includedir)
 	mkdir -p $(includedir)/bits

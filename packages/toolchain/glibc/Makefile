@@ -50,7 +50,7 @@ ifeq ($(ARCH),x86)
   endif
 endif
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -60,13 +60,9 @@ build-args = \
 	-j $(NUM_CPU) \
 	MAKEFLAGS=
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args) all
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
@@ -74,7 +70,7 @@ ifneq ($(SYSROOT),)
 	install_root=$(SYSROOT)
 endif
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

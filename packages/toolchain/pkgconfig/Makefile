@@ -20,7 +20,7 @@ conf-args += \
 	--program-prefix=$(TARGET)- \
 	--with-installed-glib
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -29,13 +29,9 @@ $(pkgtree)/.configure:
 build-args = \
 	-j $(NUM_CPU)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
@@ -43,7 +39,7 @@ ifneq ($(SYSROOT),)
 	DESTDIR=$(SYSROOT)
 endif
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

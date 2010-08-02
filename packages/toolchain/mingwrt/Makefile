@@ -26,7 +26,7 @@ conf-vars = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	ln -sf $(W32API_PACKAGE)-$(W32API_VERSION) $(buildtree)/$(W32API_PACKAGE)
 	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
@@ -34,13 +34,13 @@ $(pkgtree)/.configure:
 
 build-args =
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 
 install-args = \
 	DESTDIR=$(SYSROOT)
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install

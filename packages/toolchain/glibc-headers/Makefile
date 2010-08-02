@@ -39,17 +39,13 @@ conf-vars += \
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
@@ -58,7 +54,7 @@ ifneq ($(SYSROOT),)
 	-j $(NUM_CPU)
 endif
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install-headers
 	cp $(pkgbuildtree)/obj-$(TARGET)/bits/stdio_lim.h \

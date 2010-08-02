@@ -29,7 +29,7 @@ else
 	--disable-multilib
 endif
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args)
 	$(call cmd,stamp)
@@ -37,13 +37,9 @@ $(pkgtree)/.configure:
 build-args = \
 	-j $(NUM_CPU)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 ifneq ($(SYSROOT),)
@@ -51,7 +47,7 @@ ifneq ($(SYSROOT),)
 	DESTDIR=$(SYSROOT)
 endif
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

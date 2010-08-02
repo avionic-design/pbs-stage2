@@ -17,25 +17,21 @@ conf-args = \
 	--mandir=$(exec-prefix)/share/man \
 	--libdir=$(exec-prefix)/lib
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 install-args = \
 	DESTDIR=$(SYSROOT)
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)

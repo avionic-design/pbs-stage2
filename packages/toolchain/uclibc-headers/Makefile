@@ -31,16 +31,12 @@ conf-args = \
 	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
 	PREFIX=$(SYSROOT)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
@@ -48,6 +44,6 @@ install-args = \
 	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
 	PREFIX=$(SYSROOT)
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(env) $(priv) $(MAKE) $(install-args) install_headers
 	$(call cmd,stamp)

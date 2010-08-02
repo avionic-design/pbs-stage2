@@ -37,7 +37,7 @@ conf-args = \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(conf-args) oldconfig
@@ -50,13 +50,9 @@ build-args = \
 	DEVEL_PREFIX=/usr/ \
 	-j $(NUM_CPU)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-$(pkgtree)/.binary:
-	@echo "$@: not implemented yet"
 	$(call cmd,stamp)
 
 install-args = \
@@ -65,7 +61,7 @@ install-args = \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
 	mv $(SYSROOT)$(sysroot)/usr/lib/*crt*.o $(SYSROOT)$(exec-prefix)/lib

@@ -21,19 +21,22 @@ conf-vars = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)"
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
-$(pkgtree)/.install:
+$(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
