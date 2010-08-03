@@ -1,2 +1,1 @@
-no-rpath.patch
-unbreak-libtool.patch
+ltmain-sysroot.patch
