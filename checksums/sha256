@@ -180,7 +180,7 @@ b34bf066e07895b4d7b51a4a64e2a7524ab1cb755c996ef208293228c7bc4e69  download/linph
 606158db75d5a474ac52a8bd884e27cc2da13edb4e7bc7a1a2f39686cb5568d6  download/Linux-PAM-0.99.9.0.tar.bz2
 0a82e73b1bbf1712cff9d757739f9a2083be246d1b1d071f8808b5e6cca4d1a1  download/lirc-0.8.6.tar.bz2
 f509f19068cb7bc0ba37613b9023f0069d734edae658da38dfd5a9bebe8a9957  download/lldpd-0.4.1.tar.gz
-f3e69023771e23908f5d5592954d8271d3d6af09693cecfd29cee6fde8550dc8  download/make-3.81.tar.bz2
+e2c1a73f179c40c71e2fe8abf8a8a0688b8499538512984da4a76958d0402966  download/make-3.82.tar.bz2
 682614fa3682c4bd31e26b6f76e04bb579c2e70dbf060083e20077f4e93fb4b3  download/matchbox-keyboard-0.1.tar.bz2
 81a23a4af797cf350759fd5ac738797015a66dd5dba2f3d9f3c6908506c1ceff  download/matchbox-window-manager-1.2.tar.bz2
 b8f5746d143619846d3de70ad57841327741482bb4c14d29b76a0f3b61b2a4b6  download/MesaDemos-7.5.2.tar.bz2
@@ -193,7 +193,7 @@ ea7b9ebfb7a80de2b275c0c9124c8a505382ec48411a2794ab82542f9885ac3c  download/MesaD
 d012ab07ea26721467a85a775f34747c1c8897e37f16bec5317d8a72ef8b4f17  download/module-init-tools-3.12.tar.bz2
 ae79f8d41d8a86456b68607e9ca398d00f8b7342d1d83bcf4428178ac45380c7  download/mpc-0.8.2.tar.gz
 c74a76068f8ec36d4bb59a03bf1157be44118ca02252180e8b358b0b5e3edeee  download/mpeg2dec-0.4.1.tar.gz
-95e507b26bac3b64215bc3cf1463525781582d40358b09becdb24d058b31def8  download/mpfr-2.4.1.tar.lzma
+22de51fee8ccfae75eaea85938acf8c9d8e9415269d9abb7ced52ebf0a29b5d8  download/mpfr-3.0.0.tar.xz
 df062ee23a5e873bc72518edf35cc30d133da78d57989fbbe934f6b31fa850ee  download/MPlayer-1.0rc3.tar.bz2
 518df8d359acd7ec91e8ffcce1c3420fce5bcf85fefba6f4571ad3f6c419d398  download/mutter-2.31.5.tar.bz2
 0a9bdea5c7de8ded5c9327ed642915f2cc380753f12d4ad120ef7da3ea3498f4  download/ncurses-5.7.tar.gz
