@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.11
+VERSION = 2.11.2
 
 include packages/toolchain/common.mk
 DESTDIR := $(sysroot)
