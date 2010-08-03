@@ -9,8 +9,6 @@ TARBALLS = \
 	$(PACKAGE)-java-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
-exec-prefix = $(prefix)/$(TARGET)
-sysroot = $(exec-prefix)/sys-root
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -34,9 +32,10 @@ conf-args = \
 	--with-gxx-include-dir=$(sysroot)/usr/include/c++/$(VERSION) \
 	--with-pkgversion="PBS $(subst $(quote),,$(CONFIG_VERSION))" \
 	--program-prefix=$(TARGET)- \
-	--with-mpfr=$(SYSROOT)$(prefix) \
-	--with-gmp=$(SYSROOT)$(prefix) \
+	--with-mpfr=$(prefix) \
+	--with-gmp=$(prefix) \
 	--disable-libmudflap \
+	--disable-multilib \
 	--disable-libssp \
 	--enable-shared \
 	--enable-static \
@@ -44,19 +43,9 @@ conf-args = \
 	--enable-languages=$(languages)
 
 conf-args += \
-	--with-as=$(SYSROOT)$(prefix)/bin/$(TARGET)-as \
-	--with-ld=$(SYSROOT)$(prefix)/bin/$(TARGET)-ld \
+	--with-as=$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(prefix)/bin/$(TARGET)-ld \
 	--with-sysroot=yes
-
-ifeq ($(FLOAT),soft)
-  conf-args += --with-float=soft
-endif
-
-ifneq ($(findstring multilib,$(variant)),)
-  conf-args += --enable-multilib
-else
-  conf-args += --disable-multilib
-endif
 
 # Java-specific arguments
 conf-args-$(CONFIG_TOOLCHAIN_LANG_JAVA) += \
@@ -81,19 +70,10 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-ifneq ($(SYSROOT),)
-  CC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcc
-  CXX = $(SYSROOT)$(prefix)/bin/$(TARGET)-g++
-  CPP = $(SYSROOT)$(prefix)/bin/$(TARGET)-cpp
-  JC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcj
-  install-args = \
-	DESTDIR=$(SYSROOT)
-else
-  CC = $(prefix)/bin/$(TARGET)-gcc
-  CXX = $(prefix)/bin/$(TARGET)-g++
-  CPP = $(prefix)/bin/$(TARGET)-cpp
-  JC = $(prefix)/bin/$(TARGET)-gcj
-endif
+CPP = $(prefix)/bin/$(TARGET)-cpp
+CC = $(prefix)/bin/$(TARGET)-gcc
+CXX = $(prefix)/bin/$(TARGET)-g++
+GCJ = $(prefix)/bin/$(TARGET)-gcj
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST) && \
@@ -105,7 +85,7 @@ $(pkgtree)/.install: $(pkgtree)/.build
 		chmod a+x $(CC)
 	mv $(CXX) $(CXX)-$(VERSION) && ln -s $(TARGET)-gcc $(CXX)
 	mv $(CPP) $(CPP)-$(VERSION) && ln -s $(TARGET)-gcc $(CPP)
-ifeq ($(CONFIG_ARCH_HAS_JAVA),y)
-	mv $(JC) $(JC)-$(VERSION) && ln -s $(TARGET)-gcc $(JC)
+ifeq ($(CONFIG_TOOLCHAIN_LANG_JAVA),y)
+	mv $(GCJ) $(GCJ)-$(VERSION) && ln -s $(TARGET)-gcc $(GCJ)
 endif
 	$(call cmd,stamp)

@@ -5,7 +5,6 @@ LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
-exec-prefix = $(prefix)/$(TARGET)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -21,14 +20,6 @@ conf-args = \
 	--with-sysroot=yes \
 	--disable-nls
 
-ifneq ($(findstring multilib,$(variant)),)
-  conf-args += \
-	--enable-multilib
-else
-  conf-args += \
-	--disable-multilib
-endif
-
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args)
@@ -41,11 +32,6 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
-
-ifneq ($(SYSROOT),)
-  install-args = \
-	DESTDIR=$(SYSROOT)
-endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \

@@ -5,19 +5,13 @@ LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
-exec-prefix = $(prefix)/$(TARGET)
-
-ARCH := $(shell echo $(CONFIG_ARCH))
-CPU := $(shell echo $(CONFIG_CPU))
-ABI := $(shell echo $(CONFIG_ABI))
-ARCH := $(subst bfin,blackfin,$(ARCH))
 
 ifneq ($(ABI),)
-DEF_CONFIG = $(ARCH)-$(ABI).config
-CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
+DEF_CONFIG = $(CONFIG_ARCH)-$(CONFIG_ABI).config
+CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU)-$(CONFIG_ABI).config
 else
-DEF_CONFIG = $(ARCH).config
-CPU_CONFIG = $(ARCH)-$(CPU).config
+DEF_CONFIG = $(CONFIG_ARCH).config
+CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU).config
 endif
 
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
@@ -27,9 +21,9 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	RUNTIME_PREFIX=$(exec-prefix)/sys-root/usr/ \
-	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
-	PREFIX=$(SYSROOT)
+	RUNTIME_PREFIX=/usr/ \
+	DEVEL_PREFIX=/usr/ \
+	PREFIX=$(sysroot)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
@@ -40,10 +34,11 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
-	RUNTIME_PREFIX=$(exec-prefix)/sys-root/usr/ \
-	DEVEL_PREFIX=$(exec-prefix)/sys-root/usr/ \
-	PREFIX=$(SYSROOT)
+	RUNTIME_PREFIX=/usr/ \
+	DEVEL_PREFIX=/usr/ \
+	PREFIX=$(sysroot)
 
 $(pkgtree)/.install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(install-args) install_headers
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) $(install-args) install_headers
 	$(call cmd,stamp)

@@ -1,24 +1,19 @@
-CONFIG_ARCH := $(shell echo $(CONFIG_ARCH))
+CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+CONFIG_CPU := $(subst $(quote),,$(CONFIG_CPU))
+CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
-include toolchains/common.mk
 
-BUILD	:= $(shell echo $$MACHTYPE)
-HOST	:= $(shell echo $$MACHTYPE)
+BUILD := $(shell echo $$MACHTYPE)
+HOST := $(shell echo $$MACHTYPE)
 
-PATH	:= $(SYSROOT)$(prefix)/bin:$(PATH)
-env	:= env -i PATH=$(PATH) LD_LIBRARY_PATH=$(SYSROOT)$(prefix)/lib
-export PATH env
+prefix := $(CURDIR)/usr
+PATH := $(prefix)/bin:$(PATH)
+env := env -i PATH=$(PATH) LD_LIBRARY_PATH=$(prefix)/lib
+export prefix PATH env
 
-prefix	:= $(SYSROOT)$(prefix)
-SYSROOT	:=
-
-ifneq ($(SYSROOT),)
-  DESTDIR := $(SYSROOT)
-else
-  DESTDIR := /
-endif
-export DESTDIR
+exec-prefix := $(prefix)/$(TARGET)
+sysroot := $(exec-prefix)/sys-root
 
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 ifeq ($(NUM_CPU),)

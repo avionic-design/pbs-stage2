@@ -5,8 +5,6 @@ LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
 TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
-exec-prefix = $(prefix)/$(TARGET)
-sysroot = $(exec-prefix)/sys-root
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -22,9 +20,10 @@ conf-args = \
 	--includedir=$(sysroot)/usr/include \
 	--with-pkgversion="PBS $(subst $(quote),,$(CONFIG_VERSION))" \
 	--program-prefix=$(TARGET)- \
-	--with-mpfr=$(SYSROOT)$(prefix) \
-	--with-gmp=$(SYSROOT)$(prefix) \
+	--with-mpfr=$(prefix) \
+	--with-gmp=$(prefix) \
 	--disable-libmudflap \
+	--disable-multilib \
 	--disable-libssp \
 	--disable-shared \
 	--disable-threads \
@@ -33,19 +32,9 @@ conf-args = \
 	--enable-languages=c
 
 conf-args += \
-	--with-as=$(SYSROOT)$(prefix)/bin/$(TARGET)-as \
-	--with-ld=$(SYSROOT)$(prefix)/bin/$(TARGET)-ld \
+	--with-as=$(prefix)/bin/$(TARGET)-as \
+	--with-ld=$(prefix)/bin/$(TARGET)-ld \
 	--with-sysroot=yes
-
-ifeq ($(FLOAT),soft)
-  conf-args += --with-float=soft
-endif
-
-ifneq ($(findstring multilib,$(variant)),)
-  conf-args += --enable-multilib
-else
-  conf-args += --disable-multilib
-endif
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(HOST) && \
@@ -64,13 +53,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) $(build-args) all-target-libgcc
 	$(call cmd,stamp)
 
-ifneq ($(SYSROOT),)
-  CC = $(SYSROOT)$(prefix)/bin/$(TARGET)-gcc
-  install-args = \
-	DESTDIR=$(SYSROOT)
-else
-  CC = $(prefix)/bin/$(TARGET)-gcc
-endif
+CC = $(prefix)/bin/$(TARGET)-gcc
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(HOST) && \
@@ -82,7 +65,4 @@ $(pkgtree)/.install: $(pkgtree)/.build
 		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \
 			> $(CC) && \
 		chmod a+x $(CC)
-	# link missing fixed headers
-	$(priv) ln -sf ../include-fixed/limits.h \
-		`$(CC) -print-file-name=include`/limits.h
 	$(call cmd,stamp)

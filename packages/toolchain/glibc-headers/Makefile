@@ -7,11 +7,7 @@ TARBALLS = \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
-
-prefix := $(subst $(CURDIR),,$(prefix))
-SYSROOT := $(CURDIR)
-exec-prefix := $(prefix)/$(TARGET)
-sysroot := $(exec-prefix)/sys-root
+prefix := /usr
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
@@ -20,17 +16,13 @@ $(pkgtree)/.setup:
 conf-args = \
 	--host=$(TARGET) \
 	--build=$(BUILD) \
-	--prefix=$(sysroot)$(prefix) \
-	--datadir=$(exec-prefix)/share \
-	--infodir=$(exec-prefix)/share/info \
-	--mandir=$(exec-prefix)/share/man \
+	--prefix=$(prefix) \
+	--datadir=$(prefix)/share \
+	--infodir=$(prefix)/share/info \
+	--mandir=$(prefix)/share/man \
 	--program-prefix=$(TARGET)- \
-	--with-headers=$(SYSROOT)$(sysroot)/usr/include \
+	--with-headers=$(sysroot)$(prefix)/include \
 	--enable-addons=ports
-
-ifeq ($(FLOAT),soft)
-	conf-args += --without-fp
-endif
 
 conf-vars += \
 	libc_cv_forced_unwind=yes \
@@ -48,16 +40,13 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
-ifneq ($(SYSROOT),)
-  install-args = \
-	install_root=$(SYSROOT) \
-	-j $(NUM_CPU)
-endif
+install-args = \
+	install_root=$(sysroot)
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(install-args) install-headers
 	cp $(pkgbuildtree)/obj-$(TARGET)/bits/stdio_lim.h \
-		$(SYSROOT)$(sysroot)/usr/include/bits
-	touch $(SYSROOT)$(sysroot)/usr/include/gnu/stubs.h
+		$(sysroot)$(prefix)/include/bits
+	touch $(sysroot)$(prefix)/include/gnu/stubs.h
 	$(call cmd,stamp)

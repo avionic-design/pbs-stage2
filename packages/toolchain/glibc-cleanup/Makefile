@@ -2,53 +2,37 @@ PACKAGE = glibc
 VERSION = 2.11
 
 include packages/toolchain/common.mk
-
-CROSS_COMPILE := $(SYSROOT)$(prefix)/bin/$(TARGET)-
-exec-prefix := $(prefix)/$(TARGET)
-
-$(pkgtree)/.setup:
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	$(call cmd,stamp)
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-	$(call cmd,stamp)
+DESTDIR := $(sysroot)
+prefix := /usr
+export DESTDIR
 
 prunefiles = \
-	$(exec-prefix)/sys-root/lib/libanl.a \
-	$(exec-prefix)/sys-root/lib/libanl.so \
-	$(exec-prefix)/sys-root/lib/libBrokenLocale.a \
-	$(exec-prefix)/sys-root/lib/libBrokenLocale.so \
-	$(exec-prefix)/sys-root/lib/libc.a \
-	$(exec-prefix)/sys-root/lib/libc.so \
-	$(exec-prefix)/sys-root/lib/libc_nonshared.a \
-	$(exec-prefix)/sys-root/lib/libcrypt.a \
-	$(exec-prefix)/sys-root/lib/libcrypt.so \
-	$(exec-prefix)/sys-root/lib/libdl.a \
-	$(exec-prefix)/sys-root/lib/libdl.so \
-	$(exec-prefix)/sys-root/lib/libm.a \
-	$(exec-prefix)/sys-root/lib/libm.so \
-	$(exec-prefix)/sys-root/lib/libnsl.a \
-	$(exec-prefix)/sys-root/lib/libnsl.so \
-	$(exec-prefix)/sys-root/lib/libpthread.a \
-	$(exec-prefix)/sys-root/lib/libpthread.so \
-	$(exec-prefix)/sys-root/lib/libpthread_nonshared.a \
-	$(exec-prefix)/sys-root/lib/libresolv.a \
-	$(exec-prefix)/sys-root/lib/libresolv.so \
-	$(exec-prefix)/sys-root/lib/librt.a \
-	$(exec-prefix)/sys-root/lib/librt.so \
-	$(exec-prefix)/sys-root/lib/libutil.a \
-	$(exec-prefix)/sys-root/lib/libutil.so
+	$(prefix)/lib/libanl.a \
+	$(prefix)/lib/libanl.so \
+	$(prefix)/lib/libBrokenLocale.a \
+	$(prefix)/lib/libBrokenLocale.so \
+	$(prefix)/lib/libc.a \
+	$(prefix)/lib/libc.so \
+	$(prefix)/lib/libc_nonshared.a \
+	$(prefix)/lib/libcrypt.a \
+	$(prefix)/lib/libcrypt.so \
+	$(prefix)/lib/libdl.a \
+	$(prefix)/lib/libdl.so \
+	$(prefix)/lib/libm.a \
+	$(prefix)/lib/libm.so \
+	$(prefix)/lib/libnsl.a \
+	$(prefix)/lib/libnsl.so \
+	$(prefix)/lib/libpthread.a \
+	$(prefix)/lib/libpthread.so \
+	$(prefix)/lib/libpthread_nonshared.a \
+	$(prefix)/lib/libresolv.a \
+	$(prefix)/lib/libresolv.so \
+	$(prefix)/lib/librt.a \
+	$(prefix)/lib/librt.so \
+	$(prefix)/lib/libutil.a \
+	$(prefix)/lib/libutil.so
 
 include packages/cleanup.mk
 
-includedir = $(shell $(CROSS_COMPILE)gcc -print-file-name=include)
-
-$(pkgtree)/.install: $(pkgtree)/.build $(pkgtree)/.cleanup
-	ln -sf ../../../../../sys-root/usr/include/byteswap.h \
-		$(includedir)
-	mkdir -p $(includedir)/bits
-	ln -sf ../../../../../../sys-root/usr/include/bits/byteswap.h \
-		$(includedir)/bits
+$(pkgtree)/.install: $(pkgtree)/.cleanup
 	$(call cmd,stamp)

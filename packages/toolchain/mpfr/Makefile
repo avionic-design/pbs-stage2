@@ -13,7 +13,7 @@ conf-args = \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
-	--with-gmp=$(SYSROOT)$(prefix)
+	--with-gmp=$(prefix)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
@@ -28,11 +28,6 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
-
-ifneq ($(SYSROOT),)
-  install-args = \
-	DESTDIR=$(SYSROOT)
-endif
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \

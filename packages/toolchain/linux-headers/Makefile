@@ -5,10 +5,8 @@ LOCATION = http://www.de.kernel.org/pub/linux/kernel/v2.6
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
-prefix := $(prefix)/$(TARGET)
 
-ARCH := $(shell echo $(CONFIG_ARCH))
-ARCH := $(subst bfin,blackfin,$(ARCH))
+ARCH := $(CONFIG_ARCH)
 export ARCH
 
 MAKEFLAGS =
@@ -16,12 +14,12 @@ KBUILD_SRC =
 KBUILD_OUTPUT =
 unexport MAKEFLAGS KBUILD_SRC KBUILD_OUTPUT
 
-KERNELSRC	= $(pkgbuildtree)
-KERNEL_CONFIG	= defconfig
+KERNELSRC = $(pkgbuildtree)
+KERNEL_CONFIG = defconfig
 export KERNELSRC KERNEL_CONFIG
 
-DESTDIR		:= $(SYSROOT)$(prefix)/sys-root
-prefix		:= /usr
+DESTDIR := $(sysroot)
+prefix := /usr
 export DESTDIR prefix
 
 $(pkgtree)/.setup:

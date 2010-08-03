@@ -28,11 +28,6 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-ifneq ($(SYSROOT),)
-  install-args = \
-	DESTDIR=$(SYSROOT)
-endif
-
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(install-args) install

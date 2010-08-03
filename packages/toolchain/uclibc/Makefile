@@ -6,23 +6,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
 
-CROSS_COMPILE := $(prefix)/bin/$(TARGET)-
-prefix := $(subst $(CURDIR),,$(prefix))
-SYSROOT := $(CURDIR)
-exec-prefix = $(prefix)/$(TARGET)
-sysroot = $(exec-prefix)/sys-root
-
-ARCH := $(shell echo $(CONFIG_ARCH))
-CPU := $(shell echo $(CONFIG_CPU))
-ABI := $(shell echo $(CONFIG_ABI))
-ARCH := $(subst bfin,blackfin,$(ARCH))
-
-ifneq ($(ABI),)
-DEF_CONFIG = $(ARCH)-$(ABI).config
-CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
+ifneq ($(CONFIG_ABI),)
+DEF_CONFIG = $(CONFIG_ARCH)-$(CONFIG_ABI).config
+CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU)-$(CONFIG_ABI).config
 else
-DEF_CONFIG = $(ARCH).config
-CPU_CONFIG = $(ARCH)-$(CPU).config
+DEF_CONFIG = $(CONFIG_ARCH).config
+CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU).config
 endif
 
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
@@ -32,10 +21,10 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	CROSS=$(CROSS_COMPILE) \
-	PREFIX=$(SYSROOT)$(sysroot) \
+	CROSS=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=/usr/ \
+	PREFIX=$(sysroot)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
@@ -44,10 +33,10 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
-	CROSS=$(CROSS_COMPILE) \
-	PREFIX=$(SYSROOT)$(sysroot) \
+	CROSS=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
+	PREFIX=$(sysroot) \
 	-j $(NUM_CPU)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
@@ -56,13 +45,13 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
-	CROSS=$(CROSS_COMPILE) \
-	PREFIX=$(SYSROOT)$(sysroot) \
+	CROSS=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/
+	DEVEL_PREFIX=/usr/ \
+	PREFIX=$(sysroot)
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(install-args) install
-	mv $(SYSROOT)$(sysroot)/usr/lib/*crt*.o $(SYSROOT)$(exec-prefix)/lib
+	mv $(sysroot)/usr/lib/*crt*.o $(exec-prefix)/lib
 	$(call cmd,stamp)
