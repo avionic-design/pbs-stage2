@@ -1,5 +1,5 @@
 PACKAGE = gcc
-VERSION = 4.5.0
+VERSION = 4.5.1
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
 TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2
