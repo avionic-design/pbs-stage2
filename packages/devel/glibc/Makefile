@@ -1,10 +1,13 @@
 PACKAGE = glibc
-VERSION = 2.11
+VERSION = 2.11.2
 
-LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
 	$(PACKAGE)-$(VERSION).tar.bz2 \
-	$(PACKAGE)-ports-$(VERSION).tar.bz2
+	$(PACKAGE)-ports-$(MAJOR).$(MINOR).tar.bz2
 
 include packages/common.mk
 
