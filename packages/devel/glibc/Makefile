@@ -69,20 +69,20 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 install-args = \
 	install_root=$(DESTDIR)
 
-LIBGCC = $(shell $(CC) --print-file-name=libgcc_s.so.1)
-LIBGXX = $(shell $(CC) --print-file-name=libstdc++.so.6)
+LIBGCC = $(env) $(CC) --print-file-name=libgcc_s.so.1
+LIBGXX = $(env) $(CC) --print-file-name=libstdc++.so.6
 plugin = $(prefix)/lib/gconv
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
-	$(priv) cp $(LIBGCC) $(DESTDIR)/lib
-	$(priv) cp $(LIBGXX) $(DESTDIR)/lib
+	$(priv) cp $(shell $(LIBGCC)) $(DESTDIR)/lib
+	$(priv) cp $(shell $(LIBGXX)) $(DESTDIR)/lib
 	$(call cmd,stamp)
 
 stripfiles = \
-	/lib/$(notdir $(LIBGCC)) \
-	/lib/$(notdir $(LIBGXX)) \
+	/lib/$(notdir $(shell $(LIBGCC))) \
+	/lib/$(notdir $(shell $(LIBGXX))) \
 	/lib/ld-$(VERSION).so \
 	/lib/libanl-$(VERSION).so \
 	/lib/libBrokenLocale-$(VERSION).so \

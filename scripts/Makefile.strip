@@ -7,7 +7,14 @@ all: strip
 	@:
 
 -include include/config/auto.conf
-include $(srctree)/$(package)/Makefile
+include $(srctree)/scripts/Kbuild.include
+include $(srctree)/scripts/Makefile.lib
+
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
+
+STRIP := $(CROSS_COMPILE)strip
 
 # add the and rootfs prefix and expand wildcards
 stripfiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(stripfiles)))
@@ -17,7 +24,7 @@ stripfiles := $(patsubst %,strip-%,$(stripfiles))
 PHONY += $(stripfiles)
 $(stripfiles): strip-%: %
 	@echo "  STRIP   $(subst $(DESTDIR),,$<)"
-	@$(priv) $(STRIP) $<
+	@$(priv) $(env) $(STRIP) $<
 
 PHONY += strip
 strip: $(stripfiles)

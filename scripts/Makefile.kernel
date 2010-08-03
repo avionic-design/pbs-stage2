@@ -113,7 +113,7 @@ build: build-$(image) build-modules
 PHONY += headers-check
 headers-check: config
 	cd $(KERNELSRC) && \
-		$(priv) $(MAKE) ARCH=$(ARCH) \
+		$(env) $(MAKE) ARCH=$(ARCH) \
 			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			headers_check
@@ -121,7 +121,7 @@ headers-check: config
 PHONY += headers-install
 headers-install: config
 	cd $(KERNELSRC) && \
-		$(priv) $(MAKE) ARCH=$(ARCH) \
+		$(priv) $(env) $(MAKE) ARCH=$(ARCH) \
 			CROSS_COMPILE=$(CROSS_COMPILE) \
 			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 			INSTALL_HDR_PATH=$(DESTDIR)$(prefix) \

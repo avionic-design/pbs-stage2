@@ -41,7 +41,8 @@ build-args = \
 	DEVEL_PREFIX=$(prefix)/
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(env) $(MAKE) -j $(NUM_CPU) $(build-args)
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
@@ -66,9 +67,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(DESTDIR)/lib
-	$(priv) $(STRIP) $(DESTDIR)/lib/libgcc_s.so.1
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libstdc++.so.6` $(DESTDIR)/lib
-	$(priv) $(STRIP) $(DESTDIR)/lib/libstdc++.so.6
 	$(priv) cp $(pkgsrctree)/ldconfig.init $(DESTDIR)/etc/init.d/ldconfig
 	$(priv) cp $(pkgsrctree)/ld.so.conf $(DESTDIR)/etc/ld.so.conf
 	$(priv) ln -sf ../init.d/ldconfig $(DESTDIR)/etc/rcS.d/S50ldconfig
@@ -76,6 +75,8 @@ $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 
 stripfiles = \
 	$(prefix)/bin/ldd \
+	/lib/libgcc_s.so.1 \
+	/lib/libstdc++.so.6 \
 	/sbin/ldconfig
 
 include packages/cleanup.mk

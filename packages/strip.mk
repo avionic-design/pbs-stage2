@@ -1,3 +1,5 @@
+include scripts/Kbuild.include
+
 strip-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.strip \
 			package
 export stripfiles

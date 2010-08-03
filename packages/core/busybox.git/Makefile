@@ -5,13 +5,10 @@ include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 BUSYBOX_TREE = $(srctree)/../core/busybox.git
-ARCH := $(shell echo $(CONFIG_ARCH))
-CPU := $(shell echo $(CONFIG_CPU))
-LIBC := $(shell echo $(CONFIG_LIBC))
 DESTDIR := $(pkgtree)/install
 
 DEF_CONFIG = minimal
-CPU_CONFIG = minimal-$(CPU)
+CPU_CONFIG = minimal-$(CONFIG_CPU)
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
 
@@ -23,8 +20,8 @@ conf-args = \
 	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	O=$(pkgbuildtree) \
-	ARCH=$(ARCH)
+	ARCH=$(CONFIG_ARCH) \
+	O=$(pkgbuildtree)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)
@@ -37,8 +34,8 @@ build-args = \
 	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	O=$(pkgbuildtree) \
-	ARCH=$(ARCH)
+	ARCH=$(CONFIG_ARCH) \
+	O=$(pkgbuildtree)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(build-args) -j $(NUM_CPU)
@@ -50,8 +47,8 @@ install-args = \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	CONFIG_PREFIX=$(DESTDIR) \
-	O=$(pkgbuildtree) \
-	ARCH=$(ARCH)
+	ARCH=$(CONFIG_ARCH) \
+	O=$(pkgbuildtree)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
