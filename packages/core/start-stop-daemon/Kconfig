@@ -1,4 +1,0 @@
-config PACKAGE_CORE_START_STOP_DAEMON
-	bool "start-stop-daemon"
-	select VIRTUAL_DEVEL_LIBC
-	default n

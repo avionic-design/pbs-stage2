@@ -1,4 +1,0 @@
-config PACKAGE_NET_SWITCHCTRL
-	bool "switchctrl"
-	select VIRTUAL_DEVEL_LIBC
-	default n

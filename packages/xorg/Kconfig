@@ -10,11 +10,6 @@ source "packages/xorg/driver/Kconfig"
 source "packages/xorg/app/Kconfig"
 source "packages/xorg/data/Kconfig"
 
-config PACKAGE_XORG_KDRIVE
-	bool "kdrive"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
 source "packages/xorg/xorg-server/Kconfig"
 
 endmenu

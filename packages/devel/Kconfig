@@ -5,12 +5,10 @@ config VIRTUAL_DEVEL_LIBC
 	default n
 	select VIRTUAL_KERNEL_LINUX_LIBC
 	select PACKAGE_DEVEL_GLIBC if GLIBC
-	select PACKAGE_DEVEL_KLIBC if KLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 
 source "packages/devel/uclibc/Kconfig"
 source "packages/devel/glibc/Kconfig"
-source "packages/devel/klibc/Kconfig"
 
 config PACKAGE_DEVEL_GDB
 	bool "gdb: GNU debugger"

@@ -1,6 +1,5 @@
 obj-$(CONFIG_PACKAGE_NET_DHCP) += dhcp
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
-obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear
 obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
 obj-$(CONFIG_PACKAGE_NET_IPUTILS) += iputils
@@ -9,9 +8,5 @@ obj-$(CONFIG_PACKAGE_NET_NET_TOOLS) += net-tools
 obj-$(CONFIG_PACKAGE_NET_NETCAT) += netcat
 obj-$(CONFIG_PACKAGE_NET_NET_SNMP) += net-snmp
 obj-$(CONFIG_PACKAGE_NET_OPENNTPD) += openntpd
-obj-$(CONFIG_PACKAGE_NET_OPENSSH) += openssh
 obj-$(CONFIG_PACKAGE_NET_PPP) += ppp
-obj-$(CONFIG_PACKAGE_NET_SWITCHCTRL) += switchctrl
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
-obj-$(CONFIG_PACKAGE_NET_UDHCP) += udhcp
-obj-$(CONFIG_PACKAGE_NET_XORP) += xorp

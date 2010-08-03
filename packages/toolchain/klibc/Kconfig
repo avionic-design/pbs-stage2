@@ -1,5 +1,0 @@
-config PACKAGE_TOOLCHAIN_KLIBC
-	bool "klibc"
-	depends on KLIBC
-	select PACKAGE_TOOLCHAIN_GCC_CORE
-	default n

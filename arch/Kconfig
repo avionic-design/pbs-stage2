@@ -37,7 +37,4 @@ config UCLIBC
 config GLIBC
 	bool "glibc: GNU libc"
 
-config KLIBC
-	bool "klibc"
-
 endchoice

@@ -1,4 +1,0 @@
-config PACKAGE_LIBS_QT
-	bool "qt"
-	select VIRTUAL_DEVEL_LIBC
-	default n

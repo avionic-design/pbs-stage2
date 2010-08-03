@@ -1,4 +1,3 @@
-obj-$(CONFIG_PACKAGE_UTIL_ABOX) += abox
 obj-$(CONFIG_PACKAGE_UTIL_FLASHTOOL) += flashtool
 obj-$(CONFIG_PACKAGE_UTIL_GNOME_DOC_UTILS) += gnome-doc-utils
 obj-$(CONFIG_PACKAGE_UTIL_HTOP) += htop

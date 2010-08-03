@@ -1,5 +1,0 @@
-config PACKAGE_TOOLCHAIN_KLIBC_CLEANUP
-	bool "klibc - cleanup"
-	depends on KLIBC
-	select PACKAGE_TOOLCHAIN_GCC
-	default n

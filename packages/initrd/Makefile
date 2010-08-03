@@ -1,1 +1,0 @@
-obj-$(CONFIG_PACKAGE_INITRD_ROOTFS) += rootfs

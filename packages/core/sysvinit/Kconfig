@@ -1,4 +1,0 @@
-config PACKAGE_CORE_SYSVINIT
-	bool "sysvinit"
-	select VIRTUAL_DEVEL_LIBC
-	default n
