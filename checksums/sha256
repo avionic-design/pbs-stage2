@@ -188,7 +188,6 @@ ea7b9ebfb7a80de2b275c0c9124c8a505382ec48411a2794ab82542f9885ac3c  download/MesaD
 8b232fd2e7d8de5e4778f27ef11f7ff8c42c3815efc92144215734378b55e1ad  download/MesaLib-7.5.2.tar.bz2
 505bf418dceba05837f4ea1b1972b9620c35f8cb94bc4d1e6d573c15f562576d  download/MesaLib-7.8.2.tar.bz2
 0057b6e0562cf51b648a2d7b3729def8365ccefd12a9b1373f93312da1ebe5d8  download/metacity-2.30.1.tar.bz2
-4f4d19f3e15fdf00957932211be609b6bf4e689ad5938ce7bff666a638bde0e7  download/mingwrt-3.15.1-mingw32-src.tar.gz
 6b7af240b073ba847b091fd75aed4bf720eb94d30e188d23bb098d016bf40a48  download/minicom-2.4.tar.gz
 d012ab07ea26721467a85a775f34747c1c8897e37f16bec5317d8a72ef8b4f17  download/module-init-tools-3.12.tar.bz2
 ae79f8d41d8a86456b68607e9ca398d00f8b7342d1d83bcf4428178ac45380c7  download/mpc-0.8.2.tar.gz
@@ -200,7 +199,6 @@ df062ee23a5e873bc72518edf35cc30d133da78d57989fbbe934f6b31fa850ee  download/MPlay
 b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netcat-0.7.1.tar.bz2
 95936c6a95bef929e7ae0d9144c3fa20ffe62291dff94835bde88c5b5d2bf347  download/net-snmp-5.5.tar.gz
 7ae4dd6d44d6715f18e10559ffd270511b6e55a8900ca54fbebafe0ae6cf7d7b  download/net-tools-1.60.tar.bz2
-db426394965c48c1d29023e1cc6d965ea6b9a9035d8a849be2750ca4659a3d07  download/newlib-1.16.0.tar.gz
 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f  download/openjdk-195fcceefddc.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
 1bbf9afc5a6215121ac094147d0a84178294fe4c3d0a231731038fd3717ba7ca  download/openssl-1.0.0.tar.gz
@@ -255,7 +253,6 @@ b8c5c07c763888aa712b4585393346667a00793127c54cef0470cfa456b031cc  download/util-
 4f2bc94e5a1b60d6f35a9a2589ca98949e8841997f6a9acf4e85f46c1f34045f  download/videoproto-2.3.0.tar.bz2
 7f0a5195db1981806090a46aa962f980edc68eba72ca5cfc8287aff612f1cf70  download/vim-7.1.tar.bz2
 9129a0fdff4a91ac6bea1a8a63a643ffe185aa98d928e77efdb80e77e7d54251  download/vlc-1.1.1.tar.bz2
-b12dcaacc7a58a466797033fd39c6f8bbca7e26519dc8e859eca2915e12858d6  download/w32api-3.12-mingw32-src.tar.gz
 b0f265a1f339f19855572ac6e18a2c1f6aee596cf7c5f70fd3ea00b8e86901a6  download/webkit-1.3.2.tar.gz
 591d192da7e4ed7816f9f083ebcc38c9368c4d0995047ee584b752939658ea62  download/WebKit-r38698.tar.bz2
 f91190c8b8bb18270b86b00f30da5684bb5e5bd1ed0ccf352322f8145e076a59  download/xauth-1.0.4.tar.bz2

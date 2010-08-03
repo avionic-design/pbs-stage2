@@ -1,3 +1,0 @@
-config PACKAGE_TOOLCHAIN_LIBFLOAT
-	bool "libfloat"
-	default n
