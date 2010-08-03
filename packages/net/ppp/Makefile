@@ -13,7 +13,7 @@ conf-args = \
 	--prefix=$(prefix) \
 	--sysconfdir=/etc
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args)
 	$(call cmd,stamp)
@@ -23,7 +23,7 @@ build-args = \
 	EXTRA_CFLAGS="$(CFLAGS)" \
 	EXTRA_LDFLAGS="$(LDFLAGS)"
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

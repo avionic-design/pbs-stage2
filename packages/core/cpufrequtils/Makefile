@@ -9,13 +9,13 @@ include packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
 	CROSS=$(CROSS_COMPILE)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(priv) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 

@@ -13,7 +13,7 @@ conf-args = \
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(DOTCONFIG) $(pkgtree)/config.status
 	cd $(pkgbuildtree) && yes '' | \
 		$(env) $(MAKE) $(conf-args) config
@@ -24,7 +24,7 @@ build-args = \
 	COPTS='$(CFLAGS)' \
 	LOPTS='$(LDFLAGS)'
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

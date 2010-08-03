@@ -9,7 +9,7 @@ include packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
@@ -19,7 +19,7 @@ build-args = \
 	DESTDIR=$(DESTDIR) \
 	prefix=$(prefix)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 

@@ -52,7 +52,7 @@ ifeq ($(ARCH),x86_64)
   conf-vars += ac_cv_sizeof_long_double=16
 endif
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
@@ -61,7 +61,7 @@ $(pkgtree)/.configure:
 build-args = \
 	MAKEFLAGS=
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args) all
 	$(call cmd,stamp)

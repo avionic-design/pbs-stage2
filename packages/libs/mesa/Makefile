@@ -59,12 +59,12 @@ conf-vars += \
 	CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)

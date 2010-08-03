@@ -28,7 +28,7 @@ $(pkgtree)/.setup:
 conf-args = \
 	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include"
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)

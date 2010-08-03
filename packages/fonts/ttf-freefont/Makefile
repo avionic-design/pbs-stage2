@@ -13,10 +13,10 @@ ttfdir = $(fontsdir)/truetype
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build

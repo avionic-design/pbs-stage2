@@ -27,13 +27,13 @@ conf-args = \
 conf-args += \
 	--disable-plugin
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/build && \
 		cd $(pkgbuildtree)/build && \
 			env -i PATH=$(PATH) $(GITTREE)/configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/build && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

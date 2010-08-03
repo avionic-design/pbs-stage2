@@ -9,7 +9,7 @@ include packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp);
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
@@ -18,7 +18,7 @@ build-args = \
 	LDFLAGS="$(LDFLAGS)" \
 	prefix="$(prefix)"
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)

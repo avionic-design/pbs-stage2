@@ -25,12 +25,12 @@ conf-args = \
 
 conf-vars =
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

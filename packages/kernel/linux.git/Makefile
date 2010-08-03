@@ -25,7 +25,7 @@ include $(srctree)/packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build config
 	$(call cmd,stamp)
 

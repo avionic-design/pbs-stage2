@@ -37,7 +37,7 @@ conf-args += \
 	--enable-iwmmxt
 endif
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree) && \
 		cd $(pkgbuildtree) && \
 			$(env) ./configure $(conf-args) $(conf-vars)
@@ -46,7 +46,7 @@ $(pkgtree)/.configure:
 build-args += \
 	-j $(NUM_CPU)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

@@ -9,7 +9,7 @@ include packages/build-tools/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure: $(pkgtree)/.setup
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir $(pkgbuildtree)/obj-$(BUILD) && \
 		cd $(pkgbuildtree)/obj-$(BUILD) && \
 			../configure --prefix=$(prefix)

@@ -24,7 +24,7 @@ conf-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
 	ARCH=$(ARCH)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)

@@ -26,7 +26,7 @@ conf-args = \
 	O=$(pkgbuildtree) \
 	ARCH=$(ARCH)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)
 	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
 	cd $(BUSYBOX_TREE) && $(env) $(MAKE) $(conf-args) oldconfig

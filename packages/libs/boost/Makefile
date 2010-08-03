@@ -13,13 +13,13 @@ $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ./bootstrap.sh --without-icu
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		echo "using gcc : $(GCC_VERSION) : $(TARGET)-g++ $(CFLAGS) ;" > \
 			tools/build/v2/user-config.jam
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) ./bjam --prefix=$(DESTDIR)$(prefix) \
 			--without-mpi --without-python

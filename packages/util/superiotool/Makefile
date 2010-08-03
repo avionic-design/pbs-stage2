@@ -9,7 +9,7 @@ $(pkgtree)/.setup:
 	mkdir -p $(pkgbuildtree) && cp -a $(SOURCETREE)/* $(pkgbuildtree)
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \

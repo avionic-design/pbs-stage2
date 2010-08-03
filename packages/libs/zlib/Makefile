@@ -17,12 +17,12 @@ conf-args = \
 	--prefix=$(prefix) \
 	--shared
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)

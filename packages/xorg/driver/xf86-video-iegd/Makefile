@@ -17,7 +17,7 @@ dridstdir = $(libdstdir)/dri
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure

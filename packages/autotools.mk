@@ -24,13 +24,13 @@ conf-vars += \
 	CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)

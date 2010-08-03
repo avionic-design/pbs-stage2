@@ -112,29 +112,9 @@ $(pkgtree)/.patch: $(pkgtree)/.setup
 	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch))
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-
-$(pkgtree)/.binary: $(pkgtree)/.build
-
-$(pkgtree)/.install: $(pkgtree)/.binary
-
-PHONY += build
-build: $(pkgtree)/.build
-	@:
-
-PHONY += binary
-binary: $(pkgtree)/.binary
-	@:
-
 PHONY += install
 install: $(pkgtree)/.install
 	@:
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-$(pkgtree)/.binary: $(pkgtree)/.build
-$(pkgtree)/.install: $(pkgtree)/.binary
 
 PHONY += print
 print:

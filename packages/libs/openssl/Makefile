@@ -34,7 +34,7 @@ ifndef config
   $(error no configuration defined)
 endif
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		$(env) ./Configure $(conf-args) $(config)
 	$(call cmd,stamp)
@@ -43,7 +43,7 @@ build-vars = \
 	EXTRA_CPPFLAGS='$(CPPFLAGS)' \
 	EXTRA_CFLAGS='$(CFLAGS)'
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args) $(build-vars)
 	$(call cmd,stamp)
