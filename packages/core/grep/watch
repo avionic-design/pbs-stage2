@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.gnu.org/pub/gnu/grep/grep-(.+)\.tar\.bz2
+http://ftp.gnu.org/pub/gnu/grep/grep-(.+)\.tar\.xz

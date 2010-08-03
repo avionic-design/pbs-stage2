@@ -1,2 +1,1 @@
-pcre.patch
-automake.patch
+xmalloc.patch
