@@ -43,19 +43,17 @@ include $(srctree)/packages/cleanup.mk
 $(pkgtree)/.binary: $(pkgtree)/.do-install $(pkgtree)/.cleanup
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-install \
-			-a $(ARCH) -l $(CONFIG_LIBC) -s $(DESTDIR) \
-			-b $(objtree)/binary
+			-s $(DESTDIR) -b $(objtree)/binary
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-binary \
-			-a $(ARCH) -l $(CONFIG_LIBC) -v $(call version) \
-			-b $(objtree)/binary
+			-t $(TARGET) -v $(call version) -b $(objtree)/binary
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.binary
 	cd $(pkgsrctree) && \
 		$(priv) $(srctree)/scripts/pbs-extract \
-			-a $(ARCH) -l $(CONFIG_LIBC) -v $(call version) \
-			-r $(SYSROOT) -b $(objtree)/binary
+			-t $(TARGET) -v $(call version) -r $(SYSROOT) \
+			-b $(objtree)/binary
 	$(call cmd,stamp)
 
 kernel-version:

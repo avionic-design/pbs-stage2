@@ -17,13 +17,8 @@ for arg in $@; do
 	opt=$arg
 
 	case $arg in
-		-a | --arch)
-			prev=arch
-			shift
-			;;
-
-		-l | --libc)
-			prev=libc
+		-t | --target)
+			prev=target
 			shift
 			;;
 
@@ -70,12 +65,12 @@ if [ ! -f "$base/Makefile" ]; then
 fi
 
 [ "x$binary" = "x" ] && binary="${base}/binary"
-binary="${binary}/${arch}/${libc}/${pkg}"
+binary="${binary}/${name}/${pkg}"
 srcdir="${binary}/install"
 
 for package in $packages; do
 	package="${package%.install}"
-	tarball="${package}_${version}_${arch}.tar.bz2"
+	tarball="${package}_${version}_${target}.tar.bz2"
 	mkdir -p "${binary}"
 
 	echo -n "Building binary package: $tarball ... "

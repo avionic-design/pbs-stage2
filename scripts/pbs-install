@@ -16,16 +16,6 @@ for arg in $@; do
 	opt=$arg
 
 	case $arg in
-		-a | --arch)
-			prev=arch
-			shift
-			;;
-
-		-l | --libc)
-			prev=libc
-			shift
-			;;
-
 		-s | --source)
 			prev=srcdir
 			shift
@@ -74,7 +64,7 @@ if [ ! -f "$base/Makefile" ]; then
 fi
 
 [ "x$binary" = "x" ] && binary="${base}/binary"
-binary="${binary}/${arch}/${libc}/${pkg}"
+binary="${binary}/${name}/${pkg}"
 dstdir="${binary}/install"
 
 echo -n "Removing directory: $dstdir ... "

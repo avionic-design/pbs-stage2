@@ -17,23 +17,18 @@ for arg in $@; do
 	opt=$arg
 
 	case $arg in
-		-a | --arch)
-			prev=arch
-			shift
-			;;
-
-		-l | --libc)
-			prev=libc
-			shift
-			;;
-
-		-r | --root)
-			prev=root
+		-t | --target)
+			prev=target
 			shift
 			;;
 
 		-v | --version)
 			prev=version
+			shift
+			;;
+
+		-r | --root)
+			prev=root
 			shift
 			;;
 
@@ -85,11 +80,11 @@ if [ ! -f "$base/Makefile" ]; then
 fi
 
 [ "x$binary" = "x" ] && binary="${base}/binary"
-binary="${binary}/${arch}/${libc}/${pkg}"
+binary="${binary}/${name}/${pkg}"
 
 for package in $packages; do
 	package="${package%.install}"
-	tarball="${package}_${version}_${arch}.tar.bz2"
+	tarball="${package}_${version}_${target}.tar.bz2"
 
 	echo -n "Extracting binary package: $tarball ... "
 	tar xjf "$binary/$tarball" -C "$root"
