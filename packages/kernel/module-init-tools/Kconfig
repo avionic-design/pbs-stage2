@@ -1,0 +1,4 @@
+config PACKAGE_KERNEL_MODULE_INIT_TOOLS
+	bool "module-init-tools: Linux kernel - module init tools"
+	select VIRTUAL_DEVEL_LIBC
+	default n

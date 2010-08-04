@@ -1,35 +1,7 @@
 menu "Operating System Kernel"
 
-config OS
-	string
-	default "linux"
-
-config VIRTUAL_KERNEL_LINUX_LIBC
-	bool
-	select PACKAGE_KERNEL_LINUX_KERNEL
-	default n
-
-config PACKAGE_KERNEL_LINUX_KERNEL
-	bool "linux: Linux kernel"
-	default n
-
-config KERNEL_SOURCE
-	string "Kernel source tree"
-	depends on PACKAGE_KERNEL_LINUX_KERNEL
-	default "../kernel/linux-2.6.git"
-
-config KERNEL_CONFIG
-	string "Kernel configuration"
-	depends on PACKAGE_KERNEL_LINUX_KERNEL
-	default "defconfig"
-
-config PACKAGE_KERNEL_MODULE_INIT_TOOLS
-	bool "module-init-tools: Linux kernel - module init tools"
-	select VIRTUAL_DEVEL_LIBC
-	default n
-
-config PACKAGE_KERNEL_PSB_KERNEL_SOURCE
-	bool "Intel SCH (Poulsbo) DRM module"
-	default n
+source "packages/kernel/linux.git/Kconfig"
+source "packages/kernel/module-init-tools/Kconfig"
+source "packages/kernel/psb-kernel-source/Kconfig"
 
 endmenu

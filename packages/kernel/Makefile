@@ -1,6 +1,3 @@
-obj-$(CONFIG_PACKAGE_KERNEL_LINUX_HEADERS) += linux-headers.git
-obj-$(CONFIG_PACKAGE_KERNEL_LINUX_MODULES) += linux-modules.git
 obj-$(CONFIG_PACKAGE_KERNEL_LINUX_KERNEL) += linux.git
-#obj-$(CONFIG_PACKAGE_KERNEL_LINUX_KERNEL) += linux
 obj-$(CONFIG_PACKAGE_KERNEL_MODULE_INIT_TOOLS) += module-init-tools
 obj-$(CONFIG_PACKAGE_KERNEL_PSB_KERNEL_SOURCE) += psb-kernel-source
