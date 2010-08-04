@@ -32,7 +32,7 @@ NM = $(CROSS_COMPILE)nm
 RANLIB = $(CROSS_COMPILE)ranlib
 STRIP = $(CROSS_COMPILE)strip
 
-priv = sudo
+priv = fakeroot
 env = env -i PATH=$(objtree)/build-tools/bin:$(PATH)
 export priv env
 
