@@ -19,7 +19,7 @@ conf-args = \
 	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS_COMPILE=$(TARGET)- \
 	ARCH=$(CONFIG_ARCH) \
 	O=$(pkgbuildtree)
 
@@ -33,7 +33,7 @@ build-args = \
 	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS_COMPILE=$(TARGET)- \
 	ARCH=$(CONFIG_ARCH) \
 	O=$(pkgbuildtree)
 
@@ -45,7 +45,7 @@ install-args = \
 	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
 	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
-	CROSS_COMPILE=$(CROSS_COMPILE) \
+	CROSS_COMPILE=$(TARGET)- \
 	CONFIG_PREFIX=$(DESTDIR) \
 	ARCH=$(CONFIG_ARCH) \
 	O=$(pkgbuildtree)
