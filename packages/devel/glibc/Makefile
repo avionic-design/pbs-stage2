@@ -15,7 +15,7 @@ include packages/common.mk
 CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
 
 $(pkgtree)/.setup:
-	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
+	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(MAJOR).$(MINOR) ports
 	$(call cmd,stamp)
 
 conf-args = \
