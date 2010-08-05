@@ -54,14 +54,8 @@ quiet_cmd_gen_kernel_version = GEN     $@
 				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
 				kernelversion > $@
 
-$(pkgtree)/.version:
+$(pkgtree)/kernel-version:
 	$(call cmd,gen_kernel_version)
-
-quiet_cmd_symlink = SYMLINK $@
-      cmd_symlink = ln -sf $< $@
-
-$(objtree)/kernel-version: $(pkgtree)/.version
-	$(call cmd,symlink)
 
 quiet_cmd_gen_kernel_release = GEN     $@
       cmd_gen_kernel_release = \
@@ -70,20 +64,16 @@ quiet_cmd_gen_kernel_release = GEN     $@
 				include/config/kernel.release
 
 $(KBUILD_OUTPUT)/include/config/kernel.release:
-	$(call cmd,prepare)
+	$(call cmd,gen_kernel_release)
 
-$(pkgtree)/.release: $(KBUILD_OUTPUT)/include/config/kernel.release
-	$(call cmd,symlink)
-
-$(objtree)/kernel-release: $(pkgtree)/.release
-ifneq ($(CROSS_COMPILE),)
-	$(call cmd,symlink)
-endif
+$(pkgtree)/kernel-release: $(KBUILD_OUTPUT)/include/config/kernel.release
+	$(Q)echo "VERSION = `cat $<`" > $@
+	$(Q)echo "  GEN     $@"
 
 PHONY += config
 config: $(KBUILD_OUTPUT)/.config
-config: $(objtree)/kernel-version
-config: $(objtree)/kernel-release
+config: $(pkgtree)/kernel-version
+config: $(pkgtree)/kernel-release
 
 quiet_cmd_build_kernel_image = BUILD   $(image)
       cmd_build_kernel_image = \
