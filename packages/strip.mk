@@ -1,11 +1,8 @@
-include scripts/Kbuild.include
-
-strip-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.strip \
-			package
+strip-pkg := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.strip package
 export stripfiles
 
 $(pkgtree)/.strip:
-	$(Q)$(MAKE) $(strip-pkg)=$(obj)
+	$(Q)$(MAKE) --no-print-directory $(strip-pkg)=$(obj)
 	$(call cmd,stamp)
 
 .PHONY: $(PHONY)

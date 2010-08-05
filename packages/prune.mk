@@ -1,10 +1,9 @@
-prune-pkg := -f $(if $(KBUILD_SRC), $(srctree)/)scripts/Makefile.prune \
-			package
+prune-pkg := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.prune package
 export prunefiles
 export prunedirs
 
 $(pkgtree)/.prune:
-	$(Q)$(MAKE) $(prune-pkg)=$(obj)
+	$(Q)$(MAKE) --no-print-directory $(prune-pkg)=$(obj)
 	$(call cmd,stamp)
 
 .PHONY: $(PHONY)
