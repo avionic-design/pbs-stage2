@@ -2,7 +2,7 @@ mainmenu "Platform Build System"
 
 config VERSION
 	string
-	default "0.1.0"
+	default "2010.08-wip"
 
 config SHELL
 	string
