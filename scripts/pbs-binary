@@ -80,6 +80,11 @@ for package in $packages; do
 	package="${package##*/}"
 	tarball="${package}_${version}_${target}.tar.bz2"
 
+	if [ -x "$srcdir/$package/DEBIAN/hooks/binary" ]; then
+		"$srcdir/$package/DEBIAN/hooks/binary" \
+			"$srcdir/$package" "$version" || exit $?
+	fi
+
 	log -n "Building binary package: $tarball ... "
 	tar cjpf "$binary/$tarball" -C "$srcdir/$package" .
 	log "done"

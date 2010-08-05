@@ -28,6 +28,16 @@ for arg in $@; do
 			shift
 			;;
 
+		-t | --target)
+			prev=target
+			shift
+			;;
+
+		-v | --version)
+			prev=version
+			shift
+			;;
+
 		-s | --source)
 			prev=srcdir
 			shift
@@ -47,6 +57,16 @@ done
 
 if [ "x$prev" != "x" ]; then
 	echo "WARNING: missing argument for parameter: $opt"
+fi
+
+if [ "x$target" = "x" ]; then
+	echo "ERROR: no target configuration specified - try using -t TARGET"
+	exit 1
+fi
+
+if [ "x$version" = "x" ]; then
+	echo "ERROR: no version specified - try using -v VERSION"
+	exit 1
 fi
 
 if [ "x$srcdir" = "x" ]; then
@@ -103,4 +123,19 @@ for package in $packages; do
 			cp -dpR ${srcdir}${src} "${dstdir}/${subdir}${dst}"
 		done
 	)
+
+	debian="${dstdir}/${subdir}/DEBIAN"
+	scripts="${0%/*}"
+
+	mkdir -p "${debian}/hooks"
+
+	if [ -f "${package}.binary" ]; then
+		cp "${package}.binary" "${debian}/hooks/binary"
+		chmod 755 "${debian}/hooks/binary"
+	fi
+
+	if [ -f "${package}.control" ]; then
+		"${scripts}/opkg-gencontrol" -t $target -v $version \
+			"${package}.control" > "${debian}/control"
+	fi
 done

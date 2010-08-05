@@ -1,0 +1,39 @@
+#!/bin/sh -e
+
+for arg in $@; do
+	if test "x$prev" != "x"; then
+		eval "$prev=$arg"
+		prev=
+		continue
+	fi
+
+	case $arg in
+		-t | --target)
+			prev=target
+			;;
+
+		-v | --version)
+			prev=version
+			;;
+
+		*)
+			control="$arg"
+			;;
+	esac
+done
+
+if test "x$target" = "x"; then
+	echo "ERROR: no target configuration specified - try using -t TARGET"
+	exit 1
+fi
+
+if test "x$version" = "x"; then
+	echo "ERROR: no package version specified - try using -v VERSION"
+	exit 1
+fi
+
+if test "x$control" != "x"; then
+	sed -e "s/@VERSION@/$version/;s/@TARGET@/$target/" "$control"
+else
+	sed -e "s/@VERSION@/$version/;s/@TARGET@/$target/"
+fi
