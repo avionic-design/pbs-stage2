@@ -1,0 +1,82 @@
+src := $(obj)
+
+PHONY := all
+all:
+
+include include/config/auto.conf
+include $(srctree)/scripts/Kbuild.include
+include $(srctree)/scripts/Makefile.lib
+
+pkgtree := $(objtree)/build/$(obj)
+
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
+
+pkg-ext = $(VERSION)_$(TARGET).tar.bz2
+
+ifeq ($(install-packages-y),)
+  install-packages-y := $(wildcard $(srctree)/$(obj)/*.install)
+  install-packages-y := $(patsubst %.install,%,$(install-packages-y))
+  install-packages-y := $(patsubst $(srctree)/$(obj)/%,%,$(install-packages-y))
+
+  # filter-out unwanted packages
+  install-packages-y := $(filter-out %/linux-headers,$(install-packages-y))
+  install-packages-y := $(filter-out %-dev,$(install-packages-y))
+  install-packages-y := $(filter-out %-doc,$(install-packages-y))
+  install-packages-y := $(filter-out %-l10n,$(install-packages-y))
+  install-packages-y := $(filter-out %-locale,$(install-packages-y))
+  install-packages-y := $(filter-out %-man,$(install-packages-y))
+endif
+
+install-packages := $(addprefix install-$(obj)/,$(install-packages-y))
+
+quiet_cmd_install_pkg = TAR [x] $(<F)
+      cmd_install_pkg = mkdir -p $(rootfs) && \
+		bzip2 -dc $< | tar --extract --directory $(rootfs)
+
+PHONY += $(install-packages)
+$(install-packages): install-$(obj)/%: $(objtree)/binary/$(obj)/%_$(pkg-ext)
+	$(call cmd,install_pkg)
+
+all: $(install-packages)
+	@:
+
+ifeq ($(packages-y),)
+  packages-y := $(wildcard $(srctree)/$(obj)/*.install)
+  packages-y := $(patsubst %.install,%,$(packages-y))
+  packages-y := $(patsubst $(srctree)/$(obj)/%,%,$(packages-y))
+endif
+
+build-packages := $(addprefix build-$(obj)/,$(packages-y))
+
+quiet_cmd_install_files = INSTALL $*
+      cmd_install_files = $(priv) $(srctree)/scripts/pbs-install -q \
+				-s $(DESTDIR) -b $(objtree)/binary/$(obj) \
+				$(pkgsrctree)/$*.install
+
+quiet_cmd_build_package = BUILD   $*_$(VERSION)_$(TARGET).tar.bz2
+      cmd_build_package = $(priv) $(srctree)/scripts/pbs-binary -q \
+				-t $(TARGET) -v $(VERSION) \
+				-b $(objtree)/binary/$(obj) $*
+
+PHONY += $(build-packages)
+$(build-packages): build-$(obj)/%:
+	$(call cmd,install_files)
+	$(call cmd,build_package)
+
+PHONY += build
+build: $(build-packages)
+	@:
+
+extract-packages := $(addprefix extract-$(obj)/,$(packages-y))
+
+PHONY += $(extract-packages)
+$(extract-packages): extract-$(obj)/%: $(objtree)/binary/$(obj)/%_$(pkg-ext)
+	$(call cmd,install_pkg)
+
+PHONY += extract
+extract: $(extract-packages)
+	@:
+
+.PHONY: $(PHONY)

@@ -1,7 +1,13 @@
 #!/bin/sh
 
-packages="*.install"
-version="current"
+quiet=no
+
+log()
+{
+	if test "x$quiet" = "xno"; then
+		echo "$@"
+	fi
+}
 
 for arg in $@; do
 	if [ "x$prev" != "x" ]; then
@@ -17,6 +23,11 @@ for arg in $@; do
 	opt=$arg
 
 	case $arg in
+		-q | --quiet)
+			quiet=yes
+			shift
+			;;
+
 		-t | --target)
 			prev=target
 			shift
@@ -43,63 +54,33 @@ if [ "x$prev" != "x" ]; then
 	echo "WARNING: missing argument for parameter: $opt"
 fi
 
-cwd=`pwd`
-base=`dirname $cwd`
-name=`basename $cwd`
-
-while [ "x$name" != "xpackages" ] && [ "x$name" != "xplatforms" ]; do
-	if [ "x$name" = "x$base" ]; then
-		break;
-	fi
-
-	base=`dirname $base`
-	name=`basename $base`
-done
-
-pkg=${cwd#$base/}
-base=`dirname $base`
-
-if [ ! -f "$base/Makefile" ]; then
-	echo "cannot find base directory"
+if [ "x$target" = "x" ]; then
+	echo "ERROR: no target configuration specified - try using -t TARGET"
 	exit 1
 fi
 
-[ "x$binary" = "x" ] && binary="${base}/binary"
-binary="${binary}/${name}/${pkg}"
+if [ "x$version" = "x" ]; then
+	echo "ERROR: no package version specified - try using -v PATH"
+	exit 1
+fi
+
+if [ "x$binary" = "x" ]; then
+	echo "ERROR: no binary directory specified - try using -b PATH"
+	exit 1
+fi
+
+if [ "x$packages" = "x" ]; then
+	echo "ERROR: no package definition specified"
+	exit 1
+fi
+
 srcdir="${binary}/install"
 
 for package in $packages; do
-	package="${package%.install}"
+	package="${package##*/}"
 	tarball="${package}_${version}_${target}.tar.bz2"
-	mkdir -p "${binary}"
 
-	echo -n "Building binary package: $tarball ... "
-
-	cat "$package.install" | (
-		while read line; do
-			[ "x${line#\#}" = "x$line" ] || continue
-
-			src=`echo "$line" | awk '{ print $1 }'`
-			dst=`echo "$line" | awk '{ print $2 }'`
-
-			if [ "x$src" = "x" ]; then
-				continue
-			fi
-
-			if [ "x$dst" = "x" ]; then
-				dst=`dirname "$src"`
-			fi
-
-			if [ "x$dst" = "x/" ]; then
-				dst="$src"
-			fi
-
-			src=${src#/}
-			dst=${dst#/}
-
-			echo "$dst"
-		done
-	) | tar cjpf "$binary/$tarball" -C "$srcdir/$package" -T -
-
-	echo "done"
+	log -n "Building binary package: $tarball ... "
+	tar cjpf "$binary/$tarball" -C "$srcdir/$package" .
+	log "done"
 done

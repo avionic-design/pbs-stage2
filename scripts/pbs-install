@@ -1,6 +1,13 @@
 #!/bin/sh
 
-packages="*.install"
+quiet=no
+
+log()
+{
+	if test "x$quiet" = "xno"; then
+		echo "$@"
+	fi
+}
 
 for arg in $@; do
 	if [ "x$prev" != "x" ]; then
@@ -16,6 +23,11 @@ for arg in $@; do
 	opt=$arg
 
 	case $arg in
+		-q | --quiet)
+			quiet=yes
+			shift
+			;;
+
 		-s | --source)
 			prev=srcdir
 			shift
@@ -42,44 +54,29 @@ if [ "x$srcdir" = "x" ]; then
 	exit 1
 fi
 
-cwd=`pwd`
-base=`dirname $cwd`
-name=`basename $cwd`
-
-while [ "x$name" != "xpackages" ] && [ "x$name" != "xplatforms" ]; do
-	if [ "x$name" = "x$base" ]; then
-		break;
-	fi
-
-	base=`dirname $base`
-	name=`basename $base`
-done
-
-pkg=${cwd#$base/}
-base=`dirname $base`
-
-if [ ! -f "$base/Makefile" ]; then
-	echo "cannot find base directory"
+if [ "x$binary" = "x" ]; then
+	echo "ERROR: no binary directory specified - try using -b PATH"
 	exit 1
 fi
 
-[ "x$binary" = "x" ] && binary="${base}/binary"
-binary="${binary}/${name}/${pkg}"
+if [ "x$packages" = "x" ]; then
+	echo "ERROR: no package definition specified"
+	exit 1
+fi
+
 dstdir="${binary}/install"
-
-echo -n "Removing directory: $dstdir ... "
-rm -rf "$dstdir"
-echo "done"
-
-package_list=`echo $packages`
-if [ "x$package_list" = "x$packages" ]; then
-	echo "ERROR: no package definition found"
-	exit 1
-fi
 
 for package in $packages; do
 	package="${package%.install}"
-	echo "Installing $package "
+	subdir="${package##*/}"
+
+	if [ -d "$dstdir/$subdir" ]; then
+		log -n "Removing directory: $dstdir/$subdir ... "
+		rm -rf "$dstdir/$subdir"
+		log "done"
+	fi
+
+	log "Installing $subdir "
 	cat "$package.install" | (
 		while read line; do
 			[ "x${line#\#}" = "x$line" ] || continue
@@ -93,15 +90,17 @@ for package in $packages; do
 
 			[ "x${src#/}" = "x$src" ] && src="/$src"
 			[ "x${dst#/}" = "x$dst" ] && dst="/$dst"
+
 			# Skip shell paterns expanding to nothing
 			if echo "${srcdir}${src}" | grep -qF -e '*' -e '?' && \
 			   [ "x$(echo ${srcdir}${src})" = "x${srcdir}${src}" ] ; then
 				echo "  skipping empty install patern: ${src}"
 				continue
 			fi
-			echo "  installing: ${src}"
-			mkdir -p "${dstdir}/${package}${dst}"
-			cp -dpR ${srcdir}${src} "${dstdir}/${package}${dst}"
+
+			log "  installing: ${src}"
+			mkdir -p "${dstdir}/${subdir}${dst}"
+			cp -dpR ${srcdir}${src} "${dstdir}/${subdir}${dst}"
 		done
 	)
 done
