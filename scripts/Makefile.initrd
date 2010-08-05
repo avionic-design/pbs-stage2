@@ -1,31 +1,67 @@
-PHONY := _all
-_all:
-
 src := $(obj)
 
--include include/config/auto.conf
+PHONY := all
+all:
+
+include include/config/auto.conf
+include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-ifndef obj
-  $(warning kbuild: Makefile.initrd is included improperly)
+ifeq ($(CONFIG_ARCH),arm)
+  CONFIG_ARCH_HAS_UBOOT = y
 endif
 
-ARCH := $(shell echo $(CONFIG_ARCH))
-ARCH := $(patsubst i%86,x86,$(ARCH))
-ARCH := $(subst x86_64,x86,$(ARCH))
+targets-y := $(obj)/initrd.gz
+targets-y += $(obj)/initrd.bz2
+targets-y += $(obj)/initrd.xz
+targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.img
+targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.fit
 
-ifneq ($(wildcard $(srctree)/scripts/Makefile.initrd-$(ARCH)),)
-  include scripts/Makefile.initrd-$(ARCH)
-else
-  include scripts/Makefile.initrd-generic
-endif
+packages := $(addprefix install-$(srctree)/,$(depends-dirs))
 
-$(obj)/rootfs:
-	$(if $(wildcard $(obj)/rootfs),,@echo "run 'make install' first")
+quiet_cmd_install_deb =
+      cmd_install_deb = $(MAKE) $(binary)=$* rootfs=$(objtree)/initrd
+
+$(packages): install-$(srctree)/%: %
+	$(call cmd,install_deb)
+
+quiet_cmd_rmdir = CLEAN   $*
+      cmd_rmdir = rm -r $*
+
+rmdir-$(obj)/initrd: rmdir-%:
+	$(if $(wildcard $*),$(call cmd,rmdir),)
+
+$(obj)/initrd: %: rmdir-% $(packages) FORCE
+
+quiet_cmd_initrd = CPIO    $@
+      cmd_initrd = cd $< && find | cpio -H newc --quiet -o > $@
+
+$(obj)/initrd.img: $(obj)/initrd FORCE
+	$(call cmd,initrd)
+
+quiet_cmd_gzip = GZIP    $@
+      cmd_gzip = gzip -c $< > $@
+
+$(obj)/initrd.gz: $(obj)/initrd.img
+	$(call cmd,gzip)
+
+quiet_cmd_bzip2 = BZIP2   $@
+      cmd_bzip2 = bzip2 -c $< > $@
+
+$(obj)/initrd.bz2: $(obj)/initrd.img
+	$(call cmd,bzip2)
+
+quiet_cmd_xz = XZ      $@
+      cmd_xz = xz -c $< > $@
+
+$(obj)/initrd.xz: $(obj)/initrd.img
+	$(call cmd,xz)
+
+all: $(targets-y)
+	@:
 
 PHONY += FORCE
 FORCE: ;
-	@:
 
 .PHONY: $(PHONY)

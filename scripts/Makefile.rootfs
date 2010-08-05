@@ -1,42 +1,53 @@
 src := $(obj)
 
-include scripts/pbuild.mk
+PHONY := all
+all:
 
-pbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
-include $(if $(wildcard $(pbuild-dir)/pbuild), $(pbuild-dir)/pbuild, $(pbuild-dir)/Makefile)
-
+include include/config/auto.conf
+include include/config/depends-dirs.conf
+include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-ifndef obj
-  $(warning pbuild: Makefile.rootfs is included improperly)
-endif
+targets-y := $(obj)/rootfs.img
 
-rootfs-image ?= $(PLATFORM)/rootfs.ext2
-rootfs-size ?= 128M
+packages := $(addprefix install-,$(depends-dirs))
 
-$(PLATFORM)/rootfs.plain:
-	dd if=/dev/zero of=$@ bs=$(rootfs-size) count=1
+quiet_cmd_install_package =
+      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/rootfs
 
-$(PLATFORM)/rootfs.ext2: $(PLATFORM)/rootfs.plain
-	mv $< $@
-	/sbin/mkfs -t ext2 -F $@
-	/sbin/tune2fs -c 0 $@
+$(packages): install-%:
+	$(call cmd,install_package)
 
-$(PLATFORM)/rootfs.ext3: $(PLATFORM)/rootfs.plain
-	mv $< $@
-	/sbin/mkfs -t ext3 -F $@
-	/sbin/tune2fs -c 0 $@
+quiet_cmd_rmdir = CLEAN   $*
+      cmd_rmdir = rm -r $*
 
-$(PLATFORM)/rootfs.img: $(rootfs-image)
-	mv $< $@
+rmdir-$(obj)/rootfs: rmdir-%:
+	$(if $(wildcard $*),$(call cmd,rmdir),)
 
-PHONY += install
-install: $(ROOTFS) $(PLATFORM)/rootfs.img
-	mp=`mktemp -d` && \
-	echo "mountpoint: $$mp" && \
-	sudo mount -o loop $(PLATFORM)/rootfs.img $$mp && \
-	sudo cp -a $(ROOTFS)/* $$mp && \
-	sudo umount $$mp && \
-	rm -rf $$mp
+quiet_cmd_delete = DELETE  $*
+      cmd_delete = rm -f $*
+
+rm-$(obj)/rootfs.img: rm-%:
+	$(call cmd,delete)
+
+quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
+      cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
+
+include $(objtree)/build/packages/kernel/linux.git/kernel-release
+
+$(obj)/rootfs: KERNEL_VERSION = $(VERSION)
+$(obj)/rootfs: %: rmdir-% $(packages) FORCE
+	$(call cmd,depmod)
+
+quiet_cmd_mksquashfs = SQUASHFS $@
+      cmd_mksquashfs = mksquashfs $< $@ -noappend
+
+$(obj)/rootfs.img: $(obj)/rootfs FORCE
+	$(call cmd,mksquashfs)
+
+all: $(targets-y)
+
+PHONY += FORCE
+FORCE: ;
 
 .PHONY: $(PHONY)

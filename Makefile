@@ -116,7 +116,6 @@ ifneq ($(KBUILD_SRC),)
 endif
 
 no-dot-config-targets := clean mrproper distclean
-no-dot-config-targets += initrd
 
 config-targets	:= 0
 mixed-targets	:= 0
@@ -220,6 +219,10 @@ _all: build
 PHONY += initrd
 initrd:
 	$(Q)$(MAKE) $(initrd)=$(objtree)
+
+PHONY += rootfs
+rootfs:
+	$(Q)$(MAKE) $(rootfs)=$(objtree)
 
 clean-dirs := $(dirs) scripts/basic scripts/kconfig
 ifneq ($(CURDIR),$(srctree))
