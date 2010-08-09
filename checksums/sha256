@@ -122,7 +122,7 @@ a8346859505d2aa27ecc4531f1c86d72801936d96c31c5beaeff4587441b568b  download/libIC
 c5d24d8c096546353fbc7cedf208392d5a02afe9d56ebcc1cccb258d7c4d2220  download/libIDL-0.8.14.tar.bz2
 bbfac3ed6bfbc2823d3775ebb931087371e142bb0e9bb1bee51a76a6e0078690  download/libmad-0.15.1b.tar.gz
 db01e218e8d09540459c8f7c5698c159cd84c3d5b8caa9763bf0e5a35f6edf00  download/libmatchbox-1.9.tar.bz2
-ba1d0dcdbc5e2eefa47d1e84cafcccc0e0ab0f5967a9b508da79a7e9f38553ea  download/libnih-1.0.1.tar.gz
+7b0c0a95eb718ad0aa591f67db7b9f274cecdedd2037fc066037ea7b99c2257e  download/libnih-1.0.2.tar.gz
 d1cf0b4073471adde59385443c21f0f75f09ec5d08ed935e668450d7fd145979  download/libnotify-0.4.5.tar.bz2
 f30d983e238acd94e80ae551327ea2f83cdc330470b4188564bef28fec59eb69  download/libogg-1.2.0.tar.gz
 105f02079b0b50034c759db34b473ecb5704ffa20a5486b60a8b7698128bfc69  download/liboil-0.3.17.tar.gz
@@ -246,7 +246,7 @@ db5b27df7bbb318036ebdb75acd3e98f1bd6eb6608fb70a67d478cd243d178dc  download/ttf-b
 daa088f9ae231508929b7bd4746e942212b53f2802ca4cee450139fabc8de1fa  download/twm-1.0.4.tar.bz2
 b8caab8e7ba29432344b8134d2e47bdd451bee64cd5863f6a7bb2f7b0ac8ecfb  download/uClibc-0.9.31.tar.xz
 226447e2bdeffaa82543dd2a6d3e0cfc373dbf8e420e7e2640113917fb1aa473  download/udev-160.tar.bz2
-9c0690b90c9f5cca221cd5e2d5882233ab43b7462196ca06e73759b67117d2cf  download/upstart-0.6.5.tar.gz
+7ab4014a808751327f0a4f9687844c4022fc12d5d8b21755775d4a4aac30c9b3  download/upstart-0.6.6.tar.gz
 b3b2bea6d2cd87660c8201a47071bf2a9889d8ed90c7203cc768b597799c12f4  download/usbutils-0.86.tar.gz
 b8c5c07c763888aa712b4585393346667a00793127c54cef0470cfa456b031cc  download/util-linux-ng-2.18.tar.bz2
 4f2bc94e5a1b60d6f35a9a2589ca98949e8841997f6a9acf4e85f46c1f34045f  download/videoproto-2.3.0.tar.bz2

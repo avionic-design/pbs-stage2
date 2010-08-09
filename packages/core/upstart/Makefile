@@ -1,7 +1,10 @@
 PACKAGE = upstart
-VERSION = 0.6.5
+VERSION = 0.6.6
 
-LOCATION = http://upstart.ubuntu.com/download/0.6
+MAJOR   = $(word 1,$(subst ., ,$(VERSION)))
+MINOR   = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://upstart.ubuntu.com/download/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
