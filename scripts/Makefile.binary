@@ -33,7 +33,7 @@ install-packages := $(addprefix install-$(obj)/,$(install-packages-y))
 
 quiet_cmd_install_pkg = TAR [x] $(<F)
       cmd_install_pkg = mkdir -p $(rootfs) && \
-		bzip2 -dc $< | tar --extract --directory $(rootfs)
+		bzip2 -dc $< | $(priv) tar --extract --directory $(rootfs)
 
 PHONY += $(install-packages)
 $(install-packages): install-$(obj)/%: $(objtree)/binary/$(obj)/%_$(pkg-ext)
