@@ -1,3 +1,4 @@
 /sbin
 /etc/dbus-1
 /etc/init/control-alt-delete.conf
+/etc/init/upstart-udev-bridge.conf
