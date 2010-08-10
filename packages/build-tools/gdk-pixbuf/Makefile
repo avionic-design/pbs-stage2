@@ -1,9 +1,4 @@
-PACKAGE = gdk-pixbuf
-VERSION = 2.21.6
-
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.21
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/gdk-pixbuf/Makefile.location
 include packages/build-tools/autotools.mk
 
 env += \
