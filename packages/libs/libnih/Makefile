@@ -1,12 +1,4 @@
-PACKAGE = libnih
-VERSION = 1.0.2
-
-MAJOR   = $(word 1,$(subst ., ,$(VERSION)))
-MINOR   = $(word 2,$(subst ., ,$(VERSION)))
-
-LOCATION = http://upstart.ubuntu.com/download/libnih/$(MAJOR).$(MINOR)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/libnih/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \

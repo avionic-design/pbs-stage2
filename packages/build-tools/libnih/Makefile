@@ -1,9 +1,4 @@
-PACKAGE = libnih
-VERSION = 1.0.1
-
-LOCATION = http://upstart.ubuntu.com/download/libnih/1.0
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/libnih/Makefile.location
 include packages/build-tools/common.mk
 
 $(pkgtree)/.setup:

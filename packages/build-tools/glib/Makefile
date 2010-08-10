@@ -1,9 +1,4 @@
-PACKAGE = glib
-VERSION = 2.25.11
-
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.25
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/glib/Makefile.location
 include packages/build-tools/common.mk
 
 $(pkgtree)/.setup:
