@@ -1,8 +1,111 @@
-#!/bin/sh
+#!/bin/sh -e
 
-source="$1"
-name="$2"
+usage()
+{
+	if test "x$2" != "x"; then
+		echo "ERROR: $2"
+	fi
 
-version=`awk '/Version:/ { print $2 }' ${source}/DEBIAN/control`
-arch=`awk '/Architecture:/ { print $2 }' ${source}/DEBIAN/control`
-dpkg-deb --build "${source}" "${name}_${version}_${arch}.deb"
+	echo "usage: $1 [options] command"
+}
+
+do_help()
+{
+	usage "$1"
+}
+
+do_build()
+{
+	if test "x$1" = "x"; then
+		echo "usage: $0 $command directory [archive|directory]"
+		exit 1
+	fi
+
+	if test ! -f "$1/DEBIAN/control"; then
+		echo "$1/DEBIAN/control is missing"
+		exit 1
+	fi
+
+	package=`awk '/Package: / { print $2 }' "$1/DEBIAN/control"`
+	version=`awk '/Version: / { print $2 }' "$1/DEBIAN/control"`
+	arch=`awk '/Architecture: / { print $2 }' "$1/DEBIAN/control"`
+
+	if test "x$2" != "x"; then
+		if test -d "$2"; then
+			dstdir="$2"
+		fi
+	fi
+
+	if test "x$dstdir" = "x"; then
+		dstdir="`pwd`"
+	fi
+
+	if test "x$archive" = "x"; then
+		archive="${package}_${version}_${arch}.deb"
+	fi
+
+	tmpdir=`mktemp -d`
+
+	find "$1" -type f -not -path '*/DEBIAN/*' | (
+		while read file; do
+			sha256sum "$file" | sed -e "s%$1/%%"
+		done
+	) > "$1/DEBIAN/sha256sums"
+
+	tar --create --directory "$1/DEBIAN" --exclude hooks . | \
+		gzip -c > "$tmpdir/control.tar.gz"
+	tar --create --directory "$1" --exclude DEBIAN . | \
+		gzip -c > "$tmpdir/data.tar.gz"
+	echo "2.0" > "$tmpdir/debian-binary"
+
+	if test -e "$dstdir/$archive"; then
+		rm "$dstdir/$archive"
+	fi
+
+	ar cru "$dstdir/$archive" \
+		"$tmpdir/debian-binary" \
+		"$tmpdir/control.tar.gz" \
+		"$tmpdir/data.tar.gz"
+
+	rm -r "$tmpdir"
+}
+
+for arg in $@; do
+	case $arg in
+		-h | --help)
+			command=$arg
+			shift
+			break
+			;;
+
+		-b | --build)
+			command=$arg
+			shift
+			break
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+if test "x$command" = "x"; then
+	usage "$0" "missing command"
+	exit 1
+fi
+
+case $command in
+	-h | --help)
+		do_help "$0"
+		;;
+
+	-b | --build)
+		do_build "$1" "$2"
+		;;
+
+	*)
+		usage "$0" "unknown command \"$command\""
+		exit 1
+		;;
+esac

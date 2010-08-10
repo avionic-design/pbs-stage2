@@ -33,7 +33,8 @@ install-packages := $(addprefix install-$(obj)/,$(install-packages-y))
 
 quiet_cmd_install_pkg = TAR [x] $(<F)
       cmd_install_pkg = mkdir -p $(rootfs) && \
-		bzip2 -dc $< | $(priv) tar --extract --directory $(rootfs)
+		bzip2 -dc $< | $(priv) tar --extract --exclude ./DEBIAN \
+			--directory $(rootfs)
 
 PHONY += $(install-packages)
 $(install-packages): install-$(obj)/%: $(objtree)/binary/$(obj)/%_$(pkg-ext)
@@ -64,10 +65,16 @@ quiet_cmd_build_package = BUILD   $*_$(VERSION)_$(TARGET).tar.bz2
 				-b $(objtree)/binary/$(obj) \
 				$*
 
+quiet_cmd_build_deb = DEB     $*_$(VERSION)_$(TARGET).deb
+      cmd_build_deb = $(priv) $(srctree)/scripts/pbs-deb --build \
+				$(objtree)/binary/$(obj)/install/$* \
+				$(objtree)/binary/$(obj)
+
 PHONY += $(build-packages)
 $(build-packages): build-$(obj)/%:
 	$(call cmd,install_files)
 	$(call cmd,build_package)
+	$(call cmd,build_deb)
 
 PHONY += build
 build: $(build-packages)

@@ -137,5 +137,10 @@ for package in $packages; do
 	if [ -f "${package}.control" ]; then
 		"${scripts}/opkg-gencontrol" -t $target -v $version \
 			"${package}.control" > "${debian}/control"
+	else
+		# generate a dummy control file
+		echo "Package: ${subdir}" > "${debian}/control"
+		echo "Version: ${version}" >> "${debian}/control"
+		echo "Architecture: ${target}" >> "${debian}/control"
 	fi
 done
