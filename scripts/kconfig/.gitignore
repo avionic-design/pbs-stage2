@@ -1,0 +1,6 @@
+conf
+deps
+*.o
+*.hash.c
+*.tab.c
+lex.*.c

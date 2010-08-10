@@ -1,2 +1,10 @@
 archive
+*/*.old
+*/build
+*/include
+*/kernel-version
+*/Makefile
+*/scripts
+*/source
+*/scripts
 */usr
