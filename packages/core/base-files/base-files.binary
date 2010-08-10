@@ -1,0 +1,32 @@
+#!/bin/sh -e
+#
+# This script is run right before building the package tarball to create
+# the device nodes. We do this here because it must be done in the same
+# fakeroot session as creating the tarball.
+#
+
+PACKAGE="$1"
+DST="$2"
+
+mkdev() {
+    dev="$DST/$1"
+    shift
+    [ -e "$dev" ] && rm "$dev"
+    mknod "$dev" "$@"
+}
+
+mkdev /dev/null       c  1  3
+mkdev /dev/tty        c  5  0
+mkdev /dev/console    c  5  1
+
+for i in `seq 0 9` ; do
+    mkdev /dev/tty$i c 4 $i
+done
+
+for i in `seq 0 3` ; do
+    mkdev /dev/ttyS$i c 4 $((64+i))
+done
+
+# Create the mtab link
+[ -e "$DST/etc/mtab" ] && rm "$DST/etc/mtab"
+ln -s /proc/mounts "$DST/etc/mtab"
