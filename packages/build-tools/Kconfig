@@ -1,5 +1,6 @@
 menu "Build tools"
 
+source "packages/build-tools/gdk-pixbuf/Kconfig"
 source "packages/build-tools/glib/Kconfig"
 source "packages/build-tools/libnih/Kconfig"
 
