@@ -36,3 +36,4 @@ plugdev:x:46:
 staff:x:50:
 games:x:60:
 nogroup:x:65534:
+messagebus:x:100:
