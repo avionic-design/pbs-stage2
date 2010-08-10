@@ -1,4 +1,3 @@
 config PACKAGE_BUILD_TOOLS_LIBNIH
 	bool "libnih"
-	select VIRTUAL_DEVEL_LIBC
 	default n
