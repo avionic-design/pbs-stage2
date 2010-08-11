@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
