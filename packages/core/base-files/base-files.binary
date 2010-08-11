@@ -5,8 +5,8 @@
 # fakeroot session as creating the tarball.
 #
 
-PACKAGE="$1"
-DST="$2"
+DST="$1"
+VERSION="$2"
 
 mkdev() {
     dev="$DST/$1"
