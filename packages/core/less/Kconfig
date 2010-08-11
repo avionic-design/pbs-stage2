@@ -1,4 +1,4 @@
 config PACKAGE_CORE_LESS
 	bool "less"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_NCURSES
 	default n
