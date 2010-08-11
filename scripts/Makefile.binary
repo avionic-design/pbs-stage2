@@ -54,7 +54,7 @@ build-packages := $(addprefix build-$(obj)/,$(packages-y))
 pbs_quiet = $(if $(filter 1,$(V)),,-q)
 
 quiet_cmd_install_files = INSTALL $*
-      cmd_install_files = $(priv) $(srctree)/scripts/pbs-install -q \
+      cmd_install_files = $(priv) $(srctree)/scripts/pbs-install $(pbs_quiet) \
 				-t $(TARGET) -v $(VERSION) -s $(DESTDIR) \
 				-b $(objtree)/binary/$(obj) \
 				$(pkgsrctree)/$*.install
