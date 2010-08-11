@@ -19,7 +19,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
-	INSTALL_TOP=$(DESTDIR)$(prefix)
+	INSTALL_TOP=$(DESTDIR)$(prefix) \
+	INSTALL_MAN=$(DESTDIR)$(prefix)/share/man
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(priv) $(MAKE) $(install-args) install
