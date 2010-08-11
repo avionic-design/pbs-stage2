@@ -1,0 +1,4 @@
+config PACKAGE_DEVEL_LUA
+	bool "lua"
+	select VIRTUAL_DEVEL_LIBC
+	default n

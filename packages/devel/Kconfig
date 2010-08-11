@@ -10,6 +10,8 @@ config VIRTUAL_DEVEL_LIBC
 source "packages/devel/uclibc/Kconfig"
 source "packages/devel/glibc/Kconfig"
 
+source "packages/devel/lua/Kconfig"
+
 config PACKAGE_DEVEL_GDB
 	bool "gdb: GNU debugger"
 	select PACKAGE_DEVEL_LIBC
