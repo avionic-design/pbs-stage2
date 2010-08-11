@@ -1,4 +1,4 @@
 config PACKAGE_DEVEL_LUA
 	bool "lua"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_LIBS_READLINE
 	default n
