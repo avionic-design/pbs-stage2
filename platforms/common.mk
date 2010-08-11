@@ -8,10 +8,10 @@ links := $(addprefix $(DESTDIR),$(links))
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-$(pkgtree)/.configure:
+$(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
-$(pkgtree)/.build:
+$(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 $(files): $(DESTDIR)%: $(obj)/src%
