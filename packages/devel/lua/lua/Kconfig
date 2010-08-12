@@ -1,0 +1,4 @@
+config PACKAGE_DEVEL_LUA
+	bool "lua"
+	select PACKAGE_LIBS_READLINE
+	default n
