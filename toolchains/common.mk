@@ -1,5 +1,5 @@
 clean-dirs  := build include scripts
-clean-files := .config.old .depends source Makefile
+clean-files := .config .config.old
 clean-files += kernel-release kernel-version
 
 mrproper-dirs  :=
