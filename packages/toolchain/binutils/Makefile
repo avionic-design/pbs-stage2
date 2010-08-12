@@ -16,7 +16,7 @@ conf-args = \
 	--infodir=$(exec-prefix)/share/info \
 	--mandir=$(exec-prefix)/share/man \
 	--libdir=$(exec-prefix)/lib \
-	--with-pkgversion="PBS $(subst $(quote),,$(CONFIG_VERSION))" \
+	--with-pkgversion="PBS $(RELEASE)" \
 	--with-sysroot=yes \
 	--disable-nls
 
