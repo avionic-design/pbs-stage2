@@ -107,14 +107,6 @@ scripts_basic:
 
 scripts/basic/%: scripts_basic ;
 
-PHONY += outputmakefile
-outputmakefile:
-ifneq ($(KBUILD_SRC),)
-	$(Q)ln -fsn $(srctree) source
-	$(Q)$(CONFIG_SHELL) $(srctree)/scripts/mkmakefile \
-		$(srctree) $(objtree) $(VERSION) $(PATCHLEVEL)
-endif
-
 no-dot-config-targets := clean mrproper distclean
 
 config-targets	:= 0
@@ -140,11 +132,11 @@ ifeq ($(mixed-targets),1)
 else
   ifeq ($(config-targets),1)
 
-config: scripts_basic outputmakefile FORCE
+config: scripts_basic FORCE
 	$(Q)mkdir -p include/config include/linux
 	$(Q)$(MAKE) $(build)=scripts/kconfig $@
 
-%config: scripts_basic outputmakefile FORCE
+%config: scripts_basic FORCE
 	$(Q)mkdir -p include/config include/linux
 	$(Q)$(MAKE) $(build)=scripts/kconfig $@
 
