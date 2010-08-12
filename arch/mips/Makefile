@@ -6,5 +6,9 @@ ifeq ($(LIBC),glibc)
   LIBC := gnu
 endif
 
+ifeq ($(CONFIG_ARCH_MIPS_ENDIAN_LITTLE),y)
+  ARCH := $(ARCH)el
+endif
+
 TARGET := $(ARCH)-$(OS)-$(LIBC)
 export TARGET

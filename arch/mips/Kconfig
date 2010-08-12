@@ -4,4 +4,15 @@ config ARCH
 	string
 	default "mips"
 
+choice
+	prompt "Endianness"
+
+config ARCH_MIPS_ENDIAN_BIG
+	bool "big endian"
+
+config ARCH_MIPS_ENDIAN_LITTLE
+	bool "little endian"
+
+endchoice
+
 endif
