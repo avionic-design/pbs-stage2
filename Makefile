@@ -158,7 +158,10 @@ scripts: scripts_basic include/config/auto.conf
       -include include/config/auto.conf
       -include include/config/auto.conf.cmd
 
-$(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
+$(KCONFIG_CONFIG):
+	$(Q)$(MAKE) -f $(srctree)/Makefile KCONFIG_ALLCONFIG=1 allnoconfig
+
+include/config/auto.conf.cmd: ;
 
 include/config/auto.conf: $(KCONFIG_CONFIG) include/config/auto.conf.cmd
 	$(Q)$(MAKE) -f $(srctree)/Makefile silentoldconfig
