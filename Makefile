@@ -4,6 +4,10 @@ SUBLEVEL =
 EXTRAVERSION = -wip
 NAME =
 
+ifeq ($(O),)
+  $(error O=<build-path> must be set!)
+endif
+
 ifneq ($(SUBLEVEL),)
   RELEASE = $(VERSION).$(PATCHLEVEL).$(SUBLEVEL)$(EXTRAVERSION)
 else
