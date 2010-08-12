@@ -7,19 +7,10 @@ config VIRTUAL_DEVEL_LIBC
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 
-source "packages/devel/uclibc/Kconfig"
+source "packages/devel/gdb/Kconfig"
 source "packages/devel/glibc/Kconfig"
-
 source "packages/devel/lua/Kconfig"
-
-config PACKAGE_DEVEL_GDB
-	bool "gdb: GNU debugger"
-	select PACKAGE_DEVEL_LIBC
-	default n
-
-config PACKAGE_DEVEL_STRACE
-	bool "strace"
-	select PACKAGE_DEVEL_LIBC
-	default n
+source "packages/devel/strace/Kconfig"
+source "packages/devel/uclibc/Kconfig"
 
 endmenu
