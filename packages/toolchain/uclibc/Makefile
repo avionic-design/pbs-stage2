@@ -7,11 +7,11 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/toolchain/common.mk
 
 ifneq ($(CONFIG_ABI),)
-DEF_CONFIG = $(CONFIG_ARCH)-$(CONFIG_ABI).config
-CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU)-$(CONFIG_ABI).config
+DEF_CONFIG = $(ARCH)-$(CONFIG_ABI).config
+CPU_CONFIG = $(ARCH)-$(CONFIG_CPU)-$(CONFIG_ABI).config
 else
-DEF_CONFIG = $(CONFIG_ARCH).config
-CPU_CONFIG = $(CONFIG_ARCH)-$(CONFIG_CPU).config
+DEF_CONFIG = $(ARCH).config
+CPU_CONFIG = $(ARCH)-$(CONFIG_CPU).config
 endif
 
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
