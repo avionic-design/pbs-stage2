@@ -11,4 +11,14 @@ include packages/autotools.mk
 
 conf-args += \
 	--without-bzip2 \
-	--without-pcre \
+
+env += \
+	PCRECONFIG=$(pkgtree)/build-pcre-config \
+
+quiet_cmd_gen_pcre_config = GEN     $@
+      cmd_gen_pcre_config = (echo \\\#!/bin/sh ; echo echo -lpcre) > $@ && chmod +x $@ || rm -f $@
+
+$(pkgtree)/build-pcre-config:
+	$(call cmd,gen_pcre_config)
+
+$(pkgtree)/.configure: $(pkgtree)/build-pcre-config
