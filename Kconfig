@@ -1,9 +1,5 @@
 mainmenu "Platform Build System"
 
-config VERSION
-	string
-	default "2010.08-wip"
-
 config SHELL
 	string
 	default "/bin/sh"
