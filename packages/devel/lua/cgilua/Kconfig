@@ -1,0 +1,4 @@
+config PACKAGE_DEVEL_LUA_CGILUA
+	bool "CGILua"
+	select PACKAGE_DEVEL_LUA
+	default n

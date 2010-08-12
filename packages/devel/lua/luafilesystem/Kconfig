@@ -1,0 +1,4 @@
+config PACKAGE_DEVEL_LUA_LUAFILESYSTEM
+	bool "luafilesystem"
+	select PACKAGE_DEVEL_LUA
+	default n

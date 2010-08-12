@@ -1,0 +1,4 @@
+config PACKAGE_DEVEL_LUA_RINGS
+	bool "rings"
+	select PACKAGE_DEVEL_LUA
+	default n

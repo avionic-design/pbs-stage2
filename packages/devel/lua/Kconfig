@@ -1,1 +1,5 @@
+source "packages/devel/lua/cgilua/Kconfig"
 source "packages/devel/lua/lua/Kconfig"
+source "packages/devel/lua/luafilesystem/Kconfig"
+source "packages/devel/lua/rings/Kconfig"
+source "packages/devel/lua/wsapi/Kconfig"
