@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_DEVEL_LUA) += lua
