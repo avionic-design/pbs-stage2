@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.3.4
+VERSION = 1.3.5
 
 include packages/xorg/lib/common.mk
 
@@ -12,9 +12,7 @@ else
 endif
 
 prunefiles = \
-	$(prefix)/lib/libX11-xcb.la \
-	$(prefix)/lib/libX11.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libX11-xcb.so.1.0.0 \
-	$(prefix)/lib/libX11.so.6.3.0
+	$(prefix)/lib/*.so.*
