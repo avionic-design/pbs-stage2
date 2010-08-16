@@ -33,8 +33,5 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-stripfiles =
-prunefiles =
-
 include packages/cleanup.mk
 include packages/binary.mk
