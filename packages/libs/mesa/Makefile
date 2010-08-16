@@ -77,7 +77,6 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/corender \
 	$(prefix)/bin/glsync \
@@ -107,9 +106,7 @@ stripfiles = \
 	$(prefix)/bin/wincopy \
 	$(prefix)/bin/xfont \
 	$(prefix)/bin/xrotfontdemo \
-	$(prefix)/lib/libGL.so.1.2 \
-	$(prefix)/lib/libGLU.so.1.3.$(SOVER) \
-	$(prefix)/lib/libGLw.so.1.0.0 \
+	$(prefix)/lib/*.so.* \
 	$(prefix)/lib/dri/*.so
 
 include packages/cleanup.mk
