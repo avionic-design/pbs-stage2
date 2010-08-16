@@ -1,0 +1,24 @@
+diff --git a/ncurses/tinfo/comp_hash.c b/ncurses/tinfo/comp_hash.c
+index b7fbd06..c9e24e4 100644
+--- a/ncurses/tinfo/comp_hash.c
++++ b/ncurses/tinfo/comp_hash.c
+@@ -39,6 +39,7 @@
+  */
+ 
+ #define USE_TERMLIB 1
++#include <wchar.h>
+ #include <curses.priv.h>
+ 
+ #include <tic.h>
+diff --git a/ncurses/tinfo/make_keys.c b/ncurses/tinfo/make_keys.c
+index c084f87..73f123f 100644
+--- a/ncurses/tinfo/make_keys.c
++++ b/ncurses/tinfo/make_keys.c
+@@ -37,6 +37,7 @@
+  */
+ 
+ #define USE_TERMLIB 1
++#include <wchar.h>
+ #include <curses.priv.h>
+ 
+ MODULE_ID("$Id: make_keys.c,v 1.14 2008/08/03 21:57:22 tom Exp $")

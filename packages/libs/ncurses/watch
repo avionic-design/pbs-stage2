@@ -1,3 +1,2 @@
 version=3
-ftp://ftp.gnu.org/gnu/ncurses/ncurses-(.+)\.tar\.gz
-
+http://ftp.gnu.org/pub/gnu/ncurses/ncurses-(.+)\.tar\.gz
