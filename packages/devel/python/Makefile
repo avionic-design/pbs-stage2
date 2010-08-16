@@ -1,13 +1,8 @@
-PACKAGE = Python
-VERSION = 3.1.2
+include packages/devel/python/Makefile.location
+include packages/common.mk
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
-
-LOCATION = http://python.org/ftp/python/$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
-include packages/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
