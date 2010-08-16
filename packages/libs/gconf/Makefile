@@ -1,7 +1,10 @@
 PACKAGE = GConf
-VERSION = 2.31.6
+VERSION = 2.31.7
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.31
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -9,7 +12,7 @@ include packages/autotools.mk
 conf-args += \
 	--disable-defaults-service
 
-plugin = $(prefix)/lib/$(PACKAGE)/2
+plugin = $(prefix)/lib/$(PACKAGE)/$(MAJOR)
 giomod = $(prefix)/lib/gio/modules
 
 prunefiles = \
@@ -19,10 +22,10 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/gconf-merge-tree \
-	$(prefix)/bin/gconftool-2 \
+	$(prefix)/bin/gconftool-$(MAJOR) \
 	$(prefix)/bin/gsettings-data-convert \
-	$(prefix)/libexec/gconfd-2 \
-	$(prefix)/libexec/gconf-sanity-check-2 \
+	$(prefix)/libexec/gconfd-$(MAJOR) \
+	$(prefix)/libexec/gconf-sanity-check-$(MAJOR) \
 	$(plugin)/*.so \
 	$(giomod)/*.so \
 	$(prefix)/lib/*.so.*
