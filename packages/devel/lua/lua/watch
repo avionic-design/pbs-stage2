@@ -1,0 +1,2 @@
+version=3
+http://www.lua.org/ftp/lua-([\d\.]+)\.tar\.gz
