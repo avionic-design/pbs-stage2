@@ -11,9 +11,6 @@ conf-args += \
 	--disable-glibtest \
 	--disable-cups
 
-build-args += \
-	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
-
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
 
