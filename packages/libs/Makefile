@@ -3,6 +3,7 @@ obj-y += sdl/
 
 obj-$(CONFIG_PACKAGE_LIBS_ATK) += atk
 obj-$(CONFIG_PACKAGE_LIBS_ATKMM) += atkmm
+obj-$(CONFIG_PACKAGE_LIBS_ATTR) += attr
 obj-$(CONFIG_PACKAGE_LIBS_BLUEZ) += bluez
 obj-$(CONFIG_PACKAGE_LIBS_BOOST) += boost
 obj-$(CONFIG_PACKAGE_LIBS_BZIP2) += bzip2
