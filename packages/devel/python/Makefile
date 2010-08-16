@@ -1,17 +1,16 @@
 PACKAGE = Python
-VERSION = 2.6
+VERSION = 3.1.2
+
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-HOST = $(shell uname -m)
-
-conf-host-args = \
-	--with-cxx-main=g++
-
-conf-host-vars =
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -22,42 +21,43 @@ conf-args = \
 	--sysconfdir=/etc \
 	--with-cxx-main=$(TARGET)-g++
 
+conf-args += \
+	--with-system-ffi
+
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
-	CXXFLAGS='$(CFLAGS)' \
-	LDFLAGS='--sysroot $(ROOTFS)' \
-	ac_cv_printf_fmt_zd=yes
+	CXXFLAGS='$(CXXFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
-host-build:
-	mkdir -p $(pkgtree)/obj-$(HOST) && \
-		cd $(pkgtree)/obj-$(HOST) && \
-			$(env) ../configure $(conf-host-args) $(conf-host-vars)
-	cd $(pkgtree)/obj-$(HOST) && \
-		$(env) $(MAKE)
-
-package-configure: host-build
-	mkdir -p $(pkgtree)/obj-$(TARGET) && \
-		cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.configure: $(pkgtree)/.patch
+	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
+		cd $(pkgbuildtree)/obj-$(TARGET) && \
 			$(env) ../configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
 
 build-args = \
-	EXTRA_CFLAGS='$(CFLAGS)' \
-	LDFLAGS='--sysroot $(ROOTFS) -shared' \
-	HOSTPYTHON=$(pkgtree)/obj-$(HOST)/python \
-	HOSTPGEN=$(pkgtree)/obj-$(HOST)/Parser/pgen
+	EXTRA_CFLAGS='$(CFLAGS)'
 
-package-build:
-	cd $(pkgtree)/obj-$(TARGET) && \
+$(pkgtree)/.build: $(pkgtree)/.configure
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
+	$(call cmd,stamp)
 
 install-args = \
-	DESTDIR=$(ROOTFS)
+	EXTRA_CFLAGS='$(CFLAGS)' \
+	DESTDIR=$(DESTDIR)
 
-package-install:
-	cd $(pkgtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree)/obj-$(TARGET) && \
+		$(env) $(priv) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
 
-package-clean:
-	@:
+module = $(prefix)/lib/python$(MAJOR).$(MINOR)
 
+stripfiles = \
+	$(prefix)/bin/python$(MAJOR).$(MINOR) \
+	$(module)/lib-dynload/*.so
+
+include packages/cleanup.mk
+include packages/binary.mk
