@@ -1,7 +1,10 @@
 PACKAGE = pango
 VERSION = 1.28.1
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.28
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -10,27 +13,14 @@ include packages/autotools.mk
 conf-vars += \
 	CXX=$(TARGET)-g++
 
-build-args += \
-	GLIB_MKENUMS=$(ROOTFS)$(prefix)/bin/glib-mkenums
-
 plugin = $(prefix)/lib/pango/1.6.0/modules
 
 prunefiles = \
-	$(prefix)/lib/libpango-1.0.la \
-	$(prefix)/lib/libpangocairo-1.0.la \
-	$(prefix)/lib/libpangoft2-1.0.la \
-	$(prefix)/lib/libpangox-1.0.la \
-	$(prefix)/lib/libpangoxft-1.0.la \
+	$(prefix)/lib/*.la \
 	$(plugin)/*.la
-
-sover = 0.2800.1
 
 stripfiles = \
 	$(prefix)/bin/pango-querymodules \
 	$(prefix)/bin/pango-view \
-	$(prefix)/lib/libpangocairo-1.0.so.$(sover) \
-	$(prefix)/lib/libpango-1.0.so.$(sover) \
-	$(prefix)/lib/libpangoft2-1.0.so.$(sover) \
-	$(prefix)/lib/libpangox-1.0.so.$(sover) \
-	$(prefix)/lib/libpangoxft-1.0.so.$(sover) \
+	$(prefix)/lib/*.so.* \
 	$(plugin)/*.so
