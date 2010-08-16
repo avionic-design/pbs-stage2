@@ -1,5 +1,5 @@
 PACKAGE = dbus-glib
-VERSION = 0.86
+VERSION = 0.88
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -11,9 +11,9 @@ conf-vars += \
 	ac_cv_have_abstract_sockets=yes
 
 prunefiles = \
-	$(prefix)/lib/libdbus-glib-1.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/dbus-binding-tool \
-	$(prefix)/lib/libdbus-glib-1.so.2.1.0 \
+	$(prefix)/lib/*.so.* \
 	$(prefix)/libexec/dbus-bash-completion-helper
