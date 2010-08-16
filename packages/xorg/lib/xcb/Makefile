@@ -1,16 +1,12 @@
 PACKAGE = libxcb
-VERSION = 1.6
+VERSION = 1.7
 
 LOCATION = http://xcb.freedesktop.org/dist
-
-DESCRIPTION = X C binding
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libxcb.la \
-	$(prefix)/lib/libxcb-*.la
+	$(prefix)/lib/*la
 
 stripfiles = \
-	$(prefix)/lib/libxcb.so.1.1.0 \
-	$(prefix)/lib/libxcb-*.so.*
+	$(prefix)/lib/*.so.*
