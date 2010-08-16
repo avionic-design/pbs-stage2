@@ -6,8 +6,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
-CONFIG_ARCH := $(patsubst i%86,x86,$(CONFIG_ARCH))
-
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
@@ -19,7 +17,7 @@ conf-args = \
 
 ifeq ($(CONFIG_ARCH),arm)
   ifeq ($(CONFIG_CPU),xscale)
-    config = linux-xscale
+    config = linux-generic32
   else
   endif
 endif
@@ -53,7 +51,7 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(env) $(priv) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/ssl/engines
