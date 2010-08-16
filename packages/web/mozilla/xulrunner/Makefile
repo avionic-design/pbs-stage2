@@ -20,7 +20,7 @@ env += \
 	LDFLAGS="$(LDFLAGS)" \
 	HOST_CFLAGS="-O2 -g" \
 	HOST_CXXFLAGS="-O2 -g" \
-	HOST_LDFLAGS="-O2 -g"
+	HOST_LDFLAGS="-O2 -g -L$(objtree)/build-tools/lib"
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
