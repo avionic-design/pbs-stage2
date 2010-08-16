@@ -17,6 +17,7 @@ conf-args = \
 	--enable-cross-compile \
 	--prefix=$(prefix) \
 	--confdir=/etc/mplayer \
+	--host-cc=gcc \
 	--cc=$(CC) \
 	--as=$(AS) \
 	--nm=$(NM) \
