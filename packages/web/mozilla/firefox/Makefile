@@ -1,5 +1,5 @@
 PACKAGE = firefox
-VERSION = 3.6.7
+VERSION = 3.6.8
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
@@ -21,7 +21,7 @@ env += \
 	LDFLAGS="$(LDFLAGS)" \
 	HOST_CFLAGS="-O2 -g" \
 	HOST_CXXFLAGS="-O2 -g" \
-	HOST_LDFLAGS="-O2 -g"
+	HOST_LDFLAGS="-O2 -g -L$(objtree)/build-tools/lib"
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -57,6 +57,14 @@ install-args += \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
+	$(priv) mv $(DESTDIR)$(prefix)/include/firefox-$(VERSION) \
+		$(DESTDIR)$(prefix)/include/firefox
+	$(priv) mv $(DESTDIR)$(prefix)/lib/firefox-$(VERSION) \
+		$(DESTDIR)$(prefix)/lib/firefox
+	$(priv) mv $(DESTDIR)$(prefix)/lib/firefox-devel-$(VERSION) \
+		$(DESTDIR)$(prefix)/lib/firefox-devel
+	$(priv) mv $(DESTDIR)$(prefix)/share/idl/firefox-$(VERSION) \
+		$(DESTDIR)$(prefix)/share/idl/firefox
 	$(call cmd,stamp)
 
 sdkdir = $(prefix)/lib/firefox-devel/sdk
