@@ -25,6 +25,32 @@ index 028117b..3cf8044 100644
  cliprdr_la_LDFLAGS = -avoid-version -module
  cliprdr_la_LIBADD = ../common/libcommon.la $(am__append_3)
  
+diff --git a/channels/common/Makefile.am b/channels/common/Makefile.am
+index 813cbb7..dec6ec6 100644
+--- a/channels/common/Makefile.am
++++ b/channels/common/Makefile.am
+@@ -8,7 +8,7 @@ libcommon_la_SOURCES = \
+ 	wait_obj.c wait_obj.h \
+ 	types.h
+ 
+-libcommon_la_CFLAGS = -I../../include -I.
++libcommon_la_CFLAGS = -I$(top_srcdir)/include -I.
+ 
+ libcommon_la_LDFLAGS =
+ 
+diff --git a/channels/common/Makefile.in b/channels/common/Makefile.in
+index e2c2e93..f2ae6ad 100644
+--- a/channels/common/Makefile.in
++++ b/channels/common/Makefile.in
+@@ -225,7 +225,7 @@ libcommon_la_SOURCES = \
+ 	wait_obj.c wait_obj.h \
+ 	types.h
+ 
+-libcommon_la_CFLAGS = -I../../include -I.
++libcommon_la_CFLAGS = -I$(top_srcdir)/include -I.
+ libcommon_la_LDFLAGS = 
+ libcommon_la_LIBADD = -lpthread @LIBICONV@
+ 
 diff --git a/channels/rdpdr/Makefile.am b/channels/rdpdr/Makefile.am
 index 3fb151e..c01ec65 100644
 --- a/channels/rdpdr/Makefile.am
