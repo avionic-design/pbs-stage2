@@ -1,4 +1,4 @@
 PACKAGE = glproto
-VERSION = 1.4.11
+VERSION = 1.4.12
 
 include packages/xorg/proto/common.mk
