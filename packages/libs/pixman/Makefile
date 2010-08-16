@@ -1,5 +1,5 @@
 PACKAGE = pixman
-VERSION = 0.18.2
+VERSION = 0.18.4
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -13,7 +13,7 @@ conf-args += \
 endif
 
 prunefiles = \
-	$(prefix)/lib/libpixman-1.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libpixman-1.so.$(VERSION)
+	$(prefix)/lib/*.so.*
