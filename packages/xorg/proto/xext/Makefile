@@ -1,5 +1,5 @@
 PACKAGE = xextproto
-VERSION = 7.1.1
+VERSION = 7.1.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.0.5
