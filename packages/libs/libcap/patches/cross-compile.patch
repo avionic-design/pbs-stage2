@@ -1,0 +1,25 @@
+diff --git a/Make.Rules b/Make.Rules
+index 5a136af..d9324c0 100644
+--- a/Make.Rules
++++ b/Make.Rules
+@@ -46,9 +46,9 @@ KERNEL_HEADERS := $(topdir)/libcap/include
+ IPATH += -I$(topdir)/libcap/include -I$(KERNEL_HEADERS)
+ 
+ CC := gcc
+-CFLAGS := -O2
++CFLAGS := -O2 $(EXTRA_CFLAGS)
+ BUILD_CC := $(CC)
+-BUILD_CFLAGS := $(CFLAGS) $(IPATH)
++BUILD_CFLAGS := $(IPATH)
+ AR := ar
+ RANLIB := ranlib
+ DEBUG = -g #-DDEBUG
+@@ -57,7 +57,7 @@ WARNINGS=-fPIC -Wall -Wwrite-strings \
+         -Wstrict-prototypes -Wmissing-prototypes \
+         -Wnested-externs -Winline -Wshadow
+ LD=$(CC) -Wl,-x -shared
+-LDFLAGS := #-g
++LDFLAGS := $(EXTRA_LDFLAGS) #-g
+ 
+ SYSTEM_HEADERS = /usr/include
+ INCS=$(topdir)/libcap/include/sys/capability.h
