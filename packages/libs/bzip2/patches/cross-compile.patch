@@ -63,7 +63,7 @@ index eb09753..4e83747 100644
  	fi
  
 +libbz2.so.1.0.4: $(OBJS)
-+	$(CC) -shared -Wl,-soname -Wl,libbz2.so.1.0 -o $@ $(OBJS)
++	$(CC) $(LDFLAGS) -shared -Wl,-soname -Wl,libbz2.so.1.0 -o $@ $(OBJS)
 +
 +libbz2.so.1.0: libbz2.so.1.0.4
 +	ln -sf $< $@

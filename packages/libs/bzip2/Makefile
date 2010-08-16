@@ -14,7 +14,8 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	EXTRA_CFLAGS="$(CFLAGS)"
+	EXTRA_CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
