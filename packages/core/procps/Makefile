@@ -22,11 +22,6 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
-#install-args = \
-#	DESTDIR=$(ROOTFS) \
-#	lib64=lib \
-#	ldconfig=@:
-
 install-args = \
 	DESTDIR=$(DESTDIR) \
 	lib64=lib \
@@ -34,10 +29,9 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(env) $(priv) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-prunefiles =
 stripfiles = \
 	/bin/kill \
 	/bin/ps \
