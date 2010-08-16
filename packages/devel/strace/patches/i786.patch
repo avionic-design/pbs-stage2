@@ -1,0 +1,26 @@
+diff --git a/configure b/configure
+index 8213bb3..db3a696 100755
+--- a/configure
++++ b/configure
+@@ -2972,7 +2972,7 @@ bfin)
+ $as_echo "#define BFIN 1" >>confdefs.h
+ 
+ 	;;
+-i[3456]86|pentium)
++i[34567]86|pentium)
+ 	arch=i386
+ 
+ $as_echo "#define I386 1" >>confdefs.h
+diff --git a/configure.ac b/configure.ac
+index 76f55d2..8fc28eb 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -48,7 +48,7 @@ bfin)
+ 	arch=bfin
+ 	AC_DEFINE([BFIN], 1, [Define for the Blackfin architecture.])
+ 	;;
+-i[[3456]]86|pentium)
++i[[34567]]86|pentium)
+ 	arch=i386
+ 	AC_DEFINE([I386], 1, [Define for the i386 architecture.])
+ 	;;
