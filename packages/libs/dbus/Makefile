@@ -16,7 +16,7 @@ conf-vars += \
 	ac_cv_have_abstract_sockets=yes
 
 prunefiles = \
-	$(prefix)/lib/libdbus-1.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/dbus-cleanup-sockets \
@@ -25,4 +25,5 @@ stripfiles = \
 	$(prefix)/bin/dbus-monitor \
 	$(prefix)/bin/dbus-send \
 	$(prefix)/bin/dbus-uuidgen \
-	$(prefix)/lib/libdbus-1.so.3.5.1
+	$(prefix)/lib/*.so.* \
+	$(prefix)/libexec/dbus-daemon-launch-helper
