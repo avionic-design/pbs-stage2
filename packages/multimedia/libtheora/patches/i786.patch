@@ -1,0 +1,26 @@
+diff --git a/configure b/configure
+index 9703bcb..6a702a5 100755
+--- a/configure
++++ b/configure
+@@ -11882,7 +11882,7 @@ fi
+ if test "x${ac_enable_asm}" = xyes; then
+   cpu_optimization="no optimization for your platform, please send a patch"
+   case $target_cpu in
+-  i[3456]86)
++  i[34567]86)
+     cpu_x86_32=yes
+     cpu_optimization="32 bit x86"
+ 
+diff --git a/configure.ac b/configure.ac
+index 8260bdf..427ea95 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -183,7 +183,7 @@ AC_ARG_ENABLE(asm,
+ if test "x${ac_enable_asm}" = xyes; then
+   cpu_optimization="no optimization for your platform, please send a patch"
+   case $target_cpu in
+-  i[[3456]]86)
++  i[[34567]]86)
+     cpu_x86_32=yes 
+     cpu_optimization="32 bit x86"
+     AC_DEFINE([OC_X86_ASM], [],  [make use of x86 asm optimization])
