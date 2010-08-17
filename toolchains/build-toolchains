@@ -1,15 +1,6 @@
 #!/bin/sh -e
 
-stdin=`readlink /proc/$$/fd/0`
-pipe=`echo $stdin | cut -d: -f1`
-
-if [ "x$pipe" != "xpipe" ]; then
-	input=build-toolchains.list
-else
-	input=-
-fi
-
-cat $input | grep -v '^$' | grep -v '^#' | (
+grep -v '^$' | grep -v '^#' | (
 	while read toolchain; do
 		if [ "x$1" = "xclean" ]; then
 			scripts/build-toolchain $toolchain clean || exit $?
