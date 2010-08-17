@@ -11,7 +11,11 @@ conf-args += \
 	--disable-i18n
 
 conf-vars += \
-	CXXFLAGS='$(CFLAGS)'
+	CXXFLAGS='$(CFLAGS)' \
+	HOSTCXX='g++' \
+	HOST_CXXFLAGS='-O2 -g' \
+	HOSTCXX_LINK='g++' \
+	HOST_LDFLAGS='-O2 -g'
 
 stripfiles = \
 	$(prefix)/bin/icehelp \
