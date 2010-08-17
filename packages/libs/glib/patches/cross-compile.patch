@@ -17,7 +17,7 @@ diff --git a/Makefile.in b/Makefile.in
 index f0672b9..9518383 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -418,8 +418,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
+@@ -419,8 +419,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
 	gio-2.0-uninstalled.pc.in gio-unix-2.0-uninstalled.pc.in
  TEST_PROGS = 
  ACLOCAL_AMFLAGS = -I m4macros ${ACLOCAL_FLAGS}
@@ -45,7 +45,7 @@ diff --git a/gio/Makefile.in b/gio/Makefile.in
 index 4d426a0..5fe8a81 100644
 --- a/gio/Makefile.in
 +++ b/gio/Makefile.in
-@@ -590,7 +590,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+@@ -591,7 +591,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
  TEST_PROGS = 
  NULL = 
  SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
