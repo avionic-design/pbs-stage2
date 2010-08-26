@@ -1,6 +1,5 @@
 config PACKAGE_XORG_XORG_SERVER
 	bool "xorg-server"
-	select PACKAGE_LIBS_HAL
 	select PACKAGE_LIBS_LIBDRM if XORG_DRI
 	select PACKAGE_LIBS_MESA if XORG_DRI
 	select PACKAGE_LIBS_OPENSSL
