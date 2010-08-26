@@ -1,5 +1,5 @@
 PACKAGE = freerdp
-VERSION = 0.7.3
+VERSION = 0.7.4
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
