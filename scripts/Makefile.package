@@ -113,7 +113,20 @@ $(pkgtree)/.directory:
 $(pkgtree)/.extract: $(pkgtree)/.checksum $(extract)
 	$(call cmd,stamp)
 
+quiet_cmd_svn_export = SVN     $(LOCATION_SVN)
+      cmd_svn_export = rm -rf $(pkgbuildtree) && \
+			cd $(dir $(pkgbuildtree)) && \
+			svn export $(LOCATION_SVN) $(notdir $(pkgbuildtree)) > /dev/null
+
+$(pkgtree)/.svn-export: $(pkgtree)/.directory
+	$(call cmd,svn_export)
+	$(call cmd,stamp)
+
+ifneq ($(LOCATION_SVN),)
+$(pkgtree)/.setup: $(pkgtree)/.svn-export
+else ifneq ($(LOCATION),)
 $(pkgtree)/.setup: $(pkgtree)/.extract
+endif
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
       cmd_quilt_patch = cd $(pkgbuildtree) && \
