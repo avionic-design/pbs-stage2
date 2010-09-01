@@ -9,9 +9,6 @@ makefile-build := $(srctree)/packages/ti/$(PACKAGE)/Makefile.build
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-run_bin_PROG ?= $<
-run_bin_ARGS ?= --prefix $(pkgtree) -Y --mode silent
-
 $(pkgtree)/.configure: $(makefile-build) $(pkgtree)/.patch
 	cp $< $(pkgbuildtree)
 	$(call cmd,stamp)
