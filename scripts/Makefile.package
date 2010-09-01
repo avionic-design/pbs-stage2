@@ -38,6 +38,7 @@ extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
 extract-xz      := $(filter %.tar.xz,$(extract))
+extract-bin     := $(filter %.bin,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
 remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS)) $(FILES)
@@ -77,6 +78,14 @@ quiet_cmd_tar_lzma = TAR     $<
 quiet_cmd_tar_xz = TAR     $<
       cmd_tar_xz = cd $(pkgtree) && tar xJf $<
 
+quiet_cmd_run_bin = RUN     $<
+      cmd_run_bin = cd $(pkgtree) && \
+			(test -x $(run_bin_PROG) || chmod +x $(run_bin_PROG)) && \
+			$(run_bin_PROG) $(run_bin_ARGS)
+
+# Per default just run the .bin
+run_bin_PROG ?= $<
+
 $(extract-gz): $(extprefix)%: $(srctree)/download/%
 	$(call cmd,tar_gz)
 	$(call cmd,stamp)
@@ -91,6 +100,10 @@ $(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
 
 $(extract-xz): $(extprefix)%.tar.xz: $(srctree)/download/%.tar.xz
 	$(call cmd,tar_xz)
+	$(call cmd,stamp)
+
+$(extract-bin): $(extprefix)%.bin: $(srctree)/download/%.bin
+	$(call cmd,run_bin)
 	$(call cmd,stamp)
 
 $(pkgtree)/.directory:
