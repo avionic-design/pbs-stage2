@@ -1,0 +1,4 @@
+config PACKAGE_TI_CODEC_ENGINE
+	bool "Codec Engine"
+	select PACKAGE_TI_FRAMEWORK_COMPONENTS
+	default n

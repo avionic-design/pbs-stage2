@@ -1,0 +1,54 @@
+#!/bin/sh
+
+tmp=
+cleanup() {
+    if [ -n "$tmp" ] ; then
+        rm -r "$tmp"
+        tmp=
+    fi
+}
+
+trap cleanup EXIT INT QUIT TERM
+
+if [ $# -lt 1 ] ; then
+    echo "Usage: $(basename $0) <dvdsdk-file> [dst-dir]"
+    exit 1
+fi
+
+dvsdk="$1"
+
+# Check that the installer is executable
+if [ ! -x "$dvsdk" ] ; then
+    if ! chmod +x "$dvsdk" ; then
+        echo "Failed to set the executable bit $dvsdk, check the permissions."
+        exit 1
+    fi
+fi
+
+# The dvsdk intaller kill the gnome-panel :/
+# So we give it a non functional kill.
+tmp=$(mktemp -d)
+ln -s /bin/true $tmp/kill
+export PATH="$tmp:$PATH"
+
+# Build the arguments
+if [ $# -gt 1 ] ; then
+    dst="$2"
+else
+    dst=$(pwd)
+fi
+
+# Run the installer with the preset input
+"$1" --mode console --prefix "$dst" > /dev/null <<EOF
+y
+ qy
+
+
+
+
+dm365
+
+
+EOF
+# The installer always return 1 :(
+true

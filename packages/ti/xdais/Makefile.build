@@ -1,0 +1,55 @@
+
+PKG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+SRC_DIR := $(PKG_DIR)/packages
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+include $(srctree)/packages/ti/xdc.mk
+
+BUILD += xdai
+xdai_HDR := \
+	ti/xdais/acpy2.h \
+	ti/xdais/acpy.h \
+	ti/xdais/dm/iauddec1.h \
+	ti/xdais/dm/iauddec.h \
+	ti/xdais/dm/iaudenc1.h \
+	ti/xdais/dm/iaudenc.h \
+	ti/xdais/dm/iaudio.h \
+	ti/xdais/dm/iimgdec1.h \
+	ti/xdais/dm/iimgdec.h \
+	ti/xdais/dm/iimgenc1.h \
+	ti/xdais/dm/iimgenc.h \
+	ti/xdais/dm/ispeech1_amr.h \
+	ti/xdais/dm/ispeech1_evrc.h \
+	ti/xdais/dm/ispeech1_g723.h \
+	ti/xdais/dm/ispeech1_g726.h \
+	ti/xdais/dm/ispeech1.h \
+	ti/xdais/dm/ispeech1_pcm.h \
+	ti/xdais/dm/ispeech1_smv.h \
+	ti/xdais/dm/ispeech1_wbamr.h \
+	ti/xdais/dm/ispeech.h \
+	ti/xdais/dm/isphdec1.h \
+	ti/xdais/dm/isphdec.h \
+	ti/xdais/dm/isphenc1.h \
+	ti/xdais/dm/isphenc.h \
+	ti/xdais/dm/iuniversal.h \
+	ti/xdais/dm/ividanalytics.h \
+	ti/xdais/dm/ividdec1.h \
+	ti/xdais/dm/ividdec2.h \
+	ti/xdais/dm/ividdec.h \
+	ti/xdais/dm/ividenc1.h \
+	ti/xdais/dm/ividenc.h \
+	ti/xdais/dm/ivideo.h \
+	ti/xdais/dm/ividtranscode.h \
+	ti/xdais/dm/split/ividdec2.h \
+	ti/xdais/dm/xdm.h \
+	ti/xdais/ialg.h \
+	ti/xdais/idma2.h \
+	ti/xdais/idma3.h \
+	ti/xdais/idma.h \
+	ti/xdais/ires_common.h \
+	ti/xdais/ires.h \
+	ti/xdais/xdas.h \
+
+include $(srctree)/packages/ti/rules.mk

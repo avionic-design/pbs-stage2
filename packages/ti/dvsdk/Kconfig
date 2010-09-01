@@ -1,0 +1,14 @@
+config PACKAGE_TI_DVSDK
+	bool "dvsdk"
+	default n
+
+config PACKAGE_TI_DM365_MMAP
+	bool "DM365 mmap driver"
+	select PACKAGE_TI_DVSDK
+	select VIRTUAL_KERNEL_LINUX_LIBC
+	default n
+
+config PACKAGE_TI_DM365_CODECS
+	bool "DM365 codecs"
+	select PACKAGE_TI_DVSDK
+	default n

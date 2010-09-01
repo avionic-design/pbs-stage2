@@ -1,0 +1,6 @@
+config PACKAGE_TI_FRAMEWORK_COMPONENTS
+	bool "Framework Components"
+	select PACKAGE_TI_XDCTOOLS
+	select PACKAGE_TI_XDAIS
+	select PACKAGE_TI_LINUXUTILS
+	default n

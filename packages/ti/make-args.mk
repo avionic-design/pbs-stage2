@@ -1,0 +1,12 @@
+make-args += \
+	srctree=$(srctree) \
+	CC='$(CC)' \
+	EXTRA_CFLAGS='$(CFLAGS)' \
+	CXX='$(CXX)' \
+	EXTRA_CXXFLAGS='$(CXXFLAGS)' \
+	EXTRA_LDFLAGS='$(LDFLAGS)' \
+	AR='$(AR)' \
+	DESTDIR=$(DESTDIR) \
+	prefix=$(prefix) \
+	objtree=$(objtree) \
+	SYSROOT=$(SYSROOT) \

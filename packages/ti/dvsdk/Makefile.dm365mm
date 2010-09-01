@@ -1,0 +1,24 @@
+
+PKG_DIR   := $(abspath $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))/..)
+SRC_DIR   := $(PKG_DIR)/dm365mm_01_00_03
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+include $(srctree)/packages/ti/xdc.mk
+include $(srctree)/packages/ti/kmod.mk
+
+INSTALL_IFACE_HDR_SUBDIR =
+
+dm365mm_KMOD        := dm365mmap.ko
+dm365mmap.ko_CFLAGS  = -DUSE_UDEV=0 -DMAX_POOLS=10
+dm365mmap.ko_SRC     = \
+	module/dm365mmap.c \
+
+dm365mm_IFACE       := libdm365mm.a
+libdm365mm.a_CFLAGS  = -I$(dm365mm_O)/interface
+libdm365mm.a_SRC     = \
+	interface/dm365mm.c \
+	interface/dm365mm.h \
+
+$(call add-sub-module,dm365mm)

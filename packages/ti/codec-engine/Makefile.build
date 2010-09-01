@@ -1,0 +1,312 @@
+
+PKG_DIR := $(patsubst %/,%,$(dir  $(lastword $(MAKEFILE_LIST))))
+SRC_DIR := $(PKG_DIR)/packages
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+include $(srctree)/packages/ti/xdc.mk
+
+# For osal
+CFLAGS    += -I$(SRC_DIR)
+
+# For XDC
+CFLAGS    +=  $(XDC_CPPFLAGS)
+
+BUILD     += libce.a
+libce.a_DIR := ti/sdo/ce
+libce.a_SRC := \
+	Engine.c \
+	rms.c \
+	Server.c \
+	visa.c \
+	ce_version.c \
+
+libce.a_HDR := \
+	CERuntime.h \
+	Engine.h \
+	rms.h \
+	Server.h \
+	skel.h \
+	visa.h \
+
+BUILD     += libce_alg.a
+libce_alg.a_DIR := ti/sdo/ce/alg
+libce_alg.a_SRC := \
+	alg_control.c \
+	alg_create.c \
+	alg_malloc.c \
+
+libce_alg.a_HDR := \
+	_alg.h \
+	alg.h \
+
+BUILD     += libce_Algorithm.a
+libce_Algorithm.a_DIR := ti/sdo/ce/alg
+libce_Algorithm.a_SRC := \
+	Algorithm_noOS.c \
+
+libce_Algorithm.a_HDR := \
+	Algorithm.h \
+
+BUILD     += libce_audio.a
+libce_audio.a_DIR := ti/sdo/ce/audio
+libce_audio.a_SRC := \
+	auddec.c \
+	auddec_skel.c \
+	auddec_stubs.c \
+	audenc.c \
+	audenc_skel.c \
+	audenc_stubs.c \
+
+libce_audio.a_HDR := \
+	_auddec.h \
+	auddec.h \
+	_audenc.h \
+	audenc.h \
+
+BUILD     += libce_audio1.a
+libce_audio1.a_DIR := ti/sdo/ce/audio1
+libce_audio1.a_SRC := \
+	auddec1.c \
+	auddec1_skel.c \
+	auddec1_stubs.c \
+	audenc1.c \
+	audenc1_skel.c \
+	audenc1_stubs.c \
+
+libce_audio1.a_HDR := \
+	_auddec1.h \
+	auddec1.h \
+	_audenc1.h \
+	audenc1.h \
+
+BUILD     += libce_bioslog.a
+libce_bioslog.a_DIR := ti/sdo/ce/bioslog
+libce_bioslog.a_SRC := \
+	LogClient.c \
+
+libce_bioslog.a_HDR := \
+	LogClient.h \
+	LogProtocol.h \
+	LogServer.h \
+	LogTracker.h \
+	Timer.h \
+
+BUILD     += libce_image.a
+libce_image.a_DIR := ti/sdo/ce/image
+libce_image.a_SRC := \
+	imgdec.c \
+	imgdec_skel.c \
+	imgdec_stubs.c \
+	imgenc.c \
+	imgenc_skel.c \
+	imgenc_stubs.c \
+
+libce_image.a_HDR := \
+	_imgdec.h \
+	imgdec.h \
+	_imgenc.h \
+	imgenc.h \
+
+BUILD     += libce_image1.a
+libce_image1.a_DIR := ti/sdo/ce/image1
+libce_image1.a_SRC := \
+	imgdec1.c \
+	imgdec1_skel.c \
+	imgdec1_stubs.c \
+	imgenc1.c \
+	imgenc1_skel.c \
+	imgenc1_stubs.c \
+
+libce_image1.a_HDR := \
+	_imgdec1.h \
+	imgdec1.h \
+	_imgenc1.h \
+	imgenc1.h \
+
+BUILD     += libce_ipc.a
+libce_ipc.a_DIR := ti/sdo/ce/ipc
+libce_ipc.a_SRC := \
+	linux/Comm_posix.c \
+	linux/Processor_posix.c \
+
+libce_ipc.a_HDR := \
+	Comm.h \
+	Power.h \
+	Processor.h \
+
+BUILD     += libce_node.a
+libce_node.a_DIR := ti/sdo/ce/node
+libce_node.a_CFLAGS = \
+	-I$(SRC_DIR)/ti/sdo/ce/node \
+
+libce_node.a_SRC := \
+	node_crea.c \
+	node_dele.c \
+	node_exec.c \
+	node_getpri.c \
+	node_init.c \
+	node_start.c \
+	node_stat.c \
+
+libce_node.a_HDR := \
+	_node.h \
+	node.h \
+
+BUILD     += libce_osal.a
+libce_osal.a_DIR := ti/sdo/ce/osal
+libce_osal.a_SRC := \
+	linux/File_posix.c \
+	linux/Global_noOS.c \
+	linux/GT_config_libC.c \
+	linux/GT_config_posix.c \
+	linux/LockMP_posix.c \
+	linux/Lock_posix.c \
+	linux/Log_noOS.c \
+	linux/Memory_cmem.c \
+	linux/Queue_posix.c \
+	linux/SemMP_posix.c \
+	linux/Sem_posix.c \
+	linux/Thread_posix.c \
+	linux/Trace.c \
+
+libce_osal.a_HDR := \
+	File.h \
+	Global.h \
+	linux/GT_config_libC.h \
+	linux/GT_config_posix.h \
+	Lock.h \
+	LockMP.h \
+	Log.h \
+	Memory.h \
+	Queue.h \
+	Sem.h \
+	SemMP.h \
+	Thread.h \
+	Trace.h \
+
+BUILD     += libce_speech.a
+libce_speech.a_DIR := ti/sdo/ce/speech
+libce_speech.a_SRC := \
+	sphdec.c \
+	sphdec_skel.c \
+	sphdec_stubs.c \
+	sphenc.c \
+	sphenc_skel.c \
+	sphenc_stubs.c \
+
+libce_speech.a_HDR := \
+	_sphdec.h \
+	sphdec.h \
+	_sphenc.h \
+	sphenc.h \
+
+BUILD     += libce_speech1.a
+libce_speech1.a_DIR := ti/sdo/ce/speech1
+libce_speech1.a_SRC := \
+	sphdec1.c \
+	sphdec1_skel.c \
+	sphdec1_stubs.c \
+	sphenc1.c \
+	sphenc1_skel.c \
+	sphenc1_stubs.c \
+
+libce_speech1.a_HDR := \
+	_sphdec1.h \
+	sphdec1.h \
+	_sphenc1.h \
+	sphenc1.h \
+
+BUILD     += libce_universal.a
+libce_universal.a_DIR := ti/sdo/ce/universal
+libce_universal.a_SRC := \
+	universal.c \
+	universal_skel.c \
+	universal_stubs.c \
+
+libce_universal.a_HDR := \
+	_universal.h \
+	universal.h \
+
+BUILD     += libce_utils_trace.a
+libce_utils_trace.a_DIR := ti/sdo/ce/utils/trace
+libce_utils_trace.a_SRC := \
+	TraceUtil.c \
+
+libce_utils_trace.a_HDR := \
+	TraceUtil.h \
+
+BUILD     += libce_utils_xdm.a
+libce_utils_xdm.a_DIR := ti/sdo/ce/utils/xdm
+libce_utils_xdm.a_SRC := \
+	XdmUtils.c \
+
+libce_utils_xdm.a_HDR := \
+	XdmUtils.h \
+
+BUILD     += libce_vidanalytics.a
+libce_vidanalytics.a_DIR := ti/sdo/ce/vidanalytics
+libce_vidanalytics.a_SRC := \
+	vidanalytics.c \
+	vidanalytics_skel.c \
+	vidanalytics_stubs.c \
+
+BUILD     += libce_video.a
+libce_video.a_DIR := ti/sdo/ce/video
+libce_video.a_SRC := \
+	viddec.c \
+	viddec_skel.c \
+	viddec_stubs.c \
+	videnc.c \
+	videnc_skel.c \
+	videnc_stubs.c \
+
+libce_video.a_HDR := \
+	_viddec.h \
+	viddec.h \
+	_videnc.h \
+	videnc.h \
+
+BUILD     += libce_video1.a
+libce_video1.a_DIR := ti/sdo/ce/video1
+libce_video1.a_SRC := \
+	viddec1.c \
+	viddec1_skel.c \
+	viddec1_stubs.c \
+	videnc1.c \
+	videnc1_skel.c \
+	videnc1_stubs.c \
+
+libce_video1.a_HDR := \
+	_viddec1.h \
+	viddec1.h \
+	_videnc1.h \
+	videnc1.h \
+
+BUILD     += libce_video2.a
+libce_video2.a_DIR := ti/sdo/ce/video2
+libce_video2.a_SRC := \
+	viddec2.c \
+	viddec2_skel.c \
+	viddec2_stubs.c \
+
+libce_video2.a_HDR := \
+	split/_viddec2back.h \
+	split/_viddec2front.h \
+	split/viddec2.h \
+	_viddec2.h \
+	viddec2.h \
+
+BUILD     += libce_vidtranscode.a
+libce_vidtranscode.a_DIR := ti/sdo/ce/vidtranscode
+libce_vidtranscode.a_SRC := \
+	vidtranscode.c \
+	vidtranscode_skel.c \
+	vidtranscode_stubs.c \
+
+libce_vidtranscode.a_HDR := \
+	_vidtranscode.h \
+	vidtranscode.h \
+
+include $(srctree)/packages/ti/rules.mk

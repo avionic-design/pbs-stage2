@@ -1,0 +1,117 @@
+
+PKG_DIR   := $(abspath $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST)))))
+SRC_DIR   := $(PKG_DIR)/dmai/packages
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+include $(srctree)/packages/ti/xdc.mk
+
+add-kdef = $(if $(filter y,$($(1))),-D$(1)=1,-U$(1))
+
+BUILD += libdmai.a
+libdmai.a_DIR=ti/sdo/dmai
+libdmai.a_CFLAGS = \
+	$(XDC_CPPFLAGS) \
+	-I$(SRC_DIR) \
+	-I$(KERNEL_SRC_DIR)/include \
+	$(call add-kdef,CONFIG_INPUT_DM365EVM) \
+	$(call add-kdef,CONFIG_DM365_IPIPE) \
+	$(call add-kdef,CONFIG_SND_SOC_TLV320AIC3X) \
+	-DDmai_Device_dm365=1 \
+
+foo = \
+	-I$(XDC_DIR)/packages \
+	-I$(CE_DIR)/packages \
+	-I$(XDAIS_DIR)/packages \
+	-I$(FC_DIR)/packages \
+
+libdmai.a_SRC := \
+	Buffer.c \
+	BufferGfx.c \
+	BufTab.c \
+	Ccv.c \
+	ColorSpace.c \
+	Framecopy.c \
+	Loader.c \
+	VideoStd.c \
+	ce/Adec1.c \
+	ce/Adec.c \
+	ce/Aenc1.c \
+	ce/Aenc.c \
+	ce/Idec1.c \
+	ce/Idec.c \
+	ce/Ienc1.c \
+	ce/Ienc.c \
+	ce/Sdec1.c \
+	ce/Sdec.c \
+	ce/Senc1.c \
+	ce/Senc.c \
+	ce/Vdec2.c \
+	ce/Vdec.c \
+	ce/Venc1.c \
+	ce/Venc.c \
+	linux/Capture.c \
+	linux/Cpu.c \
+	linux/Display.c \
+	linux/Dmai.c \
+	linux/Fifo.c \
+	linux/Pause.c \
+	linux/Rendezvous.c \
+	linux/Sound_alsa.c \
+	linux/Sound.c \
+	linux/Sound_oss.c \
+	linux/Time.c \
+	linux/dm365/Blend.c \
+	linux/dm365/Capture.c \
+	linux/dm365/Ccv_accel.c \
+	linux/dm365/Display_fbdev.c \
+	linux/dm365/Display_v4l2.c \
+	linux/dm365/Framecopy_accel.c \
+	linux/dm365/Ir.c \
+	linux/dm365/Resize.c \
+	linux/dm365/Smooth.c \
+	linux/dm365/_SysFs.c \
+	linux/dm365/_VideoBuf.c \
+
+libdmai.a_HDR := \
+	Blend.h \
+	BufferGfx.h \
+	Buffer.h \
+	BufTab.h \
+	Capture.h \
+	Ccv.h \
+	ce/Adec1.h \
+	ce/Adec.h \
+	ce/Aenc1.h \
+	ce/Aenc.h \
+	ce/Idec1.h \
+	ce/Idec.h \
+	ce/Ienc1.h \
+	ce/Ienc.h \
+	ce/Sdec1.h \
+	ce/Sdec.h \
+	ce/Senc1.h \
+	ce/Senc.h \
+	ce/Vdec2.h \
+	ce/Vdec.h \
+	ce/Venc1.h \
+	ce/Venc.h \
+	ColorSpace.h \
+	Cpu.h \
+	Display.h \
+	Dmai.h \
+	Fifo.h \
+	Framecopy.h \
+	Ir.h \
+	Loader.h \
+	Pause.h \
+	Rendezvous.h \
+	Resize.h \
+	Smooth.h \
+	Sound.h \
+	Time.h \
+	VideoStd.h \
+
+include $(srctree)/packages/ti/rules.mk
+include $(KERNEL_BUILD_DIR)/.config

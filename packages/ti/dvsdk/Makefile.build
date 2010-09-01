@@ -1,0 +1,50 @@
+
+TI_DIR    := $(srctree)/packages/ti
+DVSDK_DIR := $(TI_DIR)/dvsdk
+
+include $(TI_DIR)/make-args.mk
+include $(objtree)/include/config/auto.conf
+
+.PHONY: all
+all: build
+	@:
+
+.PHONY: build
+build:
+	@:
+
+.PHONY: install
+install:
+	@:
+
+Makefile.%: $(DVSDK_DIR)/Makefile.%
+	cp $< $@
+
+.PHONY: build-dm365mm
+build-dm365mm: Makefile.dm365mm
+	$(MAKE) -f $< $(filter-out obtree=%,$(make-args))
+
+.PHONY: install-dm365mm
+install-dm365mm: Makefile.dm365mm
+	$(MAKE) -f $< $(make-args) install
+
+.PHONY: build-dm365codecs
+build-dm365codecs: Makefile.dm365codecs
+	$(MAKE) -f $< $(make-args)
+
+.PHONY: install-dm365codecs
+install-dm365codecs: Makefile.dm365codecs
+	$(MAKE) -f $< $(make-args) install
+
+packages-y :=
+
+ifeq ($(CONFIG_PACKAGE_TI_DM365_MMAP),y)
+build: build-dm365mm
+install: install-dm365mm
+endif
+
+ifeq ($(CONFIG_PACKAGE_TI_DM365_CODECS),y)
+build: build-dm365codecs
+install: install-dm365codecs
+endif
+

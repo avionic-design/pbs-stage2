@@ -1,0 +1,326 @@
+
+PKG_DIR := $(patsubst %/,%,$(dir  $(lastword $(MAKEFILE_LIST))))
+SRC_DIR := $(PKG_DIR)/packages
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+include $(srctree)/packages/ti/xdc.mk
+
+#### CONFIG ##########
+WITH_GT_TRACE   ?= no
+WITH_GT_ASSERT  ?= no
+######################
+
+# Tracing
+ifeq ($(WITH_GT_TRACE),yes)
+CFLAGS    += -DGT_TRACE=1 -DGT_ASSERT=$(if $(filter yes,$(WITH_GT_ASSERT)),1,0)
+else
+CFLAGS    += -DGT_TRACE=0 -DGT_ASSERT=0
+endif
+
+# Self include
+CFLAGS    += -I$(SRC_DIR)
+
+# For XDC
+CFLAGS    +=  $(XDC_CPPFLAGS)
+
+##
+## Trace
+##
+BUILD += libgt.a
+libgt.a_DIR := ti/sdo/utils/trace
+# Hack: GT_TRACE and GT_ASSERT should not be defined for libgt.
+libgt.a_CFLAGS = \
+	-UGT_TRACE -UGT_ASSERT
+
+libgt.a_SRC := \
+	gt_config.c \
+	CBuf.c \
+	gt.c \
+
+libgt.a_HDR := \
+	CBuf.h \
+	gt.h \
+
+#BUILD += libacpy3.a
+libacpy3.a_DIR := ti/sdo/fc/acpy3
+libacpy3.a_SRC := \
+	acpy3_arm.c \
+	acpy3.c \
+	acpy3_complete.c \
+	acpy3_completelinked.c \
+	acpy3_config.c \
+	acpy3_configure.c \
+	acpy3_fastconfigure16b.c \
+	acpy3_fastconfigure32b.c \
+	acpy3_fastsetfinal.c \
+	acpy3_init.c \
+	acpy3_instr.c \
+	acpy3_qdma_arm.c \
+	acpy3_qdma.c \
+	acpy3_setfinal.c \
+	acpy3_start_arm.c \
+	acpy3_start.c \
+	acpy3_start_cpucopy.c \
+	acpy3_wait_arm.c \
+	acpy3_wait.c \
+	acpy3_wait_cpucopy.c \
+	acpy3_waitlinked_arm.c \
+	acpy3_waitlinked.c \
+	gt_dais.c \
+
+libacpy3.a_HDR := \
+	acpy3_complete.h \
+	acpy3_fastconfigure16b.h \
+	acpy3_fastconfigure32b.h \
+	acpy3_fastsetfinal.h \
+	acpy3.h \
+	acpy3_instr.h \
+	acpy3_lock.h \
+	acpy3_qdma_arm.h \
+	acpy3_qdma.h \
+	acpy3_setfinal.h \
+	acpy3_start.h \
+	acpy3_util.h \
+	acpy3_wait.h \
+
+BUILD += libdman3.a
+libdman3.a_DIR := ti/sdo/fc/dman3
+libdman3.a_CFLAGS = \
+	-I$(SRC_DIR)/$(libdman3.a_DIR) \
+
+libdman3.a_SRC := \
+	bios_rts.c \
+	dman3.c \
+	dman3_api.c \
+	dman3_init.c \
+	dman3_initImpl.c \
+	gt_dais.c \
+	rmm.c \
+
+libdman3.a_HDR := \
+	bios_rts.h \
+	dman3.h \
+	dman3_externalRM_impl.h \
+	dman3_impl.h \
+	rmm.h \
+	_rmm.h \
+
+BUILD += librman.a
+librman.a_DIR := ti/sdo/fc/rman
+librman.a_CFLAGS = \
+	-I$(SRC_DIR)/$(librman.a_DIR) \
+
+librman.a_SRC := \
+	rman.c \
+	rman_config.c \
+	rman_staticConfig.c \
+
+librman.a_HDR := \
+	rman.h \
+
+BUILD += libedma3.a
+libedma3.a_DIR := ti/sdo/fc/edma3
+libedma3.a_SRC := \
+	edma3Cfg.c \
+	edma3_configArm.c \
+
+libedma3.a_HDR := \
+	_edma3Arm.h \
+	edma3_config.h \
+
+BUILD += libfc_utils.a
+libfc_utils.a_DIR := ti/sdo/fc/utils
+libfc_utils.a_SRC := \
+	bios_rts.c \
+	rmm.c \
+	rmmp.c \
+	sharedMem.c \
+	smgr.c \
+	smgrmp.c \
+
+libfc_utils.a_HDR := \
+	api/alg.h \
+	bios_rts.h \
+	dbc.h \
+	dbg.h \
+	gt_dais.h \
+	gtinfra/gt_dais.h \
+	gtinfra/Trace.h \
+	lock.h \
+	memleakcheck.h \
+	rmm.h \
+	rmmp.h \
+	sharedMem.h \
+	smgr.h \
+	smgrmp.h \
+
+
+BUILD += libfc_memutils.a
+libfc_memutils.a_DIR := ti/sdo/fc/memutils
+libfc_memutils.a_SRC := \
+	memutils_cmem.c \
+
+libfc_memutils.a_HDR := \
+	memutils.h \
+
+##
+## hdvicpsync
+##
+BUILD += libhdvicpsync.a
+libhdvicpsync.a_DIR := ti/sdo/fc/hdvicpsync
+libhdvicpsync.a_SRC := \
+	hdvicpsync.c \
+
+libhdvicpsync.a_HDR := \
+	hdvicpsync.h \
+
+##
+## vicpsync
+##
+BUILD += libvicpsync.a
+libvicpsync.a_DIR := ti/sdo/fc/vicpsync
+libvicpsync.a_SRC := \
+	vicpsync.c \
+
+libvicpsync.a_HDR := \
+	vicpsync.h \
+
+##
+## ires/bufres
+##
+BUILD += libires_bufres.a
+libires_bufres.a_DIR := ti/sdo/fc/ires/bufres
+libires_bufres.a_SRC := \
+	bufres_params.c \
+	bufres.c \
+
+# Hack: we put these "common" ires header in the first library to
+# have them installed.
+libires_bufres.a_HDR := \
+	bufres.h \
+	../iresman.h \
+	../iresman_protocol.h \
+
+##
+## ires/addrspace
+##
+BUILD += libires_addrspace.a
+libires_addrspace.a_DIR := ti/sdo/fc/ires/addrspace
+libires_addrspace.a_SRC := \
+	iresman_addrspace.c \
+	ires_addrspace.c \
+
+libires_addrspace.a_HDR := \
+	_addrspace.h \
+	ires_addrspace.h \
+	iresman_addrspace.h \
+	iresman_protocol_addrspace.h \
+
+##
+## ires/grouputils
+##
+BUILD += libires_grouputils.a
+libires_grouputils.a_DIR := ti/sdo/fc/ires/grouputils
+libires_grouputils.a_SRC := \
+	ires_grouputils.c \
+	iresman_grouputils.c \
+
+libires_grouputils.a_HDR := \
+	_grouputils.h \
+	ires_grouputils.h \
+	iresman_grouputils.h \
+	iresman_protocol_grouputils.h \
+
+##
+## ires/vicp
+##
+BUILD += libires_vicp.a
+libires_vicp.a_DIR := ti/sdo/fc/ires/vicp
+libires_vicp.a_SRC := \
+	ires_vicp2.c \
+	vicp2_config.c \
+	iresman_vicp2.c \
+
+libires_vicp.a_HDR := \
+	_vicp.h \
+	_vicp2.h \
+	iresman_protocol_vicp2.h \
+	iresman_protocol_vicp.h \
+	iresman_vicp2.h \
+	iresman_vicp.h \
+	ires_vicp2.h \
+	ires_vicp.h \
+
+##
+## ires/hdvicp
+##
+BUILD += libires_hdvicp.a
+libires_hdvicp.a_DIR := ti/sdo/fc/ires/hdvicp
+libires_hdvicp.a_SRC := \
+	hdvicp_config.c \
+	iresman_hdvicp.c \
+	ires_hdvicp.c \
+
+libires_hdvicp.a_HDR := \
+	_hdvicp.h \
+	ires_hdvicp.h \
+	iresman_hdvicp.h \
+	iresman_protocol_hdvicp.h \
+
+##
+## ires/edma3chan
+##
+BUILD += libires_edma3chan.a
+libires_edma3chan.a_DIR := ti/sdo/fc/ires/edma3chan
+libires_edma3chan.a_SRC := \
+	iresman_edma3ChanArm.c \
+	ires_edma3Chan.c \
+
+libires_edma3chan.a_HDR := \
+	_edma3Chan.h \
+	ires_edma3Chan.h \
+	iresman_edma3Chan.h \
+	iresman_protocol_edma3Chan.h \
+
+##
+## ires/shmbuf
+##
+BUILD += libires_shmbuf.a
+libires_shmbuf.a_DIR := ti/sdo/fc/ires/shmbuf
+libires_shmbuf.a_SRC := \
+	shmbuf.c \
+	shmbuf_params.c \
+
+libires_shmbuf.a_HDR := \
+	shmbuf.h \
+
+##
+## ires/memtcm
+##
+BUILD += libires_memtcm.a
+libires_memtcm.a_DIR := ti/sdo/fc/ires/memtcm
+libires_memtcm.a_SRC := \
+	ires_memtcm.c \
+	iresman_memtcm.c \
+
+libires_memtcm.a_HDR := \
+	_memtcm.h \
+	iresman_memtcm.h \
+	iresman_protocol_memtcm.h \
+	ires_memtcm.h \
+
+##
+## ires/nullresource
+##
+BUILD += libires_nullres.a
+libires_nullres.a_DIR := ti/sdo/fc/ires/nullresource
+libires_nullres.a_SRC := \
+	iresman_nullres.c \
+
+libires_nullres.a_HDR := \
+	iresman_nullres.h \
+	ires_nullres.h \
+
+include $(srctree)/packages/ti/rules.mk

@@ -1,0 +1,98 @@
+
+PKG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST)))/..)
+SRC_DIR := $(PKG_DIR)/dm365_codecs_03_10_00_05/packages
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+
+BUILD += dm365codecs
+dm365codecs_HDR := \
+	ti/sdo/codecs/h264dec/ih264vdec.h \
+	ti/sdo/codecs/h264enc/ih264venc.h \
+	ti/sdo/codecs/jpegdec/ijpegdec.h \
+	ti/sdo/codecs/jpegenc/ijpegenc.h \
+	ti/sdo/codecs/mpeg2dec/imp2vdec.h \
+	ti/sdo/codecs/mpeg2enc/imp2venc.h \
+	ti/sdo/codecs/mpeg4dec_hdvicp/imp4vdec.h \
+	ti/sdo/codecs/mpeg4dec/imp4vdec.h \
+	ti/sdo/codecs/mpeg4enc_hdvicp/imp4venc.h \
+	ti/sdo/codecs/mpeg4enc/imp4venc.h \
+	ti/sdo/codecs/vc1dec/ivc1vdec.h \
+
+include $(srctree)/packages/ti/rules.mk
+
+CODECS += h264dec
+h264dec_LIB := \
+	ti/sdo/codecs/h264dec/lib/h264vdec_ti_arm926.a \
+	ti/sdo/codecs/h264dec/lib/dma_ti_dm365.a \
+
+CODECS += h264enc
+h264enc_LIB := \
+	ti/sdo/codecs/h264enc/lib/h264venc_ti_arm926.a \
+	ti/sdo/codecs/h264enc/lib/dma_ti_dm365.a \
+
+CODECS += jpegdec
+jpegdec_LIB := \
+	ti/sdo/codecs/jpegdec/lib/libimx.a \
+	ti/sdo/codecs/jpegdec/lib/libjpgdec.a \
+
+CODECS += jpegenc
+jpegenc_LIB := \
+	ti/sdo/codecs/jpegenc/lib/libimx.a \
+	ti/sdo/codecs/jpegenc/lib/libjpgenc.a \
+
+CODECS += mpeg2dec
+mpeg2dec_LIB := \
+	ti/sdo/codecs/mpeg2dec/lib/mpeg2vdec_ti_arm926.a \
+	ti/sdo/codecs/mpeg2dec/lib/dma_ti_dm365.a \
+
+CODECS += mpeg2enc
+mpeg2enc_LIB := \
+	ti/sdo/codecs/mpeg2enc/lib/mpeg2venc_ti_arm926.a \
+	ti/sdo/codecs/mpeg2enc/lib/dma_ti_dm365.a \
+
+CODECS += mpeg4dec_hdvicp
+mpeg4dec_hdvicp_LIB := \
+	ti/sdo/codecs/mpeg4dec_hdvicp/lib/mpeg4vdec_ti_arm926.a \
+	ti/sdo/codecs/mpeg4dec_hdvicp/lib/dma_ti_dm365.a \
+
+CODECS += mpeg4dec
+mpeg4dec_LIB := \
+	ti/sdo/codecs/mpeg4dec/lib/libmp4dec.a \
+
+CODECS += mpeg4enc_hdvicp
+mpeg4enc_hdvicp_LIB := \
+	ti/sdo/codecs/mpeg4enc_hdvicp/lib/dma_ti_dm365.a \
+	ti/sdo/codecs/mpeg4enc_hdvicp/lib/mpeg4venc_ti_arm926.a \
+
+CODECS += mpeg4enc
+mpeg4enc_LIB := \
+	ti/sdo/codecs/mpeg4enc/lib/libmp4enc.a \
+
+CODECS += vc1dec
+vc1dec_LIB := \
+	ti/sdo/codecs/vc1dec/lib/vc1vdec_ti_arm926.a \
+	ti/sdo/codecs/vc1dec/lib/dma_ti_dm365.a \
+
+CODECS += aacdec
+aacdec_LIB := \
+	ittiam/codecs/aac_dec/lib_production/aac_dec_prod.a \
+
+CODECS += aacenc
+aacenc_LIB := \
+	ittiam/codecs/aaclc_enc/lib_production/aaclc_enc_prod.a \
+
+define add-codec
+$(1)_INSTALL_FILES := $$(addprefix $$(dm365codecs_INSTALL_LIB_DIR)/codecs/dm365/$(1)/,$$(notdir $$($(1)_LIB)))
+
+$$($(1)_INSTALL_FILES): $$(addprefix $$(SRC_DIR)/,$$($(1)_LIB))
+	mkdir -p $$(@D)
+	install $$(<D)/$$(@F) $$@
+
+.PHONY: install-codec-$(1)
+install-codec-$(1): $$($(1)_INSTALL_FILES)
+install-dm365codecs: install-codec-$(1)
+endef
+
+$(foreach codec,$(CODECS),$(eval $(call add-codec,$(codec))))

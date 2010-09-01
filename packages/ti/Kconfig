@@ -1,0 +1,11 @@
+menu "TI sotfware"
+
+source "packages/ti/xdctools/Kconfig"
+source "packages/ti/xdais/Kconfig"
+source "packages/ti/linuxutils/Kconfig"
+source "packages/ti/dvsdk/Kconfig"
+source "packages/ti/framework-components/Kconfig"
+source "packages/ti/codec-engine/Kconfig"
+source "packages/ti/dmai/Kconfig"
+
+endmenu

@@ -1,0 +1,4 @@
+config PACKAGE_TI_LINUXUTILS
+	bool "TI Linuxutils"
+	select VIRTUAL_KERNEL_LINUX_LIBC
+	default n

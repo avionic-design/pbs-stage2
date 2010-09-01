@@ -1,0 +1,69 @@
+
+PKG_DIR   := $(abspath $(patsubst %/,%,$(dir  $(lastword $(MAKEFILE_LIST)))))
+SRC_DIR   := $(PKG_DIR)/packages/ti/sdo/linuxutils
+
+ifeq ($(srctree),)
+$(error srctree must be defined!)
+endif
+
+INSTALL_KMOD_HDR_SUBDIR   = ti/sdo/linuxutils/$(1)/kernel
+INSTALL_IFACE_HDR_SUBDIR = ti/sdo/linuxutils/$(1)/include
+
+include $(srctree)/packages/ti/xdc.mk
+include $(srctree)/packages/ti/kmod.mk
+
+
+CFLAGS += -ULSP_210
+
+SUB_MODULES       := cmem edma irq sdma vicp
+
+cmem_KMOD         := cmemk.ko
+cmemk.ko_CFLAGS    = -DUSE_UDEV=1 -DMAX_POOLS=128
+cmemk.ko_SRC       = \
+	module/cmemk.c \
+	interface/cmem.h \
+
+cmem_IFACE        := libcmem.a
+libcmem.a_CFLAGS   = -I$(cmem_O)/interface
+libcmem.a_SRC      = \
+	interface/cmem.c \
+	interface/cmem.h \
+
+edma_KMOD         := edmak.ko
+edmak.ko_SRC       = \
+	module/edmak.c \
+	interface/edma.h \
+
+edma_IFACE        := libedma.a
+libedma.a_SRC      = \
+	interface/edma.c \
+	interface/edma.h \
+
+irq_KMOD          := irqk.ko
+irqk.ko_CFLAGS     = -DUSE_UDEV=1
+irqk.ko_SRC        = \
+	module/irqk.c \
+	module/irqk.h \
+
+# It doesn't build ATM
+#sdma_KMOD         := sdmak.ko
+sdmak.ko_SRC       = \
+	module/sdmak.c \
+
+#sdma_IFACE        := libsdma.a
+libsdma.a_SRC      = \
+	interface/sdma.c \
+	interface/sdma.h \
+
+
+vicp_IFACE        := libvicp.a
+libvicp.a_CFLAGS   = -I$(irq_O)/module
+libvicp.a_SRC      = \
+	interface/vicp.c \
+	interface/vicp.h \
+
+libvicp.a_DEP      = \
+	$(irq_O)/module/irqk.h \
+
+
+$(foreach m,$(SUB_MODULES),$(call add-sub-module,$(m),$(m)/src))
