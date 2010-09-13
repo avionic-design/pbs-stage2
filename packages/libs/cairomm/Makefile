@@ -1,5 +1,5 @@
 PACKAGE = cairomm
-VERSION = 1.8.4
+VERSION = 1.9.2
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libcairomm-1.0.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libcairomm-1.0.so.1.4.0
+	$(prefix)/lib/*.so.*
