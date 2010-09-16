@@ -30,7 +30,7 @@ diff --git a/interface.h b/interface.h
 index 1f03123..832b8dd 100644
 --- a/interface.h
 +++ b/interface.h
-@@ -171,7 +171,7 @@ extern u_int16_t create_osi_cksum(const u_int8_t *, int, int);
+@@ -156,7 +156,7 @@ extern u_int16_t create_osi_cksum(const u_int8_t *, int, int);
  
  /* The printer routines. */
  
@@ -43,7 +43,7 @@ diff --git a/netdissect.h b/netdissect.h
 index cd6f2f1..6856ec0 100644
 --- a/netdissect.h
 +++ b/netdissect.h
-@@ -249,7 +249,7 @@ extern const char *dnnum_string(netdissect_options *, u_short);
+@@ -261,7 +261,7 @@ extern const char *dnnum_string(netdissect_options *, u_short);
  
  /* The printer routines. */
  
@@ -90,7 +90,7 @@ index dd9bc5a..931aeec 100644
 +#include <pcap/pcap.h>
  
  #include "interface.h"
- #include "addrtoname.h"
+ #include "extract.h"
 diff --git a/print-arcnet.c b/print-arcnet.c
 index 48a4303..4f9e467 100644
 --- a/print-arcnet.c
@@ -103,7 +103,7 @@ index 48a4303..4f9e467 100644
 +#include <pcap/pcap.h>
  
  #include "interface.h"
- #include "arcnet.h"
+ #include "extract.h"
 diff --git a/print-atalk.c b/print-atalk.c
 index 6ea1361..04bce41 100644
 --- a/print-atalk.c
@@ -181,19 +181,7 @@ index 9569534..d1c6422 100644
 +#include <pcap/pcap.h>
  
  #include "interface.h"
- #include "addrtoname.h"
-@@ -77,9 +77,11 @@ enc_if_print(const struct pcap_pkthdr *h, register const u_char *p)
- 	case AF_INET:
- 		ip_print(gndo, p, length);
- 		break;
-+#ifdef INET6
- 	case AF_INET6:
- 		ip6_print(p, length);
- 		break;
-+#endif
- 	}
- 
- out:
+ #include "extract.h"
 diff --git a/print-ether.c b/print-ether.c
 index b66e885..2d38e75 100644
 --- a/print-ether.c
@@ -206,7 +194,7 @@ index b66e885..2d38e75 100644
 +#include <pcap/pcap.h>
  
  #include "interface.h"
- #include "addrtoname.h"
+ #include "extract.h"
 diff --git a/print-fddi.c b/print-fddi.c
 index 1e7d554..7ead97e 100644
 --- a/print-fddi.c
@@ -309,8 +297,8 @@ index 972cb4b..a3a2e1d 100644
 -#include <pcap.h>
 +#include <pcap/pcap.h>
  
+ #include "extract.h"
  #include "interface.h"
- #include "addrtoname.h"
 diff --git a/print-ppp.c b/print-ppp.c
 index 708e934..248a329 100644
 --- a/print-ppp.c
@@ -388,7 +376,7 @@ index ebb62cd..1fe800c 100644
 +#include <pcap/pcap.h>
  
  #include "interface.h"
- #include "addrtoname.h"
+ #include "extract.h"
 diff --git a/print-token.c b/print-token.c
 index 04defa9..c0a384d 100644
 --- a/print-token.c
