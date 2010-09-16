@@ -1,5 +1,5 @@
 PACKAGE = libpcap
-VERSION = 1.0.0
+VERSION = 1.1.1
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -13,6 +13,3 @@ conf-args += \
 
 conf-vars += \
 	ac_cv_linux_vers=2
-
-prunefiles =
-stripfiles =
