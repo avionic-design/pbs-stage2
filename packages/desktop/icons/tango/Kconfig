@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_ICONS_TANGO
+	bool "tango"
+	select PACKAGE_BUILD_TOOLS_ICON_NAMING_UTILS
+	default n

@@ -1,0 +1,5 @@
+menu "Icons"
+
+source "packages/desktop/icons/tango/Kconfig"
+
+endmenu

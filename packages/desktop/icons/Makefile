@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_DESKTOP_ICONS_TANGO) += tango
