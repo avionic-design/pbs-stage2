@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_NODM
+	bool "nodm"
+	select PACKAGE_LIBS_PAM
+	default n

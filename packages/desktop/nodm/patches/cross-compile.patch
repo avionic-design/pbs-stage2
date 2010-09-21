@@ -1,0 +1,26 @@
+diff --git a/Makefile.am b/Makefile.am
+index 52e83c2..b586e63 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -8,7 +8,7 @@ nodm_CFLAGS = -DNODM_SESSION='"$(sbindir)/nodm"'
+ 
+ nodm.8: nodm
+ 	help2man --section=8 --name="X display manager for automatic logins" \
+-		 --no-info --include=nodm-man-extras ./$< > $@
++		 --no-info --include=$(srcdir)/nodm-man-extras ./$< > $@
+ 
+ man_MANS = nodm.8
+ 
+diff --git a/Makefile.in b/Makefile.in
+index e7ec9ea..0f572ec 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -724,7 +724,7 @@ uninstall-man: uninstall-man8
+ 
+ nodm.8: nodm
+ 	help2man --section=8 --name="X display manager for automatic logins" \
+-		 --no-info --include=nodm-man-extras ./$< > $@
++		 --no-info --include=$(srcdir)/nodm-man-extras ./$< > $@
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
