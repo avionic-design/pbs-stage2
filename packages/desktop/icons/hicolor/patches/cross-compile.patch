@@ -1,0 +1,34 @@
+diff --git a/Makefile.in b/Makefile.in
+index 6ae8529..c4d48fa 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -1,5 +1,6 @@
+ PACKAGE = @PACKAGE_TARNAME@
+ VERSION = @PACKAGE_VERSION@
++srcdir = @srcdir@
+ prefix = @prefix@
+ datarootdir = @datarootdir@
+ datadir = @datadir@
+@@ -19,7 +20,7 @@ all:
+ 
+ install:
+ 	mkdir -p $(DESTDIR)$(datadir)/icons/hicolor
+-	$(INSTALL_DATA) index.theme $(DESTDIR)$(datadir)/icons/hicolor
++	$(INSTALL_DATA) $(srcdir)/index.theme $(DESTDIR)$(datadir)/icons/hicolor
+ 	for dir in $(ICON_SIZES); do \
+ 	  for ctxt in $(ICON_CONTEXTS); do \
+ 	    mkdir -p $(DESTDIR)$(datadir)/icons/hicolor/$$dir/$$ctxt; \
+@@ -42,10 +43,10 @@ tag:
+ 	cvs tag DEFAULT_ICON_THEME_`echo $(VERSION)|sed "s/\./_/"`
+ 
+ # cause rebuilds
+-Makefile: Makefile.in config.status
++Makefile: $(srcdir)/Makefile.in config.status
+ 	./config.status Makefile
+-configure: configure.ac
+-	autoconf
++configure: $(srcdir)/configure.ac
++	cd $(srcdir) && autoconf
+ config.status: configure
+ 	./config.status --recheck
+ 
