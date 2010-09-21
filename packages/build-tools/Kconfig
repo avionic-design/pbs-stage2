@@ -2,6 +2,7 @@ menu "Build tools"
 
 source "packages/build-tools/gdk-pixbuf/Kconfig"
 source "packages/build-tools/glib/Kconfig"
+source "packages/build-tools/icon-naming-utils/Kconfig"
 source "packages/build-tools/libidl/Kconfig"
 source "packages/build-tools/libnih/Kconfig"
 source "packages/build-tools/python/Kconfig"
