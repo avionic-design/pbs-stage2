@@ -1,0 +1,2 @@
+version=3
+http://mocha.xfce.org/archive/src/xfce/libxfce4ui/([\d\.]+)/libxfce4ui-(.*)\.tar\.bz2
