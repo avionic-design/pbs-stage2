@@ -1,0 +1,4 @@
+config PACKAGE_DESKTOP_XFCE_XFCE4_SETTINGS
+	bool "xfce4-settings"
+	select PACKAGE_DESKTOP_XFCE_XFCONF
+	default n
