@@ -1,24 +1,24 @@
 PACKAGE = Thunar
-VERSION = 1.0.2
+VERSION = 1.1.2
 
-LOCATION = http://mocha.xfce.org/archive/src/xfce/thunar/1.0
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://mocha.xfce.org/archive/src/xfce/thunar/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-plugin = $(prefix)/lib/thunarx-1
+plugin = $(prefix)/lib/thunarx-2
 
 prunefiles = \
+	$(prefix)/lib/xfce4/panel/plugins/*.la \
 	$(prefix)/lib/*.la \
 	$(plugin)/*.la
 
 stripfiles = \
 	$(prefix)/bin/Thunar \
-	$(prefix)/libexec/thunar-sendto-email \
-	$(prefix)/libexec/thunar-vfs-font-thumbnailer-1 \
-	$(prefix)/libexec/thunar-vfs-mime-cleaner-1 \
-	$(prefix)/libexec/thunar-vfs-pixbuf-thumbnailer-1 \
-	$(prefix)/libexec/thunar-vfs-update-thumbnailers-cache1 \
-	$(prefix)/libexec/xfce4/panel-plugins/thunar-tpa \
+	$(prefix)/lib/Thunar/thunar-sendto-email \
+	$(prefix)/lib/xfce4/panel/plugins/*.so \
 	$(prefix)/lib/*.so.* \
 	$(plugin)/*.so
