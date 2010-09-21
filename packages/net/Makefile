@@ -1,5 +1,6 @@
 obj-$(CONFIG_PACKAGE_NET_DHCP) += dhcp
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
+obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear
 obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
 obj-$(CONFIG_PACKAGE_NET_IPUTILS) += iputils
