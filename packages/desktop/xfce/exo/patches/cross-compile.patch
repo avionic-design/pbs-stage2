@@ -1,9 +1,46 @@
+diff --git a/Makefile.am b/Makefile.am
+index 7517cfa..1ff43c8 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -15,8 +15,7 @@ SUBDIRS =								\
+ 	icons								\
+ 	pixmaps								\
+ 	po								\
+-	$(PYTHON_SUBDIR)						\
+-	tests
++	$(PYTHON_SUBDIR)
+ 
+ AUTOMAKE_OPTIONS =							\
+ 	1.8								\
+diff --git a/Makefile.in b/Makefile.in
+index 0c763c6..74b9f9a 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -76,7 +76,7 @@ ETAGS = etags
+ CTAGS = ctags
+ DIST_SUBDIRS = exo exo-csource exo-support exo-desktop-item-edit \
+ 	exo-gio-module exo-helper exo-open docs icons pixmaps po \
+-	python tests
++	python
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ distdir = $(PACKAGE)-$(VERSION)
+ top_distdir = $(distdir)
+@@ -335,8 +335,7 @@ SUBDIRS = \
+ 	icons								\
+ 	pixmaps								\
+ 	po								\
+-	$(PYTHON_SUBDIR)						\
+-	tests
++	$(PYTHON_SUBDIR)
+ 
+ AUTOMAKE_OPTIONS = \
+ 	1.8								\
 diff --git a/configure b/configure
-index 397c88f..51e9a1d 100755
+index d1f8320..d80edc2 100755
 --- a/configure
 +++ b/configure
-@@ -12835,7 +12835,13 @@ fi
- done
+@@ -12913,7 +12913,13 @@ fi
+ rm -f conftest.mmap conftest.txt
  
  
 -if test "$cross_compiling" = yes; then :
@@ -16,8 +53,8 @@ index 397c88f..51e9a1d 100755
 +		if test "$cross_compiling" = yes; then :
    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error "cannot run test program while cross compiling
-@@ -12844,31 +12850,36 @@ else
+ as_fn_error $? "cannot run test program while cross compiling
+@@ -12922,31 +12928,36 @@ else
    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
@@ -71,12 +108,12 @@ index 397c88f..51e9a1d 100755
 +fi
  
  
-     GETTEXT_PACKAGE=libexo-0.3
+     GETTEXT_PACKAGE=exo-1
 diff --git a/configure.in b/configure.in
-index d349d43..3c555d6 100644
+index 97034fa..5e7241d 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -134,22 +134,27 @@ AC_CHECK_FUNCS([getfsstat getmntent getvfsstat regexec setfsent setmntent])
+@@ -124,22 +124,27 @@ AC_FUNC_MMAP()
  dnl ***************************************
  dnl *** Check for strftime() extensions ***
  dnl ***************************************
