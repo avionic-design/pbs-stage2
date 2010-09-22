@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 161
+VERSION = 162
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
