@@ -1,10 +1,10 @@
 PACKAGE = xf86-input-evdev
-VERSION = 2.4.0
+VERSION = 2.5.0
 
 include packages/xorg/driver/common.mk
 
 prunefiles = \
-	$(prefix)/lib/xorg/modules/input/evdev_drv.la
+	$(prefix)/lib/xorg/modules/input/*.la
 
 stripfiles = \
-	$(prefix)/lib/xorg/modules/input/evdev_drv.so
+	$(prefix)/lib/xorg/modules/input/*.so
