@@ -1,8 +1,5 @@
 menu "Editors"
 
-config PACKAGE_EDITORS_VIM
-	bool "vim"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/editors/vim/Kconfig"
 
 endmenu
