@@ -1,11 +1,10 @@
 PACKAGE = xinput_calibrator
-VERSION = 0.6.1
+VERSION = 0.7.5
 
-LOCATION = http://xinput_calibrator.freedesktop.org/release
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = http://github.com/downloads/tias/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
 stripfiles = \
-	$(prefix)/bin/xinput_calibrator_gtkmm \
-	$(prefix)/bin/xinput_calibrator_x11
+	$(prefix)/bin/xinput_calibrator
