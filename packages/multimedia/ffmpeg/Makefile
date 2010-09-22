@@ -23,6 +23,7 @@ conf-vars =
 
 stripfiles = \
 	$(prefix)/bin/ffmpeg \
+	$(prefix)/bin/ffplay \
 	$(prefix)/bin/ffprobe \
 	$(prefix)/bin/ffserver \
 	$(prefix)/lib/*.so.* \
