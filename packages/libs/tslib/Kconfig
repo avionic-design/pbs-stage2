@@ -1,4 +1,0 @@
-config PACKAGE_LIBS_TSLIB
-	bool "tslib"
-	select VIRTUAL_DEVEL_LIBC
-	default n

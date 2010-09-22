@@ -76,5 +76,4 @@ obj-$(CONFIG_PACKAGE_LIBS_READLINE) += readline
 obj-$(CONFIG_PACKAGE_LIBS_SQLITE) += sqlite
 obj-$(CONFIG_PACKAGE_LIBS_STARTUP_NOTIFICATION) += startup-notification
 obj-$(CONFIG_PACKAGE_LIBS_SYSFSUTILS) += sysfsutils
-obj-$(CONFIG_PACKAGE_LIBS_TSLIB) += tslib
 obj-$(CONFIG_PACKAGE_LIBS_ZLIB) += zlib
