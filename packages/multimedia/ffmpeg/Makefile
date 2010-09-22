@@ -4,11 +4,7 @@ VERSION = 0.6
 LOCATION = http://ffmpeg.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/common.mk
-
-$(pkgtree)/.setup:
-	mkdir -p $(pkgbuildtree)/obj-$(TARGET)
-	$(call cmd,stamp)
+include packages/autotools.mk
 
 conf-args = \
 	--prefix=$(prefix) \
@@ -25,30 +21,9 @@ conf-args = \
 
 conf-vars =
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) ../configure $(conf-args) $(conf-vars)
-	$(call cmd,stamp)
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
-install-args = \
-	DESTDIR=$(DESTDIR)
-
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	$(call cmd,stamp)
-
 stripfiles = \
 	$(prefix)/bin/ffmpeg \
 	$(prefix)/bin/ffprobe \
 	$(prefix)/bin/ffserver \
 	$(prefix)/lib/*.so.* \
 	$(prefix)/lib/vhook/*.so
-
-include packages/cleanup.mk
-include packages/binary.mk
