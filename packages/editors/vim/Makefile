@@ -1,17 +1,66 @@
 PACKAGE = vim
-VERSION = 7.1
+VERSION = 7.3
 
-LOCATION = ftp://ftp.vim.org/pub/vim/unix
-TARBALLS = $(PACKAGE_FULLNAME).tar.bz2
+LOCATION = http://ftp.vim.org/pub/vim/unix
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-DESCRIPTION = Vi IMproved - enhanced vi editor
+include packages/common.mk
 
-##############################################################################
+HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
+BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
+pkgbuildtree = $(pkgtree)/$(PACKAGE)$(subst .,,$(VERSION))
 
-include packages/autotools.mk
+env += \
+	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
 
-pkgtree = $(buildtree)/vim71
+$(pkgtree)/.setup:
+	$(call cmd,stamp)
+
+conf-args += \
+	--build=$(BUILD_GNU_TYPE) \
+	--host=$(HOST_GNU_TYPE) \
+	--prefix=$(prefix) \
+	--mandir=$(prefix)/share/man \
+	--infodir=$(prefix)/share/info \
+	--localstatedir=/var \
+	--sysconfdir=/etc
+
+conf-args += \
+	--with-tlib=ncurses
 
 conf-vars += \
-	$(call set-args, STRIP)
+	CPPFLAGS='$(CPPFLAGS)' \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
+conf-vars += \
+	ac_cv_small_wchar_t=yes \
+	vim_cv_toupper_broken=no \
+	vim_cv_terminfo=yes \
+	vim_cv_tty_mode=0620 \
+	vim_cv_tty_group=tty \
+	vim_cv_getcwd_broken=no \
+	vim_cv_stat_ignores_slash=yes \
+	vim_cv_memmove_handles_overlap=yes
+
+$(pkgtree)/.configure: $(pkgtree)/.patch
+	cd $(pkgbuildtree) && \
+		$(env) ./configure $(conf-args) $(conf-vars)
+	$(call cmd,stamp)
+
+$(pkgtree)/.build: $(pkgtree)/.configure
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
+	$(call cmd,stamp)
+
+install-args += \
+	DESTDIR=$(DESTDIR)
+
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	cd $(pkgbuildtree) && \
+		$(env) $(priv) $(MAKE) $(install-args) install
+	$(call cmd,stamp)
+
+include packages/cleanup.mk
+include packages/binary.mk

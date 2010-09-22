@@ -1,1 +1,2 @@
-allow-cross-compiling.patch
+#allow-cross-compiling.patch
+cross-compile.patch

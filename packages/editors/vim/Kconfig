@@ -1,0 +1,4 @@
+config PACKAGE_EDITORS_VIM
+	bool "vim"
+	select VIRTUAL_DEVEL_LIBC
+	default n
