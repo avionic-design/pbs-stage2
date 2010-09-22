@@ -1,7 +1,7 @@
 PACKAGE = linphone
-VERSION = 3.2.1
+VERSION = 3.3.2
 
-LOCATION = http://www.very-clever.com/download/nongnu/$(PACKAGE)/3.2.x/sources
+LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/stable/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
@@ -17,9 +17,7 @@ else
 endif
 
 prunefiles = \
-	$(prefix)/lib/liblinphone.la \
-	$(prefix)/lib/libmediastreamer.la \
-	$(prefix)/lib/libortp.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/linphone-3 \
@@ -27,6 +25,4 @@ stripfiles = \
 	$(prefix)/bin/linphonecsh \
 	$(prefix)/bin/sipomatic \
 	$(prefix)/libexec/mediastream \
-	$(prefix)/lib/liblinphone.so.3.2.1 \
-	$(prefix)/lib/libmediastreamer.so.0.0.0 \
-	$(prefix)/lib/libortp.so.8.0.0
+	$(prefix)/lib/*.so.*
