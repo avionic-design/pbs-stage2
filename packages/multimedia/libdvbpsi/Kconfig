@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_LIBDVBPSI
+	bool "libdvbpsi"
+	select VIRTUAL_DEVEL_LIBC
+	default n
