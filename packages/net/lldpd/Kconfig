@@ -1,4 +1,4 @@
 config PACKAGE_NET_LLDPD
 	bool "lldpd"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_NET_NET_SNMP
 	default n
