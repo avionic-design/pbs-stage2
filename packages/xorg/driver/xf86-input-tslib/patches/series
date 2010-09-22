@@ -1,9 +1,0 @@
-ltmain-sysroot.patch -p1
-01_fix-wrong-value-range-for-the-axises.diff
-10_use-hal-for-device.diff
-20_dynamic-xy.diff
-30_fix-button-release-events.diff
-40_emulate-right-button.diff
-50_add-randr-support.diff
-60_detect_xinput-abi.diff
-95_update-manpage.diff
