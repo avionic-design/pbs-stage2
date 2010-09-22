@@ -1,0 +1,4 @@
+config PACKAGE_CONSOLE_KBD
+	bool "kbd"
+	select VIRTUAL_DEVEL_LIBC
+	default n
