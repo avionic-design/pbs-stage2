@@ -1,0 +1,4 @@
+config PACKAGE_WEB_FLASHPLUGIN
+	bool "flashplugin"
+	depends on ARCH_X86
+	default n
