@@ -1,9 +1,4 @@
-PACKAGE = dbus-glib
-VERSION = 0.88
-
-LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/dbus-glib/Makefile.location
 include packages/autotools.mk
 
 conf-vars += \
