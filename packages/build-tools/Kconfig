@@ -1,6 +1,7 @@
 menu "Build tools"
 
 source "packages/build-tools/dbus/Kconfig"
+source "packages/build-tools/dbus-glib/Kconfig"
 source "packages/build-tools/gdk-pixbuf/Kconfig"
 source "packages/build-tools/glib/Kconfig"
 source "packages/build-tools/icon-naming-utils/Kconfig"
