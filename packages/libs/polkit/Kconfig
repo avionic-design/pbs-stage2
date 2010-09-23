@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_POLKIT
+	bool "polkit"
+	select PACKAGE_LIBS_GLIB
+	default n
