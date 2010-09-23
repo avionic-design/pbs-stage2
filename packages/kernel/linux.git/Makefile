@@ -35,5 +35,37 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
 	$(call cmd,stamp)
 
+prunefiles = \
+	$(prefix)/include/asm-generic/.install \
+	$(prefix)/include/asm/.install \
+	$(prefix)/include/drm/.install \
+	$(prefix)/include/.install \
+	$(prefix)/include/linux/byteorder/.install \
+	$(prefix)/include/linux/can/.install \
+	$(prefix)/include/linux/dvb/.install \
+	$(prefix)/include/linux/hdlc/.install \
+	$(prefix)/include/linux/.install \
+	$(prefix)/include/linux/isdn/.install \
+	$(prefix)/include/linux/netfilter_arp/.install \
+	$(prefix)/include/linux/netfilter_bridge/.install \
+	$(prefix)/include/linux/netfilter/.install \
+	$(prefix)/include/linux/netfilter_ipv4/.install \
+	$(prefix)/include/linux/netfilter_ipv6/.install \
+	$(prefix)/include/linux/nfsd/.install \
+	$(prefix)/include/linux/raid/.install \
+	$(prefix)/include/linux/spi/.install \
+	$(prefix)/include/linux/sunrpc/.install \
+	$(prefix)/include/linux/tc_act/.install \
+	$(prefix)/include/linux/tc_ematch/.install \
+	$(prefix)/include/linux/usb/.install \
+	$(prefix)/include/linux/wimax/.install \
+	$(prefix)/include/mtd/.install \
+	$(prefix)/include/rdma/.install \
+	$(prefix)/include/scsi/fc/.install \
+	$(prefix)/include/scsi/.install \
+	$(prefix)/include/sound/.install \
+	$(prefix)/include/video/.install \
+	$(prefix)/include/xen/.install
+
 include $(srctree)/packages/cleanup.mk
 include $(srctree)/packages/binary.mk
