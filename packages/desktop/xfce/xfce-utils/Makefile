@@ -9,6 +9,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+prunefiles = \
+	/etc/xdg/autostart/xfconf-migration-4.6.desktop
+
 stripfiles = \
 	$(prefix)/bin/xfce4-about \
 	$(prefix)/bin/xfrun4
