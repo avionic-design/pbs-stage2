@@ -1,0 +1,4 @@
+config PACKAGE_CORE_SYSLINUX
+	bool "syslinux"
+	select VIRTUAL_DEVEL_LIBC
+	default n
