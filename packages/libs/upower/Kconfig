@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_UPOWER
+	bool "upower"
+	select PACKAGE_LIBS_POLKIT
+	default n

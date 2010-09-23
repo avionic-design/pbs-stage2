@@ -1,0 +1,7 @@
+/etc/dbus-1
+/etc/UPower
+/usr/bin
+/usr/lib/upower
+/usr/share/dbus-1
+/usr/share/polkit-1
+/var/lib/upower
