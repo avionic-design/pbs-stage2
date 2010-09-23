@@ -1,10 +1,8 @@
-PACKAGE = dbus
-VERSION = 1.3.1
-
-LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/dbus/Makefile.location
 include packages/autotools.mk
+
+conf-args += \
+	--libexec=$(prefix)/lib/dbus-1.0
 
 ifeq ($(CONFIG_PACKAGE_LIBS_DBUS_X11),y)
   conf-args += --with-x
