@@ -1,7 +1,7 @@
 PACKAGE = ConsoleKit
-VERSION = 0.3.0
+VERSION = 0.4.2
 
-LOCATION = http://people.freedesktop.org/~mccann/dist
+LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/dist
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
