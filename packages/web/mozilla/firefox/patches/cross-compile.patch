@@ -1,21 +1,8 @@
-diff --git a/config/config.mk b/config/config.mk
-index a20b686..39e4efd 100644
---- a/config/config.mk
-+++ b/config/config.mk
-@@ -154,7 +154,7 @@ MOZ_WIDGET_SUPPORT_LIBS    = $(DIST)/lib/$(LIB_PREFIX)widgetsupport_s.$(LIB_SUFF
- 
- ifdef MOZ_MEMORY
- ifneq (,$(filter-out WINNT WINCE,$(OS_ARCH)))
--JEMALLOC_LIBS = $(MKSHLIB_FORCE_ALL) $(call EXPAND_LIBNAME_PATH,jemalloc,$(DIST)/lib) $(MKSHLIB_UNFORCE_ALL)
-+JEMALLOC_LIBS = $(MKSHLIB_FORCE_ALL) $(call EXPAND_LIBNAME_PATH,jemalloc,$(DIST)/lib) $(MKSHLIB_UNFORCE_ALL) -lpthread
- endif
- endif
- 
 diff --git a/security/coreconf/Linux.mk b/security/coreconf/Linux.mk
 index 5b05477..0592d4a 100644
 --- a/security/coreconf/Linux.mk
 +++ b/security/coreconf/Linux.mk
-@@ -143,8 +143,8 @@ endif
+@@ -141,8 +141,8 @@ endif
  
  ARCH			= linux
  
@@ -30,7 +17,7 @@ diff --git a/security/manager/Makefile.in b/security/manager/Makefile.in
 index 19362b0..0adc4c1 100644
 --- a/security/manager/Makefile.in
 +++ b/security/manager/Makefile.in
-@@ -271,6 +271,8 @@ DEFAULT_GMAKE_FLAGS += \
+@@ -272,6 +272,8 @@ DEFAULT_GMAKE_FLAGS += \
  	OS_ARCH="$(OS_ARCH)" \
  	OS_TEST="$(OS_TEST)" \
  	CPU_ARCH="$(TARGET_CPU)" \
