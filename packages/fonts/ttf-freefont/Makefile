@@ -1,5 +1,5 @@
 PACKAGE = ttf-freefont
-VERSION = 20090104
+VERSION = 20100919
 
 LOCATION = http://ftp.gnu.org/gnu/freefont
 TARBALLS = freefont-ttf-$(VERSION).tar.gz
