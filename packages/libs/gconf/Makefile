@@ -1,5 +1,5 @@
 PACKAGE = GConf
-VERSION = 2.31.7
+VERSION = 2.31.91
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -11,6 +11,9 @@ include packages/autotools.mk
 
 conf-args += \
 	--disable-defaults-service
+
+conf-vars += \
+	ORBIT_IDL=$(objtree)/build-tools/bin/orbit-idl-2
 
 plugin = $(prefix)/lib/$(PACKAGE)/$(MAJOR)
 giomod = $(prefix)/lib/gio/modules
