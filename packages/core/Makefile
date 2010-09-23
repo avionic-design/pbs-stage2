@@ -17,6 +17,7 @@ obj-$(CONFIG_PACKAGE_CORE_RSYSLOG) += rsyslog
 obj-$(CONFIG_PACKAGE_CORE_SED) += sed
 obj-$(CONFIG_PACKAGE_CORE_SYSLINUX) += syslinux
 obj-$(CONFIG_PACKAGE_CORE_SYSLOG_NG) += syslog-ng
+obj-$(CONFIG_PACKAGE_CORE_SYSTEMD) += systemd
 obj-$(CONFIG_PACKAGE_CORE_UDEV) += udev
 obj-$(CONFIG_PACKAGE_CORE_UPSTART) += upstart
 obj-$(CONFIG_PACKAGE_CORE_UPSTART_INIT_DEV) += upstart-init-dev

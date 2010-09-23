@@ -1,0 +1,10 @@
+/bin
+/etc/dbus-1
+/etc/systemd
+/etc/xdg
+/lib/security
+/lib/systemd
+/lib/udev
+/usr/bin
+/usr/share/dbus-1
+/usr/share/systemd
