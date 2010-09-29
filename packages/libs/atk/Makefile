@@ -1,7 +1,10 @@
 PACKAGE = atk
-VERSION = 1.30.0
+VERSION = 1.32.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/1.30
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -10,7 +13,7 @@ conf-args += \
 	--disable-glibtest
 
 prunefiles = \
-	$(prefix)/lib/libatk-1.0.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libatk-1.0.so.0.3009.1
+	$(prefix)/lib/*.so.*
