@@ -1,7 +1,10 @@
 PACKAGE = libsoup
-VERSION = 2.31.2
+VERSION = 2.32.0
 
-LOCATION = http://ftp.acc.umu.se/pub/gnome/sources/libsoup/2.31
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk

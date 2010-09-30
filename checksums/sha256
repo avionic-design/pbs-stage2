@@ -153,7 +153,7 @@ f50d184d8c6a031b3ff4f0d52efcfd4ffa811b0362b166a9ff9ba4c2e9aa7ce0  download/libSM
 0fd75fd8249e09ae2fd3ffd20c3fbaea11b47d71ba5ba2340ed98b6bdca40ea8  download/libsigc++-2.2.8.tar.bz2
 e02cffff069ac562873d0f41464926bc849637d8ff0b4d0309fb42cb47e3817f  download/libsmartcard-0.1.0.tar.xz
 7e9083a2551ff347276d82cdb61f2b4f9cd137c0b76433800e991583ded8ea67  download/libsndfile-1.0.21.tar.gz
-ae52e970deb0ca5e890d87cf55e555249c086bd56ae1fff69599174ca0075379  download/libsoup-2.31.2.tar.bz2
+08cf2ed2357177b9763994a02cf4feeab41bac61b77252d7ee8090e3372c9cc9  download/libsoup-2.32.0.tar.bz2
 10ff7f1ebe45ee53121e32f8271b79d13532ef76d483316b960a623608781e66  download/libtasn1-2.7.tar.gz
 b6ae1ee2fa3d42ac489287d3ec34c5885730b1296f0801ae577a35193d3affbc  download/libtheora-1.1.1.tar.bz2
 6ae978f9674bd1e77bbc9d6309944429d8024c53ce19db24bbed21ad5e70d490  download/libtool-2.2.10.tar.lzma
