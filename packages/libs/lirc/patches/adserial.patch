@@ -1,18 +1,11 @@
-Add support for the Avionic Design serial IR module.
+commit 6ad11c40aab7698ae55d7a62181fbe4d41689226
+Author: Thierry Reding <thierry.reding@avionic-design.de>
+Date:   Fri Sep 24 10:36:09 2010 +0200
 
-From: Thierry Reding <thierry.reding@avionic-design.de>
-
-
----
- configure.ac          |   14 ++
- daemons/Makefile.am   |    1 
- daemons/hw-types.c    |    2 
- daemons/hw_adserial.c |  347 +++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 362 insertions(+), 2 deletions(-)
- create mode 100644 daemons/hw_adserial.c
+    Add support for the Avionic Design serial IR module.
 
 diff --git a/configure.ac b/configure.ac
-index f8b2cd7..3e44166 100644
+index b94fb22..0635952 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -127,6 +127,7 @@ AC_MSG_RESULT()
@@ -20,21 +13,23 @@ index f8b2cd7..3e44166 100644
  	(userspace) \
  	(accent) \
 +	(adserial) \
+ 	(atwf83) \
  	(bte) \
  	(creative) \
- 	(ea65) \
-@@ -431,8 +432,8 @@ dnl here we see what driver the user wants.
+@@ -432,9 +433,9 @@ dnl here we see what driver the user wants.
+ 
  AC_ARG_WITH(driver,
  [  --with-driver=X         specify the driver to use, where X is one of:
-                           all, none, userspace, accent, act200l,
+-                          all, none, userspace, accent, act200l,
 -                          act220l, adaptec, alsa_usb, animax, asusdh,
--                          atilibusb, atiusb, audio, audio_alsa
-+                          act220l, adaptec, adserial, alsa_usb, animax,
-+                          asusdh, atilibusb, atiusb, audio, audio_alsa,
+-                          atilibusb, atiusb, atwf83, audio, audio_alsa
++                          all, none, userspace, accent, act200l, act220l,
++                          adaptec, adserial, alsa_usb, animax, asusdh,
++                          atilibusb, atiusb, atwf83, audio, audio_alsa,
                            avermedia, avermedia_vdomate, avermedia98,
                            awlibusb, bestbuy, bestbuy2, breakoutbox,
                            bte, bw6130, caraca, chronos, commandir,
-@@ -497,6 +498,9 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
+@@ -502,6 +503,9 @@ if test "$driver" = "userspace" -o "$driver" = "all"; then
  	accent)
  		hw_module="${hw_module} hw_accent.o serial.o"
  		;;
@@ -44,7 +39,7 @@ index f8b2cd7..3e44166 100644
  	alsa_usb)
  		hw_module="${hw_module} hw_alsa_usb.o"
  		alsa_lib=-lasound
-@@ -726,6 +730,12 @@ if test "$driver" = "adaptec"; then
+@@ -745,6 +749,12 @@ if test "$driver" = "adaptec"; then
  #  lircmd_conf="adaptec/lircmd.conf.AVC-2410"
  fi
  
@@ -58,7 +53,7 @@ index f8b2cd7..3e44166 100644
    lirc_driver="alsa_usb"
    hw_module="hw_alsa_usb.o"
 diff --git a/daemons/Makefile.am b/daemons/Makefile.am
-index 0952ea3..38adb13 100644
+index 0b58a8e..0db1ff6 100644
 --- a/daemons/Makefile.am
 +++ b/daemons/Makefile.am
 @@ -17,6 +17,7 @@ libhw_module_a_SOURCES = \
@@ -68,12 +63,12 @@ index 0952ea3..38adb13 100644
 +			hw_adserial.c \
  			hw_alsa_usb.c \
  			hw_atilibusb.c \
- 			hw_audio.c \
+ 			hw_atwf83.c \
 diff --git a/daemons/hw-types.c b/daemons/hw-types.c
-index c64b67c..23ca97c 100644
+index 44269f7..3d44bcf 100644
 --- a/daemons/hw-types.c
 +++ b/daemons/hw-types.c
-@@ -7,6 +7,7 @@
+@@ -12,6 +12,7 @@
  #include "hw-types.h"
  /* Hardware types */
  extern struct hardware hw_accent;
@@ -81,7 +76,7 @@ index c64b67c..23ca97c 100644
  extern struct hardware hw_alsa_usb;
  extern struct hardware hw_asusdh;
  extern struct hardware hw_atilibusb;
-@@ -79,6 +80,7 @@ struct hardware *hw_list[] =
+@@ -87,6 +88,7 @@ struct hardware *hw_list[] =
  {
  #ifdef LIRC_DRIVER_ANY
  	&hw_accent,

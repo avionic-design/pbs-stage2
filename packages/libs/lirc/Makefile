@@ -1,5 +1,5 @@
 PACKAGE = lirc
-VERSION = 0.8.6
+VERSION = 0.8.7
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
