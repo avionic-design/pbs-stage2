@@ -1,7 +1,10 @@
 PACKAGE = gtkmm
-VERSION = 2.21.5
+VERSION = 2.22.0
 
-LOCATION = http://ftp.gnome.org/pub/GNOME/sources/gtkmm/2.21
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
