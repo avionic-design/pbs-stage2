@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PULSEAUDIO
+	bool "pulseaudio"
+	select PACKAGE_LIBS_LIBSNDFILE
+	default n
