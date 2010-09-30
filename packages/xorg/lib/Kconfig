@@ -31,6 +31,7 @@ source "packages/xorg/lib/xt/Kconfig"
 source "packages/xorg/lib/xtst/Kconfig"
 source "packages/xorg/lib/xtrans/Kconfig"
 source "packages/xorg/lib/xv/Kconfig"
+source "packages/xorg/lib/xvmc/Kconfig"
 source "packages/xorg/lib/xxf86vm/Kconfig"
 
 endmenu

@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XVMC
+	bool "libXvMC"
+	select PACKAGE_XORG_LIB_XV
+	default n
