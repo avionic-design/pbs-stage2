@@ -1,5 +1,5 @@
 PACKAGE = libwnck
-VERSION = 2.30.3
+VERSION = 2.30.5
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
