@@ -1,5 +1,5 @@
 PACKAGE = libvorbis
-VERSION = 1.3.1
+VERSION = 1.3.2
 
 LOCATION = http://downloads.xiph.org/releases/vorbis
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
