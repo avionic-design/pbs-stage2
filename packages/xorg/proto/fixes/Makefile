@@ -1,5 +1,5 @@
 PACKAGE = fixesproto
-VERSION = 4.1.1
+VERSION = 4.1.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 4.0
