@@ -1,0 +1,3278 @@
+Autoreconfigure.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile.in                                        |    2 
+ aclocal.m4                                         |   44 +
+ callouts/Makefile.in                               |    2 
+ cli/Makefile.in                                    |    2 
+ cli/src/Makefile.in                                |    2 
+ config.h.in                                        |    3 
+ configure                                          |  683 +++++++++++---------
+ data/Makefile.in                                   |    2 
+ docs/Makefile.in                                   |    2 
+ docs/libnm-glib/Makefile.in                        |    2 
+ docs/libnm-util/Makefile.in                        |    2 
+ examples/Makefile.in                               |    2 
+ examples/python/Makefile.in                        |    2 
+ include/Makefile.in                                |    2 
+ initscript/Arch/Makefile.in                        |    2 
+ initscript/Debian/Makefile.in                      |    2 
+ initscript/Gentoo/Makefile.in                      |    2 
+ initscript/Makefile.in                             |    2 
+ initscript/Mandriva/Makefile.in                    |    2 
+ initscript/RedHat/Makefile.in                      |    2 
+ initscript/SUSE/Makefile.in                        |    2 
+ initscript/Slackware/Makefile.in                   |    2 
+ initscript/linexa/Makefile.in                      |    2 
+ initscript/paldo/Makefile.in                       |    2 
+ introspection/Makefile.in                          |    2 
+ libnm-glib/Makefile.in                             |    2 
+ libnm-util/Makefile.in                             |    2 
+ libnm-util/tests/Makefile.in                       |    2 
+ libnm-util/tests/certs/Makefile.in                 |    2 
+ man/Makefile.in                                    |    2 
+ marshallers/Makefile.in                            |    2 
+ policy/Makefile.in                                 |    2 
+ src/Makefile.in                                    |   55 +-
+ src/backends/Makefile.in                           |    2 
+ src/bluez-manager/Makefile.in                      |    2 
+ src/dhcp-manager/Makefile.in                       |    2 
+ src/dns-manager/Makefile.in                        |    2 
+ src/dnsmasq-manager/Makefile.in                    |    2 
+ src/ip6-manager/Makefile.in                        |    2 
+ src/logging/Makefile.in                            |    2 
+ src/modem-manager/Makefile.in                      |    2 
+ src/ppp-manager/Makefile.in                        |    2 
+ src/supplicant-manager/Makefile.in                 |    2 
+ src/supplicant-manager/tests/Makefile.in           |    2 
+ src/system-settings/Makefile.in                    |    2 
+ src/tests/Makefile.in                              |    2 
+ src/vpn-manager/Makefile.in                        |    2 
+ system-settings/Makefile.in                        |    2 
+ system-settings/plugins/Makefile.in                |    2 
+ system-settings/plugins/ifcfg-rh/Makefile.in       |    2 
+ system-settings/plugins/ifcfg-rh/tests/Makefile.in |    2 
+ .../ifcfg-rh/tests/network-scripts/Makefile.in     |    2 
+ system-settings/plugins/ifcfg-suse/Makefile.in     |    2 
+ system-settings/plugins/ifnet/Makefile.in          |    2 
+ system-settings/plugins/ifnet/tests/Makefile.in    |    2 
+ system-settings/plugins/ifupdown/Makefile.in       |    2 
+ system-settings/plugins/ifupdown/tests/Makefile.in |    2 
+ system-settings/plugins/keyfile/Makefile.in        |    2 
+ system-settings/plugins/keyfile/tests/Makefile.in  |    2 
+ .../plugins/keyfile/tests/keyfiles/Makefile.in     |    2 
+ test/Makefile.in                                   |    2 
+ tools/Makefile.in                                  |    2 
+ 62 files changed, 547 insertions(+), 354 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index a3f9f01..2f3a632 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -244,6 +244,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/aclocal.m4 b/aclocal.m4
+index 63cf0af..529602b 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -13,8 +13,8 @@
+ 
+ m4_ifndef([AC_AUTOCONF_VERSION],
+   [m4_copy([m4_PACKAGE_VERSION], [AC_AUTOCONF_VERSION])])dnl
+-m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.65],,
+-[m4_warning([this file was generated for autoconf 2.65.
++m4_if(m4_defn([AC_AUTOCONF_VERSION]), [2.67],,
++[m4_warning([this file was generated for autoconf 2.67.
+ You have another version of autoconf.  It may work, but is not guaranteed to.
+ If you have problems, you may need to regenerate the build system entirely.
+ To do so, use the procedure documented by the package, typically `autoreconf'.])])
+@@ -301,7 +301,7 @@ msgstr ""
+ 
+     dnl These rules are solely for the distribution goal.  While doing this
+     dnl we only have to keep exactly one list of the available catalogs
+-    dnl in configure.in.
++    dnl in configure.ac.
+     for lang in $ALL_LINGUAS; do
+       GMOFILES="$GMOFILES $lang.gmo"
+       POFILES="$POFILES $lang.po"
+@@ -430,7 +430,7 @@ AC_DEFINE_UNQUOTED($1, "$localedir",
+ dnl
+ dnl Now the definitions that aclocal will find
+ dnl
+-ifdef(glib_configure_in,[],[
++ifdef(glib_configure_ac,[],[
+ AC_DEFUN([AM_GLIB_GNU_GETTEXT],[GLIB_GNU_GETTEXT($@)])
+ AC_DEFUN([AM_GLIB_DEFINE_LOCALEDIR],[GLIB_DEFINE_LOCALEDIR($@)])
+ ])dnl
+@@ -486,6 +486,7 @@ AC_DEFUN([AM_NLS],
+ ])
+ 
+ # pkg.m4 - Macros to locate and utilise pkg-config.            -*- Autoconf -*-
++# serial 1 (pkg-config-0.24)
+ # 
+ # Copyright © 2004 Scott James Remnant <scott@netsplit.com>.
+ #
+@@ -513,7 +514,10 @@ AC_DEFUN([AM_NLS],
+ AC_DEFUN([PKG_PROG_PKG_CONFIG],
+ [m4_pattern_forbid([^_?PKG_[A-Z_]+$])
+ m4_pattern_allow([^PKG_CONFIG(_PATH)?$])
+-AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])dnl
++AC_ARG_VAR([PKG_CONFIG], [path to pkg-config utility])
++AC_ARG_VAR([PKG_CONFIG_PATH], [directories to add to pkg-config's search path])
++AC_ARG_VAR([PKG_CONFIG_LIBDIR], [path overriding pkg-config's built-in search path])
++
+ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+ 	AC_PATH_TOOL([PKG_CONFIG], [pkg-config])
+ fi
+@@ -526,7 +530,6 @@ if test -n "$PKG_CONFIG"; then
+ 		AC_MSG_RESULT([no])
+ 		PKG_CONFIG=""
+ 	fi
+-		
+ fi[]dnl
+ ])# PKG_PROG_PKG_CONFIG
+ 
+@@ -535,21 +538,20 @@ fi[]dnl
+ # Check to see whether a particular set of modules exists.  Similar
+ # to PKG_CHECK_MODULES(), but does not set variables or print errors.
+ #
+-#
+-# Similar to PKG_CHECK_MODULES, make sure that the first instance of
+-# this or PKG_CHECK_MODULES is called, or make sure to call
+-# PKG_CHECK_EXISTS manually
++# Please remember that m4 expands AC_REQUIRE([PKG_PROG_PKG_CONFIG])
++# only at the first occurence in configure.ac, so if the first place
++# it's called might be skipped (such as if it is within an "if", you
++# have to call PKG_CHECK_EXISTS manually
+ # --------------------------------------------------------------
+ AC_DEFUN([PKG_CHECK_EXISTS],
+ [AC_REQUIRE([PKG_PROG_PKG_CONFIG])dnl
+ if test -n "$PKG_CONFIG" && \
+     AC_RUN_LOG([$PKG_CONFIG --exists --print-errors "$1"]); then
+-  m4_ifval([$2], [$2], [:])
++  m4_default([$2], [:])
+ m4_ifvaln([$3], [else
+   $3])dnl
+ fi])
+ 
+-
+ # _PKG_CONFIG([VARIABLE], [COMMAND], [MODULES])
+ # ---------------------------------------------
+ m4_define([_PKG_CONFIG],
+@@ -602,6 +604,7 @@ and $1[]_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.])
+ 
+ if test $pkg_failed = yes; then
++   	AC_MSG_RESULT([no])
+         _PKG_SHORT_ERRORS_SUPPORTED
+         if test $_pkg_short_errors_supported = yes; then
+ 	        $1[]_PKG_ERRORS=`$PKG_CONFIG --short-errors --print-errors "$2" 2>&1`
+@@ -611,7 +614,7 @@ if test $pkg_failed = yes; then
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$$1[]_PKG_ERRORS" >&AS_MESSAGE_LOG_FD
+ 
+-	ifelse([$4], , [AC_MSG_ERROR(dnl
++	m4_default([$4], [AC_MSG_ERROR(
+ [Package requirements ($2) were not met:
+ 
+ $$1_PKG_ERRORS
+@@ -619,25 +622,24 @@ $$1_PKG_ERRORS
+ Consider adjusting the PKG_CONFIG_PATH environment variable if you
+ installed software in a non-standard prefix.
+ 
+-_PKG_TEXT
+-])],
+-		[AC_MSG_RESULT([no])
+-                $4])
++_PKG_TEXT])[]dnl
++        ])
+ elif test $pkg_failed = untried; then
+-	ifelse([$4], , [AC_MSG_FAILURE(dnl
++     	AC_MSG_RESULT([no])
++	m4_default([$4], [AC_MSG_FAILURE(
+ [The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+ _PKG_TEXT
+ 
+-To get pkg-config, see <http://pkg-config.freedesktop.org/>.])],
+-		[$4])
++To get pkg-config, see <http://pkg-config.freedesktop.org/>.])[]dnl
++        ])
+ else
+ 	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
+ 	$1[]_LIBS=$pkg_cv_[]$1[]_LIBS
+         AC_MSG_RESULT([yes])
+-	ifelse([$3], , :, [$3])
++	$3
+ fi[]dnl
+ ])# PKG_CHECK_MODULES
+ 
+diff --git a/callouts/Makefile.in b/callouts/Makefile.in
+index e55ddc8..0748f19 100644
+--- a/callouts/Makefile.in
++++ b/callouts/Makefile.in
+@@ -242,6 +242,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/cli/Makefile.in b/cli/Makefile.in
+index b20e5ea..188c219 100644
+--- a/cli/Makefile.in
++++ b/cli/Makefile.in
+@@ -204,6 +204,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/cli/src/Makefile.in b/cli/src/Makefile.in
+index 80a1acc..90a2e3e 100644
+--- a/cli/src/Makefile.in
++++ b/cli/src/Makefile.in
+@@ -202,6 +202,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/config.h.in b/config.h.in
+index 206f64a..78db9c9 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -52,6 +52,9 @@
+ /* Define if you have a polkit with polkit_authority_get_sync() */
+ #undef HAVE_POLKIT_AUTHORITY_GET_SYNC
+ 
++/* Define if you want to enable PPPD support. */
++#undef HAVE_PPPD
++
+ /* Define to 1 if you have the <pppd/pppd.h> header file. */
+ #undef HAVE_PPPD_PPPD_H
+ 
+diff --git a/configure b/configure
+index 186c758..9b89ab0 100755
+--- a/configure
++++ b/configure
+@@ -1,13 +1,13 @@
+ #! /bin/sh
+ # Guess values for system-dependent variables and create Makefiles.
+-# Generated by GNU Autoconf 2.65 for NetworkManager 0.8.1.999.
++# Generated by GNU Autoconf 2.67 for NetworkManager 0.8.1.999.
+ #
+ # Report bugs to <dcbw@redhat.com>.
+ #
+ #
+ # Copyright (C) 1992, 1993, 1994, 1995, 1996, 1998, 1999, 2000, 2001,
+-# 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 Free Software Foundation,
+-# Inc.
++# 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Free Software
++# Foundation, Inc.
+ #
+ #
+ # This configure script is free software; the Free Software Foundation
+@@ -319,7 +319,7 @@ $as_echo X"$as_dir" |
+       test -d "$as_dir" && break
+     done
+     test -z "$as_dirs" || eval "mkdir $as_dirs"
+-  } || test -d "$as_dir" || as_fn_error "cannot create directory $as_dir"
++  } || test -d "$as_dir" || as_fn_error $? "cannot create directory $as_dir"
+ 
+ 
+ } # as_fn_mkdir_p
+@@ -359,19 +359,19 @@ else
+ fi # as_fn_arith
+ 
+ 
+-# as_fn_error ERROR [LINENO LOG_FD]
+-# ---------------------------------
++# as_fn_error STATUS ERROR [LINENO LOG_FD]
++# ----------------------------------------
+ # Output "`basename $0`: error: ERROR" to stderr. If LINENO and LOG_FD are
+ # provided, also output the error to LOG_FD, referencing LINENO. Then exit the
+-# script with status $?, using 1 if that was 0.
++# script with STATUS, using 1 if that was 0.
+ as_fn_error ()
+ {
+-  as_status=$?; test $as_status -eq 0 && as_status=1
+-  if test "$3"; then
+-    as_lineno=${as_lineno-"$2"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-    $as_echo "$as_me:${as_lineno-$LINENO}: error: $1" >&$3
++  as_status=$1; test $as_status -eq 0 && as_status=1
++  if test "$4"; then
++    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
+   fi
+-  $as_echo "$as_me: error: $1" >&2
++  $as_echo "$as_me: error: $2" >&2
+   as_fn_exit $as_status
+ } # as_fn_error
+ 
+@@ -682,7 +682,7 @@ test -n "$DJDIR" || exec 7<&0 </dev/null
+ exec 6>&1
+ 
+ # Name of the host.
+-# hostname on some systems (SVR3.2, Linux) returns a bogus exit status,
++# hostname on some systems (SVR3.2, old GNU/Linux) returns a bogus exit status,
+ # so uname gets run too.
+ ac_hostname=`(hostname || uname -n) 2>/dev/null | sed 1q`
+ 
+@@ -768,6 +768,8 @@ RESOLVCONF_PATH
+ DHCPCD_PATH
+ DHCLIENT_VERSION
+ DHCLIENT_PATH
++ENABLE_PPPD_FALSE
++ENABLE_PPPD_TRUE
+ PPPD_PLUGIN_DIR
+ DBUS_SYS_DIR
+ GLIB_GENMARSHAL
+@@ -802,6 +804,8 @@ GLIB_LIBS
+ GLIB_CFLAGS
+ DBUS_LIBS
+ DBUS_CFLAGS
++PKG_CONFIG_LIBDIR
++PKG_CONFIG_PATH
+ PKG_CONFIG
+ LIBDL
+ LIBM
+@@ -1004,6 +1008,7 @@ with_udev_dir
+ with_systemdsystemunitdir
+ with_crypto
+ with_dbus_sys_dir
++enable_pppd
+ with_pppd_plugin_dir
+ with_dhclient
+ with_dhcpcd
+@@ -1028,6 +1033,8 @@ LIBS
+ CPPFLAGS
+ CPP
+ PKG_CONFIG
++PKG_CONFIG_PATH
++PKG_CONFIG_LIBDIR
+ DBUS_CFLAGS
+ DBUS_LIBS
+ GLIB_CFLAGS
+@@ -1110,8 +1117,9 @@ do
+   fi
+ 
+   case $ac_option in
+-  *=*)	ac_optarg=`expr "X$ac_option" : '[^=]*=\(.*\)'` ;;
+-  *)	ac_optarg=yes ;;
++  *=?*) ac_optarg=`expr "X$ac_option" : '[^=]*=\(.*\)'` ;;
++  *=)   ac_optarg= ;;
++  *)    ac_optarg=yes ;;
+   esac
+ 
+   # Accept the important Cygnus configure options, so we can diagnose typos.
+@@ -1156,7 +1164,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*disable-\(.*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error "invalid feature name: $ac_useropt"
++      as_fn_error $? "invalid feature name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1182,7 +1190,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*enable-\([^=]*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error "invalid feature name: $ac_useropt"
++      as_fn_error $? "invalid feature name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1386,7 +1394,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*with-\([^=]*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error "invalid package name: $ac_useropt"
++      as_fn_error $? "invalid package name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1402,7 +1410,7 @@ do
+     ac_useropt=`expr "x$ac_option" : 'x-*without-\(.*\)'`
+     # Reject names that are not valid shell variable names.
+     expr "x$ac_useropt" : ".*[^-+._$as_cr_alnum]" >/dev/null &&
+-      as_fn_error "invalid package name: $ac_useropt"
++      as_fn_error $? "invalid package name: $ac_useropt"
+     ac_useropt_orig=$ac_useropt
+     ac_useropt=`$as_echo "$ac_useropt" | sed 's/[-+.]/_/g'`
+     case $ac_user_opts in
+@@ -1432,8 +1440,8 @@ do
+   | --x-librar=* | --x-libra=* | --x-libr=* | --x-lib=* | --x-li=* | --x-l=*)
+     x_libraries=$ac_optarg ;;
+ 
+-  -*) as_fn_error "unrecognized option: \`$ac_option'
+-Try \`$0 --help' for more information."
++  -*) as_fn_error $? "unrecognized option: \`$ac_option'
++Try \`$0 --help' for more information"
+     ;;
+ 
+   *=*)
+@@ -1441,7 +1449,7 @@ Try \`$0 --help' for more information."
+     # Reject names that are not valid shell variable names.
+     case $ac_envvar in #(
+       '' | [0-9]* | *[!_$as_cr_alnum]* )
+-      as_fn_error "invalid variable name: \`$ac_envvar'" ;;
++      as_fn_error $? "invalid variable name: \`$ac_envvar'" ;;
+     esac
+     eval $ac_envvar=\$ac_optarg
+     export $ac_envvar ;;
+@@ -1459,13 +1467,13 @@ done
+ 
+ if test -n "$ac_prev"; then
+   ac_option=--`echo $ac_prev | sed 's/_/-/g'`
+-  as_fn_error "missing argument to $ac_option"
++  as_fn_error $? "missing argument to $ac_option"
+ fi
+ 
+ if test -n "$ac_unrecognized_opts"; then
+   case $enable_option_checking in
+     no) ;;
+-    fatal) as_fn_error "unrecognized options: $ac_unrecognized_opts" ;;
++    fatal) as_fn_error $? "unrecognized options: $ac_unrecognized_opts" ;;
+     *)     $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2 ;;
+   esac
+ fi
+@@ -1488,7 +1496,7 @@ do
+     [\\/$]* | ?:[\\/]* )  continue;;
+     NONE | '' ) case $ac_var in *prefix ) continue;; esac;;
+   esac
+-  as_fn_error "expected an absolute directory name for --$ac_var: $ac_val"
++  as_fn_error $? "expected an absolute directory name for --$ac_var: $ac_val"
+ done
+ 
+ # There might be people who depend on the old broken behavior: `$host'
+@@ -1502,8 +1510,8 @@ target=$target_alias
+ if test "x$host_alias" != x; then
+   if test "x$build_alias" = x; then
+     cross_compiling=maybe
+-    $as_echo "$as_me: WARNING: If you wanted to set the --build type, don't use --host.
+-    If a cross compiler is detected then cross compile mode will be used." >&2
++    $as_echo "$as_me: WARNING: if you wanted to set the --build type, don't use --host.
++    If a cross compiler is detected then cross compile mode will be used" >&2
+   elif test "x$build_alias" != "x$host_alias"; then
+     cross_compiling=yes
+   fi
+@@ -1518,9 +1526,9 @@ test "$silent" = yes && exec 6>/dev/null
+ ac_pwd=`pwd` && test -n "$ac_pwd" &&
+ ac_ls_di=`ls -di .` &&
+ ac_pwd_ls_di=`cd "$ac_pwd" && ls -di .` ||
+-  as_fn_error "working directory cannot be determined"
++  as_fn_error $? "working directory cannot be determined"
+ test "X$ac_ls_di" = "X$ac_pwd_ls_di" ||
+-  as_fn_error "pwd does not report name of working directory"
++  as_fn_error $? "pwd does not report name of working directory"
+ 
+ 
+ # Find the source files, if location was not specified.
+@@ -1559,11 +1567,11 @@ else
+ fi
+ if test ! -r "$srcdir/$ac_unique_file"; then
+   test "$ac_srcdir_defaulted" = yes && srcdir="$ac_confdir or .."
+-  as_fn_error "cannot find sources ($ac_unique_file) in $srcdir"
++  as_fn_error $? "cannot find sources ($ac_unique_file) in $srcdir"
+ fi
+ ac_msg="sources are in $srcdir, but \`cd $srcdir' does not work"
+ ac_abs_confdir=`(
+-	cd "$srcdir" && test -r "./$ac_unique_file" || as_fn_error "$ac_msg"
++	cd "$srcdir" && test -r "./$ac_unique_file" || as_fn_error $? "$ac_msg"
+ 	pwd)`
+ # When building in place, set srcdir=.
+ if test "$ac_abs_confdir" = "$ac_pwd"; then
+@@ -1603,7 +1611,7 @@ Configuration:
+       --help=short        display options specific to this package
+       --help=recursive    display the short help of all the included packages
+   -V, --version           display version information and exit
+-  -q, --quiet, --silent   do not print \`checking...' messages
++  -q, --quiet, --silent   do not print \`checking ...' messages
+       --cache-file=FILE   cache test results in FILE [disabled]
+   -C, --config-cache      alias for \`--cache-file=config.cache'
+   -n, --no-create         do not create output files
+@@ -1679,6 +1687,7 @@ Optional Features:
+                           optimize for fast installation [default=yes]
+   --disable-libtool-lock  avoid locking (might break parallel builds)
+   --disable-nls           do not use Native Language Support
++  --disable-pppd          Disable optional PPPD support
+   --enable-more-warnings  Maximum compiler warnings
+   --enable-gtk-doc        use gtk-doc to build documentation [[default=no]]
+   --enable-gtk-doc-html   build documentation in html format [[default=yes]]
+@@ -1731,6 +1740,10 @@ Some influential environment variables:
+               you have headers in a nonstandard directory <include dir>
+   CPP         C preprocessor
+   PKG_CONFIG  path to pkg-config utility
++  PKG_CONFIG_PATH
++              directories to add to pkg-config's search path
++  PKG_CONFIG_LIBDIR
++              path overriding pkg-config's built-in search path
+   DBUS_CFLAGS C compiler flags for DBUS, overriding pkg-config
+   DBUS_LIBS   linker flags for DBUS, overriding pkg-config
+   GLIB_CFLAGS C compiler flags for GLIB, overriding pkg-config
+@@ -1825,9 +1838,9 @@ test -n "$ac_init_help" && exit $ac_status
+ if $ac_init_version; then
+   cat <<\_ACEOF
+ NetworkManager configure 0.8.1.999
+-generated by GNU Autoconf 2.65
++generated by GNU Autoconf 2.67
+ 
+-Copyright (C) 2009 Free Software Foundation, Inc.
++Copyright (C) 2010 Free Software Foundation, Inc.
+ This configure script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it.
+ _ACEOF
+@@ -1897,7 +1910,7 @@ $as_echo "$ac_try_echo"; } >&5
+     mv -f conftest.er1 conftest.err
+   fi
+   $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
+-  test $ac_status = 0; } >/dev/null && {
++  test $ac_status = 0; } > conftest.i && {
+ 	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
+ 	 test ! -s conftest.err
+        }; then :
+@@ -1921,10 +1934,10 @@ fi
+ ac_fn_c_check_header_mongrel ()
+ {
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-  if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++  if eval "test \"\${$3+set}\"" = set; then :
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${$3+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ fi
+ eval ac_res=\$$3
+@@ -1960,7 +1973,7 @@ if ac_fn_c_try_cpp "$LINENO"; then :
+ else
+   ac_header_preproc=no
+ fi
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.err conftest.i conftest.$ac_ext
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_header_preproc" >&5
+ $as_echo "$ac_header_preproc" >&6; }
+ 
+@@ -1983,17 +1996,15 @@ $as_echo "$as_me: WARNING: $2: see the Autoconf documentation" >&2;}
+ $as_echo "$as_me: WARNING: $2:     section \"Present But Cannot Be Compiled\"" >&2;}
+     { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $2: proceeding with the compiler's result" >&5
+ $as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
+-( cat <<\_ASBOX
+-## ------------------------------ ##
++( $as_echo "## ------------------------------ ##
+ ## Report this to dcbw@redhat.com ##
+-## ------------------------------ ##
+-_ASBOX
++## ------------------------------ ##"
+      ) | sed "s/^/$as_me: WARNING:     /" >&2
+     ;;
+ esac
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${$3+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   eval "$3=\$ac_header_compiler"
+@@ -2057,7 +2068,7 @@ ac_fn_c_check_header_compile ()
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${$3+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -2133,7 +2144,7 @@ ac_fn_c_check_func ()
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${$3+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -2201,7 +2212,7 @@ ac_fn_c_check_type ()
+   as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+   { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+ $as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${$3+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   eval "$3=no"
+@@ -2250,7 +2261,7 @@ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
+ 
+ It was created by NetworkManager $as_me 0.8.1.999, which was
+-generated by GNU Autoconf 2.65.  Invocation command line was
++generated by GNU Autoconf 2.67.  Invocation command line was
+ 
+   $ $0 $@
+ 
+@@ -2360,11 +2371,9 @@ trap 'exit_status=$?
+   {
+     echo
+ 
+-    cat <<\_ASBOX
+-## ---------------- ##
++    $as_echo "## ---------------- ##
+ ## Cache variables. ##
+-## ---------------- ##
+-_ASBOX
++## ---------------- ##"
+     echo
+     # The following way of writing the cache mishandles newlines in values,
+ (
+@@ -2398,11 +2407,9 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
+ )
+     echo
+ 
+-    cat <<\_ASBOX
+-## ----------------- ##
++    $as_echo "## ----------------- ##
+ ## Output variables. ##
+-## ----------------- ##
+-_ASBOX
++## ----------------- ##"
+     echo
+     for ac_var in $ac_subst_vars
+     do
+@@ -2415,11 +2422,9 @@ _ASBOX
+     echo
+ 
+     if test -n "$ac_subst_files"; then
+-      cat <<\_ASBOX
+-## ------------------- ##
++      $as_echo "## ------------------- ##
+ ## File substitutions. ##
+-## ------------------- ##
+-_ASBOX
++## ------------------- ##"
+       echo
+       for ac_var in $ac_subst_files
+       do
+@@ -2433,11 +2438,9 @@ _ASBOX
+     fi
+ 
+     if test -s confdefs.h; then
+-      cat <<\_ASBOX
+-## ----------- ##
++      $as_echo "## ----------- ##
+ ## confdefs.h. ##
+-## ----------- ##
+-_ASBOX
++## ----------- ##"
+       echo
+       cat confdefs.h
+       echo
+@@ -2492,7 +2495,12 @@ _ACEOF
+ ac_site_file1=NONE
+ ac_site_file2=NONE
+ if test -n "$CONFIG_SITE"; then
+-  ac_site_file1=$CONFIG_SITE
++  # We do not want a PATH search for config.site.
++  case $CONFIG_SITE in #((
++    -*)  ac_site_file1=./$CONFIG_SITE;;
++    */*) ac_site_file1=$CONFIG_SITE;;
++    *)   ac_site_file1=./$CONFIG_SITE;;
++  esac
+ elif test "x$prefix" != xNONE; then
+   ac_site_file1=$prefix/share/config.site
+   ac_site_file2=$prefix/etc/config.site
+@@ -2507,7 +2515,11 @@ do
+     { $as_echo "$as_me:${as_lineno-$LINENO}: loading site script $ac_site_file" >&5
+ $as_echo "$as_me: loading site script $ac_site_file" >&6;}
+     sed 's/^/| /' "$ac_site_file" >&5
+-    . "$ac_site_file"
++    . "$ac_site_file" \
++      || { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
++$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
++as_fn_error $? "failed to load site script $ac_site_file
++See \`config.log' for more details" "$LINENO" 5 ; }
+   fi
+ done
+ 
+@@ -2583,7 +2595,7 @@ if $ac_cache_corrupted; then
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+   { $as_echo "$as_me:${as_lineno-$LINENO}: error: changes in the environment can compromise the build" >&5
+ $as_echo "$as_me: error: changes in the environment can compromise the build" >&2;}
+-  as_fn_error "run \`make distclean' and/or \`rm $cache_file' and start over" "$LINENO" 5
++  as_fn_error $? "run \`make distclean' and/or \`rm $cache_file' and start over" "$LINENO" 5
+ fi
+ ## -------------------- ##
+ ## Main body of script. ##
+@@ -2600,16 +2612,22 @@ am__api_version='1.11'
+ 
+ ac_aux_dir=
+ for ac_dir in "$srcdir" "$srcdir/.." "$srcdir/../.."; do
+-  for ac_t in install-sh install.sh shtool; do
+-    if test -f "$ac_dir/$ac_t"; then
+-      ac_aux_dir=$ac_dir
+-      ac_install_sh="$ac_aux_dir/$ac_t -c"
+-      break 2
+-    fi
+-  done
++  if test -f "$ac_dir/install-sh"; then
++    ac_aux_dir=$ac_dir
++    ac_install_sh="$ac_aux_dir/install-sh -c"
++    break
++  elif test -f "$ac_dir/install.sh"; then
++    ac_aux_dir=$ac_dir
++    ac_install_sh="$ac_aux_dir/install.sh -c"
++    break
++  elif test -f "$ac_dir/shtool"; then
++    ac_aux_dir=$ac_dir
++    ac_install_sh="$ac_aux_dir/shtool install -c"
++    break
++  fi
+ done
+ if test -z "$ac_aux_dir"; then
+-  as_fn_error "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
++  as_fn_error $? "cannot find install-sh, install.sh, or shtool in \"$srcdir\" \"$srcdir/..\" \"$srcdir/../..\"" "$LINENO" 5
+ fi
+ 
+ # These three variables are undocumented and unsupported,
+@@ -2725,11 +2743,11 @@ am_lf='
+ '
+ case `pwd` in
+   *[\\\"\#\$\&\'\`$am_lf]*)
+-    as_fn_error "unsafe absolute working directory name" "$LINENO" 5;;
++    as_fn_error $? "unsafe absolute working directory name" "$LINENO" 5 ;;
+ esac
+ case $srcdir in
+   *[\\\"\#\$\&\'\`$am_lf\ \	]*)
+-    as_fn_error "unsafe srcdir value: \`$srcdir'" "$LINENO" 5;;
++    as_fn_error $? "unsafe srcdir value: \`$srcdir'" "$LINENO" 5 ;;
+ esac
+ 
+ # Do `set' in a subshell so we don't clobber the current shell's
+@@ -2751,7 +2769,7 @@ if (
+       # if, for instance, CONFIG_SHELL is bash and it inherits a
+       # broken ls alias from the environment.  This has actually
+       # happened.  Such a system could not be considered "sane".
+-      as_fn_error "ls -t appears to fail.  Make sure there is not a broken
++      as_fn_error $? "ls -t appears to fail.  Make sure there is not a broken
+ alias in your environment" "$LINENO" 5
+    fi
+ 
+@@ -2761,7 +2779,7 @@ then
+    # Ok.
+    :
+ else
+-   as_fn_error "newly created file is older than distributed files!
++   as_fn_error $? "newly created file is older than distributed files!
+ Check your system clock" "$LINENO" 5
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+@@ -2999,7 +3017,7 @@ done
+ $as_echo_n "checking whether ${MAKE-make} sets \$(MAKE)... " >&6; }
+ set x ${MAKE-make}
+ ac_make=`$as_echo "$2" | sed 's/+/p/g; s/[^a-zA-Z0-9_]/_/g'`
+-if { as_var=ac_cv_prog_make_${ac_make}_set; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${ac_cv_prog_make_${ac_make}_set+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat >conftest.make <<\_ACEOF
+@@ -3007,7 +3025,7 @@ SHELL = /bin/sh
+ all:
+ 	@echo '@@@%%%=$(MAKE)=@@@%%%'
+ _ACEOF
+-# GNU make sometimes prints "make[1]: Entering...", which would confuse us.
++# GNU make sometimes prints "make[1]: Entering ...", which would confuse us.
+ case `${MAKE-make} -f conftest.make 2>/dev/null` in
+   *@@@%%%=?*=@@@%%%*)
+     eval ac_cv_prog_make_${ac_make}_set=yes;;
+@@ -3041,7 +3059,7 @@ if test "`cd $srcdir && pwd`" != "`pwd`"; then
+   am__isrc=' -I$(srcdir)'
+   # test to see if srcdir already configured
+   if test -f $srcdir/config.status; then
+-    as_fn_error "source directory already configured; run \"make distclean\" there first" "$LINENO" 5
++    as_fn_error $? "source directory already configured; run \"make distclean\" there first" "$LINENO" 5
+   fi
+ fi
+ 
+@@ -3581,8 +3599,8 @@ fi
+ 
+ test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "no acceptable C compiler found in \$PATH
+-See \`config.log' for more details." "$LINENO" 5; }
++as_fn_error $? "no acceptable C compiler found in \$PATH
++See \`config.log' for more details" "$LINENO" 5 ; }
+ 
+ # Provide some information about the compiler.
+ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
+@@ -3696,9 +3714,8 @@ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-{ as_fn_set_status 77
+-as_fn_error "C compiler cannot create executables
+-See \`config.log' for more details." "$LINENO" 5; }; }
++as_fn_error 77 "C compiler cannot create executables
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+@@ -3740,8 +3757,8 @@ done
+ else
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "cannot compute suffix of executables: cannot compile and link
+-See \`config.log' for more details." "$LINENO" 5; }
++as_fn_error $? "cannot compute suffix of executables: cannot compile and link
++See \`config.log' for more details" "$LINENO" 5 ; }
+ fi
+ rm -f conftest conftest$ac_cv_exeext
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
+@@ -3798,9 +3815,9 @@ $as_echo "$ac_try_echo"; } >&5
+     else
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "cannot run C compiled programs.
++as_fn_error $? "cannot run C compiled programs.
+ If you meant to cross compile, use \`--host'.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+     fi
+   fi
+ fi
+@@ -3851,8 +3868,8 @@ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+ { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "cannot compute suffix of object files: cannot compile
+-See \`config.log' for more details." "$LINENO" 5; }
++as_fn_error $? "cannot compute suffix of object files: cannot compile
++See \`config.log' for more details" "$LINENO" 5 ; }
+ fi
+ rm -f conftest.$ac_cv_objext conftest.$ac_ext
+ fi
+@@ -4242,7 +4259,7 @@ else
+   # Broken: fails on valid input.
+ continue
+ fi
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.err conftest.i conftest.$ac_ext
+ 
+   # OK, works on sane cases.  Now check whether nonexistent headers
+   # can be detected and how.
+@@ -4258,11 +4275,11 @@ else
+ ac_preproc_ok=:
+ break
+ fi
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.err conftest.i conftest.$ac_ext
+ 
+ done
+ # Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.i conftest.err conftest.$ac_ext
+ if $ac_preproc_ok; then :
+   break
+ fi
+@@ -4301,7 +4318,7 @@ else
+   # Broken: fails on valid input.
+ continue
+ fi
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.err conftest.i conftest.$ac_ext
+ 
+   # OK, works on sane cases.  Now check whether nonexistent headers
+   # can be detected and how.
+@@ -4317,18 +4334,18 @@ else
+ ac_preproc_ok=:
+ break
+ fi
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.err conftest.i conftest.$ac_ext
+ 
+ done
+ # Because of `break', _AC_PREPROC_IFELSE's cleaning code was skipped.
+-rm -f conftest.err conftest.$ac_ext
++rm -f conftest.i conftest.err conftest.$ac_ext
+ if $ac_preproc_ok; then :
+ 
+ else
+   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "C preprocessor \"$CPP\" fails sanity check
+-See \`config.log' for more details." "$LINENO" 5; }
++as_fn_error $? "C preprocessor \"$CPP\" fails sanity check
++See \`config.log' for more details" "$LINENO" 5 ; }
+ fi
+ 
+ ac_ext=c
+@@ -4389,7 +4406,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_GREP"; then
+-    as_fn_error "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error $? "no acceptable grep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_GREP=$GREP
+@@ -4455,7 +4472,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_EGREP"; then
+-    as_fn_error "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error $? "no acceptable egrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_EGREP=$EGREP
+@@ -4587,8 +4604,7 @@ do :
+   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ ac_fn_c_check_header_compile "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default
+ "
+-eval as_val=\$$as_ac_Header
+-   if test "x$as_val" = x""yes; then :
++if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+   cat >>confdefs.h <<_ACEOF
+ #define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+ _ACEOF
+@@ -4961,8 +4977,8 @@ fi
+ 
+ test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "no acceptable C compiler found in \$PATH
+-See \`config.log' for more details." "$LINENO" 5; }
++as_fn_error $? "no acceptable C compiler found in \$PATH
++See \`config.log' for more details" "$LINENO" 5 ; }
+ 
+ # Provide some information about the compiler.
+ $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
+@@ -5337,7 +5353,7 @@ $as_echo_n "checking whether cc understands -c and -o together... " >&6; }
+ fi
+ set dummy $CC; ac_cc=`$as_echo "$2" |
+ 		      sed 's/[^a-zA-Z0-9_]/_/g;s/^[0-9]/_/'`
+-if { as_var=ac_cv_prog_cc_${ac_cc}_c_o; eval "test \"\${$as_var+set}\" = set"; }; then :
++if eval "test \"\${ac_cv_prog_cc_${ac_cc}_c_o+set}\"" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+@@ -5482,7 +5498,7 @@ ltmain="$ac_aux_dir/ltmain.sh"
+ 
+ # Make sure we can run config.sub.
+ $SHELL "$ac_aux_dir/config.sub" sun4 >/dev/null 2>&1 ||
+-  as_fn_error "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
++  as_fn_error $? "cannot run $SHELL $ac_aux_dir/config.sub" "$LINENO" 5
+ 
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking build system type" >&5
+ $as_echo_n "checking build system type... " >&6; }
+@@ -5493,16 +5509,16 @@ else
+ test "x$ac_build_alias" = x &&
+   ac_build_alias=`$SHELL "$ac_aux_dir/config.guess"`
+ test "x$ac_build_alias" = x &&
+-  as_fn_error "cannot guess build type; you must specify one" "$LINENO" 5
++  as_fn_error $? "cannot guess build type; you must specify one" "$LINENO" 5
+ ac_cv_build=`$SHELL "$ac_aux_dir/config.sub" $ac_build_alias` ||
+-  as_fn_error "$SHELL $ac_aux_dir/config.sub $ac_build_alias failed" "$LINENO" 5
++  as_fn_error $? "$SHELL $ac_aux_dir/config.sub $ac_build_alias failed" "$LINENO" 5
+ 
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_build" >&5
+ $as_echo "$ac_cv_build" >&6; }
+ case $ac_cv_build in
+ *-*-*) ;;
+-*) as_fn_error "invalid value of canonical build" "$LINENO" 5;;
++*) as_fn_error $? "invalid value of canonical build" "$LINENO" 5 ;;
+ esac
+ build=$ac_cv_build
+ ac_save_IFS=$IFS; IFS='-'
+@@ -5527,7 +5543,7 @@ else
+   ac_cv_host=$ac_cv_build
+ else
+   ac_cv_host=`$SHELL "$ac_aux_dir/config.sub" $host_alias` ||
+-    as_fn_error "$SHELL $ac_aux_dir/config.sub $host_alias failed" "$LINENO" 5
++    as_fn_error $? "$SHELL $ac_aux_dir/config.sub $host_alias failed" "$LINENO" 5
+ fi
+ 
+ fi
+@@ -5535,7 +5551,7 @@ fi
+ $as_echo "$ac_cv_host" >&6; }
+ case $ac_cv_host in
+ *-*-*) ;;
+-*) as_fn_error "invalid value of canonical host" "$LINENO" 5;;
++*) as_fn_error $? "invalid value of canonical host" "$LINENO" 5 ;;
+ esac
+ host=$ac_cv_host
+ ac_save_IFS=$IFS; IFS='-'
+@@ -5608,7 +5624,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_SED"; then
+-    as_fn_error "no acceptable sed could be found in \$PATH" "$LINENO" 5
++    as_fn_error $? "no acceptable sed could be found in \$PATH" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_SED=$SED
+@@ -5687,7 +5703,7 @@ esac
+   done
+ IFS=$as_save_IFS
+   if test -z "$ac_cv_path_FGREP"; then
+-    as_fn_error "no acceptable fgrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
++    as_fn_error $? "no acceptable fgrep could be found in $PATH$PATH_SEPARATOR/usr/xpg4/bin" "$LINENO" 5
+   fi
+ else
+   ac_cv_path_FGREP=$FGREP
+@@ -5803,7 +5819,7 @@ else
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ fi
+-test -z "$LD" && as_fn_error "no acceptable ld found in \$PATH" "$LINENO" 5
++test -z "$LD" && as_fn_error $? "no acceptable ld found in \$PATH" "$LINENO" 5
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking if the linker ($LD) is GNU ld" >&5
+ $as_echo_n "checking if the linker ($LD) is GNU ld... " >&6; }
+ if test "${lt_cv_prog_gnu_ld+set}" = set; then :
+@@ -6005,13 +6021,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
+ else
+   lt_cv_nm_interface="BSD nm"
+   echo "int some_variable = 0;" > conftest.$ac_ext
+-  (eval echo "\"\$as_me:6008: $ac_compile\"" >&5)
++  (eval echo "\"\$as_me:6024: $ac_compile\"" >&5)
+   (eval "$ac_compile" 2>conftest.err)
+   cat conftest.err >&5
+-  (eval echo "\"\$as_me:6011: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
++  (eval echo "\"\$as_me:6027: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
+   cat conftest.err >&5
+-  (eval echo "\"\$as_me:6014: output\"" >&5)
++  (eval echo "\"\$as_me:6030: output\"" >&5)
+   cat conftest.out >&5
+   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
+     lt_cv_nm_interface="MS dumpbin"
+@@ -7216,7 +7232,7 @@ ia64-*-hpux*)
+   ;;
+ *-*-irix6*)
+   # Find out which ABI we are using.
+-  echo '#line 7219 "configure"' > conftest.$ac_ext
++  echo '#line 7235 "configure"' > conftest.$ac_ext
+   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
+   (eval $ac_compile) 2>&5
+   ac_status=$?
+@@ -8478,11 +8494,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8481: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8497: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:8485: \$? = $ac_status" >&5
++   echo "$as_me:8501: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8817,11 +8833,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8820: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8836: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:8824: \$? = $ac_status" >&5
++   echo "$as_me:8840: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8922,11 +8938,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8925: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8941: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8929: \$? = $ac_status" >&5
++   echo "$as_me:8945: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -8977,11 +8993,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8980: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8996: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8984: \$? = $ac_status" >&5
++   echo "$as_me:9000: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -11347,7 +11363,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11350 "configure"
++#line 11366 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11443,7 +11459,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 11446 "configure"
++#line 11462 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -11800,8 +11816,7 @@ for ac_header in fcntl.h paths.h sys/ioctl.h sys/time.h syslog.h unistd.h
+ do :
+   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
+ ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
+-eval as_val=\$$as_ac_Header
+-   if test "x$as_val" = x""yes; then :
++if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
+   cat >>confdefs.h <<_ACEOF
+ #define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
+ _ACEOF
+@@ -11977,8 +11992,7 @@ for ac_func in select socket uname
+ do :
+   as_ac_var=`$as_echo "ac_cv_func_$ac_func" | $as_tr_sh`
+ ac_fn_c_check_func "$LINENO" "$ac_func" "$as_ac_var"
+-eval as_val=\$$as_ac_var
+-   if test "x$as_val" = x""yes; then :
++if eval test \"x\$"$as_ac_var"\" = x"yes"; then :
+   cat >>confdefs.h <<_ACEOF
+ #define `$as_echo "HAVE_$ac_func" | $as_tr_cpp` 1
+ _ACEOF
+@@ -12012,7 +12026,7 @@ $as_echo "$USE_NLS" >&6; }
+ 
+ case "$am__api_version" in
+     1.01234)
+-	as_fn_error "Automake 1.5 or newer is required to use intltool" "$LINENO" 5
++	as_fn_error $? "Automake 1.5 or newer is required to use intltool" "$LINENO" 5
+     ;;
+     *)
+     ;;
+@@ -12029,7 +12043,7 @@ $as_echo_n "checking for intltool >= 0.35.0... " >&6; }
+     { $as_echo "$as_me:${as_lineno-$LINENO}: result: $INTLTOOL_APPLIED_VERSION found" >&5
+ $as_echo "$INTLTOOL_APPLIED_VERSION found" >&6; }
+     test "$INTLTOOL_APPLIED_VERSION_AS_INT" -ge "$INTLTOOL_REQUIRED_VERSION_AS_INT" ||
+-	as_fn_error "Your intltool is too old.  You need intltool 0.35.0 or later." "$LINENO" 5
++	as_fn_error $? "Your intltool is too old.  You need intltool 0.35.0 or later." "$LINENO" 5
+ fi
+ 
+ # Extract the first word of "intltool-update", so it can be a program name with args.
+@@ -12153,7 +12167,7 @@ fi
+ 
+ 
+ if test -z "$INTLTOOL_UPDATE" -o -z "$INTLTOOL_MERGE" -o -z "$INTLTOOL_EXTRACT"; then
+-    as_fn_error "The intltool scripts were not found. Please install intltool." "$LINENO" 5
++    as_fn_error $? "The intltool scripts were not found. Please install intltool." "$LINENO" 5
+ fi
+ 
+   INTLTOOL_DESKTOP_RULE='%.desktop:   %.desktop.in   $(INTLTOOL_MERGE) $(wildcard $(top_srcdir)/po/*.po) ; LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@'
+@@ -12435,13 +12449,13 @@ fi
+ 
+ 
+ if test -z "$XGETTEXT" -o -z "$MSGMERGE" -o -z "$MSGFMT"; then
+-    as_fn_error "GNU gettext tools not found; required for intltool" "$LINENO" 5
++    as_fn_error $? "GNU gettext tools not found; required for intltool" "$LINENO" 5
+ fi
+ xgversion="`$XGETTEXT --version|grep '(GNU ' 2> /dev/null`"
+ mmversion="`$MSGMERGE --version|grep '(GNU ' 2> /dev/null`"
+ mfversion="`$MSGFMT --version|grep '(GNU ' 2> /dev/null`"
+ if test -z "$xgversion" -o -z "$mmversion" -o -z "$mfversion"; then
+-    as_fn_error "GNU gettext tools not found; required for intltool" "$LINENO" 5
++    as_fn_error $? "GNU gettext tools not found; required for intltool" "$LINENO" 5
+ fi
+ 
+ # Extract the first word of "perl", so it can be a program name with args.
+@@ -12485,13 +12499,13 @@ fi
+ 
+ 
+ if test -z "$INTLTOOL_PERL"; then
+-   as_fn_error "perl not found" "$LINENO" 5
++   as_fn_error $? "perl not found" "$LINENO" 5
+ fi
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for perl >= 5.8.1" >&5
+ $as_echo_n "checking for perl >= 5.8.1... " >&6; }
+ $INTLTOOL_PERL -e "use 5.8.1;" > /dev/null 2>&1
+ if test $? -ne 0; then
+-   as_fn_error "perl 5.8.1 is required for intltool" "$LINENO" 5
++   as_fn_error $? "perl 5.8.1 is required for intltool" "$LINENO" 5
+ else
+    IT_PERL_VERSION="`$INTLTOOL_PERL -e \"printf '%vd', $^V\"`"
+    { $as_echo "$as_me:${as_lineno-$LINENO}: result: $IT_PERL_VERSION" >&5
+@@ -12504,7 +12518,7 @@ $as_echo_n "checking for XML::Parser... " >&6; }
+        { $as_echo "$as_me:${as_lineno-$LINENO}: result: ok" >&5
+ $as_echo "ok" >&6; }
+    else
+-       as_fn_error "XML::Parser perl module is required for intltool" "$LINENO" 5
++       as_fn_error $? "XML::Parser perl module is required for intltool" "$LINENO" 5
+    fi
+ fi
+ 
+@@ -13500,8 +13514,8 @@ $as_echo "#define AC_APPLE_UNIVERSAL_BUILD 1" >>confdefs.h
+ 
+      ;; #(
+    *)
+-     as_fn_error "unknown endianness
+- presetting ac_cv_c_bigendian=no (or yes) will help" "$LINENO" 5 ;;
++     as_fn_error $? "unknown endianness
++ presetting ac_cv_c_bigendian=no (or yes) will help" "$LINENO" 5  ;;
+  esac
+ 
+ 
+@@ -13518,7 +13532,7 @@ if test "${ac_cv_file__etc_redhat_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/redhat-release"; then
+   ac_cv_file__etc_redhat_release=yes
+ else
+@@ -13537,7 +13551,7 @@ if test "${ac_cv_file__etc_SuSE_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/SuSE-release"; then
+   ac_cv_file__etc_SuSE_release=yes
+ else
+@@ -13556,7 +13570,7 @@ if test "${ac_cv_file__etc_fedora_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/fedora-release"; then
+   ac_cv_file__etc_fedora_release=yes
+ else
+@@ -13575,7 +13589,7 @@ if test "${ac_cv_file__etc_gentoo_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/gentoo-release"; then
+   ac_cv_file__etc_gentoo_release=yes
+ else
+@@ -13594,7 +13608,7 @@ if test "${ac_cv_file__etc_debian_version+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/debian_version"; then
+   ac_cv_file__etc_debian_version=yes
+ else
+@@ -13613,7 +13627,7 @@ if test "${ac_cv_file__etc_arch_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/arch-release"; then
+   ac_cv_file__etc_arch_release=yes
+ else
+@@ -13632,7 +13646,7 @@ if test "${ac_cv_file__etc_slackware_version+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/slackware-version"; then
+   ac_cv_file__etc_slackware_version=yes
+ else
+@@ -13651,7 +13665,7 @@ if test "${ac_cv_file__etc_frugalware_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/frugalware-release"; then
+   ac_cv_file__etc_frugalware_release=yes
+ else
+@@ -13670,7 +13684,7 @@ if test "${ac_cv_file__etc_mandriva_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/mandriva-release"; then
+   ac_cv_file__etc_mandriva_release=yes
+ else
+@@ -13689,7 +13703,7 @@ if test "${ac_cv_file__etc_pardus_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/pardus-release"; then
+   ac_cv_file__etc_pardus_release=yes
+ else
+@@ -13708,7 +13722,7 @@ if test "${ac_cv_file__etc_linexa_release+set}" = set; then :
+   $as_echo_n "(cached) " >&6
+ else
+   test "$cross_compiling" = yes &&
+-  as_fn_error "cannot check for file existence when cross compiling" "$LINENO" 5
++  as_fn_error $? "cannot check for file existence when cross compiling" "$LINENO" 5
+ if test -r "/etc/linexa-release"; then
+   ac_cv_file__etc_linexa_release=yes
+ else
+@@ -13941,7 +13955,7 @@ rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+ { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_have_iwevgenie" >&5
+ $as_echo "$ac_have_iwevgenie" >&6; }
+ if test "$ac_have_iwevgenie" = no; then
+-	as_fn_error "wireless-tools library and development headers >= 28pre9 not installed or not functional" "$LINENO" 5
++	as_fn_error $? "wireless-tools library and development headers >= 28pre9 not installed or not functional" "$LINENO" 5
+ fi
+ 
+ LIBM=
+@@ -14171,6 +14185,10 @@ _ACEOF
+ 
+ 
+ 
++
++
++
++
+ if test "x$ac_cv_env_PKG_CONFIG_set" != "xset"; then
+ 	if test -n "$ac_tool_prefix"; then
+   # Extract the first word of "${ac_tool_prefix}pkg-config", so it can be a program name with args.
+@@ -14283,7 +14301,6 @@ $as_echo "yes" >&6; }
+ $as_echo "no" >&6; }
+ 		PKG_CONFIG=""
+ 	fi
+-
+ fi
+ 
+ pkg_failed=no
+@@ -14326,6 +14343,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14340,7 +14359,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$DBUS_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (dbus-1 >= 1.1 dbus-glib-1 >= 0.75) were not met:
++	as_fn_error $? "Package requirements (dbus-1 >= 1.1 dbus-glib-1 >= 0.75) were not met:
+ 
+ $DBUS_PKG_ERRORS
+ 
+@@ -14349,12 +14368,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables DBUS_CFLAGS
+ and DBUS_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14363,13 +14383,13 @@ and DBUS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	DBUS_CFLAGS=$pkg_cv_DBUS_CFLAGS
+ 	DBUS_LIBS=$pkg_cv_DBUS_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14415,6 +14435,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14429,7 +14451,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GLIB_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (gthread-2.0 glib-2.0 >= 2.18 gobject-2.0) were not met:
++	as_fn_error $? "Package requirements (gthread-2.0 glib-2.0 >= 2.18 gobject-2.0) were not met:
+ 
+ $GLIB_PKG_ERRORS
+ 
+@@ -14438,12 +14460,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables GLIB_CFLAGS
+ and GLIB_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14452,13 +14475,13 @@ and GLIB_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	GLIB_CFLAGS=$pkg_cv_GLIB_CFLAGS
+ 	GLIB_LIBS=$pkg_cv_GLIB_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14504,6 +14527,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14518,7 +14543,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GMODULE_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (gmodule-2.0) were not met:
++	as_fn_error $? "Package requirements (gmodule-2.0) were not met:
+ 
+ $GMODULE_PKG_ERRORS
+ 
+@@ -14527,12 +14552,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables GMODULE_CFLAGS
+ and GMODULE_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14541,13 +14567,13 @@ and GMODULE_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	GMODULE_CFLAGS=$pkg_cv_GMODULE_CFLAGS
+ 	GMODULE_LIBS=$pkg_cv_GMODULE_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14593,6 +14619,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14607,7 +14635,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GUDEV_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (gudev-1.0) were not met:
++	as_fn_error $? "Package requirements (gudev-1.0) were not met:
+ 
+ $GUDEV_PKG_ERRORS
+ 
+@@ -14616,12 +14644,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables GUDEV_CFLAGS
+ and GUDEV_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14630,13 +14659,13 @@ and GUDEV_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	GUDEV_CFLAGS=$pkg_cv_GUDEV_CFLAGS
+ 	GUDEV_LIBS=$pkg_cv_GUDEV_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14682,6 +14711,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14696,7 +14727,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GIO_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (gio-2.0) were not met:
++	as_fn_error $? "Package requirements (gio-2.0) were not met:
+ 
+ $GIO_PKG_ERRORS
+ 
+@@ -14705,12 +14736,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables GIO_CFLAGS
+ and GIO_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14719,13 +14751,13 @@ and GIO_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	GIO_CFLAGS=$pkg_cv_GIO_CFLAGS
+ 	GIO_LIBS=$pkg_cv_GIO_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14806,6 +14838,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14820,7 +14854,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$LIBNL_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (libnl-1 >= 1.0-pre8) were not met:
++	as_fn_error $? "Package requirements (libnl-1 >= 1.0-pre8) were not met:
+ 
+ $LIBNL_PKG_ERRORS
+ 
+@@ -14829,12 +14863,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables LIBNL_CFLAGS
+ and LIBNL_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -14843,13 +14878,13 @@ and LIBNL_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	LIBNL_CFLAGS=$pkg_cv_LIBNL_CFLAGS
+ 	LIBNL_LIBS=$pkg_cv_LIBNL_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -14928,7 +14963,7 @@ $as_echo "#define LIBNL_NEEDS_ADDR_CACHING_WORKAROUND 1" >>confdefs.h
+ 
+     2) { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes, and workaround doesn't work" >&5
+ $as_echo "yes, and workaround doesn't work" >&6; }
+-       as_fn_error "Installed libnl has broken address caching; please patch or upgrade" "$LINENO" 5
++       as_fn_error $? "Installed libnl has broken address caching; please patch or upgrade" "$LINENO" 5
+        ;;
+ 
+     cross) { $as_echo "$as_me:${as_lineno-$LINENO}: result: cross-compiling... assuming it works!" >&5
+@@ -14937,7 +14972,7 @@ $as_echo "cross-compiling... assuming it works!" >&6; }
+ 
+     *) { $as_echo "$as_me:${as_lineno-$LINENO}: result: ?" >&5
+ $as_echo "?" >&6; }
+-       as_fn_error "libnl test program failed" "$LINENO" 5
++       as_fn_error $? "libnl test program failed" "$LINENO" 5
+        ;;
+ esac
+ 
+@@ -14983,6 +15018,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -14997,7 +15034,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$UUID_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (uuid) were not met:
++	as_fn_error $? "Package requirements (uuid) were not met:
+ 
+ $UUID_PKG_ERRORS
+ 
+@@ -15006,12 +15043,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables UUID_CFLAGS
+ and UUID_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15020,13 +15058,13 @@ and UUID_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	UUID_CFLAGS=$pkg_cv_UUID_CFLAGS
+ 	UUID_LIBS=$pkg_cv_UUID_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -15072,6 +15110,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -15086,7 +15126,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$POLKIT_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (polkit-gobject-1) were not met:
++	as_fn_error $? "Package requirements (polkit-gobject-1) were not met:
+ 
+ $POLKIT_PKG_ERRORS
+ 
+@@ -15095,12 +15135,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables POLKIT_CFLAGS
+ and POLKIT_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15109,13 +15150,13 @@ and POLKIT_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	POLKIT_CFLAGS=$pkg_cv_POLKIT_CFLAGS
+ 	POLKIT_LIBS=$pkg_cv_POLKIT_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ 
+@@ -15221,6 +15262,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -15235,7 +15278,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$NSS_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (nss >= 3.11) were not met:
++	as_fn_error $? "Package requirements (nss >= 3.11) were not met:
+ 
+ $NSS_PKG_ERRORS
+ 
+@@ -15244,12 +15287,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables NSS_CFLAGS
+ and NSS_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15258,13 +15302,13 @@ and NSS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	NSS_CFLAGS=$pkg_cv_NSS_CFLAGS
+ 	NSS_LIBS=$pkg_cv_NSS_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+ 
+ $as_echo "#define HAVE_NSS 1" >>confdefs.h
+@@ -15312,6 +15356,8 @@ fi
+ 
+ 
+ if test $pkg_failed = yes; then
++   	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 
+ if $PKG_CONFIG --atleast-pkgconfig-version 0.20; then
+         _pkg_short_errors_supported=yes
+@@ -15326,7 +15372,7 @@ fi
+ 	# Put the nasty error message in config.log where it belongs
+ 	echo "$GNUTLS_PKG_ERRORS" >&5
+ 
+-	as_fn_error "Package requirements (gnutls >= 1.2) were not met:
++	as_fn_error $? "Package requirements (gnutls >= 1.2) were not met:
+ 
+ $GNUTLS_PKG_ERRORS
+ 
+@@ -15335,12 +15381,13 @@ installed software in a non-standard prefix.
+ 
+ Alternatively, you may set the environment variables GNUTLS_CFLAGS
+ and GNUTLS_LIBS to avoid the need to call pkg-config.
+-See the pkg-config man page for more details.
+-" "$LINENO" 5
++See the pkg-config man page for more details." "$LINENO" 5
+ elif test $pkg_failed = untried; then
++     	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
+ 	{ { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+ $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error "The pkg-config script could not be found or is too old.  Make sure it
++as_fn_error $? "The pkg-config script could not be found or is too old.  Make sure it
+ is in your PATH or set the PKG_CONFIG environment variable to the full
+ path to pkg-config.
+ 
+@@ -15349,13 +15396,13 @@ and GNUTLS_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details." "$LINENO" 5; }
++See \`config.log' for more details" "$LINENO" 5 ; }
+ else
+ 	GNUTLS_CFLAGS=$pkg_cv_GNUTLS_CFLAGS
+ 	GNUTLS_LIBS=$pkg_cv_GNUTLS_LIBS
+         { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
+-	:
++
+ fi
+   # Extract the first word of "libgcrypt-config", so it can be a program name with args.
+ set dummy libgcrypt-config; ac_word=$2
+@@ -15399,7 +15446,7 @@ fi
+ 
+ 
+   if test x"$LIBGCRYPT_CONFIG" = xno; then
+-    as_fn_error "gnutls explicitly requested but gcrypt not found on system" "$LINENO" 5
++    as_fn_error $? "gnutls explicitly requested but gcrypt not found on system" "$LINENO" 5
+   else
+ 
+ $as_echo "#define HAVE_GNUTLS 1" >>confdefs.h
+@@ -15411,7 +15458,7 @@ $as_echo "#define HAVE_GNUTLS 1" >>confdefs.h
+     with_gnutls=yes
+   fi
+ else
+-  as_fn_error "Please choose either 'nss' or 'gnutls' for certificate and key operations" "$LINENO" 5
++  as_fn_error $? "Please choose either 'nss' or 'gnutls' for certificate and key operations" "$LINENO" 5
+ fi
+  if test x"$with_nss" != xno; then
+   WITH_NSS_TRUE=
+@@ -15432,7 +15479,7 @@ fi
+ 
+ # Shouldn't ever trigger this, but just in case...
+ if test x"$ac_nss" = xno -a x"$ac_gnutls" = xno; then
+-  as_fn_error "Could not find required development headers and libraries for '$ac_crypto'" "$LINENO" 5
++  as_fn_error $? "Could not find required development headers and libraries for '$ac_crypto'" "$LINENO" 5
+ fi
+ 
+ GLIB_GENMARSHAL=`pkg-config --variable=glib_genmarshal glib-2.0`
+@@ -15453,7 +15500,13 @@ fi
+ 
+ 
+ # PPPD
+-for ac_header in pppd/pppd.h
++# Check whether --enable-pppd was given.
++if test "${enable_pppd+set}" = set; then :
++  enableval=$enable_pppd;
++fi
++
++if test "x$enable_pppd" != "xno"; then
++	for ac_header in pppd/pppd.h
+ do :
+   ac_fn_c_check_header_mongrel "$LINENO" "pppd/pppd.h" "ac_cv_header_pppd_pppd_h" "$ac_includes_default"
+ if test "x$ac_cv_header_pppd_pppd_h" = x""yes; then :
+@@ -15462,7 +15515,7 @@ if test "x$ac_cv_header_pppd_pppd_h" = x""yes; then :
+ _ACEOF
+ 
+ else
+-  as_fn_error "couldn't find pppd.h. pppd development headers are required." "$LINENO" 5
++  as_fn_error $? "couldn't find pppd.h. pppd development headers are required." "$LINENO" 5
+ fi
+ 
+ done
+@@ -15475,10 +15528,23 @@ if test "${with_pppd_plugin_dir+set}" = set; then :
+ fi
+ 
+ 
+-if test -n "$with_pppd_plugin_dir" ; then
+-	PPPD_PLUGIN_DIR="$with_pppd_plugin_dir"
++	if test -n "$with_pppd_plugin_dir" ; then
++		PPPD_PLUGIN_DIR="$with_pppd_plugin_dir"
++	else
++		PPPD_PLUGIN_DIR="${libdir}/pppd/2.4.5"
++	fi
++
++
++
++$as_echo "#define HAVE_PPPD 1" >>confdefs.h
++
++fi
++ if test "$enable_pppd" = "yes"; then
++  ENABLE_PPPD_TRUE=
++  ENABLE_PPPD_FALSE='#'
+ else
+-	PPPD_PLUGIN_DIR="${libdir}/pppd/2.4.5"
++  ENABLE_PPPD_TRUE='#'
++  ENABLE_PPPD_FALSE=
+ fi
+ 
+ 
+@@ -15678,7 +15744,7 @@ fi
+ 
+ 
+   if ! test -x "$IPTABLES_PATH"; then
+-        as_fn_error "iptables was not installed." "$LINENO" 5
++        as_fn_error $? "iptables was not installed." "$LINENO" 5
+   fi
+ else
+   IPTABLES_PATH="$with_iptables"
+@@ -15939,7 +16005,7 @@ fi
+   test $ac_status = 0; }; then
+   :
+ else
+-  as_fn_error "You need to have gtk-doc >= 1.0 installed to build $PACKAGE_NAME" "$LINENO" 5
++  as_fn_error $? "You need to have gtk-doc >= 1.0 installed to build $PACKAGE_NAME" "$LINENO" 5
+ fi
+   fi
+ 
+@@ -16119,6 +16185,7 @@ DEFS=-DHAVE_CONFIG_H
+ 
+ ac_libobjs=
+ ac_ltlibobjs=
++U=
+ for ac_i in : $LIBOBJS; do test "x$ac_i" = x: && continue
+   # 1. Remove the extension, and $U if already installed.
+   ac_script='s/\$U\././;s/\.o$//;s/\.obj$//'
+@@ -16142,19 +16209,19 @@ else
+ fi
+ 
+ if test -z "${MAINTAINER_MODE_TRUE}" && test -z "${MAINTAINER_MODE_FALSE}"; then
+-  as_fn_error "conditional \"MAINTAINER_MODE\" was never defined.
++  as_fn_error $? "conditional \"MAINTAINER_MODE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${AMDEP_TRUE}" && test -z "${AMDEP_FALSE}"; then
+-  as_fn_error "conditional \"AMDEP\" was never defined.
++  as_fn_error $? "conditional \"AMDEP\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
+-  as_fn_error "conditional \"am__fastdepCC\" was never defined.
++  as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
+-  as_fn_error "conditional \"am__fastdepCC\" was never defined.
++  as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ 
+@@ -16162,88 +16229,92 @@ fi
+ 
+ 
+ if test -z "${WITH_DOCS_TRUE}" && test -z "${WITH_DOCS_FALSE}"; then
+-  as_fn_error "conditional \"WITH_DOCS\" was never defined.
++  as_fn_error $? "conditional \"WITH_DOCS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ 
+ if test -z "${TARGET_REDHAT_TRUE}" && test -z "${TARGET_REDHAT_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_REDHAT\" was never defined.
++  as_fn_error $? "conditional \"TARGET_REDHAT\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_SUSE_TRUE}" && test -z "${TARGET_SUSE_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_SUSE\" was never defined.
++  as_fn_error $? "conditional \"TARGET_SUSE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_GENTOO_TRUE}" && test -z "${TARGET_GENTOO_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_GENTOO\" was never defined.
++  as_fn_error $? "conditional \"TARGET_GENTOO\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_DEBIAN_TRUE}" && test -z "${TARGET_DEBIAN_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_DEBIAN\" was never defined.
++  as_fn_error $? "conditional \"TARGET_DEBIAN\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_SLACKWARE_TRUE}" && test -z "${TARGET_SLACKWARE_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_SLACKWARE\" was never defined.
++  as_fn_error $? "conditional \"TARGET_SLACKWARE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_ARCH_TRUE}" && test -z "${TARGET_ARCH_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_ARCH\" was never defined.
++  as_fn_error $? "conditional \"TARGET_ARCH\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_PALDO_TRUE}" && test -z "${TARGET_PALDO_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_PALDO\" was never defined.
++  as_fn_error $? "conditional \"TARGET_PALDO\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_FRUGALWARE_TRUE}" && test -z "${TARGET_FRUGALWARE_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_FRUGALWARE\" was never defined.
++  as_fn_error $? "conditional \"TARGET_FRUGALWARE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_MANDRIVA_TRUE}" && test -z "${TARGET_MANDRIVA_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_MANDRIVA\" was never defined.
++  as_fn_error $? "conditional \"TARGET_MANDRIVA\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_PARDUS_TRUE}" && test -z "${TARGET_PARDUS_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_PARDUS\" was never defined.
++  as_fn_error $? "conditional \"TARGET_PARDUS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${TARGET_LINEXA_TRUE}" && test -z "${TARGET_LINEXA_FALSE}"; then
+-  as_fn_error "conditional \"TARGET_LINEXA\" was never defined.
++  as_fn_error $? "conditional \"TARGET_LINEXA\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${HAVE_SYSTEMD_TRUE}" && test -z "${HAVE_SYSTEMD_FALSE}"; then
+-  as_fn_error "conditional \"HAVE_SYSTEMD\" was never defined.
++  as_fn_error $? "conditional \"HAVE_SYSTEMD\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${WITH_NSS_TRUE}" && test -z "${WITH_NSS_FALSE}"; then
+-  as_fn_error "conditional \"WITH_NSS\" was never defined.
++  as_fn_error $? "conditional \"WITH_NSS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${WITH_GNUTLS_TRUE}" && test -z "${WITH_GNUTLS_FALSE}"; then
+-  as_fn_error "conditional \"WITH_GNUTLS\" was never defined.
++  as_fn_error $? "conditional \"WITH_GNUTLS\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
++if test -z "${ENABLE_PPPD_TRUE}" && test -z "${ENABLE_PPPD_FALSE}"; then
++  as_fn_error $? "conditional \"ENABLE_PPPD\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${ENABLE_GTK_DOC_TRUE}" && test -z "${ENABLE_GTK_DOC_FALSE}"; then
+-  as_fn_error "conditional \"ENABLE_GTK_DOC\" was never defined.
++  as_fn_error $? "conditional \"ENABLE_GTK_DOC\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${GTK_DOC_BUILD_HTML_TRUE}" && test -z "${GTK_DOC_BUILD_HTML_FALSE}"; then
+-  as_fn_error "conditional \"GTK_DOC_BUILD_HTML\" was never defined.
++  as_fn_error $? "conditional \"GTK_DOC_BUILD_HTML\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${GTK_DOC_BUILD_PDF_TRUE}" && test -z "${GTK_DOC_BUILD_PDF_FALSE}"; then
+-  as_fn_error "conditional \"GTK_DOC_BUILD_PDF\" was never defined.
++  as_fn_error $? "conditional \"GTK_DOC_BUILD_PDF\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${GTK_DOC_USE_LIBTOOL_TRUE}" && test -z "${GTK_DOC_USE_LIBTOOL_FALSE}"; then
+-  as_fn_error "conditional \"GTK_DOC_USE_LIBTOOL\" was never defined.
++  as_fn_error $? "conditional \"GTK_DOC_USE_LIBTOOL\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${GTK_DOC_USE_REBASE_TRUE}" && test -z "${GTK_DOC_USE_REBASE_FALSE}"; then
+-  as_fn_error "conditional \"GTK_DOC_USE_REBASE\" was never defined.
++  as_fn_error $? "conditional \"GTK_DOC_USE_REBASE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ if test -z "${WITH_TESTS_TRUE}" && test -z "${WITH_TESTS_FALSE}"; then
+-  as_fn_error "conditional \"WITH_TESTS\" was never defined.
++  as_fn_error $? "conditional \"WITH_TESTS\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
+ 
+@@ -16393,19 +16464,19 @@ export LANGUAGE
+ (unset CDPATH) >/dev/null 2>&1 && unset CDPATH
+ 
+ 
+-# as_fn_error ERROR [LINENO LOG_FD]
+-# ---------------------------------
++# as_fn_error STATUS ERROR [LINENO LOG_FD]
++# ----------------------------------------
+ # Output "`basename $0`: error: ERROR" to stderr. If LINENO and LOG_FD are
+ # provided, also output the error to LOG_FD, referencing LINENO. Then exit the
+-# script with status $?, using 1 if that was 0.
++# script with STATUS, using 1 if that was 0.
+ as_fn_error ()
+ {
+-  as_status=$?; test $as_status -eq 0 && as_status=1
+-  if test "$3"; then
+-    as_lineno=${as_lineno-"$2"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-    $as_echo "$as_me:${as_lineno-$LINENO}: error: $1" >&$3
++  as_status=$1; test $as_status -eq 0 && as_status=1
++  if test "$4"; then
++    as_lineno=${as_lineno-"$3"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++    $as_echo "$as_me:${as_lineno-$LINENO}: error: $2" >&$4
+   fi
+-  $as_echo "$as_me: error: $1" >&2
++  $as_echo "$as_me: error: $2" >&2
+   as_fn_exit $as_status
+ } # as_fn_error
+ 
+@@ -16601,7 +16672,7 @@ $as_echo X"$as_dir" |
+       test -d "$as_dir" && break
+     done
+     test -z "$as_dirs" || eval "mkdir $as_dirs"
+-  } || test -d "$as_dir" || as_fn_error "cannot create directory $as_dir"
++  } || test -d "$as_dir" || as_fn_error $? "cannot create directory $as_dir"
+ 
+ 
+ } # as_fn_mkdir_p
+@@ -16655,7 +16726,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+ # values after options handling.
+ ac_log="
+ This file was extended by NetworkManager $as_me 0.8.1.999, which was
+-generated by GNU Autoconf 2.65.  Invocation command line was
++generated by GNU Autoconf 2.67.  Invocation command line was
+ 
+   CONFIG_FILES    = $CONFIG_FILES
+   CONFIG_HEADERS  = $CONFIG_HEADERS
+@@ -16721,10 +16792,10 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ ac_cs_config="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`"
+ ac_cs_version="\\
+ NetworkManager config.status 0.8.1.999
+-configured by $0, generated by GNU Autoconf 2.65,
++configured by $0, generated by GNU Autoconf 2.67,
+   with options \\"\$ac_cs_config\\"
+ 
+-Copyright (C) 2009 Free Software Foundation, Inc.
++Copyright (C) 2010 Free Software Foundation, Inc.
+ This config.status script is free software; the Free Software Foundation
+ gives unlimited permission to copy, distribute and modify it."
+ 
+@@ -16742,11 +16813,16 @@ ac_need_defaults=:
+ while test $# != 0
+ do
+   case $1 in
+-  --*=*)
++  --*=?*)
+     ac_option=`expr "X$1" : 'X\([^=]*\)='`
+     ac_optarg=`expr "X$1" : 'X[^=]*=\(.*\)'`
+     ac_shift=:
+     ;;
++  --*=)
++    ac_option=`expr "X$1" : 'X\([^=]*\)='`
++    ac_optarg=
++    ac_shift=:
++    ;;
+   *)
+     ac_option=$1
+     ac_optarg=$2
+@@ -16768,6 +16844,7 @@ do
+     $ac_shift
+     case $ac_optarg in
+     *\'*) ac_optarg=`$as_echo "$ac_optarg" | sed "s/'/'\\\\\\\\''/g"` ;;
++    '') as_fn_error $? "missing file argument" ;;
+     esac
+     as_fn_append CONFIG_FILES " '$ac_optarg'"
+     ac_need_defaults=false;;
+@@ -16780,7 +16857,7 @@ do
+     ac_need_defaults=false;;
+   --he | --h)
+     # Conflict between --help and --header
+-    as_fn_error "ambiguous option: \`$1'
++    as_fn_error $? "ambiguous option: \`$1'
+ Try \`$0 --help' for more information.";;
+   --help | --hel | -h )
+     $as_echo "$ac_cs_usage"; exit ;;
+@@ -16789,7 +16866,7 @@ Try \`$0 --help' for more information.";;
+     ac_cs_silent=: ;;
+ 
+   # This is an error.
+-  -*) as_fn_error "unrecognized option: \`$1'
++  -*) as_fn_error $? "unrecognized option: \`$1'
+ Try \`$0 --help' for more information." ;;
+ 
+   *) as_fn_append ac_config_targets " $1"
+@@ -17184,7 +17261,7 @@ do
+     "examples/python/Makefile") CONFIG_FILES="$CONFIG_FILES examples/python/Makefile" ;;
+     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
+ 
+-  *) as_fn_error "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
++  *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;
+   esac
+ done
+ 
+@@ -17222,7 +17299,7 @@ $debug ||
+ {
+   tmp=./conf$$-$RANDOM
+   (umask 077 && mkdir "$tmp")
+-} || as_fn_error "cannot create a temporary directory in ." "$LINENO" 5
++} || as_fn_error $? "cannot create a temporary directory in ." "$LINENO" 5
+ 
+ # Set up the scripts for CONFIG_FILES section.
+ # No need to generate them if there are no CONFIG_FILES.
+@@ -17239,7 +17316,7 @@ if test "x$ac_cr" = x; then
+ fi
+ ac_cs_awk_cr=`$AWK 'BEGIN { print "a\rb" }' </dev/null 2>/dev/null`
+ if test "$ac_cs_awk_cr" = "a${ac_cr}b"; then
+-  ac_cs_awk_cr='\r'
++  ac_cs_awk_cr='\\r'
+ else
+   ac_cs_awk_cr=$ac_cr
+ fi
+@@ -17253,18 +17330,18 @@ _ACEOF
+   echo "$ac_subst_vars" | sed 's/.*/&!$&$ac_delim/' &&
+   echo "_ACEOF"
+ } >conf$$subs.sh ||
+-  as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
+-ac_delim_num=`echo "$ac_subst_vars" | grep -c '$'`
++  as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
++ac_delim_num=`echo "$ac_subst_vars" | grep -c '^'`
+ ac_delim='%!_!# '
+ for ac_last_try in false false false false false :; do
+   . ./conf$$subs.sh ||
+-    as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
++    as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
+ 
+   ac_delim_n=`sed -n "s/.*$ac_delim\$/X/p" conf$$subs.awk | grep -c X`
+   if test $ac_delim_n = $ac_delim_num; then
+     break
+   elif $ac_last_try; then
+-    as_fn_error "could not make $CONFIG_STATUS" "$LINENO" 5
++    as_fn_error $? "could not make $CONFIG_STATUS" "$LINENO" 5
+   else
+     ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+   fi
+@@ -17353,20 +17430,28 @@ if sed "s/$ac_cr//" < /dev/null > /dev/null 2>&1; then
+ else
+   cat
+ fi < "$tmp/subs1.awk" > "$tmp/subs.awk" \
+-  || as_fn_error "could not setup config files machinery" "$LINENO" 5
++  || as_fn_error $? "could not setup config files machinery" "$LINENO" 5
+ _ACEOF
+ 
+-# VPATH may cause trouble with some makes, so we remove $(srcdir),
+-# ${srcdir} and @srcdir@ from VPATH if srcdir is ".", strip leading and
++# VPATH may cause trouble with some makes, so we remove sole $(srcdir),
++# ${srcdir} and @srcdir@ entries from VPATH if srcdir is ".", strip leading and
+ # trailing colons and then remove the whole line if VPATH becomes empty
+ # (actually we leave an empty line to preserve line numbers).
+ if test "x$srcdir" = x.; then
+-  ac_vpsub='/^[	 ]*VPATH[	 ]*=/{
+-s/:*\$(srcdir):*/:/
+-s/:*\${srcdir}:*/:/
+-s/:*@srcdir@:*/:/
+-s/^\([^=]*=[	 ]*\):*/\1/
++  ac_vpsub='/^[	 ]*VPATH[	 ]*=[	 ]*/{
++h
++s///
++s/^/:/
++s/[	 ]*$/:/
++s/:\$(srcdir):/:/g
++s/:\${srcdir}:/:/g
++s/:@srcdir@:/:/g
++s/^:*//
+ s/:*$//
++x
++s/\(=[	 ]*\).*/\1/
++G
++s/\n//
+ s/^[^=]*=[	 ]*$//
+ }'
+ fi
+@@ -17394,7 +17479,7 @@ for ac_last_try in false false :; do
+   if test -z "$ac_t"; then
+     break
+   elif $ac_last_try; then
+-    as_fn_error "could not make $CONFIG_HEADERS" "$LINENO" 5
++    as_fn_error $? "could not make $CONFIG_HEADERS" "$LINENO" 5
+   else
+     ac_delim="$ac_delim!$ac_delim _$ac_delim!! "
+   fi
+@@ -17479,7 +17564,7 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+ _ACAWK
+ _ACEOF
+ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+-  as_fn_error "could not setup config headers machinery" "$LINENO" 5
++  as_fn_error $? "could not setup config headers machinery" "$LINENO" 5
+ fi # test -n "$CONFIG_HEADERS"
+ 
+ 
+@@ -17492,7 +17577,7 @@ do
+   esac
+   case $ac_mode$ac_tag in
+   :[FHL]*:*);;
+-  :L* | :C*:*) as_fn_error "invalid tag \`$ac_tag'" "$LINENO" 5;;
++  :L* | :C*:*) as_fn_error $? "invalid tag \`$ac_tag'" "$LINENO" 5 ;;
+   :[FH]-) ac_tag=-:-;;
+   :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
+   esac
+@@ -17520,7 +17605,7 @@ do
+ 	   [\\/$]*) false;;
+ 	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
+ 	   esac ||
+-	   as_fn_error "cannot find input file: \`$ac_f'" "$LINENO" 5;;
++	   as_fn_error 1 "cannot find input file: \`$ac_f'" "$LINENO" 5 ;;
+       esac
+       case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
+       as_fn_append ac_file_inputs " '$ac_f'"
+@@ -17547,7 +17632,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
+ 
+     case $ac_tag in
+     *:-:* | *:-) cat >"$tmp/stdin" \
+-      || as_fn_error "could not create $ac_file" "$LINENO" 5 ;;
++      || as_fn_error $? "could not create $ac_file" "$LINENO" 5  ;;
+     esac
+     ;;
+   esac
+@@ -17684,22 +17769,22 @@ s&@MKDIR_P@&$ac_MKDIR_P&;t t
+ $ac_datarootdir_hack
+ "
+ eval sed \"\$ac_sed_extra\" "$ac_file_inputs" | $AWK -f "$tmp/subs.awk" >$tmp/out \
+-  || as_fn_error "could not create $ac_file" "$LINENO" 5
++  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
+ 
+ test -z "$ac_datarootdir_hack$ac_datarootdir_seen" &&
+   { ac_out=`sed -n '/\${datarootdir}/p' "$tmp/out"`; test -n "$ac_out"; } &&
+   { ac_out=`sed -n '/^[	 ]*datarootdir[	 ]*:*=/p' "$tmp/out"`; test -z "$ac_out"; } &&
+   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: $ac_file contains a reference to the variable \`datarootdir'
+-which seems to be undefined.  Please make sure it is defined." >&5
++which seems to be undefined.  Please make sure it is defined" >&5
+ $as_echo "$as_me: WARNING: $ac_file contains a reference to the variable \`datarootdir'
+-which seems to be undefined.  Please make sure it is defined." >&2;}
++which seems to be undefined.  Please make sure it is defined" >&2;}
+ 
+   rm -f "$tmp/stdin"
+   case $ac_file in
+   -) cat "$tmp/out" && rm -f "$tmp/out";;
+   *) rm -f "$ac_file" && mv "$tmp/out" "$ac_file";;
+   esac \
+-  || as_fn_error "could not create $ac_file" "$LINENO" 5
++  || as_fn_error $? "could not create $ac_file" "$LINENO" 5
+  ;;
+   :H)
+   #
+@@ -17710,19 +17795,19 @@ which seems to be undefined.  Please make sure it is defined." >&2;}
+       $as_echo "/* $configure_input  */" \
+       && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs"
+     } >"$tmp/config.h" \
+-      || as_fn_error "could not create $ac_file" "$LINENO" 5
++      || as_fn_error $? "could not create $ac_file" "$LINENO" 5
+     if diff "$ac_file" "$tmp/config.h" >/dev/null 2>&1; then
+       { $as_echo "$as_me:${as_lineno-$LINENO}: $ac_file is unchanged" >&5
+ $as_echo "$as_me: $ac_file is unchanged" >&6;}
+     else
+       rm -f "$ac_file"
+       mv "$tmp/config.h" "$ac_file" \
+-	|| as_fn_error "could not create $ac_file" "$LINENO" 5
++	|| as_fn_error $? "could not create $ac_file" "$LINENO" 5
+     fi
+   else
+     $as_echo "/* $configure_input  */" \
+       && eval '$AWK -f "$tmp/defines.awk"' "$ac_file_inputs" \
+-      || as_fn_error "could not create -" "$LINENO" 5
++      || as_fn_error $? "could not create -" "$LINENO" 5
+   fi
+ # Compute "$ac_file"'s index in $config_headers.
+ _am_arg="$ac_file"
+@@ -18502,7 +18587,7 @@ _LT_EOF
+       esac ;;
+     "po/stamp-it":C)
+     if  ! grep "^# INTLTOOL_MAKEFILE$" "po/Makefile.in" > /dev/null ; then
+-       as_fn_error "po/Makefile.in.in was not created by intltoolize." "$LINENO" 5
++       as_fn_error $? "po/Makefile.in.in was not created by intltoolize." "$LINENO" 5
+     fi
+     rm -f "po/stamp-it" "po/stamp-it.tmp" "po/POTFILES" "po/Makefile.tmp"
+     >"po/stamp-it.tmp"
+@@ -18530,7 +18615,7 @@ _ACEOF
+ ac_clean_files=$ac_clean_files_save
+ 
+ test $ac_write_fail = 0 ||
+-  as_fn_error "write failure creating $CONFIG_STATUS" "$LINENO" 5
++  as_fn_error $? "write failure creating $CONFIG_STATUS" "$LINENO" 5
+ 
+ 
+ # configure is writing to config.log, and then calls config.status.
+@@ -18551,7 +18636,7 @@ if test "$no_create" != yes; then
+   exec 5>>config.log
+   # Use ||, not &&, to avoid exiting from the if with $? = 1, which
+   # would make configure fail if this is the last instruction.
+-  $ac_cs_success || as_fn_exit $?
++  $ac_cs_success || as_fn_exit 1
+ fi
+ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
+diff --git a/data/Makefile.in b/data/Makefile.in
+index 0e7dd0e..032d820 100644
+--- a/data/Makefile.in
++++ b/data/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/docs/Makefile.in b/docs/Makefile.in
+index 23ce498..ac14dbc 100644
+--- a/docs/Makefile.in
++++ b/docs/Makefile.in
+@@ -237,6 +237,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/docs/libnm-glib/Makefile.in b/docs/libnm-glib/Makefile.in
+index 0e63ba6..1cad448 100644
+--- a/docs/libnm-glib/Makefile.in
++++ b/docs/libnm-glib/Makefile.in
+@@ -171,6 +171,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/docs/libnm-util/Makefile.in b/docs/libnm-util/Makefile.in
+index c0550e7..b21143b 100644
+--- a/docs/libnm-util/Makefile.in
++++ b/docs/libnm-util/Makefile.in
+@@ -171,6 +171,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/examples/Makefile.in b/examples/Makefile.in
+index bedd5ca..57f5440 100644
+--- a/examples/Makefile.in
++++ b/examples/Makefile.in
+@@ -204,6 +204,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/examples/python/Makefile.in b/examples/python/Makefile.in
+index c4e8c63..ff8a59d 100644
+--- a/examples/python/Makefile.in
++++ b/examples/python/Makefile.in
+@@ -164,6 +164,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/include/Makefile.in b/include/Makefile.in
+index 826b58f..7a46314 100644
+--- a/include/Makefile.in
++++ b/include/Makefile.in
+@@ -191,6 +191,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Arch/Makefile.in b/initscript/Arch/Makefile.in
+index b04b6b5..ec73286 100644
+--- a/initscript/Arch/Makefile.in
++++ b/initscript/Arch/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Debian/Makefile.in b/initscript/Debian/Makefile.in
+index 38c66ef..07ef7b5 100644
+--- a/initscript/Debian/Makefile.in
++++ b/initscript/Debian/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Gentoo/Makefile.in b/initscript/Gentoo/Makefile.in
+index 18ab753..401c911 100644
+--- a/initscript/Gentoo/Makefile.in
++++ b/initscript/Gentoo/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Makefile.in b/initscript/Makefile.in
+index 0cd5765..78e7f52 100644
+--- a/initscript/Makefile.in
++++ b/initscript/Makefile.in
+@@ -214,6 +214,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Mandriva/Makefile.in b/initscript/Mandriva/Makefile.in
+index dcc468a..5fb1682 100644
+--- a/initscript/Mandriva/Makefile.in
++++ b/initscript/Mandriva/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/RedHat/Makefile.in b/initscript/RedHat/Makefile.in
+index eb03371..20018ec 100644
+--- a/initscript/RedHat/Makefile.in
++++ b/initscript/RedHat/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/SUSE/Makefile.in b/initscript/SUSE/Makefile.in
+index 73d0a9d..f7f77a9 100644
+--- a/initscript/SUSE/Makefile.in
++++ b/initscript/SUSE/Makefile.in
+@@ -165,6 +165,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/Slackware/Makefile.in b/initscript/Slackware/Makefile.in
+index 698d533..afe6f4a 100644
+--- a/initscript/Slackware/Makefile.in
++++ b/initscript/Slackware/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/linexa/Makefile.in b/initscript/linexa/Makefile.in
+index 5b403b6..6a377a1 100644
+--- a/initscript/linexa/Makefile.in
++++ b/initscript/linexa/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/initscript/paldo/Makefile.in b/initscript/paldo/Makefile.in
+index 54234bf..f579079 100644
+--- a/initscript/paldo/Makefile.in
++++ b/initscript/paldo/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/introspection/Makefile.in b/introspection/Makefile.in
+index fe68686..4eb30ba 100644
+--- a/introspection/Makefile.in
++++ b/introspection/Makefile.in
+@@ -164,6 +164,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/libnm-glib/Makefile.in b/libnm-glib/Makefile.in
+index 0e00b95..2c0e9cb 100644
+--- a/libnm-glib/Makefile.in
++++ b/libnm-glib/Makefile.in
+@@ -284,6 +284,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/libnm-util/Makefile.in b/libnm-util/Makefile.in
+index 8f7111d..7de9e4c 100644
+--- a/libnm-util/Makefile.in
++++ b/libnm-util/Makefile.in
+@@ -328,6 +328,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/libnm-util/tests/Makefile.in b/libnm-util/tests/Makefile.in
+index 417b915..6637e5a 100644
+--- a/libnm-util/tests/Makefile.in
++++ b/libnm-util/tests/Makefile.in
+@@ -264,6 +264,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/libnm-util/tests/certs/Makefile.in b/libnm-util/tests/certs/Makefile.in
+index b3fd455..fb015ea 100644
+--- a/libnm-util/tests/certs/Makefile.in
++++ b/libnm-util/tests/certs/Makefile.in
+@@ -173,6 +173,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/man/Makefile.in b/man/Makefile.in
+index b4b6f1c..e432c54 100644
+--- a/man/Makefile.in
++++ b/man/Makefile.in
+@@ -197,6 +197,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/marshallers/Makefile.in b/marshallers/Makefile.in
+index 02e4878..32923a0 100644
+--- a/marshallers/Makefile.in
++++ b/marshallers/Makefile.in
+@@ -195,6 +195,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/policy/Makefile.in b/policy/Makefile.in
+index c08dd09..4605e77 100644
+--- a/policy/Makefile.in
++++ b/policy/Makefile.in
+@@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/Makefile.in b/src/Makefile.in
+index a8f83fd..ea2c77a 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -36,7 +36,13 @@ PRE_UNINSTALL = :
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
++@ENABLE_PPPD_TRUE@am__append_1 = \
++@ENABLE_PPPD_TRUE@	ppp-manager
++
+ sbin_PROGRAMS = NetworkManager$(EXEEXT)
++@ENABLE_PPPD_TRUE@am__append_2 = \
++@ENABLE_PPPD_TRUE@	./ppp-manager/libppp-manager.la
++
+ libexec_PROGRAMS = nm-crash-logger$(EXEEXT)
+ subdir = src
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
+@@ -118,7 +124,6 @@ NetworkManager_DEPENDENCIES =  \
+ 	./ip6-manager/libip6-manager.la \
+ 	./supplicant-manager/libsupplicant-manager.la \
+ 	./dnsmasq-manager/libdnsmasq-manager.la \
+-	./ppp-manager/libppp-manager.la \
+ 	./modem-manager/libmodem-manager.la \
+ 	./bluez-manager/libbluez-manager.la \
+ 	./system-settings/libsystem-settings.la \
+@@ -127,7 +132,7 @@ NetworkManager_DEPENDENCIES =  \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+-	$(am__DEPENDENCIES_1)
++	$(am__DEPENDENCIES_1) $(am__append_2)
+ NetworkManager_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+ 	$(AM_CFLAGS) $(CFLAGS) $(NetworkManager_LDFLAGS) $(LDFLAGS) -o \
+@@ -204,7 +209,10 @@ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+ 	distdir
+ ETAGS = etags
+ CTAGS = ctags
+-DIST_SUBDIRS = $(SUBDIRS)
++DIST_SUBDIRS = logging dns-manager vpn-manager dhcp-manager \
++	ip6-manager supplicant-manager backends dnsmasq-manager \
++	modem-manager bluez-manager system-settings . tests \
++	ppp-manager
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ am__relativize = \
+   dir0=`pwd`; \
+@@ -338,6 +346,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+@@ -411,22 +421,9 @@ target_alias = @target_alias@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = \
+-	logging \
+-	dns-manager \
+-	vpn-manager \
+-	dhcp-manager \
+-	ip6-manager \
+-	supplicant-manager \
+-	ppp-manager \
+-	backends \
+-	dnsmasq-manager \
+-	modem-manager \
+-	bluez-manager \
+-	system-settings \
+-	. \
+-	tests
+-
++SUBDIRS = logging dns-manager vpn-manager dhcp-manager ip6-manager \
++	supplicant-manager backends dnsmasq-manager modem-manager \
++	bluez-manager system-settings . tests $(am__append_1)
+ INCLUDES = -I${top_srcdir}                   \
+            -I${top_srcdir}/include           \
+            -I${top_builddir}/marshallers   \
+@@ -588,30 +585,20 @@ NetworkManager_CPPFLAGS = \
+ 	-DNMLOCALEDIR=\"$(datadir)/locale\" \
+ 	-DARP_DEBUG
+ 
+-NetworkManager_LDADD = \
+-	$(top_builddir)/marshallers/libmarshallers.la \
+-	./logging/libnm-logging.la \
+-	./dns-manager/libdns-manager.la \
++NetworkManager_LDADD = $(top_builddir)/marshallers/libmarshallers.la \
++	./logging/libnm-logging.la ./dns-manager/libdns-manager.la \
+ 	./vpn-manager/libvpn-manager.la \
+ 	./dhcp-manager/libdhcp-manager.la \
+ 	./ip6-manager/libip6-manager.la \
+ 	./supplicant-manager/libsupplicant-manager.la \
+ 	./dnsmasq-manager/libdnsmasq-manager.la \
+-	./ppp-manager/libppp-manager.la \
+ 	./modem-manager/libmodem-manager.la \
+ 	./bluez-manager/libbluez-manager.la \
+ 	./system-settings/libsystem-settings.la \
+ 	./backends/libnmbackend.la \
+-	$(top_builddir)/libnm-util/libnm-util.la \
+-	$(DBUS_LIBS) \
+-	$(GLIB_LIBS) \
+-	$(GUDEV_LIBS) \
+-	$(LIBNL_LIBS) \
+-	$(GMODULE_LIBS) \
+-	$(POLKIT_LIBS) \
+-	$(LIBM) \
+-	$(LIBDL)
+-
++	$(top_builddir)/libnm-util/libnm-util.la $(DBUS_LIBS) \
++	$(GLIB_LIBS) $(GUDEV_LIBS) $(LIBNL_LIBS) $(GMODULE_LIBS) \
++	$(POLKIT_LIBS) $(LIBM) $(LIBDL) $(am__append_2)
+ NetworkManager_LDFLAGS = -rdynamic
+ nm_crash_logger_SOURCES = nm-crash-logger.c
+ nm_crash_logger_CPPFLAGS = \
+diff --git a/src/backends/Makefile.in b/src/backends/Makefile.in
+index 15c07ff..d22a745 100644
+--- a/src/backends/Makefile.in
++++ b/src/backends/Makefile.in
+@@ -239,6 +239,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/bluez-manager/Makefile.in b/src/bluez-manager/Makefile.in
+index 9ddcb94..84ff266 100644
+--- a/src/bluez-manager/Makefile.in
++++ b/src/bluez-manager/Makefile.in
+@@ -201,6 +201,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/dhcp-manager/Makefile.in b/src/dhcp-manager/Makefile.in
+index 8d7a535..f2464bf 100644
+--- a/src/dhcp-manager/Makefile.in
++++ b/src/dhcp-manager/Makefile.in
+@@ -201,6 +201,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/dns-manager/Makefile.in b/src/dns-manager/Makefile.in
+index e35462d..6a99122 100644
+--- a/src/dns-manager/Makefile.in
++++ b/src/dns-manager/Makefile.in
+@@ -200,6 +200,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/dnsmasq-manager/Makefile.in b/src/dnsmasq-manager/Makefile.in
+index 4fe3e5c..9af42e3 100644
+--- a/src/dnsmasq-manager/Makefile.in
++++ b/src/dnsmasq-manager/Makefile.in
+@@ -198,6 +198,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/ip6-manager/Makefile.in b/src/ip6-manager/Makefile.in
+index d6ce9e2..2492715 100644
+--- a/src/ip6-manager/Makefile.in
++++ b/src/ip6-manager/Makefile.in
+@@ -198,6 +198,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/logging/Makefile.in b/src/logging/Makefile.in
+index f997cb4..70d9561 100644
+--- a/src/logging/Makefile.in
++++ b/src/logging/Makefile.in
+@@ -195,6 +195,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/modem-manager/Makefile.in b/src/modem-manager/Makefile.in
+index e101c4e..e1d90aa 100644
+--- a/src/modem-manager/Makefile.in
++++ b/src/modem-manager/Makefile.in
+@@ -201,6 +201,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/ppp-manager/Makefile.in b/src/ppp-manager/Makefile.in
+index 644ee71..c010555 100644
+--- a/src/ppp-manager/Makefile.in
++++ b/src/ppp-manager/Makefile.in
+@@ -230,6 +230,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/supplicant-manager/Makefile.in b/src/supplicant-manager/Makefile.in
+index 1a6d208..ac70b57 100644
+--- a/src/supplicant-manager/Makefile.in
++++ b/src/supplicant-manager/Makefile.in
+@@ -241,6 +241,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/supplicant-manager/tests/Makefile.in b/src/supplicant-manager/tests/Makefile.in
+index fb51017..0d5c37f 100644
+--- a/src/supplicant-manager/tests/Makefile.in
++++ b/src/supplicant-manager/tests/Makefile.in
+@@ -200,6 +200,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/system-settings/Makefile.in b/src/system-settings/Makefile.in
+index 706b830..b5613e1 100644
+--- a/src/system-settings/Makefile.in
++++ b/src/system-settings/Makefile.in
+@@ -211,6 +211,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/tests/Makefile.in b/src/tests/Makefile.in
+index 18c87ed..8379ca5 100644
+--- a/src/tests/Makefile.in
++++ b/src/tests/Makefile.in
+@@ -209,6 +209,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/src/vpn-manager/Makefile.in b/src/vpn-manager/Makefile.in
+index e285e14..f3d5e82 100644
+--- a/src/vpn-manager/Makefile.in
++++ b/src/vpn-manager/Makefile.in
+@@ -201,6 +201,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/Makefile.in b/system-settings/Makefile.in
+index 8cc851c..9b59683 100644
+--- a/system-settings/Makefile.in
++++ b/system-settings/Makefile.in
+@@ -204,6 +204,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/Makefile.in b/system-settings/plugins/Makefile.in
+index a864a16..220e4e4 100644
+--- a/system-settings/plugins/Makefile.in
++++ b/system-settings/plugins/Makefile.in
+@@ -209,6 +209,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifcfg-rh/Makefile.in b/system-settings/plugins/ifcfg-rh/Makefile.in
+index ec4608d..0e79fb4 100644
+--- a/system-settings/plugins/ifcfg-rh/Makefile.in
++++ b/system-settings/plugins/ifcfg-rh/Makefile.in
+@@ -279,6 +279,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifcfg-rh/tests/Makefile.in b/system-settings/plugins/ifcfg-rh/tests/Makefile.in
+index 6b0b27a..58f2b47 100644
+--- a/system-settings/plugins/ifcfg-rh/tests/Makefile.in
++++ b/system-settings/plugins/ifcfg-rh/tests/Makefile.in
+@@ -241,6 +241,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifcfg-rh/tests/network-scripts/Makefile.in b/system-settings/plugins/ifcfg-rh/tests/network-scripts/Makefile.in
+index 61fb3b0..4b5bdc3 100644
+--- a/system-settings/plugins/ifcfg-rh/tests/network-scripts/Makefile.in
++++ b/system-settings/plugins/ifcfg-rh/tests/network-scripts/Makefile.in
+@@ -164,6 +164,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifcfg-suse/Makefile.in b/system-settings/plugins/ifcfg-suse/Makefile.in
+index b89a51f..ce05656 100644
+--- a/system-settings/plugins/ifcfg-suse/Makefile.in
++++ b/system-settings/plugins/ifcfg-suse/Makefile.in
+@@ -227,6 +227,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifnet/Makefile.in b/system-settings/plugins/ifnet/Makefile.in
+index 511e5e7..4f53d24 100644
+--- a/system-settings/plugins/ifnet/Makefile.in
++++ b/system-settings/plugins/ifnet/Makefile.in
+@@ -275,6 +275,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifnet/tests/Makefile.in b/system-settings/plugins/ifnet/tests/Makefile.in
+index b790313..b245afd 100644
+--- a/system-settings/plugins/ifnet/tests/Makefile.in
++++ b/system-settings/plugins/ifnet/tests/Makefile.in
+@@ -202,6 +202,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifupdown/Makefile.in b/system-settings/plugins/ifupdown/Makefile.in
+index 28c2853..53b280b 100644
+--- a/system-settings/plugins/ifupdown/Makefile.in
++++ b/system-settings/plugins/ifupdown/Makefile.in
+@@ -273,6 +273,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/ifupdown/tests/Makefile.in b/system-settings/plugins/ifupdown/tests/Makefile.in
+index fd58327..353eade 100644
+--- a/system-settings/plugins/ifupdown/tests/Makefile.in
++++ b/system-settings/plugins/ifupdown/tests/Makefile.in
+@@ -199,6 +199,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/keyfile/Makefile.in b/system-settings/plugins/keyfile/Makefile.in
+index 6c4f2bd..1b04ebf 100644
+--- a/system-settings/plugins/keyfile/Makefile.in
++++ b/system-settings/plugins/keyfile/Makefile.in
+@@ -272,6 +272,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/keyfile/tests/Makefile.in b/system-settings/plugins/keyfile/tests/Makefile.in
+index ccd3edb..813569d 100644
+--- a/system-settings/plugins/keyfile/tests/Makefile.in
++++ b/system-settings/plugins/keyfile/tests/Makefile.in
+@@ -236,6 +236,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/system-settings/plugins/keyfile/tests/keyfiles/Makefile.in b/system-settings/plugins/keyfile/tests/keyfiles/Makefile.in
+index aa6576c..a8c0994 100644
+--- a/system-settings/plugins/keyfile/tests/keyfiles/Makefile.in
++++ b/system-settings/plugins/keyfile/tests/keyfiles/Makefile.in
+@@ -164,6 +164,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/test/Makefile.in b/test/Makefile.in
+index 16ac4ce..1a3c7e4 100644
+--- a/test/Makefile.in
++++ b/test/Makefile.in
+@@ -217,6 +217,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@
+diff --git a/tools/Makefile.in b/tools/Makefile.in
+index d2a038c..1c7a895 100644
+--- a/tools/Makefile.in
++++ b/tools/Makefile.in
+@@ -164,6 +164,8 @@ PACKAGE_URL = @PACKAGE_URL@
+ PACKAGE_VERSION = @PACKAGE_VERSION@
+ PATH_SEPARATOR = @PATH_SEPARATOR@
+ PKG_CONFIG = @PKG_CONFIG@
++PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
++PKG_CONFIG_PATH = @PKG_CONFIG_PATH@
+ POFILES = @POFILES@
+ POLKIT_CFLAGS = @POLKIT_CFLAGS@
+ POLKIT_LIBS = @POLKIT_LIBS@

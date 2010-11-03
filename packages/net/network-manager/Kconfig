@@ -1,0 +1,6 @@
+config PACKAGE_NET_NETWORK_MANAGER
+	bool "network-manager"
+	select PACKAGE_LIBS_DBUS
+	select PACKAGE_LIBS_LIBNL
+	select PACKAGE_NET_WIRELESS_TOOLS
+	default n

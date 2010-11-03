@@ -1,0 +1,241 @@
+Allow PPPD support to be deselected.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.ac                 |   22 ++++++++++++++--------
+ src/Makefile.am              |   12 ++++++++++--
+ src/modem-manager/nm-modem.c |   18 ++++++++++++++++++
+ src/nm-device-ethernet.c     |    8 ++++++++
+ 4 files changed, 50 insertions(+), 10 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 8cdfdba..40eabb1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -314,17 +314,23 @@ fi
+ AC_SUBST(DBUS_SYS_DIR)
+ 
+ # PPPD
+-AC_CHECK_HEADERS(pppd/pppd.h,,
+-  AC_MSG_ERROR(couldn't find pppd.h. pppd development headers are required.))
++AC_ARG_ENABLE(pppd, AS_HELP_STRING([--disable-pppd], [Disable optional PPPD support]))
++if test "x$enable_pppd" != "xno"; then
++	AC_CHECK_HEADERS(pppd/pppd.h,,
++	  AC_MSG_ERROR(couldn't find pppd.h. pppd development headers are required.))
+ 
+-AC_ARG_WITH([pppd-plugin-dir], AS_HELP_STRING([--with-pppd-plugin-dir=DIR], [path to the pppd plugins directory]))
++	AC_ARG_WITH([pppd-plugin-dir], AS_HELP_STRING([--with-pppd-plugin-dir=DIR], [path to the pppd plugins directory]))
+ 
+-if test -n "$with_pppd_plugin_dir" ; then
+-	PPPD_PLUGIN_DIR="$with_pppd_plugin_dir"
+-else
+-	PPPD_PLUGIN_DIR="${libdir}/pppd/2.4.5"
++	if test -n "$with_pppd_plugin_dir" ; then
++		PPPD_PLUGIN_DIR="$with_pppd_plugin_dir"
++	else
++		PPPD_PLUGIN_DIR="${libdir}/pppd/2.4.5"
++	fi
++	AC_SUBST(PPPD_PLUGIN_DIR)
++
++	AC_DEFINE(HAVE_PPPD, 1, [Define if you want to enable PPPD support.])
+ fi
+-AC_SUBST(PPPD_PLUGIN_DIR)
++AM_CONDITIONAL(ENABLE_PPPD, [test "$enable_pppd" = "yes"])
+ 
+ # dhclient support
+ AC_ARG_WITH([dhclient], AS_HELP_STRING([--with-dhclient=yes|no|path], [Enable dhclient 4.x support]))
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 8c01df0..bbc0e7f 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -5,7 +5,6 @@ SUBDIRS= \
+ 	dhcp-manager \
+ 	ip6-manager \
+ 	supplicant-manager \
+-	ppp-manager \
+ 	backends \
+ 	dnsmasq-manager \
+ 	modem-manager \
+@@ -14,6 +13,11 @@ SUBDIRS= \
+ 	. \
+ 	tests
+ 
++if ENABLE_PPPD
++SUBDIRS += \
++	ppp-manager
++endif
++
+ INCLUDES = -I${top_srcdir}                   \
+            -I${top_srcdir}/include           \
+            -I${top_builddir}/marshallers   \
+@@ -234,7 +238,6 @@ NetworkManager_LDADD = \
+ 	./ip6-manager/libip6-manager.la \
+ 	./supplicant-manager/libsupplicant-manager.la \
+ 	./dnsmasq-manager/libdnsmasq-manager.la \
+-	./ppp-manager/libppp-manager.la \
+ 	./modem-manager/libmodem-manager.la \
+ 	./bluez-manager/libbluez-manager.la \
+ 	./system-settings/libsystem-settings.la \
+@@ -249,6 +252,11 @@ NetworkManager_LDADD = \
+ 	$(LIBM) \
+ 	$(LIBDL)
+ 
++if ENABLE_PPPD
++NetworkManager_LDADD += \
++	./ppp-manager/libppp-manager.la
++endif
++
+ NetworkManager_LDFLAGS = -rdynamic
+ 
+ libexec_PROGRAMS = nm-crash-logger
+diff --git a/src/modem-manager/nm-modem.c b/src/modem-manager/nm-modem.c
+index e07b818..bdc6ad7 100644
+--- a/src/modem-manager/nm-modem.c
++++ b/src/modem-manager/nm-modem.c
+@@ -140,6 +140,7 @@ merge_ip4_config (NMActRequest *req, NMIP4Config *config)
+ 		nm_utils_merge_ip4_config (config, s_ip4);
+ }
+ 
++#ifdef HAVE_PPPD
+ /*****************************************************************************/
+ /* IP method PPP */
+ 
+@@ -298,6 +299,7 @@ ppp_stage4 (NMModem *self,
+ 
+ 	return NM_ACT_STAGE_RETURN_SUCCESS;
+ }
++#endif /* HAVE_PPPD */
+ 
+ /*****************************************************************************/
+ /* IP method static */
+@@ -415,9 +417,11 @@ nm_modem_stage3_ip4_config_start (NMModem *self,
+ 
+ 	priv = NM_MODEM_GET_PRIVATE (self);
+ 	switch (priv->ip_method) {
++#ifdef HAVE_PPPD
+ 	case MM_MODEM_IP_METHOD_PPP:
+ 		ret = ppp_stage3_ip4_config_start (self, req, reason);
+ 		break;
++#endif
+ 	case MM_MODEM_IP_METHOD_STATIC:
+ 		ret = static_stage3_ip4_config_start (self, req, reason);
+ 		break;
+@@ -457,9 +461,11 @@ nm_modem_stage4_get_ip4_config (NMModem *self,
+ 
+ 	priv = NM_MODEM_GET_PRIVATE (self);
+ 	switch (priv->ip_method) {
++#ifdef HAVE_PPPD
+ 	case MM_MODEM_IP_METHOD_PPP:
+ 		ret = ppp_stage4 (self, req, config, reason);
+ 		break;
++#endif
+ 	case MM_MODEM_IP_METHOD_STATIC:
+ 		ret = static_stage4 (self, req, device, config, reason);
+ 		break;
+@@ -496,6 +502,7 @@ nm_modem_connection_secrets_updated (NMModem *self,
+ 
+ 	priv = NM_MODEM_GET_PRIVATE (self);
+ 
++#ifdef ENABLE_PPPD
+ 	if (caller == SECRETS_CALLER_PPP) {
+ 		const char *user = NULL;
+ 		const char *pass = NULL;
+@@ -518,6 +525,7 @@ nm_modem_connection_secrets_updated (NMModem *self,
+ 		}
+ 		return TRUE;
+ 	}
++#endif
+ 
+ 	g_return_val_if_fail (caller == SECRETS_CALLER_MOBILE_BROADBAND, FALSE);
+ 
+@@ -652,12 +660,14 @@ real_deactivate_quickly (NMModem *self, NMDevice *device)
+ 	priv->in_bytes = priv->out_bytes = 0;
+ 
+ 	switch (priv->ip_method) {
++#ifdef HAVE_PPPD
+ 	case MM_MODEM_IP_METHOD_PPP:
+ 		if (priv->ppp_manager) {
+ 			g_object_unref (priv->ppp_manager);
+ 			priv->ppp_manager = NULL;
+ 		}
+ 		break;
++#endif
+ 	case MM_MODEM_IP_METHOD_STATIC:
+ 	case MM_MODEM_IP_METHOD_DHCP:
+ 		iface = nm_device_get_ip_iface (device);
+@@ -1077,9 +1087,17 @@ nm_modem_class_init (NMModemClass *klass)
+ 		 g_param_spec_uint (NM_MODEM_IP_METHOD,
+ 							"IP method",
+ 							"IP method",
++#ifdef HAVE_PPPD
+ 							MM_MODEM_IP_METHOD_PPP,
++#else
+ 							MM_MODEM_IP_METHOD_DHCP,
++#endif
++							MM_MODEM_IP_METHOD_DHCP,
++#ifdef HAVE_PPPD
+ 							MM_MODEM_IP_METHOD_PPP,
++#else
++							MM_MODEM_IP_METHOD_DHCP,
++#endif
+ 							G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+ 
+ 	g_object_class_install_property
+diff --git a/src/nm-device-ethernet.c b/src/nm-device-ethernet.c
+index 08bbc50..481c05f 100644
+--- a/src/nm-device-ethernet.c
++++ b/src/nm-device-ethernet.c
+@@ -902,13 +902,16 @@ real_connection_secrets_updated (NMDevice *dev,
+                                  GSList *updated_settings,
+                                  RequestSecretsCaller caller)
+ {
++#ifdef HAVE_PPPD
+ 	NMDeviceEthernetPrivate *priv = NM_DEVICE_ETHERNET_GET_PRIVATE (dev);
++#endif
+ 	NMActRequest *req;
+ 	gboolean valid = FALSE;
+ 	GSList *iter;
+ 
+ 	g_return_if_fail (IS_ACTIVATING_STATE (nm_device_get_state (dev)));
+ 
++#ifdef HAVE_PPPD
+ 	/* PPPoE? */
+ 	if (caller == SECRETS_CALLER_PPP) {
+ 		NMSettingPPPOE *s_pppoe;
+@@ -934,6 +937,7 @@ real_connection_secrets_updated (NMDevice *dev,
+ 		}
+ 		return;
+ 	}
++#endif
+ 
+ 	/* Only caller could be ourselves for 802.1x */
+ 	g_return_if_fail (caller == SECRETS_CALLER_ETHERNET);
+@@ -1567,6 +1571,7 @@ nm_8021x_stage2_config (NMDeviceEthernet *self, NMDeviceStateReason *reason)
+ 	return ret;
+ }
+ 
++#ifdef HAVE_PPPD
+ /*****************************************************************************/
+ /* PPPoE */
+ 
+@@ -1645,6 +1650,7 @@ pppoe_stage3_ip4_config_start (NMDeviceEthernet *self, NMDeviceStateReason *reas
+ 
+ 	return ret;
+ }
++#endif /* HAVE_PPPD */
+ 
+ static NMActStageReturn
+ real_act_stage2_config (NMDevice *device, NMDeviceStateReason *reason)
+@@ -1685,8 +1691,10 @@ real_act_stage3_ip4_config_start (NMDevice *device, NMDeviceStateReason *reason)
+ 	g_assert (s_con);
+ 
+ 	connection_type = nm_setting_connection_get_connection_type (s_con);
++#ifdef HAVE_PPPD
+ 	if (!strcmp (connection_type, NM_SETTING_PPPOE_SETTING_NAME))
+ 		return pppoe_stage3_ip4_config_start (NM_DEVICE_ETHERNET (device), reason);
++#endif
+ 
+ 	return NM_DEVICE_CLASS (nm_device_ethernet_parent_class)->act_stage3_ip4_config_start (device, reason);
+ }
