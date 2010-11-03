@@ -1,5 +1,14 @@
+Add libtool sysroot support.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ ltmain.sh |   35 ++++++++++++++++++++++++++++++++---
+ 1 files changed, 32 insertions(+), 3 deletions(-)
+
 diff --git a/ltmain.sh b/ltmain.sh
-index 6939dcc..be92a38 100755
+index a72f2fd..6997f0e 100755
 --- a/ltmain.sh
 +++ b/ltmain.sh
 @@ -2009,6 +2009,10 @@ func_mode_install ()

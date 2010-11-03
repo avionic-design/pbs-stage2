@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 162
+VERSION = 164
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -10,11 +10,15 @@ conf-args = \
 	--build=$(BUILD_GNU_TYPE) \
 	--host=$(HOST_GNU_TYPE) \
 	--prefix= \
+	--sbindir=/sbin \
 	--includedir=$(prefix)/include \
 	--datarootdir=$(prefix)/share \
 	--libdir=$(prefix)/lib \
 	--libexecdir=/lib/udev \
 	--sysconfdir=/etc
+
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
 
 conf-args += \
 	--disable-extras \
