@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XSET
+	bool "xset"
+	select PACKAGE_XORG_LIB_XEXT
+	default n
