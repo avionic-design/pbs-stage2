@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_DCONF
+	bool "dconf"
+	select PACKAGE_LIBS_LIBGEE
+	default n
