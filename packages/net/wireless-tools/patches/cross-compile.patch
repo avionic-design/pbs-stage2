@@ -1,0 +1,27 @@
+diff --git a/Makefile b/Makefile
+index 2e43159..cea3810 100644
+--- a/Makefile
++++ b/Makefile
+@@ -103,11 +103,12 @@ endif
+ 
+ # Other flags
+ CFLAGS=-Os -W -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow \
+-	-Wpointer-arith -Wcast-qual -Winline -I.
++	-Wpointer-arith -Wcast-qual -Winline -I. $(EXTRA_CFLAGS)
+ #CFLAGS=-O2 -W -Wall -Wstrict-prototypes -I.
+ DEPFLAGS=-MMD
+ XCFLAGS=$(CFLAGS) $(DEPFLAGS) $(WARN) $(HEADERS) $(WELIB_FLAG) $(WEDEF_FLAG)
+ PICFLAG=-fPIC
++LDFLAGS=$(EXTRA_LDFLAGS)
+ 
+ # Standard compilation targets
+ all:: $(IWLIB) $(PROGS)
+@@ -145,7 +146,7 @@ wireless.h:
+ 
+ # Compilation of the dynamic library
+ $(DYNAMIC): $(OBJS:.o=.so)
+-	$(CC) -shared -o $@ -Wl,-soname,$@ $(STRIPFLAGS) $(LIBS) -lc $^
++	$(CC) $(LDFLAGS) -shared -o $@ -Wl,-soname,$@ $(STRIPFLAGS) $(LIBS) -lc $^
+ 
+ # Compilation of the static library
+ $(STATIC): $(OBJS:.o=.so)

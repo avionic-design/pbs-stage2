@@ -1,0 +1,4 @@
+config PACKAGE_NET_WIRELESS_TOOLS
+	bool "wireless-tools"
+	select VIRTUAL_DEVEL_LIBC
+	default n

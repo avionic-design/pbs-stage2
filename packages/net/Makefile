@@ -12,3 +12,4 @@ obj-$(CONFIG_PACKAGE_NET_NET_SNMP) += net-snmp
 obj-$(CONFIG_PACKAGE_NET_OPENNTPD) += openntpd
 obj-$(CONFIG_PACKAGE_NET_PPP) += ppp
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
+obj-$(CONFIG_PACKAGE_NET_WIRELESS_TOOLS) += wireless-tools
