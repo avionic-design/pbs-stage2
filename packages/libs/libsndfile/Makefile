@@ -1,5 +1,5 @@
 PACKAGE = libsndfile
-VERSION = 1.0.21
+VERSION = 1.0.23
 
 LOCATION = http://www.mega-nerd.com/$(PACKAGE)/files
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
