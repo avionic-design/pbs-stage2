@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.4.3
+VERSION = 1.4.4
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,8 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libpng.la \
-	$(prefix)/lib/libpng14.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libpng14.so.14.3.0
+	$(prefix)/lib/*.so.*
