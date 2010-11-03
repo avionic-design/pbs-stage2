@@ -1,10 +1,10 @@
 PACKAGE = libfontenc
-VERSION = 1.0.5
+VERSION = 1.1.0
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libfontenc.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libfontenc.so.1.0.0
+	$(prefix)/lib/*.so.*
