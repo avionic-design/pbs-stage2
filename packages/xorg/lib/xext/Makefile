@@ -1,6 +1,5 @@
 PACKAGE = libXext
-VERSION = 1.1.2
-SOVER = 6.4.0
+VERSION = 1.2.0
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
@@ -13,7 +12,7 @@ conf-args += \
 	--disable-malloc0returnsnull
 
 prunefiles = \
-	$(prefix)/lib/libXext.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXext.so.$(SOVER)
+	$(prefix)/lib/*.so.*
