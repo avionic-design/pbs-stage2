@@ -1,5 +1,5 @@
 PACKAGE = xfwm4
-VERSION = 4.7.0
+VERSION = 4.7.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -14,4 +14,4 @@ stripfiles = \
 	$(prefix)/bin/xfwm4-settings \
 	$(prefix)/bin/xfwm4-tweaks-settings \
 	$(prefix)/bin/xfwm4-workspace-settings \
-	$(prefix)/libexec/xfce4/xfwm4/helper-dialog
+	$(prefix)/lib/xfce4/xfwm4/helper-dialog
