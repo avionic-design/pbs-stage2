@@ -1,5 +1,5 @@
 PACKAGE = lldpd
-VERSION = 0.5.1
+VERSION = 0.5.2
 
 LOCATION = http://www.luffy.cx/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
