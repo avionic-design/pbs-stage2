@@ -1,5 +1,5 @@
 PACKAGE = xfce4-panel
-VERSION = 4.7.3
+VERSION = 4.7.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
