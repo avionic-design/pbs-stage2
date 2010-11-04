@@ -10,6 +10,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--disable-gio-unix \
 	--disable-python
 
 conf-vars += \
