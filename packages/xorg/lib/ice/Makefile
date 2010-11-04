@@ -1,10 +1,10 @@
 PACKAGE = libICE
-VERSION = 1.0.6
+VERSION = 1.0.7
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libICE.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libICE.so.6.3.0
+	$(prefix)/lib/*.so.*
