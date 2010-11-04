@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 0.6
+VERSION = 0.6.1
 
 LOCATION = http://ffmpeg.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
