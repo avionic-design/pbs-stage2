@@ -1,5 +1,5 @@
 PACKAGE = libxfce4util
-VERSION = 4.7.2
+VERSION = 4.7.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
