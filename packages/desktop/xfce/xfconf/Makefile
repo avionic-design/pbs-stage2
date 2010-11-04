@@ -17,5 +17,5 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/xfconf-query \
-	$(prefix)/libexec/xfconfd \
+	$(prefix)/lib/xfce4/xfconf/xfconfd \
 	$(prefix)/lib/*.so.*
