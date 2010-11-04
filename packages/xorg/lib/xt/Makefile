@@ -1,5 +1,5 @@
 PACKAGE = libXt
-VERSION = 1.0.8
+VERSION = 1.0.9
 
 include packages/xorg/lib/common.mk
 
@@ -16,7 +16,7 @@ conf-vars += \
 	LDFLAGS_FOR_BUILD=""
 
 prunefiles = \
-	$(prefix)/lib/libXt.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXt.so.6.0.0
+	$(prefix)/lib/*.so.*
