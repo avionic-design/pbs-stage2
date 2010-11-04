@@ -2,7 +2,7 @@ diff --git a/security/coreconf/Linux.mk b/security/coreconf/Linux.mk
 index 5b05477..0592d4a 100644
 --- a/security/coreconf/Linux.mk
 +++ b/security/coreconf/Linux.mk
-@@ -141,8 +141,8 @@ endif
+@@ -145,8 +145,8 @@ endif
  
  ARCH			= linux
  
