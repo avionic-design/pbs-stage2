@@ -23,7 +23,7 @@ f7bf5368309d76e5daf3a89d4d1bea688dac7780742e7a0ae1af19be9316fe22  download/bzip2
 89c2895ad157de50e53298b22d91db116ee4e1dd3fdf4019260254e2e31497b0  download/coreutils-6.9.tar.bz2
 1b9daa591d977679fb09ffb9b4d58afa94b9387f3c0be92ec077080e328130f1  download/cpufrequtils-008.tar.bz2
 d25ffa35add3abeeec0eba60be2cffc89425b649c64ef3a73dfc724683a59aa3  download/cups-1.4.4-source.tar.bz2
-653b3214005c778a8c642af4e5dea46c74f7bf51017a568bb8725ea9eda73643  download/curl-7.21.1.tar.bz2
+f4a632e704f28767e6bbffcc6112db0590b1c9d50d8226d706ad39632355bf21  download/curl-7.21.2.tar.bz2
 5c7c112e9b9ea8a9d5b019e5f17d481ae20f766cb7a4648360e7c1b46fc9fc5b  download/damageproto-1.2.1.tar.bz2
 82aab2ff63e5fac4bff35c91222f735ec67551db86b5c3b3455ecc10e8889e53  download/dash-0.5.3.tar.gz
 c96d2f86d40e158e2bf405925a0a42cce0533a8466098e2f2238aa1614926652  download/dbus-1.4.0.tar.gz
