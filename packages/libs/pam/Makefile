@@ -1,5 +1,5 @@
 PACKAGE = Linux-PAM
-VERSION = 1.1.2
+VERSION = 1.1.3
 
 LOCATION = http://www.kernel.org/pub/linux/libs/pam/library
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
