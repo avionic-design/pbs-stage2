@@ -1,10 +1,10 @@
 PACKAGE = libXfont
-VERSION = 1.4.2
+VERSION = 1.4.3
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXfont.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXfont.so.1.4.1
+	$(prefix)/lib/*.so.*
