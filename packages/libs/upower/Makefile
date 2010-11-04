@@ -1,5 +1,5 @@
 PACKAGE = upower
-VERSION = 0.9.5
+VERSION = 0.9.7
 
 LOCATION = http://$(PACKAGE).freedesktop.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
