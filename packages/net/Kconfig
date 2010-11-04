@@ -1,11 +1,11 @@
 menu "Networking"
 
-source "packages/net/dhcp/Kconfig"
 source "packages/net/dnsmasq/Kconfig"
 source "packages/net/dropbear/Kconfig"
 source "packages/net/ethtool/Kconfig"
 source "packages/net/iperf/Kconfig"
 source "packages/net/iputils/Kconfig"
+source "packages/net/isc-dhcp/Kconfig"
 source "packages/net/lighttpd/Kconfig"
 source "packages/net/lldpd/Kconfig"
 source "packages/net/net-tools/Kconfig"

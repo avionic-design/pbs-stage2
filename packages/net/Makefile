@@ -1,9 +1,9 @@
-obj-$(CONFIG_PACKAGE_NET_DHCP) += dhcp
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
 obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear
 obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
 obj-$(CONFIG_PACKAGE_NET_IPUTILS) += iputils
+obj-$(CONFIG_PACKAGE_NET_ISC_DHCP) += isc-dhcp
 obj-$(CONFIG_PACKAGE_NET_LIGHTTPD) += lighttpd
 obj-$(CONFIG_PACKAGE_NET_LLDPD) += lldpd
 obj-$(CONFIG_PACKAGE_NET_NET_TOOLS) += net-tools
