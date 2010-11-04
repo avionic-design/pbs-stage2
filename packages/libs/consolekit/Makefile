@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
+
 prunefiles = \
 	$(prefix)/lib/libck-connector.la
 

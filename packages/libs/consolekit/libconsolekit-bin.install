@@ -1,5 +1,6 @@
 /etc/ConsoleKit
 /etc/dbus-1
+/etc/systemd
 /usr/bin
 /usr/lib/ConsoleKit
 /usr/libexec
