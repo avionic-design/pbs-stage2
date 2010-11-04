@@ -8,6 +8,7 @@ conf-args += \
 	--with-syslog-service=syslog.service \
 	--with-sysvinit-path=/etc/init.d \
 	--with-sysvrcd-path=/etc \
+	--with-getty="/sbin/getty -L 38400" \
 	--with-distro=other \
 	--with-rootdir=
 

@@ -1,6 +1,7 @@
 /bin
 /etc/dbus-1
 /etc/systemd
+/etc/tmpfiles.d
 /etc/xdg
 /lib/security
 /lib/systemd
