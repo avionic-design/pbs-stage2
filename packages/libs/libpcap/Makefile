@@ -13,3 +13,6 @@ conf-args += \
 
 conf-vars += \
 	ac_cv_linux_vers=2
+
+stripfiles = \
+	$(prefix)/lib/*.so.*
