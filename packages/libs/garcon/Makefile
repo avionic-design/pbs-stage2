@@ -1,5 +1,5 @@
 PACKAGE = garcon
-VERSION = 0.1.1
+VERSION = 0.1.2
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
