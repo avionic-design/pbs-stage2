@@ -1,5 +1,5 @@
 PACKAGE = Thunar
-VERSION = 1.1.2
+VERSION = 1.1.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
