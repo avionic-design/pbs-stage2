@@ -1,6 +1,7 @@
 /etc/dbus-1
+/etc/systemd
 /usr/bin
-/usr/libexec
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
 /usr/share/dbus-1
 /var/run
 /var/lib

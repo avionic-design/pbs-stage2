@@ -10,6 +10,9 @@ else
   conf-args += --without-x
 endif
 
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
+
 conf-vars += \
 	ac_cv_have_abstract_sockets=yes
 
@@ -24,4 +27,4 @@ stripfiles = \
 	$(prefix)/bin/dbus-send \
 	$(prefix)/bin/dbus-uuidgen \
 	$(prefix)/lib/*.so.* \
-	$(prefix)/libexec/dbus-daemon-launch-helper
+	$(prefix)/lib/dbus-1.0/dbus-daemon-launch-helper
