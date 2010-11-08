@@ -1,0 +1,25 @@
+Pass CPPFLAGS when generating errno table.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+This patch adds the contents of the CPPFLAGS variable when calling the
+CPP preprocessor during the errno table generation. Passing these flags
+is required when cross-compiling against a sysroot such that the correct
+errno.h header is picked up.
+---
+ src/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 518a4c0..a84e3f0 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -138,7 +138,7 @@ code-to-errno.h: Makefile mkerrnos.awk errnos.in
+ # It is correct to use $(CPP).  We want the host's idea of the error codes.
+ mkerrcodes.h: Makefile mkerrcodes.awk $(gpg_extra_headers)
+ 	$(AWK) -f $(srcdir)/mkerrcodes1.awk $(srcdir)/errnos.in >_$@
+-	$(CPP) $(extra_cppflags) _$@ | grep GPG_ERR_ | \
++	$(CPP) $(CPPFLAGS) $(extra_cppflags) _$@ | grep GPG_ERR_ | \
+                $(AWK) -f $(srcdir)/mkerrcodes.awk >$@
+ 	-rm _$@
+ 
