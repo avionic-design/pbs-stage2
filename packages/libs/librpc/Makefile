@@ -5,5 +5,5 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/bin/rpcgen \
+	$(prefix)/bin/rpc-stubgen \
 	$(prefix)/lib/*.so.*
