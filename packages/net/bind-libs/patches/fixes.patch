@@ -1,0 +1,137 @@
+Miscellaneous build fixes.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ lib/export/irs/Makefile.in             |    2 +-
+ lib/export/irs/include/irs/Makefile.in |    4 ++--
+ lib/export/isc/Makefile.in             |    2 +-
+ lib/export/isc/include/isc/Makefile.in |    2 +-
+ lib/export/isc/nothreads/Makefile.in   |    2 +-
+ lib/export/isc/unix/Makefile.in        |    2 +-
+ lib/export/samples/Makefile.in         |    2 +-
+ lib/isc/mem.c                          |    2 +-
+ lib/isc/task.c                         |    2 +-
+ 9 files changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/lib/export/irs/Makefile.in b/lib/export/irs/Makefile.in
+index 58a9b21..1d487c2 100644
+--- a/lib/export/irs/Makefile.in
++++ b/lib/export/irs/Makefile.in
+@@ -24,7 +24,7 @@ export_srcdir =	@top_srcdir@/lib/export
+ 
+ @BIND9_MAKE_INCLUDES@
+ 
+-CINCLUDES =	-I. -I./include -I${srcdir}/include \
++CINCLUDES =	-I. -I./include -I${srcdir}/include -I../../irs/include \
+ 		${ISCCFG_INCLUDES} -I../dns/include ${DNS_INCLUDES} \
+ 		-I${export_srcdir}/isc/include ${ISC_INCLUDES}
+ CDEFINES =
+diff --git a/lib/export/irs/include/irs/Makefile.in b/lib/export/irs/include/irs/Makefile.in
+index c850757..7ac4d95 100644
+--- a/lib/export/irs/include/irs/Makefile.in
++++ b/lib/export/irs/include/irs/Makefile.in
+@@ -37,9 +37,9 @@ install:: installdirs
+ 		${INSTALL_DATA} ${top_srcdir}/lib/irs/include/irs/$$i \
+ 		${DESTDIR}${export_includedir}/irs ; \
+ 	done
+-	${INSTALL_DATA} ${top_srcdir}/lib/irs/include/irs/netdb.h \
++	${INSTALL_DATA} ${top_builddir}/lib/irs/include/irs/netdb.h \
+ 	${DESTDIR}${export_includedir}/irs
+-	${INSTALL_DATA} ${top_srcdir}/lib/irs/include/irs/platform.h \
++	${INSTALL_DATA} ${top_builddir}/lib/irs/include/irs/platform.h \
+ 	${DESTDIR}${export_includedir}/irs
+ 
+ distclean::
+diff --git a/lib/export/isc/Makefile.in b/lib/export/isc/Makefile.in
+index f04983b..828fb4b 100644
+--- a/lib/export/isc/Makefile.in
++++ b/lib/export/isc/Makefile.in
+@@ -22,7 +22,7 @@ export_srcdir =	@top_srcdir@/lib/export
+ 
+ @LIBISC_API@
+ 
+-CINCLUDES =	-I${srcdir}/unix/include \
++CINCLUDES =	-I${srcdir}/unix/include -I../../isc/include \
+ 		-I${srcdir}/@ISC_THREAD_DIR@/include \
+ 		-I${srcdir}/@ISC_ARCH_DIR@/include \
+ 		-I${export_srcdir}/isc/include -I${srcdir}/include \
+diff --git a/lib/export/isc/include/isc/Makefile.in b/lib/export/isc/include/isc/Makefile.in
+index 2499185..91620d7 100644
+--- a/lib/export/isc/include/isc/Makefile.in
++++ b/lib/export/isc/include/isc/Makefile.in
+@@ -55,7 +55,7 @@ install:: installdirs
+ 		${INSTALL_DATA} ${top_srcdir}/lib/isc/include/isc/$$i \
+ 		${DESTDIR}${export_includedir}/isc ; \
+ 	done
+-	${INSTALL_DATA} ${top_srcdir}/lib/isc/include/isc/platform.h \
++	${INSTALL_DATA} ${top_builddir}/lib/isc/include/isc/platform.h \
+ 	${DESTDIR}${export_includedir}/isc
+ 	${INSTALL_DATA} ${top_srcdir}/lib/isc/@ISC_ARCH_DIR@/include/isc/atomic.h \
+ 	${DESTDIR}${export_includedir}/isc
+diff --git a/lib/export/isc/nothreads/Makefile.in b/lib/export/isc/nothreads/Makefile.in
+index 8804026..edb1a44 100644
+--- a/lib/export/isc/nothreads/Makefile.in
++++ b/lib/export/isc/nothreads/Makefile.in
+@@ -19,7 +19,7 @@ srcdir =	@top_srcdir@/lib/isc/nothreads
+ 
+ @BIND9_MAKE_INCLUDES@
+ 
+-CINCLUDES =	-I${srcdir}/include \
++CINCLUDES =	-I${srcdir}/include -I../../../isc/include \
+ 		-I${srcdir}/../unix/include \
+ 		-I../include \
+ 		-I${srcdir}/../include \
+diff --git a/lib/export/isc/unix/Makefile.in b/lib/export/isc/unix/Makefile.in
+index 5a8eed8..2306d3a 100644
+--- a/lib/export/isc/unix/Makefile.in
++++ b/lib/export/isc/unix/Makefile.in
+@@ -19,7 +19,7 @@ srcdir =	@top_srcdir@/lib/isc/unix
+ 
+ @BIND9_MAKE_INCLUDES@
+ 
+-CINCLUDES =	-I${srcdir}/include \
++CINCLUDES =	-I${srcdir}/include -I../../../isc/include \
+ 		-I${srcdir}/../@ISC_THREAD_DIR@/include \
+ 		-I../include \
+ 		-I${srcdir}/../include \
+diff --git a/lib/export/samples/Makefile.in b/lib/export/samples/Makefile.in
+index c60baac..2bd9d69 100644
+--- a/lib/export/samples/Makefile.in
++++ b/lib/export/samples/Makefile.in
+@@ -25,7 +25,7 @@ export_srcdir =	@top_srcdir@/lib/export
+ CINCLUDES =	-I${srcdir}/include -I../dns/include \
+ 		-I${export_srcdir}/isc/include \
+ 		${DNS_INCLUDES} ${ISC_INCLUDES} \
+-		-I${top_srcdir}/lib/irs/include
++		-I../../irs/include
+ 
+ CDEFINES =
+ CWARNINGS =
+diff --git a/lib/isc/mem.c b/lib/isc/mem.c
+index 4e20f8f..28d6bf8 100644
+--- a/lib/isc/mem.c
++++ b/lib/isc/mem.c
+@@ -222,7 +222,7 @@ print_active(isc__mem_t *ctx, FILE *out);
+ #ifdef BIND9
+ #define ISC_MEMFUNC_SCOPE
+ #else
+-#define ISC_MEMFUNC_SCOPE static
++#define ISC_MEMFUNC_SCOPE /*static*/
+ #endif
+ 
+ ISC_MEMFUNC_SCOPE isc_result_t
+diff --git a/lib/isc/task.c b/lib/isc/task.c
+index f70ea49..6e0674f 100644
+--- a/lib/isc/task.c
++++ b/lib/isc/task.c
+@@ -172,7 +172,7 @@ static isc__taskmgr_t *taskmgr = NULL;
+ #ifdef BIND9
+ #define ISC_TASKFUNC_SCOPE
+ #else
+-#define ISC_TASKFUNC_SCOPE static
++#define ISC_TASKFUNC_SCOPE /*static*/
+ #endif
+ 
+ ISC_TASKFUNC_SCOPE isc_result_t

@@ -1,3 +1,4 @@
+obj-$(CONFIG_PACKAGE_NET_BIND_LIBS) += bind-libs
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
 obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear
 obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
