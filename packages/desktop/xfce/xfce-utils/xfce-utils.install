@@ -1,6 +1,7 @@
 /etc/xdg
 /usr/bin
-/usr/libexec
+/usr/lib/xfce4
+/usr/share/applications
 /usr/share/dbus-1
 /usr/share/icons
 /usr/share/xsessions
