@@ -1,0 +1,4 @@
+/etc/dhcpd.conf
+/usr/bin/omshell
+/usr/sbin/dhcpd
+/usr/sbin/dhcrelay

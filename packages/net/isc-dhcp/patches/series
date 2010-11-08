@@ -1,3 +1,2 @@
-cross-compile.patch -p1
-autoreconf.patch -p1
-posix-legacy.patch -p1
+cross-compile.patch
+autoreconf.patch
