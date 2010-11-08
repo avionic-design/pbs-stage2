@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_DCONF
 	bool "dconf"
+	select PACKAGE_BUILD_TOOLS_VALA
 	select PACKAGE_LIBS_LIBGEE
 	default n
