@@ -1,4 +1,10 @@
 config PACKAGE_CORE_UDEV
 	bool "udev"
-	select PACKAGE_LIBS_GLIB
+	select VIRTUAL_DEVEL_LIBC if !PACKAGE_CORE_UDEV_GLIB
+	select PACKAGE_LIBS_GLIB if PACKAGE_CORE_UDEV_GLIB
+	default n
+
+config PACKAGE_CORE_UDEV_GLIB
+	bool "GLib binding"
+	depends on PACKAGE_CORE_UDEV
 	default n

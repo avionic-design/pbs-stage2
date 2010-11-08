@@ -24,6 +24,11 @@ conf-args += \
 	--disable-extras \
 	--disable-introspection
 
+ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
+  conf-args += \
+	--disable-glib
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
