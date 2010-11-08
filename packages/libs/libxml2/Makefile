@@ -1,5 +1,5 @@
 PACKAGE = libxml2
-VERSION = 2.7.7
+VERSION = 2.7.8
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -10,9 +10,9 @@ conf-args += \
 	--without-python
 
 prunefiles = \
-	$(prefix)/lib/libxml2.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/xmlcatalog \
 	$(prefix)/bin/xmllint \
-	$(prefix)/lib/libxml2.so.$(VERSION)
+	$(prefix)/lib/*.so.*
