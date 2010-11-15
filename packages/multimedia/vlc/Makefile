@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.1.4
+VERSION = 1.1.5
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
