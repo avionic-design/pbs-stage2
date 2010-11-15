@@ -11,7 +11,7 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
  cli/src/Makefile.in                                |    2 
  config.h.in                                        |    3 
  configure                                          |  683 +++++++++++---------
- data/Makefile.in                                   |    2 
+ data/Makefile.in                                   |   38 +
  docs/Makefile.in                                   |    2 
  docs/libnm-glib/Makefile.in                        |    2 
  docs/libnm-util/Makefile.in                        |    2 
@@ -66,7 +66,7 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
  .../plugins/keyfile/tests/keyfiles/Makefile.in     |    2 
  test/Makefile.in                                   |    2 
  tools/Makefile.in                                  |    2 
- 62 files changed, 547 insertions(+), 354 deletions(-)
+ 62 files changed, 572 insertions(+), 365 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
 index a3f9f01..2f3a632 100644
@@ -2457,7 +2457,7 @@ index 186c758..9b89ab0 100755
  if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
    { $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: unrecognized options: $ac_unrecognized_opts" >&5
 diff --git a/data/Makefile.in b/data/Makefile.in
-index 0e7dd0e..032d820 100644
+index 0e7dd0e..e135ca2 100644
 --- a/data/Makefile.in
 +++ b/data/Makefile.in
 @@ -189,6 +189,8 @@ PACKAGE_URL = @PACKAGE_URL@
@@ -2469,6 +2469,72 @@ index 0e7dd0e..032d820 100644
  POFILES = @POFILES@
  POLKIT_CFLAGS = @POLKIT_CFLAGS@
  POLKIT_LIBS = @POLKIT_LIBS@
+@@ -425,6 +427,7 @@ distclean-generic:
+ maintainer-clean-generic:
+ 	@echo "This command is intended for maintainers to use"
+ 	@echo "it deletes files that may require special tools to rebuild."
++@HAVE_SYSTEMD_FALSE@install-data-hook:
+ clean: clean-am
+ 
+ clean-am: clean-generic clean-libtool mostlyclean-am
+@@ -446,7 +449,8 @@ info: info-am
+ info-am:
+ 
+ install-data-am: install-serviceDATA install-systemdsystemunitDATA
+-
++	@$(NORMAL_INSTALL)
++	$(MAKE) $(AM_MAKEFLAGS) install-data-hook
+ install-dvi: install-dvi-am
+ 
+ install-dvi-am:
+@@ -491,25 +495,37 @@ ps-am:
+ 
+ uninstall-am: uninstall-serviceDATA uninstall-systemdsystemunitDATA
+ 
+-.MAKE: install-am install-strip
++.MAKE: install-am install-data-am install-strip
+ 
+ .PHONY: all all-am check check-am clean clean-generic clean-libtool \
+ 	distclean distclean-generic distclean-libtool distdir dvi \
+ 	dvi-am html html-am info info-am install install-am \
+-	install-data install-data-am install-dvi install-dvi-am \
+-	install-exec install-exec-am install-html install-html-am \
+-	install-info install-info-am install-man install-pdf \
+-	install-pdf-am install-ps install-ps-am install-serviceDATA \
+-	install-strip install-systemdsystemunitDATA installcheck \
+-	installcheck-am installdirs maintainer-clean \
+-	maintainer-clean-generic mostlyclean mostlyclean-generic \
+-	mostlyclean-libtool pdf pdf-am ps ps-am uninstall uninstall-am \
+-	uninstall-serviceDATA uninstall-systemdsystemunitDATA
++	install-data install-data-am install-data-hook install-dvi \
++	install-dvi-am install-exec install-exec-am install-html \
++	install-html-am install-info install-info-am install-man \
++	install-pdf install-pdf-am install-ps install-ps-am \
++	install-serviceDATA install-strip \
++	install-systemdsystemunitDATA installcheck installcheck-am \
++	installdirs maintainer-clean maintainer-clean-generic \
++	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
++	ps ps-am uninstall uninstall-am uninstall-serviceDATA \
++	uninstall-systemdsystemunitDATA
+ 
+ 
+ @HAVE_SYSTEMD_TRUE@NetworkManager.service: NetworkManager.service.in
+ @HAVE_SYSTEMD_TRUE@	$(edit) $< >$@
+ 
++@HAVE_SYSTEMD_TRUE@install-data-hook:
++@HAVE_SYSTEMD_TRUE@	$(MKDIR_P) -m 0755 \
++@HAVE_SYSTEMD_TRUE@		$(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants \
++@HAVE_SYSTEMD_TRUE@		$(DESTDIR)$(systemdsystemunitdir)/network.target.wants
++@HAVE_SYSTEMD_TRUE@	( cd $(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants && \
++@HAVE_SYSTEMD_TRUE@		rm -f NetworkManager.service && \
++@HAVE_SYSTEMD_TRUE@		$(LN_S) ../NetworkManager.service NetworkManager.service )
++@HAVE_SYSTEMD_TRUE@	( cd $(DESTDIR)$(systemdsystemunitdir)/network.target.wants && \
++@HAVE_SYSTEMD_TRUE@		rm -f NetworkManager.service && \
++@HAVE_SYSTEMD_TRUE@		$(LN_S) ../NetworkManager.service NetworkManager.service )
++
+ @HAVE_SYSTEMD_TRUE@$(service_DATA): $(service_in_files) Makefile
+ @HAVE_SYSTEMD_TRUE@	$(edit) $< >$@
+ 
 diff --git a/docs/Makefile.in b/docs/Makefile.in
 index 23ce498..ac14dbc 100644
 --- a/docs/Makefile.in

@@ -1,0 +1,31 @@
+Add systemd symlinks.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ data/Makefile.am |   11 +++++++++++
+ 1 files changed, 11 insertions(+), 0 deletions(-)
+
+diff --git a/data/Makefile.am b/data/Makefile.am
+index f91d3a8..9965f8b 100644
+--- a/data/Makefile.am
++++ b/data/Makefile.am
+@@ -5,6 +5,17 @@ systemdsystemunit_DATA = NetworkManager.service
+ NetworkManager.service: NetworkManager.service.in
+ 	$(edit) $< >$@
+ 
++install-data-hook:
++	$(MKDIR_P) -m 0755 \
++		$(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants \
++		$(DESTDIR)$(systemdsystemunitdir)/network.target.wants
++	( cd $(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants && \
++		rm -f NetworkManager.service && \
++		$(LN_S) ../NetworkManager.service NetworkManager.service )
++	( cd $(DESTDIR)$(systemdsystemunitdir)/network.target.wants && \
++		rm -f NetworkManager.service && \
++		$(LN_S) ../NetworkManager.service NetworkManager.service )
++
+ servicedir = $(datadir)/dbus-1/system-services
+ service_in_files = org.freedesktop.NetworkManager.service.in
+ service_DATA = $(service_in_files:.service.in=.service)

@@ -1,4 +1,4 @@
-# This series applies on GIT commit b1ad795eb51893374a761181f6dd4a5919c95948
 ltmain-sysroot.patch
 optional-pppd.patch
+systemd-symlinks.patch
 autoreconf.patch
