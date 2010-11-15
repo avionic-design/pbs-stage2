@@ -12,6 +12,7 @@ include packages/autotools.mk
 pkglib = $(prefix)/lib/$(PACKAGE)
 
 conf-args += \
+	--with-dhclient=/usr/sbin/dhclient \
 	--libexec=$(pkglib) \
 	--with-distro=debian \
 	--with-crypto=gnutls \
