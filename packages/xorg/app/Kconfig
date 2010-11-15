@@ -1,6 +1,7 @@
 menu "X.Org - Applications"
 
 source "packages/xorg/app/iceauth/Kconfig"
+source "packages/xorg/app/setxkbmap/Kconfig"
 source "packages/xorg/app/twm/Kconfig"
 source "packages/xorg/app/xauth/Kconfig"
 source "packages/xorg/app/xinit/Kconfig"
