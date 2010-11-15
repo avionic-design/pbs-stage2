@@ -11,6 +11,7 @@ obj-$(CONFIG_PACKAGE_NET_NETCAT) += netcat
 obj-$(CONFIG_PACKAGE_NET_NET_SNMP) += net-snmp
 obj-$(CONFIG_PACKAGE_NET_NET_TOOLS) += net-tools
 obj-$(CONFIG_PACKAGE_NET_NETWORK_MANAGER) += network-manager
+obj-$(CONFIG_PACKAGE_NET_NTPDATE) += ntpdate
 obj-$(CONFIG_PACKAGE_NET_OPENNTPD) += openntpd
 obj-$(CONFIG_PACKAGE_NET_PPP) += ppp
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
