@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XPROP
+	bool "xprop"
+	select PACKAGE_XORG_LIB_X11
+	default n
