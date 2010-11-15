@@ -9,18 +9,21 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-engine = $(prefix)/lib/xfce4/splash/engines
+engine = $(prefix)/lib/xfce4/session/splash-engines
+panel = $(prefix)/lib/xfce4/panel/plugins
 
 prunefiles = \
 	$(prefix)/lib/*.la \
 	$(engine)/*.la \
-	$(engine)/*.a
+	$(engine)/*.a \
+	$(panel)/*.la
 
 stripfiles = \
 	$(prefix)/bin/xfce4-session \
 	$(prefix)/bin/xfce4-session-logout \
 	$(prefix)/bin/xfce4-session-settings \
 	$(prefix)/bin/xfce4-tips \
-	$(prefix)/libexec/xfsm-shutdown-helper \
+	$(prefix)/lib/xfce4/session/xfsm-shutdown-helper \
 	$(prefix)/lib/*.so.* \
-	$(engine)/*.so
+	$(engine)/*.so \
+	$(panel)/*.so
