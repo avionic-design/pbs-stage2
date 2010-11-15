@@ -20,4 +20,5 @@ stripfiles = \
 	$(prefix)/bin/sndfile-metadata-set \
 	$(prefix)/bin/sndfile-play \
 	$(prefix)/bin/sndfile-regtest \
+	$(prefix)/bin/sndfile-salvage \
 	$(prefix)/lib/*.so.*
