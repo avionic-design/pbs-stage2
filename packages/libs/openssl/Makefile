@@ -19,6 +19,7 @@ ifeq ($(CONFIG_ARCH),arm)
   ifeq ($(CONFIG_CPU),xscale)
     config = linux-generic32
   else
+    config = linux-generic32
   endif
 endif
 
