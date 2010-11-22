@@ -1,5 +1,5 @@
 PACKAGE = tcpdump
-VERSION = 4.0.0
+VERSION = 4.1.1
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -16,7 +16,7 @@ conf-vars += \
 	ac_cv_linux_vers=2
 
 prunefiles = \
-	$(prefix)/sbin/tcpdump.4.0.0
+	$(prefix)/sbin/tcpdump.$(VERSION)
 
 stripfiles = \
 	$(prefix)/sbin/tcpdump

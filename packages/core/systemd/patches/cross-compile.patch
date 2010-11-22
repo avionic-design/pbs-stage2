@@ -1,0 +1,40 @@
+Allow cross-compilation.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile.am  |    4 +++-
+ configure.ac |    3 +++
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 4307db1..62fd29a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -950,8 +950,10 @@ CLEANFILES += \
+ 	${XML_IN_FILES:.xml.in=.html.in}
+ endif
+ 
++SYSTEMD = @SYSTEMD@
++
+ org.freedesktop.systemd1.%.xml: systemd
+-	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 ./systemd --introspect=${@:.xml=} > $@
++	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 $(SYSTEMD) --introspect=${@:.xml=} > $@
+ 
+ CLEANFILES += \
+ 	$(dbusinterface_DATA)
+diff --git a/configure.ac b/configure.ac
+index 4f22b1b..a39bad7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -369,6 +369,9 @@ else
+         SYSTEM_SYSV_COMPAT="no"
+ fi
+ 
++SYSTEMD=systemd
++AC_SUBST(SYSTEMD)
++
+ AM_CONDITIONAL(TARGET_FEDORA, test x"$with_distro" = xfedora)
+ AM_CONDITIONAL(TARGET_SUSE, test x"$with_distro" = xsuse)
+ AM_CONDITIONAL(TARGET_DEBIAN, test x"$with_distro" = xdebian)

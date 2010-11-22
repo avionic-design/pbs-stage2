@@ -1,0 +1,4 @@
+/usr/lib/*.so.*
+/usr/lib/dconf
+/usr/lib/gio
+/usr/share/dbus-1

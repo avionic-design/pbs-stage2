@@ -1,5 +1,5 @@
 PACKAGE = libXft
-VERSION = 2.1.14
+VERSION = 2.2.0
 
 include packages/xorg/lib/common.mk
 

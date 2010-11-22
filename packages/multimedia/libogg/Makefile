@@ -1,5 +1,5 @@
 PACKAGE = libogg
-VERSION = 1.2.0
+VERSION = 1.2.1
 
 LOCATION = http://downloads.xiph.org/releases/ogg
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libogg.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libogg.so.0.7.0
+	$(prefix)/lib/*.so.*

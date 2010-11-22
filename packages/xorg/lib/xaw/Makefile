@@ -1,13 +1,10 @@
 PACKAGE = libXaw
-VERSION = 1.0.7
+VERSION = 1.0.8
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXaw.la \
-	$(prefix)/lib/libXaw6.la \
-	$(prefix)/lib/libXaw7.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXaw6.so.6.0.1 \
-	$(prefix)/lib/libXaw7.so.7.0.0
+	$(prefix)/lib/*.so.*

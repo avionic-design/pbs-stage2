@@ -1,0 +1,4 @@
+config PACKAGE_NET_ISC_DHCP
+	bool "isc-dhcp"
+	select PACKAGE_NET_BIND_LIBS
+	default n

@@ -1,4 +1,6 @@
 obj-y += lua/
+
+obj-$(CONFIG_PACKAGE_DEVEL_FLEX) += flex
 obj-$(CONFIG_PACKAGE_DEVEL_GDB) += gdb
 obj-$(CONFIG_PACKAGE_DEVEL_GLIBC) += glibc
 obj-$(CONFIG_PACKAGE_DEVEL_PYTHON) += python

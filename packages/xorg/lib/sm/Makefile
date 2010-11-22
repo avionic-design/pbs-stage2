@@ -1,10 +1,10 @@
 PACKAGE = libSM
-VERSION = 1.1.1
+VERSION = 1.2.0
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libSM.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libSM.so.6.0.1
+	$(prefix)/lib/*.so.*

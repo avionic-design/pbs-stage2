@@ -1,5 +1,5 @@
 PACKAGE = firefox
-VERSION = 3.6.8
+VERSION = 3.6.12
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
@@ -65,6 +65,8 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(DESTDIR)$(prefix)/lib/firefox-devel
 	$(priv) mv $(DESTDIR)$(prefix)/share/idl/firefox-$(VERSION) \
 		$(DESTDIR)$(prefix)/share/idl/firefox
+	$(priv) ln -sf $(prefix)/lib/firefox/firefox \
+		$(DESTDIR)$(prefix)/bin/firefox
 	$(call cmd,stamp)
 
 sdkdir = $(prefix)/lib/firefox-devel/sdk

@@ -8,6 +8,9 @@ conf-vars += \
 	ac_cv_func_posix_getpwuid_r=yes \
 	ac_cv_func_posix_getgrgid_r=yes
 
+prunefiles = \
+	$(prefix)/lib/*.la
+
 stripfiles = \
 	$(prefix)/bin/gdbus \
 	$(prefix)/bin/gio-querymodules \

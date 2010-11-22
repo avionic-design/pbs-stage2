@@ -7,6 +7,7 @@ config VIRTUAL_DEVEL_LIBC
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 
+source "packages/devel/flex/Kconfig"
 source "packages/devel/gdb/Kconfig"
 source "packages/devel/glibc/Kconfig"
 source "packages/devel/lua/Kconfig"

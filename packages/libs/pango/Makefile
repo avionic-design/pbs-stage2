@@ -1,5 +1,5 @@
 PACKAGE = pango
-VERSION = 1.28.1
+VERSION = 1.28.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))

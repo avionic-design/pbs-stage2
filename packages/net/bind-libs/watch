@@ -1,0 +1,2 @@
+version=3
+http://ftp.isc.org/isc/bind9/cur/(\d\.\d)/bind-(.*)\.tar\.gz

@@ -1,2 +1,4 @@
-ltmain-sysroot.patch
 uclibc.patch
+glib.patch
+autoreconf.patch
+ltmain-sysroot.patch

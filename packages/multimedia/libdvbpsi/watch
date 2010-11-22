@@ -1,0 +1,2 @@
+version=3
+http://download.videolan.org/pub/libdvbpsi/([\d\.]+)/libdvbpsi-(.*)\.tar\.bz2

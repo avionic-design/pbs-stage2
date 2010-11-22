@@ -1,10 +1,10 @@
 PACKAGE = libXcomposite
-VERSION = 0.4.2
+VERSION = 0.4.3
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXcomposite.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXcomposite.so.1.0.0
+	$(prefix)/lib/*.so.*

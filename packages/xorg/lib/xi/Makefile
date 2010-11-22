@@ -1,5 +1,5 @@
 PACKAGE = libXi
-VERSION = 1.3.2
+VERSION = 1.4.0
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)

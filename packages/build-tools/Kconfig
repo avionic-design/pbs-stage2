@@ -1,9 +1,16 @@
 menu "Build tools"
 
+source "packages/build-tools/dbus/Kconfig"
+source "packages/build-tools/dbus-glib/Kconfig"
 source "packages/build-tools/gdk-pixbuf/Kconfig"
 source "packages/build-tools/glib/Kconfig"
+source "packages/build-tools/icon-naming-utils/Kconfig"
 source "packages/build-tools/libidl/Kconfig"
 source "packages/build-tools/libnih/Kconfig"
+source "packages/build-tools/librpc/Kconfig"
+source "packages/build-tools/orbit/Kconfig"
 source "packages/build-tools/python/Kconfig"
+source "packages/build-tools/systemd/Kconfig"
+source "packages/build-tools/vala/Kconfig"
 
 endmenu

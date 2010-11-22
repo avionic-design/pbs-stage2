@@ -1,5 +1,5 @@
 PACKAGE = libXxf86vm
-VERSION = 1.1.0
+VERSION = 1.1.1
 
 include packages/xorg/lib/common.mk
 
@@ -12,7 +12,7 @@ else
 endif
 
 prunefiles = \
-	$(prefix)/lib/libXxf86vm.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXxf86vm.so.1.0.0
+	$(prefix)/lib/*.so.*

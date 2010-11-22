@@ -1,0 +1,1277 @@
+diff --git a/examples/Makefile.am b/examples/Makefile.am
+index ac3f407..ebec86d 100644
+--- a/examples/Makefile.am
++++ b/examples/Makefile.am
+@@ -8,7 +8,7 @@ EXTRA_DIST = README
+ 
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(top_srcdir)/libpam_misc/include
+-LDADD = -L$(top_builddir)/libpam -lpam \
+-	-L$(top_builddir)/libpam_misc -lpam_misc
++LDADD = $(top_builddir)/libpam/libpam.la \
++	$(top_builddir)/libpam_misc/libpam_misc.la
+ 
+ noinst_PROGRAMS = xsh vpass blank check_user
+diff --git a/examples/Makefile.in b/examples/Makefile.in
+index 9c2684d..6db374e 100644
+--- a/examples/Makefile.in
++++ b/examples/Makefile.in
+@@ -262,8 +262,8 @@ EXTRA_DIST = README
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(top_srcdir)/libpam_misc/include
+ 
+-LDADD = -L$(top_builddir)/libpam -lpam \
+-	-L$(top_builddir)/libpam_misc -lpam_misc
++LDADD = $(top_builddir)/libpam/libpam.la \
++	$(top_builddir)/libpam_misc/libpam_misc.la
+ 
+ all: all-am
+ 
+diff --git a/modules/pam_access/Makefile.am b/modules/pam_access/Makefile.am
+index b4fea7d..99d8c09 100644
+--- a/modules/pam_access/Makefile.am
++++ b/modules/pam_access/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_access.la
+-pam_access_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBNSL@
++pam_access_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBNSL@
+ 
+ secureconf_DATA = access.conf
+ 
+diff --git a/modules/pam_access/Makefile.in b/modules/pam_access/Makefile.in
+index 3d53e17..5047688 100644
+--- a/modules/pam_access/Makefile.in
++++ b/modules/pam_access/Makefile.in
+@@ -271,7 +271,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_access.la
+-pam_access_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBNSL@
++pam_access_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBNSL@
+ secureconf_DATA = access.conf
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ TESTS = tst-pam_access
+diff --git a/modules/pam_cracklib/Makefile.am b/modules/pam_cracklib/Makefile.am
+index 57ddd67..77b89d1 100644
+--- a/modules/pam_cracklib/Makefile.am
++++ b/modules/pam_cracklib/Makefile.am
+@@ -22,7 +22,7 @@ AM_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+-pam_cracklib_la_LIBADD = -L$(top_builddir)/libpam -lpam \
++pam_cracklib_la_LIBADD = $(top_builddir)/libpam/libpam.la \
+ 	@LIBCRACK@ @LIBCRYPT@
+ if HAVE_LIBCRACK
+   securelib_LTLIBRARIES = pam_cracklib.la
+diff --git a/modules/pam_cracklib/Makefile.in b/modules/pam_cracklib/Makefile.in
+index 19a9fb5..8db3af5 100644
+--- a/modules/pam_cracklib/Makefile.in
++++ b/modules/pam_cracklib/Makefile.in
+@@ -267,7 +267,7 @@ securelibdir = $(SECUREDIR)
+ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+-pam_cracklib_la_LIBADD = -L$(top_builddir)/libpam -lpam \
++pam_cracklib_la_LIBADD = $(top_builddir)/libpam/libpam.la \
+ 	@LIBCRACK@ @LIBCRYPT@
+ 
+ @HAVE_LIBCRACK_TRUE@securelib_LTLIBRARIES = pam_cracklib.la
+diff --git a/modules/pam_debug/Makefile.am b/modules/pam_debug/Makefile.am
+index d87af88..9e27ec5 100644
+--- a/modules/pam_debug/Makefile.am
++++ b/modules/pam_debug/Makefile.am
+@@ -20,7 +20,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_debug.la
+-pam_debug_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_debug_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ TESTS = tst-pam_debug
+ 
+diff --git a/modules/pam_debug/Makefile.in b/modules/pam_debug/Makefile.in
+index 908000e..4630997 100644
+--- a/modules/pam_debug/Makefile.in
++++ b/modules/pam_debug/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_debug.la
+-pam_debug_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_debug_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ TESTS = tst-pam_debug
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_deny/Makefile.am b/modules/pam_deny/Makefile.am
+index 118928a..e2d2ea4 100644
+--- a/modules/pam_deny/Makefile.am
++++ b/modules/pam_deny/Makefile.am
+@@ -21,7 +21,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_deny.la
+-pam_deny_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_deny_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ 
+diff --git a/modules/pam_deny/Makefile.in b/modules/pam_deny/Makefile.in
+index c2f8280..75ab36d 100644
+--- a/modules/pam_deny/Makefile.in
++++ b/modules/pam_deny/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_deny.la
+-pam_deny_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_deny_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ TESTS = tst-pam_deny
+ all: all-am
+diff --git a/modules/pam_echo/Makefile.am b/modules/pam_echo/Makefile.am
+index 265e3a0..dc14b05 100644
+--- a/modules/pam_echo/Makefile.am
++++ b/modules/pam_echo/Makefile.am
+@@ -21,7 +21,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_echo.la
+-pam_echo_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_echo_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_echo/Makefile.in b/modules/pam_echo/Makefile.in
+index f735218..6d7ef0b 100644
+--- a/modules/pam_echo/Makefile.in
++++ b/modules/pam_echo/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_echo.la
+-pam_echo_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_echo_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ TESTS = tst-pam_echo
+ all: all-am
+diff --git a/modules/pam_env/Makefile.am b/modules/pam_env/Makefile.am
+index d39aad8..7b8d9af 100644
+--- a/modules/pam_env/Makefile.am
++++ b/modules/pam_env/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_env.la
+-pam_env_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_env_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ secureconf_DATA = pam_env.conf
+ sysconf_DATA = environment
+diff --git a/modules/pam_env/Makefile.in b/modules/pam_env/Makefile.in
+index 39f16e1..553d93d 100644
+--- a/modules/pam_env/Makefile.in
++++ b/modules/pam_env/Makefile.in
+@@ -273,7 +273,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_env.la
+-pam_env_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_env_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ secureconf_DATA = pam_env.conf
+ sysconf_DATA = environment
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+diff --git a/modules/pam_exec/Makefile.am b/modules/pam_exec/Makefile.am
+index 2838d1d..293c00a 100644
+--- a/modules/pam_exec/Makefile.am
++++ b/modules/pam_exec/Makefile.am
+@@ -21,7 +21,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_exec.la
+-pam_exec_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_exec_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ 
+diff --git a/modules/pam_exec/Makefile.in b/modules/pam_exec/Makefile.in
+index 9853784..a9cab72 100644
+--- a/modules/pam_exec/Makefile.in
++++ b/modules/pam_exec/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_exec.la
+-pam_exec_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_exec_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ TESTS = tst-pam_exec
+ all: all-am
+diff --git a/modules/pam_faildelay/Makefile.am b/modules/pam_faildelay/Makefile.am
+index 2a4a2b0..9166d58 100644
+--- a/modules/pam_faildelay/Makefile.am
++++ b/modules/pam_faildelay/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_faildelay.la
+-pam_faildelay_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_faildelay_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_faildelay/Makefile.in b/modules/pam_faildelay/Makefile.in
+index 157b15d..80bd695 100644
+--- a/modules/pam_faildelay/Makefile.in
++++ b/modules/pam_faildelay/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_faildelay.la
+-pam_faildelay_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_faildelay_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_filter/Makefile.am b/modules/pam_filter/Makefile.am
+index eddb08a..47e9b49 100644
+--- a/modules/pam_filter/Makefile.am
++++ b/modules/pam_filter/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ include_HEADERS=pam_filter.h
+-pam_filter_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_filter_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ securelib_LTLIBRARIES = pam_filter.la
+ TESTS = tst-pam_filter
+diff --git a/modules/pam_filter/Makefile.in b/modules/pam_filter/Makefile.in
+index 52d64bb..9aacc29 100644
+--- a/modules/pam_filter/Makefile.in
++++ b/modules/pam_filter/Makefile.in
+@@ -282,7 +282,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ include_HEADERS = pam_filter.h
+-pam_filter_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_filter_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ securelib_LTLIBRARIES = pam_filter.la
+ TESTS = tst-pam_filter
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+diff --git a/modules/pam_filter/upperLOWER/Makefile.am b/modules/pam_filter/upperLOWER/Makefile.am
+index 93d24ff..41f0a34 100644
+--- a/modules/pam_filter/upperLOWER/Makefile.am
++++ b/modules/pam_filter/upperLOWER/Makefile.am
+@@ -10,6 +10,6 @@ securelibfilterdir = $(SECUREDIR)/pam_filter
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(srcdir)/.. @PIE_CFLAGS@
+ AM_LDFLAGS = @PIE_LDFLAGS@
+-LDADD = -L$(top_builddir)/libpam -lpam
++LDADD = $(top_builddir)/libpam/libpam.la
+ 
+ securelibfilter_PROGRAMS = upperLOWER
+diff --git a/modules/pam_filter/upperLOWER/Makefile.in b/modules/pam_filter/upperLOWER/Makefile.in
+index 8fac5db..114235b 100644
+--- a/modules/pam_filter/upperLOWER/Makefile.in
++++ b/modules/pam_filter/upperLOWER/Makefile.in
+@@ -252,7 +252,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(srcdir)/.. @PIE_CFLAGS@
+ 
+ AM_LDFLAGS = @PIE_LDFLAGS@
+-LDADD = -L$(top_builddir)/libpam -lpam
++LDADD = $(top_builddir)/libpam/libpam.la
+ all: all-am
+ 
+ .SUFFIXES:
+diff --git a/modules/pam_ftp/Makefile.am b/modules/pam_ftp/Makefile.am
+index 4401399..bbc0a73 100644
+--- a/modules/pam_ftp/Makefile.am
++++ b/modules/pam_ftp/Makefile.am
+@@ -20,7 +20,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_ftp.la
+-pam_ftp_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_ftp_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ TESTS = tst-pam_ftp
+ 
+diff --git a/modules/pam_ftp/Makefile.in b/modules/pam_ftp/Makefile.in
+index d319ddd..ff221ae 100644
+--- a/modules/pam_ftp/Makefile.in
++++ b/modules/pam_ftp/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_ftp.la
+-pam_ftp_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_ftp_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ TESTS = tst-pam_ftp
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_group/Makefile.am b/modules/pam_group/Makefile.am
+index 0fd2a5d..6c1c521 100644
+--- a/modules/pam_group/Makefile.am
++++ b/modules/pam_group/Makefile.am
+@@ -21,7 +21,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_group.la
+-pam_group_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_group_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ secureconf_DATA = group.conf
+ 
+diff --git a/modules/pam_group/Makefile.in b/modules/pam_group/Makefile.in
+index 3b6c7bf..4dae202 100644
+--- a/modules/pam_group/Makefile.in
++++ b/modules/pam_group/Makefile.in
+@@ -271,7 +271,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_group.la
+-pam_group_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_group_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ secureconf_DATA = group.conf
+ TESTS = tst-pam_group
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+diff --git a/modules/pam_issue/Makefile.am b/modules/pam_issue/Makefile.am
+index 40d5c1a..9291739 100644
+--- a/modules/pam_issue/Makefile.am
++++ b/modules/pam_issue/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_issue.la
+-pam_issue_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_issue_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_issue/Makefile.in b/modules/pam_issue/Makefile.in
+index d78ed28..7b7e4df 100644
+--- a/modules/pam_issue/Makefile.in
++++ b/modules/pam_issue/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_issue.la
+-pam_issue_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_issue_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_keyinit/Makefile.am b/modules/pam_keyinit/Makefile.am
+index 4416c1c..5e8657c 100644
+--- a/modules/pam_keyinit/Makefile.am
++++ b/modules/pam_keyinit/Makefile.am
+@@ -31,4 +31,4 @@ endif
+ if HAVE_KEY_MANAGEMENT
+   securelib_LTLIBRARIES = pam_keyinit.la
+ endif
+-pam_keyinit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_keyinit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+diff --git a/modules/pam_keyinit/Makefile.in b/modules/pam_keyinit/Makefile.in
+index 7cc2f74..e3df635 100644
+--- a/modules/pam_keyinit/Makefile.in
++++ b/modules/pam_keyinit/Makefile.in
+@@ -270,7 +270,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ @HAVE_KEY_MANAGEMENT_TRUE@securelib_LTLIBRARIES = pam_keyinit.la
+-pam_keyinit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_keyinit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ all: all-am
+ 
+ .SUFFIXES:
+diff --git a/modules/pam_lastlog/Makefile.am b/modules/pam_lastlog/Makefile.am
+index 88bab27..1c63932 100644
+--- a/modules/pam_lastlog/Makefile.am
++++ b/modules/pam_lastlog/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_lastlog.la
+-pam_lastlog_la_LIBADD = -L$(top_builddir)/libpam -lpam -lutil
++pam_lastlog_la_LIBADD = $(top_builddir)/libpam/libpam.la -lutil
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_lastlog/Makefile.in b/modules/pam_lastlog/Makefile.in
+index 623989d..ec0a7ee 100644
+--- a/modules/pam_lastlog/Makefile.in
++++ b/modules/pam_lastlog/Makefile.in
+@@ -267,7 +267,7 @@ TESTS = tst-pam_lastlog
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_lastlog.la
+-pam_lastlog_la_LIBADD = -L$(top_builddir)/libpam -lpam -lutil
++pam_lastlog_la_LIBADD = $(top_builddir)/libpam/libpam.la -lutil
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_limits/Makefile.am b/modules/pam_limits/Makefile.am
+index 7894373..75a4908 100644
+--- a/modules/pam_limits/Makefile.am
++++ b/modules/pam_limits/Makefile.am
+@@ -25,7 +25,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_limits.la
+-pam_limits_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_limits_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ secureconf_DATA = limits.conf
+ 
+diff --git a/modules/pam_limits/Makefile.in b/modules/pam_limits/Makefile.in
+index 5bd3802..b9bd807 100644
+--- a/modules/pam_limits/Makefile.in
++++ b/modules/pam_limits/Makefile.in
+@@ -274,7 +274,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_limits.la
+-pam_limits_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_limits_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ secureconf_DATA = limits.conf
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_listfile/Makefile.am b/modules/pam_listfile/Makefile.am
+index 1546625..7b10af9 100644
+--- a/modules/pam_listfile/Makefile.am
++++ b/modules/pam_listfile/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_listfile.la
+-pam_listfile_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_listfile_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_listfile/Makefile.in b/modules/pam_listfile/Makefile.in
+index 5dee8f0..8d96b2a 100644
+--- a/modules/pam_listfile/Makefile.in
++++ b/modules/pam_listfile/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_listfile.la
+-pam_listfile_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_listfile_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_localuser/Makefile.am b/modules/pam_localuser/Makefile.am
+index c7deac3..64f2ef3 100644
+--- a/modules/pam_localuser/Makefile.am
++++ b/modules/pam_localuser/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_localuser.la
+-pam_localuser_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_localuser_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_localuser/Makefile.in b/modules/pam_localuser/Makefile.in
+index 7f1cfbe..7943f07 100644
+--- a/modules/pam_localuser/Makefile.in
++++ b/modules/pam_localuser/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_localuser.la
+-pam_localuser_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_localuser_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_loginuid/Makefile.am b/modules/pam_loginuid/Makefile.am
+index 4a715f1..1b9e87b 100644
+--- a/modules/pam_loginuid/Makefile.am
++++ b/modules/pam_loginuid/Makefile.am
+@@ -21,7 +21,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_loginuid.la
+-pam_loginuid_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBAUDIT@
++pam_loginuid_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBAUDIT@
+ 
+ if ENABLE_REGENERATE_MAN
+ 
+diff --git a/modules/pam_loginuid/Makefile.in b/modules/pam_loginuid/Makefile.in
+index 39796e0..734f3dc 100644
+--- a/modules/pam_loginuid/Makefile.in
++++ b/modules/pam_loginuid/Makefile.in
+@@ -266,7 +266,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_loginuid.la
+-pam_loginuid_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBAUDIT@
++pam_loginuid_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBAUDIT@
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ TESTS = tst-pam_loginuid
+ all: all-am
+diff --git a/modules/pam_mail/Makefile.am b/modules/pam_mail/Makefile.am
+index c63a2bc..84f3d9e 100644
+--- a/modules/pam_mail/Makefile.am
++++ b/modules/pam_mail/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_mail.la
+-pam_mail_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_mail_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_mail/Makefile.in b/modules/pam_mail/Makefile.in
+index cb7c529..74a9b12 100644
+--- a/modules/pam_mail/Makefile.in
++++ b/modules/pam_mail/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_mail.la
+-pam_mail_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_mail_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_mkhomedir/Makefile.am b/modules/pam_mkhomedir/Makefile.am
+index 6e93ba9..eb04721 100644
+--- a/modules/pam_mkhomedir/Makefile.am
++++ b/modules/pam_mkhomedir/Makefile.am
+@@ -22,7 +22,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ securelib_LTLIBRARIES = pam_mkhomedir.la
+ pam_mkhomedir_la_SOURCES = pam_mkhomedir.c
+-pam_mkhomedir_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_mkhomedir_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ pam_mkhomedir_la_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   pam_mkhomedir_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+@@ -30,7 +30,7 @@ endif
+ 
+ sbin_PROGRAMS = mkhomedir_helper
+ mkhomedir_helper_SOURCES = mkhomedir_helper.c
+-mkhomedir_helper_LDADD = -L$(top_builddir)/libpam -lpam
++mkhomedir_helper_LDADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_mkhomedir/Makefile.in b/modules/pam_mkhomedir/Makefile.in
+index ecfa54b..497b27f 100644
+--- a/modules/pam_mkhomedir/Makefile.in
++++ b/modules/pam_mkhomedir/Makefile.in
+@@ -281,11 +281,11 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 
+ securelib_LTLIBRARIES = pam_mkhomedir.la
+ pam_mkhomedir_la_SOURCES = pam_mkhomedir.c
+-pam_mkhomedir_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_mkhomedir_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ pam_mkhomedir_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_1)
+ mkhomedir_helper_SOURCES = mkhomedir_helper.c
+-mkhomedir_helper_LDADD = -L$(top_builddir)/libpam -lpam
++mkhomedir_helper_LDADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_motd/Makefile.am b/modules/pam_motd/Makefile.am
+index ec6cd57..bd499c5 100644
+--- a/modules/pam_motd/Makefile.am
++++ b/modules/pam_motd/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_motd.la
+-pam_motd_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_motd_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_motd/Makefile.in b/modules/pam_motd/Makefile.in
+index 5fe5df2..3cc385d 100644
+--- a/modules/pam_motd/Makefile.in
++++ b/modules/pam_motd/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_motd.la
+-pam_motd_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_motd_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_namespace/Makefile.am b/modules/pam_namespace/Makefile.am
+index 44513de..586a543 100644
+--- a/modules/pam_namespace/Makefile.am
++++ b/modules/pam_namespace/Makefile.am
+@@ -34,7 +34,7 @@ noinst_HEADERS = md5.h pam_namespace.h argv_parse.h
+ if HAVE_UNSHARE
+   securelib_LTLIBRARIES = pam_namespace.la
+   pam_namespace_la_SOURCES = pam_namespace.c md5.c argv_parse.c
+-  pam_namespace_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++  pam_namespace_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ 
+   secureconf_DATA = namespace.conf
+   secureconf_SCRIPTS = namespace.init
+diff --git a/modules/pam_namespace/Makefile.in b/modules/pam_namespace/Makefile.in
+index dd57d82..9aa9dd2 100644
+--- a/modules/pam_namespace/Makefile.in
++++ b/modules/pam_namespace/Makefile.in
+@@ -290,7 +290,7 @@ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ noinst_HEADERS = md5.h pam_namespace.h argv_parse.h
+ @HAVE_UNSHARE_TRUE@securelib_LTLIBRARIES = pam_namespace.la
+ @HAVE_UNSHARE_TRUE@pam_namespace_la_SOURCES = pam_namespace.c md5.c argv_parse.c
+-@HAVE_UNSHARE_TRUE@pam_namespace_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++@HAVE_UNSHARE_TRUE@pam_namespace_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ @HAVE_UNSHARE_TRUE@secureconf_DATA = namespace.conf
+ @HAVE_UNSHARE_TRUE@secureconf_SCRIPTS = namespace.init
+ @HAVE_UNSHARE_TRUE@namespaced_DATA = 
+diff --git a/modules/pam_nologin/Makefile.am b/modules/pam_nologin/Makefile.am
+index f2bcfab..a4ed9ff 100644
+--- a/modules/pam_nologin/Makefile.am
++++ b/modules/pam_nologin/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_nologin.la
+-pam_nologin_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_nologin_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_nologin/Makefile.in b/modules/pam_nologin/Makefile.in
+index edd0410..2bff290 100644
+--- a/modules/pam_nologin/Makefile.in
++++ b/modules/pam_nologin/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_nologin.la
+-pam_nologin_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_nologin_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_permit/Makefile.am b/modules/pam_permit/Makefile.am
+index 5d25132..dcc75eb 100644
+--- a/modules/pam_permit/Makefile.am
++++ b/modules/pam_permit/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_permit.la
+-pam_permit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_permit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_permit/Makefile.in b/modules/pam_permit/Makefile.in
+index ee76f4c..38662a3 100644
+--- a/modules/pam_permit/Makefile.in
++++ b/modules/pam_permit/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_permit.la
+-pam_permit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_permit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_pwhistory/Makefile.am b/modules/pam_pwhistory/Makefile.am
+index 4c24c27..4bb4d6d 100644
+--- a/modules/pam_pwhistory/Makefile.am
++++ b/modules/pam_pwhistory/Makefile.am
+@@ -25,7 +25,7 @@ endif
+ noinst_HEADERS = opasswd.h
+ 
+ securelib_LTLIBRARIES = pam_pwhistory.la
+-pam_pwhistory_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBCRYPT@
++pam_pwhistory_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBCRYPT@
+ pam_pwhistory_la_SOURCES = pam_pwhistory.c opasswd.c
+ 
+ if ENABLE_REGENERATE_MAN
+diff --git a/modules/pam_pwhistory/Makefile.in b/modules/pam_pwhistory/Makefile.in
+index ead329b..7681465 100644
+--- a/modules/pam_pwhistory/Makefile.in
++++ b/modules/pam_pwhistory/Makefile.in
+@@ -271,7 +271,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ noinst_HEADERS = opasswd.h
+ securelib_LTLIBRARIES = pam_pwhistory.la
+-pam_pwhistory_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBCRYPT@
++pam_pwhistory_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBCRYPT@
+ pam_pwhistory_la_SOURCES = pam_pwhistory.c opasswd.c
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_rhosts/Makefile.am b/modules/pam_rhosts/Makefile.am
+index 7ffd4b7..7e04383 100644
+--- a/modules/pam_rhosts/Makefile.am
++++ b/modules/pam_rhosts/Makefile.am
+@@ -23,7 +23,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_rhosts.la
+-pam_rhosts_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_rhosts_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_rhosts/Makefile.in b/modules/pam_rhosts/Makefile.in
+index 5e70f8b..8dbefd5 100644
+--- a/modules/pam_rhosts/Makefile.in
++++ b/modules/pam_rhosts/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_rhosts.la
+-pam_rhosts_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_rhosts_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_rootok/Makefile.am b/modules/pam_rootok/Makefile.am
+index 81969fc..d132367 100644
+--- a/modules/pam_rootok/Makefile.am
++++ b/modules/pam_rootok/Makefile.am
+@@ -25,7 +25,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_rootok.la
+-pam_rootok_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++pam_rootok_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_rootok/Makefile.in b/modules/pam_rootok/Makefile.in
+index 344fd08..39282fd 100644
+--- a/modules/pam_rootok/Makefile.in
++++ b/modules/pam_rootok/Makefile.in
+@@ -269,7 +269,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include \
+ 	-I$(top_srcdir)/libpamc/include $(am__append_1)
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_2)
+ securelib_LTLIBRARIES = pam_rootok.la
+-pam_rootok_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++pam_rootok_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_securetty/Makefile.am b/modules/pam_securetty/Makefile.am
+index 092b677..30cc879 100644
+--- a/modules/pam_securetty/Makefile.am
++++ b/modules/pam_securetty/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_securetty.la
+-pam_securetty_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_securetty_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_securetty/Makefile.in b/modules/pam_securetty/Makefile.in
+index 53d0890..12096b6 100644
+--- a/modules/pam_securetty/Makefile.in
++++ b/modules/pam_securetty/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_securetty.la
+-pam_securetty_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_securetty_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_selinux/Makefile.am b/modules/pam_selinux/Makefile.am
+index baf782a..beb340d 100644
+--- a/modules/pam_selinux/Makefile.am
++++ b/modules/pam_selinux/Makefile.am
+@@ -22,10 +22,10 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(top_srcdir)/libpam_misc/include
+ 
+ pam_selinux_check_LDFLAGS = $(AM_LDFLAGS) \
+-	-L$(top_builddir)/libpam -lpam \
++	$(top_builddir)/libpam/libpam.la \
+ 	-L$(top_builddir)/libpam_misc -lpam_misc
+ 
+-pam_selinux_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@ @LIBAUDIT@
++pam_selinux_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@ @LIBAUDIT@
+ pam_selinux_la_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   pam_selinux_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+diff --git a/modules/pam_selinux/Makefile.in b/modules/pam_selinux/Makefile.in
+index 5aa9d8c..1f05584 100644
+--- a/modules/pam_selinux/Makefile.in
++++ b/modules/pam_selinux/Makefile.in
+@@ -283,10 +283,10 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-I$(top_srcdir)/libpam_misc/include
+ 
+ pam_selinux_check_LDFLAGS = $(AM_LDFLAGS) \
+-	-L$(top_builddir)/libpam -lpam \
++	$(top_builddir)/libpam/libpam.la \
+ 	-L$(top_builddir)/libpam_misc -lpam_misc
+ 
+-pam_selinux_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@ @LIBAUDIT@
++pam_selinux_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@ @LIBAUDIT@
+ pam_selinux_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_1)
+ @HAVE_LIBSELINUX_TRUE@securelib_LTLIBRARIES = pam_selinux.la
+diff --git a/modules/pam_sepermit/Makefile.am b/modules/pam_sepermit/Makefile.am
+index 9211a93..d1a557f 100644
+--- a/modules/pam_sepermit/Makefile.am
++++ b/modules/pam_sepermit/Makefile.am
+@@ -24,7 +24,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-D SEPERMIT_CONF_FILE=\"$(SCONFIGDIR)/sepermit.conf\" \
+ 	-D SEPERMIT_LOCKDIR=\"$(sepermitlockdir)\"
+ 
+-pam_sepermit_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++pam_sepermit_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ pam_sepermit_la_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   pam_sepermit_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+diff --git a/modules/pam_sepermit/Makefile.in b/modules/pam_sepermit/Makefile.in
+index 389f7f0..e97d3f1 100644
+--- a/modules/pam_sepermit/Makefile.in
++++ b/modules/pam_sepermit/Makefile.in
+@@ -281,7 +281,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-D SEPERMIT_CONF_FILE=\"$(SCONFIGDIR)/sepermit.conf\" \
+ 	-D SEPERMIT_LOCKDIR=\"$(sepermitlockdir)\"
+ 
+-pam_sepermit_la_LIBADD = -L$(top_builddir)/libpam -lpam @LIBSELINUX@
++pam_sepermit_la_LIBADD = $(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ pam_sepermit_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_1)
+ @HAVE_LIBSELINUX_TRUE@secureconf_DATA = sepermit.conf
+diff --git a/modules/pam_shells/Makefile.am b/modules/pam_shells/Makefile.am
+index f4abbb4..c9e01cc 100644
+--- a/modules/pam_shells/Makefile.am
++++ b/modules/pam_shells/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_shells.la
+-pam_shells_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_shells_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_shells/Makefile.in b/modules/pam_shells/Makefile.in
+index 10d2578..103eb32 100644
+--- a/modules/pam_shells/Makefile.in
++++ b/modules/pam_shells/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_shells.la
+-pam_shells_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_shells_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_stress/Makefile.am b/modules/pam_stress/Makefile.am
+index ff33817..a8d50eb 100644
+--- a/modules/pam_stress/Makefile.am
++++ b/modules/pam_stress/Makefile.am
+@@ -17,4 +17,4 @@ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+ securelib_LTLIBRARIES = pam_stress.la
+-pam_stress_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_stress_la_LIBADD = $(top_builddir)/libpam/libpam.la
+diff --git a/modules/pam_stress/Makefile.in b/modules/pam_stress/Makefile.in
+index 2c549d0..66bcdf9 100644
+--- a/modules/pam_stress/Makefile.in
++++ b/modules/pam_stress/Makefile.in
+@@ -259,7 +259,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_stress.la
+-pam_stress_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_stress_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ all: all-am
+ 
+ .SUFFIXES:
+diff --git a/modules/pam_succeed_if/Makefile.am b/modules/pam_succeed_if/Makefile.am
+index 49b5d46..ce1eb50 100644
+--- a/modules/pam_succeed_if/Makefile.am
++++ b/modules/pam_succeed_if/Makefile.am
+@@ -23,7 +23,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_succeed_if.la
+-pam_succeed_if_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_succeed_if_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_succeed_if/Makefile.in b/modules/pam_succeed_if/Makefile.in
+index ec48208..782668b 100644
+--- a/modules/pam_succeed_if/Makefile.in
++++ b/modules/pam_succeed_if/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_succeed_if.la
+-pam_succeed_if_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_succeed_if_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_tally/Makefile.am b/modules/pam_tally/Makefile.am
+index e5b9559..53d0c0a 100644
+--- a/modules/pam_tally/Makefile.am
++++ b/modules/pam_tally/Makefile.am
+@@ -20,7 +20,7 @@ noinst_HEADERS = faillog.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ 
+ pam_tally_la_LDFLAGS = -no-undefined -avoid-version -module
+-pam_tally_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_tally_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ if HAVE_VERSIONING
+   pam_tally_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+diff --git a/modules/pam_tally/Makefile.in b/modules/pam_tally/Makefile.in
+index 6553ce2..8c07e01 100644
+--- a/modules/pam_tally/Makefile.in
++++ b/modules/pam_tally/Makefile.in
+@@ -282,7 +282,7 @@ noinst_HEADERS = faillog.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ pam_tally_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_1)
+-pam_tally_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_tally_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ securelib_LTLIBRARIES = pam_tally.la
+ pam_tally_SOURCES = pam_tally_app.c
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+diff --git a/modules/pam_tally2/Makefile.am b/modules/pam_tally2/Makefile.am
+index 507c294..ec89864 100644
+--- a/modules/pam_tally2/Makefile.am
++++ b/modules/pam_tally2/Makefile.am
+@@ -21,12 +21,12 @@ noinst_HEADERS = tallylog.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ 
+ pam_tally2_la_LDFLAGS = -no-undefined -avoid-version -module
+-pam_tally2_la_LIBADD = -L$(top_builddir)/libpam -lpam $(LIBAUDIT)
++pam_tally2_la_LIBADD = $(top_builddir)/libpam/libpam.la $(LIBAUDIT)
+ if HAVE_VERSIONING
+   pam_tally2_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+ 
+-pam_tally2_LDADD = -L$(top_builddir)/libpam -lpam $(LIBAUDIT)
++pam_tally2_LDADD = $(top_builddir)/libpam/libpam.la $(LIBAUDIT)
+ 
+ securelib_LTLIBRARIES = pam_tally2.la
+ sbin_PROGRAMS = pam_tally2
+diff --git a/modules/pam_tally2/Makefile.in b/modules/pam_tally2/Makefile.in
+index a6871d4..bcbdbe5 100644
+--- a/modules/pam_tally2/Makefile.in
++++ b/modules/pam_tally2/Makefile.in
+@@ -284,8 +284,8 @@ noinst_HEADERS = tallylog.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ pam_tally2_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_1)
+-pam_tally2_la_LIBADD = -L$(top_builddir)/libpam -lpam $(LIBAUDIT)
+-pam_tally2_LDADD = -L$(top_builddir)/libpam -lpam $(LIBAUDIT)
++pam_tally2_la_LIBADD = $(top_builddir)/libpam/libpam.la $(LIBAUDIT)
++pam_tally2_LDADD = $(top_builddir)/libpam/libpam.la $(LIBAUDIT)
+ securelib_LTLIBRARIES = pam_tally2.la
+ pam_tally2_la_SOURCES = pam_tally2.c
+ pam_tally2_SOURCES = pam_tally2_app.c
+diff --git a/modules/pam_time/Makefile.am b/modules/pam_time/Makefile.am
+index d2ef636..a1640c1 100644
+--- a/modules/pam_time/Makefile.am
++++ b/modules/pam_time/Makefile.am
+@@ -21,7 +21,7 @@ AM_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+-pam_time_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_time_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ securelib_LTLIBRARIES = pam_time.la
+ secureconf_DATA = time.conf
+diff --git a/modules/pam_time/Makefile.in b/modules/pam_time/Makefile.in
+index 252f0a4..b445a2c 100644
+--- a/modules/pam_time/Makefile.in
++++ b/modules/pam_time/Makefile.in
+@@ -271,7 +271,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include \
+ 	-DPAM_TIME_CONF=\"$(SCONFIGDIR)/time.conf\"
+ 
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+-pam_time_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_time_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ securelib_LTLIBRARIES = pam_time.la
+ secureconf_DATA = time.conf
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+diff --git a/modules/pam_timestamp/Makefile.am b/modules/pam_timestamp/Makefile.am
+index 313c1eb..56fff03 100644
+--- a/modules/pam_timestamp/Makefile.am
++++ b/modules/pam_timestamp/Makefile.am
+@@ -20,7 +20,7 @@ noinst_HEADERS = hmacsha1.h sha1.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ 
+ pam_timestamp_la_LDFLAGS = -no-undefined -avoid-version -module $(AM_LDFLAGS)
+-pam_timestamp_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_timestamp_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ if HAVE_VERSIONING
+   pam_timestamp_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+@@ -33,11 +33,11 @@ pam_timestamp_la_CFLAGS = $(AM_CFLAGS)
+ 
+ pam_timestamp_check_SOURCES = pam_timestamp_check.c
+ pam_timestamp_check_CFLAGS = $(AM_CFLAGS) @PIE_CFLAGS@
+-pam_timestamp_check_LDADD = -L$(top_builddir)/libpam -lpam
++pam_timestamp_check_LDADD = $(top_builddir)/libpam/libpam.la
+ pam_timestamp_check_LDFLAGS = @PIE_LDFLAGS@
+ 
+ hmacfile_SOURCES = hmacfile.c hmacsha1.c sha1.c
+-hmacfile_LDADD = -L$(top_builddir)/libpam -lpam
++hmacfile_LDADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_timestamp/Makefile.in b/modules/pam_timestamp/Makefile.in
+index 7628436..51a288a 100644
+--- a/modules/pam_timestamp/Makefile.in
++++ b/modules/pam_timestamp/Makefile.in
+@@ -296,16 +296,16 @@ noinst_HEADERS = hmacsha1.h sha1.h
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ pam_timestamp_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(AM_LDFLAGS) $(am__append_1)
+-pam_timestamp_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_timestamp_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ securelib_LTLIBRARIES = pam_timestamp.la
+ pam_timestamp_la_SOURCES = pam_timestamp.c hmacsha1.c sha1.c
+ pam_timestamp_la_CFLAGS = $(AM_CFLAGS)
+ pam_timestamp_check_SOURCES = pam_timestamp_check.c
+ pam_timestamp_check_CFLAGS = $(AM_CFLAGS) @PIE_CFLAGS@
+-pam_timestamp_check_LDADD = -L$(top_builddir)/libpam -lpam
++pam_timestamp_check_LDADD = $(top_builddir)/libpam/libpam.la
+ pam_timestamp_check_LDFLAGS = @PIE_LDFLAGS@
+ hmacfile_SOURCES = hmacfile.c hmacsha1.c sha1.c
+-hmacfile_LDADD = -L$(top_builddir)/libpam -lpam
++hmacfile_LDADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_tty_audit/Makefile.am b/modules/pam_tty_audit/Makefile.am
+index 38c13c0..6378483 100644
+--- a/modules/pam_tty_audit/Makefile.am
++++ b/modules/pam_tty_audit/Makefile.am
+@@ -22,7 +22,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ if HAVE_AUDIT_TTY_STATUS
+-  pam_tty_audit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++  pam_tty_audit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+   securelib_LTLIBRARIES = pam_tty_audit.la
+ endif
+ 
+diff --git a/modules/pam_tty_audit/Makefile.in b/modules/pam_tty_audit/Makefile.in
+index 3feddd3..fd53094 100644
+--- a/modules/pam_tty_audit/Makefile.in
++++ b/modules/pam_tty_audit/Makefile.in
+@@ -267,7 +267,7 @@ XMLS = README.xml pam_tty_audit.8.xml
+ securelibdir = $(SECUREDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+-@HAVE_AUDIT_TTY_STATUS_TRUE@pam_tty_audit_la_LIBADD = -L$(top_builddir)/libpam -lpam
++@HAVE_AUDIT_TTY_STATUS_TRUE@pam_tty_audit_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @HAVE_AUDIT_TTY_STATUS_TRUE@securelib_LTLIBRARIES = pam_tty_audit.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_umask/Makefile.am b/modules/pam_umask/Makefile.am
+index 397c539..205e771 100644
+--- a/modules/pam_umask/Makefile.am
++++ b/modules/pam_umask/Makefile.am
+@@ -23,7 +23,7 @@ if HAVE_VERSIONING
+ endif
+ 
+ securelib_LTLIBRARIES = pam_umask.la
+-pam_umask_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_umask_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ 
+ if ENABLE_REGENERATE_MAN
+ noinst_DATA = README
+diff --git a/modules/pam_umask/Makefile.in b/modules/pam_umask/Makefile.in
+index 6305655..669d462 100644
+--- a/modules/pam_umask/Makefile.in
++++ b/modules/pam_umask/Makefile.in
+@@ -267,7 +267,7 @@ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module $(am__append_1)
+ securelib_LTLIBRARIES = pam_umask.la
+-pam_umask_la_LIBADD = -L$(top_builddir)/libpam -lpam
++pam_umask_la_LIBADD = $(top_builddir)/libpam/libpam.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+ 
+diff --git a/modules/pam_unix/Makefile.am b/modules/pam_unix/Makefile.am
+index 44b37e9..cb77d61 100644
+--- a/modules/pam_unix/Makefile.am
++++ b/modules/pam_unix/Makefile.am
+@@ -28,7 +28,7 @@ pam_unix_la_LDFLAGS = -no-undefined -avoid-version -module
+ if HAVE_VERSIONING
+   pam_unix_la_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+-pam_unix_la_LIBADD = @LIBNSL@ -L$(top_builddir)/libpam -lpam \
++pam_unix_la_LIBADD = @LIBNSL@ $(top_builddir)/libpam/libpam.la \
+ 	@LIBCRYPT@ @LIBSELINUX@
+ 
+ securelib_LTLIBRARIES = pam_unix.la
+diff --git a/modules/pam_unix/Makefile.in b/modules/pam_unix/Makefile.in
+index 6e72906..78a5a6d 100644
+--- a/modules/pam_unix/Makefile.in
++++ b/modules/pam_unix/Makefile.in
+@@ -316,7 +316,7 @@ AM_CFLAGS = -I$(top_srcdir)/libpam/include \
+ 	-DUPDATE_HELPER=\"$(sbindir)/unix_update\" $(am__append_1)
+ pam_unix_la_LDFLAGS = -no-undefined -avoid-version -module \
+ 	$(am__append_2)
+-pam_unix_la_LIBADD = @LIBNSL@ -L$(top_builddir)/libpam -lpam \
++pam_unix_la_LIBADD = @LIBNSL@ $(top_builddir)/libpam/libpam.la \
+ 	@LIBCRYPT@ @LIBSELINUX@
+ 
+ securelib_LTLIBRARIES = pam_unix.la
+diff --git a/modules/pam_userdb/Makefile.am b/modules/pam_userdb/Makefile.am
+index b05cc6c..35648fd 100644
+--- a/modules/pam_userdb/Makefile.am
++++ b/modules/pam_userdb/Makefile.am
+@@ -19,7 +19,7 @@ secureconfdir = $(SCONFIGDIR)
+ 
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam @LIBDB@ @LIBCRYPT@
++	$(top_builddir)/libpam/libpam.la @LIBDB@ @LIBCRYPT@
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+diff --git a/modules/pam_userdb/Makefile.in b/modules/pam_userdb/Makefile.in
+index bcda7c7..497a499 100644
+--- a/modules/pam_userdb/Makefile.in
++++ b/modules/pam_userdb/Makefile.in
+@@ -270,7 +270,7 @@ securelibdir = $(SECUREDIR)
+ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam @LIBDB@ @LIBCRYPT@ \
++	$(top_builddir)/libpam/libpam.la @LIBDB@ @LIBCRYPT@ \
+ 	$(am__append_1)
+ @HAVE_LIBDB_TRUE@securelib_LTLIBRARIES = pam_userdb.la
+ noinst_HEADERS = pam_userdb.h
+diff --git a/modules/pam_warn/Makefile.am b/modules/pam_warn/Makefile.am
+index 75cf38a..69c7070 100644
+--- a/modules/pam_warn/Makefile.am
++++ b/modules/pam_warn/Makefile.am
+@@ -17,7 +17,7 @@ secureconfdir = $(SCONFIGDIR)
+ 
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam
++	$(top_builddir)/libpam/libpam.la
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+diff --git a/modules/pam_warn/Makefile.in b/modules/pam_warn/Makefile.in
+index 3c259df..2a4787c 100644
+--- a/modules/pam_warn/Makefile.in
++++ b/modules/pam_warn/Makefile.in
+@@ -266,7 +266,7 @@ securelibdir = $(SECUREDIR)
+ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam $(am__append_1)
++	$(top_builddir)/libpam/libpam.la $(am__append_1)
+ securelib_LTLIBRARIES = pam_warn.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_wheel/Makefile.am b/modules/pam_wheel/Makefile.am
+index bccb8aa..f5bef18 100644
+--- a/modules/pam_wheel/Makefile.am
++++ b/modules/pam_wheel/Makefile.am
+@@ -17,7 +17,7 @@ secureconfdir = $(SCONFIGDIR)
+ 
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam
++	$(top_builddir)/libpam/libpam.la
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+diff --git a/modules/pam_wheel/Makefile.in b/modules/pam_wheel/Makefile.in
+index 12705a6..8133f04 100644
+--- a/modules/pam_wheel/Makefile.in
++++ b/modules/pam_wheel/Makefile.in
+@@ -266,7 +266,7 @@ securelibdir = $(SECUREDIR)
+ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam $(am__append_1)
++	$(top_builddir)/libpam/libpam.la $(am__append_1)
+ securelib_LTLIBRARIES = pam_wheel.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/modules/pam_xauth/Makefile.am b/modules/pam_xauth/Makefile.am
+index db089ad..3033b90 100644
+--- a/modules/pam_xauth/Makefile.am
++++ b/modules/pam_xauth/Makefile.am
+@@ -17,7 +17,7 @@ secureconfdir = $(SCONFIGDIR)
+ 
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam @LIBSELINUX@
++	$(top_builddir)/libpam/libpam.la @LIBSELINUX@
+ if HAVE_VERSIONING
+   AM_LDFLAGS += -Wl,--version-script=$(srcdir)/../modules.map
+ endif
+diff --git a/modules/pam_xauth/Makefile.in b/modules/pam_xauth/Makefile.in
+index d2392e7..e26d99f 100644
+--- a/modules/pam_xauth/Makefile.in
++++ b/modules/pam_xauth/Makefile.in
+@@ -266,7 +266,7 @@ securelibdir = $(SECUREDIR)
+ secureconfdir = $(SCONFIGDIR)
+ AM_CFLAGS = -I$(top_srcdir)/libpam/include -I$(top_srcdir)/libpamc/include
+ AM_LDFLAGS = -no-undefined -avoid-version -module \
+-	-L$(top_builddir)/libpam -lpam @LIBSELINUX@ $(am__append_1)
++	$(top_builddir)/libpam/libpam.la @LIBSELINUX@ $(am__append_1)
+ securelib_LTLIBRARIES = pam_xauth.la
+ @ENABLE_REGENERATE_MAN_TRUE@noinst_DATA = README
+ all: all-am
+diff --git a/xtests/Makefile.am b/xtests/Makefile.am
+index 4168e60..582474a 100644
+--- a/xtests/Makefile.am
++++ b/xtests/Makefile.am
+@@ -4,8 +4,8 @@
+ 
+ AM_CFLAGS = -DLIBPAM_COMPILE -I$(top_srcdir)/libpam/include \
+ 	-I$(top_srcdir)/libpamc/include -I$(top_srcdir)/libpam_misc/include
+-AM_LDFLAGS = -L$(top_builddir)/libpam -lpam \
+-	-L$(top_builddir)/libpam_misc -lpam_misc
++AM_LDFLAGS = $(top_builddir)/libpam/libpam.la \
++	$(top_builddir)/libpam_misc/libpam_misc.la
+ 
+ CLEANFILES = *~ $(XTESTS)
+ 
+diff --git a/xtests/Makefile.in b/xtests/Makefile.in
+index af7aad4..6db2b1b 100644
+--- a/xtests/Makefile.in
++++ b/xtests/Makefile.in
+@@ -332,8 +332,8 @@ top_srcdir = @top_srcdir@
+ AM_CFLAGS = -DLIBPAM_COMPILE -I$(top_srcdir)/libpam/include \
+ 	-I$(top_srcdir)/libpamc/include -I$(top_srcdir)/libpam_misc/include
+ 
+-AM_LDFLAGS = -L$(top_builddir)/libpam -lpam \
+-	-L$(top_builddir)/libpam_misc -lpam_misc
++AM_LDFLAGS = $(top_builddir)/libpam/libpam.la \
++	$(top_builddir)/libpam_misc/libpam_misc.la
+ 
+ CLEANFILES = *~ $(XTESTS)
+ EXTRA_DIST = run-xtests.sh tst-pam_dispatch1.pamd tst-pam_dispatch2.pamd \

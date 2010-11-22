@@ -1,5 +1,5 @@
 PACKAGE = pcsc-tools
-VERSION = 1.4.16
+VERSION = 1.4.17
 
 LOCATION = http://ludovic.rousseau.free.fr/softwares/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

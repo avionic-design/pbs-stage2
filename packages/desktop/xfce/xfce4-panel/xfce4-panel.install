@@ -1,6 +1,6 @@
 /etc/xdg/xfce4
 /usr/bin
-/usr/lib/xfce4/panel-plugins
+/usr/lib/xfce4/panel
 /usr/share/applications
 /usr/share/icons
 /usr/share/xfce4/panel-plugins

@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 161
+VERSION = 164
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -10,6 +10,7 @@ conf-args = \
 	--build=$(BUILD_GNU_TYPE) \
 	--host=$(HOST_GNU_TYPE) \
 	--prefix= \
+	--sbindir=/sbin \
 	--includedir=$(prefix)/include \
 	--datarootdir=$(prefix)/share \
 	--libdir=$(prefix)/lib \
@@ -17,8 +18,16 @@ conf-args = \
 	--sysconfdir=/etc
 
 conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
+
+conf-args += \
 	--disable-extras \
 	--disable-introspection
+
+ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
+  conf-args += \
+	--disable-glib
+endif
 
 prunefiles = \
 	$(prefix)/lib/*.la

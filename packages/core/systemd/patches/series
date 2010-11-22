@@ -1,0 +1,4 @@
+cross-compile.patch
+with-getty.patch
+autoreconf.patch
+ltmain-sysroot.patch

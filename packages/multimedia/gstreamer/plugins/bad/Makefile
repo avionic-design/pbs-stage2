@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-bad
-VERSION = 0.10.19
+VERSION = 0.10.20
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

@@ -1,2 +1,4 @@
-ltmain-sysroot.patch -p1
-cross-compile.patch -p1
+# This series applies on GIT commit b039ee7a61937c059cd33db9db0a9bf718047af8
+cross-compile.patch
+freetype-pkgconfig.patch
+autoreconf.patch

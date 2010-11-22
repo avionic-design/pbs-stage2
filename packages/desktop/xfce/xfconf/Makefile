@@ -1,7 +1,10 @@
 PACKAGE = xfconf
-VERSION = 4.6.2
+VERSION = 4.7.3
 
-LOCATION = http://mocha.xfce.org/archive/src/xfce/$(PACKAGE)/4.6
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://mocha.xfce.org/archive/src/xfce/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
@@ -14,5 +17,5 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/xfconf-query \
-	$(prefix)/libexec/xfconfd \
+	$(prefix)/lib/xfce4/xfconf/xfconfd \
 	$(prefix)/lib/*.so.*

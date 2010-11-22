@@ -1,3 +1,4 @@
 /etc
+/etc/systemd
 /lib/udev
 /sbin

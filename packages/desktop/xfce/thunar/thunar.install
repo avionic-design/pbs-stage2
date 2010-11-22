@@ -1,10 +1,9 @@
 /etc/xdg/Thunar
 /usr/bin
-/usr/libexec
+/usr/lib/xfce4
 /usr/share/applications
 /usr/share/dbus-1
 /usr/share/icons
 /usr/share/pixmaps
-/usr/share/thumbnailers
 /usr/share/Thunar
 /usr/share/xfce4/panel-plugins

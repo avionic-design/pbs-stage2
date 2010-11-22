@@ -1,9 +1,9 @@
 PACKAGE = libXcursor
-VERSION = 1.1.10
+VERSION = 1.1.11
 
 include packages/xorg/lib/common.mk
 
-#prunefiles = \
+prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \

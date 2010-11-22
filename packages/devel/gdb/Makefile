@@ -1,5 +1,5 @@
 PACKAGE = gdb
-VERSION = 7.1
+VERSION = 7.2
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,8 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libbfd.la \
-	$(prefix)/lib/libopcodes.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/gdb \

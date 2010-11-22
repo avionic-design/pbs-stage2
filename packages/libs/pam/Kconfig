@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_PAM
+	bool "pam"
+	select PACKAGE_DEVEL_FLEX
+	default n

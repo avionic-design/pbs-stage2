@@ -1,0 +1,5 @@
+PACKAGE = systemd
+VERSION = 11
+
+LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

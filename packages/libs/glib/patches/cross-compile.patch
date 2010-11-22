@@ -17,7 +17,7 @@ diff --git a/Makefile.in b/Makefile.in
 index f0672b9..9518383 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -419,8 +419,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
+@@ -420,8 +420,8 @@ EXTRA_DIST = ChangeLog.pre-2-20 ChangeLog.pre-2-18 ChangeLog.pre-2-16 \
 	gio-2.0-uninstalled.pc.in gio-unix-2.0-uninstalled.pc.in
  TEST_PROGS = 
  ACLOCAL_AMFLAGS = -I m4macros ${ACLOCAL_FLAGS}
@@ -32,7 +32,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index b0af5df..3c84f62 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -252,8 +252,6 @@ giowin32include_HEADERS = \
+@@ -282,8 +282,6 @@ giowin32include_HEADERS = \
  
  endif
  
@@ -40,17 +40,17 @@ index b0af5df..3c84f62 100644
 -
  libgio_2_0_la_SOURCES =		\
  	gappinfo.c 		\
- 	gapplication.c		\
+ 	gasynchelper.c 		\
 diff --git a/gio/Makefile.in b/gio/Makefile.in
 index 4d426a0..5fe8a81 100644
 --- a/gio/Makefile.in
 +++ b/gio/Makefile.in
-@@ -591,7 +591,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+@@ -612,7 +612,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
  TEST_PROGS = 
  NULL = 
- SUBDIRS = $(am__append_1) $(am__append_2) $(am__append_6) \
--	$(am__append_9) . $(am__append_12) tests
-+	$(am__append_9) . $(am__append_12)
+ SUBDIRS = $(am__append_1) $(am__append_3) $(am__append_7) \
+-	$(am__append_10) . $(am__append_13) tests
++	$(am__append_10) . $(am__append_13)
  @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@noinst_DATA = gio-2.0.lib
  @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@install_ms_lib_cmd = $(INSTALL) gio-2.0.lib $(DESTDIR)$(libdir)
  @MS_LIB_AVAILABLE_TRUE@@OS_WIN32_AND_DLL_COMPILATION_TRUE@uninstall_ms_lib_cmd = -rm $(DESTDIR)$(libdir)/gio-2.0.lib

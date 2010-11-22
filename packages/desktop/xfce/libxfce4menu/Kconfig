@@ -1,4 +1,0 @@
-config PACKAGE_DESKTOP_XFCE_LIBXFCE4MENU
-	bool "libxfce4menu"
-	select PACKAGE_DESKTOP_XFCE_LIBXFCE4UTIL
-	default n

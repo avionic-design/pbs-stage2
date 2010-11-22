@@ -1,4 +1,4 @@
 config PACKAGE_MULTIMEDIA_MPLAYER
 	bool "mplayer"
-	select PACKAGE_XORG_LIB_XV
+	select PACKAGE_XORG_LIB_XVMC
 	default n

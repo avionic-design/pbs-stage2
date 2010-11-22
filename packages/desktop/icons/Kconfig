@@ -1,0 +1,6 @@
+menu "Icons"
+
+source "packages/desktop/icons/hicolor/Kconfig"
+source "packages/desktop/icons/tango/Kconfig"
+
+endmenu

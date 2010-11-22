@@ -1,0 +1,119 @@
+diff --git a/MCONFIG.build b/MCONFIG.build
+index d1abff2..63f2e30 100644
+--- a/MCONFIG.build
++++ b/MCONFIG.build
+@@ -19,8 +19,8 @@ include $(topdir)/MCONFIG
+ OPTFLAGS   = -g -Os
+ INCLUDES   =
+ CFLAGS     = -W -Wall -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
+-             $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS    =
++             $(OPTFLAGS) $(INCLUDES) $(EXTRA_CFLAGS)
++LDFLAGS    = $(EXTRA_LDFLAGS)
+ LIBS	   =
+ 
+ .SUFFIXES: .c .o .S .s .i .elf .com .bin .asm .lst .c32 .lss
+diff --git a/com32/MCONFIG b/com32/MCONFIG
+index a74ed32..a5e8a8a 100644
+--- a/com32/MCONFIG
++++ b/com32/MCONFIG
+@@ -48,20 +48,22 @@ endif
+ CFLAGS     = $(GCCOPT) $(GCCWARN) -march=i386 \
+ 	     -fomit-frame-pointer -D__COM32__ \
+ 	     -nostdinc -iwithprefix include \
+-	     -I$(com32)/libutil/include -I$(com32)/include $(GPLINCLUDE)
++	     -I$(com32)/libutil/include -I$(com32)/include $(GPLINCLUDE) \
++	     $(EXTRA_CFLAGS)
+ SFLAGS     = $(GCCOPT) $(GCCWARN) -march=i386 \
+ 	     -fomit-frame-pointer -D__COM32__ \
+ 	     -nostdinc -iwithprefix include \
+ 	     -I$(com32)/libutil/include -I$(com32)/include $(GPLINCLUDE)
+ 
+ COM32LD	   = $(com32)/lib/com32.ld
+-LDFLAGS    = -m elf_i386 --emit-relocs -T $(COM32LD)
++LDFLAGS    = -m elf_i386 --emit-relocs -T $(COM32LD) $(EXTRA_LDFLAGS)
+ LIBGCC    := $(shell $(CC) $(GCCOPT) --print-libgcc)
+ 
+ LNXCFLAGS  = -I$(com32)/libutil/include $(GCCWARN) -O -g \
+-	     -D_GNU_SOURCE -D_FORTIFY_SOURCE=0 -Wno-error
++	     -D_GNU_SOURCE -D_FORTIFY_SOURCE=0 -Wno-error \
++	     $(EXTRA_CFLAGS)
+ LNXSFLAGS  = -g
+-LNXLDFLAGS = -g
++LNXLDFLAGS = -g $(EXTRA_LDFLAGS)
+ 
+ C_LIBS	   = $(com32)/libutil/libutil_com.a $(GPLLIB) \
+ 	     $(com32)/lib/libcom32.a $(LIBGCC)
+diff --git a/extlinux/Makefile b/extlinux/Makefile
+index 83cf1a5..8ad1571 100644
+--- a/extlinux/Makefile
++++ b/extlinux/Makefile
+@@ -20,8 +20,8 @@ include $(topdir)/MCONFIG
+ OPTFLAGS = -g -Os
+ INCLUDES = -I. -I.. -I../libinstaller
+ CFLAGS	 = $(GCCWARN) -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
+-	   $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = # -s
++	   $(OPTFLAGS) $(INCLUDES) $(EXTRA_CFLAGS)
++LDFLAGS	 = $(EXTRA_LDFLAGS) # -s
+ 
+ SRCS     = main.c \
+ 	   ../libinstaller/syslxmod.c \
+diff --git a/linux/Makefile b/linux/Makefile
+index ffe2272..6b090ea 100644
+--- a/linux/Makefile
++++ b/linux/Makefile
+@@ -19,8 +19,9 @@ include $(topdir)/MCONFIG
+ 
+ OPTFLAGS = -g -O0 -Dalloca=malloc
+ INCLUDES = -I. -I.. -I../libinstaller
+-CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = 
++CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
++	   $(EXTRA_CFLAGS)
++LDFLAGS	 =  $(EXTRA_LDFLAGS)
+ 
+ SRCS     = syslinux.c \
+ 	   ../libinstaller/syslxopt.c \
+@@ -51,7 +52,9 @@ spotless: clean
+ installer: syslinux syslinux-nomtools
+ 
+ syslinux: $(OBJS)
++	@echo "building $@"
+ 	$(CC) $(LDFLAGS) -o $@ $^
++	@echo "done"
+ 
+ syslinux-nomtools: syslinux
+ 	ln -f $< $@
+diff --git a/mtools/Makefile b/mtools/Makefile
+index 6164d24..74a5583 100755
+--- a/mtools/Makefile
++++ b/mtools/Makefile
+@@ -3,8 +3,9 @@ include $(topdir)/MCONFIG
+ 
+ OPTFLAGS = -g -Os
+ INCLUDES = -I. -I.. -I../libfat -I../libinstaller
+-CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = -s
++CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
++	   $(EXTRA_CFLAGS)
++LDFLAGS	 = -s $(EXTRA_LDFLAGS)
+ 
+ SRCS     = syslinux.c \
+ 	   ../libinstaller/fat.c \
+diff --git a/utils/Makefile b/utils/Makefile
+index 455eb82..b81fd34 100644
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -17,8 +17,9 @@
+ topdir = ..
+ include $(topdir)/MCONFIG
+ 
+-CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
+-LDFLAGS  = -O2 -s
++CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 \
++	   $(EXTRA_CFLAGS)
++LDFLAGS  = -O2 -s $(EXTRA_LDFLAGS)
+ 
+ TARGETS	 = mkdiskimage isohybrid gethostip memdiskfind
+ TARGETS += isohybrid.pl  # about to be obsoleted

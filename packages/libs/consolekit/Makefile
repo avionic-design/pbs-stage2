@@ -1,10 +1,14 @@
 PACKAGE = ConsoleKit
-VERSION = 0.3.0
+VERSION = 0.4.2
 
-LOCATION = http://people.freedesktop.org/~mccann/dist
+LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/dist
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
+
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system \
+	--libexecdir=$(prefix)/lib/$(PACKAGE)
 
 prunefiles = \
 	$(prefix)/lib/libck-connector.la
@@ -13,9 +17,9 @@ stripfiles = \
 	$(prefix)/bin/ck-history \
 	$(prefix)/bin/ck-launch-session \
 	$(prefix)/bin/ck-list-sessions \
-	$(prefix)/libexec/ck-collect-session-info \
-	$(prefix)/libexec/ck-get-x11-display-device \
-	$(prefix)/libexec/ck-get-x11-server-pid \
+	$(prefix)/lib/$(PACKAGE)/ck-collect-session-info \
+	$(prefix)/lib/$(PACKAGE)/ck-get-x11-display-device \
+	$(prefix)/lib/$(PACKAGE)/ck-get-x11-server-pid \
 	$(prefix)/lib/libck-connector.so.0.0.0 \
 	$(prefix)/sbin/ck-log-system-restart \
 	$(prefix)/sbin/ck-log-system-start \

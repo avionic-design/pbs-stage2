@@ -1,16 +1,17 @@
-PACKAGE = dbus
-VERSION = 1.3.1
-
-LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/dbus/Makefile.location
 include packages/autotools.mk
+
+conf-args += \
+	--libexec=$(prefix)/lib/dbus-1.0
 
 ifeq ($(CONFIG_PACKAGE_LIBS_DBUS_X11),y)
   conf-args += --with-x
 else
   conf-args += --without-x
 endif
+
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
 
 conf-vars += \
 	ac_cv_have_abstract_sockets=yes
@@ -26,4 +27,4 @@ stripfiles = \
 	$(prefix)/bin/dbus-send \
 	$(prefix)/bin/dbus-uuidgen \
 	$(prefix)/lib/*.so.* \
-	$(prefix)/libexec/dbus-daemon-launch-helper
+	$(prefix)/lib/dbus-1.0/dbus-daemon-launch-helper

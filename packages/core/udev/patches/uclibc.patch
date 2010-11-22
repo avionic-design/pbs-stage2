@@ -1,5 +1,16 @@
+Fix build against uClibc.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ extras/ata_id/ata_id.c    |    4 ++++
+ libudev/libudev-monitor.c |    4 ++++
+ udev/udevd.c              |    4 ++++
+ 3 files changed, 12 insertions(+), 0 deletions(-)
+
 diff --git a/extras/ata_id/ata_id.c b/extras/ata_id/ata_id.c
-index 25c7710..bfb7caf 100644
+index bf1debe..3bbaf39 100644
 --- a/extras/ata_id/ata_id.c
 +++ b/extras/ata_id/ata_id.c
 @@ -44,6 +44,10 @@
@@ -14,7 +25,7 @@ index 25c7710..bfb7caf 100644
  
  /* Sends a SCSI command block */
 diff --git a/libudev/libudev-monitor.c b/libudev/libudev-monitor.c
-index 96c153f..adf6a61 100644
+index a3789c4..d7f17b9 100644
 --- a/libudev/libudev-monitor.c
 +++ b/libudev/libudev-monitor.c
 @@ -24,6 +24,10 @@
@@ -29,7 +40,7 @@ index 96c153f..adf6a61 100644
  #include "libudev-private.h"
  
 diff --git a/udev/udevd.c b/udev/udevd.c
-index fe3352c..21ebce8 100644
+index 21dde82..b4b5933 100644
 --- a/udev/udevd.c
 +++ b/udev/udevd.c
 @@ -44,6 +44,10 @@
@@ -41,5 +52,5 @@ index fe3352c..21ebce8 100644
 +#endif
 +
  #include "udev.h"
+ #include "sd-daemon.h"
  
- #define UDEVD_PRIORITY			-4

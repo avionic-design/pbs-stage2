@@ -1,15 +1,18 @@
 PACKAGE = cairo
-VERSION = 1.8.10
+VERSION = 1.10.0
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-sover = 2.10800.10
+conf-args += \
+	--enable-xcb
 
 prunefiles = \
-	$(prefix)/lib/libcairo.la
+	$(prefix)/lib/cairo/*.la \
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libcairo.so.$(sover)
+	$(prefix)/lib/cairo/*.so.* \
+	$(prefix)/lib/*.so.*

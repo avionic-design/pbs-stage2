@@ -1,0 +1,5 @@
+/usr/bin/curl-config
+/usr/include/curl
+/usr/lib/*.a
+/usr/lib/*.so
+/usr/lib/pkgconfig

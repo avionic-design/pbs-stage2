@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.12.0
+VERSION = 2.13.0
 
 include packages/xorg/driver/common.mk
 
@@ -14,7 +14,9 @@ conf-vars += \
 	ac_cv_file_$(sdkdir)_sarea_h=yes
 
 prunefiles = \
-	$(prefix)/lib/xorg/modules/drivers/intel_drv.la
+	$(prefix)/lib/*.la \
+	$(prefix)/lib/xorg/modules/drivers/*.la
 
 stripfiles = \
-	$(prefix)/lib/xorg/modules/drivers/intel_drv.so
+	$(prefix)/lib/*.so.* \
+	$(prefix)/lib/xorg/modules/drivers/*.so

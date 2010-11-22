@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBXDG_BASEDIR
+	bool "libxdg-basedir"
+	select VIRTUAL_DEVEL_LIBC
+	default n

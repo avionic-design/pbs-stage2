@@ -1,0 +1,2 @@
+version=3
+http://mocha.xfce.org/archive/src/xfce/xfce4-settings/([\d\.]+)/xfce4-settings-(.*)\.tar\.bz2

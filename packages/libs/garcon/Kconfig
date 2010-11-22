@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GARCON
+	bool "garcon"
+	select PACKAGE_LIBS_GLIB
+	default n

@@ -1,8 +1,7 @@
 /etc/xdg
 /usr/bin
-/usr/libexec
 /usr/lib/xfce4
 /usr/share/applications
 /usr/share/icons
 /usr/share/themes
-/usr/share/xfce4/tips
+/usr/share/xfce4

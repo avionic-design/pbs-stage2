@@ -1,0 +1,4 @@
+ltmain-sysroot.patch
+optional-pppd.patch
+systemd-symlinks.patch
+autoreconf.patch

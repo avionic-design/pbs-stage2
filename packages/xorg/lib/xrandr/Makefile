@@ -1,5 +1,5 @@
 PACKAGE = libXrandr
-VERSION = 1.3.0
+VERSION = 1.3.1
 
 include packages/xorg/lib/common.mk
 
@@ -7,7 +7,7 @@ conf-args += \
 	--disable-malloc0returnsnull
 
 prunefiles = \
-	$(prefix)/lib/libXrandr.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXrandr.so.2.2.0
+	$(prefix)/lib/*.so.*

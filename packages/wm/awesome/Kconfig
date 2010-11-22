@@ -1,0 +1,7 @@
+config PACKAGE_WM_AWESOME
+	bool "awesome"
+	select PACKAGE_DEVEL_LUA
+	select PACKAGE_LIBS_LIBXDG_BASEDIR
+	select PACKAGE_LIBS_IMLIB2
+	select PACKAGE_LIBS_LIBEV
+	default n

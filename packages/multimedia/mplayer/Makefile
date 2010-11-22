@@ -30,7 +30,8 @@ conf-args += \
 conf-args += \
 	--disable-iconv \
 	--disable-live \
-	--enable-xv
+	--enable-xv \
+	--enable-xvmc
 
 ifeq ($(CONFIG_CPU),xscale)
 conf-args += \

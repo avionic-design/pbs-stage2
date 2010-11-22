@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBRPC
+	bool "librpc"
+	select VIRTUAL_DEVEL_LIBC
+	default n

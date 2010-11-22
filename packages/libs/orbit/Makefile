@@ -1,9 +1,4 @@
-PACKAGE = ORBit2
-VERSION = 2.14.18
-
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.14
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/orbit/Makefile.location
 include packages/autotools.mk
 NUM_CPU := 1
 

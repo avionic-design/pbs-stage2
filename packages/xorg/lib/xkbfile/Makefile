@@ -1,10 +1,10 @@
 PACKAGE = libxkbfile
-VERSION = 1.0.6
+VERSION = 1.0.7
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libxkbfile.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libxkbfile.so.1.0.2
+	$(prefix)/lib/*.so.*

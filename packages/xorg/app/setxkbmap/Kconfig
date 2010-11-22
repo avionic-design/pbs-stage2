@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_SETXKBMAP
+	bool "setxkbmap"
+	select PACKAGE_XORG_LIB_XKBFILE
+	default n

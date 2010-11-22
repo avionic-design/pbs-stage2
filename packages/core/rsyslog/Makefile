@@ -1,10 +1,18 @@
 PACKAGE = rsyslog
-VERSION = 5.5.1
+VERSION = 5.7.1
 
-LOCATION = http://download.rsyslog.com/$(PACKAGE)
+LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
+
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
+
+conf-vars-$(CONFIG_GLIBC) += ac_cv_func_malloc_0_nonnull=yes
+conf-vars-$(CONFIG_GLIBC) += ac_cv_func_realloc_0_nonnull=yes
+
+conf-vars += $(conf-vars-y)
 
 plugin = $(prefix)/lib/rsyslog
 

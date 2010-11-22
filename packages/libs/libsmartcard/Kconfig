@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_LIBSMARTCARD
+	bool "libsmartcard"
+	select PACKAGE_LIBS_READLINE
+	select PACKAGE_LIBS_LIBSH
+	default n

@@ -1,12 +1,12 @@
 PACKAGE = libXpm
-VERSION = 3.5.8
+VERSION = 3.5.9
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXpm.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/cxpm \
 	$(prefix)/bin/sxpm \
-	$(prefix)/lib/libXpm.so.4.11.0
+	$(prefix)/lib/*.so.*

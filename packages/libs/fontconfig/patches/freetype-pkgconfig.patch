@@ -1,0 +1,53 @@
+Check for freetype using pkg-config.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.in |   30 +++++++++++++++++-------------
+ 1 files changed, 17 insertions(+), 13 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 87df067..b9d7892 100644
+--- a/configure.in
++++ b/configure.in
+@@ -213,22 +213,26 @@ AC_DEFINE_UNQUOTED(USE_ICONV,$use_iconv,[Use iconv.])
+ # Checks for FreeType
+ #
+ 
+-AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=yes)
+-
+-if test "$freetype_config" = "yes"; then 
+-	AC_PATH_PROG(ft_config,freetype-config,no)
+-	if test "$ft_config" = "no"; then
+-		AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
++AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=)
++
++if test -n "$freetype_config"; then
++	if test "$freetype_config" = "yes"; then 
++		AC_PATH_PROG(ft_config,freetype-config,no)
++		if test "$ft_config" = "no"; then
++			AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
++		fi
++	else
++		ft_config="$freetype_config"
+ 	fi
+-else
+-	ft_config="$freetype_config"
+-fi
+ 
+-FREETYPE_CFLAGS="`$ft_config --cflags`"
+-FREETYPE_LIBS="`$ft_config --libs`"
++	FREETYPE_CFLAGS="`$ft_config --cflags`"
++	FREETYPE_LIBS="`$ft_config --libs`"
+ 
+-AC_SUBST(FREETYPE_LIBS)
+-AC_SUBST(FREETYPE_CFLAGS)
++	AC_SUBST(FREETYPE_LIBS)
++	AC_SUBST(FREETYPE_CFLAGS)
++else
++	PKG_CHECK_MODULES(FREETYPE, freetype2)
++fi
+ 
+ fontconfig_save_libs="$LIBS"
+ fontconfig_save_cflags="$CFLAGS"

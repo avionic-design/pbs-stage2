@@ -1,12 +1,16 @@
 PACKAGE = xfce4-panel
-VERSION = 4.6.4
+VERSION = 4.7.4
 
-LOCATION = http://mocha.xfce.org/archive/src/xfce/$(PACKAGE)/4.6
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://mocha.xfce.org/archive/src/xfce/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-plugin = $(prefix)/lib/xfce4/panel-plugins
+panel = $(prefix)/lib/xfce4/panel
+plugin = $(panel)/plugins
 
 prunefiles = \
 	$(prefix)/lib/*.la \
@@ -16,4 +20,6 @@ stripfiles = \
 	$(prefix)/bin/xfce4-panel \
 	$(prefix)/bin/xfce4-popup-windowlist \
 	$(prefix)/lib/*.so.* \
+	$(panel)/migrate \
+	$(panel)/wrapper \
 	$(plugin)/*.so

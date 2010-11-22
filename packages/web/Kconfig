@@ -1,5 +1,6 @@
 menu "World-Wide Web Utilities"
 
+source "packages/web/flashplugin/Kconfig"
 source "packages/web/freerdp/Kconfig"
 source "packages/web/mozilla/Kconfig"
 source "packages/web/rdesktop/Kconfig"

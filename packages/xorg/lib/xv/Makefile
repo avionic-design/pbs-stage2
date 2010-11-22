@@ -1,5 +1,5 @@
 PACKAGE = libXv
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 include packages/xorg/lib/common.mk
 
@@ -7,7 +7,7 @@ conf-args += \
 	--disable-malloc0returnsnull
 
 prunefiles = \
-	$(prefix)/lib/libXv.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXv.so.1.0.0
+	$(prefix)/lib/*.so.*

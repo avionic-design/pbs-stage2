@@ -1,8 +1,8 @@
 /etc/ConsoleKit
 /etc/dbus-1
+/etc/systemd
 /usr/bin
 /usr/lib/ConsoleKit
-/usr/libexec
 /usr/sbin
 /usr/share/dbus-1
 /var/log

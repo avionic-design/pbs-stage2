@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.21.6
+VERSION = 2.23.2
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -16,6 +16,14 @@ conf-args += \
 
 module = $(prefix)/lib/gtk-2.0/modules
 plugin = $(prefix)/lib/gtk-2.0/2.10.0
+
+prunefiles = \
+	$(prefix)/lib/*.la \
+	$(module)/*.la \
+	$(plugin)/engines/*.la \
+	$(plugin)/immodules/*.la \
+	$(plugin)/loaders/*.la \
+	$(plugin)/printbackends/*.la
 
 stripfiles = \
 	$(prefix)/bin/gdk-pixbuf-csource \

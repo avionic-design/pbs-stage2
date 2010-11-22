@@ -1,0 +1,8 @@
+/etc/dbus-1
+/etc/pam.d
+/etc/polkit-1
+/usr/bin
+/usr/lib/polkit-1
+/usr/share/dbus-1
+/usr/share/polkit-1
+/var/lib/polkit-1

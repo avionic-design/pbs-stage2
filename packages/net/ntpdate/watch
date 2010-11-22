@@ -1,0 +1,2 @@
+version=3
+http://archive.ntp.org/ntp4/ntp-(\d\.\d)/ntp-([\d.]+p\d+)\.tar\.gz
