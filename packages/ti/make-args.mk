@@ -10,3 +10,4 @@ make-args += \
 	prefix=$(prefix) \
 	objtree=$(objtree) \
 	SYSROOT=$(SYSROOT) \
+	V=$(V) \

@@ -47,6 +47,7 @@ $$($$($(1)_KMOD)_OUT): $$($$($(1)_KMOD)_BUILD_SRC) $$($(1)_O)/module/Makefile
 	env -i PATH=$(PATH) $$(MAKE) -C $$(KERNEL_BUILD_DIR) \
 		M=$$(realpath $$(@D)) \
 		EXTRA_CFLAGS="$$($$($(1)_KMOD)_CFLAGS)" \
+		V=$(V) \
 		modules
 
 .PHONY: module-$(1)
