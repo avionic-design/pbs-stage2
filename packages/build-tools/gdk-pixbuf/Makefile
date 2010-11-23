@@ -7,4 +7,5 @@ env += \
 
 conf-args += \
 	--without-libjpeg \
-	--without-libtiff
+	--without-libtiff \
+	--disable-introspection
