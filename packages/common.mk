@@ -41,3 +41,17 @@ ifeq ($(NUM_CPU),)
   NUM_CPU = 1
 endif
 export NUM_CPU
+
+# TODO: Find a less ugly way to unquote multi words strings
+kpkg                  := $(shell echo $(PACKAGE) | tr a-z- A-Z_)
+platform-env           = $(shell echo $(CONFIG_$(kpkg)_PLATFORM_ENV))
+platform-conf-args     = $(shell echo $(CONFIG_$(kpkg)_PLATFORM_CONF_ARGS))
+platform-conf-vars     = $(shell echo $(CONFIG_$(kpkg)_PLATFORM_CONF_VARS))
+platform-build-args    = $(shell echo $(CONFIG_$(kpkg)_PLATFORM_BUILD_ARGS))
+platform-install-args  = $(shell echo $(CONFIG_$(kpkg)_PLATFORM_INSTALL_ARGS))
+
+env                   += $(platform-env)
+conf-args             += $(platform-conf-args)
+conf-vars             += $(platform-conf-vars)
+build-args            += $(platform-build-args)
+install-args          += $(platform-install-args)
