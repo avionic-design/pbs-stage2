@@ -8,6 +8,8 @@ include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
+depends-dirs := $(subst //,/,$(depends-dirs))
+
 targets-y := $(obj)/rootfs.img
 
 packages := $(addprefix install-,$(depends-dirs))

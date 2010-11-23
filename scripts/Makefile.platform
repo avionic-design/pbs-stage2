@@ -7,6 +7,8 @@ include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
+depends-dirs := $(subst //,/,$(depends-dirs))
+
 build-dirs := $(addprefix build-,$(depends-dirs))
 uscan-dirs := $(addprefix uscan-,$(depends-dirs))
 print-dirs := $(addprefix print-,$(depends-dirs))
