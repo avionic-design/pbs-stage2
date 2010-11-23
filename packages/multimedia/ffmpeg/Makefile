@@ -17,9 +17,11 @@ conf-args = \
 	--enable-gpl \
 	--enable-postproc \
 	--enable-swscale \
-	--disable-stripping
+	--disable-stripping \
+	$(platform-conf-args)
 
-conf-vars =
+conf-vars = \
+	$(platform-conf-vars)
 
 stripfiles = \
 	$(prefix)/bin/ffmpeg \
