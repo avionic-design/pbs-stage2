@@ -1,20 +1,17 @@
 PACKAGE = glibc
-VERSION = 2.11.2
-
-MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-MINOR = $(word 2,$(subst ., ,$(VERSION)))
+VERSION = 2.12.1
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
-	$(PACKAGE)-$(VERSION).tar.bz2 \
-	$(PACKAGE)-ports-$(MAJOR).$(MINOR).tar.bz2
+	$(PACKAGE)-$(VERSION).tar.xz \
+	$(PACKAGE)-ports-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
 prefix := /usr
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && \
-		ln -sf ../$(PACKAGE)-ports-$(MAJOR).$(MINOR) ports
+		ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 	$(call cmd,stamp)
 
 conf-args = \
