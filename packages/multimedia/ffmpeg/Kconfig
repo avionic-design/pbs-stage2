@@ -1,4 +1,9 @@
 config PACKAGE_MULTIMEDIA_FFMPEG
 	bool "ffmpeg"
+	default n
+
+config PACKAGE_MULTIMEDIA_FFPLAY
+	bool "ffplay"
+	select PACKAGE_MULTIMEDIA_FFMPEG
 	select PACKAGE_LIBS_SDL_CORE
 	default n
