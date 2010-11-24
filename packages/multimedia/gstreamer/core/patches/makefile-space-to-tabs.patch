@@ -1,0 +1,39 @@
+diff --git a/docs/gst/Makefile.in b/docs/gst/Makefile.in
+index c2011d2..ab65504 100644
+--- a/docs/gst/Makefile.in
++++ b/docs/gst/Makefile.in
+@@ -936,7 +936,7 @@ dist-hook: dist-check-gtkdoc dist-hook-local
+ 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+ 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+ 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
++	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+ 
+ .PHONY : dist-hook-local docs
+ 
+diff --git a/docs/libs/Makefile.in b/docs/libs/Makefile.in
+index 9c049d1..9ff8083 100644
+--- a/docs/libs/Makefile.in
++++ b/docs/libs/Makefile.in
+@@ -931,7 +931,7 @@ dist-hook: dist-check-gtkdoc dist-hook-local
+ 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+ 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+ 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
++	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+ 
+ .PHONY : dist-hook-local docs
+ 
+diff --git a/docs/plugins/Makefile.in b/docs/plugins/Makefile.in
+index 422fb78..6469673 100644
+--- a/docs/plugins/Makefile.in
++++ b/docs/plugins/Makefile.in
+@@ -1043,7 +1043,7 @@ dist-hook: dist-check-gtkdoc dist-hook-local
+ 	-cp $(srcdir)/$(DOC_MODULE).types $(distdir)/
+ 	-cp $(srcdir)/$(DOC_MODULE)-sections.txt $(distdir)/
+ 	cd $(distdir) && rm -f $(DISTCLEANFILES)
+-        -gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
++	-gtkdoc-rebase --online --relative --html-dir=$(distdir)/html
+ 
+ .PHONY : dist-hook-local docs
+ 
