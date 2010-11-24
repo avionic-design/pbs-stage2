@@ -4,29 +4,153 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
 
 
 ---
- Makefile.in |    3 +-
- aclocal.m4  |    8 ++--
- configure   |  107 +++++++++++++++++++++++++++++++++++------------------------
- 3 files changed, 69 insertions(+), 49 deletions(-)
+ Makefile.in |   45 +++++----
+ aclocal.m4  |    8 +-
+ config.h.in |    3 +
+ configure   |  306 +++++++++++++++++++++++++++++++++++++++++++++++++----------
+ 4 files changed, 291 insertions(+), 71 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index 4ba4474..f5c4cea 100644
+index 1e277a5..a63b254 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -740,6 +740,7 @@ SHELL = @SHELL@
+@@ -63,16 +63,21 @@ host_triplet = @host@
+ @TARGET_ARCH_TRUE@@TARGET_GENTOO_FALSE@	-DKBD_SETFONT=\"/usr/bin/setfont\" \
+ @TARGET_ARCH_TRUE@@TARGET_GENTOO_FALSE@	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
+ 
+-@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@am__append_3 = \
+-@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
+-@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@	-DKBD_SETFONT=\"/bin/setfont\" \
+-@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@	-DDEFAULT_FONT=\"latarcyrheb-sun16\"
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_TRUE@am__append_3 = \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_TRUE@	-DKBD_LOADKEYS=\"/usr/bin/loadkeys\" \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_TRUE@	-DKBD_SETFONT=\"/usr/bin/setfont\" \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_TRUE@	-DDEFAULT_FONT=\"default8x16\"
++
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_FALSE@am__append_4 = \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_FALSE@	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_FALSE@	-DKBD_SETFONT=\"/bin/setfont\" \
++@TARGET_ARCH_FALSE@@TARGET_GENTOO_FALSE@@TARGET_PBS_FALSE@	-DDEFAULT_FONT=\"latarcyrheb-sun16\"
+ 
+ rootbin_PROGRAMS = systemd$(EXEEXT) systemctl$(EXEEXT) \
+ 	systemd-notify$(EXEEXT) systemd-ask-password$(EXEEXT) \
+ 	systemd-tty-ask-password-agent$(EXEEXT)
+ bin_PROGRAMS = systemd-cgls$(EXEEXT) $(am__EXEEXT_1)
+-@HAVE_GTK_TRUE@am__append_4 = \
++@HAVE_GTK_TRUE@am__append_5 = \
+ @HAVE_GTK_TRUE@	systemadm \
+ @HAVE_GTK_TRUE@	systemd-gnome-ask-password-agent
+ 
+@@ -89,7 +94,7 @@ rootlibexec_PROGRAMS = systemd-logger$(EXEEXT) \
+ 	systemd-quotacheck$(EXEEXT) systemd-timestamp$(EXEEXT) \
+ 	systemd-ac-power$(EXEEXT) systemd-sysctl$(EXEEXT) \
+ 	$(am__EXEEXT_2)
+-@HAVE_LIBCRYPTSETUP_TRUE@am__append_5 = \
++@HAVE_LIBCRYPTSETUP_TRUE@am__append_6 = \
+ @HAVE_LIBCRYPTSETUP_TRUE@	systemd-cryptsetup
+ 
+ @HAVE_LIBCRYPTSETUP_TRUE@systemgenerator_PROGRAMS = systemd-cryptsetup-generator$(EXEEXT)
+@@ -97,7 +102,7 @@ noinst_PROGRAMS = test-engine$(EXEEXT) test-job-type$(EXEEXT) \
+ 	test-ns$(EXEEXT) test-loopback$(EXEEXT) test-hostname$(EXEEXT) \
+ 	test-daemon$(EXEEXT) test-cgroup$(EXEEXT) \
+ 	test-env-replace$(EXEEXT) test-strv$(EXEEXT)
+-@TARGET_FEDORA_TRUE@am__append_6 = \
++@TARGET_FEDORA_TRUE@am__append_7 = \
+ @TARGET_FEDORA_TRUE@	units/fedora/prefdm.service \
+ @TARGET_FEDORA_TRUE@	units/fedora/rc-local.service \
+ @TARGET_FEDORA_TRUE@	units/fedora/halt-local.service \
+@@ -109,16 +114,16 @@ noinst_PROGRAMS = test-engine$(EXEEXT) test-job-type$(EXEEXT) \
+ @TARGET_FEDORA_TRUE@	units/fedora/plymouth-poweroff.service \
+ @TARGET_FEDORA_TRUE@	units/fedora/plymouth-halt.service
+ 
+-@TARGET_GENTOO_TRUE@am__append_7 = \
++@TARGET_GENTOO_TRUE@am__append_8 = \
+ @TARGET_GENTOO_TRUE@	units/gentoo/xdm.service
+ 
+-@TARGET_ARCH_TRUE@am__append_8 = \
++@TARGET_ARCH_TRUE@am__append_9 = \
+ @TARGET_ARCH_TRUE@	units/arch/rc-local.service
+ 
+-@HAVE_VALAC_TRUE@am__append_9 = \
++@HAVE_VALAC_TRUE@am__append_10 = \
+ @HAVE_VALAC_TRUE@	${systemadm_SOURCES:.vala=.c}
+ 
+-@HAVE_XSLTPROC_TRUE@am__append_10 = \
++@HAVE_XSLTPROC_TRUE@am__append_11 = \
+ @HAVE_XSLTPROC_TRUE@	$(dist_man_MANS) \
+ @HAVE_XSLTPROC_TRUE@	${nodist_man_MANS:=.in} \
+ @HAVE_XSLTPROC_TRUE@	${XML_FILES:.xml=.html} \
+@@ -820,6 +825,7 @@ MAKEINFO = @MAKEINFO@
+ MKDIR_P = @MKDIR_P@
+ NM = @NM@
+ NMEDIT = @NMEDIT@
++OBJCOPY = @OBJCOPY@
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = @OBJEXT@
+ OTOOL = @OTOOL@
+@@ -844,6 +850,7 @@ SET_MAKE = @SET_MAKE@
+ SHELL = @SHELL@
  SPECIAL_SYSLOG_SERVICE = @SPECIAL_SYSLOG_SERVICE@
  STOW = @STOW@
++STRINGS = @STRINGS@
  STRIP = @STRIP@
-+SYSTEMD = @SYSTEMD@
  SYSTEM_SYSVINIT_PATH = @SYSTEM_SYSVINIT_PATH@
  SYSTEM_SYSVRCND_PATH = @SYSTEM_SYSVRCND_PATH@
- UDEV_CFLAGS = @UDEV_CFLAGS@
-@@ -4672,7 +4673,7 @@ units/session/%: units/%.m4 Makefile
+@@ -950,7 +957,7 @@ AM_CPPFLAGS = -include $(top_builddir)/config.h \
+ 	-DSYSTEM_GENERATOR_PATH=\"$(systemgeneratordir)\" \
+ 	-DUSER_GENERATOR_PATH=\"$(usergeneratordir)\" -I \
+ 	$(top_srcdir)/src $(am__append_1) $(am__append_2) \
+-	$(am__append_3)
++	$(am__append_3) $(am__append_4)
+ @HAVE_PAM_TRUE@pamlib_LTLIBRARIES = \
+ @HAVE_PAM_TRUE@	pam_systemd.la
+ 
+@@ -1014,8 +1021,8 @@ dist_systemunit_DATA = units/emergency.service units/emergency.target \
+ 	units/systemd-tmpfiles-clean.timer units/quotaon.service \
+ 	units/systemd-ask-password-wall.path \
+ 	units/systemd-ask-password-plymouth.path \
+-	units/systemd-ask-password-console.path $(am__append_6) \
+-	$(am__append_7) $(am__append_8)
++	units/systemd-ask-password-console.path $(am__append_7) \
++	$(am__append_8) $(am__append_9)
+ nodist_systemunit_DATA = \
+ 	units/getty@.service \
+ 	units/serial-getty@.service \
+@@ -1093,7 +1100,8 @@ EXTRA_DIST = units/getty@.service.m4 units/serial-getty@.service.m4 \
+ 	units/reboot.service.in units/kexec.service.in \
+ 	units/user/exit.service.in units/fsck@.service.in \
+ 	units/fsck-root.service.in units/quotacheck.service.in \
+-	systemd.pc.in ${libsystemd_basic_la_SOURCES:.c=.h} \
++	systemd.pc.in introspect.awk \
++	${libsystemd_basic_la_SOURCES:.c=.h} \
+ 	${libsystemd_core_la_SOURCES:.c=.h} src/macro.h src/ioprio.h \
+ 	src/missing.h src/list.h src/securebits.h \
+ 	src/linux/auto_dev-ioctl.h src/linux/fanotify.h src/initreq.h \
+@@ -1737,7 +1745,7 @@ M4_PROCESS_USER = \
+ 
+ CLEANFILES = $(nodist_systemunit_DATA) $(nodist_userunit_DATA) \
+ 	$(nodist_man_MANS) ${XML_IN_FILES:.xml.in=.html} \
+-	$(pkgconfigdata_DATA) $(am__append_9) $(am__append_10) \
++	$(pkgconfigdata_DATA) $(am__append_10) $(am__append_11) \
+ 	$(dbusinterface_DATA)
+ @HAVE_XSLTPROC_TRUE@XSLTPROC_FLAGS = \
+ @HAVE_XSLTPROC_TRUE@	--nonet \
+@@ -1761,6 +1769,7 @@ CLEANFILES = $(nodist_systemunit_DATA) $(nodist_userunit_DATA) \
+ @HAVE_XSLTPROC_TRUE@	$(XSLTPROC) -o ${@:.in=} $(XSLTPROC_FLAGS) http://docbook.sourceforge.net/release/xsl/current/xhtml-1_1/docbook.xsl $< && \
+ @HAVE_XSLTPROC_TRUE@	mv ${@:.in=} $@
+ 
++DBUS_PREPROCESS = $(CPP) -P $(DBUS_CFLAGS) -imacros dbus/dbus-protocol.h
+ DISTCHECK_CONFIGURE_FLAGS = \
+ 	--with-dbuspolicydir=$$dc_install_base/$(dbuspolicydir) \
+ 	--with-dbussessionservicedir=$$dc_install_base/$(dbussessionservicedir) \
+@@ -5460,7 +5469,9 @@ units/user/%: units/%.m4 Makefile
  @HAVE_XSLTPROC_TRUE@	$(XSLTPROC_PROCESS_HTML_IN)
  
  org.freedesktop.systemd1.%.xml: systemd
 -	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 ./systemd --introspect=${@:.xml=} > $@
-+	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 $(SYSTEMD) --introspect=${@:.xml=} > $@
++	$(AM_V_GEN)$(OBJCOPY) -O binary -j introspect.$* $< $@.tmp && \
++		$(STRINGS) $@.tmp | $(AWK) -f $(srcdir)/introspect.awk | \
++		$(DBUS_PREPROCESS) -o $@ - && rm $@.tmp
  
  install-data-hook:
  	$(MKDIR_P) -m 0755 \
@@ -63,35 +187,59 @@ index 7ce97cb..c6957f2 100644
          ])
  else
  	$1[]_CFLAGS=$pkg_cv_[]$1[]_CFLAGS
+diff --git a/config.h.in b/config.h.in
+index 6bf9eb3..189e475 100644
+--- a/config.h.in
++++ b/config.h.in
+@@ -118,6 +118,9 @@
+ /* Target is Gentoo */
+ #undef TARGET_GENTOO
+ 
++/* Target is PBS */
++#undef TARGET_PBS
++
+ /* Target is Slackware */
+ #undef TARGET_SLACKWARE
+ 
 diff --git a/configure b/configure
-index 2cae7a5..b1d6010 100755
+index 97c540d..86378c0 100755
 --- a/configure
 +++ b/configure
 @@ -1,6 +1,6 @@
  #! /bin/sh
  # Guess values for system-dependent variables and create Makefiles.
--# Generated by GNU Autoconf 2.66 for systemd 11.
-+# Generated by GNU Autoconf 2.67 for systemd 11.
+-# Generated by GNU Autoconf 2.66 for systemd 13.
++# Generated by GNU Autoconf 2.67 for systemd 13.
  #
  # Report bugs to <systemd-devel@lists.freedesktop.org>.
  #
-@@ -687,6 +687,7 @@ TARGET_SUSE_FALSE
- TARGET_SUSE_TRUE
- TARGET_FEDORA_FALSE
- TARGET_FEDORA_TRUE
-+SYSTEMD
- M4_DISTRO_FLAG
- SPECIAL_SYSLOG_SERVICE
- SYSTEM_SYSVRCND_PATH
-@@ -848,6 +849,7 @@ with_distro
- with_sysvinit_path
- with_sysvrcd_path
- with_syslog_service
-+with_getty
- with_dbuspolicydir
- with_dbussessionservicedir
- with_dbussystemservicedir
-@@ -938,8 +940,9 @@ do
+@@ -675,6 +675,8 @@ dbusinterfacedir
+ dbussystemservicedir
+ dbussessionservicedir
+ dbuspolicydir
++TARGET_PBS_FALSE
++TARGET_PBS_TRUE
+ TARGET_SLACKWARE_FALSE
+ TARGET_SLACKWARE_TRUE
+ TARGET_GENTOO_FALSE
+@@ -745,6 +747,8 @@ DUMPBIN
+ LD
+ FGREP
+ LIBTOOL
++STRINGS
++OBJCOPY
+ EGREP
+ GREP
+ CPP
+@@ -876,7 +880,6 @@ LDFLAGS
+ LIBS
+ CPPFLAGS
+ CPP
+-CPPFLAGS
+ PKG_CONFIG
+ PKG_CONFIG_PATH
+ PKG_CONFIG_LIBDIR
+@@ -954,8 +957,9 @@ do
    fi
  
    case $ac_option in
@@ -103,25 +251,27 @@ index 2cae7a5..b1d6010 100755
    esac
  
    # Accept the important Cygnus configure options, so we can diagnose typos.
-@@ -1527,6 +1530,8 @@ Optional Packages:
-   --with-syslog-service=UNIT
-                           Specify the name of the special syslog service
-                           [default=based on distro]
-+  --with-getty=GETTY      Specify the getty command to run on tty devices
-+                          [default=based on distro]
-   --with-dbuspolicydir=DIR
-                           D-Bus policy directory
-   --with-dbussessionservicedir=DIR
-@@ -1631,7 +1636,7 @@ test -n "$ac_init_help" && exit $ac_status
+@@ -1534,8 +1538,8 @@ Optional Packages:
+                           both]
+   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+   --with-distro=DISTRO    Specify the distribution to target: One of fedora,
+-                          suse, debian, ubuntu, arch, gentoo, slackware or
+-                          other
++                          suse, debian, ubuntu, arch, gentoo, slackware, pbs
++                          or other
+   --with-sysvinit-path=PATH
+                           Specify the path to where the SysV init scripts are
+                           located [default=based on distro]
+@@ -1657,7 +1661,7 @@ test -n "$ac_init_help" && exit $ac_status
  if $ac_init_version; then
    cat <<\_ACEOF
- systemd configure 11
+ systemd configure 13
 -generated by GNU Autoconf 2.66
 +generated by GNU Autoconf 2.67
  
  Copyright (C) 2010 Free Software Foundation, Inc.
  This configure script is free software; the Free Software Foundation
-@@ -1703,7 +1708,7 @@ $as_echo "$ac_try_echo"; } >&5
+@@ -1729,7 +1733,7 @@ $as_echo "$ac_try_echo"; } >&5
      mv -f conftest.er1 conftest.err
    fi
    $as_echo "$as_me:${as_lineno-$LINENO}: \$? = $ac_status" >&5
@@ -130,7 +280,7 @@ index 2cae7a5..b1d6010 100755
  	 test -z "$ac_c_preproc_warn_flag$ac_c_werror_flag" ||
  	 test ! -s conftest.err
         }; then :
-@@ -1766,7 +1771,7 @@ if ac_fn_c_try_cpp "$LINENO"; then :
+@@ -1792,7 +1796,7 @@ if ac_fn_c_try_cpp "$LINENO"; then :
  else
    ac_header_preproc=no
  fi
@@ -139,16 +289,16 @@ index 2cae7a5..b1d6010 100755
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_header_preproc" >&5
  $as_echo "$ac_header_preproc" >&6; }
  
-@@ -2000,7 +2005,7 @@ This file contains any messages produced by compilers while
+@@ -2026,7 +2030,7 @@ This file contains any messages produced by compilers while
  running configure, to aid debugging if configure makes a mistake.
  
- It was created by systemd $as_me 11, which was
+ It was created by systemd $as_me 13, which was
 -generated by GNU Autoconf 2.66.  Invocation command line was
 +generated by GNU Autoconf 2.67.  Invocation command line was
  
    $ $0 $@
  
-@@ -2258,7 +2263,7 @@ $as_echo "$as_me: loading site script $ac_site_file" >&6;}
+@@ -2284,7 +2288,7 @@ $as_echo "$as_me: loading site script $ac_site_file" >&6;}
        || { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "failed to load site script $ac_site_file
@@ -157,7 +307,7 @@ index 2cae7a5..b1d6010 100755
    fi
  done
  
-@@ -2487,11 +2492,11 @@ am_lf='
+@@ -2513,11 +2517,11 @@ am_lf='
  '
  case `pwd` in
    *[\\\"\#\$\&\'\`$am_lf]*)
@@ -171,7 +321,7 @@ index 2cae7a5..b1d6010 100755
  esac
  
  # Do `set' in a subshell so we don't clobber the current shell's
-@@ -2978,7 +2983,7 @@ fi
+@@ -3004,7 +3008,7 @@ fi
  $as_echo "$ac_cv_build" >&6; }
  case $ac_cv_build in
  *-*-*) ;;
@@ -180,7 +330,7 @@ index 2cae7a5..b1d6010 100755
  esac
  build=$ac_cv_build
  ac_save_IFS=$IFS; IFS='-'
-@@ -3011,7 +3016,7 @@ fi
+@@ -3037,7 +3041,7 @@ fi
  $as_echo "$ac_cv_host" >&6; }
  case $ac_cv_host in
  *-*-*) ;;
@@ -189,7 +339,7 @@ index 2cae7a5..b1d6010 100755
  esac
  host=$ac_cv_host
  ac_save_IFS=$IFS; IFS='-'
-@@ -3476,7 +3481,7 @@ fi
+@@ -3502,7 +3506,7 @@ fi
  test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "no acceptable C compiler found in \$PATH
@@ -198,7 +348,7 @@ index 2cae7a5..b1d6010 100755
  
  # Provide some information about the compiler.
  $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
-@@ -3591,7 +3596,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
+@@ -3617,7 +3621,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error 77 "C compiler cannot create executables
@@ -207,7 +357,7 @@ index 2cae7a5..b1d6010 100755
  else
    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
  $as_echo "yes" >&6; }
-@@ -3634,7 +3639,7 @@ else
+@@ -3660,7 +3664,7 @@ else
    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "cannot compute suffix of executables: cannot compile and link
@@ -216,7 +366,7 @@ index 2cae7a5..b1d6010 100755
  fi
  rm -f conftest conftest$ac_cv_exeext
  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
-@@ -3693,7 +3698,7 @@ $as_echo "$ac_try_echo"; } >&5
+@@ -3719,7 +3723,7 @@ $as_echo "$ac_try_echo"; } >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "cannot run C compiled programs.
  If you meant to cross compile, use \`--host'.
@@ -225,7 +375,7 @@ index 2cae7a5..b1d6010 100755
      fi
    fi
  fi
-@@ -3745,7 +3750,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
+@@ -3771,7 +3775,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "cannot compute suffix of object files: cannot compile
@@ -234,7 +384,7 @@ index 2cae7a5..b1d6010 100755
  fi
  rm -f conftest.$ac_cv_objext conftest.$ac_ext
  fi
-@@ -4500,7 +4505,7 @@ else
+@@ -4526,7 +4530,7 @@ else
    # Broken: fails on valid input.
  continue
  fi
@@ -243,7 +393,7 @@ index 2cae7a5..b1d6010 100755
  
    # OK, works on sane cases.  Now check whether nonexistent headers
    # can be detected and how.
-@@ -4516,11 +4521,11 @@ else
+@@ -4542,11 +4546,11 @@ else
  ac_preproc_ok=:
  break
  fi
@@ -257,7 +407,7 @@ index 2cae7a5..b1d6010 100755
  if $ac_preproc_ok; then :
    break
  fi
-@@ -4559,7 +4564,7 @@ else
+@@ -4585,7 +4589,7 @@ else
    # Broken: fails on valid input.
  continue
  fi
@@ -266,7 +416,7 @@ index 2cae7a5..b1d6010 100755
  
    # OK, works on sane cases.  Now check whether nonexistent headers
    # can be detected and how.
-@@ -4575,18 +4580,18 @@ else
+@@ -4601,18 +4605,18 @@ else
  ac_preproc_ok=:
  break
  fi
@@ -288,7 +438,199 @@ index 2cae7a5..b1d6010 100755
  fi
  
  ac_ext=c
-@@ -11834,7 +11839,6 @@ installed software in a non-standard prefix.
+@@ -4985,6 +4989,191 @@ $as_echo "$ac_cv_safe_to_define___extensions__" >&6; }
+ 
+ 
+ 
++if test -n "$ac_tool_prefix"; then
++  # Extract the first word of "${ac_tool_prefix}objcopy", so it can be a program name with args.
++set dummy ${ac_tool_prefix}objcopy; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if test "${ac_cv_prog_OBJCOPY+set}" = set; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$OBJCOPY"; then
++  ac_cv_prog_OBJCOPY="$OBJCOPY" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_OBJCOPY="${ac_tool_prefix}objcopy"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++OBJCOPY=$ac_cv_prog_OBJCOPY
++if test -n "$OBJCOPY"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $OBJCOPY" >&5
++$as_echo "$OBJCOPY" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++fi
++if test -z "$ac_cv_prog_OBJCOPY"; then
++  ac_ct_OBJCOPY=$OBJCOPY
++  # Extract the first word of "objcopy", so it can be a program name with args.
++set dummy objcopy; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if test "${ac_cv_prog_ac_ct_OBJCOPY+set}" = set; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$ac_ct_OBJCOPY"; then
++  ac_cv_prog_ac_ct_OBJCOPY="$ac_ct_OBJCOPY" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_ac_ct_OBJCOPY="objcopy"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++ac_ct_OBJCOPY=$ac_cv_prog_ac_ct_OBJCOPY
++if test -n "$ac_ct_OBJCOPY"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_OBJCOPY" >&5
++$as_echo "$ac_ct_OBJCOPY" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++  if test "x$ac_ct_OBJCOPY" = x; then
++    OBJCOPY=""
++  else
++    case $cross_compiling:$ac_tool_warned in
++yes:)
++{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
++$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
++ac_tool_warned=yes ;;
++esac
++    OBJCOPY=$ac_ct_OBJCOPY
++  fi
++else
++  OBJCOPY="$ac_cv_prog_OBJCOPY"
++fi
++
++if test -n "$ac_tool_prefix"; then
++  # Extract the first word of "${ac_tool_prefix}strings", so it can be a program name with args.
++set dummy ${ac_tool_prefix}strings; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if test "${ac_cv_prog_STRINGS+set}" = set; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$STRINGS"; then
++  ac_cv_prog_STRINGS="$STRINGS" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_STRINGS="${ac_tool_prefix}strings"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++STRINGS=$ac_cv_prog_STRINGS
++if test -n "$STRINGS"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $STRINGS" >&5
++$as_echo "$STRINGS" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++
++fi
++if test -z "$ac_cv_prog_STRINGS"; then
++  ac_ct_STRINGS=$STRINGS
++  # Extract the first word of "strings", so it can be a program name with args.
++set dummy strings; ac_word=$2
++{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
++$as_echo_n "checking for $ac_word... " >&6; }
++if test "${ac_cv_prog_ac_ct_STRINGS+set}" = set; then :
++  $as_echo_n "(cached) " >&6
++else
++  if test -n "$ac_ct_STRINGS"; then
++  ac_cv_prog_ac_ct_STRINGS="$ac_ct_STRINGS" # Let the user override the test.
++else
++as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
++for as_dir in $PATH
++do
++  IFS=$as_save_IFS
++  test -z "$as_dir" && as_dir=.
++    for ac_exec_ext in '' $ac_executable_extensions; do
++  if { test -f "$as_dir/$ac_word$ac_exec_ext" && $as_test_x "$as_dir/$ac_word$ac_exec_ext"; }; then
++    ac_cv_prog_ac_ct_STRINGS="strings"
++    $as_echo "$as_me:${as_lineno-$LINENO}: found $as_dir/$ac_word$ac_exec_ext" >&5
++    break 2
++  fi
++done
++  done
++IFS=$as_save_IFS
++
++fi
++fi
++ac_ct_STRINGS=$ac_cv_prog_ac_ct_STRINGS
++if test -n "$ac_ct_STRINGS"; then
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_ct_STRINGS" >&5
++$as_echo "$ac_ct_STRINGS" >&6; }
++else
++  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++fi
++
++  if test "x$ac_ct_STRINGS" = x; then
++    STRINGS=""
++  else
++    case $cross_compiling:$ac_tool_warned in
++yes:)
++{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: using cross tools not prefixed with host triplet" >&5
++$as_echo "$as_me: WARNING: using cross tools not prefixed with host triplet" >&2;}
++ac_tool_warned=yes ;;
++esac
++    STRINGS=$ac_ct_STRINGS
++  fi
++else
++  STRINGS="$ac_cv_prog_STRINGS"
++fi
++
++
+ 
+   for flag in  \
+         -pipe \
+@@ -11860,7 +12049,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables UDEV_CFLAGS
  and UDEV_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -296,7 +638,7 @@ index 2cae7a5..b1d6010 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -11849,8 +11853,7 @@ and UDEV_LIBS to avoid the need to call pkg-config.
+@@ -11875,8 +12063,7 @@ and UDEV_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -306,7 +648,7 @@ index 2cae7a5..b1d6010 100755
  else
  	UDEV_CFLAGS=$pkg_cv_UDEV_CFLAGS
  	UDEV_LIBS=$pkg_cv_UDEV_LIBS
-@@ -11928,7 +11931,6 @@ installed software in a non-standard prefix.
+@@ -11954,7 +12141,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables DBUS_CFLAGS
  and DBUS_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -314,7 +656,7 @@ index 2cae7a5..b1d6010 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -11943,8 +11945,7 @@ and DBUS_LIBS to avoid the need to call pkg-config.
+@@ -11969,8 +12155,7 @@ and DBUS_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -324,7 +666,34 @@ index 2cae7a5..b1d6010 100755
  else
  	DBUS_CFLAGS=$pkg_cv_DBUS_CFLAGS
  	DBUS_LIBS=$pkg_cv_DBUS_LIBS
-@@ -12022,7 +12023,6 @@ installed software in a non-standard prefix.
+@@ -12070,7 +12255,7 @@ if test "${enable_tcpwrap+set}" = set; then :
+   enableval=$enable_tcpwrap; case "${enableval}" in
+                         yes) have_tcpwrap=yes ;;
+                         no) have_tcpwrap=no ;;
+-                        *) as_fn_error $? "bad value ${enableval} for --disable-tcpwrap" "$LINENO" 5 ;;
++                        *) as_fn_error $? "bad value ${enableval} for --disable-tcpwrap" "$LINENO" 5  ;;
+                 esac
+ else
+   have_tcpwrap=auto
+@@ -12132,7 +12317,7 @@ if test "${enable_pam+set}" = set; then :
+   enableval=$enable_pam; case "${enableval}" in
+                         yes) have_pam=yes ;;
+                         no) have_pam=no ;;
+-                        *) as_fn_error $? "bad value ${enableval} for --disable-pam" "$LINENO" 5 ;;
++                        *) as_fn_error $? "bad value ${enableval} for --disable-pam" "$LINENO" 5  ;;
+                 esac
+ else
+   have_pam=auto
+@@ -12229,7 +12414,7 @@ if test "${enable_audit+set}" = set; then :
+   enableval=$enable_audit; case "${enableval}" in
+                         yes) have_audit=yes ;;
+                         no) have_audit=no ;;
+-                        *) as_fn_error $? "bad value ${enableval} for --disable-audit" "$LINENO" 5 ;;
++                        *) as_fn_error $? "bad value ${enableval} for --disable-audit" "$LINENO" 5  ;;
+                 esac
+ else
+   have_audit=auto
+@@ -12566,7 +12751,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables DBUSGLIB_CFLAGS
  and DBUSGLIB_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -332,7 +701,7 @@ index 2cae7a5..b1d6010 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -12037,8 +12037,7 @@ and DBUSGLIB_LIBS to avoid the need to call pkg-config.
+@@ -12581,8 +12765,7 @@ and DBUSGLIB_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -342,96 +711,92 @@ index 2cae7a5..b1d6010 100755
  else
  	DBUSGLIB_CFLAGS=$pkg_cv_DBUSGLIB_CFLAGS
  	DBUSGLIB_LIBS=$pkg_cv_DBUSGLIB_LIBS
-@@ -12138,7 +12137,7 @@ if test "${enable_tcpwrap+set}" = set; then :
-   enableval=$enable_tcpwrap; case "${enableval}" in
-                         yes) have_tcpwrap=yes ;;
-                         no) have_tcpwrap=no ;;
--                        *) as_fn_error $? "bad value ${enableval} for --disable-tcpwrap" "$LINENO" 5 ;;
-+                        *) as_fn_error $? "bad value ${enableval} for --disable-tcpwrap" "$LINENO" 5  ;;
-                 esac
+@@ -12660,7 +12843,6 @@ installed software in a non-standard prefix.
+ Alternatively, you may set the environment variables LIBNOTIFY_CFLAGS
+ and LIBNOTIFY_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details." "$LINENO" 5
+-
+ elif test $pkg_failed = untried; then
+      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+@@ -12675,8 +12857,7 @@ and LIBNOTIFY_LIBS to avoid the need to call pkg-config.
+ See the pkg-config man page for more details.
+ 
+ To get pkg-config, see <http://pkg-config.freedesktop.org/>.
+-See \`config.log' for more details" "$LINENO" 5; }
+-
++See \`config.log' for more details" "$LINENO" 5 ; }
  else
-   have_tcpwrap=auto
-@@ -12200,7 +12199,7 @@ if test "${enable_pam+set}" = set; then :
-   enableval=$enable_pam; case "${enableval}" in
-                         yes) have_pam=yes ;;
-                         no) have_pam=no ;;
--                        *) as_fn_error $? "bad value ${enableval} for --disable-pam" "$LINENO" 5 ;;
-+                        *) as_fn_error $? "bad value ${enableval} for --disable-pam" "$LINENO" 5  ;;
-                 esac
- else
-   have_pam=auto
-@@ -12297,7 +12296,7 @@ if test "${enable_audit+set}" = set; then :
-   enableval=$enable_audit; case "${enableval}" in
-                         yes) have_audit=yes ;;
-                         no) have_audit=no ;;
--                        *) as_fn_error $? "bad value ${enableval} for --disable-audit" "$LINENO" 5 ;;
-+                        *) as_fn_error $? "bad value ${enableval} for --disable-audit" "$LINENO" 5  ;;
-                 esac
- else
-   have_audit=auto
-@@ -12534,7 +12533,7 @@ $as_echo "yes" >&6; } ;; #(
+ 	LIBNOTIFY_CFLAGS=$pkg_cv_LIBNOTIFY_CFLAGS
+ 	LIBNOTIFY_LIBS=$pkg_cv_LIBNOTIFY_LIBS
+@@ -12749,7 +12930,7 @@ $as_echo "yes" >&6; } ;; #(
    2) :
      { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
--          as_fn_error $? "Vala 0.9 not found." "$LINENO" 5 ;; #(
-+          as_fn_error $? "Vala 0.9 not found." "$LINENO" 5  ;; #(
+-          as_fn_error $? "Vala 0.11 not found." "$LINENO" 5 ;; #(
++          as_fn_error $? "Vala 0.11 not found." "$LINENO" 5  ;; #(
    *) :
       ;;
  esac
-@@ -12852,6 +12851,10 @@ $as_echo "#define TARGET_SLACKWARE /**/" >>confdefs.h
+@@ -13074,6 +13255,13 @@ $as_echo "#define TARGET_SLACKWARE /**/" >>confdefs.h
+ 
+                 M4_DISTRO_FLAG=-DTARGET_SLACKWARE=1
+                 ;;
++        pbs)
++                SYSTEM_SYSVRCND_PATH=/etc
++
++$as_echo "#define TARGET_PBS /**/" >>confdefs.h
++
++                M4_DISTRO_FLAG=-DTARGET_PBS=1
++                ;;
+         other)
                  if test "x$with_syslog_service" = "x"; then :
    as_fn_error $? "With --distro=other, you must pass --with-syslog-service= to configure" "$LINENO" 5
- fi
-+                if test "x$with_getty" = "x"; then :
-+  as_fn_error $? "With --distro=other, you must pass --with-getty= to configure" "$LINENO" 5
-+fi
-+                M4_DISTRO_FLAG="-DTARGET_GETTY=\"$with_getty\""
-                 ;;
-         *)
-                 as_fn_error $? "Your distribution (${with_distro}) is not yet supported, SysV init scripts could not be found! (patches welcome); you can specify --with-distro=other to skip this check" "$LINENO" 5
-@@ -12880,6 +12883,13 @@ fi
- 
- 
- 
-+# Check whether --with-getty was given.
-+if test "${with_getty+set}" = set; then :
-+  withval=$with_getty;
-+fi
-+
-+
-+
- 
- 
- 
-@@ -12895,6 +12905,9 @@ else
-         SYSTEM_SYSV_COMPAT="no"
+@@ -13185,6 +13373,14 @@ else
+   TARGET_SLACKWARE_FALSE=
  fi
  
-+SYSTEMD=systemd
++ if test x"$with_distro" = xpbs; then
++  TARGET_PBS_TRUE=
++  TARGET_PBS_FALSE='#'
++else
++  TARGET_PBS_TRUE='#'
++  TARGET_PBS_FALSE=
++fi
 +
-+
-  if test x"$with_distro" = xfedora; then
-   TARGET_FEDORA_TRUE=
-   TARGET_FEDORA_FALSE='#'
-@@ -13597,7 +13610,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
+ 
+ 
+ cat >>confdefs.h <<_ACEOF
+@@ -13442,6 +13638,10 @@ if test -z "${TARGET_SLACKWARE_TRUE}" && test -z "${TARGET_SLACKWARE_FALSE}"; th
+   as_fn_error $? "conditional \"TARGET_SLACKWARE\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${TARGET_PBS_TRUE}" && test -z "${TARGET_PBS_FALSE}"; then
++  as_fn_error $? "conditional \"TARGET_PBS\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ 
+ : ${CONFIG_STATUS=./config.status}
+ ac_write_fail=0
+@@ -13851,7 +14051,7 @@ cat >>$CONFIG_STATUS <<\_ACEOF || ac_write_fail=1
  # values after options handling.
  ac_log="
- This file was extended by systemd $as_me 11, which was
+ This file was extended by systemd $as_me 13, which was
 -generated by GNU Autoconf 2.66.  Invocation command line was
 +generated by GNU Autoconf 2.67.  Invocation command line was
  
    CONFIG_FILES    = $CONFIG_FILES
    CONFIG_HEADERS  = $CONFIG_HEADERS
-@@ -13663,7 +13676,7 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
+@@ -13917,7 +14117,7 @@ cat >>$CONFIG_STATUS <<_ACEOF || ac_write_fail=1
  ac_cs_config="`$as_echo "$ac_configure_args" | sed 's/^ //; s/[\\""\`\$]/\\\\&/g'`"
  ac_cs_version="\\
- systemd config.status 11
+ systemd config.status 13
 -configured by $0, generated by GNU Autoconf 2.66,
 +configured by $0, generated by GNU Autoconf 2.67,
    with options \\"\$ac_cs_config\\"
  
  Copyright (C) 2010 Free Software Foundation, Inc.
-@@ -13684,11 +13697,16 @@ ac_need_defaults=:
+@@ -13938,11 +14138,16 @@ ac_need_defaults=:
  while test $# != 0
  do
    case $1 in
@@ -449,7 +814,7 @@ index 2cae7a5..b1d6010 100755
    *)
      ac_option=$1
      ac_optarg=$2
-@@ -13710,6 +13728,7 @@ do
+@@ -13964,6 +14169,7 @@ do
      $ac_shift
      case $ac_optarg in
      *\'*) ac_optarg=`$as_echo "$ac_optarg" | sed "s/'/'\\\\\\\\''/g"` ;;
@@ -457,7 +822,7 @@ index 2cae7a5..b1d6010 100755
      esac
      as_fn_append CONFIG_FILES " '$ac_optarg'"
      ac_need_defaults=false;;
-@@ -14050,7 +14069,7 @@ do
+@@ -14304,7 +14510,7 @@ do
      "libtool") CONFIG_COMMANDS="$CONFIG_COMMANDS libtool" ;;
      "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
  
@@ -466,7 +831,7 @@ index 2cae7a5..b1d6010 100755
    esac
  done
  
-@@ -14366,7 +14385,7 @@ do
+@@ -14620,7 +14826,7 @@ do
    esac
    case $ac_mode$ac_tag in
    :[FHL]*:*);;
@@ -475,7 +840,7 @@ index 2cae7a5..b1d6010 100755
    :[FH]-) ac_tag=-:-;;
    :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
    esac
-@@ -14394,7 +14413,7 @@ do
+@@ -14648,7 +14854,7 @@ do
  	   [\\/$]*) false;;
  	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
  	   esac ||
@@ -484,7 +849,7 @@ index 2cae7a5..b1d6010 100755
        esac
        case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
        as_fn_append ac_file_inputs " '$ac_f'"
-@@ -14421,7 +14440,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
+@@ -14675,7 +14881,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
  
      case $ac_tag in
      *:-:* | *:-) cat >"$tmp/stdin" \

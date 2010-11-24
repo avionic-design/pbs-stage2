@@ -1,0 +1,67 @@
+Add support for the PBS distribution.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile.am  |    7 +++++++
+ configure.ac |    8 +++++++-
+ 2 files changed, 14 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index a009617..df9b0cc 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -76,12 +76,19 @@ AM_CPPFLAGS += \
+ 	-DKBD_SETFONT=\"/usr/bin/setfont\" \
+ 	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
+ else
++if TARGET_PBS
++AM_CPPFLAGS += \
++	-DKBD_LOADKEYS=\"/usr/bin/loadkeys\" \
++	-DKBD_SETFONT=\"/usr/bin/setfont\" \
++	-DDEFAULT_FONT=\"default8x16\"
++else
+ AM_CPPFLAGS += \
+ 	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
+ 	-DKBD_SETFONT=\"/bin/setfont\" \
+ 	-DDEFAULT_FONT=\"latarcyrheb-sun16\"
+ endif
+ endif
++endif
+ 
+ rootbin_PROGRAMS = \
+ 	systemd \
+diff --git a/configure.ac b/configure.ac
+index f9f5eee..ed44ecd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -273,7 +273,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+ 
+ AC_PATH_PROG([M4], [m4])
+ 
+-AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware or other]))
++AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, pbs or other]))
+ if test "z$with_distro" = "z"; then
+         if test "$cross_compiling" = yes; then
+                 AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
+@@ -359,6 +359,11 @@ case $with_distro in
+                 AC_DEFINE(TARGET_SLACKWARE, [], [Target is Slackware])
+                 M4_DISTRO_FLAG=-DTARGET_SLACKWARE=1
+                 ;;
++        pbs)
++                SYSTEM_SYSVRCND_PATH=/etc
++                AC_DEFINE(TARGET_PBS, [], [Target is PBS])
++                M4_DISTRO_FLAG=-DTARGET_PBS=1
++                ;;
+         other)
+                 AS_IF([test "x$with_syslog_service" = "x"],
+                         [AC_MSG_ERROR([With --distro=other, you must pass --with-syslog-service= to configure])])
+@@ -408,6 +413,7 @@ AM_CONDITIONAL(TARGET_DEBIAN_OR_UBUNTU, test x"$with_distro" = xdebian -o x"$wit
+ AM_CONDITIONAL(TARGET_ARCH, test x"$with_distro" = xarch)
+ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
+ AM_CONDITIONAL(TARGET_SLACKWARE, test x"$with_distro" = xslackware)
++AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
+ 
+ AC_DEFINE_UNQUOTED(SPECIAL_SYSLOG_SERVICE, ["$SPECIAL_SYSLOG_SERVICE"], [Syslog service name])
+ 

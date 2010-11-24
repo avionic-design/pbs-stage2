@@ -5,11 +5,7 @@ env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 
 conf-args += \
-	--with-syslog-service=syslog.service \
-	--with-sysvinit-path=/etc/init.d \
-	--with-sysvrcd-path=/etc \
-	--with-getty="/sbin/getty -L 38400" \
-	--with-distro=other \
+	--with-distro=pbs \
 	--with-rootdir=
 
 prunefiles = \
@@ -27,21 +23,30 @@ stripfiles = \
 	/bin/systemd \
 	/bin/systemd-ask-password \
 	/bin/systemd-notify \
+	/bin/systemd-tty-ask-password-agent \
 	/lib/security/pam_systemd.so \
+	/lib/systemd/systemd-ac-power \
 	/lib/systemd/systemd-cgroups-agent \
+	/lib/systemd/systemd-fsck \
 	/lib/systemd/systemd-initctl \
 	/lib/systemd/systemd-kmsg-syslogd \
 	/lib/systemd/systemd-logger \
 	/lib/systemd/systemd-modules-load \
+	/lib/systemd/systemd-quotacheck \
 	/lib/systemd/systemd-random-seed \
 	/lib/systemd/systemd-readahead-collect \
 	/lib/systemd/systemd-readahead-replay \
 	/lib/systemd/systemd-remount-api-vfs \
 	/lib/systemd/systemd-reply-password \
+	/lib/systemd/systemd-shutdown \
 	/lib/systemd/systemd-shutdownd \
+	/lib/systemd/systemd-sysctl \
+	/lib/systemd/systemd-timestamp \
 	/lib/systemd/systemd-tmpfiles \
 	/lib/systemd/systemd-update-utmp \
+	/lib/systemd/systemd-user-sessions \
 	/lib/systemd/systemd-vconsole-setup \
 	$(prefix)/bin/systemadm \
 	$(prefix)/bin/systemd-ask-password-agent \
+	$(prefix)/bin/systemd-gnome-ask-password-agent \
 	$(prefix)/bin/systemd-cgls

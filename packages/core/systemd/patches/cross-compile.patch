@@ -1,40 +1,278 @@
-Allow cross-compilation.
+build-sys: allow cross-compilation
 
 From: Thierry Reding <thierry.reding@avionic-design.de>
 
+When cross-compiling systemd, the introspection XML files fail to be
+generated because the systemd host binary is not executable. This patch
+works around this by putting the introspection XML data into separate
+ELF sections and extracting them from the binary when generating the XML
+files.
 
+The extracted XML data is passed through the strings utility in order to
+strip the trailing NUL character. A small AWK script is used to prepend
+the doctype and add the opening and closing node tags respectively.
+Finally, the C preprocessor is used to substitute the correct doctype
+information from the D-Bus header files.
 ---
- Makefile.am  |    4 +++-
- configure.ac |    3 +++
- 2 files changed, 6 insertions(+), 1 deletions(-)
+ Makefile.am          |    9 +++++++--
+ configure.ac         |    3 +++
+ introspect.awk       |   13 +++++++++++++
+ src/dbus-automount.c |    2 +-
+ src/dbus-device.c    |    2 +-
+ src/dbus-job.c       |    2 +-
+ src/dbus-manager.c   |    2 +-
+ src/dbus-mount.c     |    2 +-
+ src/dbus-path.c      |    2 +-
+ src/dbus-service.c   |    2 +-
+ src/dbus-snapshot.c  |    2 +-
+ src/dbus-socket.c    |    2 +-
+ src/dbus-swap.c      |    2 +-
+ src/dbus-target.c    |    2 +-
+ src/dbus-timer.c     |    2 +-
+ src/dbus-unit.c      |    2 +-
+ src/macro.h          |    1 +
+ 17 files changed, 37 insertions(+), 15 deletions(-)
+ create mode 100644 introspect.awk
 
 diff --git a/Makefile.am b/Makefile.am
-index 4307db1..62fd29a 100644
+index e1f6fe0..a009617 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -950,8 +950,10 @@ CLEANFILES += \
+@@ -317,7 +317,8 @@ EXTRA_DIST = \
+ 	units/fsck@.service.in \
+ 	units/fsck-root.service.in \
+ 	units/quotacheck.service.in \
+-	systemd.pc.in
++	systemd.pc.in \
++	introspect.awk
+ 
+ if TARGET_FEDORA
+ dist_systemunit_DATA += \
+@@ -1113,8 +1114,12 @@ CLEANFILES += \
  	${XML_IN_FILES:.xml.in=.html.in}
  endif
  
-+SYSTEMD = @SYSTEMD@
++DBUS_PREPROCESS = $(CPP) -P $(DBUS_CFLAGS) -imacros dbus/dbus-protocol.h
 +
  org.freedesktop.systemd1.%.xml: systemd
 -	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 ./systemd --introspect=${@:.xml=} > $@
-+	$(AM_V_GEN)SYSTEMD_SKIP_API_MOUNTS=1 $(SYSTEMD) --introspect=${@:.xml=} > $@
++	$(AM_V_GEN)$(OBJCOPY) -O binary -j introspect.$* $< $@.tmp && \
++		$(STRINGS) $@.tmp | $(AWK) -f $(srcdir)/introspect.awk | \
++		$(DBUS_PREPROCESS) -o $@ - && rm $@.tmp
  
  CLEANFILES += \
  	$(dbusinterface_DATA)
 diff --git a/configure.ac b/configure.ac
-index 4f22b1b..a39bad7 100644
+index 247806d..f9f5eee 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -369,6 +369,9 @@ else
-         SYSTEM_SYSV_COMPAT="no"
- fi
+@@ -48,6 +48,9 @@ AM_PROG_CC_C_O
+ AC_PROG_GCC_TRADITIONAL
+ AC_USE_SYSTEM_EXTENSIONS
  
-+SYSTEMD=systemd
-+AC_SUBST(SYSTEMD)
++AC_CHECK_TOOL(OBJCOPY, objcopy)
++AC_CHECK_TOOL(STRINGS, strings)
 +
- AM_CONDITIONAL(TARGET_FEDORA, test x"$with_distro" = xfedora)
- AM_CONDITIONAL(TARGET_SUSE, test x"$with_distro" = xsuse)
- AM_CONDITIONAL(TARGET_DEBIAN, test x"$with_distro" = xdebian)
+ CC_CHECK_CFLAGS_APPEND([ \
+         -pipe \
+         -Wall \
+diff --git a/introspect.awk b/introspect.awk
+new file mode 100644
+index 0000000..5931913
+--- /dev/null
++++ b/introspect.awk
+@@ -0,0 +1,13 @@
++BEGIN {
++	print "<!DOCTYPE node PUBLIC DBUS_INTROSPECT_1_0_XML_PUBLIC_IDENTIFIER"
++	print "DBUS_INTROSPECT_1_0_XML_SYSTEM_IDENTIFIER>"
++	print "<node>"
++}
++
++// {
++	print
++}
++
++END {
++	print "</node>"
++}
+diff --git a/src/dbus-automount.c b/src/dbus-automount.c
+index 3bccb4e..af277af 100644
+--- a/src/dbus-automount.c
++++ b/src/dbus-automount.c
+@@ -38,7 +38,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                 \
+         "</node>\n"
+ 
+-const char bus_automount_interface[] = BUS_AUTOMOUNT_INTERFACE;
++const char bus_automount_interface[] _introspect_("Automount") = BUS_AUTOMOUNT_INTERFACE;
+ 
+ DBusHandlerResult bus_automount_message_handler(Unit *u, DBusConnection *c, DBusMessage *message) {
+         const BusProperty properties[] = {
+diff --git a/src/dbus-device.c b/src/dbus-device.c
+index fcb05a4..aafe5d6 100644
+--- a/src/dbus-device.c
++++ b/src/dbus-device.c
+@@ -37,7 +37,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_device_interface[] = BUS_DEVICE_INTERFACE;
++const char bus_device_interface[] _introspect_("Device") = BUS_DEVICE_INTERFACE;
+ 
+ const char bus_device_invalidating_properties[] =
+         "SysFSPath\0"
+diff --git a/src/dbus-job.c b/src/dbus-job.c
+index 667eb04..18da72d 100644
+--- a/src/dbus-job.c
++++ b/src/dbus-job.c
+@@ -43,7 +43,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                  \
+         "</node>\n"
+ 
+-const char bus_job_interface[] = BUS_JOB_INTERFACE;
++const char bus_job_interface[] _introspect_("Job") = BUS_JOB_INTERFACE;
+ 
+ #define INVALIDATING_PROPERTIES                 \
+         "State\0"                               \
+diff --git a/src/dbus-manager.c b/src/dbus-manager.c
+index 28986e5..d160e7b 100644
+--- a/src/dbus-manager.c
++++ b/src/dbus-manager.c
+@@ -202,7 +202,7 @@
+ #define INTROSPECTION_END                                               \
+         "</node>\n"
+ 
+-const char bus_manager_interface[] = BUS_MANAGER_INTERFACE;
++const char bus_manager_interface[] _introspect_("Manager") = BUS_MANAGER_INTERFACE;
+ 
+ static DEFINE_BUS_PROPERTY_APPEND_ENUM(bus_manager_append_running_as, manager_running_as, ManagerRunningAs);
+ 
+diff --git a/src/dbus-mount.c b/src/dbus-mount.c
+index 4de00f7..fa319fe 100644
+--- a/src/dbus-mount.c
++++ b/src/dbus-mount.c
+@@ -50,7 +50,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_mount_interface[] = BUS_MOUNT_INTERFACE;
++const char bus_mount_interface[] _introspect_("Mount") = BUS_MOUNT_INTERFACE;
+ 
+ const char bus_mount_invalidating_properties[] =
+         "What\0"
+diff --git a/src/dbus-path.c b/src/dbus-path.c
+index c8c302a..9692d6a 100644
+--- a/src/dbus-path.c
++++ b/src/dbus-path.c
+@@ -41,7 +41,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_path_interface[] = BUS_PATH_INTERFACE;
++const char bus_path_interface[] _introspect_("Path") = BUS_PATH_INTERFACE;
+ 
+ static int bus_path_append_paths(Manager *m, DBusMessageIter *i, const char *property, void *data) {
+         Path *p = data;
+diff --git a/src/dbus-service.c b/src/dbus-service.c
+index a79f769..f929627 100644
+--- a/src/dbus-service.c
++++ b/src/dbus-service.c
+@@ -90,7 +90,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_service_interface[] = BUS_SERVICE_INTERFACE;
++const char bus_service_interface[] _introspect_("Service") = BUS_SERVICE_INTERFACE;
+ 
+ const char bus_service_invalidating_properties[] =
+         "ExecStartPre\0"
+diff --git a/src/dbus-snapshot.c b/src/dbus-snapshot.c
+index efaec7d..a9903ec 100644
+--- a/src/dbus-snapshot.c
++++ b/src/dbus-snapshot.c
+@@ -38,7 +38,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_snapshot_interface[] = BUS_SNAPSHOT_INTERFACE;
++const char bus_snapshot_interface[] _introspect_("Snapshot") = BUS_SNAPSHOT_INTERFACE;
+ 
+ DBusHandlerResult bus_snapshot_message_handler(Unit *u, DBusConnection *c, DBusMessage *message) {
+         const BusProperty properties[] = {
+diff --git a/src/dbus-socket.c b/src/dbus-socket.c
+index 5931f00..a9cb1c3 100644
+--- a/src/dbus-socket.c
++++ b/src/dbus-socket.c
+@@ -64,7 +64,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_socket_interface[] = BUS_SOCKET_INTERFACE;
++const char bus_socket_interface[] _introspect_("Socket") = BUS_SOCKET_INTERFACE;
+ 
+ const char bus_socket_invalidating_properties[] =
+         "ExecStartPre\0"
+diff --git a/src/dbus-swap.c b/src/dbus-swap.c
+index 70cccdc..06acb22 100644
+--- a/src/dbus-swap.c
++++ b/src/dbus-swap.c
+@@ -47,7 +47,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_swap_interface[] = BUS_SWAP_INTERFACE;
++const char bus_swap_interface[] _introspect_("Swap") = BUS_SWAP_INTERFACE;
+ 
+ const char bus_swap_invalidating_properties[] =
+         "What\0"
+diff --git a/src/dbus-target.c b/src/dbus-target.c
+index 69e8212..1eb3c24 100644
+--- a/src/dbus-target.c
++++ b/src/dbus-target.c
+@@ -38,7 +38,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_target_interface[] = BUS_TARGET_INTERFACE;
++const char bus_target_interface[] _introspect_("Target") = BUS_TARGET_INTERFACE;
+ 
+ DBusHandlerResult bus_target_message_handler(Unit *u, DBusConnection *c, DBusMessage *message) {
+         const BusProperty properties[] = {
+diff --git a/src/dbus-timer.c b/src/dbus-timer.c
+index e57e973..5604466 100644
+--- a/src/dbus-timer.c
++++ b/src/dbus-timer.c
+@@ -42,7 +42,7 @@
+         BUS_INTROSPECTABLE_INTERFACE                                    \
+         "</node>\n"
+ 
+-const char bus_timer_interface[] = BUS_TIMER_INTERFACE;
++const char bus_timer_interface[] _introspect_("Timer") = BUS_TIMER_INTERFACE;
+ 
+ const char bus_timer_invalidating_properties[] =
+         "Timers\0"
+diff --git a/src/dbus-unit.c b/src/dbus-unit.c
+index 47aa8d3..835eeda 100644
+--- a/src/dbus-unit.c
++++ b/src/dbus-unit.c
+@@ -26,7 +26,7 @@
+ #include "dbus-unit.h"
+ #include "bus-errors.h"
+ 
+-const char bus_unit_interface[] = BUS_UNIT_INTERFACE;
++const char bus_unit_interface[] _introspect_("Unit") = BUS_UNIT_INTERFACE;
+ 
+ #define INVALIDATING_PROPERTIES                 \
+         "LoadState\0"                           \
+diff --git a/src/macro.h b/src/macro.h
+index b3da60f..85a7fbc 100644
+--- a/src/macro.h
++++ b/src/macro.h
+@@ -45,6 +45,7 @@
+ #define _public_ __attribute__ ((visibility("default")))
+ #define _hidden_ __attribute__ ((visibility("hidden")))
+ #define _weakref_(x) __attribute__((weakref(#x)))
++#define _introspect_(x) __attribute__((section("introspect." x)))
+ 
+ /* Rounds up */
+ static inline size_t ALIGN(size_t l) {

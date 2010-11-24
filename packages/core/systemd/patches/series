@@ -1,4 +1,4 @@
 cross-compile.patch
-with-getty.patch
+pbs.patch
 autoreconf.patch
 ltmain-sysroot.patch
