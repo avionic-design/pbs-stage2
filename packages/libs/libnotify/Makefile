@@ -1,14 +1,20 @@
 PACKAGE = libnotify
-VERSION = 0.4.5
+VERSION = 0.7.0
 
-LOCATION = http://www.galago-project.org/files/releases/source/$(PACKAGE)
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--disable-tests
+
 prunefiles = \
-	$(prefix)/lib/libnotify.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/notify-send \
-	$(prefix)/lib/libnotify.so.1.1.3
+	$(prefix)/lib/*.so.*
