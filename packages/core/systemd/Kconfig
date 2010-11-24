@@ -2,6 +2,6 @@ config PACKAGE_CORE_SYSTEMD
 	bool "systemd"
 	select PACKAGE_BUILD_TOOLS_SYSTEMD
 	select PACKAGE_CORE_UDEV
-	select PACKAGE_LIBS_DBUS
+	select PACKAGE_LIBS_DBUS_GLIB
 	select PACKAGE_LIBS_LIBCAP
 	default n
