@@ -33,7 +33,7 @@ install-args = \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
+		$(env) $(priv) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 plugin = $(prefix)/lib/pppd/$(VERSION)

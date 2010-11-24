@@ -1,3 +1,20 @@
+
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ chat/Makefile.linux                  |    9 +++++----
+ pppd/Makefile.linux                  |    7 ++++---
+ pppd/plugins/Makefile.linux          |    4 ++--
+ pppd/plugins/pppoatm/Makefile.linux  |    2 +-
+ pppd/plugins/pppol2tp/Makefile.linux |    2 +-
+ pppd/plugins/radius/Makefile.linux   |    8 ++++----
+ pppd/plugins/rp-pppoe/Makefile.linux |    9 +++++----
+ pppdump/Makefile.linux               |    7 ++++---
+ pppstats/Makefile.linux              |    4 ++--
+ 9 files changed, 28 insertions(+), 24 deletions(-)
+
 diff --git a/chat/Makefile.linux b/chat/Makefile.linux
 index 1065ac5..1780f38 100644
 --- a/chat/Makefile.linux

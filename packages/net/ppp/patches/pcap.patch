@@ -1,0 +1,50 @@
+Fix building against libpcap.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ pppd/demand.c    |    2 +-
+ pppd/options.c   |    2 +-
+ pppd/sys-linux.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/pppd/demand.c b/pppd/demand.c
+index 5e57658..67cece1 100644
+--- a/pppd/demand.c
++++ b/pppd/demand.c
+@@ -44,7 +44,7 @@
+ #include <sys/stat.h>
+ #include <sys/socket.h>
+ #ifdef PPP_FILTER
+-#include <pcap-bpf.h>
++#include <pcap/bpf.h>
+ #endif
+ 
+ #include "pppd.h"
+diff --git a/pppd/options.c b/pppd/options.c
+index 482eab9..a6f99ea 100644
+--- a/pppd/options.c
++++ b/pppd/options.c
+@@ -56,7 +56,7 @@
+ #endif
+ 
+ #ifdef PPP_FILTER
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ /*
+  * There have been 3 or 4 different names for this in libpcap CVS, but
+  * this seems to be what they have settled on...
+diff --git a/pppd/sys-linux.c b/pppd/sys-linux.c
+index b675c97..6b665d5 100644
+--- a/pppd/sys-linux.c
++++ b/pppd/sys-linux.c
+@@ -136,7 +136,7 @@
+ #endif /* IPX_CHANGE */
+ 
+ #ifdef PPP_FILTER
+-#include <pcap-bpf.h>
++#include <pcap/bpf.h>
+ #include <linux/filter.h>
+ #endif /* PPP_FILTER */
+ 
