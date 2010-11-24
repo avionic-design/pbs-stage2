@@ -10,7 +10,6 @@ source "packages/build-tools/libnih/Kconfig"
 source "packages/build-tools/librpc/Kconfig"
 source "packages/build-tools/orbit/Kconfig"
 source "packages/build-tools/python/Kconfig"
-source "packages/build-tools/systemd/Kconfig"
 source "packages/build-tools/vala/Kconfig"
 
 endmenu

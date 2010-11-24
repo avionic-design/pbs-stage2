@@ -1,4 +1,9 @@
-include packages/core/systemd/Makefile.location
+PACKAGE = systemd
+VERSION = 13
+
+LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+
 include packages/autotools.mk
 
 env += \

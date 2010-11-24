@@ -1,4 +1,0 @@
-config PACKAGE_BUILD_TOOLS_SYSTEMD
-	bool "systemd"
-	select PACKAGE_BUILD_TOOLS_DBUS_GLIB
-	default n
