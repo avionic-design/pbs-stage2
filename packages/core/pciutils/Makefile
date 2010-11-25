@@ -13,11 +13,15 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
+	PREFIX=$(prefix) \
 	CROSS_COMPILE='$(CROSS_COMPILE)' \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)' \
-	PREFIX='$(prefix)'
+	HOST='$(TARGET)' \
+	SHARED=yes \
+	ZLIB=yes \
+	DNS=no
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
@@ -26,12 +30,19 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 install-args = \
 	PREFIX=$(prefix) \
-	DESTDIR=$(DESTDIR)
+	MANDIR=$(prefix)/share/man \
+	DESTDIR=$(DESTDIR) \
+	SHARED=yes
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(priv) $(env) $(MAKE) $(install-args) install install-lib
 	$(call cmd,stamp)
+
+stripfiles = \
+	$(prefix)/lib/*.so.* \
+	$(prefix)/sbin/lspci \
+	$(prefix)/sbin/setpci
 
 include packages/cleanup.mk
 include packages/binary.mk

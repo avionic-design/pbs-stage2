@@ -1,0 +1,29 @@
+
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ pci.ids |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
+
+diff --git a/pci.ids b/pci.ids
+index 078f3fb..3f69c95 100644
+--- a/pci.ids
++++ b/pci.ids
+@@ -17929,6 +17929,15 @@ a200  NEC Corporation
+ a259  Hewlett Packard
+ a25b  Hewlett Packard GmbH PL24-MKT
+ a304  Sony
++a510  Avionic Design GmbH
++	0000  FPGA PCIe PCI-to-PCI (P2P) Bridge
++	0001  FPGA PCIe Test Endpoint
++	0002  64 pin GPIO Controller
++	0003  ARINC429 Controller
++	0004  OpenCores 16550 UART
++	0005  OpenCores SPI Controller
++	0006  Part Number Core [1332-801-000]
++	0007  OpenCores I2C Controller
+ a727  3Com Corporation
+ 	0013  3CRPAG175 Wireless PC Card
+ 	6803  3CRDAG675B Wireless 11a/b/g Adapter

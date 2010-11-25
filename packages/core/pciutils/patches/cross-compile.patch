@@ -1,0 +1,46 @@
+Cross-compilation fixes.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile |    7 +++----
+ 1 files changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index f14732c..baa3bbd 100644
+--- a/Makefile
++++ b/Makefile
+@@ -37,7 +37,6 @@ PKGCFDIR=$(LIBDIR)/pkgconfig
+ # Commands
+ INSTALL=install
+ DIRINSTALL=install -d
+-STRIP=-s
+ CC=$(CROSS_COMPILE)gcc
+ AR=$(CROSS_COMPILE)ar
+ RANLIB=$(CROSS_COMPILE)ranlib
+@@ -101,21 +100,21 @@ distclean: clean
+ install: all
+ # -c is ignored on Linux, but required on FreeBSD
+ 	$(DIRINSTALL) -m 755 $(DESTDIR)$(SBINDIR) $(DESTDIR)$(IDSDIR) $(DESTDIR)$(MANDIR)/man8 $(DESTDIR)$(MANDIR)/man7
+-	$(INSTALL) -c -m 755 $(STRIP) lspci setpci $(DESTDIR)$(SBINDIR)
++	$(INSTALL) -c -m 755 lspci setpci $(DESTDIR)$(SBINDIR)
+ 	$(INSTALL) -c -m 755 update-pciids $(DESTDIR)$(SBINDIR)
+ 	$(INSTALL) -c -m 644 $(PCI_IDS) $(DESTDIR)$(IDSDIR)
+ 	$(INSTALL) -c -m 644 lspci.8 setpci.8 update-pciids.8 $(DESTDIR)$(MANDIR)/man8
+ 	$(INSTALL) -c -m 644 pcilib.7 $(DESTDIR)$(MANDIR)/man7
+ ifeq ($(SHARED),yes)
+ 	$(DIRINSTALL) -m 755 $(DESTDIR)$(LIBDIR)
+-	$(INSTALL) -c -m 644 lib/$(PCILIB) $(DESTDIR)$(LIBDIR)
++	$(INSTALL) -c -m 755 lib/$(PCILIB) $(DESTDIR)$(LIBDIR)
+ 	ln -sf $(PCILIB) $(DESTDIR)$(LIBDIR)/$(LIBNAME).so$(ABI_VERSION)
+ endif
+ 
+ install-lib: $(PCIINC_INS) lib/$(PCILIB) lib/$(PCILIBPC)
+ 	$(DIRINSTALL) -m 755 $(DESTDIR)$(INCDIR)/pci $(DESTDIR)$(LIBDIR) $(DESTDIR)$(PKGCFDIR)
+ 	$(INSTALL) -c -m 644 $(PCIINC_INS) $(DESTDIR)$(INCDIR)/pci
+-	$(INSTALL) -c -m 644 lib/$(PCILIB) $(DESTDIR)$(LIBDIR)
++	$(INSTALL) -c -m 755 lib/$(PCILIB) $(DESTDIR)$(LIBDIR)
+ 	$(INSTALL) -c -m 644 lib/$(PCILIBPC) $(DESTDIR)$(PKGCFDIR)
+ ifeq ($(SHARED),yes)
+ 	ln -sf $(LIBNAME).so$(ABI_VERSION) $(DESTDIR)$(LIBDIR)/$(LIBNAME).so
