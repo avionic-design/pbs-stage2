@@ -1,0 +1,5 @@
+/etc/ssh/moduli
+/etc/ssh/ssh_config
+/usr/lib/openssh/ssh-keysign
+/usr/lib/openssh/ssh-pkcs11-helper
+/usr/bin

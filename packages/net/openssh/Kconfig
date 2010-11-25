@@ -1,0 +1,4 @@
+config PACKAGE_NET_OPENSSH
+	bool "OpenSSH"
+	select VIRTUAL_DEVEL_LIBC
+	default n

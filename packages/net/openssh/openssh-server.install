@@ -1,0 +1,3 @@
+/etc/ssh/sshd_config
+/usr/sbin
+/usr/lib/openssh/sftp-server
