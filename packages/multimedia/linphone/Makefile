@@ -1,7 +1,7 @@
 PACKAGE = linphone
-VERSION = 3.3.2
+VERSION = 3.3.99.8
 
-LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/stable/sources
+LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/unstable/source
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
