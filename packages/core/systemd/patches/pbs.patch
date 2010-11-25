@@ -9,7 +9,7 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
  2 files changed, 14 insertions(+), 1 deletions(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index a009617..df9b0cc 100644
+index 471954b..117755f 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -76,12 +76,19 @@ AM_CPPFLAGS += \
@@ -33,7 +33,7 @@ index a009617..df9b0cc 100644
  rootbin_PROGRAMS = \
  	systemd \
 diff --git a/configure.ac b/configure.ac
-index f9f5eee..ed44ecd 100644
+index 5a6f3c7..30980ee 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -273,7 +273,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
