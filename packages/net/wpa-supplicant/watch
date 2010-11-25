@@ -1,0 +1,2 @@
+version=3
+http://hostap.epitest.fi/releases/wpa_supplicant-(.*)\.tar\.gz
