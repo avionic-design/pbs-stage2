@@ -15,8 +15,7 @@ conf-args += \
 	--with-dhclient=/usr/sbin/dhclient \
 	--libexec=$(pkglib) \
 	--with-distro=debian \
-	--with-crypto=gnutls \
-	--disable-pppd
+	--with-crypto=gnutls
 
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
