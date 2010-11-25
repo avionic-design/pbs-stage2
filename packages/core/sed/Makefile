@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--prefix=/
+	--bindir=/bin
 
 stripfiles = \
 	/bin/sed
