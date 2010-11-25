@@ -3,6 +3,7 @@ menu "Desktop Environments"
 source "packages/desktop/gnome/Kconfig"
 source "packages/desktop/icons/Kconfig"
 source "packages/desktop/nodm/Kconfig"
+source "packages/desktop/plymouth/Kconfig"
 source "packages/desktop/xfce/Kconfig"
 
 endmenu

@@ -1,0 +1,728 @@
+Add support for building against uClibc.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.ac                                       |    2 
+ src/client/ply-boot-client.c                       |    6 +
+ src/client/plymouth.c                              |    6 +
+ src/libply-splash-core/ply-boot-splash.c           |    2 
+ src/libply-splash-core/ply-terminal.c              |   20 ++--
+ src/libply/ply-command-parser.c                    |   16 +++
+ src/libply/ply-key-file.c                          |  104 ++++++++++++++++++--
+ src/libply/ply-terminal-session.c                  |    4 -
+ src/libply/ply-utils.c                             |    7 +
+ src/main.c                                         |   16 ++-
+ src/plugins/renderers/drm/plugin.c                 |    2 
+ .../renderers/drm/ply-renderer-i915-driver.c       |    6 +
+ .../renderers/drm/ply-renderer-nouveau-driver.c    |    6 +
+ .../renderers/drm/ply-renderer-radeon-driver.c     |    6 +
+ src/plugins/renderers/frame-buffer/plugin.c        |    7 +
+ src/ply-boot-server.c                              |   20 ++--
+ 16 files changed, 169 insertions(+), 61 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 145f8d8..e5220dd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -37,6 +37,8 @@ PKG_CHECK_MODULES(IMAGE, [libpng >= 1.2.16 ])
+ AC_SUBST(IMAGE_CFLAGS)
+ AC_SUBST(IMAGE_LIBS)
+ 
++AC_CHECK_FUNCS([rpmatch])
++
+ PLYMOUTH_CFLAGS=""
+ PLYMOUTH_LIBS="-lm -lrt -ldl"
+ 
+diff --git a/src/client/ply-boot-client.c b/src/client/ply-boot-client.c
+index c3373f0..b614634 100644
+--- a/src/client/ply-boot-client.c
++++ b/src/client/ply-boot-client.c
+@@ -814,7 +814,7 @@ on_pinged (ply_event_loop_t *loop)
+ static void
+ on_ping_failed (ply_event_loop_t *loop)
+ {
+-  printf ("PING FAILED! %m\n");
++  printf ("PING FAILED! %s\n", strerror(errno));
+   ply_event_loop_exit (loop, 1);
+ }
+ 
+@@ -827,7 +827,7 @@ on_update (ply_event_loop_t *loop)
+ static void
+ on_update_failed (ply_event_loop_t *loop)
+ {
+-  printf ("UPDATE FAILED! %m\n");
++  printf ("UPDATE FAILED! %s\n", strerror(errno));
+   ply_event_loop_exit (loop, 1);
+ }
+ 
+@@ -860,7 +860,7 @@ on_quit (ply_event_loop_t *loop)
+ static void
+ on_quit_failed (ply_event_loop_t *loop)
+ {
+-  printf ("QUIT FAILED! %m\n");
++  printf ("QUIT FAILED! %s\n", strerror(errno));
+   ply_event_loop_exit (loop, 2);
+ }
+ 
+diff --git a/src/client/plymouth.c b/src/client/plymouth.c
+index c219cf6..2e16d0e 100644
+--- a/src/client/plymouth.c
++++ b/src/client/plymouth.c
+@@ -158,7 +158,7 @@ answer_via_command (char           *command,
+         }
+ 
+       execvp (args[0], args); 
+-      ply_trace ("could not run command: %m");
++      ply_trace ("could not run command: %s", strerror(errno));
+       _exit (127);
+     }
+ 
+@@ -720,14 +720,14 @@ get_kernel_command_line (state_t *state)
+ 
+   if (fd < 0)
+     {
+-      ply_trace ("couldn't open it: %m");
++      ply_trace ("couldn't open it: %s", strerror(errno));
+       return false;
+     }
+ 
+   ply_trace ("reading kernel command line");
+   if (read (fd, state->kernel_command_line, sizeof (state->kernel_command_line)) < 0)
+     {
+-      ply_trace ("couldn't read it: %m");
++      ply_trace ("couldn't read it: %s", strerror(errno));
+       return false;
+     }
+ 
+diff --git a/src/libply-splash-core/ply-boot-splash.c b/src/libply-splash-core/ply-boot-splash.c
+index 0c77ef8..8593659 100644
+--- a/src/libply-splash-core/ply-boot-splash.c
++++ b/src/libply-splash-core/ply-boot-splash.c
+@@ -504,7 +504,7 @@ ply_boot_splash_show (ply_boot_splash_t *splash,
+     {
+ 
+       ply_save_errno ();
+-      ply_trace ("can't show splash: %m");
++      ply_trace ("can't show splash: %s", strerror(errno));
+       ply_restore_errno ();
+       return false;
+     }
+diff --git a/src/libply-splash-core/ply-terminal.c b/src/libply-splash-core/ply-terminal.c
+index f71f25a..63f3d34 100644
+--- a/src/libply-splash-core/ply-terminal.c
++++ b/src/libply-splash-core/ply-terminal.c
+@@ -196,7 +196,7 @@ ply_terminal_set_unbuffered_input (ply_terminal_t *terminal)
+       memset (&locked_term_attributes, 0xff, sizeof (locked_term_attributes));
+       if (ioctl (terminal->fd, TIOCSLCKTRMIOS, &locked_term_attributes) < 0)
+         {
+-          ply_trace ("couldn't lock terminal settings: %m");
++          ply_trace ("couldn't lock terminal settings: %s", strerror(errno));
+         }
+     }
+ 
+@@ -218,7 +218,7 @@ ply_terminal_set_buffered_input (ply_terminal_t *terminal)
+       if (ioctl (terminal->fd, TIOCSLCKTRMIOS,
+                  &terminal->original_locked_term_attributes) < 0)
+         {
+-          ply_trace ("couldn't unlock terminal settings: %m");
++          ply_trace ("couldn't unlock terminal settings: %s", strerror(errno));
+         }
+       terminal->original_locked_term_attributes_saved = false;
+     }
+@@ -300,7 +300,7 @@ ply_terminal_look_up_geometry (ply_terminal_t *terminal)
+ 
+     if (ioctl (terminal->fd, TIOCGWINSZ, &terminal_size) < 0)
+       {
+-        ply_trace ("could not read terminal text geometry: %m");
++        ply_trace ("could not read terminal text geometry: %s", strerror(errno));
+         terminal->number_of_columns = 80;
+         terminal->number_of_rows = 24;
+         return false;
+@@ -492,7 +492,7 @@ ply_terminal_open (ply_terminal_t *terminal)
+ 
+   if (!ply_terminal_open_device (terminal))
+     {
+-      ply_trace ("could not open %s : %m", terminal->name);
++      ply_trace ("could not open %s : %s", terminal->name, strerror(errno));
+       return false;
+     }
+ 
+@@ -775,8 +775,8 @@ ply_terminal_activate_vt (ply_terminal_t *terminal)
+ 
+   if (!set_active_vt (terminal, terminal->vt_number))
+     {
+-      ply_trace ("unable to set active vt to %d: %m",
+-                 terminal->vt_number);
++      ply_trace ("unable to set active vt to %d: %s",
++                 terminal->vt_number, strerror(errno));
+       return false;
+     }
+ 
+@@ -821,14 +821,14 @@ ply_terminal_deactivate_vt (ply_terminal_t *terminal)
+                  terminal->initial_vt_number, old_vt_number);
+       if (!set_active_vt (terminal, terminal->initial_vt_number))
+         {
+-          ply_trace ("Couldn't move console to initial vt: %m");
++          ply_trace ("Couldn't move console to initial vt: %s", strerror(errno));
+           return false;
+         }
+ 
+       if (!wait_for_vt_to_become_active (terminal, terminal->initial_vt_number))
+         {
+-          ply_trace ("Error while waiting for vt %d to become active: %m",
+-                     terminal->initial_vt_number);
++          ply_trace ("Error while waiting for vt %d to become active: %s",
++                     terminal->initial_vt_number, strerror(errno));
+           return false;
+         }
+     }
+@@ -839,7 +839,7 @@ ply_terminal_deactivate_vt (ply_terminal_t *terminal)
+ 
+   if (!deallocate_vt (terminal, old_vt_number))
+     {
+-      ply_trace ("couldn't deallocate vt %d: %m", old_vt_number);
++      ply_trace ("couldn't deallocate vt %d: %s", old_vt_number, strerror(errno));
+       return false;
+     }
+ 
+diff --git a/src/libply/ply-command-parser.c b/src/libply/ply-command-parser.c
+index dce515f..4e67b33 100644
+--- a/src/libply/ply-command-parser.c
++++ b/src/libply/ply-command-parser.c
+@@ -671,6 +671,22 @@ argument_is_option (const char *argument)
+   return argument[0] == '-' && argument[1] == '-';
+ }
+ 
++#ifndef HAVE_RPMATCH
++static int rpmatch(const char *response)
++{
++  if (!response)
++    return -1;
++
++  if ((response[0] == 'y') || (response[0] == 'Y'))
++    return 1;
++
++  if ((response[0] == 'n') || (response[0] == 'N'))
++    return 0;
++
++  return -1;
++}
++#endif
++
+ static bool
+ ply_command_option_read_arguments (ply_command_option_t *option,
+                                    ply_list_t           *arguments)
+diff --git a/src/libply/ply-key-file.c b/src/libply/ply-key-file.c
+index 3b7ee38..ca8cd35 100644
+--- a/src/libply/ply-key-file.c
++++ b/src/libply/ply-key-file.c
+@@ -25,6 +25,7 @@
+ #include "ply-key-file.h"
+ 
+ #include <assert.h>
++#include <ctype.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <string.h>
+@@ -79,8 +80,8 @@ ply_key_file_open_file (ply_key_file_t *key_file)
+ 
+   if (key_file->fp == NULL)
+     {
+-      ply_trace ("Failed to open key file %s: %m",
+-                 key_file->filename);
++      ply_trace ("Failed to open key file %s: %s",
++                 key_file->filename, strerror(errno));
+       return false;
+     }
+   return true;
+@@ -156,6 +157,60 @@ ply_key_file_free (ply_key_file_t *key_file)
+   free (key_file);
+ }
+ 
++static char *
++skip_whitespace (char *ptr)
++{
++  if (!ptr)
++    return NULL;
++
++  while (*ptr && isspace (*ptr))
++    ptr++;
++
++  return ptr;
++}
++
++static int
++ply_key_file_load_key_value (ply_key_file_t *key_file,
++                             char **key, char **value)
++{
++  char *line = NULL;
++  size_t length = 0;
++  char *ptr;
++  char *end;
++  int err;
++
++  err = getline (&line, &length, key_file->fp);
++  if (err <= 0)
++    return err;
++
++  ptr = end = skip_whitespace (line);
++
++  while (*end && !isspace (*end) && (*end != '='))
++    end++;
++
++  if (end != ptr)
++    *key = strndup (ptr, end - ptr);
++  else
++    return 0;
++
++  ptr = end;
++
++  while (*end && (*end != '='))
++    end++;
++
++  ptr = end = skip_whitespace (end + 1);
++
++  while (*end && !isspace (*end))
++    end++;
++
++  if (end != ptr)
++    *value = strndup (ptr, end - ptr);
++  else
++    return 1;
++
++  return 2;
++}
++
+ static ply_key_file_group_t *
+ ply_key_file_load_group (ply_key_file_t *key_file,
+                          const char     *group_name)
+@@ -197,15 +252,18 @@ ply_key_file_load_group (ply_key_file_t *key_file,
+       ungetc (first_byte, key_file->fp);
+ 
+       offset = ftell (key_file->fp);
+-      items_matched = fscanf (key_file->fp, " %a[^= \t\n] = %a[^\n] ", &key, &value);
++      items_matched = ply_key_file_load_key_value (key_file, &key, &value);
+ 
+       if (items_matched != 2)
+         {
+           if (items_matched == 1)
+             fseek (key_file->fp, offset, SEEK_SET);
+ 
+-          free (key);
+-          free (value);
++          if (key)
++            free (key);
++
++          if (value)
++            free (value);
+           break;
+         }
+ 
+@@ -224,14 +282,14 @@ ply_key_file_load_group (ply_key_file_t *key_file,
+ static bool
+ ply_key_file_load_groups (ply_key_file_t *key_file)
+ {
+-  int items_matched;
+   char *group_name;
+   bool added_group = false;
+   bool has_comments = false;
++  int first_byte;
+   
+   do
+     {
+-      int first_byte;
++      long offset;
+ 
+       ply_key_file_group_t *group;
+ 
+@@ -248,14 +306,38 @@ ply_key_file_load_groups (ply_key_file_t *key_file)
+                    key_file->fp);
+           free (line_to_toss);
+           has_comments = true;
+-          items_matched = 0;
+           continue;
+         }
+       ungetc (first_byte, key_file->fp);
+ 
+-      items_matched = fscanf (key_file->fp, " [ %a[^]] ] ", &group_name);
++      offset = ftell(key_file->fp);
+ 
+-      if (items_matched <= 0)
++      first_byte = fgetc (key_file->fp);
++      if (first_byte == '[')
++        {
++          char *group_line = NULL;
++          size_t number_of_bytes = 0;
++          size_t i;
++
++          getline (&group_line, &number_of_bytes, key_file->fp);
++
++          for (i = 0; i < number_of_bytes; i++)
++            {
++              if (group_line[i] == ']')
++                  break;
++            }
++
++          group_name = strndup (group_line, i);
++          if (!group_name)
++            {
++              ply_trace ("group name cannot be allocated");
++              fseek (key_file->fp, offset, SEEK_SET);
++              break;
++            }
++
++          free (group_line);
++        }
++      else
+         {
+           ply_trace ("key file has no %sgroups",
+                      added_group? "more " : "");
+@@ -272,7 +354,7 @@ ply_key_file_load_groups (ply_key_file_t *key_file)
+       ply_hashtable_insert (key_file->groups, group->name, group);
+       added_group = true;
+     }
+-  while (items_matched != EOF);
++  while (first_byte != EOF);
+ 
+   if (!added_group && has_comments)
+     {
+diff --git a/src/libply/ply-terminal-session.c b/src/libply/ply-terminal-session.c
+index 68f487f..0caff9a 100644
+--- a/src/libply/ply-terminal-session.c
++++ b/src/libply/ply-terminal-session.c
+@@ -240,7 +240,7 @@ open_pseudoterminal (ply_terminal_session_t *session)
+   if (grantpt (session->pseudoterminal_master_fd) < 0)
+     {
+       ply_save_errno ();
+-      ply_trace ("could not create psuedoterminal: %m");
++      ply_trace ("could not create psuedoterminal: %s", strerror(errno));
+       close_pseudoterminal (session);
+       ply_restore_errno ();
+       return false;
+@@ -366,7 +366,7 @@ ply_terminal_session_attach (ply_terminal_session_t               *session,
+       ply_trace ("ptmx not passed in, creating one");
+       if (!open_pseudoterminal (session))
+         {
+-          ply_trace ("could not create pseudo-terminal: %m");
++          ply_trace ("could not create pseudo-terminal: %s", strerror(errno));
+           return false;
+         }
+ 
+diff --git a/src/libply/ply-utils.c b/src/libply/ply-utils.c
+index cbc6473..66473f6 100644
+--- a/src/libply/ply-utils.c
++++ b/src/libply/ply-utils.c
+@@ -790,7 +790,7 @@ ply_show_new_kernel_messages (bool should_show)
+     type = PLY_DISABLE_CONSOLE_PRINTK;
+ 
+   if (klogctl (type, NULL, 0) < 0)
+-    ply_trace ("could not toggle printk visibility: %m");
++    ply_trace ("could not toggle printk visibility: %s", strerror(errno));
+ }
+ 
+ ply_daemon_handle_t *
+@@ -816,7 +816,7 @@ ply_create_daemon (const char *pid_file)
+ 
+       if (!ply_read (receiver_fd, &byte, sizeof (uint8_t)))
+         {
+-          ply_error ("could not read byte from child: %m");
++          ply_error ("could not read byte from child: %s", strerror(errno));
+           _exit (1);
+         }
+ 
+@@ -827,7 +827,8 @@ ply_create_daemon (const char *pid_file)
+           pidf = fopen (pid_file, "w");
+           if (!pidf)
+             {
+-              ply_error ("could not write pid file %s: %m", pid_file);
++              ply_error ("could not write pid file %s: %s", pid_file,
++                         strerror(errno));
+             }
+           else
+             {
+diff --git a/src/main.c b/src/main.c
+index e622755..68b1858 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -339,7 +339,7 @@ show_default_splash (state_t *state)
+     }
+ 
+   if (state->boot_splash == NULL)
+-    ply_error ("could not start boot splash: %m");
++    ply_error ("could not start boot splash: %s", strerror(errno));
+ }
+ 
+ static void
+@@ -1517,14 +1517,14 @@ get_kernel_command_line (state_t *state)
+ 
+   if (fd < 0)
+     {
+-      ply_trace ("couldn't open it: %m");
++      ply_trace ("couldn't open it: %s", strerror(errno));
+       return false;
+     }
+ 
+   ply_trace ("reading kernel command line");
+   if (read (fd, state->kernel_command_line, sizeof (state->kernel_command_line)) < 0)
+     {
+-      ply_trace ("couldn't read it: %m");
++      ply_trace ("couldn't read it: %s", strerror(errno));
+       return false;
+     }
+ 
+@@ -1889,7 +1889,7 @@ main (int    argc,
+ 
+       if (daemon_handle == NULL)
+         {
+-          ply_error ("cannot daemonize: %m");
++          ply_error ("cannot daemonize: %s", strerror(errno));
+           return EX_UNAVAILABLE;
+         }
+     }
+@@ -1917,7 +1917,7 @@ main (int    argc,
+           return 0;
+         }
+ 
+-      ply_error ("could not setup basic operating environment: %m");
++      ply_error ("could not setup basic operating environment: %s", strerror(errno));
+       if (! no_daemon)
+         ply_detach_daemon (daemon_handle, EX_OSERR);
+       return EX_OSERR;
+@@ -1930,7 +1930,7 @@ main (int    argc,
+       state.should_be_attached = attach_to_session;
+       if (!attach_to_running_session (&state))
+         {
+-          ply_error ("could not create session: %m");
++          ply_error ("could not create session: %s", strerror(errno));
+           if (! no_daemon)
+             ply_detach_daemon (daemon_handle, EX_UNAVAILABLE);
+           return EX_UNAVAILABLE;
+@@ -1941,7 +1941,7 @@ main (int    argc,
+ 
+   if (state.boot_server == NULL)
+     {
+-      ply_error ("could not log bootup: %m");
++      ply_error ("could not log bootup: %s", strerror(errno));
+       if (! no_daemon)
+         ply_detach_daemon (daemon_handle, EX_UNAVAILABLE);
+       return EX_UNAVAILABLE;
+@@ -1950,7 +1950,7 @@ main (int    argc,
+   if (! no_daemon)
+     if (!ply_detach_daemon (daemon_handle, 0))
+       {
+-        ply_error ("could not tell parent to exit: %m");
++        ply_error ("could not tell parent to exit: %s", strerror(errno));
+         return EX_UNAVAILABLE;
+       }
+ 
+diff --git a/src/plugins/renderers/drm/plugin.c b/src/plugins/renderers/drm/plugin.c
+index 385bd91..07234c5 100644
+--- a/src/plugins/renderers/drm/plugin.c
++++ b/src/plugins/renderers/drm/plugin.c
+@@ -512,7 +512,7 @@ open_device (ply_renderer_backend_t *backend)
+ 
+   if (!ply_terminal_open (backend->terminal))
+     {
+-      ply_trace ("could not open terminal: %m");
++      ply_trace ("could not open terminal: %s", strerror(errno));
+       return false;
+     }
+ 
+diff --git a/src/plugins/renderers/drm/ply-renderer-i915-driver.c b/src/plugins/renderers/drm/ply-renderer-i915-driver.c
+index 907a061..ed5806d 100644
+--- a/src/plugins/renderers/drm/ply-renderer-i915-driver.c
++++ b/src/plugins/renderers/drm/ply-renderer-i915-driver.c
+@@ -267,7 +267,8 @@ create_buffer (ply_renderer_driver_t *driver,
+ 
+   if (buffer_object == NULL)
+     {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
++      ply_trace ("Could not allocate GEM object for frame buffer: %s",
++                 strerror(errno));
+       return 0;
+     }
+ 
+@@ -275,7 +276,8 @@ create_buffer (ply_renderer_driver_t *driver,
+                     24, 32, *row_stride, buffer_object->handle,
+                     &buffer_id) != 0)
+     {
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
++      ply_trace ("Could not set up GEM object as frame buffer: %s",
++                 strerror(errno));
+       drm_intel_bo_unreference (buffer_object);
+       return 0;
+     }
+diff --git a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c b/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c
+index 2cef56e..2315c0f 100644
+--- a/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c
++++ b/src/plugins/renderers/drm/ply-renderer-nouveau-driver.c
+@@ -229,7 +229,8 @@ create_buffer (ply_renderer_driver_t *driver,
+                       NOUVEAU_BO_VRAM | NOUVEAU_BO_MAP, 0,
+                       height * *row_stride, &buffer_object) < 0)
+     {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
++      ply_trace ("Could not allocate GEM object for frame buffer: %s",
++                 strerror(errno));
+       return 0;
+     }
+ 
+@@ -243,7 +244,8 @@ create_buffer (ply_renderer_driver_t *driver,
+                     &buffer_id) != 0)
+     {
+       nouveau_bo_unmap (buffer_object);
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
++      ply_trace ("Could not set up GEM object as frame buffer: %s",
++                 strerror(errno));
+       nouveau_bo_ref (NULL, &buffer_object);
+       return 0;
+     }
+diff --git a/src/plugins/renderers/drm/ply-renderer-radeon-driver.c b/src/plugins/renderers/drm/ply-renderer-radeon-driver.c
+index 36cee47..7827d93 100644
+--- a/src/plugins/renderers/drm/ply-renderer-radeon-driver.c
++++ b/src/plugins/renderers/drm/ply-renderer-radeon-driver.c
+@@ -261,7 +261,8 @@ create_buffer (ply_renderer_driver_t *driver,
+ 
+   if (buffer_object == NULL)
+     {
+-      ply_trace ("Could not allocate GEM object for frame buffer: %m");
++      ply_trace ("Could not allocate GEM object for frame buffer: %s",
++                 strerror(errno));
+       return 0;
+     }
+ 
+@@ -269,7 +270,8 @@ create_buffer (ply_renderer_driver_t *driver,
+                     24, 32, *row_stride, buffer_object->handle,
+                     &buffer_id) != 0)
+     {
+-      ply_trace ("Could not set up GEM object as frame buffer: %m");
++      ply_trace ("Could not set up GEM object as frame buffer: %s",
++                 strerror(errno));
+       radeon_bo_unref (buffer_object);
+       return 0;
+     }
+diff --git a/src/plugins/renderers/frame-buffer/plugin.c b/src/plugins/renderers/frame-buffer/plugin.c
+index 479e1c2..f544135 100644
+--- a/src/plugins/renderers/frame-buffer/plugin.c
++++ b/src/plugins/renderers/frame-buffer/plugin.c
+@@ -349,13 +349,14 @@ open_device (ply_renderer_backend_t *backend)
+ 
+   if (backend->device_fd < 0)
+     {
+-      ply_trace ("could not open '%s': %m", backend->device_name);
++      ply_trace ("could not open '%s': %s", backend->device_name,
++                 strerror(errno));
+       return false;
+     }
+ 
+   if (!ply_terminal_open (backend->terminal))
+     {
+-      ply_trace ("could not open terminal: %m");
++      ply_trace ("could not open terminal: %s", strerror(errno));
+       return false;
+     }
+ 
+@@ -544,7 +545,7 @@ map_to_device (ply_renderer_backend_t *backend)
+ 
+   if (head->map_address == MAP_FAILED)
+     {
+-      ply_trace ("could not map fb device: %m");
++      ply_trace ("could not map fb device: %s", strerror(errno));
+       return false;
+     }
+ 
+diff --git a/src/ply-boot-server.c b/src/ply-boot-server.c
+index 7201f95..26c73dc 100644
+--- a/src/ply-boot-server.c
++++ b/src/ply-boot-server.c
+@@ -250,7 +250,7 @@ ply_boot_connection_send_answer (ply_boot_connection_t *connection,
+       if (!ply_write (connection->fd,
+                       PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NO_ANSWER,
+                       strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NO_ANSWER)))
+-        ply_error ("could not write bytes: %m");
++        ply_error ("could not write bytes: %s", strerror(errno));
+     }
+   else
+     {
+@@ -263,7 +263,7 @@ ply_boot_connection_send_answer (ply_boot_connection_t *connection,
+                              size) ||
+           !ply_write (connection->fd,
+                       answer, size))
+-          ply_error ("could not write bytes: %m");
++          ply_error ("could not write bytes: %s", strerror(errno));
+ 
+     }
+ 
+@@ -290,7 +290,7 @@ ply_boot_connection_on_deactivated (ply_boot_connection_t *connection)
+                   PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK,
+                   strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK)))
+     {
+-      ply_error ("could not write bytes: %m");
++      ply_error ("could not write bytes: %s", strerror(errno));
+     }
+ }
+ 
+@@ -302,7 +302,7 @@ ply_boot_connection_on_quit_complete (ply_boot_connection_t *connection)
+                   PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK,
+                   strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK)))
+     {
+-      ply_error ("could not write bytes: %m");
++      ply_error ("could not write bytes: %s", strerror(errno));
+     }
+ }
+ 
+@@ -348,7 +348,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+       if (!ply_write (connection->fd,
+                       PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK,
+                       strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK)))
+-        ply_error ("could not write bytes: %m");
++        ply_error ("could not write bytes: %s", strerror(errno));
+ 
+       free (command);
+       return;
+@@ -498,7 +498,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+           if (!ply_write (connection->fd,
+                           PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NO_ANSWER,
+                           strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NO_ANSWER)))
+-              ply_error ("could not write bytes: %m");
++              ply_error ("could not write bytes: %s", strerror(errno));
+         }
+       else
+         {
+@@ -513,7 +513,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+                                  size) ||
+               !ply_write (connection->fd,
+                           ply_buffer_get_bytes (buffer), size))
+-              ply_error ("could not write bytes: %m");
++              ply_error ("could not write bytes: %s", strerror(errno));
+         }
+ 
+       ply_buffer_free (buffer);
+@@ -611,7 +611,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+           if (!ply_write (connection->fd,
+                           PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK,
+                           strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK)))
+-            ply_error ("could not write bytes: %m");
++            ply_error ("could not write bytes: %s", strerror(errno));
+ 
+           free(command);
+           return;
+@@ -624,7 +624,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+       if (!ply_write (connection->fd,
+                       PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK,
+                       strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_NAK)))
+-        ply_error ("could not write bytes: %m");
++        ply_error ("could not write bytes: %s", strerror(errno));
+ 
+       free(command);
+       return;
+@@ -634,7 +634,7 @@ ply_boot_connection_on_request (ply_boot_connection_t *connection)
+                   PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK,
+                   strlen (PLY_BOOT_PROTOCOL_RESPONSE_TYPE_ACK)))
+     {
+-      ply_error ("could not write bytes: %m");
++      ply_error ("could not write bytes: %s", strerror(errno));
+     }
+   free(command);
+ }

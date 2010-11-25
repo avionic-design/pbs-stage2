@@ -1,0 +1,60 @@
+Make Gtk+ dependency optional.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.ac                      |   11 ++++++++---
+ src/Makefile.am                   |    6 +++++-
+ src/plugins/renderers/Makefile.am |    7 ++++++-
+ 3 files changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 288fc48..145f8d8 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -52,9 +52,14 @@ if test x$enable_pango = xyes; then
+   AC_SUBST(PANGO_LIBS)
+ fi
+ 
+-PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.12.0 ])
+-AC_SUBST(GTK_CFLAGS)
+-AC_SUBST(GTK_LIBS)
++AC_ARG_ENABLE(gtk, AS_HELP_STRING([--enable-gtk],[enable building with gtk]),enable_gtk=$enableval,enable_gtk=yes)
++AM_CONDITIONAL(ENABLE_GTK, [test "$enable_gtk" = yes])
++
++if test x$enable_gtk = xyes; then
++  PKG_CHECK_MODULES(GTK, [gtk+-2.0 >= 2.12.0 ])
++  AC_SUBST(GTK_CFLAGS)
++  AC_SUBST(GTK_LIBS)
++fi
+ 
+ PKG_CHECK_MODULES(DRM, [libdrm libdrm_intel libdrm_radeon libdrm_nouveau])
+ 
+diff --git a/src/Makefile.am b/src/Makefile.am
+index f0631dd..d556fad 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -1,4 +1,8 @@
+-SUBDIRS = libply libply-splash-core libply-splash-graphics . plugins client viewer tests
++if ENABLE_GTK
++viewer = viewer
++endif
++
++SUBDIRS = libply libply-splash-core libply-splash-graphics . plugins client $(viewer) tests
+ INCLUDES = -I$(top_srcdir)                                                    \
+            -I$(srcdir)/libply                                                 \
+            -I$(srcdir)/libply-splash-core                                     \
+diff --git a/src/plugins/renderers/Makefile.am b/src/plugins/renderers/Makefile.am
+index 5a449a7..59c05f9 100644
+--- a/src/plugins/renderers/Makefile.am
++++ b/src/plugins/renderers/Makefile.am
+@@ -1,2 +1,7 @@
+-SUBDIRS = frame-buffer drm x11
++if ENABLE_GTK
++x11 = x11
++endif
++
++SUBDIRS = frame-buffer drm $(x11)
++
+ MAINTAINERCLEANFILES = Makefile.in

@@ -1,0 +1,5 @@
+ltmain-sysroot.patch
+optional-gtk.patch
+uclibc.patch
+autoreconf.patch
+fixes.patch

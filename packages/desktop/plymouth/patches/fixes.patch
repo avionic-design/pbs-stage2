@@ -1,0 +1,92 @@
+Miscellaneous fixes.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ src/libply-splash-graphics/ply-animation.c |    1 -
+ src/libply-splash-graphics/ply-image.c     |    2 +-
+ src/libply-splash-graphics/ply-throbber.c  |    3 +--
+ src/libply/ply-rectangle.c                 |    2 --
+ src/main.c                                 |    5 +++--
+ 5 files changed, 5 insertions(+), 8 deletions(-)
+
+diff --git a/src/libply-splash-graphics/ply-animation.c b/src/libply-splash-graphics/ply-animation.c
+index 1fa78b8..e8ae440 100644
+--- a/src/libply-splash-graphics/ply-animation.c
++++ b/src/libply-splash-graphics/ply-animation.c
+@@ -367,7 +367,6 @@ ply_animation_draw_area (ply_animation_t    *animation,
+                          unsigned long       height)
+ {
+   ply_pixel_buffer_t * const * frames;
+-  uint32_t *frame_data;
+   int number_of_frames;
+   int frame_index;
+   
+diff --git a/src/libply-splash-graphics/ply-image.c b/src/libply-splash-graphics/ply-image.c
+index 9369242..4b16783 100644
+--- a/src/libply-splash-graphics/ply-image.c
++++ b/src/libply-splash-graphics/ply-image.c
+@@ -151,7 +151,7 @@ ply_image_load (ply_image_t *image)
+     png_set_palette_to_rgb (png);
+ 
+   if ((color_type == PNG_COLOR_TYPE_GRAY) && (bits_per_pixel < 8))
+-    png_set_gray_1_2_4_to_8 (png);
++    png_set_expand_gray_1_2_4_to_8 (png);
+ 
+   if (png_get_valid (png, info, PNG_INFO_tRNS))
+     png_set_tRNS_to_alpha (png);
+diff --git a/src/libply-splash-graphics/ply-throbber.c b/src/libply-splash-graphics/ply-throbber.c
+index 45638b7..900b7c2 100644
+--- a/src/libply-splash-graphics/ply-throbber.c
++++ b/src/libply-splash-graphics/ply-throbber.c
+@@ -373,12 +373,11 @@ ply_throbber_draw_area (ply_throbber_t     *throbber,
+                         unsigned long       height)
+ {
+   ply_pixel_buffer_t * const * frames;
+-  uint32_t *frame_data;
+ 
+   if (throbber->is_stopped)
+     return;
+ 
+-  frames = (ply_image_t * const *) ply_array_get_elements (throbber->frames);
++  frames = (ply_pixel_buffer_t * const *) ply_array_get_elements (throbber->frames);
+   ply_pixel_buffer_fill_with_buffer (buffer,
+                                      frames[throbber->frame_number],
+                                      throbber->frame_area.x,
+diff --git a/src/libply/ply-rectangle.c b/src/libply/ply-rectangle.c
+index 8fdd89e..9344244 100644
+--- a/src/libply/ply-rectangle.c
++++ b/src/libply/ply-rectangle.c
+@@ -67,8 +67,6 @@ ply_rectangle_overlap_t
+ ply_rectangle_find_overlap (ply_rectangle_t *rectangle1,
+                             ply_rectangle_t *rectangle2)
+ {
+-  ply_rectangle_overlap_t overlap;
+-
+   enum {H_COLLISION_NONE, H_COLLISION_LEFT, H_COLLISION_RIGHT, H_COLLISION_BOTH, H_COLLISION_CONTAINED, H_COLLISION_EXACT}
+         h_collision = H_COLLISION_NONE;
+   enum {V_COLLISION_NONE, V_COLLISION_TOP, V_COLLISION_BOTTOM, V_COLLISION_BOTH, V_COLLISION_CONTAINED, V_COLLISION_EXACT}
+diff --git a/src/main.c b/src/main.c
+index 68b1858..9a2c4b8 100644
+--- a/src/main.c
++++ b/src/main.c
+@@ -1449,7 +1449,8 @@ start_boot_splash (state_t    *state,
+       return NULL;
+     }
+ 
+-  ply_keyboard_watch_for_input (state->keyboard);
++  if (state->keyboard)
++    ply_keyboard_watch_for_input (state->keyboard);
+ 
+   update_display (state);
+   return splash;
+@@ -1799,7 +1800,7 @@ main (int    argc,
+   bool no_daemon = false;
+   bool debug = false;
+   bool attach_to_session;
+-  ply_daemon_handle_t *daemon_handle;
++  ply_daemon_handle_t *daemon_handle = NULL;
+   char *mode_string = NULL;
+   char *tty = NULL;
+ 

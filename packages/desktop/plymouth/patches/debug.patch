@@ -1,0 +1,85 @@
+Add debugging output.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ src/libply/ply-logger.c           |    8 +++++++-
+ src/libply/ply-terminal-session.c |    5 +++++
+ 2 files changed, 12 insertions(+), 1 deletions(-)
+
+diff --git a/src/libply/ply-logger.c b/src/libply/ply-logger.c
+index df4738f..c680c5d 100644
+--- a/src/libply/ply-logger.c
++++ b/src/libply/ply-logger.c
+@@ -203,6 +203,8 @@ ply_logger_buffer (ply_logger_t *logger,
+ {
+   assert (logger != NULL);
+ 
++  printf("> %s(logger=%p, string=%p[%s], length=%zu)\n", __func__, logger, string, string, length);
++
+   if ((logger->buffer_size + length) >= logger->buffer_capacity)
+     {
+       if (!ply_logger_increase_buffer_size (logger))
+@@ -215,6 +217,7 @@ ply_logger_buffer (ply_logger_t *logger,
+         }
+     }
+ 
++  printf("filename: %s\n", logger->filename);
+   assert (logger->buffer_size + length < logger->buffer_capacity);
+ 
+   memcpy (logger->buffer + logger->buffer_size,
+@@ -222,6 +225,7 @@ ply_logger_buffer (ply_logger_t *logger,
+ 
+   logger->buffer_size += length;
+ 
++  printf("< %s()\n", __func__);
+   return true;
+ }
+ 
+@@ -468,6 +472,8 @@ ply_logger_inject_with_non_literal_format_string (ply_logger_t   *logger,
+ 
+   assert (logger != NULL);
+ 
++  printf("> %s(logger=%p, format=%p[%s])\n", __func__, logger, format, format);
++
+   if (!ply_logger_is_logging (logger))
+     return;
+ 
+@@ -493,7 +499,7 @@ ply_logger_inject_with_non_literal_format_string (ply_logger_t   *logger,
+   va_end (args);
+ 
+   ply_logger_inject_bytes (logger, write_buffer, string_size - 1);
+-
++  printf("< %s()\n", __func__);
+ }
+ 
+ void
+diff --git a/src/libply/ply-terminal-session.c b/src/libply/ply-terminal-session.c
+index 0caff9a..da826fb 100644
+--- a/src/libply/ply-terminal-session.c
++++ b/src/libply/ply-terminal-session.c
+@@ -182,6 +182,7 @@ ply_terminal_session_redirect_console (ply_terminal_session_t *session)
+   assert (session != NULL);
+ 
+   terminal_name = ptsname (session->pseudoterminal_master_fd);
++  printf("%s(): terminal_name: %s\n", __func__, terminal_name);
+ 
+   assert (terminal_name != NULL);
+ 
+@@ -442,11 +443,15 @@ ply_terminal_session_log_bytes (ply_terminal_session_t *session,
+   assert (bytes != NULL);
+   assert (number_of_bytes != 0);
+ 
++  printf("> %s(session=%p, bytes=%p, number_of_bytes=%zu)\n", __func__, session, bytes, number_of_bytes);
++
+   ply_logger_inject_bytes (session->logger, bytes, number_of_bytes);
+ 
+   if (session->output_handler != NULL)
+     session->output_handler (session->user_data,
+                              bytes, number_of_bytes, session);
++
++  printf("< %s()\n", __func__);
+ }
+ 
+ static void

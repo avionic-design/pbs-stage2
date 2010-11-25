@@ -1,0 +1,6 @@
+/etc/plymouth
+/usr/bin
+/usr/lib/*.so.*
+/usr/lib/plymouth/*.so
+/usr/lib/plymouth/renderers/*.so
+/usr/sbin

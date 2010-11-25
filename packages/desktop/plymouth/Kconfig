@@ -1,0 +1,5 @@
+config PACKAGE_DESKTOP_PLYMOUTH
+	bool "plymouth"
+	select PACKAGE_LIBS_LIBDRM
+	select PACKAGE_LIBS_LIBPNG
+	default n
