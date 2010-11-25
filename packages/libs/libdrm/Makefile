@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--enable-nouveau-experimental-api
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
