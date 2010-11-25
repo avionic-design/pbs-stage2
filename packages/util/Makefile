@@ -1,3 +1,4 @@
+obj-$(CONFIG_PACKAGE_UTIL_FLASHROM) += flashrom
 obj-$(CONFIG_PACKAGE_UTIL_FLASHTOOL) += flashtool
 obj-$(CONFIG_PACKAGE_UTIL_GNOME_DOC_UTILS) += gnome-doc-utils
 obj-$(CONFIG_PACKAGE_UTIL_HTOP) += htop
