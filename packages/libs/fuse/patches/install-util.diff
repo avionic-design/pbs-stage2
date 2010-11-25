@@ -1,0 +1,25 @@
+--- fuse-2.8.5/util/Makefile.am	2010-09-28 10:03:09.000000000 +0200
++++ /home/alban/Development/CabineCamera/pbs2/build/csc-rootfs/build/packages/libs/fuse/fuse-2.8.5/util/Makefile.am	2010-11-25 10:50:08.820988469 +0100
+@@ -29,13 +29,9 @@
+ 
+ install-exec-local:
+ 	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
+-	$(INSTALL_PROGRAM) $(srcdir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
++	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+ 	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
+ 	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
+-	@if test -x /usr/sbin/update-rc.d; then \
+-		echo "/usr/sbin/update-rc.d fuse start 34 S . start 41 0 6 . || true"; \
+-		/usr/sbin/update-rc.d fuse start 34 S . start 41 0 6 . || true; \
+-	fi
+ 
+ install-data-local:
+ 	$(mkdir_p) $(DESTDIR)$(UDEV_RULES_PATH)
+@@ -45,7 +41,3 @@
+ 	rm -f $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+ 	rm -f $(DESTDIR)$(UDEV_RULES_PATH)/99-fuse.rules
+ 	rm -f $(DESTDIR)$(INIT_D_PATH)/fuse
+-	@if test -x /usr/sbin/update-rc.d; then \
+-		echo "/usr/sbin/update-rc.d fuse remove || true"; \
+-		/usr/sbin/update-rc.d fuse remove || true; \
+-	fi

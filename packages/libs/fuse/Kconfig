@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_FUSE
+	bool "fuse"
+	select VIRTUAL_DEVEL_LIBC
+	default n
