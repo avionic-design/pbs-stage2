@@ -1,0 +1,4 @@
+config PACKAGE_UTIL_MESA_DEMOS
+	bool "mesa-demos"
+	select PACKAGE_LIBS_GLEW
+	default n
