@@ -1,0 +1,37 @@
+Only build against libnotify >= 0.7.0.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ configure.ac                 |    2 +-
+ modules/misc/notify/notify.c |    3 +--
+ 2 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 0ce7a88..8fb6904 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1722,7 +1722,7 @@ AS_IF([test "${enable_growl}" != "no"], [
+ dnl
+ dnl Libnotify notification plugin
+ dnl
+-PKG_ENABLE_MODULES_VLC([NOTIFY], [], [libnotify], [libnotify notification], [auto])
++PKG_ENABLE_MODULES_VLC([NOTIFY], [], [libnotify >= 0.7.0 gtk+-2.0], [libnotify notification], [auto])
+ 
+ dnl
+ dnl Taglibplugin
+diff --git a/modules/misc/notify/notify.c b/modules/misc/notify/notify.c
+index c4576be..9cfacfc 100644
+--- a/modules/misc/notify/notify.c
++++ b/modules/misc/notify/notify.c
+@@ -311,8 +311,7 @@ static int Notify( vlc_object_t *p_this, const char *psz_temp, GdkPixbuf *pix,
+         g_object_unref( p_sys->notification );
+     }
+ 
+-    notification = notify_notification_new( _("Now Playing"),
+-                                            psz_temp, NULL, NULL );
++    notification = notify_notification_new( _("Now Playing"), psz_temp, NULL );
+     notify_notification_set_timeout( notification,
+                                 var_InheritInteger(p_this, "notify-timeout") );
+     notify_notification_set_urgency( notification, NOTIFY_URGENCY_LOW );

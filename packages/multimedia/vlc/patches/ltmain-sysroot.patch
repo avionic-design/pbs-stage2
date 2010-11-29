@@ -1,5 +1,14 @@
+
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ autotools/ltmain.sh |   68 ++++++++++++++++++++++++++++++++++-----------------
+ 1 files changed, 45 insertions(+), 23 deletions(-)
+
 diff --git a/autotools/ltmain.sh b/autotools/ltmain.sh
-index 3506ead..be92a38 100755
+index d88da2c..612f08b 100755
 --- a/autotools/ltmain.sh
 +++ b/autotools/ltmain.sh
 @@ -65,7 +65,7 @@
