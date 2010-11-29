@@ -1,5 +1,15 @@
+
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ lsusb.c |   13 +++++++++++++
+ names.c |    8 ++++----
+ 2 files changed, 17 insertions(+), 4 deletions(-)
+
 diff --git a/lsusb.c b/lsusb.c
-index 4833536..6b6c673 100644
+index f6e2f06..5980982 100644
 --- a/lsusb.c
 +++ b/lsusb.c
 @@ -139,6 +139,19 @@ static inline int typesafe_control_msg(usb_dev_handle *dev,
