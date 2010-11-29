@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_GLEW
+	bool "glew"
+	select PACKAGE_LIBS_MESA
+	default n

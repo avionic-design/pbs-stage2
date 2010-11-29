@@ -1,0 +1,63 @@
+Disable stripping.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile              |   10 +++-------
+ config/Makefile.linux |    2 +-
+ 2 files changed, 4 insertions(+), 8 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 2879015..baa3e52 100644
+--- a/Makefile
++++ b/Makefile
+@@ -55,7 +55,6 @@ DIST_SRC_TGZ = glew-$(GLEW_VERSION).tgz
+ 
+ AR = ar
+ INSTALL = install
+-STRIP = strip
+ RM = rm -f
+ LN = ln -sf
+ ifeq ($(MAKECMDGOALS), debug)
+@@ -128,11 +127,9 @@ install: all
+ 	$(INSTALL) -d -m 0755 $(LIBDIR)/pkgconfig
+ # runtime
+ ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
+-	$(STRIP) -x lib/$(LIB.SHARED)
+-	$(INSTALL) -m 0644 lib/$(LIB.SHARED) $(BINDIR)/
++	$(INSTALL) -m 0755 lib/$(LIB.SHARED) $(BINDIR)/
+ else
+-	$(STRIP) -x lib/$(LIB.SHARED)
+-	$(INSTALL) -m 0644 lib/$(LIB.SHARED) $(LIBDIR)/
++	$(INSTALL) -m 0755 lib/$(LIB.SHARED) $(LIBDIR)/
+ 	$(LN) $(LIB.SHARED) $(LIBDIR)/$(LIB.SONAME)
+ endif
+ # development files
+@@ -143,12 +140,11 @@ endif
+ ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
+ 	$(INSTALL) -m 0644 lib/$(LIB.DEVLNK) $(LIBDIR)/
+ else
+-	$(STRIP) -x lib/$(LIB.STATIC)
+ 	$(INSTALL) -m 0644 lib/$(LIB.STATIC) $(LIBDIR)/
+ 	$(LN) $(LIB.SHARED) $(LIBDIR)/$(LIB.DEVLNK)
+ endif
+ # utilities
+-	$(INSTALL) -s -m 0755 bin/$(GLEWINFO.BIN) bin/$(VISUALINFO.BIN) $(BINDIR)/
++	$(INSTALL) -m 0755 bin/$(GLEWINFO.BIN) bin/$(VISUALINFO.BIN) $(BINDIR)/
+ 
+ uninstall:
+ 	$(RM) $(INCDIR)/wglew.h
+diff --git a/config/Makefile.linux b/config/Makefile.linux
+index fd8a2d1..a536018 100644
+--- a/config/Makefile.linux
++++ b/config/Makefile.linux
+@@ -19,7 +19,7 @@ LDFLAGS.STATIC = -Wl,-Bstatic
+ LDFLAGS.DYNAMIC = -Wl,-Bdynamic
+ NAME = GLEW
+ WARN = -Wall -W
+-POPT = -O2
++POPT = -O2 -g
+ BIN.SUFFIX =
+ LIB.SONAME = lib$(NAME).so.$(SO_MAJOR)
+ LIB.DEVLNK = lib$(NAME).so
