@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_TALLOC
+	bool "talloc"
+	select VIRTUAL_DEVEL_LIBC
+	default n

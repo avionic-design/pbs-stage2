@@ -89,6 +89,7 @@ source "packages/libs/sdl/Kconfig"
 source "packages/libs/sqlite/Kconfig"
 source "packages/libs/startup-notification/Kconfig"
 source "packages/libs/sysfsutils/Kconfig"
+source "packages/libs/talloc/Kconfig"
 source "packages/libs/upower/Kconfig"
 source "packages/libs/zlib/Kconfig"
 
