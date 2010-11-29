@@ -44,5 +44,8 @@
 + Add additional functionality to fetch tarballs from a local proxy. This
   prevents problems when an upstream mirror is down or (re)moves content.
 
++ When uClibc gets proper TLS support, remove any related workarounds:
+    * core/e2fsprogs
+
 --
 vim: tw=78
