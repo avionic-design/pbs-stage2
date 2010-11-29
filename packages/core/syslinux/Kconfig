@@ -1,4 +1,5 @@
 config PACKAGE_CORE_SYSLINUX
 	bool "syslinux"
 	select VIRTUAL_DEVEL_LIBC
+	depends on ARCH_X86 || ARCH_X86_64
 	default n
