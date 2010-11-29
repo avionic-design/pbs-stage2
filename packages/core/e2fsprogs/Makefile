@@ -6,6 +6,11 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+ifneq ($(LIBC),gnu)
+  conf-args += \
+	--disable-tls
+endif
+
 stripfiles = \
 	$(prefix)/bin/chattr \
 	$(prefix)/bin/lsattr \
