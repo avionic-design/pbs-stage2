@@ -1,16 +1,12 @@
 PACKAGE = mesa
-VERSION = 7.8.2
-SOVER = 070802
+VERSION = 7.9
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2
-SOVER = 070502
 endif
 
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(VERSION)
-TARBALLS = \
-	MesaLib-$(VERSION).tar.bz2 \
-	MesaDemos-$(VERSION).tar.bz2
+TARBALLS = MesaLib-$(VERSION).tar.bz2
 
 include packages/common.mk
 
@@ -50,9 +46,7 @@ dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_FFB) += ffb
 
 conf-args += \
 	--with-dri-drivers="$(dri-drivers-y)" \
-	--with-demos=xdemos \
-	--disable-gallium \
-	--disable-egl
+	--disable-gallium
 
 conf-vars += \
 	CPPFLAGS='$(CPPFLAGS)' \
@@ -74,40 +68,13 @@ install-args += \
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
+		$(env) $(priv) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
 stripfiles = \
-	$(prefix)/bin/corender \
-	$(prefix)/bin/glsync \
-	$(prefix)/bin/glthreads \
-	$(prefix)/bin/glxcontexts \
-	$(prefix)/bin/glxdemo \
-	$(prefix)/bin/glxgears \
-	$(prefix)/bin/glxgears_fbconfig \
-	$(prefix)/bin/glxgears_pixmap \
-	$(prefix)/bin/glxheads \
-	$(prefix)/bin/glxinfo \
-	$(prefix)/bin/glxpbdemo \
-	$(prefix)/bin/glxpixmap \
-	$(prefix)/bin/glxsnoop \
-	$(prefix)/bin/glxswapcontrol \
-	$(prefix)/bin/manywin \
-	$(prefix)/bin/msctest \
-	$(prefix)/bin/multictx \
-	$(prefix)/bin/offset \
-	$(prefix)/bin/omlsync \
-	$(prefix)/bin/overlay \
-	$(prefix)/bin/pbdemo \
-	$(prefix)/bin/pbinfo \
-	$(prefix)/bin/sharedtex \
-	$(prefix)/bin/sharedtex_mt \
-	$(prefix)/bin/texture_from_pixmap \
-	$(prefix)/bin/wincopy \
-	$(prefix)/bin/xfont \
-	$(prefix)/bin/xrotfontdemo \
 	$(prefix)/lib/*.so.* \
-	$(prefix)/lib/dri/*.so
+	$(prefix)/lib/dri/*.so \
+	$(prefix)/lib/egl/*.so
 
 include packages/cleanup.mk
 include packages/binary.mk
