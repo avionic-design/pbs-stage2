@@ -1,5 +1,5 @@
 PACKAGE = flashrom
-VERSION = 0.9.2
+VERSION = 0.9.3
 
 LOCATION = http://qa.coreboot.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
