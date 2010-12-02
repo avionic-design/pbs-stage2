@@ -32,7 +32,7 @@ diff --git a/gio/Makefile.am b/gio/Makefile.am
 index b0af5df..3c84f62 100644
 --- a/gio/Makefile.am
 +++ b/gio/Makefile.am
-@@ -282,8 +282,6 @@ giowin32include_HEADERS = \
+@@ -281,8 +281,6 @@ giowin32include_HEADERS = \
  
  endif
  
@@ -45,7 +45,7 @@ diff --git a/gio/Makefile.in b/gio/Makefile.in
 index 4d426a0..5fe8a81 100644
 --- a/gio/Makefile.in
 +++ b/gio/Makefile.in
-@@ -612,7 +612,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
+@@ -618,7 +618,7 @@ EXTRA_DIST = gio-marshal.list gio.symbols gioenumtypes.h.template \
  TEST_PROGS = 
  NULL = 
  SUBDIRS = $(am__append_1) $(am__append_3) $(am__append_7) \
