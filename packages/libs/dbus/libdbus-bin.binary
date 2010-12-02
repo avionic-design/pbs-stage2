@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+rootfs="$1"
+version="$2"
+
+DBUS_DAEMON_LAUNCH_HELPER="$rootfs/usr/lib/dbus-1.0/dbus-daemon-launch-helper"
+DBUS_GID=104
+
+chgrp $DBUS_GID "$DBUS_DAEMON_LAUNCH_HELPER"
+chmod 4750 "$DBUS_DAEMON_LAUNCH_HELPER"
