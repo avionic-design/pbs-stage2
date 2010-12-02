@@ -128,4 +128,10 @@ for proc in /proc/[0-9]*; do
 done
 log_action_end_msg $?
 
+if test -b /dev/disk/by-label/persist; then
+	log_action_begin_msg "Mounting persistent storage at $mp/persist"
+	mount /dev/disk/by-label/persist $mp/persist
+	log_action_end_msg $?
+fi
+
 exec switch_root "$mp" "$init" "$@"
