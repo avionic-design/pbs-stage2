@@ -1,0 +1,4 @@
+config PACKAGE_NET_DDIP
+	bool "ddip"
+	select PACKAGE_LIBS_LIBEV
+	default n
