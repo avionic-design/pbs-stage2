@@ -1,0 +1,54 @@
+#!/bin/sh -e
+
+wait_for_partition()
+{
+	echo -n "waiting for partition $1 ..."
+	while ! test -b "$1"; do
+		echo -n .
+		sleep 1
+	done
+	echo " done"
+}
+
+format_partition()
+{
+	echo -n "formatting $1 with $2 (label:$3) ... "
+	/sbin/mkfs -t $2 -L $3 $1 > /dev/null 2>&1
+	if test "x$?" = "x0"; then
+		echo "done"
+	else
+		echo "failed"
+	fi
+}
+
+if [ "x$1" = "x" ]; then
+	echo "usage: $0 device"
+	exit 1
+fi
+
+device="$1"
+
+/sbin/sfdisk -uM "$device" <<EOF
+,512,L,*
+,,L
+EOF
+
+cat /usr/lib/syslinux/mbr.bin > ${device}
+wait_for_partition ${device}1
+format_partition ${device}1 ext3 boot
+wait_for_partition ${device}2
+format_partition ${device}2 ext3 data
+
+sleep 1
+
+mount ${device}1 /media/usb
+extlinux --install /media/usb
+cat > /media/usb/extlinux.conf << EOF
+DEFAULT linux
+LABEL linux
+	KERNEL vmlinuz
+	INITRD initrd.gz
+	APPEND root=LABEL=boot:/rootfs.img
+EOF
+chown root:root /media/usb/extlinux.conf
+umount /media/usb
