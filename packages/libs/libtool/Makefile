@@ -1,9 +1,4 @@
-PACKAGE = libtool
-VERSION = 2.4
-
-LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/libs/libtool/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
