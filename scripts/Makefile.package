@@ -113,6 +113,8 @@ $(pkgtree)/.directory:
 $(pkgtree)/.extract: $(pkgtree)/.checksum $(extract)
 	$(call cmd,stamp)
 
+setup-deps := $(pkgtree)/.extract
+
 quiet_cmd_svn_export = SVN     $(LOCATION_SVN)
       cmd_svn_export = rm -rf $(pkgbuildtree) && \
 			cd $(dir $(pkgbuildtree)) && \
@@ -123,10 +125,20 @@ $(pkgtree)/.svn-export: $(pkgtree)/.directory
 	$(call cmd,stamp)
 
 ifneq ($(LOCATION_SVN),)
-$(pkgtree)/.setup: $(pkgtree)/.svn-export
-else ifneq ($(LOCATION),)
-$(pkgtree)/.setup: $(pkgtree)/.extract
+  setup-deps := $(pkgtree)/.svn-export
 endif
+
+quiet_cmd_git_clone = GIT      $(GIT_URL)
+      cmd_git_clone = git clone -q $(GIT_URL) $@
+
+$(pkgtree)/$(PACKAGE).git:
+	$(call cmd,git_clone)
+
+ifneq ($(GIT_URL),)
+  setup-deps := $(pkgtree)/$(PACKAGE).git
+endif
+
+$(pkgtree)/.setup: $(setup-deps)
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
       cmd_quilt_patch = cd $(pkgbuildtree) && \
