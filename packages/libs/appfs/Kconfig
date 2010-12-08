@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_APPFS
+	bool "AppFS"
+	select PACKAGE_LIBS_FUSE
+	default n
