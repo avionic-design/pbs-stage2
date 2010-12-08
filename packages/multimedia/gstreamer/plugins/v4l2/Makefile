@@ -1,10 +1,7 @@
 PACKAGE = gst-plugins-v4l2
 VERSION = git
 
-LOCATION =
-TARBALLS =
-
-GITTREE = $(srctree)/../fdo/gstreamer/gst-plugins-v4l2.git
+GIT_URL = git://git.adnet.avionic-design.de/gst-plugins-v4l2.git
 include packages/autotools-git.mk
 
 plugin = $(prefix)/lib/gstreamer-0.10

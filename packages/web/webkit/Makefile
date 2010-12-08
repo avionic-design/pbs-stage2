@@ -1,8 +1,7 @@
 PACKAGE = webkit
 VERSION = git
 
-GITTREE = $(srctree)/../web/WebKit.git
-
+GIT_URL = git://git.webkit.org/WebKit.git
 include packages/autotools-git.mk
 
 conf-args += \

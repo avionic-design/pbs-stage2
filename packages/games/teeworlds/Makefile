@@ -1,11 +1,9 @@
 PACKAGE = teeworlds
-VERSION = 0.5.2
+VERSION = git
 
-GITTREE = $(srctree)/../games/teeworlds.git
-
+GIT_URL = git://git.adnet.avionic-design.de/games/teeworlds.git
 include packages/autotools-git.mk
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/teeworlds \
 	$(prefix)/bin/teeworlds-masterserver \

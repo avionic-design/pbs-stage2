@@ -1,5 +1,5 @@
-ifndef GITTREE
-$(error GITTREE is undefined)
+ifndef GIT_URL
+$(error GIT_URL is undefined)
 endif
 
 include packages/common.mk
@@ -31,7 +31,8 @@ conf-vars += \
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
-			$(env) $(GITTREE)/autogen.sh $(conf-args) $(conf-vars)
+			$(env) $(pkgtree)/$(PACKAGE).git/autogen.sh \
+				$(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure

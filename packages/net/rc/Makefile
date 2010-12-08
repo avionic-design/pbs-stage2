@@ -1,7 +1,7 @@
 PACKAGE = rc
 VERSION = git
 
-GITTREE = $(srctree)/../avionic-design/rc.git
+GIT_URL = git://git.adnet.avionic-design.de/avionic-design/rc.git
 include packages/autotools-git.mk
 
 stripfiles = \
