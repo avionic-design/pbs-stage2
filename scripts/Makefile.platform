@@ -11,6 +11,7 @@ depends-dirs := $(subst //,/,$(depends-dirs))
 
 build-dirs := $(addprefix build-,$(depends-dirs))
 uscan-dirs := $(addprefix uscan-,$(depends-dirs))
+watch-dirs := $(addprefix watch-,$(depends-dirs))
 print-dirs := $(addprefix print-,$(depends-dirs))
 
 PHONY += $(build-dirs)
@@ -27,6 +28,14 @@ $(uscan-dirs): uscan-%:
 
 PHONY += uscan
 uscan: $(uscan-dirs)
+	@:
+
+PHONY += $(watch-dirs)
+$(watch-dirs): watch-%:
+	$(Q)$(MAKE) $(watch)=$* watch
+
+PHONY += watch
+watch: $(watch-dirs)
 	@:
 
 PHONY += $(print-dirs)

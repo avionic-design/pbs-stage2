@@ -1,0 +1,54 @@
+src := $(obj)
+
+PHONY := all
+all:
+
+-include include/config/auto.conf
+include scripts/Kbuild.include
+include scripts/Makefile.lib
+
+kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
+kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
+include $(kbuild-file)
+
+all: watch
+	@:
+
+watch-dirs := $(addprefix watch-$(obj)/,$(filter %/,$(obj-y)))
+watch-pkgs := $(addprefix watch-$(obj)/,$(filter-out %/,$(obj-y)))
+
+watch = $(srctree)/scripts/watch -c $(VERSION) -q $(srctree)/$(obj)/watch
+
+cmd-watch = \
+	@if version=`$(watch)`; then \
+		echo "package is up-to-date: $(obj)"; \
+	elif test x$$? = x1; then \
+		echo "new version available: $(obj) (current: $(VERSION), new: $$version)"; \
+	else \
+		echo "error: $$?"; \
+	fi
+
+err-watch = \
+	@echo "no watchfile for package: $(obj)"
+
+PHONY += $(watch-dirs)
+$(watch-dirs): watch-%: %
+	$(Q)$(MAKE) $(watch)=$*
+
+PHONY += $(watch-pkgs)
+$(watch-pkgs): watch-%:
+	$(Q)$(MAKE) $(watch)=$*
+
+watch: $(watch-dirs) $(watch-pkgs)
+ifdef PACKAGE
+	$(if $(wildcard $(srctree)/$(obj)/watch), \
+		$(call cmd-watch), \
+		$(call err-watch))
+endif
+	@:
+
+PHONY += FORCE
+FORCE:
+	@:
+
+.PHONY: $(PHONY)

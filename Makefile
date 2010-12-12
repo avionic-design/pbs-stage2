@@ -218,6 +218,10 @@ PHONY += uscan
 uscan: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) uscan
 
+PHONY += watch
+watch: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) watch
+
 PHONY += print
 print: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) print
