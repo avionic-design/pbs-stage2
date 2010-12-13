@@ -136,6 +136,7 @@ $(pkgtree)/$(PACKAGE).git:
 
 ifneq ($(GIT_URL),)
   setup-deps := $(pkgtree)/$(PACKAGE).git
+  GIT_USER?=$(shell whoami)
 endif
 
 $(pkgtree)/.setup: $(setup-deps)
