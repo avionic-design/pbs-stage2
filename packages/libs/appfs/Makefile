@@ -1,7 +1,7 @@
 PACAKGE = appfs
 VERSION = git
 
-GITTREE = $(srctree)/../avionic-design/appfs.git
+GIT_URL = ssh://$(GIT_USER)@git.adnet.avionic-design.de/git/avionic-design/appfs.git
 include packages/autotools-git.mk
 
 prunefiles = \
