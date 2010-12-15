@@ -1,7 +1,7 @@
-PACKAGE = rc
+PACKAGE = remote-control
 VERSION = git
 
-GIT_URL = git://git.adnet.avionic-design.de/avionic-design/rc.git
+GIT_URL = git://git.adnet.avionic-design.de/avionic-design/remote-control.git
 include packages/autotools-git.mk
 
 stripfiles = \

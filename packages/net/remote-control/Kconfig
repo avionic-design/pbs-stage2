@@ -1,5 +1,5 @@
-config PACKAGE_NET_RC
-	bool "rc"
+config PACKAGE_NET_REMOTE_CONTROL
+	bool "remote-control"
 	select PACKAGE_BUILD_TOOLS_LIBRPC
 	select PACKAGE_BUILD_TOOLS_LIBTOOL
 	select PACKAGE_LIBS_LIBRPC
