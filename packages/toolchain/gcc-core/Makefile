@@ -1,9 +1,4 @@
-PACKAGE = gcc
-VERSION = 4.5.1
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
-TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2
-
+include packages/toolchain/gcc/Makefile.location
 include packages/toolchain/common.mk
 
 $(pkgtree)/.setup:

@@ -1,9 +1,6 @@
-PACKAGE = gcc
-VERSION = 4.5.1
+include packages/toolchain/gcc/Makefile.location
 
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
-TARBALLS = \
-	$(PACKAGE)-core-$(VERSION).tar.bz2 \
+TARBALLS += \
 	$(PACKAGE)-g++-$(VERSION).tar.bz2 \
 	$(PACKAGE)-objc-$(VERSION).tar.bz2 \
 	$(PACKAGE)-java-$(VERSION).tar.bz2
