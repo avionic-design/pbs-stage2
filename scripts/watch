@@ -11,7 +11,16 @@ def process_recursive(url, pattern, options, final):
 	uri = urlparse.urlparse(url)
 	result = None
 
-	content = urllib2.urlopen(url)
+	if uri.scheme == 'ftp':
+		url = url + '/'
+
+	if options.verbose > 1:
+		print 'opening URL', url, '(%s)' % pattern
+
+	try:
+		content = urllib2.urlopen(url)
+	except:
+		return None
 
 	for line in content:
 		line = line.strip()
@@ -27,7 +36,7 @@ def process_recursive(url, pattern, options, final):
 			continue
 
 		for match in matches:
-			ref = re.match(pattern, match)
+			ref = re.search(pattern, match)
 			if not ref:
 				continue
 
@@ -101,9 +110,9 @@ def process_line(line, options):
 		pattern = parts[1]
 
 	if options.verbose > 0:
-		print 'Site:',site
+		print 'Site:', site
 
-	match = re.match('^(\w+://[^/]+)/(.*)$', line);
+	match = re.match('^(\w+://[^/]+)/(.*)$', site);
 	if options.verbose > 1:
 		print 'groups:', len(match.groups())
 		for group in match.groups():
@@ -124,8 +133,8 @@ def process_line(line, options):
 		paths = collect_paths(base, dirs, options)
 
 	for path in paths:
-		versions = process_recursive(base + '/' + path, pattern,
-				options, True)
+		versions = process_recursive(base + path, pattern, options,
+				True)
 		if versions:
 			result.extend(versions)
 

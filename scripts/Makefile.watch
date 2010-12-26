@@ -25,7 +25,7 @@ cmd-watch = \
 	elif test x$$? = x1; then \
 		echo "new version available: $(obj) (current: $(VERSION), new: $$version)"; \
 	else \
-		echo "error: $$?"; \
+		echo "package scan failed: $(obj): $$?"; \
 	fi
 
 err-watch = \
