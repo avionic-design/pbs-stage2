@@ -1,12 +1,6 @@
-PACKAGE = glibc
-VERSION = 2.12.1
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = \
-	$(PACKAGE)-$(VERSION).tar.xz \
-	$(PACKAGE)-ports-$(VERSION).tar.xz
-
+include packages/toolchain/glibc/Makefile.location
 include packages/toolchain/common.mk
+
 prefix := /usr
 
 $(pkgtree)/.setup:

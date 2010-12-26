@@ -1,7 +1,6 @@
-PACKAGE = glibc
-VERSION = 2.12.1
-
+include packages/toolchain/glibc/Makefile.location
 include packages/toolchain/common.mk
+
 DESTDIR := $(sysroot)
 prefix := /usr
 export DESTDIR
