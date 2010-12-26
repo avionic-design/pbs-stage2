@@ -1,2 +1,2 @@
 version=3
-http://www.multiprecision.org/mpc/download/mpc-(.*)\.tar\.gz
+http://www.multiprecision.org/index.php?prog=mpc&page=download mpc-(.*)\.tar\.gz
