@@ -1,7 +1,6 @@
-PACKAGE = uClibc
-VERSION = 0.9.31
-
+include packages/toolchain/uclibc/Makefile.location
 include packages/toolchain/common.mk
+
 DESTDIR := $(sysroot)
 prefix := /usr
 export DESTDIR

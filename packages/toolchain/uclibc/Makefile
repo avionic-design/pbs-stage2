@@ -1,9 +1,4 @@
-PACKAGE = uClibc
-VERSION = 0.9.31
-
-LOCATION = http://uclibc.org/downloads
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/toolchain/uclibc/Makefile.location
 include packages/toolchain/common.mk
 
 ifneq ($(CONFIG_ABI),)
