@@ -1,5 +1,5 @@
 PACKAGE = dhcp
-VERSION = 4.2.0-P1
+VERSION = 4.2.0-P2
 
 LOCATION = http://ftp.isc.org/isc/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
