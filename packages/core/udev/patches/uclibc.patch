@@ -10,10 +10,10 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
  3 files changed, 12 insertions(+), 0 deletions(-)
 
 diff --git a/extras/ata_id/ata_id.c b/extras/ata_id/ata_id.c
-index bf1debe..3bbaf39 100644
+index 92387e5..1c58b94 100644
 --- a/extras/ata_id/ata_id.c
 +++ b/extras/ata_id/ata_id.c
-@@ -44,6 +44,10 @@
+@@ -45,6 +45,10 @@
  #include "libudev.h"
  #include "libudev-private.h"
  
@@ -21,9 +21,9 @@ index bf1debe..3bbaf39 100644
 +#define le16toh(x) __le16_to_cpu(x)
 +#endif
 +
- #define COMMAND_TIMEOUT 2000
+ #define COMMAND_TIMEOUT_MSEC (30 * 1000)
  
- /* Sends a SCSI command block */
+ static int disk_scsi_inquiry_command(int      fd,
 diff --git a/libudev/libudev-monitor.c b/libudev/libudev-monitor.c
 index a3789c4..d7f17b9 100644
 --- a/libudev/libudev-monitor.c
@@ -40,7 +40,7 @@ index a3789c4..d7f17b9 100644
  #include "libudev-private.h"
  
 diff --git a/udev/udevd.c b/udev/udevd.c
-index 21dde82..b4b5933 100644
+index aa2e365..cd2fba1 100644
 --- a/udev/udevd.c
 +++ b/udev/udevd.c
 @@ -44,6 +44,10 @@

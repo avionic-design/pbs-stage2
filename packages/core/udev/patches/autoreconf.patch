@@ -4,12 +4,12 @@ From: Thierry Reding <thierry.reding@avionic-design.de>
 
 
 ---
- Makefile.in |  282 ++++++++++++++++++++++++++++++-----------------------------
- configure   |  201 ++++++++++++++++++++++++------------------
- 2 files changed, 256 insertions(+), 227 deletions(-)
+ Makefile.in |  294 ++++++++++++++++++++++++++++++-----------------------------
+ configure   |  201 +++++++++++++++++++++++-----------------
+ 2 files changed, 262 insertions(+), 233 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index e889b14..0711e90 100644
+index 7344aad..0fea563 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -57,11 +57,24 @@ libexec_PROGRAMS = extras/firmware/firmware$(EXEEXT) \
@@ -77,7 +77,7 @@ index e889b14..0711e90 100644
  subdir = .
  DIST_COMMON = README $(am__configure_deps) $(am__dist_doc_DATA_DIST) \
  	$(am__dist_libexec_SCRIPTS_DIST) \
-@@ -162,21 +166,21 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libexecdir)" \
+@@ -162,8 +166,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libexecdir)" \
  	"$(DESTDIR)$(includedir)" "$(DESTDIR)$(libgudev_includedir)"
  LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
  am__DEPENDENCIES_1 =
@@ -88,13 +88,16 @@ index e889b14..0711e90 100644
  am__extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
  	extras/gudev/gudevenums.h extras/gudev/gudevenumtypes.h \
  	extras/gudev/gudevtypes.h extras/gudev/gudevclient.h \
- 	extras/gudev/gudevclient.c extras/gudev/gudevdevice.h \
- 	extras/gudev/gudevdevice.c extras/gudev/gudevprivate.h
+@@ -171,14 +175,14 @@ am__extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
+ 	extras/gudev/gudevdevice.c extras/gudev/gudevenumerator.h \
+ 	extras/gudev/gudevenumerator.c extras/gudev/gudevprivate.h
  am__dirstamp = $(am__leading_dot)dirstamp
 -@ENABLE_EXTRAS_TRUE@am_extras_gudev_libgudev_1_0_la_OBJECTS = extras/gudev/extras_gudev_libgudev_1_0_la-gudevclient.lo \
--@ENABLE_EXTRAS_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevdevice.lo
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevdevice.lo \
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevenumerator.lo
 +@ENABLE_GLIB_TRUE@am_extras_gudev_libgudev_1_0_la_OBJECTS = extras/gudev/extras_gudev_libgudev_1_0_la-gudevclient.lo \
-+@ENABLE_GLIB_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevdevice.lo
++@ENABLE_GLIB_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevdevice.lo \
++@ENABLE_GLIB_TRUE@	extras/gudev/extras_gudev_libgudev_1_0_la-gudevenumerator.lo
  am__dist_extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
  	extras/gudev/gudevmarshal.h extras/gudev/gudevmarshal.c \
  	extras/gudev/gudevenumtypes.h extras/gudev/gudevenumtypes.c
@@ -105,7 +108,7 @@ index e889b14..0711e90 100644
  extras_gudev_libgudev_1_0_la_OBJECTS =  \
  	$(am_extras_gudev_libgudev_1_0_la_OBJECTS) \
  	$(dist_extras_gudev_libgudev_1_0_la_OBJECTS)
-@@ -187,8 +191,8 @@ extras_gudev_libgudev_1_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+@@ -189,8 +193,8 @@ extras_gudev_libgudev_1_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
  	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
  	$(extras_gudev_libgudev_1_0_la_CFLAGS) $(CFLAGS) \
  	$(extras_gudev_libgudev_1_0_la_LDFLAGS) $(LDFLAGS) -o $@
@@ -116,7 +119,7 @@ index e889b14..0711e90 100644
  @WITH_SELINUX_TRUE@libudev_libudev_private_la_DEPENDENCIES =  \
  @WITH_SELINUX_TRUE@	$(am__DEPENDENCIES_1)
  am__libudev_libudev_private_la_SOURCES_DIST =  \
-@@ -712,10 +716,10 @@ target_alias = @target_alias@
+@@ -717,10 +721,10 @@ target_alias = @target_alias@
  top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
@@ -129,7 +132,7 @@ index e889b14..0711e90 100644
  	test/rule-syntax-check.py
  ACLOCAL_AMFLAGS = -I m4
  AM_MAKEFLAGS = --no-print-directory
-@@ -732,12 +736,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
+@@ -737,12 +741,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
  	--enable-gtk-doc \
  	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
  
@@ -146,16 +149,16 @@ index e889b14..0711e90 100644
  
  # ------------------------------------------------------------------------------
  # libudev
-@@ -746,7 +751,7 @@ LIBUDEV_CURRENT = 9
- LIBUDEV_REVISION = 3
- LIBUDEV_AGE = 9
+@@ -751,7 +756,7 @@ LIBUDEV_CURRENT = 10
+ LIBUDEV_REVISION = 0
+ LIBUDEV_AGE = 10
  include_HEADERS = libudev/libudev.h
 -lib_LTLIBRARIES = libudev/libudev.la $(am__append_5)
 +lib_LTLIBRARIES = libudev/libudev.la $(am__append_4)
  libudev_libudev_la_SOURCES = \
  	libudev/libudev-private.h \
  	libudev/libudev.c \
-@@ -770,7 +775,7 @@ libudev_libudev_private_la_SOURCES = $(libudev_libudev_la_SOURCES) \
+@@ -775,7 +780,7 @@ libudev_libudev_private_la_SOURCES = $(libudev_libudev_la_SOURCES) \
  	libudev/libudev-queue-private.c $(am__append_1)
  @WITH_SELINUX_TRUE@libudev_libudev_private_la_LIBADD = $(SELINUX_LIBS)
  pkgconfigdir = $(libdir)/pkgconfig
@@ -164,7 +167,7 @@ index e889b14..0711e90 100644
  udevrulesdir = $(libexecdir)/rules.d
  dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
  	rules/rules.d/60-persistent-storage.rules \
-@@ -787,7 +792,7 @@ dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
+@@ -792,7 +797,7 @@ dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
  	extras/edd_id/61-persistent-storage-edd.rules \
  	extras/floppy/60-floppy.rules \
  	extras/fstab_import/79-fstab_import.rules \
@@ -173,7 +176,7 @@ index e889b14..0711e90 100644
  udevconfdir = $(sysconfdir)/udev
  dist_udevconf_DATA = udev.conf
  sharepkgconfigdir = $(datadir)/pkgconfig
-@@ -845,7 +850,7 @@ udev_test_udev_LDADD = libudev/libudev-private.la
+@@ -850,7 +855,7 @@ udev_test_udev_LDADD = libudev/libudev-private.la
  # rule_generator - persistent network and optical device rule generator
  # ------------------------------------------------------------------------------
  dist_libexec_SCRIPTS = extras/rule_generator/write_cd_rules \
@@ -182,7 +185,7 @@ index e889b14..0711e90 100644
  udevhomedir = $(libexecdir)
  dist_udevhome_DATA = extras/rule_generator/rule_generator.functions
  
-@@ -926,62 +931,61 @@ extras_usb_id_usb_id_LDADD = libudev/libudev-private.la
+@@ -931,65 +936,64 @@ extras_usb_id_usb_id_LDADD = libudev/libudev-private.la
  # ------------------------------------------------------------------------------
  extras_v4l_id_v4l_id_SOURCES = extras/v4l_id/v4l_id.c
  extras_v4l_id_v4l_id_LDADD = libudev/libudev-private.la
@@ -191,9 +194,9 @@ index e889b14..0711e90 100644
  # ------------------------------------------------------------------------------
  # GUdev - libudev gobject interface
  # ------------------------------------------------------------------------------
--@ENABLE_EXTRAS_TRUE@LIBGUDEV_CURRENT = 0
--@ENABLE_EXTRAS_TRUE@LIBGUDEV_REVISION = 1
--@ENABLE_EXTRAS_TRUE@LIBGUDEV_AGE = 0
+-@ENABLE_EXTRAS_TRUE@LIBGUDEV_CURRENT = 1
+-@ENABLE_EXTRAS_TRUE@LIBGUDEV_REVISION = 0
+-@ENABLE_EXTRAS_TRUE@LIBGUDEV_AGE = 1
 -@ENABLE_EXTRAS_TRUE@libgudev_includedir = $(includedir)/gudev-1.0/gudev
 -@ENABLE_EXTRAS_TRUE@libgudev_include_HEADERS = \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudev.h \
@@ -201,7 +204,8 @@ index e889b14..0711e90 100644
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevenumtypes.h \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevtypes.h \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevclient.h \
--@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevdevice.h
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevdevice.h \
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevenumerator.h
 -
 -@ENABLE_EXTRAS_TRUE@extras_gudev_libgudev_1_0_la_SOURCES = \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevenums.h \
@@ -212,6 +216,8 @@ index e889b14..0711e90 100644
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevclient.c \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevdevice.h \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevdevice.c \
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevenumerator.h \
+-@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevenumerator.c \
 -@ENABLE_EXTRAS_TRUE@	extras/gudev/gudevprivate.h
 -
 -@ENABLE_EXTRAS_TRUE@dist_extras_gudev_libgudev_1_0_la_SOURCES = \
@@ -243,9 +249,9 @@ index e889b14..0711e90 100644
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@gir_DATA = extras/gudev/GUdev-1.0.gir
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@typelibsdir = $(GIRTYPELIBDIR)
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@typelibs_DATA = extras/gudev/GUdev-1.0.typelib
-+@ENABLE_GLIB_TRUE@LIBGUDEV_CURRENT = 0
-+@ENABLE_GLIB_TRUE@LIBGUDEV_REVISION = 1
-+@ENABLE_GLIB_TRUE@LIBGUDEV_AGE = 0
++@ENABLE_GLIB_TRUE@LIBGUDEV_CURRENT = 1
++@ENABLE_GLIB_TRUE@LIBGUDEV_REVISION = 0
++@ENABLE_GLIB_TRUE@LIBGUDEV_AGE = 1
 +@ENABLE_GLIB_TRUE@libgudev_includedir = $(includedir)/gudev-1.0/gudev
 +@ENABLE_GLIB_TRUE@libgudev_include_HEADERS = \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudev.h \
@@ -253,7 +259,8 @@ index e889b14..0711e90 100644
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevenumtypes.h \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevtypes.h \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevclient.h \
-+@ENABLE_GLIB_TRUE@	extras/gudev/gudevdevice.h
++@ENABLE_GLIB_TRUE@	extras/gudev/gudevdevice.h \
++@ENABLE_GLIB_TRUE@	extras/gudev/gudevenumerator.h
 +
 +@ENABLE_GLIB_TRUE@extras_gudev_libgudev_1_0_la_SOURCES = \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevenums.h \
@@ -264,6 +271,8 @@ index e889b14..0711e90 100644
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevclient.c \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevdevice.h \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevdevice.c \
++@ENABLE_GLIB_TRUE@	extras/gudev/gudevenumerator.h \
++@ENABLE_GLIB_TRUE@	extras/gudev/gudevenumerator.c \
 +@ENABLE_GLIB_TRUE@	extras/gudev/gudevprivate.h
 +
 +@ENABLE_GLIB_TRUE@dist_extras_gudev_libgudev_1_0_la_SOURCES = \
@@ -296,7 +305,7 @@ index e889b14..0711e90 100644
  
  # ------------------------------------------------------------------------------
  # Bluetooth HID devices with special magic to switch the device
-@@ -3078,61 +3082,61 @@ udev-confdirs:
+@@ -3103,63 +3107,63 @@ udev-confdirs:
  %.7 %.8 : %.xml
  	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
  
@@ -337,8 +346,10 @@ index e889b14..0711e90 100644
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(or $(wildcard $(top_builddir)/extras/gudev/gudevenumtypes.h),$(top_srcdir)/extras/gudev/gudevenumtypes.h) \
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevclient.h \
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.h \
+-@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevenumerator.h \
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevclient.c \
--@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.c
+-@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.c \
+-@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevenumerator.c
 -
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@extras/gudev/GUdev-1.0.typelib: extras/gudev/GUdev-1.0.gir $(G_IR_COMPILER)
 -@ENABLE_EXTRAS_TRUE@@ENABLE_INTROSPECTION_TRUE@	$(AM_V_GEN)g-ir-compiler $< -o $@
@@ -379,8 +390,10 @@ index e889b14..0711e90 100644
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(or $(wildcard $(top_builddir)/extras/gudev/gudevenumtypes.h),$(top_srcdir)/extras/gudev/gudevenumtypes.h) \
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevclient.h \
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.h \
++@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevenumerator.h \
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevclient.c \
-+@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.c
++@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevdevice.c \
++@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@		$(top_srcdir)/extras/gudev/gudevenumerator.c
 +
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@extras/gudev/GUdev-1.0.typelib: extras/gudev/GUdev-1.0.gir $(G_IR_COMPILER)
 +@ENABLE_GLIB_TRUE@@ENABLE_INTROSPECTION_TRUE@	$(AM_V_GEN)g-ir-compiler $< -o $@
@@ -412,7 +425,7 @@ index e889b14..0711e90 100644
  @ENABLE_EXTRAS_TRUE@udevacl-install-hook:
  @ENABLE_EXTRAS_TRUE@	mkdir -p $(DESTDIR)$(prefix)/lib/ConsoleKit/run-seat.d
 diff --git a/configure b/configure
-index 008cb83..68b33e0 100755
+index 1716e69..8b9be40 100755
 --- a/configure
 +++ b/configure
 @@ -765,9 +765,11 @@ USBUTILS_LIBS
@@ -684,7 +697,7 @@ index 008cb83..68b33e0 100755
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -11365,58 +11369,14 @@ else
+@@ -11424,58 +11428,14 @@ else
  fi
  
  
@@ -748,7 +761,7 @@ index 008cb83..68b33e0 100755
  
  pkg_failed=no
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLIB" >&5
-@@ -11498,7 +11458,7 @@ and GLIB_LIBS to avoid the need to call pkg-config.
+@@ -11557,7 +11517,7 @@ and GLIB_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -757,7 +770,7 @@ index 008cb83..68b33e0 100755
  else
  	GLIB_CFLAGS=$pkg_cv_GLIB_CFLAGS
  	GLIB_LIBS=$pkg_cv_GLIB_LIBS
-@@ -11508,6 +11468,67 @@ $as_echo "yes" >&6; }
+@@ -11567,6 +11527,67 @@ $as_echo "yes" >&6; }
  fi
  
  
@@ -825,7 +838,7 @@ index 008cb83..68b33e0 100755
  
  	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for acl_init in -lacl" >&5
  $as_echo_n "checking for acl_init in -lacl... " >&6; }
-@@ -11641,7 +11662,7 @@ and LIBUSB_LIBS to avoid the need to call pkg-config.
+@@ -11700,7 +11721,7 @@ and LIBUSB_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -834,7 +847,7 @@ index 008cb83..68b33e0 100755
  else
  	LIBUSB_CFLAGS=$pkg_cv_LIBUSB_CFLAGS
  	LIBUSB_LIBS=$pkg_cv_LIBUSB_LIBS
-@@ -11733,7 +11754,7 @@ and USBUTILS_LIBS to avoid the need to call pkg-config.
+@@ -11792,7 +11813,7 @@ and USBUTILS_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -843,7 +856,7 @@ index 008cb83..68b33e0 100755
  else
  	USBUTILS_CFLAGS=$pkg_cv_USBUTILS_CFLAGS
  	USBUTILS_LIBS=$pkg_cv_USBUTILS_LIBS
-@@ -11942,7 +11963,7 @@ and INTROSPECTION_LIBS to avoid the need to call pkg-config.
+@@ -12001,7 +12022,7 @@ and INTROSPECTION_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
@@ -852,7 +865,7 @@ index 008cb83..68b33e0 100755
  else
  	INTROSPECTION_CFLAGS=$pkg_cv_INTROSPECTION_CFLAGS
  	INTROSPECTION_LIBS=$pkg_cv_INTROSPECTION_LIBS
-@@ -12120,6 +12141,10 @@ if test -z "${WITH_SYSTEMD_TRUE}" && test -z "${WITH_SYSTEMD_FALSE}"; then
+@@ -12179,6 +12200,10 @@ if test -z "${WITH_SYSTEMD_TRUE}" && test -z "${WITH_SYSTEMD_FALSE}"; then
    as_fn_error $? "conditional \"WITH_SYSTEMD\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi
@@ -863,7 +876,7 @@ index 008cb83..68b33e0 100755
  if test -z "${ENABLE_EXTRAS_TRUE}" && test -z "${ENABLE_EXTRAS_FALSE}"; then
    as_fn_error $? "conditional \"ENABLE_EXTRAS\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -13001,7 +13026,7 @@ do
+@@ -13060,7 +13085,7 @@ do
      "extras/gudev/docs/Makefile") CONFIG_FILES="$CONFIG_FILES extras/gudev/docs/Makefile" ;;
      "extras/gudev/docs/version.xml") CONFIG_FILES="$CONFIG_FILES extras/gudev/docs/version.xml" ;;
  
@@ -872,7 +885,7 @@ index 008cb83..68b33e0 100755
    esac
  done
  
-@@ -13317,7 +13342,7 @@ do
+@@ -13376,7 +13401,7 @@ do
    esac
    case $ac_mode$ac_tag in
    :[FHL]*:*);;
@@ -881,7 +894,7 @@ index 008cb83..68b33e0 100755
    :[FH]-) ac_tag=-:-;;
    :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
    esac
-@@ -13345,7 +13370,7 @@ do
+@@ -13404,7 +13429,7 @@ do
  	   [\\/$]*) false;;
  	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
  	   esac ||
@@ -890,7 +903,7 @@ index 008cb83..68b33e0 100755
        esac
        case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
        as_fn_append ac_file_inputs " '$ac_f'"
-@@ -13372,7 +13397,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
+@@ -13431,7 +13456,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
  
      case $ac_tag in
      *:-:* | *:-) cat >"$tmp/stdin" \
