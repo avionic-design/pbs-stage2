@@ -1,5 +1,5 @@
 PACKAGE = libgcrypt
-VERSION = 1.4.5
+VERSION = 1.4.6
 
 LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
