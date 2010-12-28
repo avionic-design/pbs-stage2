@@ -1,5 +1,5 @@
 PACKAGE = net-snmp
-VERSION = 5.5
+VERSION = 5.6
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -19,13 +19,7 @@ conf-vars += \
 	LIBS="-lpthread"
 
 prunefiles = \
-	$(prefix)/lib/libnetsnmp.la \
-	$(prefix)/lib/libnetsnmpagent.la \
-	$(prefix)/lib/libnetsnmphelpers.la \
-	$(prefix)/lib/libnetsnmpmibs.la \
-	$(prefix)/lib/libnetsnmptrapd.la
-
-sover = 20.0.0
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/encode_keychange \
@@ -45,10 +39,6 @@ stripfiles = \
 	$(prefix)/bin/snmpusm \
 	$(prefix)/bin/snmpvacm \
 	$(prefix)/bin/snmpwalk \
-	$(prefix)/lib/libnetsnmp.so.$(sover) \
-	$(prefix)/lib/libnetsnmpagent.so.$(sover) \
-	$(prefix)/lib/libnetsnmphelpers.so.$(sover) \
-	$(prefix)/lib/libnetsnmpmibs.so.$(sover) \
-	$(prefix)/lib/libnetsnmptrapd.so.$(sover) \
+	$(prefix)/lib/*.so.* \
 	$(prefix)/sbin/snmpd \
 	$(prefix)/sbin/snmptrapd

@@ -2,7 +2,7 @@ diff --git a/snmplib/snmp_api.c b/snmplib/snmp_api.c
 index dbe9e22..a854e86 100644
 --- a/snmplib/snmp_api.c
 +++ b/snmplib/snmp_api.c
-@@ -347,6 +347,7 @@ int             snmp_build(u_char ** pkt, size_t * pkt_len,
+@@ -350,6 +350,7 @@ int             snmp_build(u_char ** pkt, size_t * pkt_len,
                             netsnmp_pdu *pdu);
  static int      snmp_parse(void *, netsnmp_session *, netsnmp_pdu *,
                             u_char *, size_t);
@@ -10,7 +10,7 @@ index dbe9e22..a854e86 100644
  
  static void     snmpv3_calc_msg_flags(int, int, u_char *);
  static int      snmpv3_verify_msg(netsnmp_request_list *, netsnmp_pdu *);
-@@ -4896,7 +4897,7 @@ int
+@@ -4994,7 +4995,7 @@ int
  snmp_async_send(netsnmp_session * session,
                  netsnmp_pdu *pdu, snmp_callback callback, void *cb_data)
  {
@@ -19,7 +19,7 @@ index dbe9e22..a854e86 100644
      return snmp_sess_async_send(sessp, pdu, callback, cb_data);
  }
  
-@@ -7433,17 +7434,15 @@ snmp_add_var(netsnmp_pdu *pdu,
+@@ -7514,17 +7515,15 @@ snmp_add_var(netsnmp_pdu *pdu,
   * which guarantee action will occur ONLY for this given session.
   */
  void           *
@@ -38,7 +38,7 @@ index dbe9e22..a854e86 100644
  
      if (slp == NULL) {
          snmp_errno = SNMPERR_BAD_SESSION;       /*MTCRITICAL_RESOURCE */
-@@ -7453,6 +7452,23 @@ snmp_sess_pointer(netsnmp_session * session)
+@@ -7534,6 +7533,23 @@ snmp_sess_pointer(netsnmp_session * session)
  }
  
  /*
