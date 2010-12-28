@@ -1,5 +1,5 @@
 PACKAGE = libogg
-VERSION = 1.2.1
+VERSION = 1.2.2
 
 LOCATION = http://downloads.xiph.org/releases/ogg
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
