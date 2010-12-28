@@ -3,7 +3,7 @@ VERSION = 2.12.1
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
-	$(PACKAGE)-$(VERSION).tar.xz \
+	$(PACKAGE)-$(VERSION).tar.bz2 \
 	$(PACKAGE)-ports-$(VERSION).tar.bz2
 
 include packages/common.mk
