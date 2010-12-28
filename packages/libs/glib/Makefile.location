@@ -1,5 +1,5 @@
 PACKAGE = glib
-VERSION = 2.27.4
+VERSION = 2.27.5
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
