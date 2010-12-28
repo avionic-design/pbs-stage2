@@ -1,5 +1,5 @@
 PACKAGE = libsh
-VERSION = 0.3.6
+VERSION = 0.3.8
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
