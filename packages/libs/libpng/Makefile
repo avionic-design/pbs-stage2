@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.4.4
+VERSION = 1.4.5
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
