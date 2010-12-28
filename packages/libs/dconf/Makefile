@@ -1,5 +1,5 @@
 PACKAGE = dconf
-VERSION = 0.5
+VERSION = 0.5.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
