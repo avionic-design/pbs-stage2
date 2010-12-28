@@ -1,13 +1,16 @@
 PACKAGE = pangomm
-VERSION = 2.26.2
+VERSION = 2.26.3
 
-LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/2.26
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libpangomm-1.4.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libpangomm-1.4.so.1.0.30
+	$(prefix)/lib/*.so.*
