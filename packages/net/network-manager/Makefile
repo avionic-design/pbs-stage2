@@ -1,5 +1,5 @@
 PACKAGE = NetworkManager
-VERSION = 0.8.1.999
+VERSION = 0.8.2
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -12,6 +12,7 @@ include packages/autotools.mk
 pkglib = $(prefix)/lib/$(PACKAGE)
 
 conf-args += \
+	--with-keyfiledir=/var/lib/NetworkManager/system-connections \
 	--with-dhclient=/usr/sbin/dhclient \
 	--libexec=$(pkglib) \
 	--with-distro=debian \
