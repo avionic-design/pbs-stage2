@@ -1,2 +1,2 @@
 version=3
-http://sf.net/libusb/libusb-compat-(.+)\.tar\.gz
+http://sf.net/libusb/libusb-compat-(.*)\.tar\.bz2
