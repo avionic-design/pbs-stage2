@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.10.0
+VERSION = 1.10.2
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
