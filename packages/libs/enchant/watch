@@ -1,2 +1,2 @@
 version=3
-http://www.abisource.com/downloads/enchant/(.*)/enchant-(.*)\.tar\.gz
+http://www.abisource.com/downloads/enchant/(\d+\.\d+\.\d+)/enchant-(.*)\.tar\.gz

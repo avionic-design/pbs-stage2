@@ -1,7 +1,7 @@
 PACKAGE = enchant
-VERSION = 1.5.0
+VERSION = 1.6.0
 
-LOCATION = http://www.abisource.com/downloads/enchant/1.5.0
+LOCATION = http://www.abisource.com/downloads/enchant/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
@@ -20,7 +20,7 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/enchant \
 	$(prefix)/bin/enchant-lsmod \
-	$(prefix)/lib/libenchant.so.1.5.0 \
+	$(prefix)/lib/libenchant.so.$(VERSION) \
 	$(plugin)/libenchant_ispell.so \
 	$(plugin)/libenchant_myspell.so \
 	$(plugin)/libenchant_zemberek.so
