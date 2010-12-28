@@ -1,5 +1,5 @@
 PACKAGE = libtasn1
-VERSION = 2.8
+VERSION = 2.9
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
