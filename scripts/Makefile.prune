@@ -14,12 +14,12 @@ prunedirs  := $(patsubst %,prune-%,$(prunedirs))
 prunefiles := $(patsubst %,prune-%,$(prunefiles))
 
 PHONY += $(prunedirs)
-$(prunedirs): prune-%: %
+$(prunedirs): prune-%:
 	@echo "  PRUNE   $(subst prune-$(DESTDIR),,$@)"
 	@$(priv) rm -rf $(subst prune-,,$@)
 
 PHONY += $(prunefiles)
-$(prunefiles): prune-%: %
+$(prunefiles): prune-%:
 	@echo "  PRUNE   $(subst prune-$(DESTDIR),,$@)"
 	@$(priv) rm -f $(subst prune-,,$@)
 
