@@ -1,0 +1,4 @@
+config PACKAGE_NET_IFPLUGD
+	bool "ifplugd"
+	select PACKAGE_LIBS_LIBDAEMON
+	default n
