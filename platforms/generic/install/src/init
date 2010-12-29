@@ -1,0 +1,30 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+log_action_begin_msg "Mounting /proc filesystem"
+mkdir -p /proc
+mount -t proc none /proc
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /sys filesystem"
+mkdir -p /sys
+mount -t sysfs none /sys
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /dev filesystem"
+mount -o size=256K,mode=0755 -t tmpfs udev /dev
+log_action_end_msg $?
+
+log_action_begin_msg "Creating devices"
+[ -e /dev/console ] || mknod -m 0600 /dev/console c 5 1
+[ -e /dev/null ] || mknod /dev/null c 1 3
+log_action_end_msg $?
+
+log_action_begin_msg "Populating /dev filesystem"
+/sbin/udevd --daemon --resolve-names=never
+/sbin/udevadm trigger
+/sbin/udevadm settle || true
+log_action_end_msg $?
+
+exec /sbin/init

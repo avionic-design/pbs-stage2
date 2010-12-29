@@ -1,0 +1,7 @@
+::sysinit:/etc/init.d/rcS
+tty1::askfirst:/bin/sh
+tty2::askfirst:/bin/sh
+tty3::askfirst:/bin/sh
+tty4::askfirst:/bin/sh
+tty5::askfirst:/bin/sh
+tty6::askfirst:/bin/sh

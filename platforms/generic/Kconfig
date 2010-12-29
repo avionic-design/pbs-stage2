@@ -4,6 +4,7 @@ choice
 	prompt "Generic"
 
 source "platforms/generic/initrd/Kconfig"
+source "platforms/generic/install/Kconfig"
 source "platforms/generic/toolchain/Kconfig"
 
 endchoice

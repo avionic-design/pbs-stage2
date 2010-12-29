@@ -1,0 +1,97 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+mp=/mnt/target
+
+install_file() {
+	tarball="$1"
+	target="$2"
+	file="$3"
+
+	tar xf "$tarball" -C "$target" "$file"
+}
+
+log_action_begin_msg "Loading modules"
+modprobe i915 && modprobe e1000e
+log_action_end_msg $?
+
+log_action_begin_msg "Bringing up network interface eth0"
+ifconfig eth0 up && udhcpc -i eth0 > /dev/null 2>&1
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting installer partition"
+mount -o ro /dev/disk/by-label/install /mnt/install
+log_action_end_msg $?
+
+if test -f /mnt/install/install.tar; then
+	log_action_begin_msg "Copying installation image from installer partition"
+	cp /mnt/install/install.tar /tmp
+	log_action_end_msg $?
+else
+	log_failure_msg "Network installation not supported"
+	exit 1
+fi
+
+log_action_begin_msg "Unmounting installer partition"
+umount /mnt/install
+log_action_end_msg $?
+
+serial=`/bin/macserial eth0 4-5`
+device=`/scripts/detect-media`
+
+install_file /tmp/install.tar /tmp disk-layout &&
+	/scripts/partition-disk $device &&
+	/scripts/format-disk $device
+
+log_action_begin_msg "Mounting primary boot partition"
+mount /dev/disk/by-label/boot "$mp"
+log_action_end_msg $?
+
+log_action_begin_msg "  Installing kernel image"
+install_file /tmp/install.tar "$mp" vmlinuz
+log_action_end_msg $?
+
+log_action_begin_msg "  Installing initial ramdisk"
+install_file /tmp/install.tar "$mp" initrd.gz
+log_action_end_msg $?
+
+log_action_begin_msg "  Installing root filesystem"
+install_file /tmp/install.tar "$mp" rootfs.img
+log_action_end_msg $?
+
+log_action_begin_msg "  Installing extlinux bootloader"
+extlinux --install "$mp" > /dev/null 2>&1 &&
+	install_file /tmp/install.tar "$mp" extlinux.conf
+log_action_end_msg $?
+
+log_action_begin_msg "Unmounting primary boot partition"
+umount "$mp"
+log_action_end_msg $?
+
+log_action_begin_msg "Installing MBR"
+cat /usr/share/syslinux/mbr.bin > $device
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting persistent data partition"
+mount /dev/disk/by-label/persist "$mp"
+log_action_end_msg $?
+
+log_action_begin_msg "  Generating hostname"
+install_file /tmp/install.tar /tmp hostname-prefix &&
+	mkdir -p "$mp/etc" &&
+	echo "`cat /tmp/hostname-prefix`$serial" > "$mp/etc/hostname"
+log_action_end_msg $?
+
+if test -x /usr/bin/ssh-keygen; then
+	log_action_begin_msg "  Generating SSH keys"
+	mkdir -p "$mp/etc/ssh" &&
+		ssh-keygen -q -f "$mp/etc/ssh/ssh_host_key" -N '' -t rsa1 &&
+		ssh-keygen -q -f "$mp/etc/ssh/ssh_host_dsa_key" -N '' -t dsa &&
+		ssh-keygen -q -f "$mp/etc/ssh/ssh_host_rsa_key" -N '' -t rsa
+	log_action_end_msg $?
+fi
+
+log_action_begin_msg "Unmounting persistent data partition"
+umount "$mp"
+log_action_end_msg $?

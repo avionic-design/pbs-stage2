@@ -1,0 +1,28 @@
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+YELLOW="\033[0;33m"
+NORMAL="\033[m"
+
+log_end_justify() {
+	# pad to the right
+	#echo -ne "\033[1024G\033[5D"
+	echo -ne "\033[80G\033[5D"
+}
+
+log_action_begin_msg() {
+	echo -n "$@"
+}
+
+log_action_cont_msg() {
+	echo -n "$@"
+}
+
+log_action_end_msg() {
+	log_end_justify
+
+	if test "x$1" = "x0"; then
+		echo -e "[${GREEN}DONE${NORMAL}]"
+	else
+		echo -e "[${RED}FAIL${NORMAL}]"
+	fi
+}

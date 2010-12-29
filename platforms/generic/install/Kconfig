@@ -1,0 +1,5 @@
+config PLATFORM_GENERIC_INSTALL
+	bool "Generic Installer Ramdisk"
+	select PACKAGE_CORE_BUSYBOX
+	select PACKAGE_CORE_UDEV
+	select PACKAGE_CORE_UTIL_LINUX
