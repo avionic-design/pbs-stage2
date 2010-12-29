@@ -7,6 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system \
 	--with-snmp
 
 conf-vars += \

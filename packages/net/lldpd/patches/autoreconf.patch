@@ -1,0 +1,415 @@
+Autoreconfigure.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile.in       |    1 +
+ configure         |   71 ++++++++++++++++++++++++++++++++++++++---------------
+ man/Makefile.in   |    1 +
+ src/Makefile.in   |   59 ++++++++++++++++++++++++++++++++++++--------
+ tests/Makefile.in |    1 +
+ 5 files changed, 102 insertions(+), 31 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index a00fa62..9ddd441 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -264,6 +264,7 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++systemdsystemunitdir = @systemdsystemunitdir@
+ target_alias = @target_alias@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+diff --git a/configure b/configure
+index f7dc72f..3cc132d 100755
+--- a/configure
++++ b/configure
+@@ -752,6 +752,9 @@ USE_SNMP_FALSE
+ USE_SNMP_TRUE
+ HAVE_CHECK_FALSE
+ HAVE_CHECK_TRUE
++HAVE_SYSTEMD_FALSE
++HAVE_SYSTEMD_TRUE
++systemdsystemunitdir
+ XML2_CFLAGS
+ XML2_LIBS
+ XML2_CONFIG
+@@ -895,6 +898,7 @@ with_gnu_ld
+ enable_libtool_lock
+ with_snmp
+ with_xml
++with_systemdsystemunitdir
+ with_privsep_user
+ with_privsep_group
+ with_privsep_chroot
+@@ -1572,6 +1576,8 @@ Optional Packages:
+   --with-gnu-ld           assume the C compiler uses GNU ld [default=no]
+   --with-snmp             Enable the use of SNMP [default=no]
+   --with-xml              Enable XML output via libxml2 [default=no:>@
++  --with-systemdsystemunitdir=DIR
++                          Directory for systemd service files
+   --with-privsep-user     Which user to use for privilege separation
+                           [default=_lldpd]
+   --with-privsep-group    Which group to use for privilege separation
+@@ -5000,13 +5006,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
+ else
+   lt_cv_nm_interface="BSD nm"
+   echo "int some_variable = 0;" > conftest.$ac_ext
+-  (eval echo "\"\$as_me:5003: $ac_compile\"" >&5)
++  (eval echo "\"\$as_me:5009: $ac_compile\"" >&5)
+   (eval "$ac_compile" 2>conftest.err)
+   cat conftest.err >&5
+-  (eval echo "\"\$as_me:5006: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
++  (eval echo "\"\$as_me:5012: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+   (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
+   cat conftest.err >&5
+-  (eval echo "\"\$as_me:5009: output\"" >&5)
++  (eval echo "\"\$as_me:5015: output\"" >&5)
+   cat conftest.out >&5
+   if $GREP 'External.*some_variable' conftest.out > /dev/null; then
+     lt_cv_nm_interface="MS dumpbin"
+@@ -6212,7 +6218,7 @@ ia64-*-hpux*)
+   ;;
+ *-*-irix6*)
+   # Find out which ABI we are using.
+-  echo '#line 6215 "configure"' > conftest.$ac_ext
++  echo '#line 6221 "configure"' > conftest.$ac_ext
+   if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
+   (eval $ac_compile) 2>&5
+   ac_status=$?
+@@ -7741,11 +7747,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:7744: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:7750: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:7748: \$? = $ac_status" >&5
++   echo "$as_me:7754: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8080,11 +8086,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8083: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8089: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:8087: \$? = $ac_status" >&5
++   echo "$as_me:8093: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -8185,11 +8191,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8188: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8194: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8192: \$? = $ac_status" >&5
++   echo "$as_me:8198: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -8240,11 +8246,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:8243: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8249: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:8247: \$? = $ac_status" >&5
++   echo "$as_me:8253: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -10624,7 +10630,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 10627 "configure"
++#line 10633 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -10720,7 +10726,7 @@ else
+   lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
+   lt_status=$lt_dlunknown
+   cat > conftest.$ac_ext <<_LT_EOF
+-#line 10723 "configure"
++#line 10729 "configure"
+ #include "confdefs.h"
+ 
+ #if HAVE_DLFCN_H
+@@ -14500,11 +14506,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:14503: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:14509: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>conftest.err)
+    ac_status=$?
+    cat conftest.err >&5
+-   echo "$as_me:14507: \$? = $ac_status" >&5
++   echo "$as_me:14513: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s "$ac_outfile"; then
+      # The compiler can only warn and ignore the option if not recognized
+      # So say no if there are warnings other than the usual output.
+@@ -14599,11 +14605,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:14602: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:14608: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:14606: \$? = $ac_status" >&5
++   echo "$as_me:14612: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -14651,11 +14657,11 @@ else
+    -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
+    -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
+    -e 's:$: $lt_compiler_flag:'`
+-   (eval echo "\"\$as_me:14654: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:14660: $lt_compile\"" >&5)
+    (eval "$lt_compile" 2>out/conftest.err)
+    ac_status=$?
+    cat out/conftest.err >&5
+-   echo "$as_me:14658: \$? = $ac_status" >&5
++   echo "$as_me:14664: \$? = $ac_status" >&5
+    if (exit $ac_status) && test -s out/conftest2.$ac_objext
+    then
+      # The compiler can only warn and ignore the option if not recognized
+@@ -18927,6 +18933,27 @@ _ACEOF
+ 
+ fi
+ 
++
++# Check whether --with-systemdsystemunitdir was given.
++if test "${with_systemdsystemunitdir+set}" = set; then :
++  withval=$with_systemdsystemunitdir;
++else
++  with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir sytsemd)
++fi
++
++if test "x$with_systemdsystemunitdir" != xno; then
++  systemdsystemunitdir=$with_systemdsystemunitdir
++
++fi
++ if test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno; then
++  HAVE_SYSTEMD_TRUE=
++  HAVE_SYSTEMD_FALSE='#'
++else
++  HAVE_SYSTEMD_TRUE='#'
++  HAVE_SYSTEMD_FALSE=
++fi
++
++
+ # Privsep settings
+ 
+ 
+@@ -19290,6 +19317,10 @@ if test -z "${am__fastdepCXX_TRUE}" && test -z "${am__fastdepCXX_FALSE}"; then
+   as_fn_error $? "conditional \"am__fastdepCXX\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+ fi
++if test -z "${HAVE_SYSTEMD_TRUE}" && test -z "${HAVE_SYSTEMD_FALSE}"; then
++  as_fn_error $? "conditional \"HAVE_SYSTEMD\" was never defined.
++Usually this means the macro was only invoked conditionally." "$LINENO" 5
++fi
+ if test -z "${HAVE_CHECK_TRUE}" && test -z "${HAVE_CHECK_FALSE}"; then
+   as_fn_error $? "conditional \"HAVE_CHECK\" was never defined.
+ Usually this means the macro was only invoked conditionally." "$LINENO" 5
+diff --git a/man/Makefile.in b/man/Makefile.in
+index dd0f3bd..e29863b 100644
+--- a/man/Makefile.in
++++ b/man/Makefile.in
+@@ -210,6 +210,7 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++systemdsystemunitdir = @systemdsystemunitdir@
+ target_alias = @target_alias@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+diff --git a/src/Makefile.in b/src/Makefile.in
+index c4bcf9f..1d09c3d 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -40,6 +40,7 @@ sbin_PROGRAMS = lldpd$(EXEEXT) lldpctl$(EXEEXT)
+ @USE_SNMP_TRUE@am__append_2 = @NETSNMP_LIBS@
+ @USE_XML_TRUE@am__append_3 = xml_writer.c
+ @USE_XML_TRUE@am__append_4 = @XML2_LIBS@
++@HAVE_SYSTEMD_TRUE@am__append_5 = sd-daemon.c sd-daemon.h
+ subdir = src
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in getifaddrs.c \
+ 	malloc.c realloc.c strlcpy.c
+@@ -61,23 +62,30 @@ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
+ LTLIBRARIES = $(noinst_LTLIBRARIES)
+ libcommon_la_DEPENDENCIES = @LTLIBOBJS@
+-am_libcommon_la_OBJECTS = log.lo ctl.lo
++am__libcommon_la_SOURCES_DIST = log.c ctl.c lldpd.h lldp.h cdp.h \
++	compat.h sonmp.h edp.h sd-daemon.c sd-daemon.h
++@HAVE_SYSTEMD_TRUE@am__objects_1 = libcommon_la-sd-daemon.lo
++am_libcommon_la_OBJECTS = libcommon_la-log.lo libcommon_la-ctl.lo \
++	$(am__objects_1)
+ libcommon_la_OBJECTS = $(am_libcommon_la_OBJECTS)
+ AM_V_lt = $(am__v_lt_$(V))
+ am__v_lt_ = $(am__v_lt_$(AM_DEFAULT_VERBOSITY))
+ am__v_lt_0 = --silent
++libcommon_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
++	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(libcommon_la_CFLAGS) \
++	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+ liblldpd_la_DEPENDENCIES = libcommon.la
+ am__liblldpd_la_SOURCES_DIST = frame.h frame.c lldpd.c lldp.c cdp.c \
+ 	sonmp.c edp.c interfaces.c client.c priv.c privsep_fdpass.c \
+ 	dmi.c ctl-server.c agent.c agent_priv.c
+-@USE_SNMP_TRUE@am__objects_1 = liblldpd_la-agent.lo \
++@USE_SNMP_TRUE@am__objects_2 = liblldpd_la-agent.lo \
+ @USE_SNMP_TRUE@	liblldpd_la-agent_priv.lo
+ am_liblldpd_la_OBJECTS = liblldpd_la-frame.lo liblldpd_la-lldpd.lo \
+ 	liblldpd_la-lldp.lo liblldpd_la-cdp.lo liblldpd_la-sonmp.lo \
+ 	liblldpd_la-edp.lo liblldpd_la-interfaces.lo \
+ 	liblldpd_la-client.lo liblldpd_la-priv.lo \
+ 	liblldpd_la-privsep_fdpass.lo liblldpd_la-dmi.lo \
+-	liblldpd_la-ctl-server.lo $(am__objects_1)
++	liblldpd_la-ctl-server.lo $(am__objects_2)
+ liblldpd_la_OBJECTS = $(am_liblldpd_la_OBJECTS)
+ liblldpd_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) \
+ 	$(LIBTOOLFLAGS) --mode=link $(CCLD) $(liblldpd_la_CFLAGS) \
+@@ -86,10 +94,10 @@ am__installdirs = "$(DESTDIR)$(sbindir)"
+ PROGRAMS = $(sbin_PROGRAMS)
+ am__lldpctl_SOURCES_DIST = lldpctl.c display.c writer.h text_writer.c \
+ 	kv_writer.c xml_writer.c
+-@USE_XML_TRUE@am__objects_2 = lldpctl-xml_writer.$(OBJEXT)
++@USE_XML_TRUE@am__objects_3 = lldpctl-xml_writer.$(OBJEXT)
+ am_lldpctl_OBJECTS = lldpctl-lldpctl.$(OBJEXT) \
+ 	lldpctl-display.$(OBJEXT) lldpctl-text_writer.$(OBJEXT) \
+-	lldpctl-kv_writer.$(OBJEXT) $(am__objects_2)
++	lldpctl-kv_writer.$(OBJEXT) $(am__objects_3)
+ lldpctl_OBJECTS = $(am_lldpctl_OBJECTS)
+ am__DEPENDENCIES_1 =
+ lldpctl_DEPENDENCIES = libcommon.la $(am__DEPENDENCIES_1)
+@@ -127,8 +135,9 @@ am__v_GEN_ = $(am__v_GEN_$(AM_DEFAULT_VERBOSITY))
+ am__v_GEN_0 = @echo "  GEN   " $@;
+ SOURCES = $(libcommon_la_SOURCES) $(liblldpd_la_SOURCES) \
+ 	$(lldpctl_SOURCES) $(lldpd_SOURCES)
+-DIST_SOURCES = $(libcommon_la_SOURCES) $(am__liblldpd_la_SOURCES_DIST) \
+-	$(am__lldpctl_SOURCES_DIST) $(lldpd_SOURCES)
++DIST_SOURCES = $(am__libcommon_la_SOURCES_DIST) \
++	$(am__liblldpd_la_SOURCES_DIST) $(am__lldpctl_SOURCES_DIST) \
++	$(lldpd_SOURCES)
+ ETAGS = etags
+ CTAGS = ctags
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+@@ -257,12 +266,14 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++systemdsystemunitdir = @systemdsystemunitdir@
+ target_alias = @target_alias@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ noinst_LTLIBRARIES = liblldpd.la libcommon.la
+-libcommon_la_SOURCES = log.c ctl.c lldpd.h lldp.h cdp.h compat.h sonmp.h edp.h
++libcommon_la_SOURCES = log.c ctl.c lldpd.h lldp.h cdp.h compat.h \
++	sonmp.h edp.h $(am__append_5)
+ libcommon_la_LIBADD = @LTLIBOBJS@ 
+ liblldpd_la_SOURCES = frame.h frame.c lldpd.c lldp.c cdp.c sonmp.c \
+ 	edp.c interfaces.c client.c priv.c privsep_fdpass.c dmi.c \
+@@ -275,6 +286,7 @@ lldpctl_SOURCES = lldpctl.c display.c writer.h text_writer.c \
+ lldpctl_LDADD = libcommon.la $(am__append_4)
+ @USE_SNMP_TRUE@liblldpd_la_CFLAGS = @NETSNMP_CFLAGS@
+ @USE_XML_TRUE@lldpctl_CFLAGS = @XML2_CFLAGS@
++@HAVE_SYSTEMD_TRUE@libcommon_la_CFLAGS = -DHAVE_SYSTEMD=1
+ all: all-am
+ 
+ .SUFFIXES:
+@@ -319,7 +331,7 @@ clean-noinstLTLIBRARIES:
+ 	  rm -f "$${dir}/so_locations"; \
+ 	done
+ libcommon.la: $(libcommon_la_OBJECTS) $(libcommon_la_DEPENDENCIES) 
+-	$(AM_V_CCLD)$(LINK)  $(libcommon_la_OBJECTS) $(libcommon_la_LIBADD) $(LIBS)
++	$(AM_V_CCLD)$(libcommon_la_LINK)  $(libcommon_la_OBJECTS) $(libcommon_la_LIBADD) $(LIBS)
+ liblldpd.la: $(liblldpd_la_OBJECTS) $(liblldpd_la_DEPENDENCIES) 
+ 	$(AM_V_CCLD)$(liblldpd_la_LINK)  $(liblldpd_la_OBJECTS) $(liblldpd_la_LIBADD) $(LIBS)
+ install-sbinPROGRAMS: $(sbin_PROGRAMS)
+@@ -382,7 +394,9 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/malloc.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/realloc.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/strlcpy.Plo@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ctl.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcommon_la-ctl.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcommon_la-log.Plo@am__quote@
++@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libcommon_la-sd-daemon.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liblldpd_la-agent.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liblldpd_la-agent_priv.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/liblldpd_la-cdp.Plo@am__quote@
+@@ -402,7 +416,6 @@ distclean-compile:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lldpctl-lldpctl.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lldpctl-text_writer.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lldpctl-xml_writer.Po@am__quote@
+-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/log.Plo@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+ 
+ .c.o:
+@@ -429,6 +442,30 @@ distclean-compile:
+ @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+ @am__fastdepCC_FALSE@	$(LTCOMPILE) -c -o $@ $<
+ 
++libcommon_la-log.lo: log.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -MT libcommon_la-log.lo -MD -MP -MF $(DEPDIR)/libcommon_la-log.Tpo -c -o libcommon_la-log.lo `test -f 'log.c' || echo '$(srcdir)/'`log.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcommon_la-log.Tpo $(DEPDIR)/libcommon_la-log.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='log.c' object='libcommon_la-log.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -c -o libcommon_la-log.lo `test -f 'log.c' || echo '$(srcdir)/'`log.c
++
++libcommon_la-ctl.lo: ctl.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -MT libcommon_la-ctl.lo -MD -MP -MF $(DEPDIR)/libcommon_la-ctl.Tpo -c -o libcommon_la-ctl.lo `test -f 'ctl.c' || echo '$(srcdir)/'`ctl.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcommon_la-ctl.Tpo $(DEPDIR)/libcommon_la-ctl.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='ctl.c' object='libcommon_la-ctl.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -c -o libcommon_la-ctl.lo `test -f 'ctl.c' || echo '$(srcdir)/'`ctl.c
++
++libcommon_la-sd-daemon.lo: sd-daemon.c
++@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -MT libcommon_la-sd-daemon.lo -MD -MP -MF $(DEPDIR)/libcommon_la-sd-daemon.Tpo -c -o libcommon_la-sd-daemon.lo `test -f 'sd-daemon.c' || echo '$(srcdir)/'`sd-daemon.c
++@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libcommon_la-sd-daemon.Tpo $(DEPDIR)/libcommon_la-sd-daemon.Plo
++@am__fastdepCC_FALSE@	$(AM_V_CC) @AM_BACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	source='sd-daemon.c' object='libcommon_la-sd-daemon.lo' libtool=yes @AMDEPBACKSLASH@
++@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
++@am__fastdepCC_FALSE@	$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(libcommon_la_CFLAGS) $(CFLAGS) -c -o libcommon_la-sd-daemon.lo `test -f 'sd-daemon.c' || echo '$(srcdir)/'`sd-daemon.c
++
+ liblldpd_la-frame.lo: frame.c
+ @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(liblldpd_la_CFLAGS) $(CFLAGS) -MT liblldpd_la-frame.lo -MD -MP -MF $(DEPDIR)/liblldpd_la-frame.Tpo -c -o liblldpd_la-frame.lo `test -f 'frame.c' || echo '$(srcdir)/'`frame.c
+ @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/liblldpd_la-frame.Tpo $(DEPDIR)/liblldpd_la-frame.Plo
+diff --git a/tests/Makefile.in b/tests/Makefile.in
+index 2d9b3a8..17feef5 100644
+--- a/tests/Makefile.in
++++ b/tests/Makefile.in
+@@ -299,6 +299,7 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++systemdsystemunitdir = @systemdsystemunitdir@
+ target_alias = @target_alias@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
