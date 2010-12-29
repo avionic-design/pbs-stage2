@@ -6,5 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-gui=x11
+
 stripfiles = \
 	$(prefix)/bin/xinput_calibrator

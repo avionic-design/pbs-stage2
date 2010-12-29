@@ -1,0 +1,79 @@
+Fix SwapAxes.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ src/calibrator/calibratorEvdev.cpp |   23 ++++++++++++-----------
+ 1 files changed, 12 insertions(+), 11 deletions(-)
+
+diff --git a/src/calibrator/calibratorEvdev.cpp b/src/calibrator/calibratorEvdev.cpp
+index 9508a5d..9594908 100644
+--- a/src/calibrator/calibratorEvdev.cpp
++++ b/src/calibrator/calibratorEvdev.cpp
+@@ -225,19 +225,19 @@ bool CalibratorEvdev::finish_data(const XYinfo new_axys, int swap_xy)
+         case OUTYPE_AUTO:
+             // xorg.conf.d or alternatively xinput commands
+             if (has_xorgconfd_support()) {
+-                success &= output_xorgconfd(new_axys, swap_xy, new_swap_xy);
++                success &= output_xorgconfd(new_axys, old_swap_xy, new_swap_xy);
+             } else {
+-                success &= output_xinput(new_axys, swap_xy, new_swap_xy);
++                success &= output_xinput(new_axys, old_swap_xy, new_swap_xy);
+             }
+             break;
+         case OUTYPE_XORGCONFD:
+-            success &= output_xorgconfd(new_axys, swap_xy, new_swap_xy);
++            success &= output_xorgconfd(new_axys, old_swap_xy, new_swap_xy);
+             break;
+         case OUTYPE_HAL:
+-            success &= output_hal(new_axys, swap_xy, new_swap_xy);
++            success &= output_hal(new_axys, old_swap_xy, new_swap_xy);
+             break;
+         case OUTYPE_XINPUT:
+-            success &= output_xinput(new_axys, swap_xy, new_swap_xy);
++            success &= output_xinput(new_axys, old_swap_xy, new_swap_xy);
+             break;
+         default:
+             fprintf(stderr, "ERROR: Evdev Calibrator does not support the supplied --output-type\n");
+@@ -489,8 +489,8 @@ bool CalibratorEvdev::output_xorgconfd(const XYinfo new_axys, int swap_xy, int n
+     fprintf(fp, "	MatchProduct	\"%s\"\n", sysfs_name);
+     fprintf(fp, "	Option	\"Calibration\"	\"%d %d %d %d\"\n",
+                 new_axys.x_min, new_axys.x_max, new_axys.y_min, new_axys.y_max);
+-    if (swap_xy != 0)
+-        fprintf(fp, "	Option	\"SwapAxes\"	\"%d\"\n", new_swap_xy);
++    if (swap_xy ^ new_swap_xy)
++        fprintf(fp, "	Option	\"SwapAxes\"	\"1\"\n");
+     fprintf(fp, "EndSection\n");
+ 
+     if (not_sysfs_name && !output)
+@@ -499,6 +499,7 @@ bool CalibratorEvdev::output_xorgconfd(const XYinfo new_axys, int swap_xy, int n
+     if (output)
+         fclose(fp);
+ 
++    printf("< %s()\n", __func__);
+     return true;
+ }
+ 
+@@ -514,8 +515,8 @@ bool CalibratorEvdev::output_hal(const XYinfo new_axys, int swap_xy, int new_swa
+ <match key=\"info.product\" contains=\"%s\">\n\
+   <merge key=\"input.x11_options.calibration\" type=\"string\">%d %d %d %d</merge>\n"
+      , sysfs_name, new_axys.x_min, new_axys.x_max, new_axys.y_min, new_axys.y_max);
+-    if (swap_xy != 0)
+-        printf("  <merge key=\"input.x11_options.swapaxes\" type=\"string\">%d</merge>\n", new_swap_xy);
++    if (swap_xy ^ old_swap_xy)
++        printf("  <merge key=\"input.x11_options.swapaxes\" type=\"string\">1</merge>\n");
+     printf("</match>\n");
+ 
+     if (not_sysfs_name)
+@@ -529,8 +530,8 @@ bool CalibratorEvdev::output_xinput(const XYinfo new_axys, int swap_xy, int new_
+     // create startup script
+     printf("  Install the 'xinput' tool and copy the command(s) below in a script that starts with your X session\n");
+     printf("    xinput set-int-prop \"%s\" \"Evdev Axis Calibration\" 32 %d %d %d %d\n", device_name, new_axys.x_min, new_axys.x_max, new_axys.y_min, new_axys.y_max);
+-    if (swap_xy)
+-        printf("    xinput set-int-prop \"%s\" \"Evdev Axes Swap\" 8 %d\n", device_name, new_swap_xy);
++    if (swap_xy ^ old_swap_xy)
++        printf("    xinput set-int-prop \"%s\" \"Evdev Axes Swap\" 8 1\n", device_name);
+ 
+     return true;
+ }

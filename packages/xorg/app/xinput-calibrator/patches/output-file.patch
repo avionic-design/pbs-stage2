@@ -1,0 +1,316 @@
+Add --output option.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ src/calibrator.cpp                          |    5 ++-
+ src/calibrator.hh                           |    6 +++-
+ src/calibrator/calibratorEvdev.cpp          |   38 ++++++++++++++++-------
+ src/calibrator/calibratorUsbtouchscreen.cpp |    6 ++--
+ src/calibrator/calibratorXorgPrint.cpp      |   45 +++++++++++++++++++--------
+ src/main_common.hpp                         |   23 +++++++++++---
+ 6 files changed, 88 insertions(+), 35 deletions(-)
+
+diff --git a/src/calibrator.cpp b/src/calibrator.cpp
+index ce789e4..9ade8ff 100644
+--- a/src/calibrator.cpp
++++ b/src/calibrator.cpp
+@@ -30,8 +30,9 @@
+ #include "calibrator.hh"
+ 
+ Calibrator::Calibrator(const char* const device_name0, const XYinfo& axys0,
+-    const bool verbose0, const int thr_misclick, const int thr_doubleclick, const OutputType output_type0)
+-  : device_name(device_name0), old_axys(axys0), verbose(verbose0), num_clicks(0), threshold_doubleclick(thr_doubleclick), threshold_misclick(thr_misclick), output_type(output_type0)
++    const bool verbose0, const int thr_misclick, const int thr_doubleclick,
++    const OutputType output_type0, const char* const output)
++  : device_name(device_name0), old_axys(axys0), verbose(verbose0), num_clicks(0), threshold_doubleclick(thr_doubleclick), threshold_misclick(thr_misclick), output_type(output_type0), output(output)
+ {
+ }
+ 
+diff --git a/src/calibrator.hh b/src/calibrator.hh
+index 01b3fb9..c0be1fc 100644
+--- a/src/calibrator.hh
++++ b/src/calibrator.hh
+@@ -34,7 +34,8 @@ public:
+      * if the touchscreen is not of the type it supports
+      */
+     Calibrator(const char* const device_name, const XYinfo& axys,
+-        const bool verbose, const int thr_misclick=0, const int thr_doubleclick=0, const OutputType output_type=OUTYPE_AUTO);
++        const bool verbose, const int thr_misclick=0, const int thr_doubleclick=0,
++        const OutputType output_type=OUTYPE_AUTO, const char* const output=NULL);
+     ~Calibrator() {}
+ 
+     // set the doubleclick treshold
+@@ -85,6 +86,9 @@ protected:
+     // Type of output
+     OutputType output_type;
+ 
++    // Name of output
++    const char* const output;
++
+     // Check whether the given name is a sysfs device name
+     bool is_sysfs_name(const char* name);
+ 
+diff --git a/src/calibrator/calibratorEvdev.cpp b/src/calibrator/calibratorEvdev.cpp
+index b19a899..9508a5d 100644
+--- a/src/calibrator/calibratorEvdev.cpp
++++ b/src/calibrator/calibratorEvdev.cpp
+@@ -21,6 +21,7 @@
+  * THE SOFTWARE.
+  */
+ #include <ctype.h>
++#include <errno.h>
+ 
+ #include <X11/Xlib.h>
+ #include <X11/extensions/XInput.h>
+@@ -49,7 +50,7 @@ private:
+ public:
+     CalibratorEvdev(const char* const device_name, const XYinfo& axys, const bool verbose,
+         XID device_id=(XID)-1, const int thr_misclick=0, const int thr_doubleclick=0,
+-        const OutputType output_type=OUTYPE_AUTO);
++        const OutputType output_type=OUTYPE_AUTO, const char* const output=NULL);
+     ~CalibratorEvdev();
+ 
+     virtual bool finish_data(const XYinfo new_axys, int swap_xy);
+@@ -67,8 +68,8 @@ protected:
+     bool output_xinput(const XYinfo new_axys, int swap_xy, int new_swap_xy);
+ };
+ 
+-CalibratorEvdev::CalibratorEvdev(const char* const device_name0, const XYinfo& axys0, const bool verbose0, XID device_id, const int thr_misclick, const int thr_doubleclick, const OutputType output_type)
+-  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type), old_swap_xy(0)
++CalibratorEvdev::CalibratorEvdev(const char* const device_name0, const XYinfo& axys0, const bool verbose0, XID device_id, const int thr_misclick, const int thr_doubleclick, const OutputType output_type, const char* const output)
++  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type, output), old_swap_xy(0)
+ {
+     // init
+     display = XOpenDisplay(NULL);
+@@ -466,23 +467,38 @@ bool CalibratorEvdev::output_xorgconfd(const XYinfo new_axys, int swap_xy, int n
+ {
+     const char* sysfs_name = get_sysfs_name();
+     bool not_sysfs_name = (sysfs_name == NULL);
++    FILE *fp;
++
+     if (not_sysfs_name)
+         sysfs_name = "!!Name_Of_TouchScreen!!";
+ 
+     // xorg.conf.d snippet
+-    printf("  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf'\n");
+-    printf("Section \"InputClass\"\n");
+-    printf("	Identifier	\"calibration\"\n");
+-    printf("	MatchProduct	\"%s\"\n", sysfs_name);
+-    printf("	Option	\"Calibration\"	\"%d %d %d %d\"\n",
++    if (output) {
++        fp = fopen(output, "w");
++        if (!fp) {
++            fprintf(stderr, "cannot open file %s: %s\n", output, strerror(errno));
++            return false;
++        }
++    } else {
++        printf("  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf'\n");
++        fp = stdout;
++    }
++
++    fprintf(fp, "Section \"InputClass\"\n");
++    fprintf(fp, "	Identifier	\"calibration\"\n");
++    fprintf(fp, "	MatchProduct	\"%s\"\n", sysfs_name);
++    fprintf(fp, "	Option	\"Calibration\"	\"%d %d %d %d\"\n",
+                 new_axys.x_min, new_axys.x_max, new_axys.y_min, new_axys.y_max);
+     if (swap_xy != 0)
+-        printf("	Option	\"SwapAxes\"	\"%d\"\n", new_swap_xy);
+-    printf("EndSection\n");
++        fprintf(fp, "	Option	\"SwapAxes\"	\"%d\"\n", new_swap_xy);
++    fprintf(fp, "EndSection\n");
+ 
+-    if (not_sysfs_name)
++    if (not_sysfs_name && !output)
+         printf("\nChange '%s' to your device's name in the snippet above.\n", sysfs_name);
+ 
++    if (output)
++        fclose(fp);
++
+     return true;
+ }
+ 
+diff --git a/src/calibrator/calibratorUsbtouchscreen.cpp b/src/calibrator/calibratorUsbtouchscreen.cpp
+index d15c719..886d681 100644
+--- a/src/calibrator/calibratorUsbtouchscreen.cpp
++++ b/src/calibrator/calibratorUsbtouchscreen.cpp
+@@ -53,7 +53,7 @@ class CalibratorUsbtouchscreen: public Calibrator
+ public:
+     CalibratorUsbtouchscreen(const char* const device_name, const XYinfo& axys,
+         const bool verbose, const int thr_misclick=0, const int thr_doubleclick=0,
+-        const OutputType output_type=OUTYPE_AUTO);
++        const OutputType output_type=OUTYPE_AUTO, const char* const output=NULL);
+     ~CalibratorUsbtouchscreen();
+ 
+     virtual bool finish_data(const XYinfo new_axys, int swap_xy);
+@@ -134,8 +134,8 @@ protected:
+     }
+ };
+ 
+-CalibratorUsbtouchscreen::CalibratorUsbtouchscreen(const char* const device_name0, const XYinfo& axys0, const bool verbose0, const int thr_misclick, const int thr_doubleclick, const OutputType output_type)
+-  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type)
++CalibratorUsbtouchscreen::CalibratorUsbtouchscreen(const char* const device_name0, const XYinfo& axys0, const bool verbose0, const int thr_misclick, const int thr_doubleclick, const OutputType output_type, const char* const output)
++  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type, output)
+ {
+     if (strcmp(device_name, "Usbtouchscreen") != 0)
+         throw WrongCalibratorException("Not a usbtouchscreen device");
+diff --git a/src/calibrator/calibratorXorgPrint.cpp b/src/calibrator/calibratorXorgPrint.cpp
+index 4e6910f..f9f235e 100644
+--- a/src/calibrator/calibratorXorgPrint.cpp
++++ b/src/calibrator/calibratorXorgPrint.cpp
+@@ -20,6 +20,8 @@
+  * THE SOFTWARE.
+  */
+ 
++#include <errno.h>
++
+ /***************************************
+  * Class for generic Xorg driver,
+  * outputs new Xorg.conf and FDI policy, on stdout
+@@ -29,7 +31,7 @@ class CalibratorXorgPrint: public Calibrator
+ public:
+     CalibratorXorgPrint(const char* const device_name, const XYinfo& axys,
+         const bool verbose, const int thr_misclick=0, const int thr_doubleclick=0,
+-        const OutputType output_type=OUTYPE_AUTO);
++        const OutputType output_type=OUTYPE_AUTO, const char* const output=NULL);
+ 
+     virtual bool finish_data(const XYinfo new_axys, int swap_xy);
+ protected:
+@@ -37,8 +39,8 @@ protected:
+     bool output_hal(const XYinfo new_axys, int swap_xy, int new_swap_xy);
+ };
+ 
+-CalibratorXorgPrint::CalibratorXorgPrint(const char* const device_name0, const XYinfo& axys0, const bool verbose0, const int thr_misclick, const int thr_doubleclick, const OutputType output_type)
+-  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type)
++CalibratorXorgPrint::CalibratorXorgPrint(const char* const device_name0, const XYinfo& axys0, const bool verbose0, const int thr_misclick, const int thr_doubleclick, const OutputType output_type, const char* const output)
++  : Calibrator(device_name0, axys0, verbose0, thr_misclick, thr_doubleclick, output_type, output)
+ {
+     printf("Calibrating standard Xorg driver \"%s\"\n", device_name);
+     printf("\tcurrent calibration values: min_x=%d, max_x=%d and min_y=%d, max_y=%d\n",
+@@ -82,25 +84,40 @@ bool CalibratorXorgPrint::output_xorgconfd(const XYinfo new_axys, int swap_xy, i
+ {
+     const char* sysfs_name = get_sysfs_name();
+     bool not_sysfs_name = (sysfs_name == NULL);
++    FILE *fp;
++
+     if (not_sysfs_name)
+         sysfs_name = "!!Name_Of_TouchScreen!!";
+ 
+     // xorg.conf.d snippet
+-    printf("  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf'\n");
+-    printf("Section \"InputClass\"\n");
+-    printf("	Identifier	\"calibration\"\n");
+-    printf("	MatchProduct	\"%s\"\n", sysfs_name);
+-    printf("	Option	\"MinX\"	\"%d\"\n", new_axys.x_min);
+-    printf("	Option	\"MaxX\"	\"%d\"\n", new_axys.x_max);
+-    printf("	Option	\"MinY\"	\"%d\"\n", new_axys.y_min);
+-    printf("	Option	\"MaxY\"	\"%d\"\n", new_axys.y_max);
++    if (output) {
++        fp = fopen(output, "w");
++        if (!fp) {
++            fprintf(stderr, "cannot open file %s: %s\n", output, strerror(errno));
++            return false;
++        }
++    } else {
++        printf("  copy the snippet below into '/etc/X11/xorg.conf.d/99-calibration.conf'\n");
++        fp = stdout;
++    }
++
++    fprintf(fp, "Section \"InputClass\"\n");
++    fprintf(fp, "	Identifier	\"calibration\"\n");
++    fprintf(fp, "	MatchProduct	\"%s\"\n", sysfs_name);
++    fprintf(fp, "	Option	\"MinX\"	\"%d\"\n", new_axys.x_min);
++    fprintf(fp, "	Option	\"MaxX\"	\"%d\"\n", new_axys.x_max);
++    fprintf(fp, "	Option	\"MinY\"	\"%d\"\n", new_axys.y_min);
++    fprintf(fp, "	Option	\"MaxY\"	\"%d\"\n", new_axys.y_max);
+     if (swap_xy != 0)
+-        printf("	Option	\"SwapXY\"	\"%d\" # unless it was already set to 1\n", new_swap_xy);
+-    printf("EndSection\n");
++        fprintf(fp, "	Option	\"SwapXY\"	\"%d\" # unless it was already set to 1\n", new_swap_xy);
++    fprintf(fp, "EndSection\n");
+ 
+-    if (not_sysfs_name)
++    if (not_sysfs_name && !output)
+         printf("\nChange '%s' to your device's name in the config above.\n", sysfs_name);
+ 
++    if (output)
++        fclose(fp);
++
+     return true;
+ }
+ 
+diff --git a/src/main_common.hpp b/src/main_common.hpp
+index 47b7595..f9844f7 100644
+--- a/src/main_common.hpp
++++ b/src/main_common.hpp
+@@ -230,7 +230,7 @@ int find_device(const char* pre_device, bool verbose, bool list_devices,
+ 
+ static void usage(char* cmd, unsigned thr_misclick)
+ {
+-    fprintf(stderr, "Usage: %s [-h|--help] [-v|--verbose] [--list] [--device <device name or id>] [--precalib <minx> <maxx> <miny> <maxy>] [--misclick <nr of pixels>] [--output-type <auto|xorg.conf.d|hal|xinput>] [--fake]\n", cmd);
++    fprintf(stderr, "Usage: %s [-h|--help] [-v|--verbose] [--list] [--device <device name or id>] [--precalib <minx> <maxx> <miny> <maxy>] [--misclick <nr of pixels>] [--output-type <auto|xorg.conf.d|hal|xinput>] [--output <filename>] [--fake]\n", cmd);
+     fprintf(stderr, "\t-h, --help: print this help message\n");
+     fprintf(stderr, "\t-v, --verbose: print debug messages during the process\n");
+     fprintf(stderr, "\t--list: list calibratable input devices and quit\n");
+@@ -239,6 +239,7 @@ static void usage(char* cmd, unsigned thr_misclick)
+     fprintf(stderr, "\t--misclick: set the misclick threshold (0=off, default: %i pixels)\n",
+         thr_misclick);
+     fprintf(stderr, "\t--output-type <auto|xorg.conf.d|hal|xinput>: type of config to ouput (auto=automatically detect, default: auto)\n");
++    fprintf(stderr, "\t--output <filename>: path to file that output should be written to\n");
+     fprintf(stderr, "\t--fake: emulate a fake device (for testing purposes)\n");
+ }
+ 
+@@ -254,6 +255,7 @@ Calibrator* main_common(int argc, char** argv)
+     unsigned thr_misclick = 15;
+     unsigned thr_doubleclick = 7;
+     OutputType output_type = OUTYPE_AUTO;
++    const char *output = NULL;
+ 
+     // parse input
+     if (argc > 1) {
+@@ -336,6 +338,19 @@ Calibrator* main_common(int argc, char** argv)
+                 }
+             } else
+ 
++            // Output file
++            if (strcmp("--output", argv[i]) == 0) {
++                if (argc > (i + 1)) {
++                    output = argv[i + 1];
++                    printf("output file: %s\n", output);
++                    i++;
++                } else {
++                    fprintf(stderr, "Error: --output needs one argument.\n\n");
++                    usage(argv[0], thr_misclick);
++                    exit(1);
++                }
++            } else
++
+             // Fake calibratable device ?
+             if (strcmp("--fake", argv[i]) == 0) {
+                 fake = true;
+@@ -413,7 +428,7 @@ Calibrator* main_common(int argc, char** argv)
+     try {
+         // try Usbtouchscreen driver
+         return new CalibratorUsbtouchscreen(device_name, device_axys,
+-            verbose, thr_misclick, thr_doubleclick, output_type);
++            verbose, thr_misclick, thr_doubleclick, output_type, output);
+ 
+     } catch(WrongCalibratorException& x) {
+         if (verbose)
+@@ -423,7 +438,7 @@ Calibrator* main_common(int argc, char** argv)
+     try {
+         // next, try Evdev driver (with XID)
+         return new CalibratorEvdev(device_name, device_axys, verbose, device_id,
+-            thr_misclick, thr_doubleclick, output_type);
++            thr_misclick, thr_doubleclick, output_type, output);
+ 
+     } catch(WrongCalibratorException& x) {
+         if (verbose)
+@@ -432,5 +447,5 @@ Calibrator* main_common(int argc, char** argv)
+ 
+     // lastly, presume a standard Xorg driver (evtouch, mutouch, ...)
+     return new CalibratorXorgPrint(device_name, device_axys,
+-            verbose, thr_misclick, thr_doubleclick, output_type);
++            verbose, thr_misclick, thr_doubleclick, output_type, output);
+ }
