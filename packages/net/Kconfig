@@ -2,6 +2,7 @@ menu "Networking"
 
 source "packages/net/bind-libs/Kconfig"
 source "packages/net/ddip/Kconfig"
+source "packages/net/dhcpcd/Kconfig"
 source "packages/net/dnsmasq/Kconfig"
 source "packages/net/dropbear/Kconfig"
 source "packages/net/ethtool/Kconfig"

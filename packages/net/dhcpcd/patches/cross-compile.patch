@@ -1,0 +1,33 @@
+diff --git a/configure b/configure
+index 8843435..41838b5 100755
+--- a/configure
++++ b/configure
+@@ -37,6 +37,7 @@ for x; do
+ 	--mandir) MANDIR=$var;;
+ 	--with-ccopts|CFLAGS) CFLAGS=$var;;
+ 	CPPFLAGS) CPPFLAGS=$var;;
++	LDFLAGS) LDFLAGS=$var;;
+ 	--with-hook) HOOKSCRIPTS="$HOOKSCRIPTS${HOOKSCRIPTS:+ }$var";;
+ 	--with-hooks|HOOKSCRIPTS) HOOKSCRIPTS=$var; HOOKSET=true;;
+ 	--build) BUILD=$var;;
+@@ -193,6 +194,9 @@ fi
+ if [ -n "$CPPLAGS" ]; then
+ 	echo "CPPLAGS=		$CPPLAGS" >>$CONFIG_MK
+ fi
++if [ -n "$LDFLAGS" ]; then
++	echo "LDFLAGS=		$LDFLAGS" >>$CONFIG_MK
++fi
+ for x in $INCLUDEDIR; do
+ 	echo "CPPFLAGS+=	-I$x" >>$CONFIG_MK
+ done
+@@ -252,8 +256,8 @@ if [ -e "$LDELF" ]; then
+ fi
+ 
+ # Add CPPFLAGS and CFLAGS to CC for testing features
+-XCC="$CC `$SED -n -e 's/CPPLAGS+=*\(.*\)/\1/p' $CONFIG_MK`"
+-XCC="$XCC `$SED -n -e 's/CFLAGS+=*\(.*\)/\1/p' $CONFIG_MK`"
++XCC="$CC `$SED -n -e 's/CPPLAGS+\?=\s*\(.*\)/\1/p' $CONFIG_MK`"
++XCC="$XCC `$SED -n -e 's/CFLAGS+\?=\s*\(.*\)/\1/p' $CONFIG_MK`"
+ 
+ abort=false
+ # We require the libc to support non standard functions, like getifaddrs

@@ -1,0 +1,4 @@
+config PACKAGE_NET_DHCPCD
+	bool "dhcpcd"
+	select VIRTUAL_DEVEL_LIBC
+	default n
