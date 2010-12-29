@@ -1,0 +1,22 @@
+Fix parallel build.
+
+From: Thierry Reding <thierry.reding@avionic-design.de>
+
+
+---
+ Makefile.in |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 5b15bd0..265efd1 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -136,7 +136,7 @@ minigzip64.o: minigzip.c zlib.h zconf.h
+ 	$(CC) $(SFLAGS) -DPIC -c -o objs/$*.o $<
+ 	-@mv objs/$*.o $@
+ 
+-$(SHAREDLIBV): $(PIC_OBJS)
++$(SHAREDLIBV): $(PIC_OBJS) $(STATICLIB)
+ 	$(LDSHARED) $(SFLAGS) -o $@ $(PIC_OBJS) $(LDSHAREDLIBC) $(LDFLAGS)
+ 	rm -f $(SHAREDLIB) $(SHAREDLIBM)
+ 	ln -s $@ $(SHAREDLIB)
