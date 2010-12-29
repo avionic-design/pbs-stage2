@@ -128,7 +128,7 @@ ifneq ($(LOCATION_SVN),)
   setup-deps := $(pkgtree)/.svn-export
 endif
 
-quiet_cmd_git_clone = GIT      $(GIT_URL)
+quiet_cmd_git_clone = GIT     $(GIT_URL)
       cmd_git_clone = git clone -q $(GIT_URL) $@
 
 $(pkgtree)/$(PACKAGE).git:
