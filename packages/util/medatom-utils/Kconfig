@@ -1,0 +1,3 @@
+config PACKAGE_UTIL_MEDATOM_UTILS
+	bool "Med@tom utilities"
+	default n
