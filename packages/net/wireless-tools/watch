@@ -1,2 +1,2 @@
 version=3
-http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.(.*)\.tar\.gz
+http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/Tools.html wireless_tools.(\d+)\.tar\.gz

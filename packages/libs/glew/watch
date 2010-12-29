@@ -1,2 +1,2 @@
 version=3
-http://sf.net/glew/glew-(.*)\.tar\.gz
+http://sf.net/glew/glew-([\d\.]+)\.tgz

@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnome.org/pub/gnome/sources/libgee/(.*)/libgee-(.*)\.tar\.bz2
+http://ftp.gnome.org/pub/gnome/sources/libgee/(\d+\.\d+)/libgee-(.*)\.tar\.bz2
