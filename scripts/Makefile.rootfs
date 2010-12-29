@@ -20,11 +20,11 @@ quiet_cmd_install_package =
 $(packages): install-%:
 	$(call cmd,install_package)
 
-quiet_cmd_rmdir = CLEAN   $*
-      cmd_rmdir = rm -r $*
+quiet_cmd_mount_ramdisk = MOUNT   $*
+      cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs none $*
 
-rmdir-$(obj)/rootfs: rmdir-%:
-	$(if $(wildcard $*),$(call cmd,rmdir),)
+mount-$(obj)/rootfs: mount-%:
+	$(call cmd,mount_ramdisk)
 
 quiet_cmd_delete = DELETE  $*
       cmd_delete = rm -f $*
@@ -38,14 +38,18 @@ quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
 include $(objtree)/build/packages/kernel/linux.git/kernel-release
 
 $(obj)/rootfs: KERNEL_VERSION = $(VERSION)
-$(obj)/rootfs: %: rmdir-% $(packages) FORCE
+$(obj)/rootfs: %: mount-% $(packages) FORCE
 	$(call cmd,depmod)
 
 quiet_cmd_mksquashfs = SQUASHFS $@
       cmd_mksquashfs = mksquashfs $< $@ -noappend
 
+quiet_cmd_umount_ramdisk = UMOUNT  $<
+      cmd_umount_ramdisk = umount $< && rmdir $<
+
 $(obj)/rootfs.img: $(obj)/rootfs FORCE
 	$(call cmd,mksquashfs)
+	$(call cmd,umount_ramdisk)
 
 all: $(targets-y)
 

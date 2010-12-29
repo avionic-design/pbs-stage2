@@ -20,27 +20,38 @@ targets-y += $(obj)/initrd.xz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.img
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.fit
 
-packages := $(addprefix install-$(srctree)/,$(depends-dirs))
+packages := $(addprefix install-,$(depends-dirs))
 
-quiet_cmd_install_deb =
-      cmd_install_deb = $(MAKE) $(binary)=$* rootfs=$(objtree)/initrd
+quiet_cmd_install_package =
+      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/initrd
 
-$(packages): install-$(srctree)/%: %
-	$(call cmd,install_deb)
+$(packages): install-%:
+	$(call cmd,install_package)
 
-quiet_cmd_rmdir = CLEAN   $*
-      cmd_rmdir = rm -r $*
+quiet_cmd_mount_ramdisk = MOUNT   $*
+      cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs none $*
 
-rmdir-$(obj)/initrd: rmdir-%:
-	$(if $(wildcard $*),$(call cmd,rmdir),)
+mount-$(obj)/initrd: mount-%:
+	$(call cmd,mount_ramdisk)
 
-$(obj)/initrd: %: rmdir-% $(packages) FORCE
+quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
+      cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
+
+include $(objtree)/build/packages/kernel/linux.git/kernel-release
+
+$(obj)/initrd: KERNEL_VERSION = $(VERSION)
+$(obj)/initrd: %: mount-% $(packages) FORCE
+	$(call cmd,depmod)
 
 quiet_cmd_initrd = CPIO    $@
       cmd_initrd = cd $< && find | cpio -H newc --quiet -o > $@
 
+quiet_cmd_umount_ramdisk = UMOUNT  $<
+      cmd_umount_ramdisk = umount $< && rmdir $<
+
 $(obj)/initrd.img: $(obj)/initrd FORCE
 	$(call cmd,initrd)
+	$(call cmd,umount_ramdisk)
 
 quiet_cmd_gzip = GZIP    $@
       cmd_gzip = gzip -c $< > $@
