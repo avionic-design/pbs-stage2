@@ -10,8 +10,10 @@ else
   conf-args += --without-x
 endif
 
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
+endif
 
 conf-vars += \
 	ac_cv_have_abstract_sockets=yes

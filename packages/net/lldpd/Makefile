@@ -7,8 +7,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
-	--with-systemdsystemunitdir=/etc/systemd/system \
 	--with-snmp
+
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
+conf-args += \
+	--with-systemdsystemunitdir=/etc/systemd/system
+endif
 
 conf-vars += \
 	ac_cv_path_NETSNMP_CONFIG=$(SYSROOT)$(prefix)/bin/net-snmp-config \

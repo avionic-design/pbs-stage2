@@ -17,8 +17,10 @@ conf-args = \
 	--libexecdir=/lib/udev \
 	--sysconfdir=/etc
 
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
+endif
 
 conf-args += \
 	--disable-extras \

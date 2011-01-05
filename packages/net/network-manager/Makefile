@@ -18,8 +18,10 @@ conf-args += \
 	--with-distro=debian \
 	--with-crypto=gnutls
 
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
+endif
 
 prunefiles = \
 	$(prefix)/lib/*.la \

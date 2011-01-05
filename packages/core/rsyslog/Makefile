@@ -6,8 +6,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
+endif
 
 conf-vars-$(CONFIG_GLIBC) += ac_cv_func_malloc_0_nonnull=yes
 conf-vars-$(CONFIG_GLIBC) += ac_cv_func_realloc_0_nonnull=yes
