@@ -1,4 +1,4 @@
-PACAKGE = appfs
+PACKAGE = appfs
 VERSION = git
 
 GIT_URL = ssh://$(GIT_USER)@git.adnet.avionic-design.de/git/avionic-design/appfs.git
