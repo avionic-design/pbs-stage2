@@ -20,7 +20,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(BUILD_GNU_TYPE) && \
-		$(env) $(MAKE) $(build-args)
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
