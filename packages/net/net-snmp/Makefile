@@ -1,5 +1,5 @@
 PACKAGE = net-snmp
-VERSION = 5.6
+VERSION = 5.6.1
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

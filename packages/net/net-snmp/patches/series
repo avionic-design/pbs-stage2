@@ -1,2 +1,6 @@
-ltmain-sysroot.patch
 fix-deadlock.patch
+util-funcs.patch
+pkgconfig.patch
+libtool.patch
+autoreconf.patch
+ltmain-sysroot.patch

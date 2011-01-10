@@ -1,0 +1,12 @@
+diff --git a/configure.ac b/configure.ac
+index 61e7376..8e95c42 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -19,6 +19,7 @@ AC_CONFIG_MACRO_DIR([m4])
+ AC_CONFIG_HEADER(include/net-snmp/net-snmp-config.h)
+ 
+ AC_MSG_CACHE_INIT()
++LT_INIT
+ 
+ #
+ # save the configure arguments

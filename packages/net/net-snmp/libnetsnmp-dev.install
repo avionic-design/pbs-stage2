@@ -4,6 +4,7 @@
 /usr/include
 /usr/lib/*.a
 /usr/lib/*.so
+/usr/lib/pkgconfig
 /usr/share/man/man1/mib2c.1
 /usr/share/man/man1/mib2c-update.1
 /usr/share/man/man1/net-snmp-config.1

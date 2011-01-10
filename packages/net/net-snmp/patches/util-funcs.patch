@@ -1,0 +1,32 @@
+diff --git a/agent/Makefile.in b/agent/Makefile.in
+index 8d8b5e8..005696d 100644
+--- a/agent/Makefile.in
++++ b/agent/Makefile.in
+@@ -75,7 +75,10 @@ INSTALLBUILTSUBDIRHEADERS=../include/net-snmp/agent/mib_module_config.h \
+ INSTALLBUILTSUBDIR=agent
+ 
+ INCLUDEMIBGROUPDIR=agent/mibgroup
+-INCLUDEMIBGROUPDIRHEADERS=util_funcs.h
++INCLUDEMIBGROUPDIRHEADERS=struct.h util_funcs.h
++
++INCLUDEMIBGROUPUTILFUNCSDIR=agent/mibgroup/util_funcs
++INCLUDEMIBGROUPUTILFUNCSDIRHEADERS=Exit.h header_generic.h header_simple_table.h MIB_STATS_CACHE_TIMEOUT.h restart.h
+ 
+ OTHERINSTALL=installmibgroupheaders @EMBEDPERLINSTALL@
+ OTHERUNINSTALL=@EMBEDPERLUNINSTALL@
+@@ -281,6 +284,15 @@ installmibgroupheaders:
+                         echo "installing $$i in $(INSTALL_PREFIX)$(includedir)/agent" ; \
+                 done \
+         fi
++	@if test "$(INCLUDEMIBGROUPUTILFUNCSDIRHEADERS)" != "" ; then \
++		echo creating directory $(INSTALL_PREFIX)$(includedir)/agent/util_funcs ; \
++		it="$(INCLUDEMIBGROUPUTILFUNCSDIRHEADERS)" ; \
++		$(SHELL) $(top_srcdir)/mkinstalldirs $(INSTALL_PREFIX)$(includedir)/agent/util_funcs ; \
++		for i in $$it ; do \
++			$(INSTALL_DATA) $(top_srcdir)/$(INCLUDEMIBGROUPUTILFUNCSDIR)/$$i $(INSTALL_PREFIX)$(includedir)/agent/util_funcs ; \
++			echo "installing $$i in $(INSTALL_PREFIX)$(includedir)/agent/util_funcs" ; \
++		done \
++	fi
+ 
+ @module_list_deps@
+ @agent_module_list_deps@

@@ -1,0 +1,95 @@
+diff --git a/Makefile.in b/Makefile.in
+index d1023e1..56da741 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -28,6 +28,7 @@ INCLUDESUBDIRHEADERS2=generic.h
+ INSTALLBUILTHEADERS=include/net-snmp/net-snmp-config.h
+ INSTALLBINSCRIPTS=net-snmp-config net-snmp-create-v3-user
+ INSTALLUCDHEADERS=ucd-snmp-config.h version.h mib_module_config.h
++INSTALLPKGCONFIGFILES=net-snmp-agent.pc
+ 
+ #
+ # other install rules.
+diff --git a/Makefile.rules b/Makefile.rules
+index 65687ef..05ff810 100644
+--- a/Makefile.rules
++++ b/Makefile.rules
+@@ -31,10 +31,11 @@ subdirs:
+ install: installlocalheaders @installucdheaders@ \
+          installlibs \
+          installlocalbin      installlocalsbin   \
+-         installsubdirs      $(OTHERINSTALL)
++         installsubdirs       installdata        \
++         $(OTHERINSTALL)
+ 
+ uninstall: uninstalllibs uninstallbin uninstallsbin uninstallheaders \
+-           uninstallsubdirs $(OTHERUNINSTALL)
++           uninstallsubdirs uninstalldata $(OTHERUNINSTALL)
+ 
+ installprogs: installbin installsbin
+ 
+@@ -323,6 +324,25 @@ uninstallsubdirs:
+ 		done \
+ 	fi
+ 
++installdata:
++	@if test "$(INSTALLPKGCONFIGFILES)" != "" ; then \
++		it="$(INSTALLPKGCONFIGFILES)" ; \
++		$(SHELL) $(top_srcdir)/mkinstalldirs $(INSTALL_PREFIX)$(pkgconfigdir) ; \
++		for i in $$it ; do \
++			$(INSTALL_DATA) $$i $(INSTALL_PREFIX)$(pkgconfigdir) ; \
++			echo "installing $$i in $(INSTALL_PREFIX)$(pkgconfigdir)" ; \
++		done \
++	fi
++
++uninstalldata:
++	@if test "$(INSTALLPKGCONFIGFILES)" != "" ; then \
++		it="$(INSTALLPKGCONFIGFILES)" ; \
++		for i in $$it ; do \
++			rm -f $(INSTALL_PREFIX)$(pkgconfigdir)/$$i ; \
++			echo "removing $$i from $(INSTALL_PREFIX)$(pkgconfigdir)" ; \
++		done \
++	fi
++
+ #
+ # cleaning targets
+ #
+diff --git a/Makefile.top b/Makefile.top
+index d3580e9..41525b6 100644
+--- a/Makefile.top
++++ b/Makefile.top
+@@ -27,6 +27,7 @@ man8dir		= $(mandir)/man8
+ snmplibdir	= $(datadir)/snmp
+ mibdir		= $(snmplibdir)/mibs
+ persistentdir	= @PERSISTENT_DIRECTORY@
++pkgconfigdir	= @libdir@/pkgconfig
+ DESTDIR         = @INSTALL_PREFIX@
+ INSTALL_PREFIX  = $(DESTDIR)
+ 
+diff --git a/configure.ac b/configure.ac
+index 997c9e2..61e7376 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -94,6 +94,7 @@ AC_CONFIG_FILES([net-snmp-config:net-snmp-config.in],
+ AC_CONFIG_FILES([net-snmp-create-v3-user:net-snmp-create-v3-user.in],
+ 		[chmod +x net-snmp-create-v3-user])
+ AC_CONFIG_FILES([dist/generation-scripts/gen-variables:dist/generation-scripts/gen-variables.in])
++AC_CONFIG_FILES([net-snmp-agent.pc])
+ 
+ AC_CONFIG_COMMANDS([default], echo timestamp > stamp-h)
+ 
+diff --git a/net-snmp-agent.pc.in b/net-snmp-agent.pc.in
+new file mode 100644
+index 0000000..e35a0d7
+--- /dev/null
++++ b/net-snmp-agent.pc.in
+@@ -0,0 +1,9 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: net-snmp-agent
++Description: SNMP libraries
++Version: @VERSION@
++Libs: -L${libdir} -lnetsnmpagent -lnetsnmp
