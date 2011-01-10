@@ -1,3 +1,5 @@
 systemd.patch
+power-via-mdi.patch
+net-snmp-pkgconfig.patch
 autoreconf.patch
 ltmain-sysroot.patch

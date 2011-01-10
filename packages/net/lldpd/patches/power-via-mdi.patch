@@ -1,0 +1,1052 @@
+diff --git a/man/lldpctl.8 b/man/lldpctl.8
+index d83f43d..f7116b7 100644
+--- a/man/lldpctl.8
++++ b/man/lldpctl.8
+@@ -281,6 +281,8 @@ The format of this option is (without spaces):
+ .Pp
+ .Em type
+ :
++.Ar class
++:
+ .Ar source
+ :
+ .Ar priority
+@@ -290,12 +292,16 @@ The format of this option is (without spaces):
+ .Bl -tag -width "XX"
+ .It Ar type
+ Valid types are:
+-.Bl -tag -width "XXX." -compact
+-.It Sy PSE
++.Em Sy PSE
+ Power Sourcing Entity (power provider)
+ .It Sy PD
+ Power Device (power consumer)
+ .El
++.It Ar class
++Valid power classes are from 0 to 4 as defined in RFC 3621. They are not to be
++confused, however, with the integer values ranging from 1 to 5 assigned to the
++.Em pethPsePortPowerClassifications
++object in RFC 3621.
+ .It Ar source
+ Valid sources are:
+ .Bl -tag -width "X." -compact
+diff --git a/src/Makefile.am b/src/Makefile.am
+index d4cdddf..d213894 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -2,7 +2,8 @@ sbin_PROGRAMS = lldpd lldpctl
+ noinst_LTLIBRARIES = liblldpd.la libcommon.la
+ 
+ ## Shared by all executables
+-libcommon_la_SOURCES = log.c ctl.c lldpd.h lldp.h cdp.h compat.h sonmp.h edp.h
++libcommon_la_SOURCES = log.c ctl.c lldpd.h lldp.h cdp.h compat.h sonmp.h edp.h \
++	utils.c
+ libcommon_la_LIBADD = @LTLIBOBJS@ 
+ 
+ ## Used for lldpd and tests
+diff --git a/src/agent.c b/src/agent.c
+index 17c16d7..83401e8 100644
+--- a/src/agent.c
++++ b/src/agent.c
+@@ -540,42 +540,37 @@ agent_h_scalars(struct variable *vp, oid *name, size_t *length,
+ 
+ #ifdef ENABLE_LLDPMED
+ static unsigned long
+-agent_h_med_power(struct variable *vp, struct lldpd_med_power *power)
++agent_h_med_power(struct variable *vp, struct lldpd_power *power)
+ {
+ 	unsigned long long_ret;
+ 
+ 	switch (vp->magic) {
+ 	case LLDP_SNMP_MED_POE_DEVICETYPE:
+-		switch (power->devicetype) {
+-		case LLDPMED_POW_TYPE_PSE:
+-			long_ret = 2; break;
+-		case LLDPMED_POW_TYPE_PD:
+-			long_ret = 3; break;
+-		case 0:
+-			long_ret = 4; break;
+-		default:
++		if (lldp_power_is_pse(power))
++			long_ret = 2;
++		else if (lldp_power_is_pd(power))
++			long_ret = 3;
++		else
+ 			long_ret = 1;
+-		}
+ 		return long_ret;
+ 	case LLDP_SNMP_MED_POE_PSE_POWERVAL:
++		if (lldp_power_is_pse(power))
++			long_ret = power->value;
++		else
++			long_ret = 0;
++		return long_ret;
+ 	case LLDP_SNMP_MED_POE_PD_POWERVAL:
+-		if (((vp->magic == LLDP_SNMP_MED_POE_PSE_POWERVAL) &&
+-			(power->devicetype ==
+-			LLDPMED_POW_TYPE_PSE)) ||
+-		    ((vp->magic == LLDP_SNMP_MED_POE_PD_POWERVAL) &&
+-			(power->devicetype ==
+-			    LLDPMED_POW_TYPE_PD))) {
+-			long_ret = power->val;
+-			return long_ret;
+-		}
+-		break;
++		if (lldp_power_is_pd(power))
++			long_ret = power->value;
++		else
++			long_ret = 0;
++		return long_ret;
+ 	case LLDP_SNMP_MED_POE_PSE_POWERSOURCE:
+-		if (power->devicetype ==
+-		    LLDPMED_POW_TYPE_PSE) {
++		if (lldp_power_is_pse(power)) {
+ 			switch (power->source) {
+-			case LLDPMED_POW_SOURCE_PRIMARY:
++			case LLDP_POWER_SOURCE_PSE_PRIMARY:
+ 				long_ret = 2; break;
+-			case LLDPMED_POW_SOURCE_BACKUP:
++			case LLDP_POWER_SOURCE_PSE_BACKUP:
+ 				long_ret = 3; break;
+ 			default:
+ 				long_ret = 1;
+@@ -584,14 +579,13 @@ agent_h_med_power(struct variable *vp, struct lldpd_med_power *power)
+ 		}
+ 		break;
+ 	case LLDP_SNMP_MED_POE_PD_POWERSOURCE:
+-		if (power->devicetype ==
+-		    LLDPMED_POW_TYPE_PD) {
++		if (lldp_power_is_pd(power)) {
+ 			switch (power->source) {
+-			case LLDPMED_POW_SOURCE_PSE:
++			case LLDP_POWER_SOURCE_PD_PSE:
+ 				long_ret = 2; break;
+-			case LLDPMED_POW_SOURCE_LOCAL:
++			case LLDP_POWER_SOURCE_PD_LOCAL:
+ 				long_ret = 3; break;
+-			case LLDPMED_POW_SOURCE_BOTH:
++			case LLDP_POWER_SOURCE_PD_BOTH:
+ 				long_ret = 4; break;
+ 			default:
+ 				long_ret = 1;
+@@ -602,17 +596,15 @@ agent_h_med_power(struct variable *vp, struct lldpd_med_power *power)
+ 	case LLDP_SNMP_MED_POE_PSE_POWERPRIORITY:
+ 	case LLDP_SNMP_MED_POE_PD_POWERPRIORITY:
+ 		if (((vp->magic == LLDP_SNMP_MED_POE_PSE_POWERPRIORITY) &&
+-			(power->devicetype ==
+-			LLDPMED_POW_TYPE_PSE)) ||
++			(lldp_power_is_pse(power))) ||
+ 		    ((vp->magic == LLDP_SNMP_MED_POE_PD_POWERPRIORITY) &&
+-			(power->devicetype ==
+-			    LLDPMED_POW_TYPE_PD))) {
++			(lldp_power_is_pd(power)))) {
+ 			switch (power->priority) {
+-			case LLDPMED_POW_PRIO_CRITICAL:
++			case LLDP_POWER_PRIO_CRITICAL:
+ 				long_ret = 2; break;
+-			case LLDPMED_POW_PRIO_HIGH:
++			case LLDP_POWER_PRIO_HIGH:
+ 				long_ret = 3; break;
+-			case LLDPMED_POW_PRIO_LOW:
++			case LLDP_POWER_PRIO_LOW:
+ 				long_ret = 4; break;
+ 			default:
+ 				long_ret = 1;
+@@ -631,7 +623,7 @@ agent_h_local_med(struct variable *vp, oid *name, size_t *length,
+ {
+         static unsigned long long_ret;
+ 	struct lldpd_hardware *hardware;
+-	struct lldpd_med_power *power;
++	struct lldpd_power *power;
+ 	int pse;
+ 
+ 	if (!LOCAL_CHASSIS(scfg)->c_med_cap_available)
+@@ -656,16 +648,14 @@ agent_h_local_med(struct variable *vp, oid *name, size_t *length,
+ 		   PD/PSE ports. */
+ 		pse = 0; power = NULL;
+ 		TAILQ_FOREACH(hardware, &scfg->g_hardware, h_entries) {
+-			if (hardware->h_lport.p_med_power.devicetype ==
+-			    LLDPMED_POW_TYPE_PSE) {
++			if (lldp_power_is_pse(&hardware->h_lport.p_power)) {
+ 				pse++;
+ 				if (pse == 1) /* Take this port as a reference */
+-					power = &hardware->h_lport.p_med_power;
+-			} else if (hardware->h_lport.p_med_power.devicetype ==
+-			    LLDPMED_POW_TYPE_PD) {
++					power = &hardware->h_lport.p_power;
++			} else if (lldp_power_is_pd(&hardware->h_lport.p_power)) {
+ 				pse--;
+ 				if (pse == -1) /* Take this one instead */
+-					power = &hardware->h_lport.p_med_power;
++					power = &hardware->h_lport.p_power;
+ 			}
+ 		}
+ 		if (!power)
+@@ -767,14 +757,18 @@ agent_h_local_med_power(struct variable *vp, oid *name, size_t *length,
+ {
+ 	static unsigned long long_ret;
+ 	struct lldpd_hardware *hardware;
++	struct lldpd_power *power;
+ 
+ 	if ((hardware = header_portindexed_table(vp, name, length,
+ 		    exact, var_len, write_method)) == NULL)
+ 		return NULL;
+-	if (!hardware->h_lport.p_med_power.devicetype)
++
++	power = &hardware->h_lport.p_power;
++
++	if (!lldp_power_is_pse(power) && !lldp_power_is_pd(power))
+ 		goto localpower_failed;
+ 
+-	long_ret = agent_h_med_power(vp, &hardware->h_lport.p_med_power);
++	long_ret = agent_h_med_power(vp, power);
+ 	if (long_ret != (unsigned long)-1)
+ 		return (u_char *)&long_ret;
+ 
+@@ -824,7 +818,7 @@ agent_h_remote_med(struct variable *vp, oid *name, size_t *length,
+ 	case LLDP_SNMP_MED_POE_PD_POWERSOURCE:
+ 	case LLDP_SNMP_MED_POE_PSE_POWERPRIORITY:
+ 	case LLDP_SNMP_MED_POE_PD_POWERPRIORITY:
+-		long_ret = agent_h_med_power(vp, &port->p_med_power);
++		long_ret = agent_h_med_power(vp, &port->p_power);
+ 		if (long_ret != (unsigned long)-1)
+ 			return (u_char *)&long_ret;
+ 		break;
+diff --git a/src/client.c b/src/client.c
+index 93a3516..826261b 100644
+--- a/src/client.c
++++ b/src/client.c
+@@ -199,11 +199,11 @@ client_handle_port_related(struct lldpd *cfg, struct hmsg *r, struct hmsg *s)
+ 				break;
+ 			case HMSG_SET_POWER:
+ 				p = (char*)&r->data + IFNAMSIZ;
+-				memset(&hardware->h_lport.p_med_power, 0,
+-				       sizeof(struct lldpd_med_power));
+-				if (ctl_msg_unpack_structure(STRUCT_LLDPD_MED_POWER,
+-						&hardware->h_lport.p_med_power,
+-						sizeof(struct lldpd_med_power),
++				memset(&hardware->h_lport.p_power, 0,
++				       sizeof(struct lldpd_power));
++				if (ctl_msg_unpack_structure(STRUCT_LLDPD_POWER,
++						&hardware->h_lport.p_power,
++						sizeof(struct lldpd_power),
+ 						r, &p) == -1) {
+ 					LLOG_WARNX("unable to set POE-MDI for %s",
+ 						   ifname);
+@@ -212,16 +212,12 @@ client_handle_port_related(struct lldpd *cfg, struct hmsg *r, struct hmsg *s)
+ 				}
+ 				hardware->h_lport.p_med_cap_enabled &= ~(
+ 					LLDPMED_CAP_MDI_PD | LLDPMED_CAP_MDI_PSE);
+-				switch (hardware->h_lport.p_med_power.devicetype)
+-				{
+-				case LLDPMED_POW_TYPE_PSE:
++				if (lldp_power_is_pse(&hardware->h_lport.p_power)) {
+ 					hardware->h_lport.p_med_cap_enabled |=
+ 					    LLDPMED_CAP_MDI_PSE;
+-					break;
+-				case LLDPMED_POW_TYPE_PD:
++				} else if (lldp_power_is_pd(&hardware->h_lport.p_power)) {
+ 					hardware->h_lport.p_med_cap_enabled |=
+ 					    LLDPMED_CAP_MDI_PD;
+-					break;
+ 				}
+ 				break;
+ #endif
+diff --git a/src/display.c b/src/display.c
+index 5a7fbbf..36a42d5 100644
+--- a/src/display.c
++++ b/src/display.c
+@@ -161,26 +161,34 @@ static const struct value_string port_med_geoid_map[] = {
+ 	{ 3, "NAD83/MLLW" },
+ 	{ 0, NULL },
+ };
++#endif
++
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++static const struct value_string port_power_type_map[] = {
++	{ LLDP_POWER_TYPE_PSE | LLDP_POWER_TYPE_ONE, "PSE Type 1 Device" },
++	{ LLDP_POWER_TYPE_PD  | LLDP_POWER_TYPE_ONE, "PD Type 1 Device" },
++	{ LLDP_POWER_TYPE_PSE | LLDP_POWER_TYPE_TWO, "PSE Type 2 Device" },
++	{ LLDP_POWER_TYPE_PD  | LLDP_POWER_TYPE_TWO, "PD Type 2 Device" },
++	{ 0, NULL },
++};
+ 
+-static const struct value_string port_med_pow_devicetype_map[] = {
+-	{ LLDPMED_POW_TYPE_PSE, "PSE Device" },
+-	{ LLDPMED_POW_TYPE_PD,  "PD Device" },
++static const struct value_string port_power_pse_source_map[] = {
++	{ LLDP_POWER_SOURCE_PSE_PRIMARY, "Primary Power Source" },
++	{ LLDP_POWER_SOURCE_PSE_BACKUP,  "Backup Power Source / Power Conservation Mode" },
+ 	{ 0, NULL },
+ };
+ 
+-static const struct value_string port_med_pow_source_map[] = {
+-	{ LLDPMED_POW_SOURCE_PRIMARY, "Primary Power Source" },
+-	{ LLDPMED_POW_SOURCE_BACKUP,  "Backup Power Source / Power Conservation Mode" },
+-	{ LLDPMED_POW_SOURCE_PSE,     "PSE" },
+-	{ LLDPMED_POW_SOURCE_LOCAL,   "Local"},
+-	{ LLDPMED_POW_SOURCE_BOTH,    "PSE + Local"},
++static const struct value_string port_power_pd_source_map[] = {
++	{ LLDP_POWER_SOURCE_PD_PSE,   "PSE" },
++	{ LLDP_POWER_SOURCE_PD_LOCAL, "Local"},
++	{ LLDP_POWER_SOURCE_PD_BOTH,  "PSE + Local"},
+ 	{ 0, NULL },
+ };
+ 
+-static const struct value_string port_med_pow_priority_map[] = {
+-	{ LLDPMED_POW_PRIO_CRITICAL, "critical" },
+-	{ LLDPMED_POW_PRIO_HIGH,     "high" },
+-	{ LLDPMED_POW_PRIO_LOW,      "low" },
++static const struct value_string port_power_priority_map[] = {
++	{ LLDP_POWER_PRIO_CRITICAL, "critical" },
++	{ LLDP_POWER_PRIO_HIGH,     "high" },
++	{ LLDP_POWER_PRIO_LOW,      "low" },
+ 	{ 0, NULL },
+ };
+ #endif
+@@ -506,6 +514,7 @@ display_med_capability(struct writer *w, struct lldpd_chassis *chassis, int cap)
+ static void
+ display_med(struct writer *w, struct lldpd_chassis *chassis, struct lldpd_port *port)
+ {
++	struct lldpd_power *power = &port->p_power;
+ 	int i;
+ 	char *value;
+ 
+@@ -671,24 +680,29 @@ display_med(struct writer *w, struct lldpd_chassis *chassis, struct lldpd_port *
+ 			tag_end(w);
+ 		}
+ 	}
+-	if (port->p_med_power.devicetype) {
++	if (lldp_power_is_pse(power) || lldp_power_is_pd(power)) {
+ 		tag_start(w, "poe", "Extended Power-over-Ethernet");
+ 
+ 		tag_start(w, "device-type", "Power Type & Source");
+-		tag_data(w, map_lookup(port_med_pow_devicetype_map, port->p_med_power.devicetype));
++		tag_data(w, map_lookup(port_power_type_map, power->type));
+ 		tag_end(w);
+ 
+ 		tag_start(w, "source", "Power Source");
+-		tag_data(w, map_lookup(port_med_pow_source_map, port->p_med_power.source));
++
++		if (lldp_power_is_pse(power))
++			tag_data(w, map_lookup(port_power_pse_source_map, power->source));
++		else
++			tag_data(w, map_lookup(port_power_pd_source_map, power->source));
++
+ 		tag_end(w);
+-		
++
+ 		tag_start(w, "priority", "Power Priority");
+-		tag_data(w, map_lookup(port_med_pow_priority_map, port->p_med_power.priority));
++		tag_data(w, map_lookup(port_power_priority_map, port->p_power.priority));
+ 		tag_end(w);
+ 
+-		if(port->p_med_power.val < 1024) {
++		if(port->p_power.value < 1024) {
+ 			tag_start(w, "power", "Power Value");
+-			tag_data(w, u2str(port->p_med_power.val * 100));
++			tag_data(w, u2str(port->p_power.value * 100));
+ 			tag_end(w);
+ 		}
+ 		tag_end(w);
+diff --git a/src/lldp.c b/src/lldp.c
+index 3563300..aa0344b 100644
+--- a/src/lldp.c
++++ b/src/lldp.c
+@@ -33,6 +33,7 @@ lldp_send(struct lldpd *global,
+ 	struct lldpd_port *port;
+ 	struct lldpd_chassis *chassis;
+ 	struct lldpd_frame *frame;
++	struct lldpd_power *power;
+ 	int length;
+ 	u_int8_t *packet, *pos, *tlv;
+ 
+@@ -51,6 +52,7 @@ lldp_send(struct lldpd *global,
+ 
+ 	port = &hardware->h_lport;
+ 	chassis = port->p_chassis;
++	power = &port->p_power;
+ 	length = hardware->h_mtu;
+ 	if ((packet = (u_int8_t*)malloc(length)) == NULL)
+ 		return ENOMEM;
+@@ -190,6 +192,39 @@ lldp_send(struct lldpd *global,
+ 	      POKE_END_LLDP_TLV))
+ 		goto toobig;
+ 
++	if (lldp_power_is_pse(power) || lldp_power_is_pd(power)) {
++		u_int16_t requested = 0;
++		u_int16_t allocated = 0;
++		u_int8_t support = 0;
++		u_int8_t pair = 0;
++		u_int8_t tsp = 0;
++
++		if (lldp_power_is_pse(power)) {
++			allocated = power->value;
++			support |= 0x07;
++			pair = 1;
++		} else {
++			requested = power->value;
++		}
++
++		tsp |= (power->type     & 0x3) << 6;
++		tsp |= (power->source   & 0x3) << 4;
++		tsp |= (power->priority & 0x3) << 0;
++
++		if (!(
++		      POKE_START_LLDP_TLV(LLDP_TLV_ORG) &&
++		      POKE_BYTES(dot3, sizeof(dot3)) &&
++		      POKE_UINT8(LLDP_TLV_DOT3_POWER) &&
++		      POKE_UINT8(support) &&
++		      POKE_UINT8(pair) &&
++		      POKE_UINT8(power->power_class + 1) &&
++		      POKE_UINT8(tsp) &&
++		      POKE_UINT16(requested) &&
++		      POKE_UINT16(allocated) &&
++		      POKE_END_LLDP_TLV))
++			goto toobig;
++	}
++
+ 	/* MFS */
+ 	if (!(
+ 	      POKE_START_LLDP_TLV(LLDP_TLV_ORG) &&
+@@ -278,40 +313,26 @@ lldp_send(struct lldpd *global,
+ 		}
+ 
+ 		/* LLDP-MED POE-MDI */
+-		if ((port->p_med_power.devicetype == LLDPMED_POW_TYPE_PSE) ||
+-		    (port->p_med_power.devicetype == LLDPMED_POW_TYPE_PD)) {
+-			int devicetype = 0, source = 0;
++		if (lldp_power_is_pse(power) || lldp_power_is_pd(power)) {
++			u_int8_t source = 0;
++
+ 			if (!(
+ 			      POKE_START_LLDP_TLV(LLDP_TLV_ORG) &&
+ 			      POKE_BYTES(med, sizeof(med)) &&
+ 			      POKE_UINT8(LLDP_TLV_MED_MDI)))
+ 				goto toobig;
+-			switch (port->p_med_power.devicetype) {
+-			case LLDPMED_POW_TYPE_PSE:
+-				devicetype = 0;
+-				switch (port->p_med_power.source) {
+-				case LLDPMED_POW_SOURCE_PRIMARY: source = 1; break;
+-				case LLDPMED_POW_SOURCE_BACKUP: source = 2; break;
+-				case LLDPMED_POW_SOURCE_RESERVED: source = 3; break;
+-				default: source = 0; break;
+-				}
+-				break;
+-			case LLDPMED_POW_TYPE_PD:
+-				devicetype = 1;
+-				switch (port->p_med_power.source) {
+-				case LLDPMED_POW_SOURCE_PSE: source = 1; break;
+-				case LLDPMED_POW_SOURCE_LOCAL: source = 2; break;
+-				case LLDPMED_POW_SOURCE_BOTH: source = 3; break;
+-				default: source = 0; break;
+-				}
+-				break;
+-			}
++
++			if (power->source < 4)
++				source = power->source;
++			else
++				source = 0;
++
+ 			if (!(
+ 			      POKE_UINT8((
+-				((devicetype                   %(1<< 2))<<6) |
+-				((source                       %(1<< 2))<<4) |
+-				((port->p_med_power.priority   %(1<< 4))<<0) )) &&
+-			      POKE_UINT16(port->p_med_power.val) &&
++				((power->type     & 0x3) << 6) |
++				((source          & 0x3) << 4) |
++				((power->priority & 0x3) << 0))) &&
++			      POKE_UINT16(power->value) &&
+ 			      POKE_END_LLDP_TLV))
+ 				goto toobig;
+ 		}
+@@ -593,9 +614,10 @@ lldp_decode(struct lldpd *cfg, char *frame, int s,
+ #ifndef ENABLE_LLDPMED
+ 				hardware->h_rx_unrecognized_cnt++;
+ #else
++				struct lldpd_power *power = &port->p_power;
+ 				u_int32_t policy;
+ 				int loctype;
+-				int power;
++				int support;
+ 
+ 				switch (tlv_subtype) {
+ 				case LLDP_TLV_MED_CAP:
+@@ -659,64 +681,21 @@ lldp_decode(struct lldpd *cfg, char *frame, int s,
+ 					break;
+ 				case LLDP_TLV_MED_MDI:
+ 					CHECK_TLV_SIZE(7, "LLDP-MED PoE-MDI");
+-					power = PEEK_UINT8;
+-					switch (power & 0xC0) {
+-					case 0x0:
+-						port->p_med_power.devicetype = LLDPMED_POW_TYPE_PSE;
+-						port->p_med_cap_enabled |=
+-						    LLDPMED_CAP_MDI_PSE;
+-						switch (power & 0x30) {
+-						case 0x0:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_UNKNOWN;
+-							break;
+-						case 0x10:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_PRIMARY;
+-							break;
+-						case 0x20:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_BACKUP;
+-							break;
+-						default:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_RESERVED;
+-						}
+-						break;
+-					case 0x40:
+-						port->p_med_power.devicetype = LLDPMED_POW_TYPE_PD;
+-						port->p_med_cap_enabled |=
+-						    LLDPMED_CAP_MDI_PD;
+-						switch (power & 0x30) {
+-						case 0x0:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_UNKNOWN;
+-							break;
+-						case 0x10:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_PSE;
+-							break;
+-						case 0x20:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_LOCAL;
+-							break;
+-						default:
+-							port->p_med_power.source =
+-							    LLDPMED_POW_SOURCE_BOTH;
+-						}
+-						break;
+-					default:
+-						port->p_med_power.devicetype =
+-						    LLDPMED_POW_TYPE_RESERVED;
++					support = PEEK_UINT8;
++
++					power->type = ((support >> 6) & 0x3) | LLDP_POWER_TYPE_SET;
++					power->source = (support >> 4) & 0x3;
++					power->priority = (support >> 0) & 0xf;
++
++					if (lldp_power_is_pse(power)) {
++						port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PSE;
++						PEEK_DISCARD_UINT16;
++						port->p_power.value = PEEK_UINT16;
++					} else if (lldp_power_is_pd(power)) {
++						port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PD;
++						port->p_power.value = PEEK_UINT16;
++						PEEK_DISCARD_UINT16;
+ 					}
+-					if (((power & 0x0F) < 0) ||
+-					    ((power & 0x0F) > LLDPMED_POW_PRIO_LOW))
+-						port->p_med_power.priority =
+-						    LLDPMED_POW_PRIO_UNKNOWN;
+-					else
+-						port->p_med_power.priority =
+-						    power & 0x0F;
+-					port->p_med_power.val = PEEK_UINT16;
+ 					break;
+ 				case LLDP_TLV_MED_IV_HW:
+ 				case LLDP_TLV_MED_IV_SW:
+diff --git a/src/lldp.h b/src/lldp.h
+index f1b5f94..f32a4e9 100644
+--- a/src/lldp.h
++++ b/src/lldp.h
+@@ -158,6 +158,29 @@ enum {
+ 	LLDP_MGMT_IFACE_SYSPORT	= 3
+ };
+ 
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++#define LLDP_POWER_TYPE_PSE (0 << 0)
++#define LLDP_POWER_TYPE_PD  (1 << 0)
++#define LLDP_POWER_TYPE_TWO (0 << 1)
++#define LLDP_POWER_TYPE_ONE (1 << 1)
++#define LLDP_POWER_TYPE_SET (1 << 2)
++
++#define LLDP_POWER_SOURCE_PD_UNKNOWN 0
++#define LLDP_POWER_SOURCE_PD_PSE 1
++#define LLDP_POWER_SOURCE_PD_LOCAL 2
++#define LLDP_POWER_SOURCE_PD_BOTH 3
++
++#define LLDP_POWER_SOURCE_PSE_UNKNOWN 0
++#define LLDP_POWER_SOURCE_PSE_PRIMARY 1
++#define LLDP_POWER_SOURCE_PSE_BACKUP 2
++#define LLDP_POWER_SOURCE_PSE_RESERVED 3
++
++#define LLDP_POWER_PRIO_UNKNOWN 0
++#define LLDP_POWER_PRIO_CRITICAL 1
++#define LLDP_POWER_PRIO_HIGH 2
++#define LLDP_POWER_PRIO_LOW 3
++#endif
++
+ #ifdef ENABLE_LLDPMED
+ enum {
+ 	LLDP_TLV_MED_CAP	= 1,
+@@ -193,23 +216,6 @@ enum {
+ #define LLDPMED_LOCFORMAT_ELIN 3
+ #define LLDPMED_LOCFORMAT_LAST LLDPMED_LOCFORMAT_ELIN
+ 
+-#define LLDPMED_POW_TYPE_PSE 1
+-#define LLDPMED_POW_TYPE_PD 2
+-#define LLDPMED_POW_TYPE_RESERVED 3
+-
+-#define LLDPMED_POW_SOURCE_UNKNOWN 1
+-#define LLDPMED_POW_SOURCE_PRIMARY 2
+-#define LLDPMED_POW_SOURCE_BACKUP 3
+-#define LLDPMED_POW_SOURCE_RESERVED 4
+-#define LLDPMED_POW_SOURCE_PSE 5
+-#define LLDPMED_POW_SOURCE_LOCAL 6
+-#define LLDPMED_POW_SOURCE_BOTH 7
+-
+-#define LLDPMED_POW_PRIO_UNKNOWN 0
+-#define LLDPMED_POW_PRIO_CRITICAL 1
+-#define LLDPMED_POW_PRIO_HIGH 2
+-#define LLDPMED_POW_PRIO_LOW 3
+-
+ #define LLDPMED_CAP_CAP 0x01
+ #define LLDPMED_CAP_POLICY 0x02
+ #define LLDPMED_CAP_LOCATION 0x04
+diff --git a/src/lldpctl.c b/src/lldpctl.c
+index c2bb2b5..85c92c8 100644
+--- a/src/lldpctl.c
++++ b/src/lldpctl.c
+@@ -59,7 +59,7 @@ usage(void)
+ 	fprintf(stderr, "-P policy   Enable the transmission of LLDP-MED Network Policy TLVs\n");
+ 	fprintf(stderr, "            for the given interfaces. Can be repeated to specify\n");
+ 	fprintf(stderr, "            different policies.\n");
+-	fprintf(stderr, "-O poe      Enable the trabsmission of LLDP-MED POE-MDI TLV\n");
++	fprintf(stderr, "-O poe      Enable the transmission of LLDP-MED POE-MDI TLV\n");
+ 	fprintf(stderr, "            for the given interfaces.\n");
+ #endif
+ 
+@@ -354,106 +354,6 @@ invalid_policy:
+ 	return -1;
+ }
+ 
+-static int
+-lldpd_parse_power(struct lldpd_port *port, const char *poe)
+-{
+-	const char *e;
+-	int device_type = 0;
+-	int source      = 0;
+-	int priority    = 0;
+-	int val         = 0;
+-
+-	if (strlen(poe) == 0)
+-		return 0;
+-	e = poe;
+-
+-	/* Device type */
+-	if (!strncmp(e, "PD", 2))
+-		device_type = LLDPMED_POW_TYPE_PD;
+-	else if (!strncmp(e, "PSE", 3))
+-		device_type = LLDPMED_POW_TYPE_PSE;
+-	else {
+-		LLOG_WARNX("Device type should be either 'PD' or 'PSE'.");
+-		goto invalid_poe;
+-	}
+-
+-	/* Source */
+-	if ((e = strchr(e, ':')) == NULL) {
+-		LLOG_WARNX("Expected power source.");
+-		goto invalid_poe;
+-	}
+-	source = atoi(++e);
+-	if (source < 0 || source > 3) {
+-		LLOG_WARNX("Power source out of range (%d).", source);
+-		goto invalid_poe;
+-	}
+-
+-	/* Priority */
+-	if ((e = strchr(e, ':')) == NULL) {
+-		LLOG_WARNX("Expected power priority.");
+-		goto invalid_poe;
+-	}
+-	priority = atoi(++e);
+-	if (priority < 0 || priority > 3) {
+-		LLOG_WARNX("Power priority out of range (%d).", priority);
+-		goto invalid_poe;
+-	}
+-
+-	/* Value */
+-	if ((e = strchr(e, ':')) == NULL) {
+-		LLOG_WARNX("Expected power value.");
+-		goto invalid_poe;
+-	}
+-	val = atoi(++e);
+-	if (val < 0 || val > 1023) {
+-		LLOG_WARNX("Power value out of range (%d).", val);
+-		goto invalid_poe;
+-	}
+-
+-	port->p_med_power.devicetype = device_type;
+-	port->p_med_power.priority = priority;
+-	port->p_med_power.val = val;
+-
+-	switch (device_type) {
+-	case LLDPMED_POW_TYPE_PD:
+-		switch (source) {
+-		case 1:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_PSE;
+-			break;
+-		case 2:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_LOCAL;
+-			break;
+-		case 3:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_BOTH;
+-			break;
+-		default:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_UNKNOWN;
+-			break;
+-		}
+-		port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PD;
+-		break;
+-	case LLDPMED_POW_TYPE_PSE:
+-		switch (source) {
+-		case 1:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_PRIMARY;
+-			break;
+-		case 2:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_BACKUP;
+-			break;
+-		default:
+-			port->p_med_power.source = LLDPMED_POW_SOURCE_UNKNOWN;
+-			break;
+-		}
+-		port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PSE;
+-		break;
+-	}
+-	return 0;
+-
+- invalid_poe:
+-	LLOG_WARNX("The format POE-MDI is invalid (%s)", poe);
+-	return -1;
+-}
+-
+ static void
+ set_location(int s, int argc, char *argv[])
+ {
+@@ -589,7 +489,7 @@ set_power(int s, int argc, char *argv[])
+ 	while ((ch = getopt(argc, argv, LLDPCTL_ARGS)) != -1) {
+ 		switch (ch) {
+ 		case 'O':
+-			if ((lldpd_parse_power(&port, optarg)) == -1)
++			if (lldp_port_power_parse(&port, optarg))
+ 				fatalx("Incorrect POE-MDI.");
+ 			break;
+ 		}
+@@ -609,9 +509,9 @@ set_power(int s, int argc, char *argv[])
+ 		strlcpy((char *)&h->data, iff->name, IFNAMSIZ);
+ 		h->hdr.len += IFNAMSIZ;
+ 		p = (char*)&h->data + IFNAMSIZ;
+-		if (ctl_msg_pack_structure(STRUCT_LLDPD_MED_POWER,
+-					   &port.p_med_power,
+-					   sizeof(struct lldpd_med_power), h, &p) == -1) {
++		if (ctl_msg_pack_structure(STRUCT_LLDPD_POWER,
++					   &port.p_power,
++					   sizeof(struct lldpd_power), h, &p) == -1) {
+ 			LLOG_WARNX("set_power: Unable to set POE-MDI for %s", iff->name);
+ 			fatalx("aborting");
+ 		}
+diff --git a/src/lldpd.c b/src/lldpd.c
+index b620b20..6030c14 100644
+--- a/src/lldpd.c
++++ b/src/lldpd.c
+@@ -114,6 +114,10 @@ usage(void)
+ 	fprintf(stderr, "-S descr Override the default system description.\n");
+ 	fprintf(stderr, "-m IP    Specify the management address of this system.\n");
+ 	fprintf(stderr, "-H mode  Specify the behaviour when detecting multiple neighbors.\n");
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++	fprintf(stderr, "-O poe   Enable the transmission of the 802.3at and/or LLDP-MED\n");
++	fprintf(stderr, "         Power-via-MDI TLV for the given interfaces.\n");
++#endif
+ #ifdef ENABLE_LLDPMED
+ 	fprintf(stderr, "-M class Enable emission of LLDP-MED frame. 'class' should be one of:\n");
+ 	fprintf(stderr, "             1 Generic Endpoint (Class I)\n");
+@@ -175,6 +179,9 @@ lldpd_alloc_hardware(struct lldpd *cfg, char *name)
+ 	hardware->h_lport.p_chassis->c_refcount++;
+ 	TAILQ_INIT(&hardware->h_rports);
+ 
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++	memcpy(&hardware->h_lport.p_power, &cfg->g_power, sizeof(cfg->g_power));
++#endif
+ #ifdef ENABLE_LLDPMED
+ 	if (LOCAL_CHASSIS(cfg)->c_med_cap_available) {
+ 		hardware->h_lport.p_med_cap_enabled = LLDPMED_CAP_CAP;
+@@ -1068,8 +1075,11 @@ lldpd_main(int argc, char *argv[])
+ #endif
+ 	char *mgmtp = NULL;
+ 	char *popt, opts[] = 
+-		"H:hkrdxX:m:p:M:S:i@                    ";
++		"H:hkrdxX:m:p:O:M:S:i@                  ";
+ 	int i, found, advertise_version = 1;
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++	struct lldpd_power power;
++#endif
+ #ifdef ENABLE_LLDPMED
+ 	int lldpmed = 0, noinventory = 0;
+ #endif
+@@ -1104,6 +1114,18 @@ lldpd_main(int argc, char *argv[])
+ 		case 'k':
+ 			advertise_version = 0;
+ 			break;
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++		case 'O':
++			if (lldp_power_parse(&power, optarg)) {
++				fprintf(stderr, "The format Power-via-MDI is "
++						"invalid (%s)\n", optarg);
++			}
++			break;
++#else
++		case 'O':
++			fprintf(stderr, "Power-via-MDI support is not built-in\n");
++			break;
++#endif
+ #ifdef ENABLE_LLDPMED
+ 		case 'M':
+ 			lldpmed = atoi(optarg);
+@@ -1197,6 +1219,7 @@ lldpd_main(int argc, char *argv[])
+ 	    calloc(1, sizeof(struct lldpd))) == NULL)
+ 		fatal(NULL);
+ 
++	memcpy(&cfg->g_power, &power, sizeof(power));
+ 	cfg->g_mgmt_pattern = mgmtp;
+ 	cfg->g_smart = smart;
+ 	cfg->g_receiveonly = receiveonly;
+diff --git a/src/lldpd.h b/src/lldpd.h
+index db1b4de..444a999 100644
+--- a/src/lldpd.h
++++ b/src/lldpd.h
+@@ -75,6 +75,17 @@ struct lldpd_vlan {
+ #define STRUCT_LLDPD_VLAN "(Lsw)"
+ #endif
+ 
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++struct lldpd_power {
++	u_int8_t power_class;
++	u_int8_t type;
++	u_int8_t source;
++	u_int8_t priority;
++	u_int16_t value;
++};
++#define STRUCT_LLDPD_POWER "(bbbbw)"
++#endif
++
+ #ifdef ENABLE_LLDPMED
+ #define STRUCT_LLDPD_MED_POLICY "(bbbwbb)"
+ struct lldpd_med_policy {
+@@ -92,14 +103,6 @@ struct lldpd_med_loc {
+ 	char			*data;
+ 	int			 data_len;
+ };
+-
+-#define STRUCT_LLDPD_MED_POWER "(bbbw)"
+-struct lldpd_med_power {
+-	u_int8_t		 devicetype; /* PD or PSE */
+-	u_int8_t		 source;
+-	u_int8_t		 priority;
+-	u_int16_t		 val;
+-};
+ #endif
+ 
+ struct lldpd_chassis {
+@@ -166,6 +169,12 @@ struct lldpd_port {
+ #define STRUCT_LLDPD_PORT_DOT3 ""
+ #endif
+ 
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++#define STRUCT_LLDPD_PORT_POWER        \
++	STRUCT_LLDPD_POWER
++	struct lldpd_power	 p_power;
++#endif
++
+ #ifdef ENABLE_LLDPMED
+ #define STRUCT_LLDPD_PORT_MED "w"      \
+ 	STRUCT_LLDPD_MED_POLICY	       \
+@@ -178,12 +187,10 @@ struct lldpd_port {
+ 	STRUCT_LLDPD_MED_POLICY	       \
+ 	STRUCT_LLDPD_MED_LOC	       \
+ 	STRUCT_LLDPD_MED_LOC	       \
+-	STRUCT_LLDPD_MED_LOC	       \
+-	STRUCT_LLDPD_MED_POWER
++	STRUCT_LLDPD_MED_LOC
+ 	u_int16_t		 p_med_cap_enabled;
+ 	struct lldpd_med_policy	 p_med_policy[LLDPMED_APPTYPE_LAST];
+ 	struct lldpd_med_loc	 p_med_location[LLDPMED_LOCFORMAT_LAST];
+-	struct lldpd_med_power	 p_med_power;
+ #else
+ #define STRUCT_LLDPD_PORT_MED ""
+ #endif
+@@ -199,6 +206,7 @@ struct lldpd_port {
+ 
+ #define STRUCT_LLDPD_PORT "(LPttPbbCswb"				\
+ 	STRUCT_LLDPD_PORT_DOT3					\
++	STRUCT_LLDPD_PORT_POWER					\
+ 	STRUCT_LLDPD_PORT_MED					\
+ 	STRUCT_LLDPD_PORT_DOT1 ")"
+ 
+@@ -325,6 +333,9 @@ struct lldpd {
+         char                    *g_descr_override;
+ 	char			*g_lsb_release;
+ 	int			 g_advertise_version;
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++	struct lldpd_power	 g_power;
++#endif
+ #ifdef ENABLE_LLDPMED
+ 	int			 g_noinventory;
+ #endif
+@@ -491,4 +502,10 @@ int	 priv_snmp_socket(struct sockaddr_un *);
+ int	 receive_fd(int);
+ void	 send_fd(int, int);
+ 
++/* utils.c */
++int	 lldp_power_is_pse(struct lldpd_power *power);
++int	 lldp_power_is_pd(struct lldpd_power *power);
++int	 lldp_power_parse(struct lldpd_power *power, const char *poe);
++int	 lldp_port_power_parse(struct lldpd_port *port, const char *poe);
++
+ #endif /* _LLDPD_H */
+diff --git a/src/utils.c b/src/utils.c
+new file mode 100644
+index 0000000..727a8a4
+--- /dev/null
++++ b/src/utils.c
+@@ -0,0 +1,132 @@
++/*
++ * Copyright (c) 2011 Avionic Design GmbH
++ *
++ * Permission to use, copy, modify, and distribute this software for any
++ * purpose with or without fee is hereby granted, provided that the above
++ * copyright notice and this permission notice appear in all copies.
++ *
++ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
++ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
++ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
++ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
++ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
++ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
++ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
++ */
++
++#include "lldpd.h"
++
++int lldp_power_is_pse(struct lldpd_power *power)
++{
++	if ((power->type & LLDP_POWER_TYPE_SET) == 0)
++		return 0;
++
++	if ((power->type & LLDP_POWER_TYPE_PSE) != 0)
++		return 1;
++
++	return 0;
++}
++
++int lldp_power_is_pd(struct lldpd_power *power)
++{
++	if ((power->type & LLDP_POWER_TYPE_SET) == 0)
++		return 0;
++
++	if ((power->type & LLDP_POWER_TYPE_PD) != 0)
++		return 1;
++
++	return 0;
++}
++
++#if defined(ENABLE_DOT3) || defined(ENABLE_LLDPMED)
++int lldp_power_parse(struct lldpd_power *power, const char *poe)
++{
++	const char *e;
++	int type     = 0;
++	int class    = 0;
++	int source   = 0;
++	int priority = 0;
++	int value    = 0;
++
++	if (strlen(poe) == 0)
++		return 0;
++	e = poe;
++
++	/* Device type */
++	if (!strncmp(e, "PD", 2))
++		type = LLDP_POWER_TYPE_PD | LLDP_POWER_TYPE_SET;
++	else if (!strncmp(e, "PSE", 3))
++		type = LLDP_POWER_TYPE_PSE | LLDP_POWER_TYPE_SET;
++	else {
++		LLOG_WARNX("Device type should be either 'PD' or 'PSE'.");
++		return -1;
++	}
++
++	/* Power Class */
++	if ((e = strchr(e, ':')) == NULL) {
++		LLOG_WARNX("Expected power class.");
++		return -1;
++	}
++	class = atoi(++e);
++	if (class < 0 || class > 4) {
++		LLOG_WARNX("Power class out of range (%d).", class);
++		return -1;
++	}
++
++	/* Source */
++	if ((e = strchr(e, ':')) == NULL) {
++		LLOG_WARNX("Expected power source.");
++		return -1;
++	}
++	source = atoi(++e);
++	if (source < 0 || source > 3) {
++		LLOG_WARNX("Power source out of range (%d).", source);
++		return -1;
++	}
++
++	/* Priority */
++	if ((e = strchr(e, ':')) == NULL) {
++		LLOG_WARNX("Expected power priority.");
++		return -1;
++	}
++	priority = atoi(++e);
++	if (priority < 0 || priority > 3) {
++		LLOG_WARNX("Power priority out of range (%d).", priority);
++		return -1;
++	}
++
++	/* Value */
++	if ((e = strchr(e, ':')) == NULL) {
++		LLOG_WARNX("Expected power value.");
++		return -1;
++	}
++	value = atoi(++e);
++	if (value < 0 || value > 1023) {
++		LLOG_WARNX("Power value out of range (%d).", value);
++		return -1;
++	}
++
++	power->type = type;
++	power->power_class = class;
++	power->source = source;
++	power->priority = priority;
++	power->value = value;
++
++	return 0;
++}
++
++int lldp_port_power_parse(struct lldpd_port *port, const char *poe)
++{
++	if (lldp_power_parse(&port->p_power, poe))
++		return -1;
++
++#  if defined(ENABLE_LLDPMED)
++	if (lldp_power_is_pse(&port->p_power))
++		port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PSE;
++	else if (lldp_power_is_pd(&port->p_power))
++		port->p_med_cap_enabled |= LLDPMED_CAP_MDI_PD;
++#  endif
++
++	return 0;
++}
++#endif
