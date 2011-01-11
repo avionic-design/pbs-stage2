@@ -151,6 +151,18 @@ ifneq ($(GIT_URL),)
   endif
 endif
 
+quiet_cmd_ln_src = LN      $(pkgsrctree)/src
+      cmd_ln_src = rm -rf $(pkgbuildtree) && \
+			ln -s $(pkgsrctree)/src $(pkgbuildtree)
+
+$(pkgtree)/.ln-src: $(pkgtree)/.directory
+	$(call cmd,ln_src)
+	$(call cmd,stamp)
+
+ifneq ($(wildcard $(pkgsrctree)/src),)
+  setup-deps := $(pkgtree)/.ln-src
+endif
+
 $(pkgtree)/.setup: $(setup-deps)
 
 quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
