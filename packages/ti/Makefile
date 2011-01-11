@@ -5,3 +5,4 @@ obj-$(CONFIG_PACKAGE_TI_DVSDK) += dvsdk
 obj-$(CONFIG_PACKAGE_TI_FRAMEWORK_COMPONENTS) += framework-components
 obj-$(CONFIG_PACKAGE_TI_CODEC_ENGINE) += codec-engine
 obj-$(CONFIG_PACKAGE_TI_DMAI) += dmai
+obj-$(CONFIG_PACKAGE_TI_FFMPEG_CSC) += ffmpeg-csc
