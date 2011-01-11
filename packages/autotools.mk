@@ -10,6 +10,8 @@ env += \
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
+conf-cmd ?= ../configure
+
 conf-args += \
 	--build=$(BUILD_GNU_TYPE) \
 	--host=$(HOST_GNU_TYPE) \
@@ -27,7 +29,7 @@ conf-vars += \
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgbuildtree)/obj-$(HOST_GNU_TYPE) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
+			$(env) $(conf-cmd) $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
