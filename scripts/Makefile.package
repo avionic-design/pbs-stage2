@@ -129,13 +129,16 @@ ifneq ($(LOCATION_SVN),)
 endif
 
 quiet_cmd_git_clone = GIT     $(GIT_URL)
-      cmd_git_clone = git clone -q $(GIT_URL) $@
+      cmd_git_clone = rm -rf $(pkgbuildtree) && \
+			cd $(dir $(pkgbuildtree)) && \
+			git clone -q $(GIT_URL) $(notdir $(pkgbuildtree))
 
-$(pkgtree)/$(PACKAGE).git:
+$(pkgtree)/.git-clone: $(pkgtree)/.directory
 	$(call cmd,git_clone)
+	$(call cmd,stamp)
 
 ifneq ($(GIT_URL),)
-  setup-deps := $(pkgtree)/$(PACKAGE).git
+  setup-deps := $(pkgtree)/.git-clone
 endif
 
 $(pkgtree)/.setup: $(setup-deps)
