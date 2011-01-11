@@ -1,2 +1,2 @@
 /usr/include/ti/sdo/codecs
-/usr/lib/codecs/dm365
+/usr/lib/libce_dm365_*.a

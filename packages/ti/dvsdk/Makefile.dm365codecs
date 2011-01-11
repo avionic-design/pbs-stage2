@@ -84,11 +84,11 @@ aacenc_LIB := \
 	ittiam/codecs/aaclc_enc/lib_production/aaclc_enc_prod.a \
 
 define add-codec
-$(1)_INSTALL_FILES := $$(addprefix $$(dm365codecs_INSTALL_LIB_DIR)/codecs/dm365/$(1)/,$$(notdir $$($(1)_LIB)))
+$(1)_INSTALL_FILES := $$(addprefix $$(dm365codecs_INSTALL_LIB_DIR)/libce_dm365_$(1)_,$$(notdir $$($(1)_LIB)))
 
-$$($(1)_INSTALL_FILES): $$(addprefix $$(SRC_DIR)/,$$($(1)_LIB))
+$$($(1)_INSTALL_FILES): $$(dm365codecs_INSTALL_LIB_DIR)/libce_dm365_$(1)_%.a: $$(SRC_DIR)/ti/sdo/codecs/$(1)/lib/%.a
 	mkdir -p $$(@D)
-	install $$(<D)/$$(@F) $$@
+	install $$< $$@
 
 .PHONY: install-codec-$(1)
 install-codec-$(1): $$($(1)_INSTALL_FILES)
