@@ -137,8 +137,18 @@ $(pkgtree)/.git-clone: $(pkgtree)/.directory
 	$(call cmd,git_clone)
 	$(call cmd,stamp)
 
+quiet_cmd_git_checkout = GIT     $(GIT_CHECKOUT)
+      cmd_git_checkout = cd $(pkgbuildtree) && git checkout -q $(GIT_CHECKOUT)
+
+$(pkgtree)/.git-checkout: $(pkgtree)/.git-clone
+	$(call cmd,git_checkout)
+	$(call cmd,stamp)
+
 ifneq ($(GIT_URL),)
   setup-deps := $(pkgtree)/.git-clone
+  ifneq ($(GIT_CHECKOUT),)
+    setup-deps += $(pkgtree)/.git-checkout
+  endif
 endif
 
 $(pkgtree)/.setup: $(setup-deps)
