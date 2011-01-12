@@ -18,7 +18,7 @@ $(depends):
 
 __depend: $(depends)
 
-obj-y := $(patsubst %,$(obj)/%,$(obj-y))
+obj-y := $(patsubst %,$(obj)%,$(obj-y))
 pkgdir-y := $(sort $(filter-out %/,$(obj-y)))
 subdir-y := $(sort $(filter %/,$(obj-y)))
 
