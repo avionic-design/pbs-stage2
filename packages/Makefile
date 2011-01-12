@@ -1,4 +1,5 @@
 obj-y += build-tools/
+obj-y += boot/
 obj-y += console/
 obj-y += core/
 obj-y += devel/

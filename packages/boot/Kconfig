@@ -1,0 +1,5 @@
+menu "Boot loaders"
+
+source "packages/boot/u-boot/Kconfig"
+
+endmenu

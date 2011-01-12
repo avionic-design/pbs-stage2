@@ -1,0 +1,13 @@
+config PACKAGE_BOOT_U_BOOT
+	bool "u-boot"
+	default n
+
+config U_BOOT_BOARD
+	string "u-boot board"
+        default ""
+        depends on PACKAGE_BOOT_U_BOOT
+
+config U_BOOT_BRANCH
+	string "u-boot repository branch"
+        default ""
+        depends on PACKAGE_BOOT_U_BOOT
