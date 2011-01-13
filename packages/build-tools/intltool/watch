@@ -1,0 +1,2 @@
+version=3
+http://edge.launchpad.net/intltool/trunk/([\d\.]+)/+download/intltool-(.*)\.tar\.gz
