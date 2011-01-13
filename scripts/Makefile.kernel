@@ -20,6 +20,9 @@ install-x86 = install
   image-x86_64 = bzImage
 install-x86_64 = install
 
+  image-arm = uImage
+install-arm = install
+
 ifneq ($(image-$(ARCH)),)
   image = $(image-$(ARCH))
 else
