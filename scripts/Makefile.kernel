@@ -41,10 +41,14 @@ endif
 
 include $(srctree)/scripts/Kbuild.include
 
+make-conf = \
+	CROSS_COMPILE=$(CROSS_COMPILE) \
+	KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+	ARCH=$(ARCH)
+
 quiet_cmd_gen_config = GEN     $@
       cmd_gen_config = \
-			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
-				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
 				$(KERNEL_CONFIG)
 
 $(KBUILD_OUTPUT)/.config:
@@ -53,8 +57,7 @@ $(KBUILD_OUTPUT)/.config:
 
 quiet_cmd_gen_kernel_version = GEN     $@
       cmd_gen_kernel_version = \
-			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
-				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
 				kernelversion > $@
 
 $(pkgtree)/kernel-version:
@@ -62,8 +65,7 @@ $(pkgtree)/kernel-version:
 
 quiet_cmd_gen_kernel_release = GEN     $@
       cmd_gen_kernel_release = \
-			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
-				KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
 				include/config/kernel.release
 
 $(KBUILD_OUTPUT)/include/config/kernel.release:
@@ -80,9 +82,7 @@ config: $(pkgtree)/kernel-release
 
 quiet_cmd_build_kernel_image = BUILD   $(image)
       cmd_build_kernel_image = \
-			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
-					CROSS_COMPILE=$(CROSS_COMPILE) \
-					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
 					-j $(NUM_CPU) $(image)
 
 PHONY += build-$(image)
@@ -91,9 +91,7 @@ build-$(image): $(objtree)/.config
 
 quiet_cmd_build_kernel_modules = BUILD   modules
       cmd_build_kernel_modules = \
-			cd $(KERNELSRC) && $(MAKE) ARCH=$(ARCH) \
-					CROSS_COMPILE=$(CROSS_COMPILE) \
-					KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
 					-j $(NUM_CPU) modules
 
 PHONY += build-modules
@@ -106,17 +104,13 @@ build: build-$(image) build-modules
 PHONY += headers-check
 headers-check: config
 	cd $(KERNELSRC) && \
-		$(env) $(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(env) $(MAKE) $(make-conf) \
 			headers_check
 
 PHONY += headers-install
 headers-install: config
 	cd $(KERNELSRC) && \
-		$(priv) $(env) $(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(priv) $(env) $(MAKE) $(make-conf) \
 			INSTALL_HDR_PATH=$(DESTDIR)$(prefix) \
 			headers_install
 ifeq ($(ARCH),arm)
@@ -133,18 +127,14 @@ endif
 PHONY += install-$(image)
 install-$(image): build-$(image)
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(MAKE) $(make-conf) \
 			INSTALL_PATH=$(objtree) \
 			$(install-target)
 
 PHONY += install-modules
 install-modules: build-modules
 	cd $(KERNELSRC) && \
-		$(priv) $(MAKE) ARCH=$(ARCH) \
-			CROSS_COMPILE=$(CROSS_COMPILE) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(priv) $(MAKE) $(make-conf) \
 			INSTALL_MOD_PATH=$(DESTDIR) \
 			modules_install
 
@@ -155,8 +145,7 @@ PHONY += clean
 clean:
 ifneq ($(wildcard $(KBUILD_OUTPUT)),)
 	$(Q)cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(MAKE) $(make-conf) \
 			mrproper
 else
 	@:
@@ -165,8 +154,7 @@ endif
 PHONY += version
 version:
 	cd $(KERNELSRC) && \
-		$(MAKE) ARCH=$(ARCH) \
-			KBUILD_OUTPUT=$(KBUILD_OUTPUT) \
+		$(MAKE) $(make-conf) \
 			kernelversion
 
 .PHONY: $(PHONY)
