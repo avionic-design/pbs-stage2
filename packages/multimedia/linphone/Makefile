@@ -1,5 +1,5 @@
 PACKAGE = linphone
-VERSION = 3.3.99.8
+VERSION = 3.3.99.10
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/unstable/source
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
