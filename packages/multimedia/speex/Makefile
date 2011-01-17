@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
-	--disable-oggtest
+	--disable-oggtest \
+	--with-ogg=$(SYSROOT)$(prefix)
 
 prunefiles = \
 	$(prefix)/lib/*.la
