@@ -14,13 +14,16 @@ pkgsrctree	:= $(srctree)/$(obj)
 patchdir	:= $(pkgsrctree)/patches
 export pkgtree pkgsrctree patchdir
 
+# Declare a default value for $(pkgbuildtree), it can't be a simple variable
+# because $(PACKAGE) and $(VERSION) are defined in the following include.
+pkgbuildtree     = $(pkgtree)/$(PACKAGE)-$(VERSION)
+
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-ifeq ($(pkgbuildtree),)
-  pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
-endif
+# Turn $(pkgbuildtree) into a simple variable
+pkgbuildtree    := $(pkgbuildtree)
 
 url-filename	= $(lastword $(subst /, ,$(subst ;filename=, ,$(1))))
 url-pathname	= $(firstword $(subst ;filename=, ,$(1)))
