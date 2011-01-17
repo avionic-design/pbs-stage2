@@ -13,6 +13,7 @@ dirs = \
 	/sbin \
 	/srv \
 	/sys \
+	/tmp \
 	/usr \
 	/usr/bin \
 	/usr/lib \
@@ -20,6 +21,7 @@ dirs = \
 	/var \
 	/var/log \
 	/var/run \
+	/var/spool \
 
 files = \
 	/etc/fstab \
