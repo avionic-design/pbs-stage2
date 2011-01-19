@@ -15,12 +15,12 @@ $(pkgtree)/.setup:
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgtree)/build && cd $(pkgbuildtree) && \
-		$(env) $(MAKE) O=../build $(CONFIG_U_BOOT_BOARD)_config
+		$(env) $(MAKE) O=$(pkgtree)/build $(CONFIG_U_BOOT_BOARD)_config
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) O=../build CROSS_COMPILE=$(CROSS_COMPILE)
+		$(env) $(MAKE) O=$(pkgtree)/build CROSS_COMPILE=$(CROSS_COMPILE)
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
