@@ -13,6 +13,7 @@ config PACKAGE_NET_REMOTE_CONTROL
 
 choice
 	prompt "Video Playback Support"
+	depends on PACKAGE_NET_REMOTE_CONTROL
 
 	config PACKAGE_NET_REMOTE_CONTROL_VIDEO_NONE
 		bool "Not supported"
