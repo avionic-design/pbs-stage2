@@ -13,7 +13,8 @@ pkglib = $(prefix)/lib/$(PACKAGE)
 
 conf-args += \
 	--with-keyfiledir=/var/lib/NetworkManager/system-connections \
-	--with-dhclient=/usr/sbin/dhclient \
+	--with-dhcpcd=/usr/sbin/dhcpcd \
+	--with-iptables=/sbin/iptables \
 	--libexec=$(pkglib) \
 	--with-distro=debian \
 	--with-crypto=gnutls
