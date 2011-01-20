@@ -1,10 +1,11 @@
 PACKAGE = usbutils
-VERSION = 0.86
+VERSION = 001
 
-LOCATION = http://mesh.dl.sourceforge.net/sourceforge/linux-usb
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = http://www.kernel.org/pub/linux/utils/usb/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
 stripfiles = \
-	$(prefix)/sbin/lsusb
+	$(prefix)/bin/lsusb \
+	$(prefix)/bin/usbhid-dump
