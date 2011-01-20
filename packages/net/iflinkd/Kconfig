@@ -1,0 +1,4 @@
+config PACKAGE_NET_IFLINKD
+	bool "iflinkd"
+	select PACKAGE_LIBS_LIBNL
+	default n
