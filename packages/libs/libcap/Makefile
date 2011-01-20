@@ -1,5 +1,5 @@
 PACKAGE = libcap
-VERSION = 2.19
+VERSION = 2.20
 
 LOCATION = http://www.kernel.org/pub/linux/libs/security/linux-privs/$(PACKAGE)2
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -27,6 +27,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 install-args = \
 	prefix=$(prefix) \
 	lib=lib \
+	RAISE_SETFCAP=no \
 	DESTDIR='$(DESTDIR)'
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
