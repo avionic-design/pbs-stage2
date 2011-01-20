@@ -4,7 +4,6 @@ source "packages/web/flashplugin/Kconfig"
 source "packages/web/freerdp/Kconfig"
 source "packages/web/mozilla/Kconfig"
 source "packages/web/rdesktop/Kconfig"
-source "packages/web/webkit/Kconfig"
 source "packages/web/webkit-gtk/Kconfig"
 
 endmenu
