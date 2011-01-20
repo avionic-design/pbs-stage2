@@ -26,7 +26,6 @@ source "packages/xorg/proto/x/Kconfig"
 source "packages/xorg/proto/xcb/Kconfig"
 source "packages/xorg/proto/xcmisc/Kconfig"
 source "packages/xorg/proto/xext/Kconfig"
-source "packages/xorg/proto/xf86bigfont/Kconfig"
 source "packages/xorg/proto/xf86misc/Kconfig"
 source "packages/xorg/proto/xinerama/Kconfig"
 
