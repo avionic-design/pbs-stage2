@@ -1,5 +1,0 @@
-systemd-symlinks.patch
-etc-hosts-symlink.patch
-keyfile-dir.patch
-autoreconf.patch
-ltmain-sysroot.patch
