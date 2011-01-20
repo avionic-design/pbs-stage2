@@ -29,7 +29,6 @@ source "packages/xorg/proto/xext/Kconfig"
 source "packages/xorg/proto/xf86bigfont/Kconfig"
 source "packages/xorg/proto/xf86dga/Kconfig"
 source "packages/xorg/proto/xf86misc/Kconfig"
-source "packages/xorg/proto/xf86vidmode/Kconfig"
 source "packages/xorg/proto/xinerama/Kconfig"
 
 endmenu
