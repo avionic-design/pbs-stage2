@@ -1,3 +1,2 @@
 pkgconfig.patch
 autoreconf.patch
-ltmain-sysroot.patch

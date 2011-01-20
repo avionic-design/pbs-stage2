@@ -1,5 +1,5 @@
 PACKAGE = libev
-VERSION = 4.01
+VERSION = 4.03
 
 LOCATION = http://dist.schmorp.de/$(PACKAGE)/Attic
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
