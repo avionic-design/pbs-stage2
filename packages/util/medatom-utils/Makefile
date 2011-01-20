@@ -1,8 +1,10 @@
 PACKAGE = medatom-utils
-VERSION = git
+VERSION = 0.1.4
 
-GIT_URL = git://git.adnet.avionic-design.de/avionic-design/medatom-utils.git
-include packages/autotools-git.mk
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+
+include packages/autotools.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib/$(PACKAGE)

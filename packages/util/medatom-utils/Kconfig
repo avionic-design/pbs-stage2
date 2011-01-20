@@ -1,3 +1,4 @@
 config PACKAGE_UTIL_MEDATOM_UTILS
 	bool "Med@tom utilities"
+	select PACKAGE_UTIL_ADAK
 	default n
