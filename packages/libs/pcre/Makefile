@@ -1,5 +1,5 @@
 PACKAGE = pcre
-VERSION = 8.11
+VERSION = 8.12
 
 LOCATION = ftp://ftp.csx.cam.ac.uk/pub/software/programming/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
