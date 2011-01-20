@@ -1,5 +1,5 @@
 PACKAGE = cairomm
-VERSION = 1.9.6
+VERSION = 1.9.8
 
 LOCATION = http://cairographics.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
