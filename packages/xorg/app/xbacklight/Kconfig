@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XBACKLIGHT
+	bool "xbacklight"
+	select PACKAGE_XORG_LIB_XRANDR
+	default n
