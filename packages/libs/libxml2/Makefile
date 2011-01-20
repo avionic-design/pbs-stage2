@@ -1,9 +1,4 @@
-PACKAGE = libxml2
-VERSION = 2.7.8
-
-LOCATION = ftp://xmlsoft.org/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/libxml2/Makefile.location
 include packages/autotools.mk
 
 conf-args += \
