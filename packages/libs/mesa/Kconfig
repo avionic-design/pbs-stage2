@@ -2,6 +2,8 @@ menu "mesa"
 
 config PACKAGE_LIBS_MESA
 	bool "mesa"
+	select PACKAGE_BUILD_TOOLS_LIBXML2
+	select PACKAGE_LIBS_EXPAT
 	select PACKAGE_LIBS_LIBDRM
 	select PACKAGE_LIBS_TALLOC
 	select PACKAGE_XORG_PROTO_DRI2
