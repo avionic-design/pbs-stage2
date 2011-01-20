@@ -1,5 +1,5 @@
 PACKAGE = twm
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 include packages/xorg/app/common.mk
 
