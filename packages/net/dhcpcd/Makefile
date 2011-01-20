@@ -1,5 +1,5 @@
 PACKAGE = dhcpcd
-VERSION = 5.2.9
+VERSION = 5.2.10
 
 LOCATION = http://roy.marples.name/downloads/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
