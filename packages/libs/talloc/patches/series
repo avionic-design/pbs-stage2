@@ -1,1 +1,2 @@
-out-of-tree.patch
+autotools.patch
+autoreconf.patch
