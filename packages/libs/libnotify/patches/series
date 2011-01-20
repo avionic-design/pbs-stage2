@@ -1,3 +1,2 @@
 optional-tests.patch
 autoreconf.patch
-ltmain-sysroot.patch
