@@ -3,6 +3,7 @@ obj-$(CONFIG_PACKAGE_NET_DDIP) += ddip
 obj-$(CONFIG_PACKAGE_NET_DHCPCD) += dhcpcd
 obj-$(CONFIG_PACKAGE_NET_DNSMASQ) += dnsmasq
 obj-$(CONFIG_PACKAGE_NET_DROPBEAR) += dropbear
+obj-$(CONFIG_PACKAGE_NET_ETHERDUMP) += etherdump
 obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
 obj-$(CONFIG_PACKAGE_NET_IFLINKD) += iflinkd
 obj-$(CONFIG_PACKAGE_NET_IFPLUGD) += ifplugd

@@ -1,0 +1,29 @@
+From 2e40846d4e0cd58d7abd7f075b18927862713051 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Tue, 25 Jan 2011 10:59:38 +0100
+Subject: [PATCH] Fix Makefile to support configurable toolchain.
+
+The makefile stripes the binary when not a debug build. But the strip command
+is hard-coded and can't be changed by user.
+This patch changes the hard coded command to a enviroment variable so we can
+override it if needed.
+---
+ Makefile |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index d6e7ded..ae1f874 100644
+--- a/Makefile
++++ b/Makefile
+@@ -72,7 +72,7 @@ filtering.o: filtering.c
+ 
+ ethereal: $(OBJECTS)
+ 	$(CC) $(FLAGS) ${PROG}.c -o ${PROG} $(OBJECTS)
+-	[ $(DEBUG) -eq 1 ] || strip ${PROG}
++	[ $(DEBUG) -eq 1 ] || $(STRIP) ${PROG}
+ 
+ clean:
+ 	rm -f etherdump *~ *.o
+-- 
+1.7.3.5
+

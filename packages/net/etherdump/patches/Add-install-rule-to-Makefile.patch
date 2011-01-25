@@ -1,0 +1,24 @@
+From 18c1cf94bb95776dbf9659a775b577ba1d276873 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Tue, 25 Jan 2011 11:14:07 +0100
+Subject: [PATCH] Add install rule to Makefile.
+
+---
+ Makefile |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index ae1f874..9cf2e6e 100644
+--- a/Makefile
++++ b/Makefile
+@@ -76,3 +76,7 @@ ethereal: $(OBJECTS)
+ 
+ clean:
+ 	rm -f etherdump *~ *.o
++
++install:
++	mkdir -p $(DESTDIR)$(PREFIX)/sbin
++	$(INSTALL) --mode=755 ${PROG} $(DESTDIR)$(PREFIX)/sbin/${PROG}
+-- 
+1.7.3.5
+
