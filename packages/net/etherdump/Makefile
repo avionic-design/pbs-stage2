@@ -7,10 +7,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/common.mk
 
 $(pkgtree)/.setup:
-	$(call cmd, stamp)
+	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	$(call cmd, stamp)
+	$(call cmd,stamp)
 
 build-args = \
 	CC="$(CC)" \
@@ -21,7 +21,7 @@ build-args = \
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
-	$(call cmd, stamp)
+	$(call cmd,stamp)
 
 install-args = \
 	INSTALL="$(INSTALL)" \
@@ -30,7 +30,7 @@ install-args = \
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
-	$(call cmd, stamp)
+	$(call cmd,stamp)
 
 include packages/cleanup.mk
 include packages/binary.mk
