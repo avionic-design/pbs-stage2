@@ -126,10 +126,19 @@ endif
 
 PHONY += install-$(image)
 install-$(image): build-$(image)
+	if test -d $(DESTDIR)/boot ; then rm -r $(DESTDIR)/boot ; fi
+	mkdir -p $(DESTDIR)/boot
 	cd $(KERNELSRC) && \
 		$(MAKE) $(make-conf) \
-			INSTALL_PATH=$(objtree) \
+			INSTALL_PATH=$(DESTDIR)/boot \
 			$(install-target)
+
+PHONY += install-image-link
+install-image-link: install-$(image)
+	for f in $(DESTDIR)/boot/*-$$(cat $(pkgtree)/kernel-version) ; do \
+		rm -f $(objtree)/$$(basename $$f) ; \
+		ln -s $$f $(objtree) ; \
+	done
 
 PHONY += install-modules
 install-modules: build-modules
@@ -139,7 +148,7 @@ install-modules: build-modules
 			modules_install
 
 PHONY += install
-install: install-$(image) install-modules
+install: install-image-link install-$(image) install-modules
 
 PHONY += clean
 clean:
