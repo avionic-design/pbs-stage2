@@ -12,17 +12,21 @@ CONFIG_U_BOOT_BOARD:=$(subst $(quote),,$(CONFIG_U_BOOT_BOARD))
 
 include packages/common.mk
 
+make-args = \
+	O=$(pkgtree)/build \
+	CROSS_COMPILE=$(CROSS_COMPILE)
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgtree)/build && cd $(pkgbuildtree) && \
-		$(env) $(MAKE) O=$(pkgtree)/build $(CONFIG_U_BOOT_BOARD)_config
+		$(env) $(MAKE) $(make-args) $(CONFIG_U_BOOT_BOARD)_config
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) O=$(pkgtree)/build CROSS_COMPILE=$(CROSS_COMPILE)
+		$(env) $(MAKE) $(make-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
