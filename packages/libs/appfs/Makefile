@@ -1,8 +1,10 @@
 PACKAGE = appfs
-VERSION = git
+VERSION = 0.1.0
 
-GIT_URL = git://git.adnet.avionic-design.de/git/avionic-design/appfs.git
-include packages/autotools-git.mk
+LOCATION = http://ftp.avionic-design.de/pub/appfs/
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+
+include packages/autotools.mk
 
 conf-args += \
 	--disable-shared
