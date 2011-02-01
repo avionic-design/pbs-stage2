@@ -1,5 +1,5 @@
 PACKAGE = flashtool
-VERSION = 0.2.4
+VERSION = 0.3.0
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
