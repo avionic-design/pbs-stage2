@@ -226,6 +226,10 @@ PHONY += print
 print: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) print
 
+PHONY += fs
+fs: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(fs)=$(obj)
+
 _all: build
 	@:
 
