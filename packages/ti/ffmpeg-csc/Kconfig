@@ -1,3 +1,8 @@
 config PACKAGE_TI_FFMPEG_CSC
 	bool "ffmpeg for CSC"
 	default n
+
+config FFMPEG_CSC_BRANCH
+	string "ffmpeg csc repository branch"
+	default "csc"
+	depends on PACKAGE_TI_FFMPEG_CSC

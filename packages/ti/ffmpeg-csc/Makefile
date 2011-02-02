@@ -2,7 +2,7 @@ PACKAGE = ffmpeg-csc
 VERSION = git-20110110
 
 GIT_URL      = git://git.adnet.avionic-design.de/multimedia/ffmpeg.git
-GIT_CHECKOUT = csc-v0.1.0
+GIT_CHECKOUT = $(CONFIG_FFMPEG_CSC_BRANCH)
 
 include packages/autotools.mk
 
