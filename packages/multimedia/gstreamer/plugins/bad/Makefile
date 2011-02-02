@@ -9,6 +9,10 @@ include packages/autotools.mk
 conf-args += \
 	--disable-dvdnav
 
+ifeq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),n)
+conf-args += --disable-sdl
+endif
+
 plugin = $(prefix)/lib/gstreamer-0.10
 
 prunefiles = \
