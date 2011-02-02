@@ -190,13 +190,14 @@ quiet_cmd_tar_export = LN      $(patsubst $(srctree)/%,%,$<) $(patsubst $(objtre
       cmd_tar_export = mkdir -p $(@D) && ln $< $@
 
 quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
-      cmd_git_export = mkdir -p $(@D) && cd $(@D) && \
-			git clone -q --depth 1 $(GIT_URL) $(@F) && \
+      cmd_git_export = mkdir -p $@ && cd $(@D) && \
+			git clone -q $(GIT_URL) $(@F).clone && \
+			cd $(@F).clone && \
+			git archive --format=tar $(or $(GIT_CHECKOUT),HEAD) | \
+				tar -x -C $@ && \
+			cd .. && \
+			rm -rf $(@F).clone && \
 			ln -s $(@F) src
-
-quiet_cmd_git_export_checkout = GIT     $(GIT_URL) $(GIT_CHECKOUT)
-      cmd_git_export_checkout = cd $@ && git checkout -q $(GIT_CHECKOUT)
-
 
 quiet_cmd_svn_export = SVN     $(SVN_LOCATION) $(patsubst $(objtree)/%,%,$@)
       cmd_svn_export = mkdir -p $(@D) && cd $(@D) && \
@@ -218,7 +219,6 @@ $(objtree)/dist/download/%: $(srctree)/download/%
 
 $(objtree)/dist/$(obj)/src.git:
 	$(call cmd,git_export)
-	$(if $(GIT_CHECKOUT),$(call cmd,git_export_checkout))
 
 $(objtree)/dist/$(obj)/src.svn:
 	$(call cmd,svn_export)
