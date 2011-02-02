@@ -13,6 +13,7 @@ source "packages/build-tools/libtool/Kconfig"
 source "packages/build-tools/libxml2/Kconfig"
 source "packages/build-tools/orbit/Kconfig"
 source "packages/build-tools/python/Kconfig"
+source "packages/build-tools/python3/Kconfig"
 source "packages/build-tools/vala/Kconfig"
 
 endmenu
