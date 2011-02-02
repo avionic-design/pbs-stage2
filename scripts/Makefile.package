@@ -194,8 +194,8 @@ quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
 			git clone -q --depth 1 $(GIT_URL) $(@F) && \
 			ln -s $(@F) src
 
-quiet_cmd_git_checkout = GIT     $(GIT_URL) $(GIT_CHECKOUT)
-      cmd_git_checkout = cd $@ && git checkout -q $(GIT_CHECKOUT)
+quiet_cmd_git_export_checkout = GIT     $(GIT_URL) $(GIT_CHECKOUT)
+      cmd_git_export_checkout = cd $@ && git checkout -q $(GIT_CHECKOUT)
 
 
 quiet_cmd_svn_export = SVN     $(SVN_LOCATION) $(patsubst $(objtree)/%,%,$@)
@@ -218,7 +218,7 @@ $(objtree)/dist/download/%: $(srctree)/download/%
 
 $(objtree)/dist/$(obj)/src.git:
 	$(call cmd,git_export)
-	$(if $(GIT_CHECKOUT),$(call cmd,git_checkout))
+	$(if $(GIT_CHECKOUT),$(call cmd,git_export_checkout))
 
 $(objtree)/dist/$(obj)/src.svn:
 	$(call cmd,svn_export)
