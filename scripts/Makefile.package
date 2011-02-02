@@ -117,6 +117,7 @@ $(pkgtree)/.extract: $(pkgtree)/.checksum $(extract)
 	$(call cmd,stamp)
 
 setup-deps := $(pkgtree)/.extract
+dist-deps  := $(addprefix $(objtree)/dist/download/,$(tarballs))
 
 quiet_cmd_svn_export = SVN     $(LOCATION_SVN)
       cmd_svn_export = rm -rf $(pkgbuildtree) && \
@@ -129,6 +130,7 @@ $(pkgtree)/.svn-export: $(pkgtree)/.directory
 
 ifneq ($(LOCATION_SVN),)
   setup-deps := $(pkgtree)/.svn-export
+  dist-deps  := $(objtree)/dist/$(obj)/src.svn
 endif
 
 quiet_cmd_git_clone = GIT     $(GIT_URL)
@@ -149,6 +151,7 @@ $(pkgtree)/.git-checkout: $(pkgtree)/.git-clone
 
 ifneq ($(GIT_URL),)
   setup-deps := $(pkgtree)/.git-clone
+  dist-deps  := $(objtree)/dist/$(obj)/src.git
   ifneq ($(GIT_CHECKOUT),)
     setup-deps += $(pkgtree)/.git-checkout
   endif
@@ -164,6 +167,7 @@ $(pkgtree)/.ln-src: $(pkgtree)/.directory
 
 ifneq ($(wildcard $(pkgsrctree)/src),)
   setup-deps := $(pkgtree)/.ln-src
+  dist-deps  := $(objtree)/dist/$(obj)/src.local
 endif
 
 $(pkgtree)/.setup: $(setup-deps)
@@ -180,6 +184,50 @@ $(pkgtree)/.patch: $(pkgtree)/.setup
 
 PHONY += install
 install: $(pkgtree)/.install
+	@:
+
+quiet_cmd_tar_export = LN      $(patsubst $(srctree)/%,%,$<) $(patsubst $(objtree)/%,%,$@)
+      cmd_tar_export = mkdir -p $(@D) && ln $< $@
+
+quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
+      cmd_git_export = mkdir -p $(@D) && cd $(@D) && \
+			git clone -q --depth 1 $(GIT_URL) $(@F) && \
+			ln -s $(@F) src
+
+quiet_cmd_git_checkout = GIT     $(GIT_URL) $(GIT_CHECKOUT)
+      cmd_git_checkout = cd $@ && git checkout -q $(GIT_CHECKOUT)
+
+
+quiet_cmd_svn_export = SVN     $(SVN_LOCATION) $(patsubst $(objtree)/%,%,$@)
+      cmd_svn_export = mkdir -p $(@D) && cd $(@D) && \
+			svn export $(LOCATION_SVN) $(@F) > /dev/null && \
+			ln -s $(@F) src
+
+SRC_DIR=$(pkgsrctree)/src/
+SRC_EXPORT_EXCLUDE=*~ .svn .git
+quiet_cmd_src_export = CP      $(patsubst $(srctree)/%,%,$(pkgsrctree)/src) $(patsubst $(objtree)/%,%,$@)
+      cmd_src_export = mkdir -p $@ && \
+				tar -c -C $(SRC_DIR) $(addprefix --exclude=,$(SRC_EXPORT_EXCLUDE)) . | \
+					tar -x -C $@ && \
+				cd $(@D) && ln -s $(@F) src
+
+
+
+$(objtree)/dist/download/%: $(srctree)/download/%
+	$(call cmd,tar_export)
+
+$(objtree)/dist/$(obj)/src.git:
+	$(call cmd,git_export)
+	$(if $(GIT_CHECKOUT),$(call cmd,git_checkout))
+
+$(objtree)/dist/$(obj)/src.svn:
+	$(call cmd,svn_export)
+
+$(objtree)/dist/$(obj)/src.local:
+	$(call cmd,src_export)
+
+PHONY += dist
+dist: $(dist-deps) $(extra-dist-deps)
 	@:
 
 PHONY += print

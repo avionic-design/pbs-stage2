@@ -214,6 +214,10 @@ PHONY += build
 build: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) build
 
+PHONY += dist
+dist: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) dist
+
 PHONY += uscan
 uscan: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) uscan

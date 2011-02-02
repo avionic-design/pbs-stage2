@@ -3,16 +3,24 @@ src = $(obj)
 PHONY := build
 build:
 
+include include/config/auto.conf
 include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-depends-dirs := $(subst //,/,$(depends-dirs))
+CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-build-dirs := $(addprefix build-,$(depends-dirs))
-uscan-dirs := $(addprefix uscan-,$(depends-dirs))
-watch-dirs := $(addprefix watch-,$(depends-dirs))
-print-dirs := $(addprefix print-,$(depends-dirs))
+platform-depends-dirs := $(subst //,/,$(depends-dirs))
+
+include toolchains/$(TARGET)/include/config/depends-dirs.conf
+toolchain-depends-dirs := $(subst //,/,$(depends-dirs))
+
+build-dirs := $(addprefix build-,$(platform-depends-dirs))
+dist-dirs  := $(addprefix dist-, $(platform-depends-dirs) $(toolchain-depends-dirs))
+uscan-dirs := $(addprefix uscan-,$(platform-depends-dirs))
+watch-dirs := $(addprefix watch-,$(platform-depends-dirs))
+print-dirs := $(addprefix print-,$(platform-depends-dirs))
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
@@ -20,6 +28,32 @@ $(build-dirs): build-%:
 
 PHONY += build
 build: $(build-dirs)
+	@:
+
+PHONY += $(dist-dirs)
+$(dist-dirs): dist-%: dist-pbs
+	$(Q)$(MAKE) $(package)=$* dist
+
+quiet_cmd_mkdir_dist = MKDIR   dist
+      cmd_mkdir_dist = rm -rf $(objtree)/dist && mkdir -p $(objtree)/dist
+
+quiet_cmd_git_export_pbs = GIT     . dist
+      cmd_git_export_pbs = cd $(srctree) && \
+				git archive --format=tar HEAD | \
+					tar -x -C $(objtree)/dist
+
+quiet_cmd_ln_config = LN      .config dist/build/.config
+      cmd_ln_config = mkdir -p $(objtree)/dist/build/ && \
+			ln $(objtree)/.config $(objtree)/dist/build/
+
+PHONY += dist-pbs
+dist-pbs:
+	$(call cmd,mkdir_dist)
+	$(call cmd,git_export_pbs)
+	$(call cmd,ln_config)
+
+PHONY += dist
+dist: $(dist-dirs)
 	@:
 
 PHONY += $(uscan-dirs)
