@@ -1,0 +1,54 @@
+From 831f90a4815c2094a7ddc6b33ac531a41170b5b8 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Fri, 4 Feb 2011 14:57:42 +0100
+Subject: [PATCH 2/3] Use pkg-config instead of freetype-config if available.
+
+---
+ configure.ac |   31 ++++++++++++++++++++-----------
+ 1 files changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 3c221c5..0b1cfb7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -102,17 +102,26 @@ AC_MSG_RESULT($amd64)
+ AM_CONDITIONAL(BUILD_AMD64, test x$amd64 = xyes)
+ 
+ # check for freetype
+-AC_ARG_WITH(freetype-config,
+-  [AC_HELP_STRING([--with-freetype-config], [use freetype-config specified])],
+-  [ FREETYPE_CONFIG=$withval;
+-    echo "using "$FREETYPE_CONFIG" for freetype-config"; ],
+-  [ if test -z "$FREETYPE_CONFIG"; then
+-      AC_PATH_PROG(FREETYPE_CONFIG, "freetype-config", "", $PATH)
+-    fi
+-  ]
+-)
+-freetype_cflags=`$FREETYPE_CONFIG --cflags`
+-freetype_libs=`$FREETYPE_CONFIG --libs`
++AC_ARG_WITH(freetype-config, [--with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=)
++
++if test -n "$freetype_config"; then
++	if test "$freetype_config" = "yes"; then
++		AC_PATH_PROG(ft_config,freetype-config,no)
++		if test "$ft_config" = "no"; then
++			AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
++		fi
++	else
++		ft_config="$freetype_config"
++	fi
++
++	freetype_cflags=`$FREETYPE_CONFIG --cflags`
++	freetype_libs=`$FREETYPE_CONFIG --libs`
++else
++	PKG_CHECK_MODULES(FREETYPE, freetype2)
++
++	freetype_cflags=$FREETYPE_CFLAGS
++	freetype_libs=$FREETYPE_LIBS
++fi
+ 
+ AC_PATH_X
+ 
+-- 
+1.7.4
+
