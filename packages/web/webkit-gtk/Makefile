@@ -14,5 +14,5 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/bin/jsc-1 \
+	$(prefix)/bin/* \
 	$(prefix)/lib/*.so.*
