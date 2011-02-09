@@ -13,8 +13,10 @@ include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 platform-depends-dirs := $(depends-dirs)
 
+ifneq ($(wildcard toolchains/$(TARGET)/include/config/depends-dirs.conf),)
 include toolchains/$(TARGET)/include/config/depends-dirs.conf
 toolchain-depends-dirs := $(depends-dirs)
+endif
 
 build-dirs := $(addprefix build-,$(platform-depends-dirs))
 dist-dirs  := $(addprefix dist-, $(platform-depends-dirs) $(toolchain-depends-dirs))
