@@ -1,5 +1,5 @@
 PACKAGE = alsa-utils
-VERSION = 1.0.23
+VERSION = 1.0.24.2
 
 LOCATION = ftp://ftp.alsa-project.org/pub/utils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -12,7 +12,9 @@ conf-vars += \
 
 stripfiles = \
 	$(prefix)/bin/aconnect \
+	$(prefix)/bin/alsaloop \
 	$(prefix)/bin/alsamixer \
+	$(prefix)/bin/alsaucm \
 	$(prefix)/bin/amidi \
 	$(prefix)/bin/amixer \
 	$(prefix)/bin/aplay \

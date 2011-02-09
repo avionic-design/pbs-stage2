@@ -12,12 +12,12 @@ diff --git a/alsamixer/Makefile.in b/alsamixer/Makefile.in
 index 8455506..f91df44 100644
 --- a/alsamixer/Makefile.in
 +++ b/alsamixer/Makefile.in
-@@ -63,7 +63,7 @@ am_alsamixer_OBJECTS = card_select.$(OBJEXT) cli.$(OBJEXT) \
+@@ -61,7 +61,7 @@ am_alsamixer_OBJECTS = card_select.$(OBJEXT) cli.$(OBJEXT) \
  alsamixer_OBJECTS = $(am_alsamixer_OBJECTS)
  alsamixer_LDADD = $(LDADD)
  alsamixer_DEPENDENCIES =
--DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/include
-+DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/include -I$(top_srcdir)/include
+-DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include
++DEFAULT_INCLUDES = -I.@am__isrc@ -I$(top_builddir)/include -I$(top_srcdir)/include
  depcomp = $(SHELL) $(top_srcdir)/depcomp
  am__depfiles_maybe = depfiles
- COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
+ am__mv = mv -f
