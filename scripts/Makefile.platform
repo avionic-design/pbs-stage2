@@ -11,10 +11,10 @@ include scripts/Makefile.lib
 CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-platform-depends-dirs := $(subst //,/,$(depends-dirs))
+platform-depends-dirs := $(depends-dirs)
 
 include toolchains/$(TARGET)/include/config/depends-dirs.conf
-toolchain-depends-dirs := $(subst //,/,$(depends-dirs))
+toolchain-depends-dirs := $(depends-dirs)
 
 build-dirs := $(addprefix build-,$(platform-depends-dirs))
 dist-dirs  := $(addprefix dist-, $(platform-depends-dirs) $(toolchain-depends-dirs))

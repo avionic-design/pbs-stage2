@@ -60,7 +60,7 @@ endif
 #
 ifeq ($(packages),)
 packages-filter  ?= linux-headers %-dev %-doc %-l10n %-locale %-man
-packages-dirs    ?= $(subst //,/,$(depends-dirs))
+packages-dirs    ?= $(depends-dirs)
 
 # List the basename of all package available from directory $(1)
 get-basenames     = $(patsubst $(srctree)/$(1)/%.install,%,$(wildcard $(srctree)/$(1)/*.install))

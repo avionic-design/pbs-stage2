@@ -8,8 +8,6 @@ include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-depends-dirs := $(subst //,/,$(depends-dirs))
-
 ifeq ($(CONFIG_ARCH),arm)
   CONFIG_ARCH_HAS_UBOOT = y
 endif
