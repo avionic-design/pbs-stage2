@@ -1,5 +1,5 @@
 PACKAGE = alsa-lib
-VERSION = 1.0.23
+VERSION = 1.0.24.1
 
 LOCATION = ftp://ftp.alsa-project.org/pub/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -17,13 +17,12 @@ conf-args += \
 endif
 
 plugin = $(prefix)/lib/alsa-lib
-sover = 2.0.0
 
 prunefiles = \
-	$(prefix)/lib/libasound.la \
+	$(prefix)/lib/*.la \
 	$(plugin)/smixer/*.la
 
 stripfiles = \
 	$(prefix)/bin/aserver \
-	$(prefix)/lib/libasound.so.$(sover) \
+	$(prefix)/lib/*.so.* \
 	$(plugin)/smixer/*.so
