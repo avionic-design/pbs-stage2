@@ -1,3 +1,4 @@
 config PACKAGE_BUILD_TOOLS_GLIB
 	bool "glib"
+	select PACKAGE_BUILD_TOOLS_DBUS
 	default n
