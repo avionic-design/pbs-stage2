@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_GLEW
 	bool "glew"
 	select PACKAGE_LIBS_MESA
+	select PACKAGE_XORG_LIB_XI
 	default n

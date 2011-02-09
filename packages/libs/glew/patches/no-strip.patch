@@ -20,7 +20,7 @@ index 2879015..baa3e52 100644
  RM = rm -f
  LN = ln -sf
  ifeq ($(MAKECMDGOALS), debug)
-@@ -128,11 +127,9 @@ install: all
+@@ -131,11 +130,9 @@ install: all
  	$(INSTALL) -d -m 0755 $(LIBDIR)/pkgconfig
  # runtime
  ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
@@ -34,7 +34,7 @@ index 2879015..baa3e52 100644
  	$(LN) $(LIB.SHARED) $(LIBDIR)/$(LIB.SONAME)
  endif
  # development files
-@@ -143,12 +140,11 @@ endif
+@@ -146,12 +143,11 @@ endif
  ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
  	$(INSTALL) -m 0644 lib/$(LIB.DEVLNK) $(LIBDIR)/
  else
