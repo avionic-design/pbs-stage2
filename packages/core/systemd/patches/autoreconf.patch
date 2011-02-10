@@ -1,5 +1,5 @@
 diff --git a/Makefile.in b/Makefile.in
-index 507b9fb..b284369 100644
+index 9868303..279dedd 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -68,16 +68,21 @@ host_triplet = @host@
@@ -47,28 +47,24 @@ index 507b9fb..b284369 100644
  @TARGET_FEDORA_TRUE@	units/fedora/prefdm.service \
  @TARGET_FEDORA_TRUE@	units/fedora/rc-local.service \
  @TARGET_FEDORA_TRUE@	units/fedora/halt-local.service \
-@@ -114,16 +119,16 @@ noinst_PROGRAMS = test-engine$(EXEEXT) test-job-type$(EXEEXT) \
+@@ -114,13 +119,13 @@ noinst_PROGRAMS = test-engine$(EXEEXT) test-job-type$(EXEEXT) \
  @TARGET_FEDORA_TRUE@	units/fedora/plymouth-poweroff.service \
  @TARGET_FEDORA_TRUE@	units/fedora/plymouth-halt.service
  
--@TARGET_ARCH_TRUE@am__append_8 = \
-+@TARGET_ARCH_TRUE@am__append_9 = \
- @TARGET_ARCH_TRUE@	units/arch/rc-local.service
- 
--@LIBNOTIFY07_TRUE@am__append_9 = \
-+@LIBNOTIFY07_TRUE@am__append_10 = \
+-@LIBNOTIFY07_TRUE@am__append_8 = \
++@LIBNOTIFY07_TRUE@am__append_9 = \
  @LIBNOTIFY07_TRUE@	-D LIBNOTIFY07
  
--@HAVE_VALAC_TRUE@am__append_10 = \
-+@HAVE_VALAC_TRUE@am__append_11 = \
+-@HAVE_VALAC_TRUE@am__append_9 = \
++@HAVE_VALAC_TRUE@am__append_10 = \
  @HAVE_VALAC_TRUE@	${systemadm_SOURCES:.vala=.c}
  
--@HAVE_XSLTPROC_TRUE@am__append_11 = \
-+@HAVE_XSLTPROC_TRUE@am__append_12 = \
+-@HAVE_XSLTPROC_TRUE@am__append_10 = \
++@HAVE_XSLTPROC_TRUE@am__append_11 = \
  @HAVE_XSLTPROC_TRUE@	$(dist_man_MANS) \
  @HAVE_XSLTPROC_TRUE@	${nodist_man_MANS:=.in} \
  @HAVE_XSLTPROC_TRUE@	${XML_FILES:.xml=.html} \
-@@ -959,7 +964,7 @@ AM_CPPFLAGS = -include $(top_builddir)/config.h \
+@@ -955,7 +960,7 @@ AM_CPPFLAGS = -include $(top_builddir)/config.h \
  	-DSYSTEM_GENERATOR_PATH=\"$(systemgeneratordir)\" \
  	-DUSER_GENERATOR_PATH=\"$(usergeneratordir)\" -I \
  	$(top_srcdir)/src $(am__append_1) $(am__append_2) \
@@ -77,32 +73,30 @@ index 507b9fb..b284369 100644
  @HAVE_PAM_TRUE@pamlib_LTLIBRARIES = \
  @HAVE_PAM_TRUE@	pam_systemd.la
  
-@@ -1023,8 +1028,8 @@ dist_systemunit_DATA = units/emergency.service units/emergency.target \
+@@ -1019,7 +1024,7 @@ dist_systemunit_DATA = units/emergency.service units/emergency.target \
  	units/systemd-tmpfiles-clean.timer units/quotaon.service \
  	units/systemd-ask-password-wall.path \
  	units/systemd-ask-password-plymouth.path \
--	units/systemd-ask-password-console.path $(am__append_7) \
--	$(am__append_8)
-+	units/systemd-ask-password-console.path $(am__append_8) \
-+	$(am__append_9)
+-	units/systemd-ask-password-console.path $(am__append_7)
++	units/systemd-ask-password-console.path $(am__append_8)
  nodist_systemunit_DATA = \
  	units/getty@.service \
  	units/serial-getty@.service \
-@@ -1692,7 +1697,7 @@ systemd_gnome_ask_password_agent_CFLAGS = \
+@@ -1684,7 +1689,7 @@ systemd_gnome_ask_password_agent_CFLAGS = \
  
- systemd_gnome_ask_password_agent_VALAFLAGS = --pkg=dbus-glib-1 \
- 	--pkg=posix --pkg=gtk+-2.0 --pkg=linux --pkg=gio-unix-2.0 \
--	--pkg=libnotify $(am__append_9) -g
-+	--pkg=libnotify $(am__append_10) -g
+ systemd_gnome_ask_password_agent_VALAFLAGS = --pkg=posix \
+ 	--pkg=gtk+-2.0 --pkg=linux --pkg=gio-unix-2.0 --pkg=libnotify \
+-	$(am__append_8) -g
++	$(am__append_9) -g
  systemd_gnome_ask_password_agent_LDADD = \
- 	$(DBUSGLIB_LIBS) \
  	$(LIBNOTIFY_LIBS) \
-@@ -1751,7 +1756,7 @@ M4_PROCESS_USER = \
+ 	$(GTK_LIBS)
+@@ -1742,7 +1747,7 @@ M4_PROCESS_USER = \
  
  CLEANFILES = $(nodist_systemunit_DATA) $(nodist_userunit_DATA) \
  	$(nodist_man_MANS) ${XML_IN_FILES:.xml.in=.html} \
--	$(pkgconfigdata_DATA) $(am__append_10) $(am__append_11) \
-+	$(pkgconfigdata_DATA) $(am__append_11) $(am__append_12) \
+-	$(pkgconfigdata_DATA) $(am__append_9) $(am__append_10) \
++	$(pkgconfigdata_DATA) $(am__append_10) $(am__append_11) \
  	$(dbusinterface_DATA)
  @HAVE_XSLTPROC_TRUE@XSLTPROC_FLAGS = \
  @HAVE_XSLTPROC_TRUE@	--nonet \
@@ -143,7 +137,7 @@ index 9cd3faf..baa6604 100644
  #undef TARGET_SLACKWARE
  
 diff --git a/configure b/configure
-index c5ad552..8e007fc 100755
+index 92c9bc0..dd8ca8e 100755
 --- a/configure
 +++ b/configure
 @@ -683,6 +683,8 @@ dbusinterfacedir
@@ -155,7 +149,7 @@ index c5ad552..8e007fc 100755
  TARGET_FRUGALWARE_FALSE
  TARGET_FRUGALWARE_TRUE
  TARGET_SLACKWARE_FALSE
-@@ -895,7 +897,6 @@ LDFLAGS
+@@ -893,7 +895,6 @@ LDFLAGS
  LIBS
  CPPFLAGS
  CPP
@@ -163,7 +157,7 @@ index c5ad552..8e007fc 100755
  PKG_CONFIG
  PKG_CONFIG_PATH
  PKG_CONFIG_LIBDIR
-@@ -1556,8 +1557,8 @@ Optional Packages:
+@@ -1552,8 +1553,8 @@ Optional Packages:
    --with-sysroot=DIR Search for dependent libraries within DIR
                          (or the compiler's sysroot if not specified).
    --with-distro=DISTRO    Specify the distribution to target: One of fedora,
@@ -174,7 +168,7 @@ index c5ad552..8e007fc 100755
    --with-sysvinit-path=PATH
                            Specify the path to where the SysV init scripts are
                            located [default=based on distro]
-@@ -12713,7 +12714,6 @@ installed software in a non-standard prefix.
+@@ -12705,7 +12706,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables UDEV_CFLAGS
  and UDEV_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -182,7 +176,7 @@ index c5ad552..8e007fc 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -12729,7 +12729,6 @@ See the pkg-config man page for more details.
+@@ -12721,7 +12721,6 @@ See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
  See \`config.log' for more details" "$LINENO" 5; }
@@ -190,7 +184,7 @@ index c5ad552..8e007fc 100755
  else
  	UDEV_CFLAGS=$pkg_cv_UDEV_CFLAGS
  	UDEV_LIBS=$pkg_cv_UDEV_LIBS
-@@ -12807,7 +12806,6 @@ installed software in a non-standard prefix.
+@@ -12799,7 +12798,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables DBUS_CFLAGS
  and DBUS_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -198,7 +192,7 @@ index c5ad552..8e007fc 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -12823,7 +12821,6 @@ See the pkg-config man page for more details.
+@@ -12815,7 +12813,6 @@ See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
  See \`config.log' for more details" "$LINENO" 5; }
@@ -206,23 +200,7 @@ index c5ad552..8e007fc 100755
  else
  	DBUS_CFLAGS=$pkg_cv_DBUS_CFLAGS
  	DBUS_LIBS=$pkg_cv_DBUS_LIBS
-@@ -13419,7 +13416,6 @@ installed software in a non-standard prefix.
- Alternatively, you may set the environment variables DBUSGLIB_CFLAGS
- and DBUSGLIB_LIBS to avoid the need to call pkg-config.
- See the pkg-config man page for more details." "$LINENO" 5
--
- elif test $pkg_failed = untried; then
-      	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
- $as_echo "no" >&6; }
-@@ -13435,7 +13431,6 @@ See the pkg-config man page for more details.
- 
- To get pkg-config, see <http://pkg-config.freedesktop.org/>.
- See \`config.log' for more details" "$LINENO" 5; }
--
- else
- 	DBUSGLIB_CFLAGS=$pkg_cv_DBUSGLIB_CFLAGS
- 	DBUSGLIB_LIBS=$pkg_cv_DBUSGLIB_LIBS
-@@ -13513,7 +13508,6 @@ installed software in a non-standard prefix.
+@@ -13411,7 +13408,6 @@ installed software in a non-standard prefix.
  Alternatively, you may set the environment variables LIBNOTIFY_CFLAGS
  and LIBNOTIFY_LIBS to avoid the need to call pkg-config.
  See the pkg-config man page for more details." "$LINENO" 5
@@ -230,7 +208,7 @@ index c5ad552..8e007fc 100755
  elif test $pkg_failed = untried; then
       	{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
  $as_echo "no" >&6; }
-@@ -13529,7 +13523,6 @@ See the pkg-config man page for more details.
+@@ -13427,7 +13423,6 @@ See the pkg-config man page for more details.
  
  To get pkg-config, see <http://pkg-config.freedesktop.org/>.
  See \`config.log' for more details" "$LINENO" 5; }
@@ -238,7 +216,7 @@ index c5ad552..8e007fc 100755
  else
  	LIBNOTIFY_CFLAGS=$pkg_cv_LIBNOTIFY_CFLAGS
  	LIBNOTIFY_LIBS=$pkg_cv_LIBNOTIFY_LIBS
-@@ -13971,6 +13964,13 @@ $as_echo "#define TARGET_FRUGALWARE /**/" >>confdefs.h
+@@ -13869,6 +13864,13 @@ $as_echo "#define TARGET_FRUGALWARE /**/" >>confdefs.h
  
                  M4_DISTRO_FLAG=-DTARGET_FRUGALWARE=1
                  ;;
@@ -252,7 +230,7 @@ index c5ad552..8e007fc 100755
          other)
                  if test "x$with_syslog_service" = "x"; then :
    as_fn_error $? "With --distro=other, you must pass --with-syslog-service= to configure" "$LINENO" 5
-@@ -14101,6 +14101,14 @@ else
+@@ -13999,6 +14001,14 @@ else
    TARGET_FRUGALWARE_FALSE=
  fi
  
@@ -267,7 +245,7 @@ index c5ad552..8e007fc 100755
  
  
  cat >>confdefs.h <<_ACEOF
-@@ -14377,6 +14385,10 @@ if test -z "${TARGET_FRUGALWARE_TRUE}" && test -z "${TARGET_FRUGALWARE_FALSE}";
+@@ -14275,6 +14285,10 @@ if test -z "${TARGET_FRUGALWARE_TRUE}" && test -z "${TARGET_FRUGALWARE_FALSE}";
    as_fn_error $? "conditional \"TARGET_FRUGALWARE\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi

@@ -27,7 +27,7 @@ diff --git a/configure.ac b/configure.ac
 index e4520e7..e4a0796 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -276,7 +276,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -272,7 +272,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
@@ -36,7 +36,7 @@ index e4520e7..e4a0796 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -369,6 +369,11 @@ case $with_distro in
+@@ -365,6 +365,11 @@ case $with_distro in
                  AC_DEFINE(TARGET_FRUGALWARE, [], [Target is Frugalware])
                  M4_DISTRO_FLAG=-DTARGET_FRUGALWARE=1
                  ;;
@@ -48,7 +48,7 @@ index e4520e7..e4a0796 100644
          other)
                  AS_IF([test "x$with_syslog_service" = "x"],
                          [AC_MSG_ERROR([With --distro=other, you must pass --with-syslog-service= to configure])])
-@@ -425,6 +430,7 @@ AM_CONDITIONAL(TARGET_ARCH, test x"$with_distro" = xarch)
+@@ -421,6 +426,7 @@ AM_CONDITIONAL(TARGET_ARCH, test x"$with_distro" = xarch)
  AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
  AM_CONDITIONAL(TARGET_SLACKWARE, test x"$with_distro" = xslackware)
  AM_CONDITIONAL(TARGET_FRUGALWARE, test x"$with_distro" = xfrugalware)
