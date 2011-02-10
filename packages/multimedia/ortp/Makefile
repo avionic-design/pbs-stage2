@@ -1,5 +1,5 @@
 PACKAGE = ortp
-VERSION = 0.16.3
+VERSION = 0.16.4
 
 LOCATION = http://download.savannah.gnu.org/releases/linphone/$(PACKAGE)/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
