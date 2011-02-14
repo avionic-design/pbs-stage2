@@ -1,2 +1,2 @@
-ltmain-sysroot.patch
-agetty-serial.patch
+uclibc.patch
+gettext.patch

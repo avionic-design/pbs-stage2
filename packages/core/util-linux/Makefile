@@ -1,17 +1,32 @@
-PACKAGE = util-linux-ng
-VERSION = 2.18
+PACKAGE = util-linux
+VERSION = 2.19
 
-LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v2.18
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
+
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+
+conf-args += \
+	--disable-libmount \
+	--disable-rpath
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
   conf-args += --without-ncurses
 endif
 
 ifneq ($(CONFIG_LIBC),gnu)
-  conf-args += --disable-tls
+  conf-args += \
+	--disable-nls
 endif
 
 prunefiles = \

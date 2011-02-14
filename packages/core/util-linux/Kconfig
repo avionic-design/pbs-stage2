@@ -1,5 +1,6 @@
 config PACKAGE_CORE_UTIL_LINUX
 	bool "util-linux-ng"
+	select PACKAGE_BUILD_TOOLS_LIBTOOL
 	select PACKAGE_LIBS_NCURSES if PACKAGE_CORE_UTIL_LINUX_NCURSES
 	default n
 
