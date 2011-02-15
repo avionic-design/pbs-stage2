@@ -1,15 +1,5 @@
-Autoreconfigure.
-
-From: Thierry Reding <thierry.reding@avionic-design.de>
-
-
----
- Makefile.in |  294 ++++++++++++++++++++++++++++++-----------------------------
- configure   |  201 +++++++++++++++++++++++-----------------
- 2 files changed, 262 insertions(+), 233 deletions(-)
-
 diff --git a/Makefile.in b/Makefile.in
-index 7344aad..0fea563 100644
+index 12a74f1..68d0939 100644
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -57,11 +57,24 @@ libexec_PROGRAMS = extras/firmware/firmware$(EXEEXT) \
@@ -77,7 +67,7 @@ index 7344aad..0fea563 100644
  subdir = .
  DIST_COMMON = README $(am__configure_deps) $(am__dist_doc_DATA_DIST) \
  	$(am__dist_libexec_SCRIPTS_DIST) \
-@@ -162,8 +166,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libexecdir)" \
+@@ -163,8 +167,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(libexecdir)" \
  	"$(DESTDIR)$(includedir)" "$(DESTDIR)$(libgudev_includedir)"
  LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
  am__DEPENDENCIES_1 =
@@ -88,7 +78,7 @@ index 7344aad..0fea563 100644
  am__extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
  	extras/gudev/gudevenums.h extras/gudev/gudevenumtypes.h \
  	extras/gudev/gudevtypes.h extras/gudev/gudevclient.h \
-@@ -171,14 +175,14 @@ am__extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
+@@ -172,14 +176,14 @@ am__extras_gudev_libgudev_1_0_la_SOURCES_DIST =  \
  	extras/gudev/gudevdevice.c extras/gudev/gudevenumerator.h \
  	extras/gudev/gudevenumerator.c extras/gudev/gudevprivate.h
  am__dirstamp = $(am__leading_dot)dirstamp
@@ -108,7 +98,7 @@ index 7344aad..0fea563 100644
  extras_gudev_libgudev_1_0_la_OBJECTS =  \
  	$(am_extras_gudev_libgudev_1_0_la_OBJECTS) \
  	$(dist_extras_gudev_libgudev_1_0_la_OBJECTS)
-@@ -189,8 +193,8 @@ extras_gudev_libgudev_1_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+@@ -190,8 +194,8 @@ extras_gudev_libgudev_1_0_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
  	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
  	$(extras_gudev_libgudev_1_0_la_CFLAGS) $(CFLAGS) \
  	$(extras_gudev_libgudev_1_0_la_LDFLAGS) $(LDFLAGS) -o $@
@@ -119,7 +109,7 @@ index 7344aad..0fea563 100644
  @WITH_SELINUX_TRUE@libudev_libudev_private_la_DEPENDENCIES =  \
  @WITH_SELINUX_TRUE@	$(am__DEPENDENCIES_1)
  am__libudev_libudev_private_la_SOURCES_DIST =  \
-@@ -717,10 +721,10 @@ target_alias = @target_alias@
+@@ -720,10 +724,10 @@ target_alias = @target_alias@
  top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
@@ -132,7 +122,7 @@ index 7344aad..0fea563 100644
  	test/rule-syntax-check.py
  ACLOCAL_AMFLAGS = -I m4
  AM_MAKEFLAGS = --no-print-directory
-@@ -737,12 +741,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
+@@ -740,12 +744,13 @@ DISTCHECK_CONFIGURE_FLAGS = \
  	--enable-gtk-doc \
  	--with-systemdsystemunitdir=$$dc_install_base/$(systemdsystemunitdir)
  
@@ -149,7 +139,7 @@ index 7344aad..0fea563 100644
  
  # ------------------------------------------------------------------------------
  # libudev
-@@ -751,7 +756,7 @@ LIBUDEV_CURRENT = 10
+@@ -754,7 +759,7 @@ LIBUDEV_CURRENT = 10
  LIBUDEV_REVISION = 0
  LIBUDEV_AGE = 10
  include_HEADERS = libudev/libudev.h
@@ -158,25 +148,25 @@ index 7344aad..0fea563 100644
  libudev_libudev_la_SOURCES = \
  	libudev/libudev-private.h \
  	libudev/libudev.c \
-@@ -775,7 +780,7 @@ libudev_libudev_private_la_SOURCES = $(libudev_libudev_la_SOURCES) \
+@@ -778,7 +783,7 @@ libudev_libudev_private_la_SOURCES = $(libudev_libudev_la_SOURCES) \
  	libudev/libudev-queue-private.c $(am__append_1)
  @WITH_SELINUX_TRUE@libudev_libudev_private_la_LIBADD = $(SELINUX_LIBS)
  pkgconfigdir = $(libdir)/pkgconfig
 -pkgconfig_DATA = libudev/libudev.pc $(am__append_6)
 +pkgconfig_DATA = libudev/libudev.pc $(am__append_5)
  udevrulesdir = $(libexecdir)/rules.d
- dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
- 	rules/rules.d/60-persistent-storage.rules \
-@@ -792,7 +797,7 @@ dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
- 	extras/edd_id/61-persistent-storage-edd.rules \
+ 
+ # ------------------------------------------------------------------------------
+@@ -800,7 +805,7 @@ dist_udevrules_DATA = rules/rules.d/50-udev-default.rules \
  	extras/floppy/60-floppy.rules \
  	extras/fstab_import/79-fstab_import.rules \
--	extras/v4l_id/60-persistent-v4l.rules $(am__append_3)
-+	extras/v4l_id/60-persistent-v4l.rules $(am__append_11)
+ 	extras/v4l_id/60-persistent-v4l.rules \
+-	extras/qemu/42-qemu-usb.rules $(am__append_3)
++	extras/qemu/42-qemu-usb.rules $(am__append_11)
  udevconfdir = $(sysconfdir)/udev
  dist_udevconf_DATA = udev.conf
  sharepkgconfigdir = $(datadir)/pkgconfig
-@@ -850,7 +855,7 @@ udev_test_udev_LDADD = libudev/libudev-private.la
+@@ -863,7 +868,7 @@ udev_test_udev_LDADD = libudev/libudev-private.la
  # rule_generator - persistent network and optical device rule generator
  # ------------------------------------------------------------------------------
  dist_libexec_SCRIPTS = extras/rule_generator/write_cd_rules \
@@ -185,7 +175,7 @@ index 7344aad..0fea563 100644
  udevhomedir = $(libexecdir)
  dist_udevhome_DATA = extras/rule_generator/rule_generator.functions
  
-@@ -931,65 +936,64 @@ extras_usb_id_usb_id_LDADD = libudev/libudev-private.la
+@@ -944,65 +949,64 @@ extras_usb_id_usb_id_LDADD = libudev/libudev-private.la
  # ------------------------------------------------------------------------------
  extras_v4l_id_v4l_id_SOURCES = extras/v4l_id/v4l_id.c
  extras_v4l_id_v4l_id_LDADD = libudev/libudev-private.la
@@ -305,9 +295,9 @@ index 7344aad..0fea563 100644
  
  # ------------------------------------------------------------------------------
  # Bluetooth HID devices with special magic to switch the device
-@@ -3103,63 +3107,63 @@ udev-confdirs:
- %.7 %.8 : %.xml
- 	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl $<
+@@ -3120,63 +3124,63 @@ udev/%.7 udev/%.8 : udev/%.xml
+ udev/%.html : udev/%.xml
+ 	$(AM_V_GEN)$(XSLTPROC) -o $@ -nonet http://docbook.sourceforge.net/release/xsl/current/xhtml-1_1/docbook.xsl $<
  
 -@ENABLE_EXTRAS_TRUE@extras/gudev/gudevmarshal.h: extras/gudev/gudevmarshal.list
 -@ENABLE_EXTRAS_TRUE@	$(AM_V_GEN)glib-genmarshal $< --prefix=g_udev_marshal --header > $@
@@ -425,10 +415,10 @@ index 7344aad..0fea563 100644
  @ENABLE_EXTRAS_TRUE@udevacl-install-hook:
  @ENABLE_EXTRAS_TRUE@	mkdir -p $(DESTDIR)$(prefix)/lib/ConsoleKit/run-seat.d
 diff --git a/configure b/configure
-index 1716e69..8b9be40 100755
+index 67f3cde..dfd52e5 100755
 --- a/configure
 +++ b/configure
-@@ -765,9 +765,11 @@ USBUTILS_LIBS
+@@ -773,9 +773,11 @@ USBUTILS_LIBS
  USBUTILS_CFLAGS
  LIBUSB_LIBS
  LIBUSB_CFLAGS
@@ -441,7 +431,7 @@ index 1716e69..8b9be40 100755
  WITH_SYSTEMD_FALSE
  WITH_SYSTEMD_TRUE
  systemdsystemunitdir
-@@ -923,6 +925,7 @@ enable_debug
+@@ -931,6 +933,7 @@ enable_debug
  enable_logging
  with_firmware_path
  with_systemdsystemunitdir
@@ -449,7 +439,7 @@ index 1716e69..8b9be40 100755
  enable_extras
  with_pci_ids_path
  enable_introspection
-@@ -1582,6 +1585,7 @@ Optional Features:
+@@ -1590,6 +1593,7 @@ Optional Features:
    --enable-gtk-doc-pdf    build documentation in pdf format [[default=no]]
    --enable-debug          enable debug messages
    --disable-logging       disable system logging
@@ -457,247 +447,107 @@ index 1716e69..8b9be40 100755
    --disable-extras        disable extras with external dependencies
    --disable-introspection disable GObject introspection
  
-@@ -1856,7 +1860,7 @@ $as_echo "$as_me: WARNING: $2:     section \"Present But Cannot Be Compiled\"" >
- $as_echo "$as_me: WARNING: $2: proceeding with the compiler's result" >&2;}
- ( $as_echo "## -------------------------------------------- ##
- ## Report this to linux-hotplug@vger.kernel.org ##
--## -------------------------------------------- ##"[]
-+## -------------------------------------------- ##"
-      ) | sed "s/^/$as_me: WARNING:     /" >&2
-     ;;
- esac
-@@ -2177,7 +2181,7 @@ trap 'exit_status=$?
- 
-     $as_echo "## ---------------- ##
- ## Cache variables. ##
--## ---------------- ##"[]
-+## ---------------- ##"
-     echo
-     # The following way of writing the cache mishandles newlines in values,
- (
-@@ -2213,7 +2217,7 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
- 
-     $as_echo "## ----------------- ##
- ## Output variables. ##
--## ----------------- ##"[]
-+## ----------------- ##"
-     echo
-     for ac_var in $ac_subst_vars
-     do
-@@ -2228,7 +2232,7 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
-     if test -n "$ac_subst_files"; then
-       $as_echo "## ------------------- ##
- ## File substitutions. ##
--## ------------------- ##"[]
-+## ------------------- ##"
-       echo
-       for ac_var in $ac_subst_files
-       do
-@@ -2244,7 +2248,7 @@ $as_echo "$as_me: WARNING: cache variable $ac_var contains a newline" >&2;} ;;
-     if test -s confdefs.h; then
-       $as_echo "## ----------- ##
- ## confdefs.h. ##
--## ----------- ##"[]
-+## ----------- ##"
-       echo
-       cat confdefs.h
-       echo
-@@ -2323,7 +2327,7 @@ $as_echo "$as_me: loading site script $ac_site_file" >&6;}
-       || { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "failed to load site script $ac_site_file
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
-   fi
- done
- 
-@@ -2548,11 +2552,11 @@ am_lf='
- '
- case `pwd` in
-   *[\\\"\#\$\&\'\`$am_lf]*)
--    as_fn_error $? "unsafe absolute working directory name" "$LINENO" 5;;
-+    as_fn_error $? "unsafe absolute working directory name" "$LINENO" 5 ;;
- esac
- case $srcdir in
-   *[\\\"\#\$\&\'\`$am_lf\ \	]*)
--    as_fn_error $? "unsafe srcdir value: \`$srcdir'" "$LINENO" 5;;
-+    as_fn_error $? "unsafe srcdir value: \`$srcdir'" "$LINENO" 5 ;;
- esac
- 
- # Do `set' in a subshell so we don't clobber the current shell's
-@@ -3326,7 +3330,7 @@ fi
- test -z "$CC" && { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "no acceptable C compiler found in \$PATH
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- 
- # Provide some information about the compiler.
- $as_echo "$as_me:${as_lineno-$LINENO}: checking for C compiler version" >&5
-@@ -3441,7 +3445,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
- { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error 77 "C compiler cannot create executables
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- else
-   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
- $as_echo "yes" >&6; }
-@@ -3484,7 +3488,7 @@ else
-   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "cannot compute suffix of executables: cannot compile and link
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- fi
- rm -f conftest conftest$ac_cv_exeext
- { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_exeext" >&5
-@@ -3543,7 +3547,7 @@ $as_echo "$ac_try_echo"; } >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "cannot run C compiled programs.
- If you meant to cross compile, use \`--host'.
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
-     fi
-   fi
- fi
-@@ -3595,7 +3599,7 @@ sed 's/^/| /' conftest.$ac_ext >&5
- { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "cannot compute suffix of object files: cannot compile
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- fi
- rm -f conftest.$ac_cv_objext conftest.$ac_ext
- fi
-@@ -4071,7 +4075,7 @@ else
-   { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
- $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
- as_fn_error $? "C preprocessor \"$CPP\" fails sanity check
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- fi
- 
- ac_ext=c
-@@ -4647,7 +4651,7 @@ fi
- $as_echo "$ac_cv_build" >&6; }
- case $ac_cv_build in
- *-*-*) ;;
--*) as_fn_error $? "invalid value of canonical build" "$LINENO" 5;;
-+*) as_fn_error $? "invalid value of canonical build" "$LINENO" 5 ;;
- esac
- build=$ac_cv_build
- ac_save_IFS=$IFS; IFS='-'
-@@ -4680,7 +4684,7 @@ fi
- $as_echo "$ac_cv_host" >&6; }
- case $ac_cv_host in
- *-*-*) ;;
--*) as_fn_error $? "invalid value of canonical host" "$LINENO" 5;;
-+*) as_fn_error $? "invalid value of canonical host" "$LINENO" 5 ;;
- esac
- host=$ac_cv_host
- ac_save_IFS=$IFS; IFS='-'
-@@ -5150,13 +5154,13 @@ if test "${lt_cv_nm_interface+set}" = set; then :
+@@ -5158,13 +5162,13 @@ if ${lt_cv_nm_interface+:} false; then :
  else
    lt_cv_nm_interface="BSD nm"
    echo "int some_variable = 0;" > conftest.$ac_ext
--  (eval echo "\"\$as_me:5153: $ac_compile\"" >&5)
-+  (eval echo "\"\$as_me:5157: $ac_compile\"" >&5)
+-  (eval echo "\"\$as_me:5161: $ac_compile\"" >&5)
++  (eval echo "\"\$as_me:5165: $ac_compile\"" >&5)
    (eval "$ac_compile" 2>conftest.err)
    cat conftest.err >&5
--  (eval echo "\"\$as_me:5156: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
-+  (eval echo "\"\$as_me:5160: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
+-  (eval echo "\"\$as_me:5164: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
++  (eval echo "\"\$as_me:5168: $NM \\\"conftest.$ac_objext\\\"\"" >&5)
    (eval "$NM \"conftest.$ac_objext\"" 2>conftest.err > conftest.out)
    cat conftest.err >&5
--  (eval echo "\"\$as_me:5159: output\"" >&5)
-+  (eval echo "\"\$as_me:5163: output\"" >&5)
+-  (eval echo "\"\$as_me:5167: output\"" >&5)
++  (eval echo "\"\$as_me:5171: output\"" >&5)
    cat conftest.out >&5
    if $GREP 'External.*some_variable' conftest.out > /dev/null; then
      lt_cv_nm_interface="MS dumpbin"
-@@ -6361,7 +6365,7 @@ ia64-*-hpux*)
+@@ -6369,7 +6373,7 @@ ia64-*-hpux*)
    ;;
  *-*-irix6*)
    # Find out which ABI we are using.
--  echo '#line 6364 "configure"' > conftest.$ac_ext
-+  echo '#line 6368 "configure"' > conftest.$ac_ext
+-  echo '#line 6372 "configure"' > conftest.$ac_ext
++  echo '#line 6376 "configure"' > conftest.$ac_ext
    if { { eval echo "\"\$as_me\":${as_lineno-$LINENO}: \"$ac_compile\""; } >&5
    (eval $ac_compile) 2>&5
    ac_status=$?
-@@ -7593,11 +7597,11 @@ else
+@@ -7601,11 +7605,11 @@ else
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
--   (eval echo "\"\$as_me:7596: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:7600: $lt_compile\"" >&5)
+-   (eval echo "\"\$as_me:7604: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:7608: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>conftest.err)
     ac_status=$?
     cat conftest.err >&5
--   echo "$as_me:7600: \$? = $ac_status" >&5
-+   echo "$as_me:7604: \$? = $ac_status" >&5
+-   echo "$as_me:7608: \$? = $ac_status" >&5
++   echo "$as_me:7612: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s "$ac_outfile"; then
       # The compiler can only warn and ignore the option if not recognized
       # So say no if there are warnings other than the usual output.
-@@ -7932,11 +7936,11 @@ else
+@@ -7940,11 +7944,11 @@ else
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
--   (eval echo "\"\$as_me:7935: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:7939: $lt_compile\"" >&5)
+-   (eval echo "\"\$as_me:7943: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:7947: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>conftest.err)
     ac_status=$?
     cat conftest.err >&5
--   echo "$as_me:7939: \$? = $ac_status" >&5
-+   echo "$as_me:7943: \$? = $ac_status" >&5
+-   echo "$as_me:7947: \$? = $ac_status" >&5
++   echo "$as_me:7951: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s "$ac_outfile"; then
       # The compiler can only warn and ignore the option if not recognized
       # So say no if there are warnings other than the usual output.
-@@ -8037,11 +8041,11 @@ else
+@@ -8045,11 +8049,11 @@ else
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
--   (eval echo "\"\$as_me:8040: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:8044: $lt_compile\"" >&5)
+-   (eval echo "\"\$as_me:8048: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8052: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
--   echo "$as_me:8044: \$? = $ac_status" >&5
-+   echo "$as_me:8048: \$? = $ac_status" >&5
+-   echo "$as_me:8052: \$? = $ac_status" >&5
++   echo "$as_me:8056: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -8092,11 +8096,11 @@ else
+@@ -8100,11 +8104,11 @@ else
     -e 's:.*FLAGS}\{0,1\} :&$lt_compiler_flag :; t' \
     -e 's: [^ ]*conftest\.: $lt_compiler_flag&:; t' \
     -e 's:$: $lt_compiler_flag:'`
--   (eval echo "\"\$as_me:8095: $lt_compile\"" >&5)
-+   (eval echo "\"\$as_me:8099: $lt_compile\"" >&5)
+-   (eval echo "\"\$as_me:8103: $lt_compile\"" >&5)
++   (eval echo "\"\$as_me:8107: $lt_compile\"" >&5)
     (eval "$lt_compile" 2>out/conftest.err)
     ac_status=$?
     cat out/conftest.err >&5
--   echo "$as_me:8099: \$? = $ac_status" >&5
-+   echo "$as_me:8103: \$? = $ac_status" >&5
+-   echo "$as_me:8107: \$? = $ac_status" >&5
++   echo "$as_me:8111: \$? = $ac_status" >&5
     if (exit $ac_status) && test -s out/conftest2.$ac_objext
     then
       # The compiler can only warn and ignore the option if not recognized
-@@ -10459,7 +10463,7 @@ else
+@@ -10467,7 +10471,7 @@ else
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 10462 "configure"
-+#line 10466 "configure"
+-#line 10470 "configure"
++#line 10474 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -10555,7 +10559,7 @@ else
+@@ -10563,7 +10567,7 @@ else
    lt_dlunknown=0; lt_dlno_uscore=1; lt_dlneed_uscore=2
    lt_status=$lt_dlunknown
    cat > conftest.$ac_ext <<_LT_EOF
--#line 10558 "configure"
-+#line 10562 "configure"
+-#line 10566 "configure"
++#line 10570 "configure"
  #include "confdefs.h"
  
  #if HAVE_DLFCN_H
-@@ -11424,58 +11428,14 @@ else
+@@ -11432,58 +11436,14 @@ else
  fi
  
  
@@ -717,7 +567,7 @@ index 1716e69..8b9be40 100755
 -set dummy gperf; ac_word=$2
 -{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 -$as_echo_n "checking for $ac_word... " >&6; }
--if test "${ac_cv_path_GPERF+set}" = set; then :
+-if ${ac_cv_path_GPERF+:} false; then :
 -  $as_echo_n "(cached) " >&6
 -else
 -  case $GPERF in
@@ -761,16 +611,7 @@ index 1716e69..8b9be40 100755
  
  pkg_failed=no
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for GLIB" >&5
-@@ -11557,7 +11517,7 @@ and GLIB_LIBS to avoid the need to call pkg-config.
- See the pkg-config man page for more details.
- 
- To get pkg-config, see <http://pkg-config.freedesktop.org/>.
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- else
- 	GLIB_CFLAGS=$pkg_cv_GLIB_CFLAGS
- 	GLIB_LIBS=$pkg_cv_GLIB_LIBS
-@@ -11567,6 +11527,67 @@ $as_echo "yes" >&6; }
+@@ -11575,6 +11535,67 @@ $as_echo "yes" >&6; }
  fi
  
  
@@ -796,7 +637,7 @@ index 1716e69..8b9be40 100755
 +set dummy gperf; ac_word=$2
 +{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 +$as_echo_n "checking for $ac_word... " >&6; }
-+if test "${ac_cv_path_GPERF+set}" = set; then :
++if ${ac_cv_path_GPERF+:} false; then :
 +  $as_echo_n "(cached) " >&6
 +else
 +  case $GPERF in
@@ -838,34 +679,7 @@ index 1716e69..8b9be40 100755
  
  	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for acl_init in -lacl" >&5
  $as_echo_n "checking for acl_init in -lacl... " >&6; }
-@@ -11700,7 +11721,7 @@ and LIBUSB_LIBS to avoid the need to call pkg-config.
- See the pkg-config man page for more details.
- 
- To get pkg-config, see <http://pkg-config.freedesktop.org/>.
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- else
- 	LIBUSB_CFLAGS=$pkg_cv_LIBUSB_CFLAGS
- 	LIBUSB_LIBS=$pkg_cv_LIBUSB_LIBS
-@@ -11792,7 +11813,7 @@ and USBUTILS_LIBS to avoid the need to call pkg-config.
- See the pkg-config man page for more details.
- 
- To get pkg-config, see <http://pkg-config.freedesktop.org/>.
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- else
- 	USBUTILS_CFLAGS=$pkg_cv_USBUTILS_CFLAGS
- 	USBUTILS_LIBS=$pkg_cv_USBUTILS_LIBS
-@@ -12001,7 +12022,7 @@ and INTROSPECTION_LIBS to avoid the need to call pkg-config.
- See the pkg-config man page for more details.
- 
- To get pkg-config, see <http://pkg-config.freedesktop.org/>.
--See \`config.log' for more details" "$LINENO" 5; }
-+See \`config.log' for more details" "$LINENO" 5 ; }
- else
- 	INTROSPECTION_CFLAGS=$pkg_cv_INTROSPECTION_CFLAGS
- 	INTROSPECTION_LIBS=$pkg_cv_INTROSPECTION_LIBS
-@@ -12179,6 +12200,10 @@ if test -z "${WITH_SYSTEMD_TRUE}" && test -z "${WITH_SYSTEMD_FALSE}"; then
+@@ -12198,6 +12219,10 @@ if test -z "${WITH_SYSTEMD_TRUE}" && test -z "${WITH_SYSTEMD_FALSE}"; then
    as_fn_error $? "conditional \"WITH_SYSTEMD\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
  fi
@@ -876,39 +690,3 @@ index 1716e69..8b9be40 100755
  if test -z "${ENABLE_EXTRAS_TRUE}" && test -z "${ENABLE_EXTRAS_FALSE}"; then
    as_fn_error $? "conditional \"ENABLE_EXTRAS\" was never defined.
  Usually this means the macro was only invoked conditionally." "$LINENO" 5
-@@ -13060,7 +13085,7 @@ do
-     "extras/gudev/docs/Makefile") CONFIG_FILES="$CONFIG_FILES extras/gudev/docs/Makefile" ;;
-     "extras/gudev/docs/version.xml") CONFIG_FILES="$CONFIG_FILES extras/gudev/docs/version.xml" ;;
- 
--  *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
-+  *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5 ;;
-   esac
- done
- 
-@@ -13376,7 +13401,7 @@ do
-   esac
-   case $ac_mode$ac_tag in
-   :[FHL]*:*);;
--  :L* | :C*:*) as_fn_error $? "invalid tag \`$ac_tag'" "$LINENO" 5;;
-+  :L* | :C*:*) as_fn_error $? "invalid tag \`$ac_tag'" "$LINENO" 5 ;;
-   :[FH]-) ac_tag=-:-;;
-   :[FH]*) ac_tag=$ac_tag:$ac_tag.in;;
-   esac
-@@ -13404,7 +13429,7 @@ do
- 	   [\\/$]*) false;;
- 	   *) test -f "$srcdir/$ac_f" && ac_f="$srcdir/$ac_f";;
- 	   esac ||
--	   as_fn_error 1 "cannot find input file: \`$ac_f'" "$LINENO" 5;;
-+	   as_fn_error 1 "cannot find input file: \`$ac_f'" "$LINENO" 5 ;;
-       esac
-       case $ac_f in *\'*) ac_f=`$as_echo "$ac_f" | sed "s/'/'\\\\\\\\''/g"`;; esac
-       as_fn_append ac_file_inputs " '$ac_f'"
-@@ -13431,7 +13456,7 @@ $as_echo "$as_me: creating $ac_file" >&6;}
- 
-     case $ac_tag in
-     *:-:* | *:-) cat >"$tmp/stdin" \
--      || as_fn_error $? "could not create $ac_file" "$LINENO" 5 ;;
-+      || as_fn_error $? "could not create $ac_file" "$LINENO" 5  ;;
-     esac
-     ;;
-   esac

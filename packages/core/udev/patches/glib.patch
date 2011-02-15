@@ -3,18 +3,13 @@ Allow gudev to be built separately from other extras.
 From: Thierry Reding <thierry.reding@avionic-design.de>
 
 
----
- Makefile.am  |   22 +++++++++++++---------
- configure.ac |   14 ++++++++++----
- 2 files changed, 23 insertions(+), 13 deletions(-)
-
 diff --git a/Makefile.am b/Makefile.am
-index 0ee691c..0bd4546 100644
+index df426f7..5ca1c61 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -309,15 +309,9 @@ extras_v4l_id_v4l_id_LDADD = libudev/libudev-private.la
- libexec_PROGRAMS += extras/v4l_id/v4l_id
- dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
+@@ -322,15 +322,9 @@ dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
+ # ------------------------------------------------------------------------------
+ dist_udevrules_DATA += extras/qemu/42-qemu-usb.rules
  
 -if ENABLE_EXTRAS
 -# ------------------------------------------------------------------------------
@@ -30,7 +25,7 @@ index 0ee691c..0bd4546 100644
  # ------------------------------------------------------------------------------
  # GUdev - libudev gobject interface
  # ------------------------------------------------------------------------------
-@@ -358,7 +352,7 @@ dist_extras_gudev_libgudev_1_0_la_SOURCES = \
+@@ -371,7 +365,7 @@ dist_extras_gudev_libgudev_1_0_la_SOURCES = \
  	extras/gudev/gudevmarshal.c \
  	extras/gudev/gudevenumtypes.h \
  	extras/gudev/gudevenumtypes.c
@@ -39,7 +34,7 @@ index 0ee691c..0bd4546 100644
  
  extras_gudev_libgudev_1_0_la_CPPFLAGS = \
  	$(AM_CPPFLAGS) \
-@@ -453,6 +447,16 @@ libgudev-uninstall-move-hook:
+@@ -466,6 +460,16 @@ libgudev-uninstall-move-hook:
  
  INSTALL_EXEC_HOOKS += libgudev-install-move-hook
  UNINSTALL_EXEC_HOOKS += libgudev-uninstall-move-hook
@@ -57,7 +52,7 @@ index 0ee691c..0bd4546 100644
  # ------------------------------------------------------------------------------
  # Bluetooth HID devices with special magic to switch the device
 diff --git a/configure.ac b/configure.ac
-index 7fda8bb..2d7353d 100644
+index 9d35cfc..1096e1e 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -73,6 +73,16 @@ if test "x$with_systemdsystemunitdir" != xno; then
