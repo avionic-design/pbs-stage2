@@ -1,5 +1,5 @@
 PACKAGE = libgee
-VERSION = 0.6.0
+VERSION = 0.6.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
