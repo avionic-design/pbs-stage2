@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.1.5
+VERSION = 1.1.7
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -12,6 +12,7 @@ conf-args += \
 	--disable-dvdnav \
 	--disable-libgcrypt \
 	--disable-lua \
+	--disable-notify \
 	--disable-qt4 \
 	--disable-remoteosd \
 	--disable-skins2
