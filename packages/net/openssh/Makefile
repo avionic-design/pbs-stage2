@@ -1,5 +1,5 @@
 PACKAGE = openssh
-VERSION = 5.6p1
+VERSION = 5.8p1
 
 LOCATION = http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

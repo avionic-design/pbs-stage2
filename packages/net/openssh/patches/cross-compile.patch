@@ -11,7 +11,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 5654d43..a3ee1e1 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -238,13 +238,10 @@ distprep: catman-do
+@@ -242,13 +242,10 @@ distprep: catman-do
  	$(AUTORECONF)
  	-rm -rf autom4te.cache
  
