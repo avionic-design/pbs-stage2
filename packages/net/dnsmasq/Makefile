@@ -1,5 +1,5 @@
 PACKAGE = dnsmasq
-VERSION = 2.55
+VERSION = 2.56
 
 LOCATION = http://www.thekelleys.org.uk/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.lzma
