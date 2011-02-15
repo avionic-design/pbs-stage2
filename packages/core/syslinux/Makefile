@@ -22,7 +22,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(MAKE) $(build-args)
+	cd $(pkgbuildtree) && $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
