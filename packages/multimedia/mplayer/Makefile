@@ -1,5 +1,5 @@
 PACKAGE = MPlayer
-VERSION = 1.0rc3
+VERSION = 1.0rc4
 
 LOCATION = http://www.mplayerhq.hu/MPlayer/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
