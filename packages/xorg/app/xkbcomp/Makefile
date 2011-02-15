@@ -1,10 +1,15 @@
 PACKAGE = xkbcomp
-VERSION = 1.2.0
+VERSION = 1.2.1
 
 include packages/xorg/app/common.mk
 
+xkbparse_c := $(pkgbuildtree)/xkbparse.c
+xkbparse_c := $(subst .,_,$(xkbparse_c))
+xkbparse_c := $(subst /,_,$(xkbparse_c))
+xkbparse_c := $(subst -,_,$(xkbparse_c))
+
 conf-args += \
-	ac_cv_file____xkbparse_c=yes
+	ac_cv_file_$(xkbparse_c)=yes
 
 stripfiles = \
 	$(prefix)/bin/xkbcomp
