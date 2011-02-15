@@ -1,0 +1,75 @@
+X11: Add option to enable kiosk mode.
+
+The kiosk mode currently only hides the mouse cursor and is useful if
+deploying xfreerdp in an application controlled via a touchscreen
+device.
+
+Eventually the kiosk mode could monitor for input device changes (via
+the XInput extension) and automatically display the cursor if a mouse
+device is attached.
+---
+diff --git a/X11/xf_win.c b/X11/xf_win.c
+index f5c478f..c0f4dc6 100644
+--- a/X11/xf_win.c
++++ b/X11/xf_win.c
+@@ -657,7 +657,8 @@ l_ui_set_cursor(struct rdp_inst * inst, RD_HCURSOR cursor)
+ 	xfInfo * xfi;
+ 
+ 	xfi = GET_XFI(inst);
+-	XDefineCursor(xfi->display, xfi->wnd, (Cursor) cursor);
++	if (!xfi->settings->kiosk)
++		XDefineCursor(xfi->display, xfi->wnd, (Cursor) cursor);
+ }
+ 
+ static void
+@@ -747,7 +748,8 @@ l_ui_set_null_cursor(struct rdp_inst * inst)
+ 	xfInfo * xfi;
+ 
+ 	xfi = GET_XFI(inst);
+-	XDefineCursor(xfi->display, xfi->wnd, xfi->null_cursor);
++	if (!xfi->settings->kiosk)
++		XDefineCursor(xfi->display, xfi->wnd, xfi->null_cursor);
+ }
+ 
+ static void
+diff --git a/X11/xfreerdp.c b/X11/xfreerdp.c
+index fc59e8a..5e24aea 100644
+--- a/X11/xfreerdp.c
++++ b/X11/xfreerdp.c
+@@ -67,6 +67,7 @@ set_default_params(xfInfo * xfi)
+ 	settings->triblt = 0;
+ 	settings->new_cursors = 1;
+ 	settings->rdp_version = 5;
++	settings->kiosk = 0;
+ #ifndef DISABLE_TLS
+ 	settings->tls = 1;
+ #endif
+@@ -100,6 +101,7 @@ out_args(void)
+ 		"\t-z: enable bulk compression\n"
+ 		"\t-x: performance flags (m, b or l for modem, broadband or lan)\n"
+ 		"\t-X: embed into another window with a given XID.\n"
++		"\t--kiosk: enable kiosk mode\n"
+ #ifndef DISABLE_TLS
+ 		"\t--no-tls: disable TLS encryption\n"
+ #endif
+@@ -351,6 +353,8 @@ process_params(xfInfo * xfi, int argc, char ** argv, int * pindex)
+ 				printf("bad XID\n");
+ 				return 1;
+ 			}
++		} else if (strcmp("--kiosk", argv[*pindex]) == 0) {
++			settings->kiosk = 1;
+ 		}
+ #ifndef DISABLE_TLS
+ 		else if (strcmp("--no-tls", argv[*pindex]) == 0)
+diff --git a/include/freerdp/rdpset.h b/include/freerdp/rdpset.h
+index 9be75b8..d23f265 100644
+--- a/include/freerdp/rdpset.h
++++ b/include/freerdp/rdpset.h
+@@ -68,6 +68,7 @@ struct rdp_set
+ 	int bulk_compression;
+ 	int num_channels;
+ 	struct rdp_chan channels[16];
++	int kiosk;
+ };
+ 
+ #endif
