@@ -2,6 +2,6 @@ ifndef GIT_URL
 $(error GIT_URL is undefined)
 endif
 
-conf-cmd = ../autogen.sh
+conf-cmd = $(pkgbuildtree)/autogen.sh
 
 include packages/autotools.mk
