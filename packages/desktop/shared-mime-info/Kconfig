@@ -1,4 +1,5 @@
 config PACKAGE_DESKTOP_SHARED_MIME_INFO
 	bool "shared-mime-info"
+	select PACKAGE_BUILD_TOOLS_SHARED_MIME_INFO
 	select VIRTUAL_DEVEL_LIBC
 	default n

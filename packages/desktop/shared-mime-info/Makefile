@@ -1,14 +1,7 @@
-PACKAGE = shared-mime-info
-VERSION = 0.90
-
-LOCATION = http://freedesktop.org/~hadess
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/desktop/shared-mime-info/Makefile.location
 include packages/autotools.mk
-NUM_CPU := 1
 
-conf-args += \
-	--disable-update-mimedb
+NUM_CPU := 1
 
 stripfiles = \
 	$(prefix)/bin/update-mime-database

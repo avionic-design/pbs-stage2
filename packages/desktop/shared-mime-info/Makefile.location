@@ -1,0 +1,5 @@
+PACKAGE = shared-mime-info
+VERSION = 0.90
+
+LOCATION = http://freedesktop.org/~hadess
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
