@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-asound-state-dir=\$${sysconfdir}
+
 conf-vars += \
 	ac_cv_prog_ncursesw5_config=no \
 	ac_cv_prog_ncurses5_config=no
