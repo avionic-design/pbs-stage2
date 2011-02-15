@@ -1,3 +1,4 @@
 config PACKAGE_XORG_PROTO_XCB
 	bool "xcb"
+	select PACKAGE_BUILD_TOOLS_PYTHON
 	default n
