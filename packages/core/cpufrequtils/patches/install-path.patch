@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index 3ef2af7..0294ab6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -79,7 +79,7 @@ confdir ?=      /etc/
+ # Toolchain: what tools do we use, and what options do they need:
+ 
+ CP = cp -fpR
+-INSTALL = /usr/bin/install -c
++INSTALL = install -c
+ INSTALL_PROGRAM = ${INSTALL}
+ INSTALL_DATA  = ${INSTALL} -m 644
+ INSTALL_SCRIPT = ${INSTALL_PROGRAM}
