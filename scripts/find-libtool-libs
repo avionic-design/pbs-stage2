@@ -7,5 +7,4 @@ fi
 
 rootfs="$1"
 
-find "$rootfs" -name '*.la*'
-
+find "$rootfs" -name '*.la'
