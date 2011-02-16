@@ -10,6 +10,7 @@ conf-vars-$(CONFIG_PACKAGE_DEVEL_GLIBC) = \
 	ac_cv_func_malloc_0_nonnull=yes
 
 conf-args += \
+	--with-initdir=/etc/init.d \
 	--disable-lynx
 
 conf-vars += \
