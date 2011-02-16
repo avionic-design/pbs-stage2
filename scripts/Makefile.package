@@ -157,17 +157,19 @@ ifneq ($(GIT_URL),)
   endif
 endif
 
-quiet_cmd_ln_src = LN      $(pkgsrctree)/src
-      cmd_ln_src = rm -rf $(pkgbuildtree) && \
-			ln -s $(pkgsrctree)/src $(pkgbuildtree)
+ifneq ($(wildcard $(pkgsrctree)/source),)
+quiet_cmd_symlink_source = LN      $(pkgsrctree)/source
+      cmd_symlink_source = rm -rf $(pkgbuildtree) && \
+			ln -s $(pkgsrctree)/source $(pkgbuildtree)
 
-$(pkgtree)/.ln-src: $(pkgtree)/.directory
-	$(call cmd,ln_src)
+$(pkgbuildtree): $(pkgtree)/.directory
+	$(call cmd,symlink_source)
+
+$(pkgtree)/.symlink-source: $(pkgbuildtree)
 	$(call cmd,stamp)
 
-ifneq ($(wildcard $(pkgsrctree)/src),)
-  setup-deps := $(pkgtree)/.ln-src
-  dist-deps  := $(objtree)/dist/$(obj)/src.local
+setup-deps := $(pkgtree)/.symlink-source
+dist-deps  := $(objtree)/dist/$(obj)/src.local
 endif
 
 $(pkgtree)/.setup: $(setup-deps)
