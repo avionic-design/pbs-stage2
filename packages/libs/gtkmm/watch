@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnome.org/pub/GNOME/sources/gtkmm/(2.[0-8]\d+)/gtkmm-(.*)\.tar\.bz2
+http://ftp.gnome.org/pub/GNOME/sources/gtkmm/(2\.[0-8][02468])/gtkmm-(.*)\.tar\.bz2

@@ -1,5 +1,5 @@
 PACKAGE = gtkmm
-VERSION = 2.22.0
+VERSION = 2.24.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
