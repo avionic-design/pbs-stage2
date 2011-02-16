@@ -13,8 +13,6 @@ ifeq ($(CONFIG_ARCH),arm)
 endif
 
 targets-y := $(obj)/initrd.gz
-targets-y += $(obj)/initrd.bz2
-targets-y += $(obj)/initrd.xz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.img
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.fit
 
@@ -56,18 +54,6 @@ quiet_cmd_gzip = GZIP    $@
 
 $(obj)/initrd.gz: $(obj)/initrd.img
 	$(call cmd,gzip)
-
-quiet_cmd_bzip2 = BZIP2   $@
-      cmd_bzip2 = bzip2 -c $< > $@
-
-$(obj)/initrd.bz2: $(obj)/initrd.img
-	$(call cmd,bzip2)
-
-quiet_cmd_xz = XZ      $@
-      cmd_xz = xz -c $< > $@
-
-$(obj)/initrd.xz: $(obj)/initrd.img
-	$(call cmd,xz)
 
 all: $(targets-y)
 	@:
