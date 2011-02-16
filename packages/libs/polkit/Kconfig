@@ -1,5 +1,6 @@
 config PACKAGE_LIBS_POLKIT
 	bool "polkit"
+	select PACKAGE_BUILD_TOOLS_INTLTOOL
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_PAM
 	default n
