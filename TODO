@@ -47,5 +47,20 @@
 + When uClibc gets proper TLS support, remove any related workarounds:
     * core/e2fsprogs
 
++ Implement platform-specific overlay for packages. For example, if a Makefile
+  (or Kbuild, or whatever the name) exists in a subdirectory below the
+  platforms/<foo>/overlay directory, it will be included after the original
+  Makefile of the package and allowed to override variables.
+
++ Fix the following packages (they don't build correctly on ArchLinux):
+    * packages/desktop/icons/hicolor: Seems to hang in an infinite loop
+      trying to run autoconf all the time
+
++ Add wrapper script around toolchain gcc to check that --sysroot is always
+  set and that no -I or -L options point to anything outside the sysroot.
+
++ Build libtool, autoconf and automake as part of the toolchain, so that
+  specific versions will always be available.
+
 --
 vim: tw=78
