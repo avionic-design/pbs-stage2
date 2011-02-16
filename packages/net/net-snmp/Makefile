@@ -22,6 +22,7 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
+	$(prefix)/bin/agentxtrap \
 	$(prefix)/bin/encode_keychange \
 	$(prefix)/bin/snmpbulkget \
 	$(prefix)/bin/snmpbulkwalk \
