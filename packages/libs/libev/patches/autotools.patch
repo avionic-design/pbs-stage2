@@ -1,0 +1,22 @@
+diff --git a/Makefile.am b/Makefile.am
+index 058c2cb..2acbb79 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,4 +1,5 @@
+ AUTOMAKE_OPTIONS = foreign
++ACLOCAL_AMFLAGS = -I m4
+ 
+ VERSION_INFO = 4:0:0
+ 
+diff --git a/configure.ac b/configure.ac
+index 03a784f..c6d1d7f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -3,6 +3,7 @@ AC_CONFIG_SRCDIR([ev_epoll.c])
+ 
+ AM_INIT_AUTOMAKE(libev,4.04) dnl also update ev.h!
+ AC_CONFIG_HEADERS([config.h])
++AC_CONFIG_MACRO_DIR([m4])
+ AM_MAINTAINER_MODE
+ 
+ AC_PROG_INSTALL

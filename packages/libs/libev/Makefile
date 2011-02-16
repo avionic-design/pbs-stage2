@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 $(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
+	cd $(pkgbuildtree) && mkdir -p m4 && \
 		$(env) autoreconf --force --install
 	$(call cmd,stamp)
 

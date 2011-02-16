@@ -3,28 +3,21 @@ Add pkg-config file.
 From: Thierry Reding <thierry.reding@avionic-design.de>
 
 
----
- Makefile.am  |    2 ++
- configure.ac |    2 +-
- libev.pc.in  |    9 +++++++++
- 3 files changed, 12 insertions(+), 1 deletions(-)
- create mode 100644 libev.pc.in
-
 diff --git a/Makefile.am b/Makefile.am
-index 058c2cb..01532f7 100644
+index 2acbb79..7075ee4 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -16,3 +16,5 @@ lib_LTLIBRARIES = libev.la
+@@ -17,3 +17,5 @@ lib_LTLIBRARIES = libev.la
  libev_la_SOURCES = ev.c event.c
  libev_la_LDFLAGS = -version-info $(VERSION_INFO)
  
 +pkgconfigdir = $(libdir)/pkgconfig
 +pkgconfig_DATA = libev.pc
 diff --git a/configure.ac b/configure.ac
-index 20665bb..5e2b7c1 100644
+index c6d1d7f..7828d30 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -14,5 +14,5 @@ fi
+@@ -15,5 +15,5 @@ fi
  
  m4_include([libev.m4])
  
