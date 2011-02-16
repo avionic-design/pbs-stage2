@@ -1,6 +1,6 @@
 # common definitions for packages
 
-INSTALL = /usr/bin/install
+INSTALL = install
 
 SYSROOT ?= $(objtree)/sysroot
 DESTDIR ?= $(pkgtree)/install
