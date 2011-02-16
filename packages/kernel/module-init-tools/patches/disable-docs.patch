@@ -1,0 +1,50 @@
+diff --git a/Makefile.am b/Makefile.am
+index 6f83c12..5638861 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -60,6 +60,7 @@ DIST_DIR := /data/work/releases/module-init-tools/
+ 
+ MAINTAINERCLEANFILES := $(man_MANS)
+ 
++if BUILD_DOCS
+ # docbook2man writes file itself, doesn't do stdout.
+ %.8: doc/%.sgml
+ 	if [ "$(DOCBOOKTOMAN)" = "docbook2man" ]; then                     \
+@@ -80,6 +81,7 @@ distclean-local: killbuildmanpages
+ 
+ killbuildmanpages:
+ 	rm -f doc/*.tmp manpage.refs manpage.links
++endif
+ 
+ tarball: $(DIST_DIR)/module-init-tools-$(VERSION).tar.gz
+ 
+diff --git a/configure.ac b/configure.ac
+index 163148e..6b24731 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -29,14 +29,18 @@ fi])
+ AC_PROG_CC
+ AC_PROG_RANLIB
+ 
+-AC_CHECK_PROGS(DOCBOOKTOMAN, docbook-to-man docbook2man, [no],)
+-if test x"$DOCBOOKTOMAN" = xno
+-then
+-	AC_MSG_WARN([docbook2man not found])
+-	# fail with a meaningfull error if $DOCBOOKTOMAN called by the makefile
+-	DOCBOOKTOMAN=docbook2man
++AC_ARG_ENABLE(docs,
++	AS_HELP_STRING([--disable-docs], [disable building the documentation]),
++	[build_docs=$enableval], [build_docs=yes])
++
++if test "$build_docs" = "yes"; then
++	AC_CHECK_PROGS(DOCBOOKTOMAN, docbook-to-man docbook2man, [no],)
++	if test x"$DOCBOOKTOMAN" = xno; then
++		build_docs=no
++	fi
+ fi
+- 
++AM_CONDITIONAL(BUILD_DOCS, [test "$build_docs" = "yes"])
++
+ # Delay adding the zlib_flags until after AC_PROG_CC, so we can distinguish
+ # between a broken cc and a working cc but missing libz.a.
+ LDADD="$LDADD $zlib_flags"

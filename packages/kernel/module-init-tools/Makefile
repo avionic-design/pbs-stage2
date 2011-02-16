@@ -6,12 +6,20 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+
 conf-args += \
 	--prefix=/ \
 	--bindir=/bin
 
-prunefiles = \
-	/sbin/insmod.static
+conf-args += \
+	--disable-static-utils \
+	--disable-docs
 
 stripfiles = \
 	/sbin/lsmod \
