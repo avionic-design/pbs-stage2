@@ -1,8 +1,10 @@
 PACKAGE = remote-control
-VERSION = git
+VERSION = 0.3.2
 
-GIT_URL = git://git.adnet.avionic-design.de/avionic-design/remote-control.git
-include packages/autotools-git.mk
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+
+include packages/autotools.mk
 
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VIDEO_VLC),y)
 	conf-args += --with-video-backend=libvlc
