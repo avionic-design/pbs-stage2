@@ -5,6 +5,9 @@ import crypt
 import sys
 
 def rotn(char, num):
+	lower = None
+	upper = None
+
 	if (char >= 'a') and (char <= 'z'):
 		lower = 'a'
 		upper = 'z'
@@ -13,12 +16,13 @@ def rotn(char, num):
 		lower = 'A'
 		upper = 'Z'
 
-	char = chr(ord(char) + num)
-	while char < lower:
-		char = chr(ord(char) + 26)
+	if lower and upper:
+		char = chr(ord(char) + num)
+		while char < lower:
+			char = chr(ord(char) + 26)
 
-	while char > upper:
-		char = chr(ord(char) - 26)
+		while char > upper:
+			char = chr(ord(char) - 26)
 
 	return char;
 
