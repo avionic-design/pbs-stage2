@@ -1,1 +1,2 @@
-posix-legacy.patch -p1
+posix-legacy.patch
+build-fix.patch
