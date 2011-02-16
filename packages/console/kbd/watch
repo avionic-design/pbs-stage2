@@ -1,2 +1,2 @@
 version=3
-http://ftp.kernel.org/pub/linux/utils/kbd/kbd-(.*)\.tar\.bz2
+http://ftp.kernel.org/pub/linux/utils/kbd/kbd-([\d\.]+)\.tar\.bz2
