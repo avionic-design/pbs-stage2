@@ -1,5 +1,5 @@
 PACKAGE = ConsoleKit
-VERSION = 0.4.3
+VERSION = 0.4.4
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/dist
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
