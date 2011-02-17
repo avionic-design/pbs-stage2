@@ -1,10 +1,17 @@
 PACKAGE = systemd
-VERSION = 17
+VERSION = 18
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
+
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
@@ -14,9 +21,11 @@ conf-args += \
 	--with-rootdir=
 
 prunefiles = \
+	/lib/systemd/system/multi-user.target.wants/systemd-user-sessions.service \
 	/lib/systemd/system/basic.target.wants/sys-kernel-security.automount \
 	/lib/systemd/system/basic.target.wants/tmpwatch.service \
 	/lib/systemd/system/basic.target.wants/tmpwatch.timer \
+	/lib/systemd/system/systemd-user-sessions.service \
 	/lib/systemd/system/sys-kernel-security.automount \
 	/lib/systemd/system/sys-kernel-security.mount \
 	/lib/systemd/system/tmpwatch.service \
@@ -28,6 +37,7 @@ stripfiles = \
 	/bin/systemd \
 	/bin/systemd-ask-password \
 	/bin/systemd-notify \
+	/bin/systemd-tmpfiles \
 	/bin/systemd-tty-ask-password-agent \
 	/lib/security/pam_systemd.so \
 	/lib/systemd/systemd-ac-power \
@@ -47,7 +57,6 @@ stripfiles = \
 	/lib/systemd/systemd-shutdownd \
 	/lib/systemd/systemd-sysctl \
 	/lib/systemd/systemd-timestamp \
-	/lib/systemd/systemd-tmpfiles \
 	/lib/systemd/systemd-update-utmp \
 	/lib/systemd/systemd-user-sessions \
 	/lib/systemd/systemd-vconsole-setup \

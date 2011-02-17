@@ -1,8 +1,8 @@
 diff --git a/Makefile.am b/Makefile.am
-index 91bcb0f..839ee84 100644
+index f508163..ad4b8e4 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -82,6 +82,12 @@ AM_CPPFLAGS += \
+@@ -84,6 +84,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/usr/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -15,7 +15,7 @@ index 91bcb0f..839ee84 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -89,6 +95,7 @@ AM_CPPFLAGS += \
+@@ -91,6 +97,7 @@ AM_CPPFLAGS += \
  endif
  endif
  endif
@@ -24,21 +24,21 @@ index 91bcb0f..839ee84 100644
  rootbin_PROGRAMS = \
  	systemd \
 diff --git a/configure.ac b/configure.ac
-index e4520e7..e4a0796 100644
+index ce5772d..dc78c3c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -272,7 +272,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -269,7 +269,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
--AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware or other]))
-+AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, pbs or other]))
+-AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux or other]))
++AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, pbs or other]))
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -365,6 +365,11 @@ case $with_distro in
-                 AC_DEFINE(TARGET_FRUGALWARE, [], [Target is Frugalware])
-                 M4_DISTRO_FLAG=-DTARGET_FRUGALWARE=1
+@@ -371,6 +371,11 @@ case $with_distro in
+                 AC_DEFINE(TARGET_ALTLINUX, [], [Target is ALTLinux])
+                 M4_DISTRO_FLAG=-DTARGET_ALTLINUX=1
                  ;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
@@ -48,11 +48,11 @@ index e4520e7..e4a0796 100644
          other)
                  AS_IF([test "x$with_syslog_service" = "x"],
                          [AC_MSG_ERROR([With --distro=other, you must pass --with-syslog-service= to configure])])
-@@ -421,6 +426,7 @@ AM_CONDITIONAL(TARGET_ARCH, test x"$with_distro" = xarch)
- AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
+@@ -428,6 +433,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
  AM_CONDITIONAL(TARGET_SLACKWARE, test x"$with_distro" = xslackware)
  AM_CONDITIONAL(TARGET_FRUGALWARE, test x"$with_distro" = xfrugalware)
+ AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
 +AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
  
- AC_DEFINE_UNQUOTED(SPECIAL_SYSLOG_SERVICE, ["$SPECIAL_SYSLOG_SERVICE"], [Syslog service name])
+ AM_CONDITIONAL(HAVE_PLYMOUTH, test -n "$have_plymouth")
  
