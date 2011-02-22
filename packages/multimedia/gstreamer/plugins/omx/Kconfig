@@ -1,0 +1,8 @@
+config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_OMX
+	bool "omx"
+	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+	default n
+	help
+	  gst-openmax is a GStreamer plug-in that allows communication with OpenMAX IL components.
+	  OpenMAX IL is an industry standard that provides an abstraction layer for computer
+	  graphics, video, and sound routines.
