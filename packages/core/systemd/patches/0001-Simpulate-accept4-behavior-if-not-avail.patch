@@ -1,0 +1,78 @@
+From a302ebfee0f029f7552c10bf590e24c53f4d7120 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Thu, 17 Feb 2011 18:45:27 +0100
+Subject: [PATCH] Simpulate accept4 behavior if not avail.
+
+Not all kernel/glibc versions provide a running accept4 implemenation. Where
+this is not the case we can simulate the behavior by rebuilding the
+functionality.
+---
+ src/logger.c |   45 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 44 insertions(+), 1 deletions(-)
+
+diff --git a/src/logger.c b/src/logger.c
+index 342c307..ad198a7 100644
+--- a/src/logger.c
++++ b/src/logger.c
+@@ -394,6 +394,49 @@ static void stream_free(Stream *s) {
+         free(s);
+ }
+ 
++static int accept4_wrapper(int sockfd, struct sockaddr *addr, socklen_t *addrlen, int opt)
++{
++	int err, fd;
++
++	fd = accept4(sockfd, addr, addrlen, opt);
++	if (fd < 0 && errno != ENOSYS) {
++		log_error("%s: accept4() failed with: %s",
++			__func__, strerror(errno));
++		return fd;
++	}
++
++	/* ok, accept4 is not implemented, lets try the rebuild the
++	 * functionality by hand */
++	fd = accept(sockfd, addr, addrlen);
++	if (fd < 0 ) {
++		log_error("%s: accept() failed with: %s",
++			__func__, strerror(errno));
++		return fd;
++	}
++
++	err = fcntl(fd, F_SETFD, FD_CLOEXEC);
++	if (err) {
++		log_error("%s: fcntl(CLOEXEC) failed with: %s",
++			__func__, strerror(errno));
++		goto cleanup;
++	}
++
++	err = fcntl(fd, F_SETFD, O_NONBLOCK);
++	if (err) {
++		log_error("%s: fcntl(NONBLOCK) failed with: %s",
++			__func__, strerror(errno));
++		goto cleanup;
++	}
++
++	return fd;
++
++cleanup:
++	/* the socket will not behave as suspected, so we close it and
++	 * return with an error */
++	close(fd);
++	return -1;
++}
++
+ static int stream_new(Server *s, int server_fd) {
+         Stream *stream;
+         int fd;
+@@ -404,7 +447,7 @@ static int stream_new(Server *s, int server_fd) {
+ 
+         assert(s);
+ 
+-        if ((fd = accept4(server_fd, NULL, NULL, SOCK_NONBLOCK|SOCK_CLOEXEC)) < 0)
++        if ((fd = accept4_wrapper(server_fd, NULL, NULL, SOCK_NONBLOCK|SOCK_CLOEXEC)) < 0)
+                 return -errno;
+ 
+         if (s->n_streams >= STREAMS_MAX) {
+-- 
+1.7.4
+
