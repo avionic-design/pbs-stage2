@@ -1,6 +1,7 @@
 # common definitions for packages
 
 INSTALL = install
+SED = sed
 
 SYSROOT ?= $(objtree)/sysroot
 DESTDIR ?= $(pkgtree)/install
