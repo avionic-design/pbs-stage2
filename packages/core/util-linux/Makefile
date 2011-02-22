@@ -35,6 +35,7 @@ prunefiles = \
 stripfiles = \
 	/bin/dmesg \
 	/bin/findmnt \
+	/bin/lsblk \
 	/bin/more \
 	/bin/mount \
 	/bin/umount \
@@ -50,6 +51,7 @@ stripfiles = \
 	/sbin/fsck.cramfs \
 	/sbin/fsck.minix \
 	/sbin/fsfreeze \
+	/sbin/fstrim \
 	/sbin/hwclock \
 	/sbin/losetup \
 	/sbin/mkfs \
@@ -102,6 +104,8 @@ stripfiles = \
 	$(prefix)/bin/uuidgen \
 	$(prefix)/bin/wall \
 	$(prefix)/bin/whereis \
+	$(prefix)/sbin/addpart \
+	$(prefix)/sbin/delpart \
 	$(prefix)/sbin/fdformat \
 	$(prefix)/sbin/ldattach \
 	$(prefix)/sbin/readprofile \
