@@ -1,5 +1,5 @@
 PACKAGE = linphone
-VERSION = 3.4.0
+VERSION = 3.4.1
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/stable/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -20,6 +20,7 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
+	$(prefix)/bin/linphone \
 	$(prefix)/bin/linphone-3 \
 	$(prefix)/bin/linphonec \
 	$(prefix)/bin/linphonecsh \
