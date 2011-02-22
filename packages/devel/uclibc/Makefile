@@ -1,5 +1,5 @@
 PACKAGE = uClibc
-VERSION = 0.9.31
+VERSION = 0.9.32-rc2
 
 LOCATION = http://www.uclibc.org/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
