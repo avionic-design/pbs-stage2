@@ -1,5 +1,5 @@
 PACKAGE = xterm
-VERSION = 268
+VERSION = 269
 
 LOCATION = ftp://invisible-island.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tgz
@@ -7,10 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tgz
 include packages/xorg/app/common.mk
 
 conf-args += \
-	--disable-imake \
-	--with-pkg-config=$(srctree)/toolchains/$(TARGET)/usr/bin/$(TARGET)-pkg-config
+	--disable-imake
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/resize \
 	$(prefix)/bin/xterm
