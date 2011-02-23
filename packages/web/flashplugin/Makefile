@@ -1,8 +1,8 @@
 PACKAGE = flashplugin
-VERSION = 10
+VERSION = 10.2.152.27
 
 LOCATION = http://fpdownload.macromedia.com/get/flashplayer/current
-TARBALLS = install_flash_player_$(VERSION)_linux.tar.gz
+TARBALLS = install_flash_player_$(word 1,$(subst ., ,$(VERSION)))_linux.tar.gz
 
 include packages/common.mk
 
