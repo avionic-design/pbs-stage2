@@ -1,0 +1,2 @@
+version=3
+http://www.cmake.org/files/v(.*)/cmake-(.*)\.tar\.gz
