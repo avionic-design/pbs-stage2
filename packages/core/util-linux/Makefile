@@ -17,6 +17,7 @@ $(pkgtree)/.autoreconfigure:
 $(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--disable-libmount \
 	--disable-rpath
 
