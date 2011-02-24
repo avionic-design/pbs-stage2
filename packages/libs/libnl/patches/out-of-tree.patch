@@ -10,16 +10,3 @@ index 92a916e..1b3e510 100644
  
  lib_LTLIBRARIES = \
  	libnl.la libnl-genl.la libnl-route.la libnl-nf.la
-diff --git a/lib/Makefile.in b/lib/Makefile.in
-index 167d8ee..c4697e6 100644
---- a/lib/Makefile.in
-+++ b/lib/Makefile.in
-@@ -254,7 +254,7 @@ target_alias = @target_alias@
- top_build_prefix = @top_build_prefix@
- top_builddir = @top_builddir@
- top_srcdir = @top_srcdir@
--AM_CPPFLAGS = -Wall -I${top_srcdir}/include -I${top_builddir}/include -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
-+AM_CPPFLAGS = -Wall -I${top_srcdir}/include -I${top_builddir}/include -I${builddir}/route -I${builddir}/route/cls -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
- lib_LTLIBRARIES = \
- 	libnl.la libnl-genl.la libnl-route.la libnl-nf.la
- 
