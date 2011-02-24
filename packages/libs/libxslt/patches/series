@@ -1,2 +1,2 @@
-ltmain-sysroot.patch
 remove-exsltconfig.patch
+pkg-config.patch
