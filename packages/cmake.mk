@@ -26,7 +26,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE)
+		$(env) $(MAKE) -j $(NUM_CPU)
 	$(call cmd,stamp)
 
 install-args = \
