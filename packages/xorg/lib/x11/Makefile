@@ -3,6 +3,9 @@ VERSION = 1.4.1
 
 include packages/xorg/lib/common.mk
 
+conf-args += \
+	--with-sysroot=$(SYSROOT)
+
 ifeq ($(CONFIG_LIBC),uclibc)
   conf-args += \
 	--enable-malloc0returnsnull
