@@ -2,6 +2,7 @@ include packages/libs/gdk-pixbuf/Makefile.location
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--without-libjasper \
 	--without-libtiff
 
