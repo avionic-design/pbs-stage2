@@ -10,6 +10,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--with-gdktarget=x11 \
 	--disable-glibtest \
 	--disable-cups
