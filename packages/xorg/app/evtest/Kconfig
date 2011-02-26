@@ -1,0 +1,6 @@
+config PACKAGE_XORG_APP_EVTEST
+	bool "evtest"
+	select PACKAGE_XORG_LIB
+	default n
+	help
+	  evtest displays information on the input device specified on the command line, including all the events supported by the device. It then monitors the device and displays all the events layer events generated.
