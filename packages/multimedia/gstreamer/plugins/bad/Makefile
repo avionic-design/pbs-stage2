@@ -9,7 +9,7 @@ include packages/autotools.mk
 conf-args += \
 	--disable-dvdnav
 
-ifeq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),n)
+ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
 endif
 
