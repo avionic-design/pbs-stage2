@@ -12,6 +12,9 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VIDEO_GST),y)
 	conf-args += --with-video-backend=gst
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VOIP_LINPHONE),y)
+	conf-args += --with-voip-backend=linphone
+endif
 
 stripfiles = \
 	$(prefix)/bin/remote-control-client \
