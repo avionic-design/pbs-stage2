@@ -1,0 +1,7 @@
+config PACKAGE_XORG_APP_XRANDR
+	bool "xrandr"
+	select PACKAGE_XORG_LIB_XCURSOR
+	default n
+	help
+	  Query and changed resolution and output during runtand output.
+	  NOTE: you'll need to have the xorg-macros installed in order to build.
