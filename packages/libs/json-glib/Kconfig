@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_JSON_GLIB
+	bool "json-glib"
+	select PACKAGE_LIBS_GLIB
+	default n
