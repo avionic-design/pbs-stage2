@@ -96,4 +96,5 @@ obj-$(CONFIG_PACKAGE_LIBS_STARTUP_NOTIFICATION) += startup-notification
 obj-$(CONFIG_PACKAGE_LIBS_SYSFSUTILS) += sysfsutils
 obj-$(CONFIG_PACKAGE_LIBS_TALLOC) += talloc
 obj-$(CONFIG_PACKAGE_LIBS_UPOWER) += upower
+obj-$(CONFIG_PACKAGE_LIBS_XDGMIME) += xdgmime
 obj-$(CONFIG_PACKAGE_LIBS_ZLIB) += zlib
