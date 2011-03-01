@@ -1,5 +1,6 @@
 config PACKAGE_NET_RUM
 	bool "rum"
+	select PACKAGE_LIBS_JSON_GLIB
 	select PACKAGE_LIBS_LIBSOUP
 	select PACKAGE_LIBS_XDGMIME
 	default n
