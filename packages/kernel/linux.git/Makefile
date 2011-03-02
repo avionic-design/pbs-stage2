@@ -33,7 +33,12 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build headers-install
 	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build install
+	$(if $(wildcard $(pkgtree)/build/arch/$(ARCH)/boot/uImage),$(call cmd,install_uimage))
 	$(call cmd,stamp)
+
+quiet_cmd_install_uimage = INSTALL boot/uImage
+      cmd_install_uimage = install $(pkgtree)/build/arch/$(ARCH)/boot/uImage \
+				$(pkgtree)/install/boot/uImage-$(VERSION)
 
 prunefiles = \
 	$(prefix)/include/asm-generic/.install \
