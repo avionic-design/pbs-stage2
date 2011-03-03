@@ -34,6 +34,7 @@ rootfs-version   ?= $(if $(rootfs-platform),$(call get-version,$(rootfs-platform
 rootfs-type      ?= tar.gz
 # Where to create the rootfs
 rootfs-dir       ?= $(obj)/rootfs
+rootfs-root       = $(rootfs-dir)$(if $(rootfs-prefix),/$(rootfs-prefix))
 # Filename of the rootfs image
 rootfs-file      ?= $(rootfs-name)$(if $(rootfs-version),_$(rootfs-version)).$(rootfs-type)
 rootfs-img       ?= $(dir $(rootfs-dir))$(rootfs-file)
@@ -92,7 +93,7 @@ endif
 
 # Create a machine id for dbus
 ifneq ($(filter packages/libs/dbus/libdbus-bin,$(packages)),)
-postprocess: $(rootfs-dir)/var/lib/dbus/machine-id
+postprocess: $(rootfs-root)/var/lib/dbus/machine-id
 endif
 
 #
@@ -154,20 +155,20 @@ PHONY += depmod
 depmod: begin-postprocess
 	$(call cmd,depmod)
 
-$(rootfs-dir)/var/lib/dbus/machine-id: begin-postprocess
+$(rootfs-root)/var/lib/dbus/machine-id: begin-postprocess
 	$(call cmd,mkmachine_id)
 
 #
 # Commands
 #
-quiet_cmd_mkdir_rootfs = MKDIR   $(rootfs-dir)
-      cmd_mkdir_rootfs = rm -rf $(rootfs-dir) $(rootfs-img) && mkdir -p $(rootfs-dir)
+quiet_cmd_mkdir_rootfs = MKDIR   $(rootfs-root)
+      cmd_mkdir_rootfs = rm -rf $(rootfs-dir) $(rootfs-img) && mkdir -p $(rootfs-root)
 
 quiet_cmd_extract_tar.bz2 = TAR [x] $*
-      cmd_extract_tar.bz2 = tar --bzip2 -x -f $< -C $(rootfs-dir) --exclude ./DEBIAN
+      cmd_extract_tar.bz2 = tar --bzip2 -x -f $< -C $(rootfs-root) --exclude ./DEBIAN
 
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
-      cmd_depmod = /sbin/depmod -b $(rootfs-dir) $(KERNEL_VERSION)
+      cmd_depmod = /sbin/depmod -b $(rootfs-root) $(KERNEL_VERSION)
 
 quiet_cmd_mkimg_tar.gz = TAR [c] $@
       cmd_mkimg_tar.gz = tar -c -C $< --gzip -f $@ .
