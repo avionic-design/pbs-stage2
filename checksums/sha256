@@ -95,7 +95,7 @@ cc7ffed03d889175586519c16916b55260171c6ae1a0c94155d4fe15b0b16e2c  download/gnome
 c086d5426ef04427038db6af1a4dc62ff32694e91e759ebf9bb3380243ebd9c9  download/gnutls-2.10.5.tar.bz2
 dd28d8f3ccad9456ac907e59cdc471076caa0dad8b483841dab77b71a1d6184b  download/grep-2.7.tar.xz
 1031dff866df976a957f34039addbab4c0753406299a275f4cf1780e1dbe2a90  download/gst-plugins-bad-0.10.20.tar.bz2
-63938641380be9935c804ae8d55acdcfd93920ed2deb72dcf70f027a78b085d7  download/gst-plugins-base-0.10.30.tar.bz2
+e9aabfac83f6480896da0686e9c911989f896fbad634821b7771ed84a446172b  download/gst-plugins-base-0.10.32.tar.bz2
 b5d5750c12412c47d85ba9391c842f6f02cad9511876695e48b15fb37e4699f6  download/gst-plugins-good-0.10.25.tar.bz2
 d7fc7636001e78736540c628ad889888cb85ea722f08d1c6813b16682dd9c09c  download/gst-plugins-ugly-0.10.16.tar.bz2
 3bf4e46a186ee9a1f5e212aaf651d67cffb4f5f05345a7c99ae71d5d992be133  download/gstreamer-0.10.32.tar.bz2
