@@ -1,9 +1,4 @@
-PACKAGE = uClibc
-VERSION = 0.9.32-rc2
-
-LOCATION = http://www.uclibc.org/downloads
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/toolchain/uclibc/Makefile.location
 include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
