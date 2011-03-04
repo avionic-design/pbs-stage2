@@ -1,2 +1,1 @@
-ltmain-sysroot.patch -p1
-makefile-space-to-tabs.patch
+ltmain-sysroot.patch

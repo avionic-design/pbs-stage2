@@ -1,5 +1,5 @@
 PACKAGE = gstreamer
-VERSION = 0.10.30
+VERSION = 0.10.32
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
