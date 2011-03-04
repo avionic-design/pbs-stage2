@@ -1,5 +1,5 @@
 PACKAGE = ncurses
-VERSION = 5.7
+VERSION = 5.8
 
 LOCATION = http://ftp.gnu.org/pub/gnu/ncurses
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -18,6 +18,7 @@ stripfiles = \
 	$(prefix)/bin/infocmp \
 	$(prefix)/bin/infotocap \
 	$(prefix)/bin/reset \
+	$(prefix)/bin/tabs \
 	$(prefix)/bin/tic \
 	$(prefix)/bin/toe \
 	$(prefix)/bin/tput \
