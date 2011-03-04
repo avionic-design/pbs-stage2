@@ -36,9 +36,9 @@ index ce5772d..dc78c3c 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -371,6 +371,11 @@ case $with_distro in
-                 AC_DEFINE(TARGET_ALTLINUX, [], [Target is ALTLinux])
+@@ -373,6 +373,11 @@ case $with_distro in
                  M4_DISTRO_FLAG=-DTARGET_ALTLINUX=1
+ 		have_plymouth=true
                  ;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
@@ -48,7 +48,7 @@ index ce5772d..dc78c3c 100644
          other)
                  AS_IF([test "x$with_syslog_service" = "x"],
                          [AC_MSG_ERROR([With --distro=other, you must pass --with-syslog-service= to configure])])
-@@ -428,6 +433,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
+@@ -430,6 +435,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
  AM_CONDITIONAL(TARGET_SLACKWARE, test x"$with_distro" = xslackware)
  AM_CONDITIONAL(TARGET_FRUGALWARE, test x"$with_distro" = xfrugalware)
  AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
