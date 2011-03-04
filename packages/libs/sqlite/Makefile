@@ -1,5 +1,5 @@
-PACKAGE = sqlite
-VERSION = 3.6.16
+PACKAGE = sqlite-autoconf
+VERSION = 3070500
 
 LOCATION = http://www.sqlite.org
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -7,8 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libsqlite3.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/sqlite3 \
-	$(prefix)/lib/libsqlite3.so.0.8.6
+	$(prefix)/lib/*.so.*
