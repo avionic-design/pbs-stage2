@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-bad
-VERSION = 0.10.20
+VERSION = 0.10.21
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--disable-dvdnav
+	--disable-cdaudio
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
