@@ -9,4 +9,4 @@ cwd=`cd $dir; pwd`
 prefix="${cwd%/*}"
 
 LD_LIBRARY_PATH="$prefix/lib" \
-	"$dir/$bin-@VERSION@" "$@"
+	exec "$dir/$bin-@VERSION@" "$@"
