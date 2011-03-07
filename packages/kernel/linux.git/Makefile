@@ -38,7 +38,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 
 quiet_cmd_install_uimage = INSTALL boot/uImage
       cmd_install_uimage = install $(pkgtree)/build/arch/$(ARCH)/boot/uImage \
-				$(pkgtree)/install/boot/uImage-$(VERSION)
+				$(pkgtree)/install/boot/uImage-$$(cat $(pkgtree)/kernel-version)
 
 prunefiles = \
 	$(prefix)/include/asm-generic/.install \
