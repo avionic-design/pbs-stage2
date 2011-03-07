@@ -44,12 +44,12 @@ packages-type    ?= tar.bz2
 # packages    ?= <generated list>
 
 #
-# Look if the platform define a packages list
+# Look if the platform define a configuration
 #
 ifneq ($(rootfs-platform),)
-ifeq ($(packages),)
-ifneq ($(wildcard $(srctree)/$(rootfs-platform)/packages),)
-include $(srctree)/$(rootfs-platform)/packages
+ifneq ($(wildcard $(srctree)/$(rootfs-platform)/make-fs.mk),)
+include $(srctree)/$(rootfs-platform)/make-fs.mk
+ifneq ($(packages)$(packages-y),)
 packages := $(packages) $(packages-y)
 endif
 endif
