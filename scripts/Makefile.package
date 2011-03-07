@@ -162,10 +162,8 @@ quiet_cmd_symlink_source = LN      $(pkgsrctree)/source
       cmd_symlink_source = rm -rf $(pkgbuildtree) && \
 			ln -s $(pkgsrctree)/source $(pkgbuildtree)
 
-$(pkgbuildtree): $(pkgtree)/.directory
+$(pkgtree)/.symlink-source: $(pkgtree)/.directory
 	$(call cmd,symlink_source)
-
-$(pkgtree)/.symlink-source: $(pkgbuildtree)
 	$(call cmd,stamp)
 
 setup-deps := $(pkgtree)/.symlink-source
