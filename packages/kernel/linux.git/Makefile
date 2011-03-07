@@ -4,8 +4,8 @@ VERSION = git
 include $(objtree)/include/config/auto.conf
 -include $(pkgtree)/kernel-release
 
-KERNELSRC := $(or $(wildcard $(srctree)/$(obj)/src),"$(srctree)/$(subst $(quote),,$(CONFIG_KERNEL_SOURCE))")
-ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+KERNELSRC := $(or $(wildcard $(srctree)/$(obj)/src),"$(srctree)/$(call unquote,$(CONFIG_KERNEL_SOURCE))")
+ARCH := $(call unquote,$(CONFIG_ARCH))
 export KERNELSRC ARCH
 
 KERNEL_CONFIG = $(CONFIG_KERNEL_CONFIG)

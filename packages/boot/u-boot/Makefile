@@ -8,7 +8,7 @@ ifeq ($(CONFIG_U_BOOT_BOARD),)
 $(error CONFIG_U_BOOT_BOARD is not defined!)
 endif
 
-CONFIG_U_BOOT_BOARD:=$(subst $(quote),,$(CONFIG_U_BOOT_BOARD))
+CONFIG_U_BOOT_BOARD:=$(call unquote,$(CONFIG_U_BOOT_BOARD))
 
 pkgbuildtree := $(pkgbuildtree)
 include packages/common.mk
