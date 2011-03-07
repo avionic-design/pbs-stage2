@@ -152,7 +152,7 @@ $(pkgtree)/.git-checkout: $(pkgtree)/.git-clone
 ifneq ($(GIT_URL),)
   setup-deps := $(pkgtree)/.git-clone
   dist-deps  := $(objtree)/dist/$(obj)/src.git
-  ifneq ($(GIT_CHECKOUT),)
+  ifneq ($(call unquote,$(GIT_CHECKOUT)),)
     setup-deps += $(pkgtree)/.git-checkout
   endif
 endif
@@ -193,7 +193,7 @@ quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
       cmd_git_export = mkdir -p $@ && cd $(@D) && \
 			git clone -q $(GIT_URL) $(@F).clone && \
 			cd $(@F).clone && \
-			git archive --format=tar $(or $(GIT_CHECKOUT),HEAD) | \
+			git archive --format=tar $(or $(call unquote,$(GIT_CHECKOUT)),HEAD) | \
 				tar -x -C $@ && \
 			cd .. && \
 			rm -rf $(@F).clone && \
