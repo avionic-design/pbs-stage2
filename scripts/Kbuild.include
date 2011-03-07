@@ -25,6 +25,10 @@ basetarget = $(basename $(notdir $@))
 # Escape single quote for use in echo statements
 escsq = $(subst $(squote),'\$(squote)',$1)
 
+##
+# Unquote string
+unquote = $(patsubst $(quote)%$(quote),%,$(1))
+
 ###
 # Easy method for doing a status message
        kecho := :
