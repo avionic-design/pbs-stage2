@@ -1,5 +1,5 @@
 PACKAGE = wsapi
-VERSION = 1.3.4
+VERSION = 1.4
 
 LOCATION = http://github.com/downloads/keplerproject/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
