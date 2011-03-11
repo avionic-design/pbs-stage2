@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-keyboard
-VERSION = 1.5.0
+VERSION = 1.6.0
 
 include packages/xorg/driver/common.mk
 
