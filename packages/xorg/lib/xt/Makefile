@@ -1,5 +1,5 @@
 PACKAGE = libXt
-VERSION = 1.0.9
+VERSION = 1.1.1
 
 include packages/xorg/lib/common.mk
 
