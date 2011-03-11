@@ -1,10 +1,10 @@
 PACKAGE = libXfixes
-VERSION = 4.0.5
+VERSION = 5.0
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXfixes.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXfixes.so.3.1.0
+	$(prefix)/lib/*.so.*
