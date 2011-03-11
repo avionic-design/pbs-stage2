@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 19
+VERSION = 20
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
