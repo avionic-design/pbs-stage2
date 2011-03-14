@@ -1,0 +1,13 @@
+--- a/plugins/sudoers/Makefile.in	2011-02-19 14:27:28.000000000 +0100
++++ b/plugins/sudoers/Makefile.in	2011-03-14 12:19:29.832081334 +0100
+@@ -55,8 +55,8 @@
+ CFLAGS = @CFLAGS@
+ 
+ # Flags to pass to the link stage
+-LDFLAGS =
+-SUDOERS_LDFLAGS = @SUDOERS_LDFLAGS@
++LDFLAGS = $(if $(SYSROOT),--sysroot $(SYSROOT))
++SUDOERS_LDFLAGS = @SUDOERS_LDFLAGS@ $(if $(SYSROOT),--sysroot $(SYSROOT))
+ 
+ # Where to install things...
+ prefix = @prefix@

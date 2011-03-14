@@ -1,0 +1,11 @@
+--- a/compat/Makefile.in	2011-01-20 22:43:14.000000000 +0100
++++ b/compat/Makefile.in	2011-03-14 12:08:06.602393833 +0100
+@@ -30,7 +30,7 @@
+ LIBTOOL = @LIBTOOL@
+ 
+ # C preprocessor flags
+-CPPFLAGS = -I. -I$(top_builddir) -I$(incdir) @CPPFLAGS@
++CPPFLAGS = -I. -I$(top_builddir) -I$(incdir) -I$(top_srcdir) @CPPFLAGS@
+ 
+ # Usually -O and/or -g
+ CFLAGS = @CFLAGS@

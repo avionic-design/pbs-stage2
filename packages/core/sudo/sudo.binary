@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+DST="$1"
+VERSION="$2"
+
+chmod 4755 "$DST/usr/bin/sudo" "$DST/usr/bin/sudoedit"

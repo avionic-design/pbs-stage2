@@ -1,0 +1,4 @@
+config PACKAGE_CORE_SUDO
+	bool "sudo"
+	select VIRTUAL_DEVEL_LIBC
+	default n
