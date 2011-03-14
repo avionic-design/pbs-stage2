@@ -1,5 +1,5 @@
 PACKAGE = lighttpd
-VERSION = 1.4.26
+VERSION = 1.4.28
 
 MAJOR   = $(word 1,$(subst ., ,$(VERSION)))
 MINOR   = $(word 2,$(subst ., ,$(VERSION)))
