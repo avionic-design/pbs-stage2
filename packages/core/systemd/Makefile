@@ -36,6 +36,7 @@ stripfiles = \
 	/bin/systemctl \
 	/bin/systemd \
 	/bin/systemd-ask-password \
+	/bin/systemd-machine-id-setup \
 	/bin/systemd-notify \
 	/bin/systemd-tmpfiles \
 	/bin/systemd-tty-ask-password-agent \
