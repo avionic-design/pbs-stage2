@@ -24,7 +24,7 @@ subdir-y := $(sort $(filter %/,$(obj-y)))
 
 PHONY += $(subdir-y)
 $(subdir-y):
-	$(Q)$(MAKE) $(depend)=$@ depend
+	$(Q)$(MAKE) $(depend)=$(patsubst %//,%/,$@/) depend
 
 PHONY += $(pkgdir-y)
 $(pkgdir-y):

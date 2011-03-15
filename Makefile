@@ -190,7 +190,7 @@ depend-dirs := $(addprefix depend-,$(obj-y))
 
 PHONY += $(depend-dirs)
 $(depend-dirs): depend-%: %
-	$(Q)$(MAKE) $(depend)=$*
+	$(Q)$(MAKE) $(depend)=$(patsubst %//,%/,$*/)
 
 PHONY += depend
 depend: $(depend-dirs)
