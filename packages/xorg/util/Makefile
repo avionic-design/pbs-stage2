@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_XORG_UTIL_UTIL_MACROS) += util-macros

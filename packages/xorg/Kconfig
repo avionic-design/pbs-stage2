@@ -9,6 +9,7 @@ source "packages/xorg/lib/Kconfig"
 source "packages/xorg/driver/Kconfig"
 source "packages/xorg/app/Kconfig"
 source "packages/xorg/data/Kconfig"
+source "packages/xorg/util/Kconfig"
 
 source "packages/xorg/xorg-server/Kconfig"
 
