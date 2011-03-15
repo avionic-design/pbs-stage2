@@ -2,33 +2,14 @@ menu "X.Org - Drivers"
 
 comment "Input Drivers"
 
-config PACKAGE_XORG_DRIVER_INPUT_EVDEV
-	bool "evdev"
-	select PACKAGE_XORG_XORG_SERVER
-	default n
-
-config PACKAGE_XORG_DRIVER_INPUT_EVTOUCH
-	bool "evtouch"
-	select PACKAGE_XORG_XORG_SERVER
-	default n
-
-config PACKAGE_XORG_DRIVER_INPUT_KEYBOARD
-	bool "keyboard"
-	select PACKAGE_XORG_XORG_SERVER
-	default n
-
-config PACKAGE_XORG_DRIVER_INPUT_MOUSE
-	bool "mouse"
-	select PACKAGE_XORG_XORG_SERVER
-	default n
+source "packages/xorg/driver/xf86-input-evdev/Kconfig"
+source "packages/xorg/driver/xf86-input-evtouch/Kconfig"
+source "packages/xorg/driver/xf86-input-keyboard/Kconfig"
+source "packages/xorg/driver/xf86-input-mouse/Kconfig"
 
 comment "Video Drivers"
 
-config PACKAGE_XORG_DRIVER_VIDEO_FBDEV
-	bool "fbdev"
-	select PACKAGE_XORG_XORG_SERVER
-	default n
-
+source "packages/xorg/driver/xf86-video-fbdev/Kconfig"
 source "packages/xorg/driver/xf86-video-iegd/Kconfig"
 source "packages/xorg/driver/xf86-video-intel/Kconfig"
 source "packages/xorg/driver/xf86-video-psb/Kconfig"

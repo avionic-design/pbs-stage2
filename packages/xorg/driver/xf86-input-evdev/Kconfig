@@ -1,0 +1,4 @@
+config PACKAGE_XORG_DRIVER_INPUT_EVDEV
+	bool "evdev"
+	select PACKAGE_XORG_XORG_SERVER
+	default n
