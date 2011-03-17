@@ -1,11 +1,4 @@
-PACKAGE = glibc
-VERSION = 2.12.1
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = \
-	$(PACKAGE)-$(VERSION).tar.bz2 \
-	$(PACKAGE)-ports-$(VERSION).tar.bz2
-
+include packages/toolchain/glibc/Makefile.location
 include packages/common.mk
 
 # always optimize glibc for speed (it won't even compile with -Os)

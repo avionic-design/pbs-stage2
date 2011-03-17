@@ -1,2 +1,1 @@
-version=3
-http://ftp.gnu.org/pub/gnu/glibc/glibc-ports-(.*)\.tar\.bz2
+../../toolchain/glibc/watch
