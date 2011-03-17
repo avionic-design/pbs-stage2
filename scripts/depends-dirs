@@ -1,7 +1,25 @@
 #!/bin/sh -e
 
 printf "depends-dirs ="
+platform=
 
 while read directory; do
 	printf " \\\\\n\t$directory"
+
+	if echo "$directory" | grep '^platforms/' > /dev/null 2>&1; then
+		platforms="$platforms $directory"
+	fi
 done
+
+if test -n "$platforms"; then
+	printf "\n\ndepends-platforms ="
+
+	for directory in $platforms; do
+		printf " \\\\\n\t$directory"
+		platform="$directory"
+	done
+fi
+
+if test -n "$platform"; then
+	printf "\n\nmaster-platform = $platform"
+fi
