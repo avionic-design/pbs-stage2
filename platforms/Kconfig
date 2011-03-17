@@ -3,9 +3,6 @@ menu "Platform"
 choice
 	prompt "Platform Selection"
 
-config PLATFORM_GENERIC
-	bool "generic"
-
 config PLATFORM_SOEKRIS
 	bool "Soekris Engineering"
 
