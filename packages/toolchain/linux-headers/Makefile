@@ -1,5 +1,5 @@
 PACKAGE = linux
-VERSION = 2.6.36.2
+VERSION = 2.6.38
 
 LOCATION = http://www.de.kernel.org/pub/linux/kernel/v2.6
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
