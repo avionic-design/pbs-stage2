@@ -25,6 +25,8 @@ prunefiles = \
 	/lib/systemd/system/basic.target.wants/sys-kernel-security.automount \
 	/lib/systemd/system/basic.target.wants/tmpwatch.service \
 	/lib/systemd/system/basic.target.wants/tmpwatch.timer \
+	/lib/systemd/system/local-fs.target.wants/media.mount \
+	/lib/systemd/system/media.mount \
 	/lib/systemd/system/systemd-user-sessions.service \
 	/lib/systemd/system/sys-kernel-security.automount \
 	/lib/systemd/system/sys-kernel-security.mount \
