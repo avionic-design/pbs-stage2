@@ -1,2 +1,0 @@
-no-libgcc_eh.patch -p1
-dont-mix-pattern-rules-with-normal-rules.patch
