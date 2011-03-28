@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBCCID
+	bool "libccid"
+	select PACKAGE_LIBS_LIBUSB
+	default n
