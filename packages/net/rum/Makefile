@@ -1,5 +1,5 @@
 PACKAGE = rum
-VERSION = 0.2.0
+VERSION = 0.2.2
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
