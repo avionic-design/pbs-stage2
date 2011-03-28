@@ -7,6 +7,6 @@ index 92a916e..1b3e510 100644
  
 -AM_CPPFLAGS  = -Wall -I${top_srcdir}/include -I${top_builddir}/include -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
 +AM_CPPFLAGS  = -Wall -I${top_srcdir}/include -I${top_builddir}/include -I${builddir}/route -I${builddir}/route/cls -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
+ AM_LDFLAGS = -version-info 3:0:0
  
  lib_LTLIBRARIES = \
- 	libnl.la libnl-genl.la libnl-route.la libnl-nf.la
