@@ -1,5 +1,5 @@
 PACKAGE = librpc
-VERSION = 0.4.4
+VERSION = 0.4.8
 
 LOCATION = http://ftp.avionic-design.de/pub/librpc
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
