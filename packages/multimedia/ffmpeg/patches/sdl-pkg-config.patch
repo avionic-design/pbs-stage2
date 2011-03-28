@@ -2,7 +2,7 @@ diff --git a/configure b/configure
 index 0166829..6ce763a 100755
 --- a/configure
 +++ b/configure
-@@ -2640,10 +2640,21 @@ if enabled libdc1394; then
+@@ -2641,10 +2641,21 @@ if enabled libdc1394; then
      die "ERROR: No version of libdc1394 found "
  fi
  
