@@ -1,4 +1,5 @@
 uclibc.patch
 glib.patch
+v4l_id-no-v4l1.patch
 autoreconf.patch
 ltmain-sysroot.patch
