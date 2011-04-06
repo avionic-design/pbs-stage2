@@ -1,0 +1,5 @@
+config PACKAGE_MULTIMEDIA_OPENGLES2_BINARY
+	bool "opengles2 binaries"
+	default n
+	help
+	  Header and binaries to build gles2 apps.
