@@ -7,7 +7,11 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--disable-cdaudio
+	--disable-cdaudio \
+	--disable-examples \
+	--disable-gsettings \
+	--disable-dvdnav \
+	--disable-dvdspu
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
