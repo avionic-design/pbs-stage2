@@ -1,0 +1,2 @@
+ltmain-sysroot.patch
+gst-plugin-gl-6184670652a.patch -R

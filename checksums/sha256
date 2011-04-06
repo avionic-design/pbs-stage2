@@ -100,6 +100,7 @@ ff36a138e5af4ed8dcc459d6d6521fe66ed31ec29ba9a924dc3675c6749a692e  download/gst-f
 e9aabfac83f6480896da0686e9c911989f896fbad634821b7771ed84a446172b  download/gst-plugins-base-0.10.32.tar.bz2
 a9d801c3d42b456a6ebc0b95f68c44f153f756ec0fbd4877197c469cc67771fa  download/gst-plugins-good-0.10.27.tar.bz2
 0cbd4aa8dceafea21ddd547dfde686a8836f68ba547afa5575a52b64cfa0b369  download/gst-plugins-ugly-0.10.17.tar.bz2
+d6913c3d3ee51d685ead94a069c6b370a0f8229bf6642c10a2980545adc2c364  download/gst-plugins-gl-0.10.2.tar.bz2
 3bf4e46a186ee9a1f5e212aaf651d67cffb4f5f05345a7c99ae71d5d992be133  download/gstreamer-0.10.32.tar.bz2
 7d3033ad83647079977466d3e8f1a7533f47abd5cc693f01b8797ff43dd407a5  download/gtk+-2.24.4.tar.bz2
 8cbae7254746bc7df7cce882d9b9a916c4e00dba7bdacd1c50b5d096a484cf56  download/gtkmm-2.24.0.tar.bz2

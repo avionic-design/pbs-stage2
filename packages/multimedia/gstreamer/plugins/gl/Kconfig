@@ -1,0 +1,7 @@
+config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_GL
+	bool "gl"
+	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+	select PACKAGE_MULTIMEDIA_OPENGLES2_BINARY
+	default n
+	help
+	  This module contains integration libraries and plug-ins for using OpenGL within GStreamer pipelines.

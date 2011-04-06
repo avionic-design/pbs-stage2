@@ -1,0 +1,285 @@
+From 6184670652af5f378eec42fae84971b0754855cd Mon Sep 17 00:00:00 2001
+From: Filippo Argiolas <filippo.argiolas@gmail.com>
+Date: Thu, 29 Apr 2010 06:27:29 +0000
+Subject: sobel: move some highly duplicated code into glfilter
+
+Add a new convenience function in GstGLFilter that just draws an input
+texture to a target texture using a simple shader with just a "tex"
+uniform sampler.
+Move draw_texture from glfiltersobel to glfilter. Still need to update
+other plugins to this.
+---
+diff --git a/gst-libs/gst/gl/gstglfilter.c b/gst-libs/gst/gl/gstglfilter.c
+index 087e8be..2f0e6ec 100644
+--- a/gst-libs/gst/gl/gstglfilter.c
++++ b/gst-libs/gst/gl/gstglfilter.c
+@@ -223,10 +223,12 @@ gst_gl_filter_reset (GstGLFilter * filter)
+     g_object_unref (filter->display);
+     filter->display = NULL;
+   }
++
+   filter->width = 0;
+   filter->height = 0;
+   filter->fbo = 0;
+   filter->depthbuffer = 0;
++  filter->default_shader = NULL;
+   filter->external_gl_context = 0;
+ }
+ 
+@@ -252,7 +254,8 @@ gst_gl_filter_start (GstBaseTransform * bt)
+     else {
+       /* this gl filter is a sink in terms of the gl chain */
+       filter->display = gst_gl_display_new ();
+-      gst_gl_display_create_context (filter->display, filter->external_gl_context);
++      gst_gl_display_create_context (filter->display,
++          filter->external_gl_context);
+     }
+   }
+ 
+@@ -442,3 +445,55 @@ gst_gl_filter_render_to_target (GstGLFilter * filter,
+       0, filter->width, 0, filter->height,
+       GST_GL_DISPLAY_PROJECTION_ORTHO2D, data);
+ }
++
++static void
++_draw_with_shader_cb (gint width, gint height, guint texture, gpointer stuff)
++{
++  GstGLFilter *filter = GST_GL_FILTER (stuff);
++
++  glMatrixMode (GL_PROJECTION);
++  glLoadIdentity ();
++
++  gst_gl_shader_use (filter->default_shader);
++
++  glActiveTexture (GL_TEXTURE1);
++  glEnable (GL_TEXTURE_RECTANGLE_ARB);
++  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, texture);
++  glDisable (GL_TEXTURE_RECTANGLE_ARB);
++
++  gst_gl_shader_set_uniform_1i (filter->default_shader, "tex", 1);
++
++  gst_gl_filter_draw_texture (filter, texture);
++}
++
++/* attach target to a FBO, use shader, pass input as "tex" uniform to
++ * the shader, render input to a quad */
++void
++gst_gl_filter_render_to_target_with_shader (GstGLFilter * filter,
++    GLuint input, GLuint target, GstGLShader * shader)
++{
++  filter->default_shader = shader;
++  gst_gl_filter_render_to_target (filter, input, target, _draw_with_shader_cb,
++      filter);
++}
++
++void
++gst_gl_filter_draw_texture (GstGLFilter * filter, GLuint texture)
++{
++  glActiveTexture (GL_TEXTURE0);
++  glEnable (GL_TEXTURE_RECTANGLE_ARB);
++  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, texture);
++
++  glBegin (GL_QUADS);
++
++  glTexCoord2f (0.0, 0.0);
++  glVertex2f (-1.0, -1.0);
++  glTexCoord2f ((gfloat) filter->width, 0.0);
++  glVertex2f (1.0, -1.0);
++  glTexCoord2f ((gfloat) filter->width, (gfloat) filter->height);
++  glVertex2f (1.0, 1.0);
++  glTexCoord2f (0.0, (gfloat) filter->height);
++  glVertex2f (-1.0, 1.0);
++
++  glEnd ();
++}
+diff --git a/gst-libs/gst/gl/gstglfilter.h b/gst-libs/gst/gl/gstglfilter.h
+index 0d24b52..f97c91d 100644
+--- a/gst-libs/gst/gl/gstglfilter.h
++++ b/gst-libs/gst/gl/gstglfilter.h
+@@ -64,6 +64,8 @@ struct _GstGLFilter
+   GLuint fbo;
+   GLuint depthbuffer;
+ 
++  GstGLShader *default_shader;
++
+   gulong external_gl_context;
+ };
+ 
+@@ -90,7 +92,11 @@ void
+ gst_gl_filter_render_to_target (GstGLFilter *filter, 
+ 				GLuint input, GLuint target,
+ 				GLCB func, gpointer data);
++void
++gst_gl_filter_render_to_target_with_shader (GstGLFilter * filter,
++                                            GLuint input, GLuint target, GstGLShader *shader);
+ 
++void gst_gl_filter_draw_texture (GstGLFilter *filter, GLuint texture);
+ 
+ G_END_DECLS
+ 
+diff --git a/gst/gl/gstglfiltersobel.c b/gst/gl/gstglfiltersobel.c
+index 535d971..5321789 100644
+--- a/gst/gl/gstglfiltersobel.c
++++ b/gst/gl/gstglfiltersobel.c
+@@ -1,6 +1,6 @@
+ /*
+  * GStreamer
+- * Copyright (C) 2008 Filippo Argiolas <filippo.argiolas@gmail.com>
++ * Copyright (C) 2008-2010 Filippo Argiolas <filippo.argiolas@gmail.com>
+  *
+  * This library is free software; you can redistribute it and/or
+  * modify it under the terms of the GNU Library General Public
+@@ -59,19 +59,11 @@ static void gst_gl_filtersobel_set_property (GObject * object, guint prop_id,
+ static void gst_gl_filtersobel_get_property (GObject * object, guint prop_id,
+     GValue * value, GParamSpec * pspec);
+ static void gst_gl_filter_filtersobel_reset (GstGLFilter * filter);
+-static void gst_gl_filtersobel_draw_texture (GstGLFilterSobel * filtersobel,
+-    GLuint tex);
+ 
+ static void gst_gl_filtersobel_init_shader (GstGLFilter * filter);
+ static gboolean gst_gl_filtersobel_filter (GstGLFilter * filter,
+     GstGLBuffer * inbuf, GstGLBuffer * outbuf);
+ 
+-static void gst_gl_filtersobel_desaturate (gint width, gint height,
+-    guint texture, gpointer stuff);
+-static void gst_gl_filtersobel_hconv (gint width, gint height, guint texture,
+-    gpointer stuff);
+-static void gst_gl_filtersobel_vconv (gint width, gint height, guint texture,
+-    gpointer stuff);
+ static void gst_gl_filtersobel_length (gint width, gint height, guint texture,
+     gpointer stuff);
+ 
+@@ -216,114 +208,31 @@ gst_gl_filtersobel_init_shader (GstGLFilter * filter)
+       sep_sobel_length_fragment_source, &filtersobel->len);
+ }
+ 
+-static void
+-gst_gl_filtersobel_draw_texture (GstGLFilterSobel * filtersobel, GLuint tex)
+-{
+-  GstGLFilter *filter = GST_GL_FILTER (filtersobel);
+-
+-  glActiveTexture (GL_TEXTURE0);
+-  glEnable (GL_TEXTURE_RECTANGLE_ARB);
+-  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, tex);
+-
+-  glBegin (GL_QUADS);
+-
+-  glTexCoord2f (0.0, 0.0);
+-  glVertex2f (-1.0, -1.0);
+-  glTexCoord2f ((gfloat) filter->width, 0.0);
+-  glVertex2f (1.0, -1.0);
+-  glTexCoord2f ((gfloat) filter->width, (gfloat) filter->height);
+-  glVertex2f (1.0, 1.0);
+-  glTexCoord2f (0.0, (gfloat) filter->height);
+-  glVertex2f (-1.0, 1.0);
+-
+-  glEnd ();
+-}
+-
+ static gboolean
+ gst_gl_filtersobel_filter (GstGLFilter * filter, GstGLBuffer * inbuf,
+     GstGLBuffer * outbuf)
+ {
+   GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (filter);
+ 
+-  gst_gl_filter_render_to_target (filter, inbuf->texture,
+-      filtersobel->midtexture[0], gst_gl_filtersobel_desaturate, filtersobel);
+-  gst_gl_filter_render_to_target (filter, filtersobel->midtexture[0],
+-      filtersobel->midtexture[1], gst_gl_filtersobel_hconv, filtersobel);
+-  gst_gl_filter_render_to_target (filter, filtersobel->midtexture[1],
+-      filtersobel->midtexture[0], gst_gl_filtersobel_vconv, filtersobel);
++  gst_gl_filter_render_to_target_with_shader (filter, inbuf->texture,
++      filtersobel->midtexture[0], filtersobel->desat);
++  gst_gl_filter_render_to_target_with_shader (filter,
++      filtersobel->midtexture[0], filtersobel->midtexture[1],
++      filtersobel->hconv);
++  gst_gl_filter_render_to_target_with_shader (filter,
++      filtersobel->midtexture[1], filtersobel->midtexture[0],
++      filtersobel->vconv);
+   gst_gl_filter_render_to_target (filter, filtersobel->midtexture[0],
+       outbuf->texture, gst_gl_filtersobel_length, filtersobel);
+   return TRUE;
+ }
+ 
+ static void
+-gst_gl_filtersobel_desaturate (gint width, gint height, guint texture,
+-    gpointer stuff)
+-{
+-  GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (stuff);
+-
+-  glMatrixMode (GL_PROJECTION);
+-  glLoadIdentity ();
+-
+-  gst_gl_shader_use (filtersobel->desat);
+-
+-  glActiveTexture (GL_TEXTURE1);
+-  glEnable (GL_TEXTURE_RECTANGLE_ARB);
+-  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, texture);
+-  glDisable (GL_TEXTURE_RECTANGLE_ARB);
+-
+-  gst_gl_shader_set_uniform_1i (filtersobel->desat, "tex", 1);
+-
+-  gst_gl_filtersobel_draw_texture (filtersobel, texture);
+-}
+-
+-static void
+-gst_gl_filtersobel_hconv (gint width, gint height, guint texture,
+-    gpointer stuff)
+-{
+-  GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (stuff);
+-
+-  glMatrixMode (GL_PROJECTION);
+-  glLoadIdentity ();
+-
+-  gst_gl_shader_use (filtersobel->hconv);
+-
+-  glActiveTexture (GL_TEXTURE1);
+-  glEnable (GL_TEXTURE_RECTANGLE_ARB);
+-  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, texture);
+-  glDisable (GL_TEXTURE_RECTANGLE_ARB);
+-
+-  gst_gl_shader_set_uniform_1i (filtersobel->hconv, "tex", 1);
+-
+-  gst_gl_filtersobel_draw_texture (filtersobel, texture);
+-}
+-
+-static void
+-gst_gl_filtersobel_vconv (gint width, gint height, guint texture,
+-    gpointer stuff)
+-{
+-  GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (stuff);
+-
+-  glMatrixMode (GL_PROJECTION);
+-  glLoadIdentity ();
+-
+-  gst_gl_shader_use (filtersobel->vconv);
+-
+-  glActiveTexture (GL_TEXTURE1);
+-  glEnable (GL_TEXTURE_RECTANGLE_ARB);
+-  glBindTexture (GL_TEXTURE_RECTANGLE_ARB, texture);
+-  glDisable (GL_TEXTURE_RECTANGLE_ARB);
+-
+-  gst_gl_shader_set_uniform_1i (filtersobel->vconv, "tex", 1);
+-
+-  gst_gl_filtersobel_draw_texture (filtersobel, texture);
+-}
+-
+-static void
+ gst_gl_filtersobel_length (gint width, gint height, guint texture,
+     gpointer stuff)
+ {
+-  GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (stuff);
++  GstGLFilter *filter = GST_GL_FILTER (stuff);
++  GstGLFilterSobel *filtersobel = GST_GL_FILTERSOBEL (filter);
+ 
+   glMatrixMode (GL_PROJECTION);
+   glLoadIdentity ();
+@@ -339,5 +248,5 @@ gst_gl_filtersobel_length (gint width, gint height, guint texture,
+   gst_gl_shader_set_uniform_1i (filtersobel->len, "invert",
+       filtersobel->invert);
+ 
+-  gst_gl_filtersobel_draw_texture (filtersobel, texture);
++  gst_gl_filter_draw_texture (filter, texture);
+ }
+--
+cgit v0.8.3-6-g21f6
