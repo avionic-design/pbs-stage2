@@ -8,7 +8,10 @@ include packages/autotools.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib \
-	--disable-rpath
+	--disable-rpath \
+	--disable-examples \
+	--disable-tests \
+	--disable-check
 
 versuf = 0.10
 plugin = $(prefix)/lib/gstreamer-$(versuf)
