@@ -18,6 +18,7 @@ conf-args = \
 	--enable-postproc \
 	--enable-swscale \
 	--disable-stripping \
+	--disable-encoders \
 	$(platform-conf-args)
 
 conf-vars = \
