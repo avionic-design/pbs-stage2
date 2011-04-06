@@ -5,6 +5,7 @@ source "packages/multimedia/gstreamer/plugins/good/Kconfig"
 source "packages/multimedia/gstreamer/plugins/bad/Kconfig"
 source "packages/multimedia/gstreamer/plugins/ugly/Kconfig"
 source "packages/multimedia/gstreamer/plugins/v4l2/Kconfig"
+source "packages/multimedia/gstreamer/plugins/ffmpeg/Kconfig"
 source "packages/multimedia/gstreamer/plugins/omx/Kconfig"
 
 endmenu
