@@ -1,10 +1,17 @@
 PACKAGE = udev
-VERSION = 166
+VERSION = 167
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
+
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 conf-args = \
 	--build=$(BUILD_GNU_TYPE) \
