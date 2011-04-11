@@ -1,5 +1,5 @@
 PACKAGE = ncurses
-VERSION = 5.8
+VERSION = 5.9
 
 LOCATION = http://ftp.gnu.org/pub/gnu/ncurses
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
