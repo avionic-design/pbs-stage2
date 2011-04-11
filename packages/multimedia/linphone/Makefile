@@ -1,5 +1,5 @@
 PACKAGE = linphone
-VERSION = 3.4.2
+VERSION = 3.4.3
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/stable/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
