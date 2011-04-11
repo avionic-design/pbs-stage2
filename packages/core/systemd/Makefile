@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 20
+VERSION = 24
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -44,6 +44,7 @@ stripfiles = \
 	/bin/systemd-tty-ask-password-agent \
 	/lib/security/pam_systemd.so \
 	/lib/systemd/systemd-ac-power \
+	/lib/systemd/systemd-binfmt \
 	/lib/systemd/systemd-cgroups-agent \
 	/lib/systemd/systemd-detect-virt \
 	/lib/systemd/systemd-fsck \
@@ -64,7 +65,10 @@ stripfiles = \
 	/lib/systemd/systemd-update-utmp \
 	/lib/systemd/systemd-user-sessions \
 	/lib/systemd/systemd-vconsole-setup \
+	/lib/systemd/system-generators/systemd-getty-generator \
 	$(prefix)/bin/systemadm \
 	$(prefix)/bin/systemd-ask-password-agent \
+	$(prefix)/bin/systemd-cgls \
 	$(prefix)/bin/systemd-gnome-ask-password-agent \
-	$(prefix)/bin/systemd-cgls
+	$(prefix)/bin/systemd-nspawn \
+	$(prefix)/bin/systemd-stdio-bridge
