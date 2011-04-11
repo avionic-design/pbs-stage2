@@ -1,10 +1,10 @@
 PACKAGE = libXtst
-VERSION = 1.1.0
+VERSION = 1.2.0
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXtst.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXtst.so.6.1.0
+	$(prefix)/lib/*.so.*
