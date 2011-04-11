@@ -74,7 +74,7 @@ static void do_print_item(WINDOW * win, const char *item, int line_y,
 	j = first_alpha(menu_item, "YyNnMmHh");
 
 	/* Clear 'residue' of last item */
-	(void)wattrset(win, dlg.menubox.atr);
+	wattrset(win, dlg.menubox.atr);
 	wmove(win, line_y, 0);
 #if OLD_NCURSES
 	{
@@ -85,10 +85,10 @@ static void do_print_item(WINDOW * win, const char *item, int line_y,
 #else
 	wclrtoeol(win);
 #endif
-	(void)wattrset(win, selected ? dlg.item_selected.atr : dlg.item.atr);
+	wattrset(win, selected ? dlg.item_selected.atr : dlg.item.atr);
 	mvwaddstr(win, line_y, item_x, menu_item);
 	if (hotkey) {
-		(void)wattrset(win, selected ? dlg.tag_key_selected.atr
+		wattrset(win, selected ? dlg.tag_key_selected.atr
 			 : dlg.tag_key.atr);
 		mvwaddch(win, line_y, item_x + j, menu_item[j]);
 	}
@@ -118,11 +118,11 @@ static void print_arrows(WINDOW * win, int item_no, int scroll, int y, int x,
 	wmove(win, y, x);
 
 	if (scroll > 0) {
-		(void)wattrset(win, dlg.uarrow.atr);
+		wattrset(win, dlg.uarrow.atr);
 		waddch(win, ACS_UARROW);
 		waddstr(win, "(-)");
 	} else {
-		(void)wattrset(win, dlg.menubox.atr);
+		wattrset(win, dlg.menubox.atr);
 		waddch(win, ACS_HLINE);
 		waddch(win, ACS_HLINE);
 		waddch(win, ACS_HLINE);
@@ -134,11 +134,11 @@ static void print_arrows(WINDOW * win, int item_no, int scroll, int y, int x,
 	wrefresh(win);
 
 	if ((height < item_no) && (scroll + height < item_no)) {
-		(void)wattrset(win, dlg.darrow.atr);
+		wattrset(win, dlg.darrow.atr);
 		waddch(win, ACS_DARROW);
 		waddstr(win, "(+)");
 	} else {
-		(void)wattrset(win, dlg.menubox_border.atr);
+		wattrset(win, dlg.menubox_border.atr);
 		waddch(win, ACS_HLINE);
 		waddch(win, ACS_HLINE);
 		waddch(win, ACS_HLINE);
@@ -211,17 +211,17 @@ do_resize:
 
 	draw_box(dialog, 0, 0, height, width,
 		 dlg.dialog.atr, dlg.border.atr);
-	(void)wattrset(dialog, dlg.border.atr);
+	wattrset(dialog, dlg.border.atr);
 	mvwaddch(dialog, height - 3, 0, ACS_LTEE);
 	for (i = 0; i < width - 2; i++)
 		waddch(dialog, ACS_HLINE);
-	(void)wattrset(dialog, dlg.dialog.atr);
+	wattrset(dialog, dlg.dialog.atr);
 	wbkgdset(dialog, dlg.dialog.atr & A_COLOR);
 	waddch(dialog, ACS_RTEE);
 
 	print_title(dialog, title, width);
 
-	(void)wattrset(dialog, dlg.dialog.atr);
+	wattrset(dialog, dlg.dialog.atr);
 	print_autowrap(dialog, prompt, width - 2, 1, 3);
 
 	menu_width = width - 6;
@@ -383,6 +383,10 @@ do_resize:
 		case 'n':
 		case 'm':
 		case '/':
+		case 'h':
+		case '?':
+		case 'z':
+		case '\n':
 			/* save scroll info */
 			*s_scroll = scroll;
 			delwin(menu);
@@ -390,8 +394,10 @@ do_resize:
 			item_set(scroll + choice);
 			item_set_selected(1);
 			switch (key) {
+			case 'h':
+			case '?':
+				return 2;
 			case 's':
-				return 3;
 			case 'y':
 				return 3;
 			case 'n':
@@ -402,18 +408,12 @@ do_resize:
 				return 6;
 			case '/':
 				return 7;
+			case 'z':
+				return 8;
+			case '\n':
+				return button;
 			}
 			return 0;
-		case 'h':
-		case '?':
-			button = 2;
-		case '\n':
-			*s_scroll = scroll;
-			delwin(menu);
-			delwin(dialog);
-			item_set(scroll + choice);
-			item_set_selected(1);
-			return button;
 		case 'e':
 		case 'x':
 			key = KEY_ESC;
