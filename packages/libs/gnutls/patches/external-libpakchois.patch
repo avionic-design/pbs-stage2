@@ -2,7 +2,7 @@ diff --git a/configure b/configure
 index 06e2f2f..79c6244 100755
 --- a/configure
 +++ b/configure
-@@ -9477,7 +9477,7 @@ $as_echo "$LIBPAKCHOIS" >&6; }
+@@ -9487,7 +9487,7 @@ $as_echo "$LIBPAKCHOIS" >&6; }
  
  
  

@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 2.12.0
+VERSION = 2.12.2
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -22,6 +22,7 @@ stripfiles = \
 	$(prefix)/bin/gnutls-cli \
 	$(prefix)/bin/gnutls-cli-debug \
 	$(prefix)/bin/gnutls-serv \
+	$(prefix)/bin/p11tool \
 	$(prefix)/bin/psktool \
 	$(prefix)/bin/srptool \
 	$(prefix)/lib/*.so.*
