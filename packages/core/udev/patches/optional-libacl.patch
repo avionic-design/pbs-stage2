@@ -1,0 +1,46 @@
+diff --git a/Makefile.am b/Makefile.am
+index f0809be..a308ec4 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -479,6 +479,7 @@ extras_hid2hci_hid2hci_LDADD = libudev/libudev-private.la $(LIBUSB_LIBS)
+ dist_udevrules_DATA += extras/hid2hci/70-hid2hci.rules
+ libexec_PROGRAMS += extras/hid2hci/hid2hci
+ 
++if ENABLE_ACL
+ # ------------------------------------------------------------------------------
+ # udev_acl - apply ACLs for users with local forground sessions
+ # ------------------------------------------------------------------------------
+@@ -493,6 +494,7 @@ udevacl-install-hook:
+ 	ln -sf $(libexecdir)/udev-acl $(DESTDIR)$(prefix)/lib/ConsoleKit/run-seat.d/udev-acl.ck
+ 
+ INSTALL_EXEC_HOOKS += udevacl-install-hook
++endif
+ 
+ # ------------------------------------------------------------------------------
+ # usb-db - read USB vendor/device string database
+diff --git a/configure.ac b/configure.ac
+index 65fdce1..c694730 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -83,6 +83,11 @@ if test "x$enable_glib" = xyes; then
+ fi
+ AM_CONDITIONAL([ENABLE_GLIB], [test "x$enable_glib" = xyes])
+ 
++AC_CHECK_LIB([acl], [acl_init],
++	[AC_CHECK_HEADER([acl/libacl.h], [enable_acl=yes], [enable_acl=no])],
++	[enable_acl=no])
++AM_CONDITIONAL([ENABLE_ACL], [test "x$enable_acl" = xyes])
++
+ AC_ARG_ENABLE([extras],
+ 	AS_HELP_STRING([--disable-extras], [disable extras with external dependencies]),
+ 	[], [enable_extras=yes])
+@@ -92,9 +97,6 @@ if test "x$enable_extras" = xyes; then
+ 		AC_MSG_ERROR([gperf is needed])
+ 	fi
+ 
+-	AC_CHECK_LIB([acl], [acl_init], [:], AC_MSG_ERROR([libacl not found]))
+-	AC_CHECK_HEADER([acl/libacl.h], [:], AC_MSG_ERROR([libacl header not found]))
+-
+ 	PKG_CHECK_MODULES(LIBUSB, libusb >= 0.1.12)
+ 	AC_SUBST(LIBUSB_CFLAGS)
+ 	AC_SUBST(LIBUSB_LIBS)

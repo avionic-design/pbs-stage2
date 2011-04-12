@@ -29,8 +29,15 @@ conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
 endif
 
+ifeq ($(CONFIG_PACKAGE_CORE_UDEV_DISABLE_EXTRAS),y)
 conf-args += \
-	--disable-extras \
+	--disable-extras
+else
+conf-args += \
+	--with-pci-ids-path=/usr/share/pci.ids.gz
+endif
+
+conf-args += \
 	--disable-introspection
 
 ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
