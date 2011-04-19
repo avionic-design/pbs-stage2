@@ -1,5 +1,5 @@
 PACKAGE = json-glib
-VERSION = 0.12.2
+VERSION = 0.12.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
