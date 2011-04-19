@@ -1,5 +1,5 @@
 PACKAGE = attr
-VERSION = 2.4.44
+VERSION = 2.4.46
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).src.tar.gz
