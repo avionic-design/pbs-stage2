@@ -1,10 +1,17 @@
 PACKAGE = rsyslog
-VERSION = 5.7.1
+VERSION = 5.8.0
 
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
+
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
