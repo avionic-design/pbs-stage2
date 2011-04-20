@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_GTKOSK
+	bool "gtkosk"
+	select PACKAGE_LIBS_GTK
+	select PACKAGE_XORG_LIB_XTST
+	default n
