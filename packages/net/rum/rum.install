@@ -1,3 +1,4 @@
 /etc/systemd/system
+/usr/lib/rum
 /usr/sbin
 /usr/share/rum

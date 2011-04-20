@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+conf-args += \
+	--libexecdir=$(prefix)/lib/$(PACKAGE)
+
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
