@@ -23,6 +23,7 @@ ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VOIP_LINPHONE),y)
 endif
 
 stripfiles = \
+	$(prefix)/bin/remote-control-browser \
 	$(prefix)/bin/remote-control-client \
 	$(prefix)/bin/remote-control-gtk \
 	$(prefix)/bin/remote-control \
