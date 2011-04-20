@@ -1,2 +1,2 @@
 version=3
-http://www.tcpdump.org/release/tcpdump-(.+)\.tar\.gz
+http://www.tcpdump.org/release tcpdump-(.*)\.tar\.gz

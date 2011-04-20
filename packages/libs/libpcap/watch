@@ -1,2 +1,2 @@
 version=3
-http://www.tcpdump.org/release/libpcap-(.+)\.tar\.gz
+http://www.tcpdump.org/release libpcap-(.*)\.tar\.gz
