@@ -6,7 +6,17 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-TARGET_PLATFORM := $(patsubst i786-%,i686-%,$(TARGET))
+ifeq ($(CONFIG_ARCH),x86)
+  ifeq ($(CONFIG_CPU),i786)
+    CPU := i686
+  else
+    CPU := $(CONFIG_CPU)
+  endif
+else
+  CPU := $(CONFIG_ARCH)
+endif
+
+TARGET_PLATFORM := $(CPU)-$(CONFIG_OS)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -24,7 +34,7 @@ conf-args = \
 	--ar=$(AR)
 
 conf-args += \
-	--extra-cflags='$(CFLAGS)' \
+	--extra-cflags='--sysroot $(SYSROOT)' \
 	--extra-ldflags='$(LDFLAGS)'
 
 conf-args += \
