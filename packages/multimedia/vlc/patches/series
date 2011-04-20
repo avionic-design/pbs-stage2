@@ -1,1 +1,4 @@
+env-verbose.patch
+v4l2-std.patch
+v4l2-dev.patch
 ltmain-sysroot.patch

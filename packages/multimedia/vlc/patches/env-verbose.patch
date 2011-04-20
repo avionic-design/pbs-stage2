@@ -1,0 +1,16 @@
+diff --git a/src/libvlc.c b/src/libvlc.c
+index 06ebd6b..27a751c 100644
+--- a/src/libvlc.c
++++ b/src/libvlc.c
+@@ -262,7 +262,11 @@ libvlc_int_t * libvlc_InternalCreate( void )
+     /* Find verbosity from VLC_VERBOSE environment variable */
+     psz_env = getenv( "VLC_VERBOSE" );
+     if( psz_env != NULL )
++    {
++        var_Create( p_libvlc, "verbose", VLC_VAR_INTEGER );
+         priv->i_verbose = atoi( psz_env );
++        var_SetInteger( p_libvlc, "verbose", priv->i_verbose );
++    }
+     else
+         priv->i_verbose = 3;
+ #if defined( HAVE_ISATTY ) && !defined( WIN32 )
