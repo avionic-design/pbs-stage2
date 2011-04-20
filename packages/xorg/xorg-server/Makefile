@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.10.0
+VERSION = 1.10.1
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 1.6.5
@@ -9,13 +9,6 @@ LOCATION = http://xorg.freedesktop.org/releases/individual/xserver
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
-
-$(pkgtree)/.build-fix:
-	rm $(pkgtree)/build/obj-$(TARGET)/hw/xfree86/loader/sdksyms.dep && \
-		rm $(pkgbuildtree)/hw/xfree86/loader/sdksyms.c
-	$(call cmd,stamp)
-
-$(pkgtree)/.build: $(pkgtree)/.build-fix
 
 conf-args += \
 	--with-xkb-output=/var/lib/xkb \
