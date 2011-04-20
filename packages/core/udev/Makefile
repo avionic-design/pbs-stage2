@@ -56,9 +56,15 @@ stripfiles = \
 	/lib/udev/edd_id \
 	/lib/udev/firmware \
 	/lib/udev/fstab_import \
+	/lib/udev/hid2hci \
 	/lib/udev/input_id \
+	/lib/udev/keymap \
+	/lib/udev/mobile-action-modeswitch \
+	/lib/udev/mtd_probe \
 	/lib/udev/path_id \
+	/lib/udev/pci-db \
 	/lib/udev/scsi_id \
+	/lib/udev/usb-db \
 	/lib/udev/usb_id \
 	/lib/udev/v4l_id \
 	/lib/udev/vol_id \
