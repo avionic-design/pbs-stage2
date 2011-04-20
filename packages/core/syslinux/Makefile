@@ -1,5 +1,5 @@
 PACKAGE = syslinux
-VERSION = 4.03
+VERSION = 4.04
 
 LOCATION = http://www.kernel.org/pub/linux/utils/boot/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
