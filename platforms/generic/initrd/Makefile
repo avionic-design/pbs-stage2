@@ -3,7 +3,8 @@ VERSION = 0.0.0
 
 dirs = \
 	/etc \
-	/etc/plymouth
+	/etc/plymouth \
+	/run
 
 scripts = \
 	/init
