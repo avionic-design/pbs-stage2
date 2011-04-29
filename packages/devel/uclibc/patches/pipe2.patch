@@ -1,0 +1,29 @@
+Implement pipe2 system call.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+diff --git a/include/unistd.h b/include/unistd.h
+index c421cb3..00fbbb5 100644
+--- a/include/unistd.h
++++ b/include/unistd.h
+@@ -389,6 +389,9 @@ extern ssize_t pwrite64 (int __fd, __const void *__buf, size_t __n,
+ extern int pipe (int __pipedes[2]) __THROW __wur;
+ libc_hidden_proto(pipe)
+ 
++extern int pipe2 (int __pipedes[2], int flags) __THROW __wur;
++libc_hidden_proto(pipe2)
++
+ /* Schedule an alarm.  In SECONDS seconds, the process will get a SIGALRM.
+    If SECONDS is zero, any currently scheduled alarm will be cancelled.
+    The function returns the number of seconds remaining until the last
+diff --git a/libc/sysdeps/linux/common/pipe.c b/libc/sysdeps/linux/common/pipe.c
+index 8eae27c..29d9bfb 100644
+--- a/libc/sysdeps/linux/common/pipe.c
++++ b/libc/sysdeps/linux/common/pipe.c
+@@ -13,3 +13,6 @@
+ 
+ _syscall1(int, pipe, int *, filedes)
+ libc_hidden_def(pipe)
++
++_syscall2(int, pipe2, int *, filedes, int, flags)
++libc_hidden_def(pipe2)

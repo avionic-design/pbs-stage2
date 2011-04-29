@@ -1,0 +1,47 @@
+Implement accept4 system call.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+diff --git a/libc/inet/accept.c b/libc/inet/accept.c
+index 0217a68..b0fd2b2 100644
+--- a/libc/inet/accept.c
++++ b/libc/inet/accept.c
+@@ -5,4 +5,5 @@
+  */
+ 
+ #define L_accept
++#define L_accept4
+ #include "socketcalls.c"
+diff --git a/libc/inet/socketcalls.c b/libc/inet/socketcalls.c
+index 42a5a56..ff5fdaa 100644
+--- a/libc/inet/socketcalls.c
++++ b/libc/inet/socketcalls.c
+@@ -31,6 +31,7 @@ extern int __socketcall(int call, unsigned long *args) attribute_hidden;
+ #define SYS_GETSOCKOPT  15
+ #define SYS_SENDMSG     16
+ #define SYS_RECVMSG     17
++#define SYS_ACCEPT4     18
+ #endif
+ 
+ #ifdef __UCLIBC_HAS_THREADS_NATIVE__
+@@ -560,3 +561,20 @@ int socketpair(int family, int type, int protocol, int sockvec[2])
+ }
+ #endif
+ #endif
++
++#ifdef L_accept4
++#ifdef __NR_accept4
++_syscall4(int, accept4, int, sockfd, struct sockaddr *, addr, socklen_t *, addrlen, int, flags)
++#elif defined(__NR_socketcall)
++int accept4(int sockfd, struct sockaddr *addr, socklen_t *addrlen, int flags)
++{
++	unsigned long args[4];
++
++	args[0] = sockfd;
++	args[1] = (unsigned long) addr;
++	args[2] = (unsigned long) addrlen;
++	args[3] = flags;
++	return __socketcall(SYS_ACCEPT4, args);
++}
++#endif
++#endif
