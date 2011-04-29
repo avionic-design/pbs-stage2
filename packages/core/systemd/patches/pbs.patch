@@ -2,7 +2,7 @@ diff --git a/Makefile.am b/Makefile.am
 index f508163..ad4b8e4 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -90,6 +90,12 @@ AM_CPPFLAGS += \
+@@ -96,6 +96,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -15,7 +15,7 @@ index f508163..ad4b8e4 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -98,6 +104,7 @@ AM_CPPFLAGS += \
+@@ -105,6 +111,7 @@ AM_CPPFLAGS += \
  endif
  endif
  endif
@@ -36,10 +36,10 @@ index ce5772d..dc78c3c 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -360,6 +360,11 @@ case $with_distro in
-                 M4_DISTRO_FLAG=-DTARGET_MANDRIVA=1
- 		have_plymouth=true
-                 ;;
+@@ -367,6 +367,11 @@ case $with_distro in
+                 AC_DEFINE(TARGET_MEEGO, [], [Target is MeeGo])
+                 M4_DISTRO_FLAG=-DTARGET_MEEGO=1
+		;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
 +                AC_DEFINE(TARGET_PBS, [], [Target is PBS])
@@ -48,10 +48,10 @@ index ce5772d..dc78c3c 100644
          other)
                  ;;
          *)
-@@ -409,6 +414,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
- AM_CONDITIONAL(TARGET_FRUGALWARE, test x"$with_distro" = xfrugalware)
+@@ -417,6 +422,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
  AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
  AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+ AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
 +AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
  
  AM_CONDITIONAL(HAVE_PLYMOUTH, test -n "$have_plymouth")

@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 24
+VERSION = 25
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -48,6 +48,7 @@ stripfiles = \
 	/lib/systemd/systemd-cgroups-agent \
 	/lib/systemd/systemd-detect-virt \
 	/lib/systemd/systemd-fsck \
+	/lib/systemd/systemd-hostnamed \
 	/lib/systemd/systemd-initctl \
 	/lib/systemd/systemd-kmsg-syslogd \
 	/lib/systemd/systemd-logger \
