@@ -1,5 +1,5 @@
 PACKAGE = libcap
-VERSION = 2.20
+VERSION = 2.21
 
 LOCATION = http://www.kernel.org/pub/linux/libs/security/linux-privs/$(PACKAGE)2
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
