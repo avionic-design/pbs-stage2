@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBMODEM
+	bool "libmodem"
+	select VIRTUAL_DEVEL_LIBC
+	default n
