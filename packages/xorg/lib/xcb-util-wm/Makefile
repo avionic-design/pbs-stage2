@@ -1,4 +1,4 @@
-PACKAGE = xcb-util
+PACKAGE = xcb-util-wm
 VERSION = 0.3.8
 
 LOCATION = http://xcb.freedesktop.org/dist

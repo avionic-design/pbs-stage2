@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XCB_UTIL_KEYSYMS
+	bool "XCB utilities - keysyms"
+	select PACKAGE_XORG_LIB_XCB_UTIL
+	default n

@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XCB_UTIL_WM
+	bool "XCB utilities - WM"
+	select PACKAGE_XORG_LIB_XCB_UTIL
+	default n

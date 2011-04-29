@@ -1,2 +1,2 @@
 version=3
-http://xcb.freedesktop.org/dist/xcb-util-(.*)\.tar\.bz2
+http://xcb.freedesktop.org/dist/xcb-util-([\d\.]+)\.tar\.bz2
