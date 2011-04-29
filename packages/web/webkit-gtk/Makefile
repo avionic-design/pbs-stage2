@@ -1,5 +1,5 @@
 PACKAGE = webkit
-VERSION = 1.3.13
+VERSION = 1.4.0
 
 LOCATION = http://www.webkitgtk.org
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
