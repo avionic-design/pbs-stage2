@@ -1,5 +1,5 @@
 PACKAGE = glib-networking
-VERSION = 2.28.5
+VERSION = 2.28.6.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
