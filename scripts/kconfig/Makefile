@@ -29,7 +29,7 @@ nconfig: $(obj)/nconf
 oldconfig: $(obj)/conf
 	$< --$@ $(Kconfig)
 
-silentoldconfig: $(obj)/conf
+silentoldconfig: $(obj)/conf $(obj)/deps
 	$(Q)mkdir -p include/generated
 	$< --$@ $(Kconfig)
 
