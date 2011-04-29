@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 2.12.2
+VERSION = 2.12.3
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -9,9 +9,8 @@ include packages/autotools.mk
 conf-args += \
 	--with-libgcrypt \
 	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \
-	--with-libpakchois-prefix=$(SYSROOT)$(prefix) \
 	--with-libtasn1-prefix=$(SYSROOT)$(prefix) \
-	--with-libz-prefix=$(SYSROOT)$(prefix) \
+	--with-libdl-prefix=$(SYSROOT)$(prefix) \
 	--disable-rpath
 
 prunefiles = \
