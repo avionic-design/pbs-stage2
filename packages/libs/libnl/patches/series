@@ -1,2 +1,3 @@
 out-of-tree.patch
+dist-check.patch
 linux-2.6.37.patch
