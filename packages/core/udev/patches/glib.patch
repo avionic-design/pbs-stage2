@@ -7,7 +7,7 @@ diff --git a/Makefile.am b/Makefile.am
 index df426f7..5ca1c61 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -321,15 +321,9 @@ dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
+@@ -318,15 +318,9 @@ dist_udevrules_DATA += extras/v4l_id/60-persistent-v4l.rules
  # ------------------------------------------------------------------------------
  dist_udevrules_DATA += extras/qemu/42-qemu-usb.rules
  
@@ -25,7 +25,7 @@ index df426f7..5ca1c61 100644
  # ------------------------------------------------------------------------------
  # GUdev - libudev gobject interface
  # ------------------------------------------------------------------------------
-@@ -370,7 +364,7 @@ dist_extras_gudev_libgudev_1_0_la_SOURCES = \
+@@ -367,7 +361,7 @@ dist_extras_gudev_libgudev_1_0_la_SOURCES = \
  	extras/gudev/gudevmarshal.c \
  	extras/gudev/gudevenumtypes.h \
  	extras/gudev/gudevenumtypes.c
@@ -34,7 +34,7 @@ index df426f7..5ca1c61 100644
  
  extras_gudev_libgudev_1_0_la_CPPFLAGS = \
  	$(AM_CPPFLAGS) \
-@@ -465,6 +459,16 @@ libgudev-uninstall-move-hook:
+@@ -462,6 +456,16 @@ libgudev-uninstall-move-hook:
  
  INSTALL_EXEC_HOOKS += libgudev-install-move-hook
  UNINSTALL_EXEC_HOOKS += libgudev-uninstall-move-hook

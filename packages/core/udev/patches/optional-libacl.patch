@@ -2,7 +2,7 @@ diff --git a/Makefile.am b/Makefile.am
 index f0809be..a308ec4 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -479,6 +479,7 @@ extras_hid2hci_hid2hci_LDADD = libudev/libudev-private.la $(LIBUSB_LIBS)
+@@ -476,6 +476,7 @@ extras_hid2hci_hid2hci_LDADD = libudev/libudev-private.la $(LIBUSB_LIBS)
  dist_udevrules_DATA += extras/hid2hci/70-hid2hci.rules
  libexec_PROGRAMS += extras/hid2hci/hid2hci
  
@@ -10,7 +10,7 @@ index f0809be..a308ec4 100644
  # ------------------------------------------------------------------------------
  # udev_acl - apply ACLs for users with local forground sessions
  # ------------------------------------------------------------------------------
-@@ -493,6 +494,7 @@ udevacl-install-hook:
+@@ -490,6 +491,7 @@ udevacl-install-hook:
  	ln -sf $(libexecdir)/udev-acl $(DESTDIR)$(prefix)/lib/ConsoleKit/run-seat.d/udev-acl.ck
  
  INSTALL_EXEC_HOOKS += udevacl-install-hook
