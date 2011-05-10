@@ -1,5 +1,5 @@
 PACKAGE = libnotify
-VERSION = 0.7.2
+VERSION = 0.7.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -8,6 +8,13 @@ LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
+
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 conf-args += \
 	--disable-tests
