@@ -1,5 +1,5 @@
 PACKAGE = nspr
-VERSION = 4.8.7
+VERSION = 4.8.8
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
