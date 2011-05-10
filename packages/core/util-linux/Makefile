@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.19
+VERSION = 2.19.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
