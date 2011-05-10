@@ -1,11 +1,17 @@
 PACKAGE = remote-control
-VERSION = 0.4.6
+VERSION = 0.4.10
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_BACKLIGHT_DPMS),y)
+	conf-args += --with-backlight-backend=dpms
+endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_BACKLIGHT_MEDATOM),y)
+	conf-args += --with-backlight-backend=medatom
+endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VIDEO_VLC),y)
 	conf-args += --with-video-backend=libvlc
 endif
@@ -20,6 +26,9 @@ ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_SMARTCARD_LIBCCID),y)
 endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VOIP_LINPHONE),y)
 	conf-args += --with-voip-backend=linphone
+endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_MODEM_LIBMODEM),y)
+	conf-args += --with-modem-backend=libmodem
 endif
 
 stripfiles = \
