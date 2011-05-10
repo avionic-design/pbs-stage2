@@ -27,7 +27,7 @@ diff --git a/configure.ac b/configure.ac
 index ce5772d..dc78c3c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -272,7 +272,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -280,7 +280,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
@@ -36,7 +36,7 @@ index ce5772d..dc78c3c 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -367,6 +367,11 @@ case $with_distro in
+@@ -375,6 +375,11 @@ case $with_distro in
                  AC_DEFINE(TARGET_MEEGO, [], [Target is MeeGo])
                  M4_DISTRO_FLAG=-DTARGET_MEEGO=1
 		;;
@@ -48,7 +48,7 @@ index ce5772d..dc78c3c 100644
          other)
                  ;;
          *)
-@@ -417,6 +422,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
+@@ -425,6 +430,7 @@ AM_CONDITIONAL(TARGET_GENTOO, test x"$with_distro" = xgentoo)
  AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
  AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
