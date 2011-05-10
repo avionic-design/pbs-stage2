@@ -1,18 +1,8 @@
-Disable stripping.
-
-From: Thierry Reding <thierry.reding@avionic-design.de>
-
-
----
- Makefile              |   10 +++-------
- config/Makefile.linux |    2 +-
- 2 files changed, 4 insertions(+), 8 deletions(-)
-
 diff --git a/Makefile b/Makefile
-index 2879015..baa3e52 100644
+index 5637c2b..f519ce7 100644
 --- a/Makefile
 +++ b/Makefile
-@@ -55,7 +55,6 @@ DIST_SRC_TGZ = glew-$(GLEW_VERSION).tgz
+@@ -56,7 +56,6 @@ DIST_SRC_TGZ = glew-$(GLEW_VERSION).tgz
  
  AR = ar
  INSTALL = install
@@ -20,44 +10,43 @@ index 2879015..baa3e52 100644
  RM = rm -f
  LN = ln -sf
  ifeq ($(MAKECMDGOALS), debug)
-@@ -131,11 +130,9 @@ install: all
- 	$(INSTALL) -d -m 0755 $(LIBDIR)/pkgconfig
+@@ -182,10 +181,8 @@ install.lib: glew.lib
  # runtime
  ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
+ 	$(INSTALL) -d -m 0755 $(BINDIR)
 -	$(STRIP) -x lib/$(LIB.SHARED)
--	$(INSTALL) -m 0644 lib/$(LIB.SHARED) $(BINDIR)/
-+	$(INSTALL) -m 0755 lib/$(LIB.SHARED) $(BINDIR)/
+ 	$(INSTALL) -m 0755 lib/$(LIB.SHARED) $(BINDIR)/
  else
 -	$(STRIP) -x lib/$(LIB.SHARED)
--	$(INSTALL) -m 0644 lib/$(LIB.SHARED) $(LIBDIR)/
-+	$(INSTALL) -m 0755 lib/$(LIB.SHARED) $(LIBDIR)/
+ 	$(INSTALL) -m 0644 lib/$(LIB.SHARED) $(LIBDIR)/
  	$(LN) $(LIB.SHARED) $(LIBDIR)/$(LIB.SONAME)
  endif
- # development files
-@@ -146,12 +143,11 @@ endif
- ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
- 	$(INSTALL) -m 0644 lib/$(LIB.DEVLNK) $(LIBDIR)/
+@@ -195,7 +192,6 @@ ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
  else
--	$(STRIP) -x lib/$(LIB.STATIC)
- 	$(INSTALL) -m 0644 lib/$(LIB.STATIC) $(LIBDIR)/
  	$(LN) $(LIB.SHARED) $(LIBDIR)/$(LIB.DEVLNK)
  endif
- # utilities
--	$(INSTALL) -s -m 0755 bin/$(GLEWINFO.BIN) bin/$(VISUALINFO.BIN) $(BINDIR)/
-+	$(INSTALL) -m 0755 bin/$(GLEWINFO.BIN) bin/$(VISUALINFO.BIN) $(BINDIR)/
+-	$(STRIP) -x lib/$(LIB.STATIC)
+ 	$(INSTALL) -m 0644 lib/$(LIB.STATIC) $(LIBDIR)/
  
- uninstall:
- 	$(RM) $(INCDIR)/wglew.h
-diff --git a/config/Makefile.linux b/config/Makefile.linux
-index fd8a2d1..a536018 100644
---- a/config/Makefile.linux
-+++ b/config/Makefile.linux
-@@ -19,7 +19,7 @@ LDFLAGS.STATIC = -Wl,-Bstatic
- LDFLAGS.DYNAMIC = -Wl,-Bdynamic
- NAME = GLEW
- WARN = -Wall -W
--POPT = -O2
-+POPT = -O2 -g
- BIN.SUFFIX =
- LIB.SONAME = lib$(NAME).so.$(SO_MAJOR)
- LIB.DEVLNK = lib$(NAME).so
+ install.lib.mx: glew.lib.mx
+@@ -203,11 +199,9 @@ install.lib.mx: glew.lib.mx
+ # runtime
+ ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
+ 	$(INSTALL) -d -m 0755 $(BINDIR)
+-	$(STRIP) -x lib/$(LIB.SHARED.MX)
+ 	$(INSTALL) -m 0755 lib/$(LIB.SHARED.MX) $(BINDIR)/
+ else
+-	$(STRIP) -x lib/$(LIB.SHARED.MX)
+-	$(INSTALL) -m 0644 lib/$(LIB.SHARED.MX) $(LIBDIR)/
++	$(INSTALL) -m 0755 lib/$(LIB.SHARED.MX) $(LIBDIR)/
+ 	$(LN) $(LIB.SHARED.MX) $(LIBDIR)/$(LIB.SONAME.MX)
+ endif
+ # development files
+@@ -216,7 +210,6 @@ ifeq ($(filter-out mingw% cygwin,$(SYSTEM)),)
+ else
+ 	$(LN) $(LIB.SHARED.MX) $(LIBDIR)/$(LIB.DEVLNK.MX)
+ endif
+-	$(STRIP) -x lib/$(LIB.STATIC.MX)
+ 	$(INSTALL) -m 0644 lib/$(LIB.STATIC.MX) $(LIBDIR)/
+ 
+ install.bin: glew.bin

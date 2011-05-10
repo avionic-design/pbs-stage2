@@ -1,5 +1,5 @@
 PACKAGE = glew
-VERSION = 1.5.8
+VERSION = 1.6.0
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tgz
@@ -35,8 +35,6 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 stripfiles = \
-	$(prefix)/bin/glewinfo \
-	$(prefix)/bin/visualinfo \
 	$(prefix)/lib/*.so.*
 
 include packages/cleanup.mk
