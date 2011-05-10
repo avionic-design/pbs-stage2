@@ -1,5 +1,5 @@
 PACKAGE = startup-notification
-VERSION = 0.10
+VERSION = 0.11
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
