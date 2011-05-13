@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBRSVG
+	bool "librsvg"
+	select PACKAGE_LIBS_GDK_PIXBUF
+	default n
