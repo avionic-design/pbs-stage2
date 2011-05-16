@@ -1,0 +1,13 @@
+diff --git a/po/es.po b/po/es.po
+index 9372d70..c440e0c 100644
+--- a/po/es.po
++++ b/po/es.po
+@@ -1363,7 +1363,7 @@ msgstr "No se encontró nada que guardar\n"
+ #: src/setfont.c:682
+ #, c-format
+ msgid "Saved %d-char %dx%d font file on %s\n"
+-msgstr "Se ha guardado el fichero de tipos %2$dx%3$d de %1$d caracteres en %s\n"
++msgstr "Se ha guardado el fichero de tipos %2$dx%3$d de %1$d caracteres en %4$s\n"
+ 
+ #: src/setkeycodes.c:21
+ #, c-format

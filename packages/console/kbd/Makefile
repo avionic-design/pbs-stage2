@@ -1,5 +1,5 @@
 PACKAGE = kbd
-VERSION = 1.15.2
+VERSION = 1.15.3
 
 LOCATION = http://ftp.kernel.org/pub/linux/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
