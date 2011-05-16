@@ -17,14 +17,18 @@ endif
 DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
 
-$(pkgtree)/.setup:
+$(pkgtree)/build:
+	$(call cmd,mkdir_p)
+
+$(pkgtree)/.setup: | $(pkgtree)/build
 	$(call cmd,stamp)
 
 conf-args = \
-	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include"
+	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include" \
+	O=$(pkgtree)/build
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/build/.config
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
@@ -33,20 +37,23 @@ build-args = \
 	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
 	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=$(prefix)/
+	DEVEL_PREFIX=$(prefix)/ \
+	O=$(pkgtree)/build
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
+	cd $(pkgbuildtree) && \
+		$(env) $(MAKE) -j $(NUM_CPU) $(build-args) utils
 	$(call cmd,stamp)
 
 install-args = \
 	CROSS=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
-	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
-	DEVEL_PREFIX=$(prefix)/
+	DEVEL_PREFIX=$(prefix)/ \
+	O=$(pkgtree)/build
 
 dest-dirs = \
 	$(DESTDIR)/etc/init.d \
@@ -59,8 +66,8 @@ $(dest-dirs):
 	$(call cmd,priv_mkdir_p)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
-	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
-	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install_utils
+	cd $(pkgbuildtree) && \
+		$(priv) $(env) $(MAKE) $(install-args) install install_utils
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(DESTDIR)/lib
 	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libstdc++.so.6` $(DESTDIR)/lib
 	$(priv) cp $(pkgsrctree)/ldconfig.init $(DESTDIR)/etc/init.d/ldconfig

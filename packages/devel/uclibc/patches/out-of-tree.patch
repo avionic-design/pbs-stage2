@@ -1,0 +1,45 @@
+diff --git a/libm/Makefile.in b/libm/Makefile.in
+index 2235933..f0aaa2a 100644
+--- a/libm/Makefile.in
++++ b/libm/Makefile.in
+@@ -20,7 +20,7 @@
+ # by Erik Andersen <andersen@codepoet.org>
+ #
+ 
+-subdirs += libm
++subdirs += libm libm/$(TARGET_ARCH)
+ 
+ CFLAGS-libm := -DNOT_IN_libc -DIS_IN_libm $(SSP_ALL_CFLAGS)
+ CFLAGS-libm += -D_IEEE_LIBM
+diff --git a/utils/Makefile b/utils/Makefile
+index bdaea9f..bdd9519 100644
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -6,8 +6,8 @@
+ #
+ 
+ top_srcdir=../
+-top_builddir=../
+-include $(top_builddir)Rules.mak
++top_builddir=$(if $(O),$(O),..)/
++include $(top_srcdir)Rules.mak
+ all: utils
+ include Makefile.in
+ include $(top_srcdir)Makerules
+diff --git a/utils/Makefile.in b/utils/Makefile.in
+index 65364d7..217f01d 100644
+--- a/utils/Makefile.in
++++ b/utils/Makefile.in
+@@ -99,7 +99,11 @@ utils: $(utils_OBJ) $(utils_LOCALE_OBJ)
+ 
+ # NOTE: We build the utils AFTER we have a uClibc-targeted toolchain.
+ 
+-$(utils_OBJ): $(utils_OUT)/% : $(utils_DIR)/%.c | $(libc)
++subdirs: $(addprefix $(top_builddir),$(subdirs))
++$(addprefix $(top_builddir),$(subdirs)):
++	$(do_mkdir)
++
++$(utils_OBJ): $(utils_OUT)/% : $(utils_DIR)/%.c | $(libc) subdirs
+ 	$(compile.u)
+ 
+ $(utils_OUT)/locale: $(top_srcdir)extra/locale/programs/locale.c | $(libc)
