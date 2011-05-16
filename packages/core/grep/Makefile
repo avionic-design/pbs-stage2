@@ -1,5 +1,5 @@
 PACKAGE = grep
-VERSION = 2.7
+VERSION = 2.8
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
