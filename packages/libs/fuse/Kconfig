@@ -2,3 +2,6 @@ config PACKAGE_LIBS_FUSE
 	bool "fuse"
 	select VIRTUAL_DEVEL_LIBC
 	default n
+	help
+	  With FUSE it is possible to implement a fully functional filesystem in a
+	  userspace program.
