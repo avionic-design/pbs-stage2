@@ -24,6 +24,7 @@ obj-$(CONFIG_PACKAGE_NET_OPENSSH) += openssh
 obj-$(CONFIG_PACKAGE_NET_PPP) += ppp
 obj-$(CONFIG_PACKAGE_NET_REMOTE_CONTROL) += remote-control
 obj-$(CONFIG_PACKAGE_NET_RUM) += rum
+obj-$(CONFIG_PACKAGE_NET_FUSE_SSHFS) += sshfs-fuse
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
 obj-$(CONFIG_PACKAGE_NET_UPDATED) += updated
 obj-$(CONFIG_PACKAGE_NET_WIRELESS_TOOLS) += wireless-tools
