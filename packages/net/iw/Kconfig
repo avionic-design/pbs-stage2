@@ -1,0 +1,7 @@
+config PACKAGE_NET_IW
+	bool "iw"
+	select PACKAGE_LIBS_LIBNL
+	default n
+	help
+	  iw is a new nl80211 based CLI configuration utility for wireless devices.
+	  It supports almost all new drivers that have been added to the kernel recently.

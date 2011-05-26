@@ -12,6 +12,7 @@ obj-$(CONFIG_PACKAGE_NET_IFPLUGD) += ifplugd
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
 obj-$(CONFIG_PACKAGE_NET_IPUTILS) += iputils
 obj-$(CONFIG_PACKAGE_NET_ISC_DHCP) += isc-dhcp
+obj-$(CONFIG_PACKAGE_NET_IW) += iw
 obj-$(CONFIG_PACKAGE_NET_LIGHTTPD) += lighttpd
 obj-$(CONFIG_PACKAGE_NET_LLDPD) += lldpd
 obj-$(CONFIG_PACKAGE_NET_NETCAT) += netcat
