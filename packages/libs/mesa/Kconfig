@@ -75,4 +75,26 @@ config PACKAGE_LIBS_MESA_DRI_FFB
 
 endif
 
+if PACKAGE_LIBS_MESA
+
+comment "GL Backends"
+
+config PACKAGE_LIBS_MESA_GL_EGL
+	bool "EGL"
+	default n
+
+config PACKAGE_LIBS_MESA_GL_ESV1
+	bool "OpenGL ES v1"
+	default n
+
+config PACKAGE_LIBS_MESA_GL_ESV2
+	bool "OpenGL ES v2"
+	default n
+
+config PACKAGE_LIBS_MESA_GL_OGL
+	bool "OpenGL"
+	default n
+
+endif
+
 endmenu

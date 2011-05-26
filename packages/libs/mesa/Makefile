@@ -48,6 +48,27 @@ conf-args += \
 	--with-dri-drivers="$(dri-drivers-y)" \
 	--disable-gallium
 
+ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_EGL),y)
+	conf-args += --enable-egl
+else
+	conf-args += --disable-egl
+endif
+ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_ESV1),y)
+	conf-args += --enable-gles1
+else
+	conf-args += --disable-gles1
+endif
+ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_ESV2),y)
+	conf-args += --enable-gles2
+else
+	conf-args += --disable-gles2
+endif
+ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_OGL),y)
+	conf-args += --enable-opengl
+else
+	conf-args += --disable-opengl
+endif
+
 conf-vars += \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
