@@ -1,0 +1,12 @@
+diff --git a/lib/Makefile.am b/lib/Makefile.am
+index 92a916e..1b3e510 100644
+--- a/lib/Makefile.am
++++ b/lib/Makefile.am
+@@ -1,6 +1,6 @@
+ # -*- Makefile -*-
+ 
+-AM_CPPFLAGS  = -Wall -I${top_srcdir}/include -I${top_builddir}/include -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
++AM_CPPFLAGS  = -Wall -I${top_srcdir}/include -I${top_builddir}/include -I${builddir}/route -I${builddir}/route/cls -D_GNU_SOURCE -DSYSCONFDIR=\"$(sysconfdir)/libnl\"
+ 
+ lib_LTLIBRARIES = \
+ 	libnl.la libnl-genl.la libnl-route.la libnl-nf.la
