@@ -18,6 +18,5 @@ source "packages/multimedia/mplayer/Kconfig"
 source "packages/multimedia/ortp/Kconfig"
 source "packages/multimedia/speex/Kconfig"
 source "packages/multimedia/vlc/Kconfig"
-source "packages/multimedia/opengles2/Kconfig"
 
 endmenu
