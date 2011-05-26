@@ -1,0 +1,3 @@
+default-config.patch
+makefile-extra-flags.patch
+install-prefix.patch

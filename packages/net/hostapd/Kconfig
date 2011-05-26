@@ -1,0 +1,8 @@
+config PACKAGE_NET_HOSTAPD
+	bool "hostapd"
+	select PACKAGE_LIBS_LIBNL_1
+	default n
+	help
+	  hostapd is a user space daemon for access point and authentication servers.
+	  It implements IEEE 802.11 access point management, IEEE 802.1X/WPA/WPA2/EAP
+	  Authenticators, RADIUS client, EAP server, and RADIUS authentication server.

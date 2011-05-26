@@ -1,0 +1,37 @@
+From f22e1f67601a7ff5ba456ec9936c871b96e854b9 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Fri, 11 Mar 2011 15:56:40 +0100
+Subject: [PATCH] Add support for install prefix.
+
+---
+ hostapd/Makefile |    7 ++++++-
+ 1 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/hostapd/Makefile b/hostapd/Makefile
+index 833766c..f5a596c 100644
+--- a/hostapd/Makefile
++++ b/hostapd/Makefile
+@@ -2,6 +2,10 @@ ifndef CC
+ CC=gcc
+ endif
+ 
++ifndef PREFIX
++PREFIX = /usr/local
++endif
++
+ ifndef CFLAGS
+ CFLAGS = -MMD -O2 -Wall -g
+ endif
+@@ -736,7 +740,8 @@ verify_config:
+ 	fi
+ 
+ install: all
+-	for i in $(ALL); do cp -f $$i /usr/local/bin/$$i; done
++	mkdir -p $(PREFIX)/bin
++	for i in $(ALL); do cp -f $$i $(PREFIX)/bin/$$i; done
+ 
+ ../src/drivers/build.hostapd:
+ 	@if [ -f ../src/drivers/build.wpa_supplicant ]; then \
+-- 
+1.7.4
+

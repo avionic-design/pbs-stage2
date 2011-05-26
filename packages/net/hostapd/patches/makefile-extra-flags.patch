@@ -1,0 +1,34 @@
+From 514b472c80c683dc5d981df905c1ac2fb2f87896 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Fri, 11 Mar 2011 15:13:43 +0100
+Subject: [PATCH] Add support for extra flags to makefile.
+
+Because we can't not set CFLAGS/LDFLAGS from outside and modifiy them in the
+makefile, we need a another way to do this. So we add our CFLAGS as
+EXTRA_CFLAGS and append them to the internal, we are still be able to update
+the CFLAGS inside.
+---
+ hostapd/Makefile |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+
+diff --git a/hostapd/Makefile b/hostapd/Makefile
+index 6d344d2..833766c 100644
+--- a/hostapd/Makefile
++++ b/hostapd/Makefile
+@@ -704,6 +704,13 @@ ifdef CONFIG_NO_STDOUT_DEBUG
+ CFLAGS += -DCONFIG_NO_STDOUT_DEBUG
+ endif
+ 
++ifdef EXTRA_CFLAGS
++CFLAGS += $(EXTRA_CFLAGS)
++endif
++ifdef EXTRA_LDFLAGS
++LDFLAGS += $(EXTRA_LDFLAGS)
++endif
++
+ ALL=hostapd hostapd_cli
+ 
+ all: verify_config $(ALL)
+-- 
+1.7.4
+
