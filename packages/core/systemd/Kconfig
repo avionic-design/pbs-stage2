@@ -5,3 +5,29 @@ config PACKAGE_CORE_SYSTEMD
 	select PACKAGE_LIBS_LIBCAP
 	select PACKAGE_LIBS_LIBNOTIFY
 	default n
+	help
+	  systemd is a system and service manager for Linux, compatible with SysV and
+	  LSB init scripts. systemd provides aggressive parallelization capabilities,
+	  uses socket and D-Bus activation for starting services, offers on-demand
+	  starting of daemons, keeps track of processes using Linux cgroups, supports
+	  snapshotting and restoring of the system state, maintains mount and
+	  automount points and implements an elaborate transactional dependency-based
+	  service control logic. It can work as a drop-in replacement for sysvinit.
+
+if PACKAGE_CORE_SYSTEMD
+
+	config PACKAGE_CORE_SYSTEMD_SUPPORT_BINFMT
+		bool "Enable BinFmt support"
+		depends on PACKAGE_CORE_SYSTEMD
+		default y
+		help
+		  Enables support for automounting binfmt format handlers.
+
+	config PACKAGE_CORE_SYSTEMD_SUPPORT_GTKTOOL
+		bool "Enable GtkAdminTool"
+		depends on PACKAGE_CORE_SYSTEMD
+		default y
+		help
+		  Enables the grafical administration utility.
+
+endif

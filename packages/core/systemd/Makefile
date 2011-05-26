@@ -20,6 +20,13 @@ conf-args += \
 	--with-distro=pbs \
 	--with-rootdir=
 
+ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_SUPPORT_BINFMT),y)
+conf-args += --disable-binfmt
+endif
+ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_SUPPORT_GTKTOOL),y)
+conf-args += --disable-gtk
+endif
+
 prunefiles = \
 	/lib/systemd/system/multi-user.target.wants/systemd-user-sessions.service \
 	/lib/systemd/system/basic.target.wants/sys-kernel-security.automount \
