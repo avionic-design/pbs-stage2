@@ -120,19 +120,20 @@ If you only want to build i686 toolchains, you could do something like this:
 Packages:
 ---------
 
-Packages in PBS are defined in the packages directory. There are categorized
+Packages in PBS are defined in the packages directory. They are categorized
 by placing them into subdirectories.
 To define a new packages, create a new directory with the name of the new
 package in packages folder.
 In order to build the package we need two files. The first one is a Kconfig
 file. It will define the config variable for the package and is responsible
-for dependence tracking. The second file is the Makefile which defines the
+for dependeny tracking. The second file is the Makefile which defines the
 actual build process.
 To simplify package definition we have several predefined profiles. The most
-common and recommond type of packages is auto-tools.
+common and recommended type of packages is auto-tools based (include
+package/autotools.mk).
 Once you're done with Makefile and Kconfig, you have to update the Kconfig and
 Makefile of the parrent directory. Otherwise the new package is not known.
-Finally you'll need to update one of the checksum files (usualy sha256).
+Finally you'll need to update one of the checksum files (usually sha256).
 
 
 Build Process:
@@ -140,18 +141,18 @@ Build Process:
 
 Each package is build in several steps. Each steps is marked complete with
 stamp files created in the build directory. At the end of the build process
-the following files are exists:
+the following files are exist:
 	.directory
-	.chksum-<pkgname>
+	.chksum-<tarball>
 	.checksum
-	.extract-<pkgname>
+	.extract-<tarball>
 	.extract
 	.setup
 	.patch
 	.configure
 	.build                - Build the package
 	.do-install           - 
-	.prone                - Prone marked files
+	.prune                - Prune marked files
 	.strip                - Strip the marked files
 	.cleanup              - 
 	.binary               - Create binary packages
