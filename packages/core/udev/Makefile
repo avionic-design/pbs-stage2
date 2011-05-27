@@ -1,17 +1,10 @@
 PACKAGE = udev
-VERSION = 168
+VERSION = 171
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
-
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 conf-args = \
 	--build=$(BUILD_GNU_TYPE) \
@@ -24,25 +17,19 @@ conf-args = \
 	--libexecdir=/lib/udev \
 	--sysconfdir=/etc
 
+conf-args += \
+	--with-pci-ids-path=/usr/share/pci.ids.gz \
+	--disable-introspection \
+	--disable-udev_acl
+
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
 	--with-systemdsystemunitdir=/etc/systemd/system
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_UDEV_DISABLE_EXTRAS),y)
-conf-args += \
-	--disable-extras
-else
-conf-args += \
-	--with-pci-ids-path=/usr/share/pci.ids.gz
-endif
-
-conf-args += \
-	--disable-introspection
-
 ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
   conf-args += \
-	--disable-glib
+	--disable-gudev
 endif
 
 prunefiles = \
