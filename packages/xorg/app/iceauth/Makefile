@@ -1,5 +1,5 @@
 PACKAGE = iceauth
-VERSION = 1.0.4
+VERSION = 1.0.5
 
 include packages/xorg/app/common.mk
 
