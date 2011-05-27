@@ -14,20 +14,16 @@ config PACKAGE_CORE_SYSTEMD
 	  automount points and implements an elaborate transactional dependency-based
 	  service control logic. It can work as a drop-in replacement for sysvinit.
 
-if PACKAGE_CORE_SYSTEMD
+config PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT
+	bool "Enable binfmt support"
+	depends on PACKAGE_CORE_SYSTEMD
+	default y
+	help
+	  Enables support for automounting binfmt format handlers.
 
-	config PACKAGE_CORE_SYSTEMD_SUPPORT_BINFMT
-		bool "Enable BinFmt support"
-		depends on PACKAGE_CORE_SYSTEMD
-		default y
-		help
-		  Enables support for automounting binfmt format handlers.
-
-	config PACKAGE_CORE_SYSTEMD_SUPPORT_GTKTOOL
-		bool "Enable GtkAdminTool"
-		depends on PACKAGE_CORE_SYSTEMD
-		default y
-		help
-		  Enables the grafical administration utility.
-
-endif
+config PACKAGE_CORE_SYSTEMD_ENABLE_GTK
+	bool "Enable GtkAdminTool"
+	depends on PACKAGE_CORE_SYSTEMD
+	default y
+	help
+	  Enables the grafical administration utility.

@@ -13,10 +13,10 @@ conf-args += \
 	--with-distro=pbs \
 	--with-rootdir=
 
-ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_SUPPORT_BINFMT),y)
+ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
 conf-args += --disable-binfmt
 endif
-ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_SUPPORT_GTKTOOL),y)
+ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_GTK),y)
 conf-args += --disable-gtk
 endif
 
