@@ -2,7 +2,7 @@ diff --git a/awesome.c b/awesome.c
 index 10a1cbb..dd97290 100644
 --- a/awesome.c
 +++ b/awesome.c
-@@ -153,7 +153,7 @@ scan(void)
+@@ -154,7 +154,7 @@ scan(void)
  
              if(!attr_r || attr_r->override_redirect
                 || attr_r->map_state == XCB_MAP_STATE_UNMAPPED
@@ -141,7 +141,7 @@ index 6af6253..d66a687 100644
  
      /* set client as invalid */
      c->invalid = true;
-@@ -2033,9 +2033,9 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2052,9 +2052,9 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
  
      lua_createtable(L, 0, 1);
  
@@ -153,7 +153,7 @@ index 6af6253..d66a687 100644
          u_or_p = "program_position";
  
      if(u_or_p)
-@@ -2049,9 +2049,9 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2068,9 +2068,9 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          u_or_p = NULL;
      }
  
@@ -165,7 +165,7 @@ index 6af6253..d66a687 100644
          u_or_p = "program_size";
  
      if(u_or_p)
-@@ -2064,7 +2064,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2083,7 +2083,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, u_or_p);
      }
  
@@ -174,7 +174,7 @@ index 6af6253..d66a687 100644
      {
          lua_pushnumber(L, c->size_hints.min_width);
          lua_setfield(L, -2, "min_width");
-@@ -2072,7 +2072,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2091,7 +2091,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, "min_height");
      }
  
@@ -183,7 +183,7 @@ index 6af6253..d66a687 100644
      {
          lua_pushnumber(L, c->size_hints.max_width);
          lua_setfield(L, -2, "max_width");
-@@ -2080,7 +2080,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2099,7 +2099,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, "max_height");
      }
  
@@ -192,7 +192,7 @@ index 6af6253..d66a687 100644
      {
          lua_pushnumber(L, c->size_hints.width_inc);
          lua_setfield(L, -2, "width_inc");
-@@ -2088,7 +2088,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2107,7 +2107,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, "height_inc");
      }
  
@@ -201,7 +201,7 @@ index 6af6253..d66a687 100644
      {
          lua_pushnumber(L, c->size_hints.min_aspect_num);
          lua_setfield(L, -2, "min_aspect_num");
-@@ -2100,7 +2100,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2119,7 +2119,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, "max_aspect_den");
      }
  
@@ -210,7 +210,7 @@ index 6af6253..d66a687 100644
      {
          lua_pushnumber(L, c->size_hints.base_width);
          lua_setfield(L, -2, "base_width");
-@@ -2108,7 +2108,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
+@@ -2127,7 +2127,7 @@ luaA_client_get_size_hints(lua_State *L, client_t *c)
          lua_setfield(L, -2, "base_height");
      }
  

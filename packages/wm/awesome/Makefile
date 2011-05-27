@@ -1,5 +1,5 @@
 PACKAGE = awesome
-VERSION = 3.4.9
+VERSION = 3.4.10
 
 LOCATION = http://$(PACKAGE).naquadah.org/download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
