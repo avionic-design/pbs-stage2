@@ -8,8 +8,11 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-unicode-backend=glib \
-	--disable-spellcheck \
-	--disable-video
+	--disable-spellcheck
+
+ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO),y)
+conf-args += --disable-video
+endif
 
 prunefiles = \
 	$(prefix)/lib/*.la

@@ -8,3 +8,11 @@ config PACKAGE_WEB_WEBKIT_GTK
 	select PACKAGE_LIBS_SQLITE
 	select PACKAGE_XORG_LIB_XT
 	default n
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO
+	bool "Enable html5 video support"
+	depends on PACKAGE_WEB_WEBKIT_GTK
+	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+	default n
+	help
+	  Enables support for HTML5 video tag.
