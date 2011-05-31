@@ -17,7 +17,7 @@ ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
 else
 conf-args += \
-	--with-sdl-prefix=$(SYSROOT)/usr
+	--with-sdl-prefix=$(SYSROOT)$(prefix)
 endif
 
 plugin = $(prefix)/lib/gstreamer-0.10
