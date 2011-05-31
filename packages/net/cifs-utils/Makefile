@@ -17,4 +17,4 @@ else
 endif
 
 stripfiles = \
-	$(prefix)/sbin/mount.cifs
+	/sbin/mount.cifs
