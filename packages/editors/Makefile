@@ -1,1 +1,2 @@
+obj-$(CONFIG_PACKAGE_EDITORS_NANO) += nano
 obj-$(CONFIG_PACKAGE_EDITORS_VIM) += vim

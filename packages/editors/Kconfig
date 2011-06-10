@@ -1,5 +1,6 @@
 menu "Editors"
 
+source "packages/editors/nano/Kconfig"
 source "packages/editors/vim/Kconfig"
 
 endmenu
