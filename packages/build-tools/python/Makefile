@@ -1,5 +1,5 @@
 PACKAGE = Python
-VERSION = 2.7.1
+VERSION = 2.7.2
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
