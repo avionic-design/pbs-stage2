@@ -6,3 +6,6 @@ $(pkgtree)/.autoreconfigure:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
