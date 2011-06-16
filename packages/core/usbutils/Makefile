@@ -1,5 +1,5 @@
 PACKAGE = usbutils
-VERSION = 002
+VERSION = 003
 
 LOCATION = http://www.kernel.org/pub/linux/utils/usb/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

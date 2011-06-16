@@ -1,4 +1,4 @@
 config PACKAGE_CORE_USBUTILS
 	bool "usbutils"
-	select PACKAGE_LIBS_LIBUSB_COMPAT
+	select PACKAGE_LIBS_LIBUSB
 	default n
