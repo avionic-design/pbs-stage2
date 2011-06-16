@@ -1,6 +1,9 @@
 include packages/libs/dbus-glib/Makefile.location
 include packages/autotools.mk
 
+conf-args += \
+	--with-sysroot=$(SYSROOT)
+
 conf-vars += \
 	ac_cv_func_posix_getpwnam_r=yes \
 	ac_cv_have_abstract_sockets=yes
