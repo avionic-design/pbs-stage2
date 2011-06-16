@@ -1,5 +1,5 @@
 PACKAGE = less
-VERSION = 418
+VERSION = 443
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
