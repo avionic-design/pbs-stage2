@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.1.9
+VERSION = 1.1.10
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--enable-run-as-root \
+	--disable-rpath \
 	--disable-a52 \
 	--disable-dvdnav \
 	--disable-libgcrypt \
@@ -15,7 +17,9 @@ conf-args += \
 	--disable-notify \
 	--disable-qt4 \
 	--disable-remoteosd \
-	--disable-skins2
+	--disable-skins2 \
+	--disable-neon \
+	--disable-glx
 
 plugin = $(prefix)/lib/vlc/plugins
 

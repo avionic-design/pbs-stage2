@@ -2,7 +2,7 @@ diff --git a/modules/access/v4l2.c b/modules/access/v4l2.c
 index d1aafc0..86064dd 100644
 --- a/modules/access/v4l2.c
 +++ b/modules/access/v4l2.c
-@@ -708,6 +708,8 @@ static int DemuxOpen( vlc_object_t *p_this )
+@@ -709,6 +709,8 @@ static int DemuxOpen( vlc_object_t *p_this )
   *****************************************************************************/
  static void GetV4L2Params( demux_sys_t *p_sys, vlc_object_t *p_obj )
  {
