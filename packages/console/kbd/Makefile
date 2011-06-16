@@ -12,6 +12,7 @@ stripfiles = \
 	$(prefix)/bin/dumpkeys \
 	$(prefix)/bin/fgconsole \
 	$(prefix)/bin/getkeycodes \
+	$(prefix)/bin/kbdinfo \
 	$(prefix)/bin/kbd_mode \
 	$(prefix)/bin/kbdrate \
 	$(prefix)/bin/loadkeys \
@@ -24,5 +25,6 @@ stripfiles = \
 	$(prefix)/bin/setkeycodes \
 	$(prefix)/bin/setleds \
 	$(prefix)/bin/setmetamode \
+	$(prefix)/bin/setvtrgb \
 	$(prefix)/bin/showconsolefont \
 	$(prefix)/bin/showkey
