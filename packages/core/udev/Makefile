@@ -6,21 +6,18 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-conf-args = \
-	--build=$(BUILD_GNU_TYPE) \
-	--host=$(HOST_GNU_TYPE) \
+conf-args += \
 	--prefix= \
 	--sbindir=/sbin \
 	--includedir=$(prefix)/include \
 	--datarootdir=$(prefix)/share \
 	--libdir=$(prefix)/lib \
 	--libexecdir=/lib/udev \
-	--sysconfdir=/etc
-
-conf-args += \
-	--with-pci-ids-path=/usr/share/pci.ids.gz \
+	--with-pci-ids-path=$(prefix)/share/pci.ids.gz \
+	--with-sysroot=$(SYSROOT) \
 	--disable-introspection \
-	--disable-udev_acl
+	--disable-udev_acl \
+	--disable-rpath
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
