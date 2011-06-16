@@ -1,10 +1,10 @@
 PACKAGE = net-snmp
-VERSION = 5.6.1
+VERSION = 5.6.1.1
 
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)/$(VERSION)
+LOCATION = http://downloads.sourceforge.net/project/$(PACKAGE)/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--enable-reentrant \
