@@ -1,5 +1,5 @@
 PACKAGE = psmisc
-VERSION = 22.10
+VERSION = 22.13
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
