@@ -11,17 +11,13 @@ diff --git a/Makefile.am b/Makefile.am
 index 54b6815..dbfdbdc 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -53,6 +53,16 @@ CLEANFILES = \
+@@ -53,6 +53,12 @@ CLEANFILES = \
  %.service: %.service.in
  	$(AM_V_GEN)sed -e 's,@sbindir\@,$(sbindir),g' $< > $@
  
 +install-data-hook:
 +	$(MKDIR_P) -m 0755 \
-+		$(DESTDIR)$(systemdsystemunitdir)/sockets.target.wants \
 +		$(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants
-+	( cd $(DESTDIR)$(systemdsystemunitdir)/sockets.target.wants && \
-+		rm -f rsyslog.socket && \
-+		$(LN_S) ../rsyslog.socket rsyslog.socket )
 +	( cd $(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants && \
 +		rm -f rsyslog.service && \
 +		$(LN_S) ../rsyslog.service rsyslog.service )

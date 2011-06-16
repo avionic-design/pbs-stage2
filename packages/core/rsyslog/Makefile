@@ -1,5 +1,5 @@
 PACKAGE = rsyslog
-VERSION = 5.8.0
+VERSION = 5.8.1
 
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
