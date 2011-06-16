@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_LIBDRM
 	bool "libdrm"
+	select PACKAGE_XORG_LIB_PCIACCESS
 	select PACKAGE_XORG_LIB_PTHREAD_STUBS
 	default n
