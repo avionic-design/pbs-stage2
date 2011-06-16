@@ -2,7 +2,8 @@ include packages/libs/dbus/Makefile.location
 include packages/autotools.mk
 
 conf-args += \
-	--libexec=$(prefix)/lib/dbus-1.0
+	--libexec=$(prefix)/lib/dbus-1.0 \
+	--with-root=$(SYSROOT)
 
 ifeq ($(CONFIG_PACKAGE_LIBS_DBUS_X11),y)
   conf-args += --with-x
