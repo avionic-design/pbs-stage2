@@ -55,7 +55,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args += \
-	DESTDIR=$(DESTDIR)
+	DESTDIR=$(DESTDIR) \
+	STRIP=$(STRIP)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
