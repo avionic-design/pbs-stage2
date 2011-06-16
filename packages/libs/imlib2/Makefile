@@ -13,6 +13,9 @@ $(pkgtree)/.autoreconfigure:
 
 $(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
+conf-args += \
+	--with-sysroot=$(SYSROOT)
+
 plugin = $(prefix)/lib/imlib2
 
 prunefiles = \
