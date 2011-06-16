@@ -1,0 +1,529 @@
+diff --git a/Makefile.in b/Makefile.in
+index 90a78db..ad9e629 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -448,8 +448,8 @@ allnoconfig: $(top_builddir)extra/config/conf
+ 	$(Q)$(top_builddir)extra/config/conf -n extra/Configs/Config.in
+ 
+ defconfig: $(top_builddir)extra/config/conf
+-	$(Q)$(top_builddir)extra/config/conf -d extra/Configs/Config.in \
+-		-D extra/Configs/defconfigs/$(ARCH)
++	$(Q)$(top_builddir)extra/config/conf \
++		-D extra/Configs/defconfigs/$(ARCH) extra/Configs/Config.in
+ 
+ menuconfig-clean-y:
+ 	$(Q)$(MAKE) -C extra/config CLEAN_extra/config
+diff --git a/Rules.mak b/Rules.mak
+index fe06c24..4e4baf9 100644
+--- a/Rules.mak
++++ b/Rules.mak
+@@ -335,25 +335,7 @@ endif
+ ifeq ($(TARGET_ARCH),arm)
+ 	CPU_CFLAGS-$(ARCH_LITTLE_ENDIAN)+=-mlittle-endian
+ 	CPU_CFLAGS-$(ARCH_BIG_ENDIAN)+=-mbig-endian
+-	CPU_CFLAGS-$(CONFIG_GENERIC_ARM)+=
+-	CPU_CFLAGS-$(CONFIG_ARM610)+=-mtune=arm610 -march=armv3
+-	CPU_CFLAGS-$(CONFIG_ARM710)+=-mtune=arm710 -march=armv3
+-	CPU_CFLAGS-$(CONFIG_ARM7TDMI)+=-mtune=arm7tdmi -march=armv4t
+-	CPU_CFLAGS-$(CONFIG_ARM720T)+=-mtune=arm7tdmi -march=armv4t
+-	CPU_CFLAGS-$(CONFIG_ARM920T)+=-mtune=arm9tdmi -march=armv4t
+-	CPU_CFLAGS-$(CONFIG_ARM922T)+=-mtune=arm9tdmi -march=armv4t
+-	CPU_CFLAGS-$(CONFIG_ARM926T)+=-mtune=arm9e -march=armv5te
+-	CPU_CFLAGS-$(CONFIG_ARM10T)+=-mtune=arm10tdmi -march=armv5t
+-	CPU_CFLAGS-$(CONFIG_ARM1136JF_S)+=-mtune=arm1136jf-s -march=armv6
+-	CPU_CFLAGS-$(CONFIG_ARM1176JZ_S)+=-mtune=arm1176jz-s -march=armv6
+-	CPU_CFLAGS-$(CONFIG_ARM1176JZF_S)+=-mtune=arm1176jzf-s -march=armv6
+-	CPU_CFLAGS-$(CONFIG_ARM_SA110)+=-mtune=strongarm110 -march=armv4
+-	CPU_CFLAGS-$(CONFIG_ARM_SA1100)+=-mtune=strongarm1100 -march=armv4
+-	CPU_CFLAGS-$(CONFIG_ARM_XSCALE)+=$(call check_gcc,-mtune=xscale,-mtune=strongarm110)
+-	CPU_CFLAGS-$(CONFIG_ARM_XSCALE)+=-march=armv5te -Wa,-mcpu=xscale
+- 	CPU_CFLAGS-$(CONFIG_ARM_IWMMXT)+=-march=iwmmxt -Wa,-mcpu=iwmmxt -mabi=iwmmxt
+- 	CPU_CFLAGS-$(CONFIG_ARM_CORTEX_M3)+=-mcpu=cortex-m3 -mthumb
+- 	CPU_CFLAGS-$(CONFIG_ARM_CORTEX_M1)+=-mcpu=cortex-m1 -mthumb
++	CPU_CFLAGS-$(COMPILE_IN_THUMB_MODE)+=-mthumb
+ endif
+ 
+ ifeq ($(TARGET_ARCH),mips)
+@@ -585,9 +567,6 @@ CFLAGS := -include $(top_srcdir)include/libc-symbols.h \
+ 	-nostdinc -I$(top_builddir)include -I$(top_srcdir)include -I. \
+ 	-I$(top_srcdir)libc/sysdeps/linux \
+ 	-I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH)
+-ifneq ($(strip $(UCLIBC_EXTRA_CFLAGS)),"")
+-CFLAGS += $(call qstrip,$(UCLIBC_EXTRA_CFLAGS))
+-endif
+ 
+ # We need this to be checked within libc-symbols.h
+ ifneq ($(HAVE_SHARED),y)
+@@ -633,6 +612,9 @@ LDFLAGS += -Wl,-s
+ else
+ STRIPTOOL := true -Stripping_disabled
+ endif
++ifneq ($(strip $(UCLIBC_EXTRA_CFLAGS)),"")
++CFLAGS += $(call qstrip,$(UCLIBC_EXTRA_CFLAGS))
++endif
+ 
+ ifeq ($(DOMULTI),y)
+ # we try to compile all sources at once into an object (IMA), but
+diff --git a/extra/Configs/Config.arm b/extra/Configs/Config.arm
+index eb27a33..0bb2971 100644
+--- a/extra/Configs/Config.arm
++++ b/extra/Configs/Config.arm
+@@ -12,122 +12,27 @@ config FORCE_OPTIONS_FOR_ARCH
+ 	default y
+ 	select ARCH_ANY_ENDIAN
+ 
+-choice
+-	prompt "Target ABI"
+-	default CONFIG_ARM_EABI
++config CONFIG_ARM_EABI
++	bool "Build for EABI"
+ 	help
+-	  If you choose "EABI" here, functions and constants required by the
+-	  ARM EABI will be built into the library.  You should choose "EABI"
++	  If you say 'y' here, functions and constants required by the
++	  ARM EABI will be built into the library.  You should say 'y'
+ 	  if your compiler uses the ARM EABI, in which case you will also
+-	  need a kernel supporting the EABI system call interface, or "OABI"
+-	  for a compiler using the old Linux ABI.
+-
+-config CONFIG_ARM_OABI
+-	bool "OABI"
++	  need a kernel supporting the EABI system call interface.
+ 
+-config CONFIG_ARM_EABI
+-	bool "EABI"
++	  If you say 'n' here, then the library will be built for the
++	  old Linux ABI.
+ 
+-endchoice
++config COMPILE_IN_THUMB_MODE
++	bool "Build using Thumb mode"
++	select USE_BX
++	help
++	  Say 'y' here to force building uClibc in thumb mode.
++	  Say 'n' to use your compiler's default mode.
+ 
+ config USE_BX
+ 	bool "Use BX in function return"
+-	default y
+-	depends on !CONFIG_GENERIC_ARM && !CONFIG_ARM610 && !CONFIG_ARM710
+-	help
+-	  Use BX instruction for THUMB aware architectures.
+-
+-choice
+-	prompt "Target Processor Type"
+-	default CONFIG_GENERIC_ARM
+ 	help
+-	  This is the processor type of your CPU. This information is used for
+-	  optimizing purposes.  To build a library that will run on all ARMCPU
+-	  types (albeit not optimally fast), you can specify "Generic Arm" here.
+-	  If you pick anything other than "Generic Arm", there is no guarantee 
+-	  that uClibc will even run on anything other than the selected
+-	  processor type.
+-
+-	  Here are the settings recommended for greatest speed:
+-	  - "Generic Arm" select this if your compiler is already setup to
+-	    optimize things properly, or if you want to run on pretty much
+-	    everything, or you just don't much care.
+-	  - For anything else, pick the ARM core type that best matches the
+-	    cpu you will be using on your device.
+-
+-	  If you don't know what to do, choose "Generic Arm".
+-
+-config CONFIG_GENERIC_ARM
+-	bool "Generic Arm"
+-
+-config CONFIG_ARM610
+-	bool "Arm 610"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM710
+-	bool "Arm 710"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM7TDMI
+-	bool "Arm 7TDMI"
+-	select ARCH_HAS_NO_MMU
+-
+-config CONFIG_ARM720T
+-	bool "Arm 720T"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM920T
+-	bool "Arm 920T"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM922T
+-	bool "Arm 922T"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM926T
+-	bool "Arm 926T"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM10T
+-	bool "Arm 10T"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM1136JF_S
+-	bool "Arm 1136JF-S"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM1176JZ_S
+-	bool "Arm 1176JZ-S"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM1176JZF_S
+-	bool "Arm 1176JZF-S"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM_CORTEX_M3
+-	bool "Arm Cortex-M3"
+-	select ARCH_HAS_NO_MMU
+-	select USE_BX
+-
+-config CONFIG_ARM_CORTEX_M1
+-	bool "Arm Cortex-M1"
+-	select ARCH_HAS_NO_MMU
+-	select USE_BX
+-
+-config CONFIG_ARM_SA110
+-	bool "Intel StrongArm SA-110"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM_SA1100
+-	bool "Intel StrongArm SA-1100"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM_XSCALE
+-	bool "Intel Xscale"
+-	select ARCH_HAS_MMU
+-
+-config CONFIG_ARM_IWMMXT
+-	bool "Intel Xscale With WMMX PXA27x"
+-	select ARCH_HAS_MMU
+-
+-endchoice
++	  Say 'y' to use BX to return from functions on your thumb-aware
++	  processor. Say 'y' if you need to use interworking. Say 'n' if not.
++	  It is safe to say 'y' even if you're not doing interworking.
+diff --git a/ldso/ldso/arm/dl-startup.h b/ldso/ldso/arm/dl-startup.h
+index a95389d..2dfdaff 100644
+--- a/ldso/ldso/arm/dl-startup.h
++++ b/ldso/ldso/arm/dl-startup.h
+@@ -7,6 +7,7 @@
+  */
+ 
+ #include <features.h>
++#include <bits/arm_asm.h>
+ 
+ #if !defined(__thumb__)
+ __asm__(
+diff --git a/ldso/libdl/libdl.c b/ldso/libdl/libdl.c
+index 52c77b0..f59889c 100644
+--- a/ldso/libdl/libdl.c
++++ b/ldso/libdl/libdl.c
+@@ -667,7 +667,7 @@ void *dlsym(void *vhandle, const char *name)
+ 	tpnt = NULL;
+ 	if (handle == _dl_symbol_tables)
+ 		tpnt = handle->dyn; /* Only search RTLD_GLOBAL objs if global object */
+-	ret = _dl_find_hash(name2, handle, tpnt, 0, &sym_ref);
++	ret = _dl_find_hash(name2, handle, tpnt, ELF_RTYPE_CLASS_DLSYM, &sym_ref);
+ 
+ #if defined(USE_TLS) && USE_TLS && defined SHARED
+ 	if (sym_ref.tpnt) {
+diff --git a/libc/inet/getaddrinfo.c b/libc/inet/getaddrinfo.c
+index 1a77c51..e7511f6 100644
+--- a/libc/inet/getaddrinfo.c
++++ b/libc/inet/getaddrinfo.c
+@@ -820,13 +820,6 @@ getaddrinfo(const char *name, const char *service,
+ 			if (hints->ai_flags & AI_NUMERICSERV)
+ 				return EAI_NONAME;
+ 			gaih_service.num = -1;
+-		} else {
+-			/*
+-			 * Can't specify a numerical socket unless a protocol
+-			 * family was given.
+-			 */
+-			if (hints->ai_socktype == 0 && hints->ai_protocol == 0)
+-				return EAI_SERVICE;
+ 		}
+ 		pservice = &gaih_service;
+ 	} else
+diff --git a/libc/inet/resolv.c b/libc/inet/resolv.c
+index 021d5bf..e8b7f2b 100644
+--- a/libc/inet/resolv.c
++++ b/libc/inet/resolv.c
+@@ -1461,7 +1461,7 @@ int attribute_hidden __dns_lookup(const char *name,
+ 		/* bug 660 says we treat negative response as an error
+ 		 * and retry, which is, eh, an error. :)
+ 		 * We were incurring long delays because of this. */
+-		if (h.rcode == NXDOMAIN) {
++		if (h.rcode == NXDOMAIN || h.rcode == SERVFAIL) {
+ 			/* if possible, try next search domain */
+ 			if (!ends_with_dot) {
+ 				DPRINTF("variant:%d sdomains:%d\n", variant, sdomains);
+diff --git a/libc/sysdeps/linux/arm/Makefile.arch b/libc/sysdeps/linux/arm/Makefile.arch
+index b53c539..14279e0 100644
+--- a/libc/sysdeps/linux/arm/Makefile.arch
++++ b/libc/sysdeps/linux/arm/Makefile.arch
+@@ -24,7 +24,12 @@ ifeq ($(UCLIBC_HAS_ADVANCED_REALTIME),y)
+ CSRC += posix_fadvise.c posix_fadvise64.c
+ endif
+ 
+-ifeq ($(CONFIG_ARM_EABI),y)
++# Is our compiler set up for EABI ?
++IS_EABI:=$(shell $(CC) $(CFLAGS) -x c - -E -dM </dev/null 2>/dev/null \
++                 |sed -r -e '/^\#[[:space:]]*define[[:space:]]+__ARM_EABI__([[:space:]]+1)?$$/!d; s/.+/y/;' \
++          )
++
++ifeq ($(IS_EABI),y)
+ CSRC += aeabi_assert.c aeabi_atexit.c aeabi_errno_addr.c \
+ 	aeabi_localeconv.c aeabi_memclr.c aeabi_memcpy.c \
+ 	aeabi_memmove.c aeabi_memset.c find_exidx.c
+@@ -37,7 +42,7 @@ else
+ CSRC += syscall.c
+ endif
+ 
+-ifeq ($(CONFIG_ARM_EABI),y)
++ifeq ($(IS_EABI),y)
+ libc-static-y += $(ARCH_OUT)/aeabi_lcsts.o $(ARCH_OUT)/aeabi_math.o \
+ 	$(ARCH_OUT)/aeabi_sighandlers.o
+ libc-nonshared-y += $(ARCH_OUT)/aeabi_lcsts.os $(ARCH_OUT)/aeabi_math.os \
+diff --git a/libc/sysdeps/linux/arm/bits/arm_asm.h b/libc/sysdeps/linux/arm/bits/arm_asm.h
+index 1d87df6..921c9a3 100644
+--- a/libc/sysdeps/linux/arm/bits/arm_asm.h
++++ b/libc/sysdeps/linux/arm/bits/arm_asm.h
+@@ -24,5 +24,12 @@
+ #define THUMB1_ONLY 1
+ #endif
+ 
+-#endif /* _ARM_ASM_H */
++#if defined(__USE_BX__)
++# if (   defined (__ARM_ARCH_2__)  || defined (__ARM_ARCH_3__) \
++      || defined (__ARM_ARCH_3M__) || defined (__ARM_ARCH_4__) \
++     )
++#  error Use of BX was requested, but is not available on the target processor.
++# endif /* ARCH level */
++#endif /* __USE_BX__ */
+ 
++#endif /* _ARM_ASM_H */
+diff --git a/libc/sysdeps/linux/arm/bits/huge_val.h b/libc/sysdeps/linux/arm/bits/huge_val.h
+index a215f3c..745e0bb 100644
+--- a/libc/sysdeps/linux/arm/bits/huge_val.h
++++ b/libc/sysdeps/linux/arm/bits/huge_val.h
+@@ -32,7 +32,7 @@
+ # define HUGE_VAL (__extension__ 0x1.0p2047)
+ #elif defined __GNUC__
+ 
+-#ifndef __CONFIG_ARM_EABI__
++#ifndef __ARM_EABI__
+ # define HUGE_VAL \
+   (__extension__							      \
+    ((union { unsigned __l __attribute__((__mode__(__DI__))); double __d; })   \
+@@ -50,7 +50,7 @@
+ 
+ typedef union { unsigned char __c[8]; double __d; } __huge_val_t;
+ 
+-#ifndef __CONFIG_ARM_EABI__
++#ifndef __ARM_EABI__
+ # if __BYTE_ORDER == __BIG_ENDIAN
+ #  define __HUGE_VAL_bytes	{ 0, 0, 0, 0, 0x7f, 0xf0, 0, 0 }
+ # endif
+diff --git a/libc/sysdeps/linux/arm/sysdep.h b/libc/sysdeps/linux/arm/sysdep.h
+index 013f88c..e498695 100644
+--- a/libc/sysdeps/linux/arm/sysdep.h
++++ b/libc/sysdeps/linux/arm/sysdep.h
+@@ -21,6 +21,7 @@
+ #define _LINUX_ARM_SYSDEP_H 1
+ 
+ #include <common/sysdep.h>
++#include <bits/arm_asm.h>
+ 
+ #include <sys/syscall.h>
+ /* For Linux we can use the system call table in the header file
+diff --git a/libc/sysdeps/linux/common/epoll.c b/libc/sysdeps/linux/common/epoll.c
+index 85b0cfd..ab3e73b 100644
+--- a/libc/sysdeps/linux/common/epoll.c
++++ b/libc/sysdeps/linux/common/epoll.c
+@@ -67,12 +67,13 @@ extern __typeof(epoll_pwait) __libc_epoll_pwait;
+ int __libc_epoll_pwait(int epfd, struct epoll_event *events, int maxevents,
+ 						int timeout, const sigset_t *set)
+ {
++    int nsig = _NSIG / 8;
+ 	if (SINGLE_THREAD_P)
+-		return INLINE_SYSCALL(epoll_pwait, 6, epfd, events, maxevents, timeout, set, _NSIG / 8);
++		return INLINE_SYSCALL(epoll_pwait, 6, epfd, events, maxevents, timeout, set, nsig);
+ # ifdef __UCLIBC_HAS_THREADS_NATIVE__
+ 	else {
+ 		int oldtype = LIBC_CANCEL_ASYNC ();
+-		int result = INLINE_SYSCALL(epoll_pwait, 6, epfd, events, maxevents, timeout, set, _NSIG / 8);
++		int result = INLINE_SYSCALL(epoll_pwait, 6, epfd, events, maxevents, timeout, set, nsig);
+ 		LIBC_CANCEL_RESET (oldtype);
+ 		return result;
+ 	}
+diff --git a/libc/sysdeps/linux/mips/crtn.S b/libc/sysdeps/linux/mips/crtn.S
+index cedd593..f3756a2 100644
+--- a/libc/sysdeps/linux/mips/crtn.S
++++ b/libc/sysdeps/linux/mips/crtn.S
+@@ -10,7 +10,6 @@
+ #NO_APP
+ 	.align	2
+ 	.globl	_init
+-	.ent	_init
+ 	.type	_init, @function
+ #NO_APP
+ 	lw	$31,28($sp)
+@@ -22,14 +21,12 @@
+ 	.set	macro
+ 	.set	reorder
+ 
+-	.end	_init
+ #APP
+ 	
+ 	.section .fini
+ #NO_APP
+ 	.align	2
+ 	.globl	_fini
+-	.ent	_fini
+ 	.type	_fini, @function
+ #NO_APP
+ 	lw	$31,28($sp)
+@@ -41,7 +38,6 @@
+ 	.set	macro
+ 	.set	reorder
+ 
+-	.end	_fini
+ #APP
+ 	
+ 	.ident	"GCC: (GNU) 3.3.2"
+@@ -54,10 +50,8 @@
+ 	
+ 	.section .init
+ #NO_APP
+-	.align	2
+ 	.align	3
+ 	.globl	_init
+-	.ent	_init
+ 	.type	_init, @function
+ #NO_APP
+ 	ld	$31,8($sp)
+@@ -68,16 +62,12 @@
+ 	addiu	$sp,$sp,16
+ 	.set	macro
+ 	.set	reorder
+-
+-	.end	_init
+ #APP
+ 	
+ 	.section .fini
+ #NO_APP
+-	.align	2
+ 	.align	3
+ 	.globl	_fini
+-	.ent	_fini
+ 	.type	_fini, @function
+ #NO_APP
+ 	ld	$31,8($sp)
+@@ -89,7 +79,6 @@
+ 	.set	macro
+ 	.set	reorder
+ 
+-	.end	_fini
+ #APP
+ 	
+ 	.ident	"GCC: (GNU) 3.4.3"
+@@ -105,7 +94,6 @@
+ #NO_APP
+ 	.align	2
+ 	.globl	_init
+-	.ent	_init
+ 	.type	_init, @function
+ #NO_APP
+ 	ld	$31,24($sp)
+@@ -118,14 +106,12 @@
+ 	.set	macro
+ 	.set	reorder
+ 
+-	.end	_init
+ #APP
+ 	
+ 	.section .fini
+ #NO_APP
+ 	.align	2
+ 	.globl	_fini
+-	.ent	_fini
+ 	.type	_fini, @function
+ #NO_APP
+ 	ld	$31,24($sp)
+@@ -138,7 +124,6 @@
+ 	.set	macro
+ 	.set	reorder
+ 
+-	.end	_fini
+ #APP
+ 	
+ 	.ident	"GCC: (GNU) 3.3.2"
+diff --git a/libpthread/nptl/Makefile.in b/libpthread/nptl/Makefile.in
+index 70616a1..849bd59 100644
+--- a/libpthread/nptl/Makefile.in
++++ b/libpthread/nptl/Makefile.in
+@@ -64,8 +64,8 @@ endif
+ librt-so-y += $(librt_OBJS:.o=.oS) $(librt-pt-shared-only-routines-y:.o=.oS)
+ 
+ ifeq ($(UCLIBC_CTOR_DTOR),y)
+-START_FILE-libpthread.so := $(top_builddir)/libpthread/nptl/sysdeps/pthread/crti.o
+-END_FILE-libpthread.so := $(top_builddir)/libpthread/nptl/sysdeps/pthread/crtn.o
++START_FILE-libpthread.so := $(top_builddir)libpthread/nptl/sysdeps/pthread/pt-crti.o
++END_FILE-libpthread.so := $(top_builddir)libpthread/nptl/sysdeps/pthread/pt-crtn.o
+ LDFLAGS-libpthread.so += -nostartfiles
+ $(top_builddir)lib/libpthread.so: | $(START_FILE-libpthread.so) $(END_FILE-libpthread.so)
+ endif
+diff --git a/libpthread/nptl/sysdeps/pthread/Makefile.in b/libpthread/nptl/sysdeps/pthread/Makefile.in
+index d93b3a5..be5c022 100644
+--- a/libpthread/nptl/sysdeps/pthread/Makefile.in
++++ b/libpthread/nptl/sysdeps/pthread/Makefile.in
+@@ -73,23 +73,37 @@ CFLAGS-pt-initfini.c = -S -g0 $(PICFLAG) -fno-inline-functions	\
+ 			-finhibit-size-directive			\
+ 			-fno-asynchronous-unwind-tables -fno-unwind-tables \
+ 			$(patsubst -f%,-fno-%,$(call check_gcc,-fexceptions,))
+-ASFLAGS-crti.S = -g0
+-ASFLAGS-crtn.S = -g0
+ 
+-$(libpthread_pthread_OUT)/pt-initfini.s: $(libpthread_pthread_DIR)/pt-initfini.c
++#ASFLAGS += $(PICFLAG) -I$(top_srcdir)include -I$(top_srcdir)libc/sysdeps/linux/$(TARGET_ARCH)
++ifneq ($(wildcard $(libpthread_pthread_DIR)/../unix/sysv/linux/$(TARGET_ARCH)/pt-initfini.c),)
++PTHREAD_INITFINI := $(libpthread_pthread_DIR)/../unix/sysv/linux/$(TARGET_ARCH)/pt-initfini.c
++else
++PTHREAD_INITFINI := $(libpthread_pthread_DIR)/pt-initfini.c
++endif
++
++ASFLAGS-pt-crti.S =  $(PICFLAG)
++ASFLAGS-pt-crtn.S =  $(PICFLAG)
++
++$(libpthread_pthread_OUT)/pt-crti.o: $(libpthread_pthread_OUT)/pt-crti.S
++	$(compile.S)
++
++$(libpthread_pthread_OUT)/pt-crtn.o: $(libpthread_pthread_OUT)/pt-crtn.S
++	$(compile.S)
++
++$(libpthread_pthread_OUT)/pt-initfini.s: $(PTHREAD_INITFINI) | $(top_builddir)include/bits/uClibc_config.h
+ 	$(compile.c)
+-$(libpthread_pthread_OUT)/defs.h: $(libpthread_pthread_DIR)/pt-initfini.c
++$(libpthread_pthread_OUT)/defs.h: $(PTHREAD_INITFINI)
+ 	$(do_sed) -n -e '/@TESTS_BEGIN/,/@TESTS_END/p' $< | \
+ 		$(AWK) -f $(top_srcdir)extra/scripts/defs.awk > $@.tmp
+ 	$(Q)mv $@.tmp $@
+ 
+-$(libpthread_pthread_OUT)/crti.S: $(libpthread_pthread_OUT)/pt-initfini.s $(libpthread_pthread_OUT)/defs.h
++$(libpthread_pthread_OUT)/pt-crti.S: $(libpthread_pthread_OUT)/pt-initfini.s $(libpthread_pthread_OUT)/defs.h
+ 	$(do_sed) -n -e '/[ 	]*\.file/d' \
+ 		-e '1,/@HEADER_ENDS/p' \
+ 		-e '/@_.*_PROLOG_BEGINS/,/@_.*_PROLOG_ENDS/p' \
+ 		-e '/@TRAILER_BEGINS/,$$p' $< > $@.tmp
+ 	$(Q)mv $@.tmp $@
+-$(libpthread_pthread_OUT)/crtn.S: $(libpthread_pthread_OUT)/pt-initfini.s $(libpthread_pthread_OUT)/defs.h
++$(libpthread_pthread_OUT)/pt-crtn.S: $(libpthread_pthread_OUT)/pt-initfini.s $(libpthread_pthread_OUT)/defs.h
+ 	$(do_sed) -n -e '/[ 	]*\.file/d' \
+ 		-e '1,/@HEADER_ENDS/p' \
+ 		-e '/@_.*_EPILOG_BEGINS/,/@_.*_EPILOG_ENDS/p' \

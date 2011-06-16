@@ -25,6 +25,7 @@ $(pkgtree)/.setup: | $(pkgtree)/build
 
 conf-args = \
 	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include" \
+	CROSS=$(CROSS_COMPILE) \
 	O=$(pkgtree)/build
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
@@ -33,8 +34,8 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
-	CROSS=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=$(prefix)/ \
@@ -48,8 +49,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
-	CROSS=$(CROSS_COMPILE) \
 	KERNEL_HEADERS=$(SYSROOT)$(prefix)/include \
+	CROSS=$(CROSS_COMPILE) \
 	PREFIX=$(DESTDIR) \
 	RUNTIME_PREFIX=/ \
 	DEVEL_PREFIX=$(prefix)/ \

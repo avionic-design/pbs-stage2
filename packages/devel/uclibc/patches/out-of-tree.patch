@@ -1,16 +1,3 @@
-diff --git a/libm/Makefile.in b/libm/Makefile.in
-index 2235933..f0aaa2a 100644
---- a/libm/Makefile.in
-+++ b/libm/Makefile.in
-@@ -20,7 +20,7 @@
- # by Erik Andersen <andersen@codepoet.org>
- #
- 
--subdirs += libm
-+subdirs += libm libm/$(TARGET_ARCH)
- 
- CFLAGS-libm := -DNOT_IN_libc -DIS_IN_libm $(SSP_ALL_CFLAGS)
- CFLAGS-libm += -D_IEEE_LIBM
 diff --git a/utils/Makefile b/utils/Makefile
 index bdaea9f..bdd9519 100644
 --- a/utils/Makefile
