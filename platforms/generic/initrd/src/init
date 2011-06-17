@@ -168,6 +168,12 @@ if test -b /dev/disk/by-label/persist; then
 	log_action_begin_msg "Mounting persistent storage at $mp/persist"
 	mount /dev/disk/by-label/persist $mp/persist
 	log_action_end_msg $?
+
+	if test -d /scripts/persist; then
+		log_action_begin_msg "Running scripts for persistent storage"
+		run-parts -a "$mp/persist" /scripts/persist
+		log_action_end_msg $?
+	fi
 fi
 
 log_action_begin_msg "Moving /run to root filesystem"
