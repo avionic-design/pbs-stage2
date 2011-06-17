@@ -11,7 +11,15 @@ conf-args += \
 	--disable-examples \
 	--disable-gsettings \
 	--disable-dvdnav \
-	--disable-dvdspu
+	--disable-dvdspu \
+	--disable-camerabin \
+	--disable-camerabin2 \
+	--disable-dvbsuboverlay \
+	--disable-dtmf \
+	--disable-fieldanalysis \
+	--disable-gaudieffects \
+	--disable-geometrictransform \
+	--disable-colorspace
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
