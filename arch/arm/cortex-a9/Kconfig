@@ -4,4 +4,7 @@ config CPU
 	string
 	default "unknown"
 
+config ARCH_TEGRA_2x_SOC
+	bool
+
 endif
