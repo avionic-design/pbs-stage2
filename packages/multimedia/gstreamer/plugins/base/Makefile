@@ -21,5 +21,4 @@ prunefiles = \
 stripfiles = \
 	$(plugin)/*.so \
 	$(prefix)/bin/gst-discoverer-0.10 \
-	$(prefix)/bin/gst-visualise-0.10 \
 	$(prefix)/lib/*.so.*
