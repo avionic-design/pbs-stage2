@@ -8,6 +8,7 @@ include packages/autotools.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib \
+	--with-sysroot=$(SYSROOT) \
 	--disable-rpath \
 	--disable-examples \
 	--disable-tests \
