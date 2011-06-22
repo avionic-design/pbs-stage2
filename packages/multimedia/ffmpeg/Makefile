@@ -19,6 +19,7 @@ conf-args = \
 	--enable-swscale \
 	--disable-stripping \
 	--disable-encoders \
+	--disable-doc \
 	$(platform-conf-args)
 
 conf-vars = \
