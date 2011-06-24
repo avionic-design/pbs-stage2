@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 2.12.6.1
+VERSION = 2.12.7
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
