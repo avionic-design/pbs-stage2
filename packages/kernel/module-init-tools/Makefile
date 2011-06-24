@@ -1,5 +1,5 @@
 PACKAGE = module-init-tools
-VERSION = 3.12
+VERSION = 3.13
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
