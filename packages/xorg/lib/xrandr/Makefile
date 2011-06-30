@@ -1,5 +1,5 @@
 PACKAGE = libXrandr
-VERSION = 1.3.1
+VERSION = 1.3.2
 
 include packages/xorg/lib/common.mk
 
