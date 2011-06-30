@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_FLAC
+	bool "flac"
+	select VIRTUAL_DEVEL_LIBC
+	default n
