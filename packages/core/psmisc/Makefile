@@ -1,5 +1,5 @@
 PACKAGE = psmisc
-VERSION = 22.13
+VERSION = 22.14
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -16,7 +16,6 @@ else
 	ac_cv_func_malloc_0_nonnull=no
 endif
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/fuser \
 	$(prefix)/bin/killall \
