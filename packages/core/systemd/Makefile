@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 29
+VERSION = 30
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -38,6 +38,7 @@ stripfiles = \
 	/bin/systemctl \
 	/bin/systemd \
 	/bin/systemd-ask-password \
+	/bin/systemd-loginctl \
 	/bin/systemd-machine-id-setup \
 	/bin/systemd-notify \
 	/bin/systemd-tmpfiles \
@@ -51,7 +52,9 @@ stripfiles = \
 	/lib/systemd/systemd-hostnamed \
 	/lib/systemd/systemd-initctl \
 	/lib/systemd/systemd-kmsg-syslogd \
+	/lib/systemd/systemd-localed \
 	/lib/systemd/systemd-logger \
+	/lib/systemd/systemd-logind \
 	/lib/systemd/systemd-modules-load \
 	/lib/systemd/systemd-quotacheck \
 	/lib/systemd/systemd-random-seed \
@@ -62,7 +65,9 @@ stripfiles = \
 	/lib/systemd/systemd-shutdown \
 	/lib/systemd/systemd-shutdownd \
 	/lib/systemd/systemd-sysctl \
+	/lib/systemd/systemd-timedated \
 	/lib/systemd/systemd-timestamp \
+	/lib/systemd/systemd-uaccess \
 	/lib/systemd/systemd-update-utmp \
 	/lib/systemd/systemd-user-sessions \
 	/lib/systemd/systemd-vconsole-setup \
