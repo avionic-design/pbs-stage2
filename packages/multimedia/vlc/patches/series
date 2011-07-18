@@ -1,4 +1,5 @@
 env-verbose.patch
 v4l2-std.patch
 v4l2-dev.patch
+i786-sse.patch
 ltmain-sysroot.patch

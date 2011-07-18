@@ -1,10 +1,10 @@
 PACKAGE = vlc
-VERSION = 1.1.10
+VERSION = 1.1.11
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
