@@ -2,7 +2,7 @@ diff --git a/agent/Makefile.in b/agent/Makefile.in
 index 8d8b5e8..005696d 100644
 --- a/agent/Makefile.in
 +++ b/agent/Makefile.in
-@@ -75,7 +75,10 @@ INSTALLBUILTSUBDIRHEADERS=../include/net-snmp/agent/mib_module_config.h \
+@@ -77,7 +77,10 @@ INSTALLBUILTSUBDIRHEADERS=../include/net-snmp/agent/mib_module_config.h \
  INSTALLBUILTSUBDIR=agent
  
  INCLUDEMIBGROUPDIR=agent/mibgroup
@@ -14,7 +14,7 @@ index 8d8b5e8..005696d 100644
  
  OTHERINSTALL=installmibgroupheaders @EMBEDPERLINSTALL@
  OTHERUNINSTALL=@EMBEDPERLUNINSTALL@
-@@ -281,6 +284,15 @@ installmibgroupheaders:
+@@ -330,6 +333,15 @@ installmibgroupheaders:
                          echo "installing $$i in $(INSTALL_PREFIX)$(includedir)/agent" ; \
                  done \
          fi

@@ -2,8 +2,8 @@ diff --git a/Makefile.in b/Makefile.in
 index d1023e1..56da741 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -28,6 +28,7 @@ INCLUDESUBDIRHEADERS2=generic.h
- INSTALLBUILTHEADERS=include/net-snmp/net-snmp-config.h
+@@ -30,6 +30,7 @@ INCLUDESUBDIRHEADERS2=generic.h
+ INSTALLBUILTINCLUDEHEADERS=@FEATUREHEADERS@
  INSTALLBINSCRIPTS=net-snmp-config net-snmp-create-v3-user
  INSTALLUCDHEADERS=ucd-snmp-config.h version.h mib_module_config.h
 +INSTALLPKGCONFIGFILES=net-snmp-agent.pc
@@ -14,7 +14,7 @@ diff --git a/Makefile.rules b/Makefile.rules
 index 65687ef..05ff810 100644
 --- a/Makefile.rules
 +++ b/Makefile.rules
-@@ -31,10 +31,11 @@ subdirs:
+@@ -84,10 +84,11 @@ subdirs:
  install: installlocalheaders @installucdheaders@ \
           installlibs \
           installlocalbin      installlocalsbin   \
@@ -28,7 +28,7 @@ index 65687ef..05ff810 100644
  
  installprogs: installbin installsbin
  
-@@ -323,6 +324,25 @@ uninstallsubdirs:
+@@ -387,6 +388,25 @@ uninstallsubdirs:
  		done \
  	fi
  
@@ -70,7 +70,7 @@ diff --git a/configure.ac b/configure.ac
 index 997c9e2..61e7376 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -94,6 +94,7 @@ AC_CONFIG_FILES([net-snmp-config:net-snmp-config.in],
+@@ -95,6 +95,7 @@ AC_CONFIG_FILES([net-snmp-config:net-snmp-config.in],
  AC_CONFIG_FILES([net-snmp-create-v3-user:net-snmp-create-v3-user.in],
  		[chmod +x net-snmp-create-v3-user])
  AC_CONFIG_FILES([dist/generation-scripts/gen-variables:dist/generation-scripts/gen-variables.in])

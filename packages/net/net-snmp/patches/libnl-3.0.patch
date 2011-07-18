@@ -2,7 +2,7 @@ diff --git a/agent/mibgroup/mibII/tcpTable.c b/agent/mibgroup/mibII/tcpTable.c
 index 624ef04..28caeb2 100644
 --- a/agent/mibgroup/mibII/tcpTable.c
 +++ b/agent/mibgroup/mibII/tcpTable.c
-@@ -556,7 +556,8 @@ static int
+@@ -567,7 +567,8 @@ static int
  tcpTable_load_netlink(void)
  {
  	/*  TODO: perhaps use permanent nl handle? */
@@ -12,7 +12,7 @@ index 624ef04..28caeb2 100644
  
  	if (nl == NULL) {
  		DEBUGMSGTL(("mibII/tcpTable", "Failed to allocate netlink handle\n"));
-@@ -564,10 +565,11 @@ tcpTable_load_netlink(void)
+@@ -575,10 +576,11 @@ tcpTable_load_netlink(void)
  		return -1;
  	}
  
@@ -28,7 +28,7 @@ index 624ef04..28caeb2 100644
  		return -1;
  	}
  
-@@ -579,10 +581,11 @@ tcpTable_load_netlink(void)
+@@ -590,10 +592,11 @@ tcpTable_load_netlink(void)
  	struct nl_msg *nm = nlmsg_alloc_simple(TCPDIAG_GETSOCK, NLM_F_ROOT|NLM_F_MATCH|NLM_F_REQUEST);
  	nlmsg_append(nm, &req, sizeof(struct inet_diag_req), 0);
  
@@ -44,7 +44,7 @@ index 624ef04..28caeb2 100644
  		return -1;
  	}
  	nlmsg_free(nm);
-@@ -593,9 +596,9 @@ tcpTable_load_netlink(void)
+@@ -604,9 +607,9 @@ tcpTable_load_netlink(void)
  
  	while (running) {
  		if ((len = nl_recv(nl, &peer, &buf, NULL)) <= 0) {
@@ -57,7 +57,7 @@ index 624ef04..28caeb2 100644
  			return -1;
  		}
  
-@@ -644,7 +647,7 @@ tcpTable_load_netlink(void)
+@@ -655,7 +658,7 @@ tcpTable_load_netlink(void)
  		free(buf);
  	}
  
