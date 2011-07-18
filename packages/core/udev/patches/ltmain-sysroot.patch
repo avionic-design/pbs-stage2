@@ -1,7 +1,7 @@
 diff --git a/ltmain.sh b/ltmain.sh
 index aa5624c..0b11ae2 100755
---- a/ltmain.sh
-+++ b/ltmain.sh
+--- a/build-aux/ltmain.sh
++++ b/build-aux/ltmain.sh
 @@ -6904,7 +6904,7 @@ func_mode_link ()
  	      fi
  	    else
