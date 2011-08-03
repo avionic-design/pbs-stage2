@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.4.5
+VERSION = 2.4.6
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
