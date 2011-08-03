@@ -4,7 +4,7 @@ VERSION = 0.10.35
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \

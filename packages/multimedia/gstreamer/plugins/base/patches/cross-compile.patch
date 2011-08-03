@@ -1,0 +1,26 @@
+diff --git a/configure.ac b/configure.ac
+index 15de626..37733e4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -22,6 +22,7 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
+ 
+ dnl can autoconf find the source ?
+ AC_CONFIG_SRCDIR([gst/audiotestsrc/gstaudiotestsrc.c])
++AC_CONFIG_MACRO_DIR([m4])
+ 
+ dnl define the output header for config
+ AM_CONFIG_HEADER([config.h])
+diff --git a/gst-libs/gst/audio/Makefile.am b/gst-libs/gst/audio/Makefile.am
+index c7e1dcc..c32d4c0 100644
+--- a/gst-libs/gst/audio/Makefile.am
++++ b/gst-libs/gst/audio/Makefile.am
+@@ -46,8 +46,7 @@ nodist_libgstaudio_@GST_MAJORMINOR@include_HEADERS = \
+ 	audio-enumtypes.h
+ 
+ libgstaudio_@GST_MAJORMINOR@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+-libgstaudio_@GST_MAJORMINOR@_la_LIBADD = $(GST_BASE_LIBS) $(GST_LIBS) \
+-  $(top_builddir)/gst-libs/gst/interfaces/libgstinterfaces-@GST_MAJORMINOR@.la
++libgstaudio_@GST_MAJORMINOR@_la_LIBADD = $(GST_BASE_LIBS) $(GST_LIBS) ../interfaces/libgstinterfaces-@GST_MAJORMINOR@.la
+ libgstaudio_@GST_MAJORMINOR@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+ 
+ noinst_PROGRAMS = testchannels
