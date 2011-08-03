@@ -1,5 +1,5 @@
 PACKAGE = gst-ffmpeg
-VERSION = 0.10.11
+VERSION = 0.10.12
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
