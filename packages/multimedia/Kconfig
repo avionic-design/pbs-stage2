@@ -20,5 +20,6 @@ source "packages/multimedia/ortp/Kconfig"
 source "packages/multimedia/speex/Kconfig"
 source "packages/multimedia/v4l-utils/Kconfig"
 source "packages/multimedia/vlc/Kconfig"
+source "packages/multimedia/zvbi/Kconfig"
 
 endmenu

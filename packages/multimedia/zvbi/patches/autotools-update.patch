@@ -1,0 +1,136 @@
+diff --git a/configure.in b/configure.in
+index 7c0275a..61103f0 100644
+--- a/configure.in
++++ b/configure.in
+@@ -5,8 +5,8 @@ AC_INIT(zvbi, 0.2.33)
+ AC_CONFIG_SRCDIR(src/vbi.c)
+ 
+ AM_INIT_AUTOMAKE([1.9 check-news dist-bzip2])
++AC_CONFIG_MACRO_DIR([m4])
+ AM_CONFIG_HEADER(config.h)
+-AM_ACLOCAL_INCLUDE(m4)
+ AM_MAINTAINER_MODE
+ 
+ dnl [current:revision:age]
+@@ -19,6 +19,7 @@ dnl Enable GNU extensions if available.
+ AC_GNU_SOURCE
+ 
+ AC_PROG_CC
++AM_PROG_CC_C_O
+ 
+ dnl For header tests only.
+ AC_PROG_CXX
+@@ -33,9 +34,10 @@ AC_CHECK_FUNCS([strndup strlcpy asprintf vasprintf getopt_long \
+ dnl sincos() is a GNU extension (a macro, not a function).
+ dnl If not present we use a replacement.
+ AC_MSG_CHECKING([for sincos])
+-AC_LINK_IFELSE([
++AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+ #include <stdio.h>
+ #include <math.h>
++]], [[
+ int main (void) {
+ double s, c;
+ scanf ("%f", &s);
+@@ -43,7 +45,7 @@ sincos (s, &s, &c);
+ printf ("%f %f", s, c);
+ return 0;
+ }
+-],[
++]])],[
+   AC_MSG_RESULT([yes])
+   AC_DEFINE(HAVE_SINCOS, 1, [Define if the sincos() function is available])
+ ],[
+@@ -53,16 +55,17 @@ return 0;
+ dnl log2() is a GNU extension (a macro, not a function).
+ dnl If not present we use a replacement.
+ AC_MSG_CHECKING([for log2])
+-AC_LINK_IFELSE([
++AC_LINK_IFELSE([AC_LANG_PROGRAM([[
+ #include <stdio.h>
+ #include <math.h>
++]], [[
+ int main (void) {
+ double x;
+ scanf ("%f", &x);
+ printf ("%f", log2 (x));
+ return 0;
+ }
+-],[
++]])],[
+   AC_MSG_RESULT([yes])
+   AC_DEFINE(HAVE_LOG2, 1, [Define if the log2() function is available])
+ ],[
+@@ -72,26 +75,28 @@ return 0;
+ dnl strerror() is not thread safe and there are different versions
+ dnl of strerror_r(). If none of them are present we use a replacement.
+ AC_MSG_CHECKING([for strerror_r])
+-AC_COMPILE_IFELSE([
++AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include <stdlib.h>
+ #include <string.h>
++]], [[
+ int main (void) {
+ return *strerror_r (22, malloc (128), 128);
+ }
+-],[
++]])],[
+   AC_MSG_RESULT([yes, GNU version])
+   AC_DEFINE(HAVE_GNU_STRERROR_R, 1, [Define to 1 if you have
+ 	    the GNU version of the strerror_r() function.])
+ ],[
+-  AC_COMPILE_IFELSE([
++  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <string.h>
++]], [[
+ int main (void) {
+ printf ("%f", 1.0 + strerror_r (22, malloc (128), 128));
+ return 0;
+ }
+-  ],[
++  ]])],[
+     AC_MSG_RESULT([yes, SUSV3 version])
+     AC_DEFINE(HAVE_SUSV3_STRERROR_R, 1, [Define to 1 if you have
+ 	      the SUSV3 version of the strerror_r() function.])
+@@ -132,7 +137,7 @@ AC_DEFUN([CHECK_CC_OPTION], [
+   AC_MSG_CHECKING([if $CC supports $1])
+   SAVE_CFLAGS="$CFLAGS"
+   CFLAGS="$CFLAGS $1"
+-  AC_COMPILE_IFELSE(AC_LANG_PROGRAM([], [return 0;]),
++  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
+ 		    [$2=yes], [$2=no])
+   CFLAGS="$SAVE_CFLAGS"
+   AC_MSG_RESULT($$2)
+@@ -144,7 +149,7 @@ AC_DEFUN([CHECK_CXX_OPTION], [
+   SAVE_CXXFLAGS="$CXXFLAGS"
+   CXXFLAGS="$CXXFLAGS $1"
+   AC_LANG_PUSH(C++)
+-  AC_COMPILE_IFELSE(AC_LANG_PROGRAM([], [return 0;]),
++  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([], [return 0;])],
+ 		    [$2=yes], [$2=no])
+   AC_LANG_POP()
+   CXXFLAGS="$SAVE_CXXFLAGS"
+@@ -295,10 +300,10 @@ if test "x$enable_v4l" = xyes -o "x$enable_dvb" = xyes; then
+   dnl if __GNUC__ is defined. These types are required to compile
+   dnl videodev2.h and the Linux DVB headers.
+   AC_MSG_CHECKING([if asm/types.h defines __s64 and __u64])
+-  AC_COMPILE_IFELSE([#include <asm/types.h>
++  AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <asm/types.h>]], [[
+ __s64 a = 1;
+ __u64 b = 2;
+-  ], [AC_DEFINE(HAVE_S64_U64, 1,
++  ]])], [AC_DEFINE(HAVE_S64_U64, 1,
+ 		[Define if asm/types.h defines __s64 and __u64])
+       AC_MSG_RESULT(yes)],
+   [AC_MSG_RESULT(no)]) 
+@@ -359,6 +364,8 @@ AM_CONDITIONAL(HAVE_DOXYGEN, [test "x$HAVE_DOXYGEN" = xyes])
+ dnl Helps debugging, see test/Makefile.am.
+ AM_CONDITIONAL(BUILD_STATIC_LIB, [test "x$enable_static" = xyes])
+ 
++CFLAGS="$CFLAGS -Wall -Werror"
++
+ AC_OUTPUT([
+   Makefile
+   contrib/Makefile

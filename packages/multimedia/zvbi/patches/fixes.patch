@@ -1,0 +1,891 @@
+diff --git a/contrib/atsc-cc.c b/contrib/atsc-cc.c
+index 1671678..72364df 100644
+--- a/contrib/atsc-cc.c
++++ b/contrib/atsc-cc.c
+@@ -1749,7 +1749,7 @@ cr_new_line			(struct caption_recorder *cr,
+ 	cr->ucs_buffer_length = 0;
+ 	
+ 	if (cr->usesen) {
+-		unsigned int uc[3];
++		unsigned int uc[3] = { 0, 0, 0 };
+ 		unsigned int column;
+ 		unsigned int end;
+ 		unsigned int separator;
+diff --git a/contrib/ntsc-cc.c b/contrib/ntsc-cc.c
+index a89a5f9..77a213f 100644
+--- a/contrib/ntsc-cc.c
++++ b/contrib/ntsc-cc.c
+@@ -33,6 +33,7 @@
+ #include <errno.h>
+ #include <locale.h>
+ #include <sys/ioctl.h>
++#include <sys/stat.h>
+ #include <sys/types.h>
+ #include <sys/time.h>
+ #ifdef HAVE_GETOPT_LONG
+@@ -101,7 +102,7 @@ static FILE *			xds_fp;
+ //ccdecode
+ const char    *ratings[] = {"(NOT RATED)","TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA","(NOT RATED)"};
+ int     rowdata[] = {11,-1,1,2,3,4,12,13,14,15,5,6,7,8,9,10};
+-const char	*specialchar[] = {"®","°","½","¿","(TM)","¢","£","o/~ ","à"," ","è","â","ê","î","ô","û"};
++const char	*specialchar[] = {"?","?","?","?","(TM)","?","?","o/~ ","?"," ","?","?","?","?","?","?"};
+ const char	*modes[]={"current","future","channel","miscellaneous","public service","reserved","invalid","invalid","invalid","invalid"};
+ int	lastcode;
+ int	ccmode=1;		//cc1 or cc2
+@@ -129,6 +130,7 @@ char rawline=-1;
+ int sen;
+ int inval;
+ 
++#ifndef HAVE_ZVBI
+ static int parityok(int n)	/* check parity for 2 bytes packed in n */
+ {
+     int mask=0;
+@@ -219,6 +221,7 @@ static int decode(unsigned char *vbiline)
+ 	    packedbits |= 1<<i;
+     return packedbits&parityok(packedbits);
+ } /* decode */
++#endif /* !HAVE_ZVBI */
+ 
+ static void
+ print_xds_info			(unsigned int		mode,
+@@ -551,7 +554,7 @@ append_control_seq		(const char *		seq)
+ 
+ static int CCdecode(int data)
+ {
+-	int b1, b2, row, x,y;
++	int b1, b2, x,y;
+ 
+ 	if (cur_ch[field] < 0)
+ 		return -1;
+@@ -581,7 +584,6 @@ static int CCdecode(int data)
+ 
+ 		if (b2 & 0x40)	//preamble address code (row & indent)
+ 		{
+-			row=rowdata[((b1<<1)&14)|((b2>>5)&1)];
+ 			if (strlen (ccbuf[cur_ch[field]][ccmode]) > 0) {
+ 				append_char ('\n', '\n');
+ 			}
+@@ -1056,7 +1058,6 @@ read_test_stream		(vbi_sliced *		sliced,
+ 				 unsigned int		max_lines)
+ {
+ 	char buf[256];
+-	double dt;
+ 	unsigned int n_items;
+ 	vbi_sliced *s;
+ 
+@@ -1065,7 +1066,6 @@ read_test_stream		(vbi_sliced *		sliced,
+ 		exit (EXIT_SUCCESS);
+ 	}
+ 
+-	dt = strtod (buf, NULL);
+ 	n_items = fgetc (stdin);
+ 
+ 	assert (n_items < max_lines);
+@@ -1323,23 +1323,18 @@ open_output_file		(const char *		name)
+ 
+ int main(int argc,char **argv)
+ {
+-   unsigned char buf[65536];
+-   int arg;
+-   int args=0;
+-   fd_set rfds;
+    int x;
+ 	const char *device_file_name;
+ 	const char *cc_file_name[8];
+ 	const char *xds_file_name;
+ 	int verbose;
+ 	int have_xds_filter_option;
+-	vbi_bool use_cc_filter;
+ 	unsigned int i;
+ 	unsigned int channels;
+ 
+ #ifdef HAVE_ZVBI
+ 
+-   vbi_capture *cap;
++   vbi_capture *cap = NULL;
+    char *errstr;
+    unsigned int services;
+    int scanning;
+@@ -1366,7 +1361,6 @@ int main(int argc,char **argv)
+ 	channels = 0;
+ 
+ 	have_xds_filter_option = FALSE;	
+-	use_cc_filter = FALSE;
+ 
+ 	for (;;) {
+ 		int c;
+@@ -1386,7 +1380,6 @@ int main(int argc,char **argv)
+ 			assert (NULL != optarg);
+ 			cc_file_name[c - '1'] = optarg;
+ 			channels |= 1 << (c - '1');
+-			use_cc_filter = TRUE;
+ 			usecc=1;
+ 			break;
+ 
+@@ -1423,7 +1416,6 @@ int main(int argc,char **argv)
+ 				exit (EXIT_FAILURE);
+ 			}
+ 			channels |= 1 << (ch - 1);
+-			use_cc_filter = TRUE;
+ 			usecc=1;
+ 			break;
+ 		}
+@@ -1761,6 +1753,8 @@ int main(int argc,char **argv)
+ 
+    //mainloop
+    while(1){
++	unsigned char buf[65536];
++	fd_set rfds;
+ 	FD_ZERO(&rfds);
+ 	FD_SET(vbifd, &rfds);
+ 	select(FD_SETSIZE, &rfds, NULL, NULL, NULL);
+diff --git a/daemon/proxyd.c b/daemon/proxyd.c
+index 042d98a..1de7c0b 100644
+--- a/daemon/proxyd.c
++++ b/daemon/proxyd.c
+@@ -1215,11 +1215,9 @@ static vbi_bool vbi_proxyd_take_service_req( PROXY_CLNT * req,
+ */
+ static PROXY_CLNT * vbi_proxyd_get_token_owner( int dev_idx )
+ {
+-   PROXY_DEV   * p_proxy_dev;
+    PROXY_CLNT  * p_walk;
+    PROXY_CLNT  * p_owner;
+ 
+-   p_proxy_dev = proxy.dev + dev_idx;
+    p_owner = NULL;
+ 
+    for (p_walk = proxy.p_clnts; p_walk != NULL; p_walk = p_walk->p_next)
+@@ -1412,10 +1410,8 @@ vbi_proxyd_channel_schedule( int dev_idx )
+    PROXY_CLNT  * p_walk;
+    PROXY_CLNT  * p_sched;
+    PROXY_CLNT  * p_active;
+-   PROXY_DEV   * p_proxy_dev;
+    time_t        now;
+ 
+-   p_proxy_dev = proxy.dev + dev_idx;
+    p_sched     = NULL;
+    p_active    = NULL;
+    now         = time(NULL);
+@@ -2050,7 +2046,7 @@ static vbi_bool vbi_proxyd_take_message( PROXY_CLNT *req, VBIPROXY_MSG * pMsg )
+ 
+                if ( vbi_proxyd_take_service_req(req, pBody->connect_req.services,
+                                                      pBody->connect_req.strict,
+-                                                     req->msg_buf.body.connect_rej.errorstr) )
++                                                     (char *)req->msg_buf.body.connect_rej.errorstr) )
+                { 
+                   /* open & service initialization succeeded -> reply with confirm */
+                   vbi_proxy_msg_fill_magics(&req->msg_buf.body.connect_cnf.magics);
+@@ -2139,7 +2135,7 @@ static vbi_bool vbi_proxyd_take_message( PROXY_CLNT *req, VBIPROXY_MSG * pMsg )
+ 
+             if ( vbi_proxyd_take_service_req(req, pBody->service_req.services,
+                                                   pBody->service_req.strict,
+-                                                  req->msg_buf.body.service_rej.errorstr) )
++                                                  (char *)req->msg_buf.body.service_rej.errorstr) )
+             {
+                if (proxy.dev[req->dev_idx].p_decoder != NULL)
+                {
+diff --git a/examples/network.c b/examples/network.c
+index e8546c1..7b9cb41 100644
+--- a/examples/network.c
++++ b/examples/network.c
+@@ -79,7 +79,7 @@ handler				(vbi_event *		ev,
+ 
+ 	network_name = "unknown";
+ 	if (0 != ev->ev.network.name[0])
+-		network_name = ev->ev.network.name;
++		network_name = (const char *)ev->ev.network.name;
+ 
+ 	/* The network name is an ISO-8859-1 string (the API is
+ 	   quite old...) so we convert it to locale encoding,
+@@ -93,7 +93,7 @@ handler				(vbi_event *		ev,
+ 	/* ASCII. */
+ 	call_sign = "unknown";
+ 	if (0 != ev->ev.network.call[0])
+-		call_sign = ev->ev.network.call;
++		call_sign = (const char *)ev->ev.network.call;
+ 
+ 	printf ("%s: receiving: \"%s\" call sign: \"%s\" "
+ 	        "CNI VPS: 0x%x 8/30-1: 0x%x 8/30-2: 0x%x\n",
+diff --git a/src/conv.c b/src/conv.c
+index 3686516..5b45a1a 100644
+--- a/src/conv.c
++++ b/src/conv.c
+@@ -786,7 +786,7 @@ strndup_iconv_to_ucs2		(unsigned long *	out_size,
+ 
+ 			/* Ignore compiler warnings if second argument
+ 			   is declared as char** instead of const char**. */
+-			r = iconv (cd->icd, &s, &s_left, &d, &d_left);
++			r = iconv (cd->icd, (char **)&s, &s_left, &d, &d_left);
+ 
+ 			_vbi_iconv_close (cd);
+ 			cd = NULL;
+diff --git a/src/decoder.c b/src/decoder.c
+index 818b762..ca6fbb0 100644
+--- a/src/decoder.c
++++ b/src/decoder.c
+@@ -541,7 +541,6 @@ vbi_raw_decoder_resize		(vbi_raw_decoder *	rd,
+ 				 int *			start,
+ 				 unsigned int *		count)
+ {
+-	vbi_service_set service_set;
+ 	vbi3_raw_decoder *rd3;
+ 
+ 	assert (NULL != rd);
+@@ -566,7 +565,7 @@ vbi_raw_decoder_resize		(vbi_raw_decoder *	rd,
+ 		rd->count[0] = count[0];
+ 		rd->count[1] = count[1];
+ 
+-		service_set = vbi3_raw_decoder_set_sampling_par
++		vbi3_raw_decoder_set_sampling_par
+ 			(rd3, (vbi_sampling_par *) rd, /* strict */ 0);
+ 	}
+ 
+diff --git a/src/exp-gfx.c b/src/exp-gfx.c
+index 87eebee..c8ce16e 100644
+--- a/src/exp-gfx.c
++++ b/src/exp-gfx.c
+@@ -298,7 +298,7 @@ draw_char(int canvas_type, uint8_t *canvas, int rowstride,
+ 
+ 		if (!(underline & 1)) {
+ #ifdef __GNUC__
+-#if #cpu (i386)
++#ifdef __i386__
+ 			bits = (*((uint16_t *) src) >> shift);
+ #else
+                         /* unaligned/little endian */
+@@ -503,8 +503,8 @@ draw_blank(int canvas_type, uint8_t *canvas, unsigned int rowstride,
+  * character occupies 16 x 26 pixels.
+  */
+ void
+-vbi_draw_cc_page_region(vbi_page *pg,
+-			vbi_pixfmt fmt, void *canvas, int rowstride,
++vbi_draw_cc_page_region(const vbi_page *pg,
++			vbi_pixfmt fmt, const void *canvas, int rowstride,
+ 			int column, int row, int width, int height)
+ {
+         union {
+@@ -512,7 +512,7 @@ vbi_draw_cc_page_region(vbi_page *pg,
+ 	        uint8_t         pal8[2];
+         } pen;
+ 	int count, row_adv;
+-	vbi_char *ac;
++	const vbi_char *ac;
+         int canvas_type;
+ 
+ 	if (fmt == VBI_PIXFMT_RGBA32_LE) {
+@@ -598,8 +598,8 @@ vbi_draw_cc_page_region(vbi_page *pg,
+  * not consider transparency (e.g. on boxed pages)
+  */
+ void
+-vbi_draw_vt_page_region(vbi_page *pg,
+-			vbi_pixfmt fmt, void *canvas, int rowstride,
++vbi_draw_vt_page_region(const vbi_page *pg,
++			vbi_pixfmt fmt, const void *canvas, int rowstride,
+ 			int column, int row, int width, int height,
+ 			int reveal, int flash_on)
+ {
+@@ -609,7 +609,7 @@ vbi_draw_vt_page_region(vbi_page *pg,
+         } pen;
+ 	int count, row_adv;
+ 	int conceal, off, unicode;
+-	vbi_char *ac;
++	const vbi_char *ac;
+         int canvas_type;
+ 	int i;
+ 
+@@ -675,16 +675,16 @@ vbi_draw_vt_page_region(vbi_page *pg,
+ 					uint8_t *font = pg->drcs[(unicode >> 6) & 0x1F];
+ 
+ 					if (font)
+-						draw_drcs(canvas_type, canvas, rowstride,
++						draw_drcs(canvas_type, (uint8_t *)canvas, rowstride,
+ 							  (uint8_t *) &pen, ac->drcs_clut_offs,
+ 							  font, unicode & 0x3F, ac->size);
+ 					else /* shouldn't happen */
+-						draw_blank(canvas_type, canvas, rowstride,
++						draw_blank(canvas_type, (uint8_t *)canvas, rowstride,
+ 							   ((canvas_type == 1) ? pen.pal8[0]: pen.rgba[0]),
+                                                            TCW, TCH);
+ 				} else {
+ 					draw_char (canvas_type,
+-						   canvas,
++						   (uint8_t *)canvas,
+ 						   rowstride,
+ 						   (uint8_t *) &pen,
+ 						   (uint8_t *) wstfont2_bits,
+@@ -919,7 +919,7 @@ get_image_title(vbi_export *e, const vbi_page *pg, char *title, int title_max)
+ 
+ static vbi_bool
+ ppm_export			(vbi_export *		e,
+-				 vbi_page *		pg)
++				 const vbi_page *	pg)
+ {
+ 	gfx_instance *gfx = PARENT(e, gfx_instance, export);
+ 	vbi_rgba *rgba_image;
+@@ -1143,7 +1143,7 @@ VBI_AUTOREG_EXPORT_MODULE(vbi_export_class_ppm)
+  */
+ static void
+ draw_char_cc_indexed(uint8_t * canvas, int rowstride,  uint8_t * pen,
+-		     int unicode, vbi_char *ac)
++		     int unicode, const vbi_char *ac)
+ {
+ 	draw_char(sizeof(*canvas), canvas, rowstride,
+ 		  pen, (uint8_t *) ccfont2_bits, CCPL, CCW, CCH,
+@@ -1154,7 +1154,7 @@ draw_char_cc_indexed(uint8_t * canvas, int rowstride,  uint8_t * pen,
+ 
+ static void
+ draw_char_vt_indexed(uint8_t * canvas, int rowstride,  uint8_t * pen,
+-		     int unicode, vbi_char *ac)
++		     int unicode, const vbi_char *ac)
+ {
+ 	draw_char(sizeof(*canvas), canvas, rowstride,
+ 		  pen, (uint8_t *) wstfont2_bits, TCPL, TCW, TCH,
+@@ -1171,12 +1171,12 @@ draw_drcs_indexed(uint8_t * canvas, int rowstride, uint8_t * pen,
+ }
+ 
+ static void
+-draw_row_indexed(vbi_page * pg, vbi_char * ac, uint8_t * canvas, uint8_t * pen,
++draw_row_indexed(const vbi_page * pg, const vbi_char * ac, uint8_t * canvas, uint8_t * pen,
+                  int rowstride, vbi_bool conceal, vbi_bool is_cc)
+ {
+         const int cw = is_cc ? CCW : TCW;
+         const int ch = is_cc ? CCH : TCH;
+-	void (* draw_char_indexed)(uint8_t *, int, uint8_t *, int, vbi_char *)
++	void (* draw_char_indexed)(uint8_t *, int, uint8_t *, int, const vbi_char *)
+                 = is_cc ? draw_char_cc_indexed : draw_char_vt_indexed;
+ 	int column;
+         int unicode;
+@@ -1474,7 +1474,7 @@ xpm_write_row			(vbi_export *		e,
+ 
+ static vbi_bool
+ xpm_export			(vbi_export *		e,
+-				 vbi_page *		pg)
++				 const vbi_page *	pg)
+ {
+ 	gfx_instance *gfx = PARENT(e, gfx_instance, export);
+         uint8_t pen[128];
+@@ -1672,11 +1672,11 @@ write_png			(gfx_instance *		gfx,
+ 	char title[80];
+ 	unsigned int i;
+ 
+-	if (setjmp (png_ptr->jmpbuf))
++	if (setjmp (png_jmpbuf(png_ptr)))
+ 		return FALSE;
+ 
+ 	png_set_write_fn (png_ptr,
+-			  (voidp) gfx,
++			  (png_voidp) gfx,
+ 			  write_data,
+ 			  flush_data);
+ 
+@@ -1761,7 +1761,7 @@ write_png			(gfx_instance *		gfx,
+ }
+ 
+ static vbi_bool
+-png_export(vbi_export *e, vbi_page *pg)
++png_export(vbi_export *e, const vbi_page *pg)
+ {
+ 	gfx_instance *gfx = PARENT(e, gfx_instance, export);
+ 	png_structp png_ptr;
+diff --git a/src/exp-gfx.h b/src/exp-gfx.h
+index 2da32fb..0403a50 100644
+--- a/src/exp-gfx.h
++++ b/src/exp-gfx.h
+@@ -33,8 +33,8 @@
+  * @addtogroup Render
+  * @{
+  */
+-extern void		vbi_draw_vt_page_region(vbi_page *pg, vbi_pixfmt fmt,
+-						void *canvas, int rowstride,
++extern void		vbi_draw_vt_page_region(const vbi_page *pg, vbi_pixfmt fmt,
++						const void *canvas, int rowstride,
+ 						int column, int row,
+ 						int width, int height,
+ 						int reveal, int flash_on);
+@@ -59,8 +59,8 @@ vbi_draw_vt_page(vbi_page *pg, vbi_pixfmt fmt, void *canvas,
+ 				pg->columns, pg->rows, reveal, flash_on);
+ }
+ 
+-extern void		vbi_draw_cc_page_region(vbi_page *pg, vbi_pixfmt fmt,
+-						void *canvas, int rowstride,
++extern void		vbi_draw_cc_page_region(const vbi_page *pg, vbi_pixfmt fmt,
++						const void *canvas, int rowstride,
+ 						int column, int row,
+ 						int width, int height);
+ 
+diff --git a/src/exp-html.c b/src/exp-html.c
+index fe2be09..9b3beee 100644
+--- a/src/exp-html.c
++++ b/src/exp-html.c
+@@ -460,7 +460,7 @@ header(html_instance *html, vbi_page *pg)
+ }
+ 
+ static vbi_bool
+-export(vbi_export *e, vbi_page *pgp)
++export(vbi_export *e, const vbi_page *pgp)
+ {
+ 	html_instance *html = PARENT(e, html_instance, export);
+ 	int endian = vbi_ucs2be();
+diff --git a/src/exp-templ.c b/src/exp-templ.c
+index 2b1a831..9a19fcb 100644
+--- a/src/exp-templ.c
++++ b/src/exp-templ.c
+@@ -230,7 +230,7 @@ option_set(vbi_export *e, const char *keyword, va_list args)
+  *  The output function, mandatory.
+  */
+ static vbi_bool
+-export(vbi_export *e, vbi_page *pg)
++export(vbi_export *e, const vbi_page *pg)
+ {
+ 	tmpl_instance *tmpl = TMPL(e);
+ 
+diff --git a/src/exp-txt.c b/src/exp-txt.c
+index 58937b4..993056a 100644
+--- a/src/exp-txt.c
++++ b/src/exp-txt.c
+@@ -593,7 +593,7 @@ print_char(text_instance *text, int endian, vbi_page *pg, vbi_char old, vbi_char
+ 
+ static vbi_bool
+ export				(vbi_export *		e,
+-				 vbi_page *		pg)
++				 const vbi_page *	pg)
+ {
+ 	int endian = vbi_ucs2be();
+ 	text_instance *text = PARENT(e, text_instance, export);
+diff --git a/src/export.h b/src/export.h
+index 5b4ceab..54b27c4 100644
+--- a/src/export.h
++++ b/src/export.h
+@@ -442,7 +442,7 @@ struct vbi_export_class {
+ 	vbi_bool		(* option_get)(vbi_export *, const char *keyword,
+ 					       vbi_option_value *value);
+ 
+-	vbi_bool		(* export)(vbi_export *, vbi_page *pg);
++	vbi_bool		(* export)(vbi_export *, const vbi_page *pg);
+ };
+ 
+ /**
+diff --git a/src/idl_demux.c b/src/idl_demux.c
+index d26725d..1083ade 100644
+--- a/src/idl_demux.c
++++ b/src/idl_demux.c
+@@ -79,7 +79,6 @@ idl_a_demux_feed		(vbi_idl_demux *	dx,
+ 	unsigned int ci;	/* continuity indicator */
+ 	unsigned int dl;	/* data length */
+ 	unsigned int crc;
+-	unsigned int flags;
+ 	unsigned int i;
+ 	unsigned int j;
+ 
+@@ -205,7 +204,6 @@ idl_a_demux_feed		(vbi_idl_demux *	dx,
+ 		buf[j++] = t;
+ 	}
+ 
+-	flags = dx->flags | (ial & VBI_IDL_DEPENDENT);
+ 	dx->flags &= ~VBI_IDL_DATA_LOST;
+ 
+ 	return dx->callback (dx, buf, j, dx->flags, dx->user_data);
+diff --git a/src/io-dvb.c b/src/io-dvb.c
+index bc5d634..dbb9583 100644
+--- a/src/io-dvb.c
++++ b/src/io-dvb.c
+@@ -29,6 +29,7 @@
+ #include <errno.h>
+ #include <sys/select.h>
+ #include <sys/ioctl.h>
++#include <sys/stat.h>
+ 
+ #ifndef HAVE_S64_U64
+   /* Linux 2.6.x asm/types.h defines __s64 and __u64 only
+diff --git a/src/io-v4l2k.c b/src/io-v4l2k.c
+index f3947ff..2a20d21 100644
+--- a/src/io-v4l2k.c
++++ b/src/io-v4l2k.c
+@@ -190,7 +190,6 @@ v4l2_stream_alloc(vbi_capture_v4l2 *v, char ** errstr)
+ {
+ 	struct v4l2_requestbuffers vrbuf;
+ 	struct v4l2_buffer vbuf;
+-	char * guess = NULL;
+         int errno_copy;
+ 
+ 	assert(v->enqueue == ENQUEUE_SUSPENDED);
+@@ -211,7 +210,6 @@ v4l2_stream_alloc(vbi_capture_v4l2 *v, char ** errstr)
+ 			    "from %s (%s): %s."),
+ 			  v->p_dev_name, v->vcap.card,
+ 			  strerror(errno));
+-		guess = _("Possibly a driver bug.");
+ 		goto failure;
+ 	}
+ 
+@@ -309,7 +307,6 @@ v4l2_stream_alloc(vbi_capture_v4l2 *v, char ** errstr)
+ 				    "#%d to %s (%s): %s."),
+ 				  v->num_raw_buffers, v->p_dev_name,
+ 				  v->vcap.card, strerror(errno));
+-			guess = _("Probably a driver bug.");
+ 			goto mmap_failure;
+ 		}
+ 
+@@ -752,7 +749,6 @@ v4l2_get_videostd(vbi_capture_v4l2 *v, char ** errstr)
+ 	v4l2_std_id stdid;
+ 	unsigned int i;
+ 	int r;
+-	char * guess = NULL;
+ 
+ 	if (-1 == xioctl (v, VIDIOC_G_STD, &stdid)) {
+ 		asprintf (errstr,
+@@ -760,7 +756,6 @@ v4l2_get_videostd(vbi_capture_v4l2 *v, char ** errstr)
+ 			    "of %s (%s): %s."),
+ 			  v->p_dev_name, v->vcap.card,
+ 			  strerror(errno));
+-		guess = _("Probably a driver bug.");
+ 		goto failure;
+ 	}
+ 
+@@ -785,7 +780,6 @@ v4l2_get_videostd(vbi_capture_v4l2 *v, char ** errstr)
+ 		asprintf(errstr, _("Cannot query current "
+ 				   "videostandard of %s (%s): %s."),
+ 			 v->p_dev_name, v->vcap.card, strerror(errno));
+-		guess = _("Probably a driver bug.");
+ 		goto failure;
+ 	}
+ 
+@@ -860,7 +854,6 @@ v4l2_update_services(vbi_capture *vc,
+ 	unsigned int    max_rate;
+ 	int    g_fmt;
+ 	int    s_fmt;
+-	char * guess = NULL;
+ 
+ 	/* suspend capturing, or driver will return EBUSY */
+ 	v4l2_suspend(v);
+@@ -1033,7 +1026,6 @@ v4l2_update_services(vbi_capture *vc,
+ 				asprintf(errstr, _("Could not set the vbi capture parameters "
+ 						   "for %s (%s): %d, %s."),
+ 					 v->p_dev_name, v->vcap.card, errno, strerror(errno));
+-				guess = _("Possibly a driver bug.");
+ 				goto io_error;
+ 			}
+ 
+@@ -1310,7 +1302,6 @@ vbi_capture_v4l2k_new		(const char *		dev_name,
+ 				 char **		errstr,
+ 				 vbi_bool		trace)
+ {
+-	char *guess = NULL;
+ 	char *error = NULL;
+ 	vbi_capture_v4l2 *v;
+ 
+@@ -1393,7 +1384,6 @@ vbi_capture_v4l2k_new		(const char *		dev_name,
+ 	if (-1 == xioctl (v, VIDIOC_QUERYCAP, &v->vcap)) {
+ 		asprintf(errstr, _("Cannot identify '%s': %d, %s."),
+ 			     v->p_dev_name, errno, strerror(errno));
+-		guess = _("Probably not a v4l2 device.");
+ 		goto io_error;
+ 	}
+ 
+diff --git a/src/libzvbi.h b/src/libzvbi.h
+index 042d657..a5e4fa1 100644
+--- a/src/libzvbi.h
++++ b/src/libzvbi.h
+@@ -2,7 +2,7 @@
+  *  libzvbi -- VBI decoding library
+  *
+  *  Copyright (C) 2000, 2001, 2002 Michael H. Schimek
+- *  Copyright (C) 2000, 2001 Iñaki García Etxebarria
++ *  Copyright (C) 2000, 2001 I?aki Garc?a Etxebarria
+  *
+  *  Originally based on AleVT 1.5.1 by Edgar Toernig
+  *
+@@ -1832,7 +1832,7 @@ extern vbi_bool		vbi_fetch_vt_page(vbi_decoder *vbi, vbi_page *pg,
+ 					  vbi_bool navigation);
+ extern int		vbi_page_title(vbi_decoder *vbi, int pgno, int subno, char *buf);
+ 
+-extern void		vbi_resolve_link(vbi_page *pg, int column, int row,
++extern void		vbi_resolve_link(const vbi_page *pg, int column, int row,
+ 					 vbi_link *ld);
+ extern void		vbi_resolve_home(vbi_page *pg, vbi_link *ld);
+ 
+diff --git a/src/misc.h b/src/misc.h
+index e6cfe5f..c4a53e0 100644
+--- a/src/misc.h
++++ b/src/misc.h
+@@ -51,15 +51,6 @@
+ #  define unlikely(expr) __builtin_expect(expr, 0)
+ #endif
+ 
+-#undef __i386__
+-#undef __i686__
+-#if #cpu (i386)
+-#  define __i386__ 1
+-#endif
+-#if #cpu (i686)
+-#  define __i686__ 1
+-#endif
+-
+ /* &x == PARENT (&x.tm_min, struct tm, tm_min),
+    safer than &x == (struct tm *) &x.tm_min. A NULL _ptr is safe and
+    will return NULL, not -offsetof(_member). */
+diff --git a/src/packet.c b/src/packet.c
+index c456e35..4833b39 100644
+--- a/src/packet.c
++++ b/src/packet.c
+@@ -1419,8 +1419,8 @@ parse_bsd(vbi_decoder *vbi, uint8_t *raw, int packet, int designation)
+ }
+ 
+ static int
+-same_header(int cur_pgno, uint8_t *cur,
+-	    int ref_pgno, uint8_t *ref,
++same_header(int cur_pgno, const uint8_t *cur,
++	    int ref_pgno, const uint8_t *ref,
+ 	    int *page_num_offsetp)
+ {
+ 	uint8_t buf[3];
+@@ -1477,7 +1477,7 @@ same_header(int cur_pgno, uint8_t *cur,
+ }
+ 
+ static inline vbi_bool
+-same_clock(uint8_t *cur, uint8_t *ref)
++same_clock(const uint8_t *cur, uint8_t *ref)
+ {
+ 	int i;
+ 
+@@ -2018,7 +2018,6 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *p)
+ 	cache_page *cvtp;
+ 	struct raw_page *rvtp;
+ 	int pmag, mag0, mag8, packet;
+-	struct ttx_magazine *mag;
+ 
+ 	if ((pmag = vbi_unham16p (p)) < 0)
+ 		return FALSE;
+@@ -2031,7 +2030,6 @@ vbi_decode_teletext(vbi_decoder *vbi, uint8_t *p)
+ 	    && !(vbi->event_mask & TTX_EVENTS))
+ 		return TRUE;
+ 
+-	mag = cache_network_magazine (vbi->cn, mag8 * 0x100);
+ 	rvtp = vbi->vt.raw_page + mag0;
+ 	cvtp = rvtp->page;
+ 
+diff --git a/src/page_table.c b/src/page_table.c
+index 29caf86..db2091d 100644
+--- a/src/page_table.c
++++ b/src/page_table.c
+@@ -218,7 +218,7 @@ vbi_page_table_next_subpage	(const vbi_page_table *pt,
+ 	vbi_pgno next_pgno;
+ 	vbi_pgno next_subno;
+ 	vbi_pgno min_pgno;
+-	vbi_subno min_subno;
++	vbi_subno min_subno = 0;
+ 	uint32_t mask;
+ 	unsigned int offset;
+ 	unsigned int i;
+diff --git a/src/raw_decoder.c b/src/raw_decoder.c
+index b42cec5..9c6347f 100644
+--- a/src/raw_decoder.c
++++ b/src/raw_decoder.c
+@@ -1105,13 +1105,11 @@ vbi_bool
+ vbi3_raw_decoder_debug		(vbi3_raw_decoder *	rd,
+ 				 vbi_bool		enable)
+ {
+-	_vbi3_raw_decoder_sp_line *sp_lines;
+ 	unsigned int n_lines;
+ 	vbi_bool r;
+ 
+ 	assert (NULL != rd);
+ 
+-	sp_lines = NULL;
+ 	r = TRUE;
+ 
+ 	rd->debug = !!enable;
+diff --git a/src/sampling_par.c b/src/sampling_par.c
+index 3e39bec..c131216 100644
+--- a/src/sampling_par.c
++++ b/src/sampling_par.c
+@@ -25,6 +25,12 @@
+ #  include "config.h"
+ #endif
+ 
++#if __WORDSIZE == 64
++#  define FMT_UINT64 "l"
++#else
++#  define FMT_UINT64 "ll"
++#endif
++
+ #include <errno.h>
+ 
+ #include "misc.h"
+@@ -166,7 +172,7 @@ _vbi_sampling_par_valid_log	(const vbi_sampling_par *sp,
+ 	} else {
+ 	ambiguous:
+ 		info (log,
+-			"Ambiguous videostd_set 0x%x.",
++			"Ambiguous videostd_set 0x%" FMT_UINT64 "x.",
+ 			videostd_set);
+ 		return FALSE;
+ 	}
+@@ -241,8 +247,8 @@ _vbi_sampling_par_permit_service
+ 	if (0 == (par->videostd_set & videostd_set)) {
+ 		info (log,
+ 			"Service 0x%08x (%s) requires "
+-			"videostd_set 0x%x, "
+-			"have 0x%x.",
++			"videostd_set 0x%" FMT_UINT64 "x, "
++			"have 0x%" FMT_UINT64 "x.",
+ 			par->id, par->label,
+ 			par->videostd_set, videostd_set);
+ 		return FALSE;
+@@ -457,7 +463,7 @@ _vbi_sampling_par_from_services_log
+ 		    || ((VBI_VIDEOSTD_SET_525_60 & videostd_set_req)
+ 			&& (VBI_VIDEOSTD_SET_625_50 & videostd_set_req))) {
+ 			warning (log,
+-				 "Ambiguous videostd_set 0x%x.",
++				 "Ambiguous videostd_set 0x%" FMT_UINT64 "x.",
+ 				 videostd_set_req);
+ 			CLEAR (*sp);
+ 			return 0;
+@@ -480,7 +486,6 @@ _vbi_sampling_par_from_services_log
+ 	rate = 0;
+ 
+ 	for (par = _vbi_service_table; par->id; ++par) {
+-		double margin;
+ 		double signal;
+ 		int offset;
+ 		unsigned int samples;
+@@ -499,16 +504,11 @@ _vbi_sampling_par_from_services_log
+ 				videostd_set |= par->videostd_set;
+ 		}
+ 
+-		if (VBI_VIDEOSTD_SET_525_60 & videostd_set)
+-			margin = 1.0e-6;
+-		else
+-			margin = 2.0e-6;
+-
+ 		if (0 == (par->videostd_set & videostd_set)) {
+ 			info (log,
+ 				"Service 0x%08x (%s) requires "
+-				"videostd_set 0x%x, "
+-				"have 0x%x.",
++				"videostd_set 0x%" FMT_UINT64 "x, "
++				"have 0x%" FMT_UINT64 "x.",
+ 				par->id, par->label,
+ 				par->videostd_set, videostd_set);
+ 			continue;
+diff --git a/src/teletext.c b/src/teletext.c
+index f9165a9..d78a506 100644
+--- a/src/teletext.c
++++ b/src/teletext.c
+@@ -923,10 +923,10 @@ zap_links(vbi_page *pg, int row)
+  * returns a more verbose description of the link.
+  */
+ void
+-vbi_resolve_link(vbi_page *pg, int column, int row, vbi_link *ld)
++vbi_resolve_link(const vbi_page *pg, int column, int row, vbi_link *ld)
+ {
+ 	unsigned char buffer[43];
+-	vbi_char *acp;
++	const vbi_char *acp;
+ 	int i, j, b;
+ 
+ 	assert(column >= 0 && column < EXT_COLUMNS);
+@@ -1684,8 +1684,8 @@ enhance(vbi_decoder *vbi,
+ 						pgno = vtp->data.lop.link[24].pgno;
+ 
+ 						if (NO_PAGE(pgno)) {
+-							if (max_level < VBI_WST_LEVEL_3p5
+-							    || NO_PAGE(pgno = mag->pop_link[0][8].pgno))
++							pgno = mag->pop_link[0][7].pgno;
++							if (max_level < VBI_WST_LEVEL_3p5 || NO_PAGE(pgno))
+ 								pgno = mag->pop_link[0][0].pgno;
+ 						} else
+ 							printv("... X/27/4 GPOP overrides MOT\n");
+@@ -1996,8 +1996,8 @@ enhance(vbi_decoder *vbi,
+ 						pgno = vtp->data.lop.link[26].pgno;
+ 
+ 						if (NO_PAGE(pgno)) {
+-							if (max_level < VBI_WST_LEVEL_3p5
+-							    || NO_PAGE(pgno = mag->drcs_link[0][8]))
++							pgno = mag->drcs_link[0][7];
++							if (max_level < VBI_WST_LEVEL_3p5 || NO_PAGE(pgno))
+ 								pgno = mag->drcs_link[0][0];
+ 						} else
+ 							printv("... X/27/4 GDRCS overrides MOT\n");
+diff --git a/src/teletext_decoder.h b/src/teletext_decoder.h
+index aa06bf4..feb248c 100644
+--- a/src/teletext_decoder.h
++++ b/src/teletext_decoder.h
+@@ -91,7 +91,7 @@ extern int		vbi_page_title(vbi_decoder *vbi, int pgno, int subno, char *buf);
+  * @addtogroup Event
+  * @{
+  */
+-extern void		vbi_resolve_link(vbi_page *pg, int column, int row,
++extern void		vbi_resolve_link(const vbi_page *pg, int column, int row,
+ 					 vbi_link *ld);
+ extern void		vbi_resolve_home(vbi_page *pg, vbi_link *ld);
+ /** @} */
+diff --git a/src/vbi.c b/src/vbi.c
+index 839eeb1..da01704 100644
+--- a/src/vbi.c
++++ b/src/vbi.c
+@@ -2,7 +2,7 @@
+  *  libzvbi -- VBI decoding library
+  *
+  *  Copyright (C) 2000-2008 Michael H. Schimek
+- *  Copyright (C) 2000, 2001 Iñaki García Etxebarria
++ *  Copyright (C) 2000, 2001 I?aki Garc?a Etxebarria
+  *  Copyright (C) 2003, 2004 Tom Zoerner
+  *
+  *  Originally based on AleVT 1.5.1 by Edgar Toernig
+@@ -56,7 +56,7 @@
+ /**
+  * @mainpage ZVBI - VBI Decoding Library
+  *
+- * @author Iñaki García Etxebarria<br>
++ * @author I?aki Garc?a Etxebarria<br>
+  * Michael H. Schimek<br>
+  * Tom Zoerner<br>
+  * based on AleVT by Edgar Toernig
+@@ -732,7 +732,7 @@ vbi_classify_page(vbi_decoder *vbi, vbi_pgno pgno,
+ 		if ((current_time() - vbi->cc.channel[pgno - 1].time) > 20)
+ 			return VBI_NO_PAGE;
+ 
+-		*language = vbi->cc.channel[pgno - 1].language;
++		*language = (char *)vbi->cc.channel[pgno - 1].language;
+ 
+ 		return (pgno <= 4) ? VBI_SUBTITLE_PAGE : VBI_NORMAL_PAGE;
+ 	} else if (pgno < 0x100 || pgno > 0x8FF) {
+diff --git a/test/caption.c b/test/caption.c
+index 6bc9938..fbf72fb 100644
+--- a/test/caption.c
++++ b/test/caption.c
+@@ -440,7 +440,7 @@ decode_frame			(const vbi_sliced *	sliced,
+ 	sp = sp;
+ 	stream_time = stream_time; /* unused */
+ 
+-	vbi_decode (vbi, sliced, n_lines, sample_time);
++	vbi_decode (vbi, (vbi_sliced *)sliced, n_lines, sample_time);
+ 
+ 	/* xevent (1e6 / 30); */
+ 
+diff --git a/test/export.c b/test/export.c
+index 82eea26..16349e4 100644
+--- a/test/export.c
++++ b/test/export.c
+@@ -770,7 +770,7 @@ decode_frame			(const vbi_sliced *	sliced,
+ 		have_start_timestamp = TRUE;
+ 	}
+ 
+-	vbi_decoder_feed (vbi, sliced, n_lines, sample_time);
++	vbi_decoder_feed (vbi, (vbi_sliced *)sliced, n_lines, sample_time);
+ 
+ 	return !quit;
+ }
+diff --git a/test/sliced.c b/test/sliced.c
+index f9abf0c..10126e9 100644
+--- a/test/sliced.c
++++ b/test/sliced.c
+@@ -774,7 +774,7 @@ read_more			(struct stream *	st)
+ 	uint8_t *s;
+ 	uint8_t *e;
+ 
+-	s = /* const cast */ st->end;
++	s = (uint8_t *) st->end;
+ 	e = st->buffer + sizeof (st->buffer);
+ 
+ 	if (s >= e)

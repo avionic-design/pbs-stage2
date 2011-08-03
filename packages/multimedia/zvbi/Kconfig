@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_ZVBI
+	bool "zvbi"
+	select VIRTUAL_DEVEL_LIBC
+	default n
