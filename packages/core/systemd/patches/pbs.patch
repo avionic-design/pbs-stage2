@@ -2,7 +2,7 @@ diff --git a/Makefile.am b/Makefile.am
 index 120c603..cea4fc8 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -104,6 +104,12 @@ AM_CPPFLAGS += \
+@@ -114,6 +114,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/usr/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -15,7 +15,7 @@ index 120c603..cea4fc8 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -114,6 +120,7 @@ endif
+@@ -124,6 +130,7 @@ endif
  endif
  endif
  endif
@@ -27,7 +27,7 @@ diff --git a/configure.ac b/configure.ac
 index e0a0792..e8f7e07 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -323,7 +323,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -338,7 +338,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
@@ -36,19 +36,19 @@ index e0a0792..e8f7e07 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -426,6 +426,11 @@ case $with_distro in
+@@ -441,6 +441,11 @@ case $with_distro in
                  AC_DEFINE(TARGET_ANGSTROM, [], [Target is Ångström])
-                 M4_DISTRO_FLAG=-DTARGET_ANGSTROM=1
+                 M4_DEFINES=-DTARGET_ANGSTROM=1
                  ;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
 +                AC_DEFINE(TARGET_PBS, [], [Target is PBS])
-+                M4_DISTRO_FLAG=-DTARGET_PBS=1
++                M4_DEFINES=-DTARGET_PBS=1
 +                ;;
          other)
                  ;;
          *)
-@@ -482,6 +487,7 @@ AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
+@@ -498,6 +503,7 @@ AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
  AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)

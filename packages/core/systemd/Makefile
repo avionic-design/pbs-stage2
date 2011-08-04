@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 30
+VERSION = 33
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -10,6 +10,7 @@ env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 
 conf-args += \
+	--libexecdir=$(prefix)/lib/systemd \
 	--with-distro=pbs \
 	--with-rootdir=
 
@@ -32,7 +33,8 @@ prunefiles = \
 	/lib/systemd/system/sys-kernel-security.mount \
 	/lib/systemd/system/tmpwatch.service \
 	/lib/systemd/system/tmpwatch.timer \
-	/lib/security/pam_systemd.la
+	/lib/security/pam_systemd.la \
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	/bin/systemctl \
@@ -77,4 +79,5 @@ stripfiles = \
 	$(prefix)/bin/systemd-cgls \
 	$(prefix)/bin/systemd-gnome-ask-password-agent \
 	$(prefix)/bin/systemd-nspawn \
-	$(prefix)/bin/systemd-stdio-bridge
+	$(prefix)/bin/systemd-stdio-bridge \
+	$(prefix)/lib/*.so.*
