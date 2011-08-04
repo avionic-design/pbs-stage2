@@ -1,5 +1,5 @@
 PACKAGE = udev
-VERSION = 172
+VERSION = 173
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -16,7 +16,6 @@ conf-args += \
 	--with-pci-ids-path=$(prefix)/share/pci.ids.gz \
 	--with-sysroot=$(SYSROOT) \
 	--disable-introspection \
-	--disable-udev_acl \
 	--disable-rpath
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
@@ -33,6 +32,7 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
+	/lib/udev/accelerometer \
 	/lib/udev/ata_id \
 	/lib/udev/cdrom_id \
 	/lib/udev/collect \
