@@ -1,0 +1,31 @@
+From dff3d3f69959056aef5da8fe95dd72a347915894 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 4 Aug 2011 20:39:37 +0200
+Subject: [PATCH] soup-session: Reset message status when requeued.
+
+Asynchronous sessions use this field to determine that a message related
+to a proxy connect message should be terminated when the connection is
+established in tunnel_message_completed(). However, when the original
+message was requeued because of a redirect, the message should really be
+completed instead.
+
+https://bugzilla.gnome.org/show_bug.cgi?id=631368
+---
+ libsoup/soup-session.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index 4cd0de3..8a21c2c 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -1563,6 +1563,7 @@ requeue_message (SoupSession *session, SoupMessage *msg)
+ 	item = soup_message_queue_lookup (priv->queue, msg);
+ 	g_return_if_fail (item != NULL);
+ 	item->state = SOUP_MESSAGE_RESTARTING;
++	msg->status_code = 0;
+ 	soup_message_queue_item_unref (item);
+ }
+ 
+-- 
+1.7.6
+
