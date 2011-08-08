@@ -1,2 +1,2 @@
 version=3
-http://www.kernel.org/pub/linux/kernel/v2.6/linux-(.+)\.tar\.bz2
+http://www.kernel.org/pub/linux/kernel/v(.*)/linux-(.+)\.tar\.bz2

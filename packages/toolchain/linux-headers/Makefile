@@ -1,7 +1,10 @@
 PACKAGE = linux
-VERSION = 2.6.38
+VERSION = 3.0
 
-LOCATION = http://www.de.kernel.org/pub/linux/kernel/v2.6
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://www.de.kernel.org/pub/linux/kernel/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/toolchain/common.mk
