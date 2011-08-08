@@ -1,5 +1,5 @@
 PACKAGE = libsoup
-VERSION = 2.34.2
+VERSION = 2.35.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -10,6 +10,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--without-gnome
 
 prunefiles = \
