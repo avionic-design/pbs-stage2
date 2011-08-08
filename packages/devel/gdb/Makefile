@@ -1,9 +1,4 @@
-PACKAGE = gdb
-VERSION = 7.2
-
-LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/toolchain/gdb/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
