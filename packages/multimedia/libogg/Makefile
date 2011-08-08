@@ -1,10 +1,13 @@
 PACKAGE = libogg
-VERSION = 1.2.2
+VERSION = 1.3.0
 
 LOCATION = http://downloads.xiph.org/releases/ogg
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
