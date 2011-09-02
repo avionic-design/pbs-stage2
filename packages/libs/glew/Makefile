@@ -1,5 +1,5 @@
 PACKAGE = glew
-VERSION = 1.6.0
+VERSION = 1.7.0
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tgz
