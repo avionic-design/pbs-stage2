@@ -13,7 +13,7 @@ index 3c221c5..6df11df 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -4,7 +4,7 @@ rm -f config.cache
- AC_INIT(imlib2, 1.4.4, enlightenment-devel@lists.sourceforge.net)
+ AC_INIT(imlib2, 1.4.5, enlightenment-devel@lists.sourceforge.net)
  AC_PREREQ(2.52)
  AC_CONFIG_SRCDIR(configure.ac)
 -dnl#AC_CONFIG_MACRO_DIR([m4])
