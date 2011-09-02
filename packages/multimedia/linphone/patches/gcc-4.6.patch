@@ -1,0 +1,165 @@
+diff --git a/coreapi/linphonecore.c b/coreapi/linphonecore.c
+index 9ddc77c..4331c9f 100644
+--- a/coreapi/linphonecore.c
++++ b/coreapi/linphonecore.c
+@@ -746,8 +746,10 @@ static void codecs_config_read(LinphoneCore *lc)
+ }
+ 
+ static void video_config_read(LinphoneCore *lc){
++#ifdef VIDEO_ENABLED
+ 	int capture, display, self_view;
+ 	int enabled;
++#endif
+ 	const char *str;
+ 	int ndev;
+ 	const char **devices;
+@@ -771,14 +773,14 @@ static void video_config_read(LinphoneCore *lc){
+ 	linphone_core_set_preferred_video_size_by_name(lc,
+ 		lp_config_get_string(lc->config,"video","size","cif"));
+ 
+-	enabled=lp_config_get_int(lc->config,"video","enabled",1);
+-	capture=lp_config_get_int(lc->config,"video","capture",enabled);
+-	display=lp_config_get_int(lc->config,"video","display",enabled);
+-	self_view=lp_config_get_int(lc->config,"video","self_view",enabled);
+ 	lc->video_conf.displaytype=lp_config_get_string(lc->config,"video","displaytype",NULL);
+ 	if(lc->video_conf.displaytype)
+ 		ms_message("we are using a specific display:%s\n",lc->video_conf.displaytype);
+ #ifdef VIDEO_ENABLED
++	enabled=lp_config_get_int(lc->config,"video","enabled",1);
++	capture=lp_config_get_int(lc->config,"video","capture",enabled);
++	display=lp_config_get_int(lc->config,"video","display",enabled);
++	self_view=lp_config_get_int(lc->config,"video","self_view",enabled);
+ 	linphone_core_enable_video(lc,capture,display);
+ 	linphone_core_enable_self_view(lc,self_view);
+ #endif
+@@ -2064,7 +2066,6 @@ LinphoneCall * linphone_core_invite_address(LinphoneCore *lc, const LinphoneAddr
+ **/
+ LinphoneCall * linphone_core_invite_address_with_params(LinphoneCore *lc, const LinphoneAddress *addr, const LinphoneCallParams *params)
+ {
+-	int err=0;
+ 	const char *route=NULL;
+ 	const char *from=NULL;
+ 	LinphoneProxyConfig *proxy=NULL;
+@@ -2117,7 +2118,7 @@ LinphoneCall * linphone_core_invite_address_with_params(LinphoneCore *lc, const
+ 	lc->current_call=call;
+ 	linphone_call_set_state (call,LinphoneCallOutgoingInit,"Starting outgoing call");
+ 	if (dest_proxy!=NULL || lc->sip_conf.ping_with_options==FALSE){
+-		err=linphone_core_start_invite(lc,call,dest_proxy);
++		linphone_core_start_invite(lc,call,dest_proxy);
+ 	}else{
+ 		/*defer the start of the call after the OPTIONS ping*/
+ 		call->ping_op=sal_op_new(lc->sal);
+diff --git a/coreapi/proxy.c b/coreapi/proxy.c
+index 674422b..f07345d 100644
+--- a/coreapi/proxy.c
++++ b/coreapi/proxy.c
+@@ -269,10 +269,6 @@ static char *guess_contact_for_register(LinphoneProxyConfig *obj){
+ }
+ 
+ static void linphone_proxy_config_register(LinphoneProxyConfig *obj){
+-	const char *id_str;
+-
+-	if (obj->reg_identity!=NULL) id_str=obj->reg_identity;
+-	else id_str=linphone_core_get_primary_contact(obj->lc);
+ 	if (obj->reg_sendregister){
+ 		char *contact;
+ 		if (obj->op)
+diff --git a/coreapi/sal_eXosip2.c b/coreapi/sal_eXosip2.c
+index 1c04eb1..708f360 100644
+--- a/coreapi/sal_eXosip2.c
++++ b/coreapi/sal_eXosip2.c
+@@ -545,19 +545,18 @@ int sal_call(SalOp *h, const char *from, const char *to){
+ 
+ int sal_call_notify_ringing(SalOp *h, bool_t early_media){
+ 	osip_message_t *msg;
+-	int err;
+ 	
+ 	/*if early media send also 180 and 183 */
+ 	if (early_media && h->sdp_answer){
+ 		msg=NULL;
+ 		eXosip_lock();
+-		err=eXosip_call_build_answer(h->tid,180,&msg);
++		eXosip_call_build_answer(h->tid,180,&msg);
+ 		if (msg){
+ 			set_sdp(msg,h->sdp_answer);
+ 			eXosip_call_send_answer(h->tid,180,msg);
+ 		}
+ 		msg=NULL;
+-		err=eXosip_call_build_answer(h->tid,183,&msg);
++		eXosip_call_build_answer(h->tid,183,&msg);
+ 		if (msg){
+ 			set_sdp(msg,h->sdp_answer);
+ 			eXosip_call_send_answer(h->tid,183,msg);
+diff --git a/gtk/friendlist.c b/gtk/friendlist.c
+index f193076..53d51ec 100644
+--- a/gtk/friendlist.c
++++ b/gtk/friendlist.c
+@@ -70,7 +70,6 @@ static GdkPixbuf *create_status_picture(LinphoneOnlineStatus ss){
+ void linphone_gtk_set_friend_status(GtkWidget *friendlist , LinphoneFriend * fid, const gchar *url, const gchar *status, const gchar *img){
+ 	GtkTreeIter iter;
+ 	LinphoneFriend *tmp=0;
+-	gboolean found=FALSE;
+ 	GtkTreeModel *model=gtk_tree_view_get_model(GTK_TREE_VIEW(friendlist));
+ 	if (gtk_tree_model_get_iter_first(model,&iter)) {
+ 		do{
+@@ -84,7 +83,6 @@ void linphone_gtk_set_friend_status(GtkWidget *friendlist , LinphoneFriend * fid
+ 				  {
+ 				    gtk_list_store_set(GTK_LIST_STORE(model),&iter,FRIEND_PRESENCE_IMG, pixbuf,-1);
+ 				  }
+-				  found=TRUE;
+ 			}
+ 		}while(gtk_tree_model_iter_next(model,&iter));
+ 	}
+diff --git a/oRTP/src/stun.c b/oRTP/src/stun.c
+index ccac58f..c8a1f31 100644
+--- a/oRTP/src/stun.c
++++ b/oRTP/src/stun.c
+@@ -1993,7 +1993,6 @@ stunSendTest( Socket myFd, StunAddress4 *dest,
+ 	
+    bool_t changePort=FALSE;
+    bool_t changeIP=FALSE;
+-   bool_t discard=FALSE;
+ 
+    StunMessage req;
+    char buf[STUN_MAX_MESSAGE_SIZE];
+@@ -2016,7 +2015,6 @@ stunSendTest( Socket myFd, StunAddress4 *dest,
+          changeIP=TRUE;
+          break;
+       case 5:
+-         discard=TRUE;
+          break;
+       default:
+          ortp_error("stun: Test %i is unkown\n", testNum);
+@@ -2162,7 +2160,6 @@ stunNatType( StunAddress4 *dest,
+ 
+    bool_t respTestI=FALSE;
+    bool_t isNat=TRUE;
+-   StunAddress4 testIchangedAddr;
+    StunAddress4 testImappedAddr;
+    bool_t respTestI2=FALSE; 
+    bool_t mappedIpSame = TRUE;
+@@ -2345,8 +2342,6 @@ stunNatType( StunAddress4 *dest,
+                         if ( !respTestI )
+                         {
+ 									
+-                           testIchangedAddr.addr = resp.changedAddress.ipv4.addr;
+-                           testIchangedAddr.port = resp.changedAddress.ipv4.port;
+                            testImappedAddr.addr = resp.mappedAddress.ipv4.addr;
+                            testImappedAddr.port = resp.mappedAddress.ipv4.port;
+ 									
+diff --git a/oRTP/src/tests/rtprecv.c b/oRTP/src/tests/rtprecv.c
+index 1861592..f96a159 100644
+--- a/oRTP/src/tests/rtprecv.c
++++ b/oRTP/src/tests/rtprecv.c
+@@ -162,9 +162,9 @@ int main(int argc, char*argv[])
+ 			if (err>0) stream_received=1;
+ 			/* this is to avoid to write to disk some silence before the first RTP packet is returned*/	
+ 			if ((stream_received) && (err>0)) {
+-				size_t ret = fwrite(buffer,1,err,outfile);
++				fwrite(buffer,1,err,outfile);
+ 				if (sound_fd>0)
+-					ret = write(sound_fd,buffer,err);
++					write(sound_fd,buffer,err);
+ 			}
+ 		}
+ 		ts+=160;

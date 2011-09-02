@@ -1,5 +1,5 @@
 diff --git a/contrib/atsc-cc.c b/contrib/atsc-cc.c
-index 1671678..72364df 100644
+index 1671678..f268201 100644
 --- a/contrib/atsc-cc.c
 +++ b/contrib/atsc-cc.c
 @@ -1749,7 +1749,7 @@ cr_new_line			(struct caption_recorder *cr,
@@ -11,8 +11,35 @@ index 1671678..72364df 100644
  		unsigned int column;
  		unsigned int end;
  		unsigned int separator;
+@@ -2706,7 +2706,7 @@ cc_carriage_return		(struct cc_decoder *	cd,
+ {
+ 	unsigned int curr_buffer;
+ 	unsigned int row;
+-	unsigned int window_rows;
++	unsigned int window_rows = 0;
+ 	unsigned int first_row;
+ 
+ 	/* CR Carriage Return -- 001 c10f  010 1101 */
+@@ -5286,7 +5286,7 @@ dtvcc_backspace			(struct dtvcc_decoder *	dc,
+ 	struct dtvcc_window *dw;
+ 	unsigned int row;
+ 	unsigned int column;
+-	unsigned int mask;
++	unsigned int mask = 0;
+ 
+ 	dc = dc; /* unused */
+ 
+@@ -5343,7 +5343,7 @@ dtvcc_hor_carriage_return	(struct dtvcc_decoder *	dc,
+ 	struct dtvcc_window *dw;
+ 	unsigned int row;
+ 	unsigned int column;
+-	unsigned int mask;
++	unsigned int mask = 0;
+ 
+ 	dc = dc; /* unused */
+ 
 diff --git a/contrib/ntsc-cc.c b/contrib/ntsc-cc.c
-index a89a5f9..77a213f 100644
+index a89a5f9..2f267c7 100644
 --- a/contrib/ntsc-cc.c
 +++ b/contrib/ntsc-cc.c
 @@ -33,6 +33,7 @@
@@ -23,15 +50,6 @@ index a89a5f9..77a213f 100644
  #include <sys/types.h>
  #include <sys/time.h>
  #ifdef HAVE_GETOPT_LONG
-@@ -101,7 +102,7 @@ static FILE *			xds_fp;
- //ccdecode
- const char    *ratings[] = {"(NOT RATED)","TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA","(NOT RATED)"};
- int     rowdata[] = {11,-1,1,2,3,4,12,13,14,15,5,6,7,8,9,10};
--const char	*specialchar[] = {"®","°","½","¿","(TM)","¢","£","o/~ ","à"," ","è","â","ê","î","ô","û"};
-+const char	*specialchar[] = {"?","?","?","?","(TM)","?","?","o/~ ","?"," ","?","?","?","?","?","?"};
- const char	*modes[]={"current","future","channel","miscellaneous","public service","reserved","invalid","invalid","invalid","invalid"};
- int	lastcode;
- int	ccmode=1;		//cc1 or cc2
 @@ -129,6 +130,7 @@ char rawline=-1;
  int sen;
  int inval;
@@ -582,18 +600,9 @@ index f3947ff..2a20d21 100644
  	}
  
 diff --git a/src/libzvbi.h b/src/libzvbi.h
-index 042d657..a5e4fa1 100644
+index 042d657..03cc1f5 100644
 --- a/src/libzvbi.h
 +++ b/src/libzvbi.h
-@@ -2,7 +2,7 @@
-  *  libzvbi -- VBI decoding library
-  *
-  *  Copyright (C) 2000, 2001, 2002 Michael H. Schimek
-- *  Copyright (C) 2000, 2001 Iñaki García Etxebarria
-+ *  Copyright (C) 2000, 2001 I?aki Garc?a Etxebarria
-  *
-  *  Originally based on AleVT 1.5.1 by Edgar Toernig
-  *
 @@ -1832,7 +1832,7 @@ extern vbi_bool		vbi_fetch_vt_page(vbi_decoder *vbi, vbi_page *pg,
  					  vbi_bool navigation);
  extern int		vbi_page_title(vbi_decoder *vbi, int pgno, int subno, char *buf);
@@ -820,27 +829,9 @@ index aa06bf4..feb248c 100644
  extern void		vbi_resolve_home(vbi_page *pg, vbi_link *ld);
  /** @} */
 diff --git a/src/vbi.c b/src/vbi.c
-index 839eeb1..da01704 100644
+index 839eeb1..c79e18f 100644
 --- a/src/vbi.c
 +++ b/src/vbi.c
-@@ -2,7 +2,7 @@
-  *  libzvbi -- VBI decoding library
-  *
-  *  Copyright (C) 2000-2008 Michael H. Schimek
-- *  Copyright (C) 2000, 2001 Iñaki García Etxebarria
-+ *  Copyright (C) 2000, 2001 I?aki Garc?a Etxebarria
-  *  Copyright (C) 2003, 2004 Tom Zoerner
-  *
-  *  Originally based on AleVT 1.5.1 by Edgar Toernig
-@@ -56,7 +56,7 @@
- /**
-  * @mainpage ZVBI - VBI Decoding Library
-  *
-- * @author Iñaki García Etxebarria<br>
-+ * @author I?aki Garc?a Etxebarria<br>
-  * Michael H. Schimek<br>
-  * Tom Zoerner<br>
-  * based on AleVT by Edgar Toernig
 @@ -732,7 +732,7 @@ vbi_classify_page(vbi_decoder *vbi, vbi_pgno pgno,
  		if ((current_time() - vbi->cc.channel[pgno - 1].time) > 20)
  			return VBI_NO_PAGE;
