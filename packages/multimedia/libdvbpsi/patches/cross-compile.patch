@@ -35,7 +35,7 @@ diff --git a/examples/Makefile.in b/examples/Makefile.in
 index 9224d9f..b8fe702 100644
 --- a/examples/Makefile.in
 +++ b/examples/Makefile.in
-@@ -225,17 +225,17 @@ top_build_prefix = @top_build_prefix@
+@@ -229,17 +229,17 @@ top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  decode_pat_SOURCES = decode_pat.c
@@ -85,7 +85,7 @@ diff --git a/misc/Makefile.in b/misc/Makefile.in
 index 6fbc227..2f1e758 100644
 --- a/misc/Makefile.in
 +++ b/misc/Makefile.in
-@@ -208,11 +208,11 @@ top_builddir = @top_builddir@
+@@ -212,11 +212,11 @@ top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  gen_crc_SOURCES = gen_crc.c
  gen_pat_SOURCES = gen_pat.c

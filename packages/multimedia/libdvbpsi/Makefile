@@ -1,5 +1,5 @@
 PACKAGE = libdvbpsi
-VERSION = 0.2.0
+VERSION = 0.2.1
 
 LOCATION = http://download.videolan.org/pub/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
