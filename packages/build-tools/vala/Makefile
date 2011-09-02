@@ -1,5 +1,5 @@
 PACKAGE = vala
-VERSION = 0.13.1
+VERSION = 0.13.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
