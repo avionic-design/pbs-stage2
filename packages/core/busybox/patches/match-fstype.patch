@@ -1,0 +1,17 @@
+diff --git a/libbb/match_fstype.c b/libbb/match_fstype.c
+index c792d13..32c3d7f 100644
+--- a/libbb/match_fstype.c
++++ b/libbb/match_fstype.c
+@@ -10,10 +10,10 @@
+  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
+  */
+ 
+-#ifdef HAVE_MNTENT_H
+-
+ #include "libbb.h"
+ 
++#ifdef HAVE_MNTENT_H
++
+ int FAST_FUNC match_fstype(const struct mntent *mt, const char *t_fstype)
+ {
+ 	int match = 1;
