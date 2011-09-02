@@ -204,6 +204,15 @@ cmd_lzma = (lzma -9 -c $< && $(size_append) $<) >$@ || (rm -f $@ ; false)
 # miscellaneous common commands
 # ---------------------------------------------------------------------------
 
+quiet_cmd_clean = CLEAN   $(obj)
+      cmd_clean = rm -f $(__clean-files)
+
+quiet_cmd_cleanfile = CLEAN   $(__clean-files)
+      cmd_cleanfile = rm -f $(__clean-files)
+
+quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
+      cmd_cleandir = rm -rf $(__clean-dirs)
+
 quiet_cmd_mkdir_p = MKDIR   $@
       cmd_mkdir_p = mkdir -p $@
 

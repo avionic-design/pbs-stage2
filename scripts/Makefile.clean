@@ -61,12 +61,6 @@ __clean-dirs    := $(wildcard                                               \
 
 # ==========================================================================
 
-quiet_cmd_clean    = CLEAN   $(obj)
-      cmd_clean    = rm -f $(__clean-files)
-quiet_cmd_cleandir = CLEAN   $(__clean-dirs)
-      cmd_cleandir = rm -rf $(__clean-dirs)
-
-
 __clean: $(subdir-ymn)
 ifneq ($(strip $(__clean-files)),)
 	+$(call cmd,clean)

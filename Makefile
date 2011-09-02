@@ -214,6 +214,10 @@ PHONY += build
 build: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) build
 
+PHONY += rebuild-sysroot
+rebuild-sysroot: include/config/depends-dirs.conf
+	$(Q)$(MAKE) $(platform)=$(obj) rebuild-sysroot
+
 PHONY += dist
 dist: include/config/depends-dirs.conf
 	$(Q)$(MAKE) $(platform)=$(obj) dist

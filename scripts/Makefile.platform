@@ -19,6 +19,7 @@ toolchain-depends-dirs := $(depends-dirs)
 endif
 
 build-dirs := $(addprefix build-,$(platform-depends-dirs))
+rebuild-sysroot-dirs := $(addprefix rebuild-sysroot-,$(platform-depends-dirs))
 dist-dirs  := $(addprefix dist-, $(platform-depends-dirs) $(toolchain-depends-dirs))
 uscan-dirs := $(addprefix uscan-,$(platform-depends-dirs))
 watch-dirs := $(addprefix watch-,$(platform-depends-dirs))
@@ -30,6 +31,21 @@ $(build-dirs): build-%:
 
 PHONY += build
 build: $(build-dirs)
+	@:
+
+PHONY += $(rebuild-sysroot-dirs)
+$(rebuild-sysroot-dirs): __clean-files = $(objtree)/build/$*/.install
+$(rebuild-sysroot-dirs): rebuild-sysroot-%:
+	$(call cmd,cleanfile)
+	$(Q)$(MAKE) $(package)=$* install
+
+PHONY += remove-sysroot
+remove-sysroot: __clean-dirs = $(objtree)/sysroot
+remove-sysroot:
+	$(call cmd,cleandir)
+
+PHONY += rebuild-sysroot
+rebuild-sysroot: remove-sysroot $(rebuild-sysroot-dirs)
 	@:
 
 PHONY += $(dist-dirs)
