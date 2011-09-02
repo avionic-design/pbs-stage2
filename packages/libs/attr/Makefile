@@ -12,7 +12,8 @@ $(pkgtree)/.setup:
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
-	--libexecdir=$(prefix)/lib
+	--libexecdir=$(prefix)/lib \
+	--disable-gettext
 
 conf-vars = \
 	CFLAGS='$(CFLAGS)' \
