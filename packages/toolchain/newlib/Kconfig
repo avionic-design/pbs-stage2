@@ -1,0 +1,5 @@
+config PACKAGE_TOOLCHAIN_NEWLIB
+	bool "newlib"
+	depends on OS_NONE
+	select PACKAGE_TOOLCHAIN_GCC_CORE
+	default n

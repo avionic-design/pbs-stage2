@@ -31,13 +31,17 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(prefix) \
 	--with-gmp=$(prefix) \
-	--disable-libmudflap \
-	--disable-multilib \
-	--disable-libssp \
-	--enable-shared \
-	--enable-static \
-	--enable-symvers=gnu \
 	--enable-languages=$(languages)
+
+ifeq ($(CONFIG_OS_NONE),y)
+  conf-args += \
+	--enable-multilib \
+	--with-newlib
+
+  ifeq ($(CONFIG_ARCH),arm)
+    conf-args += --enable-interwork
+  endif
+endif
 
 conf-args += \
 	--with-as=$(prefix)/bin/$(TARGET)-as \

@@ -1,0 +1,4 @@
+config PACKAGE_TOOLCHAIN_NEWLIB_HEADERS
+	bool "newlib headers"
+	depends on OS_NONE
+	default n

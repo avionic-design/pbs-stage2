@@ -17,14 +17,22 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(prefix) \
 	--with-gmp=$(prefix) \
-	--disable-libmudflap \
-	--disable-multilib \
-	--disable-libssp \
+	--enable-languages=c
+
+ifeq ($(CONFIG_OS_NONE),y)
+  conf-args += \
+	--enable-multilib \
+	--with-newlib
+
+  ifeq ($(CONFIG_ARCH),arm)
+    conf-args += --enable-interwork
+  endif
+else
+  conf-args += \
 	--disable-shared \
 	--disable-threads \
-	--disable-nls \
-	--enable-symvers=gnu \
-	--enable-languages=c
+	--disable-nls
+endif
 
 conf-args += \
 	--with-as=$(prefix)/bin/$(TARGET)-as \
