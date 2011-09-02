@@ -14,5 +14,6 @@ source "packages/devel/lua/Kconfig"
 source "packages/devel/python/Kconfig"
 source "packages/devel/strace/Kconfig"
 source "packages/devel/uclibc/Kconfig"
+source "packages/devel/valgrind/Kconfig"
 
 endmenu

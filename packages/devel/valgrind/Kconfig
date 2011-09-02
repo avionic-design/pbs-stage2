@@ -1,0 +1,5 @@
+config PACKAGE_DEVEL_VALGRIND
+	bool "valgrind"
+	select VIRTUAL_DEVEL_LIBC
+	depends on ARCH_X86 || ARCH_X86_64
+	default n
