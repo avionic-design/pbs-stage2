@@ -1,7 +1,10 @@
 PACKAGE = libXfont
-VERSION = 1.4.3
+VERSION = 1.4.4
 
 include packages/xorg/lib/common.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
