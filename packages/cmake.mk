@@ -15,8 +15,7 @@ $(pkgtree)/.setup: $(pkgtree)/cross-compile.cmake
 
 cmake-args = \
 	-DCMAKE_TOOLCHAIN_FILE=$(pkgtree)/cross-compile.cmake \
-	-DPREFIX=$(prefix) \
-	-DSYSCONFDIR=/etc
+	-DCMAKE_INSTALL_PREFIX=$(prefix)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
