@@ -2,7 +2,7 @@ diff --git a/main.c b/main.c
 index 1dc973d..a823a39 100644
 --- a/main.c
 +++ b/main.c
-@@ -2510,7 +2510,7 @@ get_pty(int *pty, char *from GCC_UNUSED)
+@@ -2650,7 +2650,7 @@ get_pty(int *pty, char *from GCC_UNUSED)
  #ifdef __GLIBC__		/* if __GLIBC__ and USE_USG_PTYS, we know glibc >= 2.1 */
      /* GNU libc 2 allows us to abstract away from having to know the
         master pty device name. */
