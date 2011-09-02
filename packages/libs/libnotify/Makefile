@@ -1,5 +1,5 @@
 PACKAGE = libnotify
-VERSION = 0.7.3
+VERSION = 0.7.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
