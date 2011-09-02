@@ -6,5 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/cmake.mk
 
+cmake-args += \
+	-DSYSCONFDIR=/etc
+
 stripfiles = \
 	$(prefix)/bin/awesome
