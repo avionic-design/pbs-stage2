@@ -4,12 +4,16 @@ OS := $(subst $(quote),,$(CONFIG_OS))
 LIBC := $(subst $(quote),,$(CONFIG_LIBC))
 ABI := $(subst $(quote),,$(CONFIG_ABI))
 
-ifneq ($(CPU),)
-  CPU := $(CPU)-
-endif
+ifeq ($(CONFIG_OS_NONE),y)
+  CPU :=
+else
+  ifneq ($(CPU),)
+    CPU := $(CPU)-
+  endif
 
-ifeq ($(LIBC),glibc)
-  LIBC := gnu
+  ifeq ($(LIBC),glibc)
+    LIBC := gnu
+  endif
 endif
 
 TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)

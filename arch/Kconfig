@@ -24,6 +24,24 @@ source "arch/arm/Kconfig"
 source "arch/blackfin/Kconfig"
 source "arch/mips/Kconfig"
 
+choice
+	prompt "Operating System"
+
+config OS_NONE
+	bool "None"
+
+config OS_LINUX
+	bool "Linux"
+
+endchoice
+
+if OS_NONE
+config OS
+	string
+	default "none"
+endif
+
+if OS_LINUX
 config OS
 	string
 	default "linux"
@@ -33,8 +51,11 @@ choice
 
 config UCLIBC
 	bool "uclibc: uClibc"
+	depends on OS_LINUX
 
 config GLIBC
 	bool "glibc: GNU libc"
+	depends on OS_LINUX
 
 endchoice
+endif
