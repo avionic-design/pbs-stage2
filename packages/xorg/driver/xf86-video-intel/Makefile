@@ -1,17 +1,17 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.15.0
+VERSION = 2.16.0
 
 include packages/xorg/driver/common.mk
 
-sdkdir := $(prefix)/include/xorg
-sdkdir := $(subst /,_,$(sdkdir))
-sdkdir := $(subst .,_,$(sdkdir))
-sdkdir := $(subst -,_,$(sdkdir))
+$(pkgtree)/.autoreconfigure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install
+	$(call cmd,stamp)
 
-conf-vars += \
-	ac_cv_file_$(sdkdir)_dri_h=yes \
-	ac_cv_file_$(sdkdir)_dristruct_h=yes \
-	ac_cv_file_$(sdkdir)_sarea_h=yes
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la \
