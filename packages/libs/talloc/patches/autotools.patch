@@ -1,3 +1,28 @@
+From 3fb80b26cc67e40353c07606ea32c6963f428537 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 10 Aug 2011 08:23:42 +0200
+Subject: [PATCH] Add autotools-based build system.
+
+---
+ Makefile.am              |   43 +++
+ autogen.sh               |   13 +
+ configure.ac             |   51 +++
+ m4/docbook.m4            |   61 ++++
+ talloc.3.xml             |  801 ---------------------------------------------
+ talloc.3.xml.in          |  813 ++++++++++++++++++++++++++++++++++++++++++++++
+ talloc.pc.in             |    8 +-
+ xsl/catalog.xml.in       |   18 +
+ xsl/manpages/docbook.xsl |    8 +
+ 9 files changed, 1011 insertions(+), 805 deletions(-)
+ create mode 100644 Makefile.am
+ create mode 100755 autogen.sh
+ create mode 100644 configure.ac
+ create mode 100644 m4/docbook.m4
+ delete mode 100644 talloc.3.xml
+ create mode 100644 talloc.3.xml.in
+ create mode 100644 xsl/catalog.xml.in
+ create mode 100644 xsl/manpages/docbook.xsl
+
 diff --git a/Makefile.am b/Makefile.am
 new file mode 100644
 index 0000000..51c3482
@@ -48,25 +73,19 @@ index 0000000..51c3482
 +CLEANFILES = \
 +	$(BUILT_SOURCES)
 diff --git a/autogen.sh b/autogen.sh
-index 3005239..86f382e 100755
---- a/autogen.sh
+new file mode 100755
+index 0000000..86f382e
+--- /dev/null
 +++ b/autogen.sh
-@@ -1,11 +1,13 @@
- #!/bin/sh
- 
--p=`dirname $0`
+@@ -0,0 +1,13 @@
++#!/bin/sh
++
 +srcdir=`dirname $0`
 +test -z "$srcdir" && srcdir=.
- 
--echo "Setting up for waf build"
++
 +ORIGDIR=`pwd`
 +cd $srcdir
- 
--echo "done. Now run $p/configure then make."
--if [ $p != "." ]; then
--	echo "Notice: The build invoke path is not the main directory! Use make with the parameter"
--	echo "-C $p. Example: make -C $p all"
--fi
++
 +test -d m4 || mkdir m4
 +autoreconf -v --install || exit 1
 +cd $ORIGDIR || exit $?
@@ -198,7 +217,7 @@ index 0000000..9d1f832
 +])
 diff --git a/talloc.3.xml b/talloc.3.xml
 deleted file mode 100644
-index a327922..0000000
+index 99e8bcd..0000000
 --- a/talloc.3.xml
 +++ /dev/null
 @@ -1,801 +0,0 @@
@@ -987,9 +1006,9 @@ index a327922..0000000
 -    </para>
 -    <para>
 -      This program is free software; you can redistribute it and/or modify
--      it under the terms of the GNU General Public License as published by
--      the Free Software Foundation; either version 3 of the License, or (at
--      your option) any later version.
+-      it under the terms of the GNU Lesser General Public License as 
+-      published by the Free Software Foundation; either version 3 of the
+-      License, or (at your option) any later version.
 -    </para>
 -    <para>
 -      This program is distributed in the hope that it will be useful, but
@@ -1005,7 +1024,7 @@ index a327922..0000000
 -</refentry>
 diff --git a/talloc.3.xml.in b/talloc.3.xml.in
 new file mode 100644
-index 0000000..90c1d9b
+index 0000000..ac6efe2
 --- /dev/null
 +++ b/talloc.3.xml.in
 @@ -0,0 +1,813 @@
@@ -1806,9 +1825,9 @@ index 0000000..90c1d9b
 +    </para>
 +    <para>
 +      This program is free software; you can redistribute it and/or modify
-+      it under the terms of the GNU General Public License as published by
-+      the Free Software Foundation; either version 3 of the License, or (at
-+      your option) any later version.
++      it under the terms of the GNU Lesser General Public License as
++      published by the Free Software Foundation; either version 3 of the
++      License, or (at your option) any later version.
 +    </para>
 +    <para>
 +      This program is distributed in the hope that it will be useful, but
@@ -1878,3 +1897,6 @@ index 0000000..e4161a3
 +	<xsl:import href="http://docbook.sourceforge.net/release/xsl/current/manpages/docbook.xsl"/>
 +
 +</xsl:stylesheet>
+-- 
+1.7.6
+

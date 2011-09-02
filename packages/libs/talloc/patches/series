@@ -1,2 +1,2 @@
 autotools.patch
-autoreconf.patch
+gcc-4.6.patch
