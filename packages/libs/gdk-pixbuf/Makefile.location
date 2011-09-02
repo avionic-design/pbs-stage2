@@ -1,5 +1,5 @@
 PACKAGE = gdk-pixbuf
-VERSION = 2.23.5
+VERSION = 2.24.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
