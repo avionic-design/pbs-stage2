@@ -30,6 +30,9 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_MODEM_LIBMODEM),y)
 	conf-args += --with-modem-backend=libmodem
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_HANDSET_PTIP),y)
+	conf-args += --with-handset-backend=ptip
+endif
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
