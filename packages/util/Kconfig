@@ -9,6 +9,7 @@ source "packages/util/i2c-tools/Kconfig"
 source "packages/util/irkey/Kconfig"
 source "packages/util/medatom-utils/Kconfig"
 source "packages/util/mesa-demos/Kconfig"
+source "packages/util/mtd-utils/Kconfig"
 source "packages/util/superiotool/Kconfig"
 
 endmenu
