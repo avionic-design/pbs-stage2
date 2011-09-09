@@ -1,0 +1,4 @@
+config PACKAGE_NET_PROXYCONF
+	bool "proxyconf"
+	select PACKAGE_LIBS_LIBURI
+	default n
