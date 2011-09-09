@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LZO
+	bool "lzo"
+	select VIRTUAL_DEVEL_LIBC
+	default n
