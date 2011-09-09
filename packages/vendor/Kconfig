@@ -1,0 +1,5 @@
+menu "Vendor-specific Utilities"
+
+source "packages/vendor/avionic-design/Kconfig"
+
+endmenu

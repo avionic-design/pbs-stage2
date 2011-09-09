@@ -17,5 +17,6 @@ obj-y += toolchain/
 obj-y += util/
 obj-y += web/
 obj-y += desktop/
+obj-y += vendor/
 obj-y += wm/
 obj-y += xorg/

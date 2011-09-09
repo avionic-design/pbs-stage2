@@ -1,0 +1,5 @@
+menu "Avionic Design GmbH"
+
+source "packages/vendor/avionic-design/ptip/Kconfig"
+
+endmenu

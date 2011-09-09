@@ -1,0 +1,5 @@
+menu "PT-IP"
+
+source "packages/vendor/avionic-design/ptip/murnau/Kconfig"
+
+endmenu

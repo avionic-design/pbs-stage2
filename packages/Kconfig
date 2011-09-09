@@ -21,5 +21,6 @@ source "packages/fonts/Kconfig"
 source "packages/games/Kconfig"
 source "packages/java/Kconfig"
 source "packages/ti/Kconfig"
+source "packages/vendor/Kconfig"
 
 endmenu
