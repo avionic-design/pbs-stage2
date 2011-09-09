@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_LIBURI
+	bool "liburi"
+	select VIRTUAL_DEVEL_LIBC
+	default n
