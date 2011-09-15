@@ -14,6 +14,10 @@ conf-args += \
 	--disable-tests \
 	--disable-check
 
+conf-vars += \
+	ac_cv_func_register_printf_specifier=no \
+	ac_cv_func_register_printf_function=no
+
 versuf = 0.10
 plugin = $(prefix)/lib/gstreamer-$(versuf)
 
