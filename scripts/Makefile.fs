@@ -176,6 +176,9 @@ quiet_cmd_mkimg_tar.gz = TAR [c] $@
 quiet_cmd_mkimg_tar.bz2 = TAR [c] $@
       cmd_mkimg_tar.bz2 = tar -c -C $< --bzip2 -f $@ .
 
+quiet_cmd_mkimg_initrd.gz = CPIO $@
+      cmd_mkimg_initrd.gz = cd $< && find | cpio -H newc --quiet -o | gzip -c > $@
+
 quiet_cmd_mkimg_squashfs = SQUASHFS $@
       cmd_mkimg_squashfs = mksquashfs $< $@ -noappend
 
