@@ -1,0 +1,92 @@
+--- a/gdb/gdb_thread_db.h	2011-01-07 20:36:17.000000000 +0100
++++ b/gdb/gdb_thread_db.h	2011-09-29 14:18:26.743492564 +0200
+@@ -1,14 +1,5 @@
+ #ifdef HAVE_THREAD_DB_H
+ #include <thread_db.h>
+-
+-#ifndef LIBTHREAD_DB_SO
+-#define LIBTHREAD_DB_SO "libthread_db.so.1"
+-#endif
+-
+-#ifndef LIBTHREAD_DB_SEARCH_PATH
+-#define LIBTHREAD_DB_SEARCH_PATH ""
+-#endif
+-
+ #else
+ 
+ /* Copyright (C) 1999, 2000, 2007, 2008, 2009, 2010, 2011
+@@ -37,6 +28,7 @@
+ #include <pthread.h>
+ #include <sys/types.h>
+ #include <sys/procfs.h>
++#include <stdint.h>
+ 
+ 
+ /* Error codes of the library.  */
+@@ -200,16 +192,6 @@
+   } u;
+ } td_notify_t;
+ 
+-/* Some people still have libc5 or old glibc with no uintptr_t.
+-   They lose.  glibc 2.1.3 was released on 2000-02-25, and it has
+-   uintptr_t, so it's reasonable to force these people to upgrade.  */
+-
+-#ifndef HAVE_UINTPTR_T
+-#error No uintptr_t available; your C library is too old.
+-/* Inhibit further compilation errors after this error.  */
+-#define uintptr_t void *
+-#endif
+-
+ /* Structure used to report event.  */
+ typedef struct td_event_msg
+ {
+@@ -460,4 +442,13 @@
+ 
+ #endif	/* thread_db.h */
+ 
++
++#ifndef LIBTHREAD_DB_SO
++#define LIBTHREAD_DB_SO "libthread_db.so.1"
++#endif
++
++#ifndef LIBTHREAD_DB_SEARCH_PATH
++#define LIBTHREAD_DB_SEARCH_PATH ""
++#endif
++
+ #endif /* HAVE_THREAD_DB_H */
+--- a/gdb/gdbserver/linux-low.h	2011-01-01 16:33:24.000000000 +0100
++++ b/gdb/gdbserver/linux-low.h	2011-09-29 14:23:51.989785156 +0200
+@@ -17,10 +17,7 @@
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+ 
+-#ifdef HAVE_THREAD_DB_H
+-#include <thread_db.h>
+-#endif
+-
++#include "../gdb_thread_db.h"
+ #include "gdb_proc_service.h"
+ 
+ #ifdef HAVE_LINUX_REGSETS
+@@ -242,11 +239,9 @@
+   int need_step_over;
+ 
+   int thread_known;
+-#ifdef HAVE_THREAD_DB_H
+   /* The thread handle, used for e.g. TLS access.  Only valid if
+      THREAD_KNOWN is set.  */
+   td_thrhandle_t th;
+-#endif
+ 
+   /* Arch-specific additions.  */
+   struct arch_lwp_info *arch_private;
+--- a/gdb/gdbserver/thread-db.c	2011-01-06 01:14:09.000000000 +0100
++++ b/gdb/gdbserver/thread-db.c	2011-09-29 14:27:49.112028737 +0200
+@@ -28,7 +28,6 @@
+ static int thread_db_use_events;
+ 
+ #include "gdb_proc_service.h"
+-#include "../gdb_thread_db.h"
+ 
+ #ifndef USE_LIBTHREAD_DB_DIRECTLY
+ #include <dlfcn.h>
