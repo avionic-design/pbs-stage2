@@ -1,0 +1,5 @@
+menu "Samples"
+
+source "packages/vendor/nvidia/tegra2/samples/gst-media-player/Kconfig"
+
+endmenu

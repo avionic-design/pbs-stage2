@@ -1,0 +1,4 @@
+config PACKAGE_VENDOR_NVIDIA_TEGRA2_EGL
+	bool "egl"
+	select PACKAGE_VENDOR_NVIDIA_TEGRA2_COMMON
+	default n

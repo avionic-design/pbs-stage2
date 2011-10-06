@@ -20,3 +20,4 @@ obj-y += desktop/
 obj-y += vendor/
 obj-y += wm/
 obj-y += xorg/
+obj-y += vendor/

@@ -1,0 +1,4 @@
+obj-y += samples/
+
+obj-$(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_EGL) += egl
+obj-$(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_OPENGLES) += opengles
