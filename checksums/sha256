@@ -272,6 +272,10 @@ b55af0bbdf5acc02d1eb6ab18da2acd77a400bafd074489003f3df09676332bb  download/netca
 ff43c7c819e72f03bb908e7652c5d5f59a5d31ee86c333e692650207103d1cce  download/nspr-4.8.9.tar.gz
 0dc77718016654bbf6ffdda09e968e2b2875c05dacec967abf5725b5daae5978  download/nss-3.12.9.tar.gz
 6e84d4ddfa14b911c3ed88463af10867e1fa9b287e7b34d8a02e78be85a7c40e  download/ntp-4.2.6p3.tar.gz
+29efb82781df6bdce58640082241517498253454c98a8c22ba8bede4b7246577  download/nvidia-tegra2-common-19.0026.tar.bz2
+53cb189e08c4d7683f6c3ef32918013b14d55959de34477b9b11cab960176051  download/nvidia-tegra2-egl-19.0026.tar.bz2
+276c17d757ece69edd37c12e6c1a5fd7d5e7ad3c6032fb4393bd1aeb62043032  download/nvidia-tegra2-opengles-19.0026.tar.bz2
+ced6cc60799fa22d61ea1683e295d6b80f7b8a07fac70869a329309ae71ceb26  download/nvidia-tegra2-xorg-19.0026.tar.bz2
 8b2cf4ccc4e7d182d7f40790acc1d4ae822aa05ff560c0be6541ce07832b9b0a  download/opengles2-binary.tar.bz2
 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f  download/openjdk-195fcceefddc.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
