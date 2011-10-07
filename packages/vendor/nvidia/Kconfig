@@ -1,5 +1,7 @@
-if PLATFORM_NVIDIA
+if PLATFORM_NVIDIA || PLATFORM_AVIONIC_DESIGN_PLUTUX
+menu "Nvidia Corp."
 
 source "packages/vendor/nvidia/tegra2/Kconfig"
 
+endmenu
 endif
