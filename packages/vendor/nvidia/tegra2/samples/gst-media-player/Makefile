@@ -1,7 +1,7 @@
 PACKAGE = GstMediaPlayer
 VERSION = 19.0028
 
-LOCATION = http://ftp.avionic-design.de/nvidia/$(PACKAGE)
+LOCATION = http://ftp.avionic-design.de/nvidia/source/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk

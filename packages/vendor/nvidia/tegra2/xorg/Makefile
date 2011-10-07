@@ -1,7 +1,7 @@
 PACKAGE = nvidia-tegra2-xorg
 VERSION = 19.0026
 
-LOCATION = ftp://ftp.avionic-design.de/pub/$(PACKAGE)
+LOCATION = ftp://ftp.avionic-design.de/nvidia/source/vibrante
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
