@@ -16,7 +16,8 @@ include packages/common.mk
 make-args = \
 	O=$(pkgtree)/build \
 	CROSS_COMPILE=$(CROSS_COMPILE) \
-	SYSROOT=$(SYSROOT)
+	SYSROOT=$(SYSROOT) \
+	-j $(NUM_CPU)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
