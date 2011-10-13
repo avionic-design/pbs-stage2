@@ -1,0 +1,71 @@
+From 1fff19be05ea7b3be27a97fd507fc2f3518ba7ba Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Thu, 13 Oct 2011 19:10:58 +0200
+Subject: [PATCH] Fix xdisplay instance usage in forked process.
+
+When xinit forks the Xserver it uses XOpenDisplay within the original program
+to check if the Xserver is running and stores the xdisplay instance "xd" for
+later usage.
+But this usage is done by another forked xinit instance. So it is possible
+that the buggy drivers does not except this instance anymore or do strange
+things.
+
+This patch will use XOpenDisplay only local to check the server status. The
+client will open its own xdisplay if needed.
+---
+ xinit.c |   18 ++++++++++++++++--
+ 1 files changed, 16 insertions(+), 2 deletions(-)
+
+diff --git a/xinit.c b/xinit.c
+index 42ff008..b6e8577 100644
+--- a/xinit.c
++++ b/xinit.c
+@@ -334,6 +334,7 @@ main(int argc, char *argv[])
+ static Bool
+ waitforserver(void)
+ {
++    Display *test;
+     int    ncycles     = 120;        /* # of cycles to wait */
+     int    cycles;            /* Wait cycle count */
+ 
+@@ -348,7 +349,12 @@ waitforserver(void)
+ #endif
+ 
+     for (cycles = 0; cycles < ncycles; cycles++) {
+-        if ((xd = XOpenDisplay(displayNum))) {
++        /* do not use xd here since some drivers e.g. nvidia''s tegra are very
++         * strikt in there handling, so xd will lose its validity after forking
++         * the client. We use XOpenDisplay here only to verify that server is
++         * running so we can live with a local version here. */
++        if ((test = XOpenDisplay(displayNum))) {
++            XCloseDisplay(test);
+             return(TRUE);
+         }
+         else {
+@@ -491,6 +497,13 @@ setWindowPath(void)
+     char nums[10];
+     int numn;
+     size_t len;
++
++    /* xinit forks the server and used xd to check if the server is running
++     * then it forks into the client. at this point xd is no longer valid for
++     * us. So we need to open our own xd. */
++    if (xd == NULL)
++        xd = XOpenDisplay(displayNum);
++
+     prop = XInternAtom(xd, "XFree86_VT", False);
+     if (prop == None) {
+         Errorx("Unable to intern XFree86_VT atom");
+@@ -599,7 +612,8 @@ shutdown(void)
+     if (clientpid > 0) {
+         XSetIOErrorHandler(ignorexio);
+         if (! setjmp(close_env)) {
+-            XCloseDisplay(xd);
++            if (xd)
++                XCloseDisplay(xd);
+         }
+ 
+         /* HUP all local clients to allow them to clean up */
+-- 
+1.7.4.4
+
