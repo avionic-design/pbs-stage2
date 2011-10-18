@@ -2,7 +2,7 @@ diff --git a/Makefile.am b/Makefile.am
 index 120c603..cea4fc8 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -114,6 +114,12 @@ AM_CPPFLAGS += \
+@@ -115,6 +115,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/usr/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -15,7 +15,7 @@ index 120c603..cea4fc8 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -124,6 +130,7 @@ endif
+@@ -125,6 +131,7 @@ endif
  endif
  endif
  endif

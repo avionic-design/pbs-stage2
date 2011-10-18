@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 35
+VERSION = 37
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -34,7 +34,8 @@ prunefiles = \
 	/lib/systemd/system/tmpwatch.service \
 	/lib/systemd/system/tmpwatch.timer \
 	/lib/security/pam_systemd.la \
-	$(prefix)/lib/*.la
+	$(prefix)/lib/tmpfiles.d/tmp.conf \
+	$(prefix)/lib/*.la \
 
 stripfiles = \
 	/bin/systemctl \
