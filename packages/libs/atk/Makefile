@@ -1,5 +1,5 @@
 PACKAGE = atk
-VERSION = 2.0.1
+VERSION = 2.2.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
