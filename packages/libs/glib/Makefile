@@ -8,6 +8,7 @@ conf-vars += \
 	glib_cv_stack_grows=no \
 	glib_cv_monotonic_clock=yes \
 	glib_cv_uscore=no \
+	glib_cv_have_qsort_r=yes \
 	ac_cv_func_posix_getpwuid_r=yes \
 	ac_cv_func_posix_getgrgid_r=yes
 
