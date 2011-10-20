@@ -1,1 +1,2 @@
-ltmain-sysroot.patch -p1
+fixes.patch
+ltmain-sysroot.patch

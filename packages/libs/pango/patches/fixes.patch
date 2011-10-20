@@ -1,0 +1,17 @@
+diff --git a/pango/opentype/hb-common.h b/pango/opentype/hb-common.h
+index a6be6ba..a5d2226 100644
+--- a/pango/opentype/hb-common.h
++++ b/pango/opentype/hb-common.h
+@@ -29,8 +29,10 @@
+ 
+ # ifdef HAVE_STDINT_H
+ #  include <stdint.h>
+-# else ifdef HAVE_INTTYPES_H
+-# include <inttypes.h>
++# else
++#  ifdef HAVE_INTTYPES_H
++#   include <inttypes.h>
++#  endif
+ # endif
+ 
+ # ifdef __cplusplus
