@@ -1,5 +1,5 @@
 PACKAGE = libffi
-VERSION = 3.0.9
+VERSION = 3.0.10
 
 LOCATION = ftp://sourceware.org/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 prunefiles = \
-	$(prefix)/lib/libffi.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libffi.so.5.0.10
+	$(prefix)/lib/*.so.*
