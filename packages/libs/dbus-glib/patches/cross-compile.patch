@@ -15,7 +15,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 1a1029c..190fc56 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -318,7 +318,7 @@ top_builddir = @top_builddir@
+@@ -320,7 +320,7 @@ top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
  ACLOCAL_AMFLAGS = -I m4
  GLIB_PC = dbus-glib-1.pc
@@ -38,7 +38,7 @@ diff --git a/dbus/Makefile.in b/dbus/Makefile.in
 index f4fd885..f006170 100644
 --- a/dbus/Makefile.in
 +++ b/dbus/Makefile.in
-@@ -352,7 +352,7 @@ target_vendor = @target_vendor@
+@@ -354,7 +354,7 @@ target_vendor = @target_vendor@
  top_build_prefix = @top_build_prefix@
  top_builddir = @top_builddir@
  top_srcdir = @top_srcdir@
