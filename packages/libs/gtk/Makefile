@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.24.6
+VERSION = 2.24.7
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
