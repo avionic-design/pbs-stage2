@@ -1,5 +1,5 @@
 PACKAGE = libsoup
-VERSION = 2.35.90
+VERSION = 2.36.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
