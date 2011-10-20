@@ -2,7 +2,7 @@ diff --git a/Makefile.in b/Makefile.in
 index d1023e1..56da741 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -30,6 +30,7 @@ INCLUDESUBDIRHEADERS2=generic.h
+@@ -31,6 +31,7 @@ INCLUDESUBDIRHEADERS2=generic.h
  INSTALLBUILTINCLUDEHEADERS=@FEATUREHEADERS@
  INSTALLBINSCRIPTS=net-snmp-config net-snmp-create-v3-user
  INSTALLUCDHEADERS=ucd-snmp-config.h version.h mib_module_config.h
@@ -14,7 +14,7 @@ diff --git a/Makefile.rules b/Makefile.rules
 index 65687ef..05ff810 100644
 --- a/Makefile.rules
 +++ b/Makefile.rules
-@@ -84,10 +84,11 @@ subdirs:
+@@ -87,10 +87,11 @@ subdirs:
  install: installlocalheaders @installucdheaders@ \
           installlibs \
           installlocalbin      installlocalsbin   \
@@ -28,7 +28,7 @@ index 65687ef..05ff810 100644
  
  installprogs: installbin installsbin
  
-@@ -387,6 +388,25 @@ uninstallsubdirs:
+@@ -390,6 +391,25 @@ uninstallsubdirs:
  		done \
  	fi
  
