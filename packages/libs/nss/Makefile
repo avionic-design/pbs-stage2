@@ -1,5 +1,5 @@
 PACKAGE = nss
-VERSION = 3.12.9
+VERSION = 3.13
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_RTM/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
