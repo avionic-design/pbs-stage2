@@ -2,6 +2,7 @@ menu "Nvidia Tegra2"
 
 source "packages/vendor/nvidia/tegra2/common/Kconfig"
 source "packages/vendor/nvidia/tegra2/egl/Kconfig"
+source "packages/vendor/nvidia/tegra2/l4t/Kconfig"
 source "packages/vendor/nvidia/tegra2/opengles/Kconfig"
 source "packages/vendor/nvidia/tegra2/xorg/Kconfig"
 
