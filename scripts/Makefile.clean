@@ -7,6 +7,9 @@ src := $(obj)
 PHONY := __clean
 __clean:
 
+include scripts/Kbuild.include
+include scripts/Makefile.lib
+
 # Shorthand for $(Q)$(MAKE) scripts/Makefile.clean obj=dir
 # Usage:
 # $(Q)$(MAKE) $(clean)=dir
