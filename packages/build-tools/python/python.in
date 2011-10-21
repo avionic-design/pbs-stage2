@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+program="$0"
+dir="${0%/*}"
+bin="${0##*/}"
+cwd=`cd $dir; pwd`
+prefix="${cwd%/*}"
+
+LD_LIBRARY_PATH="$prefix/lib" \
+	exec "$dir/${bin}@MAJOR@.@MINOR@" "$@"
