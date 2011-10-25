@@ -16,6 +16,7 @@ source "packages/build-tools/orbit/Kconfig"
 source "packages/build-tools/python/Kconfig"
 source "packages/build-tools/python3/Kconfig"
 source "packages/build-tools/shared-mime-info/Kconfig"
+source "packages/build-tools/u-boot/Kconfig"
 source "packages/build-tools/vala/Kconfig"
 
 endmenu

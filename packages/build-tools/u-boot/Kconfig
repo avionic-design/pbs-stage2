@@ -1,0 +1,4 @@
+config PACKAGE_BUILD_TOOLS_UBOOT
+	bool "U-Boot utilities"
+	select PACKAGE_BUILD_TOOLS_DTC
+	default n
