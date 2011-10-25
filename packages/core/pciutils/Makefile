@@ -15,8 +15,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 build-args = \
 	PREFIX=$(prefix) \
 	CROSS_COMPILE='$(CROSS_COMPILE)' \
-	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)' \
+	EXTRA_CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)' \
 	HOST='$(TARGET)' \
 	SHARED=yes \
