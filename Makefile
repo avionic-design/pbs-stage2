@@ -164,7 +164,7 @@ ifeq ($(wildcard $(objtree)/all.config),)
 $(KCONFIG_CONFIG) include/config/auto.conf.cmd: ;
 else
 $(KCONFIG_CONFIG):
-	$(Q)$(MAKE) -f $(srctree)/Makefile KCONFIG_ALLCONFIG=1 allnoconfig
+	$(Q)$(MAKE) -f $(srctree)/Makefile KCONFIG_ALLCONFIG=1 alldefconfig
 
 include/config/auto.conf.cmd: ;
 endif
