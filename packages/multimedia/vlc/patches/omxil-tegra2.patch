@@ -1,0 +1,12 @@
+diff --git a/modules/codec/omxil/omxil.c b/modules/codec/omxil/omxil.c
+index 5eda432..28c554e 100644
+--- a/modules/codec/omxil/omxil.c
++++ b/modules/codec/omxil/omxil.c
+@@ -48,6 +48,7 @@
+  *****************************************************************************/
+ static const char *ppsz_dll_list[] =
+ {
++    "libnvomx.so", /* NVIDIA Tegra2 IL core */
+     "libOMX_Core.so", /* TI OMAP IL core */
+     "libomxil-bellagio.so",  /* Bellagio IL core */
+     0

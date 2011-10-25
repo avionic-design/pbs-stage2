@@ -1,0 +1,61 @@
+diff --git a/include/vlc/libvlc_events.h b/include/vlc/libvlc_events.h
+index 8aa41d8..78c4717 100644
+--- a/include/vlc/libvlc_events.h
++++ b/include/vlc/libvlc_events.h
+@@ -71,6 +71,7 @@ enum libvlc_event_e {
+     libvlc_MediaPlayerTitleChanged,
+     libvlc_MediaPlayerSnapshotTaken,
+     libvlc_MediaPlayerLengthChanged,
++    libvlc_MediaPlayerVout,
+ 
+     libvlc_MediaListItemAdded=0x200,
+     libvlc_MediaListWillAddItem,
+@@ -158,6 +159,10 @@ typedef struct libvlc_event_t
+         {
+             int new_pausable;
+         } media_player_pausable_changed;
++        struct
++        {
++            int new_count;
++        } media_player_vout;
+ 
+         /* media list */
+         struct
+diff --git a/src/control/media_player.c b/src/control/media_player.c
+index c8193e4..a0d3bb2 100644
+--- a/src/control/media_player.c
++++ b/src/control/media_player.c
+@@ -303,6 +303,25 @@ input_event_changed( vlc_object_t * p_this, char const * psz_cmd,
+            from_mtime(var_GetTime( p_input, "length" ));
+         libvlc_event_send( p_mi->p_event_manager, &event );
+     }
++    else if( newval.i_int == INPUT_EVENT_VOUT )
++    {
++        vout_thread_t **pp_vout;
++        size_t i_vout;
++        if( input_Control( p_input, INPUT_GET_VOUTS, &pp_vout, &i_vout ) )
++        {
++            i_vout = 0;
++        }
++        else
++        {
++            for( size_t i = 0; i < i_vout; i++ )
++                vlc_object_release( pp_vout[i] );
++            free( pp_vout );
++        }
++
++        event.type = libvlc_MediaPlayerVout;
++        event.u.media_player_vout.new_count = i_vout;
++        libvlc_event_send( p_mi->p_event_manager, &event );
++    }
+ 
+     return VLC_SUCCESS;
+ 
+@@ -470,6 +489,7 @@ libvlc_media_player_new( libvlc_instance_t *instance )
+     register_event(mp, LengthChanged);
+     register_event(mp, TitleChanged);
+     register_event(mp, PausableChanged);
++    register_event(mp, Vout);
+ 
+     /* Snapshot initialization */
+     register_event(mp, SnapshotTaken);

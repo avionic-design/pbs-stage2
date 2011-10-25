@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 1.1.11
+VERSION = 1.1.12
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
 	--enable-run-as-root \
 	--disable-rpath \
 	--disable-a52 \
@@ -20,6 +19,10 @@ conf-args += \
 	--disable-skins2 \
 	--disable-neon \
 	--disable-glx
+
+conf-args += \
+	--with-live555-tree=$(SYSROOT)$(prefix)/lib/live \
+	--enable-live555
 
 plugin = $(prefix)/lib/vlc/plugins
 
