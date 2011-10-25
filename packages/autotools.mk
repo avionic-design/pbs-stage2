@@ -11,7 +11,9 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
+install-target ?= install
+
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
-		$(env) $(priv) $(MAKE) $(install-args) install
+		$(env) $(priv) $(MAKE) $(install-args) $(install-target)
 	$(call cmd,stamp)
