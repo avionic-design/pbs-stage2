@@ -1,5 +1,5 @@
 PACKAGE = talloc
-VERSION = 2.0.6
+VERSION = 2.0.7
 
 LOCATION = http://samba.org/ftp/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
