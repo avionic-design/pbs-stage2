@@ -1,0 +1,14 @@
+diff --git a/configure.ac b/configure.ac
+index cbf5cb6..2e785df 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -82,8 +82,7 @@ WEBKIT_INIT
+ AC_DISABLE_STATIC
+ AC_LIBTOOL_WIN32_DLL
+ AC_PROG_LIBTOOL
+-# use dolt to speedup the build
+-DOLT
++AC_PROG_CXX
+ 
+ AC_PATH_PROG(FLEX, flex)
+ if test -z "$FLEX"; then
