@@ -31,7 +31,8 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(prefix) \
 	--with-gmp=$(prefix) \
-	--enable-languages=$(languages)
+	--enable-languages=$(languages) \
+	--disable-libssp
 
 ifeq ($(CONFIG_OS_NONE),y)
   conf-args += \
