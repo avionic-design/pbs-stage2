@@ -4,17 +4,12 @@ VERSION = 1.4.5
 LOCATION = http://prdownloads.sourceforge.net/enlightenment
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && mkdir -p m4 && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
+$(pkgbuildtree)/m4:
+	$(call cmd,mkdir_p)
 
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
-
-conf-args += \
-	--with-sysroot=$(SYSROOT)
+$(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 plugin = $(prefix)/lib/imlib2
 

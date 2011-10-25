@@ -1,3 +1,0 @@
-config PACKAGE_BUILD_TOOLS_LIBTOOL
-	bool "libtool"
-	default n

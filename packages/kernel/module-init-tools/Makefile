@@ -4,14 +4,7 @@ VERSION = 3.13
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
-
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--prefix=/ \

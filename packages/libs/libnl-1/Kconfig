@@ -1,5 +1,4 @@
 config PACKAGE_LIBS_LIBNL_1
 	bool "libnl-1.x"
-	select PACKAGE_BUILD_TOOLS_LIBTOOL
 	select VIRTUAL_DEVEL_LIBC
 	default n

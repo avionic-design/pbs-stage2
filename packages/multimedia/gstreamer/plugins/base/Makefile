@@ -7,7 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
 	--disable-examples \
 	--disable-vorbis \
 	--disable-ogg

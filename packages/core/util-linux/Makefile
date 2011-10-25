@@ -7,17 +7,9 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
-
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
 	--disable-libmount \
 	--disable-rpath
 

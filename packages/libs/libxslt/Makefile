@@ -4,17 +4,9 @@ VERSION = 1.1.26
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
-
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		mkdir m4 && $(env) autoreconf --force --install
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
 	--without-crypto \
 	--without-python
 
