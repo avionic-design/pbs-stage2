@@ -2,7 +2,7 @@ PACKAGE = binutils
 VERSION = 2.21.1
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION)a.tar.bz2
 
 include packages/toolchain/common.mk
 
