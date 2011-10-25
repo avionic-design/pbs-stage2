@@ -111,6 +111,7 @@ stripfiles = \
 	$(prefix)/bin/pcprofiledump \
 	$(prefix)/bin/rpcgen \
 	$(prefix)/bin/sprof \
+	$(prefix)/lib/audit/*.so \
 	$(prefix)/libexec/pt_chown \
 	$(prefix)/sbin/iconvconfig \
 	$(prefix)/sbin/nscd \
