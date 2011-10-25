@@ -1,4 +1,4 @@
-menu "Nvidia Tegra2"
+menu "NVIDIA Tegra2"
 
 source "packages/vendor/nvidia/tegra2/common/Kconfig"
 source "packages/vendor/nvidia/tegra2/egl/Kconfig"
