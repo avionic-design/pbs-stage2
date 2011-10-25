@@ -1,9 +1,10 @@
 PACKAGE = openssh
-VERSION = 5.8p2
+VERSION = 5.9p1
 
 LOCATION = http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
+install-target = install-nokeys
 include packages/autotools.mk
 
 # uClibc 0.9.31 doesn't have utmpx, but git (as of 2010/09/09) has
