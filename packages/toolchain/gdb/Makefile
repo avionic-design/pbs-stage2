@@ -11,7 +11,12 @@ conf-args = \
 	--mandir=$(exec-prefix)/share/man
 
 conf-args += \
-	--program-prefix=$(TARGET)-
+	--program-prefix=$(TARGET)- \
+	--enable-multilib
+
+ifeq ($(CONFIG_ARCH),arm)
+  conf-args += --enable-interwork
+endif
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
