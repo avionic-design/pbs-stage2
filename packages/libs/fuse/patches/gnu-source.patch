@@ -1,0 +1,12 @@
+diff --git a/util/fusermount.c b/util/fusermount.c
+index af08033..27f8095 100644
+--- a/util/fusermount.c
++++ b/util/fusermount.c
+@@ -9,6 +9,7 @@
+ 
+ #include <config.h>
+ 
++#define _GNU_SOURCE
+ #include "../lib/mount_util.h"
+ #include <stdio.h>
+ #include <stdlib.h>

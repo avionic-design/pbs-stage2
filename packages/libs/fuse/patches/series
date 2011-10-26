@@ -1,3 +1,4 @@
 ltmain-sysroot-2.2.6.patch
 fusermount-include.diff
 install-util.diff
+gnu-source.patch
