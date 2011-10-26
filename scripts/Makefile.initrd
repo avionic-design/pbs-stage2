@@ -33,7 +33,7 @@ include $(kernel-release)
 
 $(obj)/initrd: KERNEL_VERSION = $(VERSION)
 $(obj)/initrd: %: mount-% $(packages) FORCE
-	$(call cmd,depmod)
+	$(if $(wildcard $(obj)/initrd/lib/modules/$(KERNEL_VERSION)),$(call cmd,depmod))
 
 quiet_cmd_initrd = CPIO    $@
       cmd_initrd = cd $< && find | cpio -H newc --quiet -o > $@
