@@ -1,2 +1,3 @@
 gcc-4.6.patch
+disable-speex.patch
 ltmain-sysroot.patch

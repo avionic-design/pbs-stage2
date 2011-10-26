@@ -1,12 +1,13 @@
 PACKAGE = linphone
 VERSION = 3.4.3
 
-LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)/stable/sources
+LOCATION = http://download-mirror.savannah.gnu.org/releases/$(PACKAGE)/stable/source
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
 conf-args += \
+	--disable-speex \
 	--disable-video \
 	--disable-rpath
 
