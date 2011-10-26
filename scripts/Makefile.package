@@ -55,7 +55,10 @@ destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
 quiet_cmd_wget = WGET    $(dlurl) $(destination)
       cmd_wget = wget --no-check-certificate -q $(dlurl) -O $@ || ( rm $@ ; false )
 
-$(local-files): $(srctree)/download/%:
+$(srctree)/download:
+	$(call cmd,mkdir_p)
+
+$(local-files): $(srctree)/download/%: | $(srctree)/download
 	$(call cmd,wget)
 
 quiet_cmd_checksum_sha256 = SHA256  $<
