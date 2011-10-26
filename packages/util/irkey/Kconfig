@@ -1,6 +1,6 @@
 config PACKAGE_UTIL_IRKEY
 	bool "IRKey"
-	depends on PLATFORM_NVIDIA_HARMONY
+	select VIRTUAL_DEVEL_LIBC
 	default n
 	help
 	  This is a service to generate input events from a ir-remote.
