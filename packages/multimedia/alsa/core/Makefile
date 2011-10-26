@@ -9,7 +9,8 @@ include packages/autotools.mk
 conf-args += \
 	--disable-old-symbols \
 	--disable-alisp \
-	--disable-python
+	--disable-python \
+	--with-versioned=no
 
 ifeq ($(FLOAT),soft)
 conf-args += \
