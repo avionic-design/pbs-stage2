@@ -1,0 +1,41 @@
+diff --git a/dtc.c b/dtc.c
+index cbc0193..98218e0 100644
+--- a/dtc.c
++++ b/dtc.c
+@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
+ 	const char *inform = "dts";
+ 	const char *outform = "dts";
+ 	const char *outname = "-";
+-	int force = 0, check = 0, sort = 0;
++	int force = 0, sort = 0;
+ 	const char *arg;
+ 	int opt;
+ 	FILE *outf = NULL;
+@@ -138,7 +138,6 @@ int main(int argc, char *argv[])
+ 			force = 1;
+ 			break;
+ 		case 'c':
+-			check = 1;
+ 			break;
+ 		case 'q':
+ 			quiet++;
+diff --git a/flattree.c b/flattree.c
+index ead0332..28d0b23 100644
+--- a/flattree.c
++++ b/flattree.c
+@@ -697,7 +697,6 @@ static struct reserve_info *flat_read_mem_reserve(struct inbuf *inb)
+ {
+ 	struct reserve_info *reservelist = NULL;
+ 	struct reserve_info *new;
+-	const char *p;
+ 	struct fdt_reserve_entry re;
+ 
+ 	/*
+@@ -706,7 +705,6 @@ static struct reserve_info *flat_read_mem_reserve(struct inbuf *inb)
+ 	 *
+ 	 * First pass, count entries.
+ 	 */
+-	p = inb->ptr;
+ 	while (1) {
+ 		flat_read_chunk(inb, &re, sizeof(re));
+ 		re.address  = fdt64_to_cpu(re.address);
