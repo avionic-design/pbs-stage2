@@ -4,8 +4,13 @@ PHONY := all
 all:
 
 include include/config/auto.conf
+include include/config/depends-dirs.conf
 include $(srctree)/scripts/Kbuild.include
 include $(srctree)/scripts/Makefile.lib
+
+ifneq ($(wildcard $(srctree)/$(master-platform)/binary.mk),)
+  include $(srctree)/$(master-platform)/binary.mk
+endif
 
 pkgtree := $(objtree)/build/$(obj)
 
@@ -27,6 +32,10 @@ ifeq ($(install-packages-y),)
   install-packages-y := $(filter-out %-l10n,$(install-packages-y))
   install-packages-y := $(filter-out %-locale,$(install-packages-y))
   install-packages-y := $(filter-out %-man,$(install-packages-y))
+
+  ifneq ($(exclude-packages-y),)
+    install-packages-y := $(filter-out $(exclude-packages-y),$(install-packages-y))
+  endif
 endif
 
 install-packages := $(addprefix install-$(obj)/,$(install-packages-y))
