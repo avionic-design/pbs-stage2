@@ -9,6 +9,7 @@ config VIRTUAL_KERNEL_LINUX_LIBC
 
 config PACKAGE_KERNEL_LINUX_KERNEL
 	bool "linux: Linux kernel"
+	select PACKAGE_BUILD_TOOLS_UBOOT if ARCH_HAS_UBOOT
 	default n
 
 config KERNEL_SOURCE

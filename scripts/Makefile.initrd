@@ -8,12 +8,6 @@ include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-CONFIG_ARCH := $(call unquote,$(CONFIG_ARCH))
-
-ifeq ($(CONFIG_ARCH),arm)
-  CONFIG_ARCH_HAS_UBOOT = y
-endif
-
 targets-y := $(obj)/initrd.gz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
 

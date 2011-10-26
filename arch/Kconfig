@@ -9,6 +9,7 @@ config ARCH_X86_64
 
 config ARCH_ARM
 	bool "arm"
+	select ARCH_HAS_UBOOT
 
 config ARCH_BLACKFIN
 	bool "blackfin"
@@ -17,6 +18,10 @@ config ARCH_MIPS
 	bool "mips"
 
 endchoice
+
+config ARCH_HAS_UBOOT
+	bool
+	default n
 
 source "arch/x86/Kconfig"
 source "arch/x86_64/Kconfig"
