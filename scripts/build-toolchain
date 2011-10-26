@@ -105,6 +105,8 @@ else
 
 	version=`toolchain_version $toolchain $libc`
 
+	test -d logs || mkdir logs
+
 	log_begin_msg -n "[`eval $date`]   Building toolchain ... "
 	CROSS_COMPILE="${arch}-${os}-gnu${abi}-" \
 		time make O=toolchains/$toolchain > logs/$toolchain.log 2>&1
