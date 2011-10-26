@@ -18,6 +18,10 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
+ifneq ($(wildcard $(pkgtree)/.symlink-source),)
+  VERSION := $(VERSION)+
+endif
+
 pkg-ext = $(VERSION)_$(TARGET).tar.bz2
 
 ifeq ($(install-packages-y),)
