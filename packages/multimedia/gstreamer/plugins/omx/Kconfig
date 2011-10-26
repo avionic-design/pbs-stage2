@@ -1,6 +1,7 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_OMX
 	bool "omx"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+	select PACKAGE_VENDOR_NVIDIA_TEGRA2_OPENGLES if ARCH_TEGRA_2x_SOC
 	default n
 	help
 	  gst-openmax is a GStreamer plug-in that allows communication with OpenMAX IL components.

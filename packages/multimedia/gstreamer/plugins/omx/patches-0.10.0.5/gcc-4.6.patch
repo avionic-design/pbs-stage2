@@ -1,0 +1,117 @@
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_base_filter.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_base_filter.c
+--- gst-openmax-0.10.0.5/omx/gstomx_base_filter.c	2011-09-22 11:42:38.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_base_filter.c	2011-10-18 16:59:21.258111714 +0200
+@@ -979,12 +979,10 @@
+            GstEvent *event)
+ {
+     GstOmxBaseFilter *self;
+-    GOmxCore *gomx;
+     GOmxPort *in_port;
+     gboolean ret = TRUE;
+ 
+     self = GST_OMX_BASE_FILTER (GST_OBJECT_PARENT (pad));
+-    gomx = self->gomx;
+     in_port = self->in_port;
+ 
+     GST_LOG_OBJECT (self, "begin");
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_base_sink.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_base_sink.c
+--- gst-openmax-0.10.0.5/omx/gstomx_base_sink.c	2011-09-22 16:09:28.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_base_sink.c	2011-10-18 16:59:48.574448350 +0200
+@@ -423,11 +423,9 @@
+ {
+     GObjectClass *gobject_class;
+     GstBaseSinkClass *gst_base_sink_class;
+-    GstElementClass *gstelement_class;
+ 
+     gobject_class = G_OBJECT_CLASS (g_class);
+     gst_base_sink_class = GST_BASE_SINK_CLASS (g_class);
+-    gstelement_class = GST_ELEMENT_CLASS (g_class);
+ 
+     parent_class = g_type_class_ref (GST_TYPE_ELEMENT);
+ 
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_h264dec.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_h264dec.c
+--- gst-openmax-0.10.0.5/omx/gstomx_h264dec.c	2011-09-06 11:35:03.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_h264dec.c	2011-10-18 16:58:39.271952253 +0200
+@@ -405,9 +405,7 @@
+ gpointer class_data)
+ {
+     GObjectClass *gobject_class;
+-    GstElementClass *gstelement_class;
+     gobject_class = (GObjectClass *) g_class;
+-    gstelement_class = (GstElementClass *) g_class;
+             
+     parent_class = g_type_class_ref (GST_OMX_BASE_VIDEODEC_TYPE);
+     gobject_class->finalize = gst_omx_h264dec_finalize;
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_mixer.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_mixer.c
+--- gst-openmax-0.10.0.5/omx/gstomx_mixer.c	2011-09-22 11:41:47.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_mixer.c	2011-10-18 16:58:09.722309185 +0200
+@@ -389,10 +389,8 @@
+                  gpointer class_data)
+ {
+     GObjectClass *gobject_class;
+-    GstElementClass *gstelement_class;
+ 
+     gobject_class = G_OBJECT_CLASS (g_class);
+-    gstelement_class = GST_ELEMENT_CLASS (g_class);
+ 
+     parent_class = g_type_class_ref (GST_OMX_BASE_FILTER_TYPE);
+ 
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_nvxtunnel.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_nvxtunnel.c
+--- gst-openmax-0.10.0.5/omx/gstomx_nvxtunnel.c	2010-11-05 04:08:19.000000000 +0100
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_nvxtunnel.c	2011-10-18 16:57:52.062522481 +0200
+@@ -12,12 +12,11 @@
+ {
+     nvx_tunnel_param oTunnelParam;
+     OMX_INDEXTYPE nIndexParam;
+-    GOmxPort *port;
+     INIT_PARAM(oTunnelParam);
+     nIndexParam = (OMX_IndexVendorStartUnused | 0xF00000);
+     oTunnelParam.bTunningSupported = OMX_TRUE;
+     oTunnelParam.nPort = portIndex;  
+     oTunnelParam.transactionType = transaction_type_rmsurfaces;
+-    port = g_omx_core_get_port (core, oTunnelParam.nPort);
++    (void)g_omx_core_get_port (core, oTunnelParam.nPort);
+     OMX_SetParameter(core->omx_handle,nIndexParam,&oTunnelParam);
+ }
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_wmvdec.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_wmvdec.c
+--- gst-openmax-0.10.0.5/omx/gstomx_wmvdec.c	2011-09-02 10:50:01.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_wmvdec.c	2011-10-18 16:58:25.635450310 +0200
+@@ -476,9 +476,7 @@
+                  gpointer class_data)
+ {
+     GObjectClass *gobject_class;
+-    GstElementClass *gstelement_class;
+     gobject_class = (GObjectClass *) g_class;
+-    gstelement_class = (GstElementClass *) g_class;
+ 
+     parent_class = g_type_class_ref (GST_OMX_BASE_VIDEODEC_TYPE);
+     gobject_class->finalize = gst_omx_vc1dec_finalize; 
+diff -Nur gst-openmax-0.10.0.5/omx/gstomx_x11eglutils.c ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_x11eglutils.c
+--- gst-openmax-0.10.0.5/omx/gstomx_x11eglutils.c	2011-09-22 11:39:05.000000000 +0200
++++ ../build/plutux-rootfs/build/packages/multimedia/gstreamer/plugins/omx/gst-openmax-0.10.0.5/omx/gstomx_x11eglutils.c	2011-10-18 17:02:46.125635730 +0200
+@@ -26,7 +26,7 @@
+ extern GMutex *gl_mutex;
+ static int FrameCnt=0;
+ static gboolean eglInitialized = FALSE;
+-extern char dumpfilename[256];
++char dumpfilename[256];
+ 
+ /* ERROR_GOTO_FAIL - if <val> is true, print <string> and goto fail */
+ #define ERROR_GOTO_FAIL(val, string) \
+@@ -1076,7 +1076,6 @@
+ void nvomx_render_eglimage(nvomx_eglbuffer *buf , int dumpEnabled ,int start_frame, int end_frame, int step )
+ {
+     int ret = 0;
+-    EGLBoolean eglStatus;
+     ownThreadContext();
+ 
+     if (buf->bimageflip)
+@@ -1091,7 +1090,7 @@
+     glBindTexture(GL_TEXTURE_2D, buf->hTex);
+     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+ #ifdef EGL_NV_sync
+-    eglStatus = eglFenceNV(buf->hReadEglSync);
++    (void)eglFenceNV(buf->hReadEglSync);
+ #endif
+     // if dumpEnabled is set then dump frames starting from start_frame until end_frame in the increment of step. Default is just one frame (30'th frame)
+     if(dumpEnabled == 1)
