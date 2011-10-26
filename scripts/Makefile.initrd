@@ -28,7 +28,8 @@ mount-$(obj)/initrd: mount-%:
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
 
-include $(objtree)/build/packages/kernel/linux.git/kernel-release
+kernel-release = $(objtree)/build/packages/kernel/linux.git/kernel-release
+include $(kernel-release)
 
 $(obj)/initrd: KERNEL_VERSION = $(VERSION)
 $(obj)/initrd: %: mount-% $(packages) FORCE
@@ -50,8 +51,8 @@ quiet_cmd_gzip = GZIP    $@
 $(obj)/initrd.gz: $(obj)/initrd.img
 	$(call cmd,gzip)
 
-$(obj)/multi.its: $(master-platform)/multi.its.in
-	sed -e 's;@VERSION@;$(VERSION);' $< > $@
+$(obj)/multi.its: $(master-platform)/multi.its.in $(kernel-release)
+	@echo '  GEN     $@'; sed -e 's;@VERSION@;$(VERSION);' $< > $@
 
 MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
 
