@@ -1,0 +1,429 @@
+diff --git a/gdb/config.in b/gdb/config.in
+index 01ba750..736dccd 100644
+--- a/gdb/config.in
++++ b/gdb/config.in
+@@ -665,6 +665,9 @@
+ /* Define to 1 if you have the `ttrace' function. */
+ #undef HAVE_TTRACE
+ 
++/* Define to 1 if the system has the type `uintptr_t'. */
++#undef HAVE_UINTPTR_T
++
+ /* Define to 1 if you have the <unistd.h> header file. */
+ #undef HAVE_UNISTD_H
+ 
+@@ -964,6 +967,10 @@
+ # define __restrict__
+ #endif
+ 
++/* Define to the type of an unsigned integer type wide enough to hold a
++   pointer, if such a type exists, and if the system does not define it. */
++#undef uintptr_t
++
+ /* Define as a marker that can be attached to declarations that might not
+     be used.  This helps to reduce warnings, such as from
+     GCC -Wunused-parameter.  */
+diff --git a/gdb/configure b/gdb/configure
+index 30e5e45..81c8610 100755
+--- a/gdb/configure
++++ b/gdb/configure
+@@ -11638,6 +11638,42 @@ _ACEOF
+ fi
+ 
+ 
++  ac_fn_c_check_type "$LINENO" "uintptr_t" "ac_cv_type_uintptr_t" "$ac_includes_default"
++if test "x$ac_cv_type_uintptr_t" = x""yes; then :
++
++$as_echo "#define HAVE_UINTPTR_T 1" >>confdefs.h
++
++else
++  for ac_type in 'unsigned int' 'unsigned long int' \
++	'unsigned long long int'; do
++       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++$ac_includes_default
++int
++main ()
++{
++static int test_array [1 - 2 * !(sizeof (void *) <= sizeof ($ac_type))];
++test_array [0] = 0
++
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_compile "$LINENO"; then :
++
++cat >>confdefs.h <<_ACEOF
++#define uintptr_t $ac_type
++_ACEOF
++
++	  ac_type=
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++       test -z "$ac_type" && break
++     done
++fi
++
++
++
+ # ------------------------------------- #
+ # Checks for compiler characteristics.  #
+ # ------------------------------------- #
+diff --git a/gdb/configure.ac b/gdb/configure.ac
+index f51a567..d2a67da 100644
+--- a/gdb/configure.ac
++++ b/gdb/configure.ac
+@@ -976,6 +976,7 @@ AC_CHECK_TYPES(socklen_t, [], [],
+ [#include <sys/types.h>
+ #include <sys/socket.h>
+ ])
++AC_TYPE_UINTPTR_T
+ 
+ # ------------------------------------- #
+ # Checks for compiler characteristics.  #
+diff --git a/gdb/gdb_thread_db.h b/gdb/gdb_thread_db.h
+index 957ed2c..93e2e33 100644
+--- a/gdb/gdb_thread_db.h
++++ b/gdb/gdb_thread_db.h
+@@ -1,14 +1,5 @@
+ #ifdef HAVE_THREAD_DB_H
+ #include <thread_db.h>
+-
+-#ifndef LIBTHREAD_DB_SO
+-#define LIBTHREAD_DB_SO "libthread_db.so.1"
+-#endif
+-
+-#ifndef LIBTHREAD_DB_SEARCH_PATH
+-#define LIBTHREAD_DB_SEARCH_PATH ""
+-#endif
+-
+ #else
+ 
+ /* Copyright (C) 1999, 2000, 2007, 2008, 2009, 2010, 2011
+@@ -461,3 +452,11 @@ extern td_err_e td_thr_dbresume (const td_thrhandle_t *__th);
+ #endif	/* thread_db.h */
+ 
+ #endif /* HAVE_THREAD_DB_H */
++
++#ifndef LIBTHREAD_DB_SO
++#define LIBTHREAD_DB_SO "libthread_db.so.1"
++#endif
++
++#ifndef LIBTHREAD_DB_SEARCH_PATH
++#define LIBTHREAD_DB_SEARCH_PATH ""
++#endif
+diff --git a/gdb/gdbserver/config.in b/gdb/gdbserver/config.in
+index 909dcb9..3b55470 100644
+--- a/gdb/gdbserver/config.in
++++ b/gdb/gdbserver/config.in
+@@ -53,6 +53,9 @@
+ /* Define to 1 if you have the <fcntl.h> header file. */
+ #undef HAVE_FCNTL_H
+ 
++/* Define to 1 if the system has the type `intptr_t'. */
++#undef HAVE_INTPTR_T
++
+ /* Define to 1 if you have the <inttypes.h> header file. */
+ #undef HAVE_INTTYPES_H
+ 
+@@ -174,6 +177,9 @@
+ /* Define to 1 if you have the <thread_db.h> header file. */
+ #undef HAVE_THREAD_DB_H
+ 
++/* Define to 1 if the system has the type `uintptr_t'. */
++#undef HAVE_UINTPTR_T
++
+ /* Define to 1 if you have the <unistd.h> header file. */
+ #undef HAVE_UNISTD_H
+ 
+@@ -266,3 +272,11 @@
+ 
+ /* Define to 1 if you need to in order for `stat' and other things to work. */
+ #undef _POSIX_SOURCE
++
++/* Define to the type of a signed integer type wide enough to hold a pointer,
++   if such a type exists, and if the system does not define it. */
++#undef intptr_t
++
++/* Define to the type of an unsigned integer type wide enough to hold a
++   pointer, if such a type exists, and if the system does not define it. */
++#undef uintptr_t
+diff --git a/gdb/gdbserver/configure b/gdb/gdbserver/configure
+index aaa73fc..6b35247 100755
+--- a/gdb/gdbserver/configure
++++ b/gdb/gdbserver/configure
+@@ -1651,6 +1651,60 @@ $as_echo "$ac_res" >&6; }
+ 
+ } # ac_fn_c_check_header_compile
+ 
++# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
++# -------------------------------------------
++# Tests whether TYPE exists after having included INCLUDES, setting cache
++# variable VAR accordingly.
++ac_fn_c_check_type ()
++{
++  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
++  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
++$as_echo_n "checking for $2... " >&6; }
++if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
++  $as_echo_n "(cached) " >&6
++else
++  eval "$3=no"
++  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++$4
++int
++main ()
++{
++if (sizeof ($2))
++	 return 0;
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_compile "$LINENO"; then :
++  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++$4
++int
++main ()
++{
++if (sizeof (($2)))
++	    return 0;
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_compile "$LINENO"; then :
++
++else
++  eval "$3=yes"
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++fi
++eval ac_res=\$$3
++	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
++$as_echo "$ac_res" >&6; }
++  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
++
++} # ac_fn_c_check_type
++
+ # ac_fn_c_try_link LINENO
+ # -----------------------
+ # Try to link conftest.$ac_ext, and return whether this succeeded.
+@@ -1808,60 +1862,6 @@ $as_echo "$ac_res" >&6; }
+   eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+ 
+ } # ac_fn_c_check_decl
+-
+-# ac_fn_c_check_type LINENO TYPE VAR INCLUDES
+-# -------------------------------------------
+-# Tests whether TYPE exists after having included INCLUDES, setting cache
+-# variable VAR accordingly.
+-ac_fn_c_check_type ()
+-{
+-  as_lineno=${as_lineno-"$1"} as_lineno_stack=as_lineno_stack=$as_lineno_stack
+-  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for $2" >&5
+-$as_echo_n "checking for $2... " >&6; }
+-if { as_var=$3; eval "test \"\${$as_var+set}\" = set"; }; then :
+-  $as_echo_n "(cached) " >&6
+-else
+-  eval "$3=no"
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-$4
+-int
+-main ()
+-{
+-if (sizeof ($2))
+-	 return 0;
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-if ac_fn_c_try_compile "$LINENO"; then :
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-$4
+-int
+-main ()
+-{
+-if (sizeof (($2)))
+-	    return 0;
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-if ac_fn_c_try_compile "$LINENO"; then :
+-
+-else
+-  eval "$3=yes"
+-fi
+-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+-fi
+-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
+-fi
+-eval ac_res=\$$3
+-	       { $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_res" >&5
+-$as_echo "$ac_res" >&6; }
+-  eval $as_lineno_stack; test "x$as_lineno_stack" = x && { as_lineno=; unset as_lineno;}
+-
+-} # ac_fn_c_check_type
+ cat >config.log <<_ACEOF
+ This file contains any messages produced by compilers while
+ running configure, to aid debugging if configure makes a mistake.
+@@ -3800,6 +3800,78 @@ $as_echo "#define STDC_HEADERS 1" >>confdefs.h
+ fi
+ 
+ 
++
++  ac_fn_c_check_type "$LINENO" "intptr_t" "ac_cv_type_intptr_t" "$ac_includes_default"
++if test "x$ac_cv_type_intptr_t" = x""yes; then :
++
++$as_echo "#define HAVE_INTPTR_T 1" >>confdefs.h
++
++else
++  for ac_type in 'int' 'long int' 'long long int'; do
++       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++$ac_includes_default
++int
++main ()
++{
++static int test_array [1 - 2 * !(sizeof (void *) <= sizeof ($ac_type))];
++test_array [0] = 0
++
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_compile "$LINENO"; then :
++
++cat >>confdefs.h <<_ACEOF
++#define intptr_t $ac_type
++_ACEOF
++
++	  ac_type=
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++       test -z "$ac_type" && break
++     done
++fi
++
++
++
++  ac_fn_c_check_type "$LINENO" "uintptr_t" "ac_cv_type_uintptr_t" "$ac_includes_default"
++if test "x$ac_cv_type_uintptr_t" = x""yes; then :
++
++$as_echo "#define HAVE_UINTPTR_T 1" >>confdefs.h
++
++else
++  for ac_type in 'unsigned int' 'unsigned long int' \
++	'unsigned long long int'; do
++       cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++$ac_includes_default
++int
++main ()
++{
++static int test_array [1 - 2 * !(sizeof (void *) <= sizeof ($ac_type))];
++test_array [0] = 0
++
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_compile "$LINENO"; then :
++
++cat >>confdefs.h <<_ACEOF
++#define uintptr_t $ac_type
++_ACEOF
++
++	  ac_type=
++fi
++rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++       test -z "$ac_type" && break
++     done
++fi
++
++
++
+ # The Ultrix 4.2 mips builtin alloca declared by alloca.h only works
+ # for constant arguments.  Useless!
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working alloca.h" >&5
+diff --git a/gdb/gdbserver/configure.ac b/gdb/gdbserver/configure.ac
+index 07ac26a..e84fd3f 100644
+--- a/gdb/gdbserver/configure.ac
++++ b/gdb/gdbserver/configure.ac
+@@ -36,6 +36,9 @@ AC_ARG_PROGRAM
+ 
+ AC_HEADER_STDC
+ 
++AC_TYPE_INTPTR_T
++AC_TYPE_UINTPTR_T
++
+ AC_FUNC_ALLOCA
+ AC_CHECK_HEADERS(sgtty.h termio.h termios.h sys/reg.h string.h dnl
+ 		 proc_service.h sys/procfs.h thread_db.h linux/elf.h dnl
+diff --git a/gdb/gdbserver/linux-low.h b/gdb/gdbserver/linux-low.h
+index 6635bc6..edc2c02 100644
+--- a/gdb/gdbserver/linux-low.h
++++ b/gdb/gdbserver/linux-low.h
+@@ -21,6 +21,8 @@
+ #include <thread_db.h>
+ #endif
+ 
++#include <stdint.h>
++
+ #include "gdb_proc_service.h"
+ 
+ #ifdef HAVE_LINUX_REGSETS
+diff --git a/gdb/gdbserver/thread-db.c b/gdb/gdbserver/thread-db.c
+index 529516e..373e5ac 100644
+--- a/gdb/gdbserver/thread-db.c
++++ b/gdb/gdbserver/thread-db.c
+@@ -313,7 +313,9 @@ find_one_thread (ptid_t ptid)
+     return 0;
+ 
+   lwp->thread_known = 1;
++#ifdef HAVE_THREAD_DB_H
+   lwp->th = th;
++#endif
+ 
+   return 1;
+ }
+@@ -338,7 +340,9 @@ attach_thread (const td_thrhandle_t *th_p, td_thrinfo_t *ti_p)
+     }
+ 
+   lwp->thread_known = 1;
++#ifdef HAVE_THREAD_DB_H
+   lwp->th = *th_p;
++#endif
+ 
+   if (thread_db_use_events)
+     {
+@@ -489,6 +493,7 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
+   struct thread_info *saved_inferior;
+   struct process_info *proc;
+   struct thread_db *thread_db;
++  td_thrhandle_t th;
+ 
+   proc = get_thread_process (thread);
+   thread_db = proc->private->thread_db;
+@@ -511,9 +516,12 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
+   /* Note the cast through uintptr_t: this interface only works if
+      a target address fits in a psaddr_t, which is a host pointer.
+      So a 32-bit debugger can not access 64-bit TLS through this.  */
+-  err = thread_db->td_thr_tls_get_addr_p (&lwp->th,
++  err = thread_db->td_thr_tls_get_addr_p (&th,
+ 					  (psaddr_t) (uintptr_t) load_module,
+ 					  offset, &addr);
++#ifdef HAVE_THREAD_DB
++  lwp->th = th;
++#endif
+   current_inferior = saved_inferior;
+   if (err == TD_OK)
+     {
