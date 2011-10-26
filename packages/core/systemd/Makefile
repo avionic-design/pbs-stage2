@@ -65,6 +65,7 @@ stripfiles = \
 	/lib/systemd/systemd-readahead-replay \
 	/lib/systemd/systemd-remount-api-vfs \
 	/lib/systemd/systemd-reply-password \
+	/lib/systemd/systemd-stdout-syslog-bridge \
 	/lib/systemd/systemd-shutdown \
 	/lib/systemd/systemd-shutdownd \
 	/lib/systemd/systemd-sysctl \
