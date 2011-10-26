@@ -69,13 +69,11 @@ $(dest-dirs):
 $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install install_utils
-	$(priv) cp $(pkgsrctree)/ldconfig.init $(DESTDIR)/etc/init.d/ldconfig
-	$(priv) cp $(pkgsrctree)/ld.so.conf $(DESTDIR)/etc/ld.so.conf
-	$(priv) ln -sf ../init.d/ldconfig $(DESTDIR)/etc/rcS.d/S50ldconfig
 	$(call cmd,stamp)
 
 stripfiles = \
 	$(prefix)/bin/ldd \
+	$(prefix)/bin/getconf \
 	/sbin/ldconfig
 
 include packages/cleanup.mk
