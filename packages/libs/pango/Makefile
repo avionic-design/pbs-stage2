@@ -9,6 +9,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+conf-args += \
+	--with-sysroot=$(SYSROOT)
+
 # pango configure does not detect the C++ cross-compiler correctly
 conf-vars += \
 	CXX=$(TARGET)-g++

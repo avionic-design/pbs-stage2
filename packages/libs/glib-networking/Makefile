@@ -12,7 +12,7 @@ include packages/autotools-reconf.mk
 $(pkgbuildtree)/m4:
 	$(call cmd,mkdir_p)
 
-$(pkgtree)/.setup: $(pkgbuildtree)/m4
+$(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 conf-args += \
 	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \

@@ -7,6 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--with-system-ffmpeg
 
 plugin = $(prefix)/lib/gstreamer-0.10
