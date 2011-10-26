@@ -4,7 +4,7 @@ VERSION = 2.1.0
 LOCATION = http://prdownloads.sourceforge.net/linux-diag
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la
