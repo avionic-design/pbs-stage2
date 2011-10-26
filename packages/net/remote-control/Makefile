@@ -12,6 +12,9 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_BACKLIGHT_MEDATOM),y)
 	conf-args += --with-backlight-backend=medatom
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_BACKLIGHT_SYSFS),y)
+	conf-args += --with-backlight-backend=sysfs
+endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_VIDEO_VLC),y)
 	conf-args += --with-video-backend=libvlc
 endif
