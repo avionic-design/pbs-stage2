@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_LIBNOTIFY
 	bool "libnotify"
 	select PACKAGE_LIBS_DBUS_GLIB
+	select PACKAGE_LIBS_GDK_PIXBUF
 	default n
