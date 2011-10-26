@@ -78,16 +78,10 @@ quiet_cmd_build_package = BUILD   $*_$(VERSION)_$(TARGET).tar.bz2
 				-b $(objtree)/binary/$(obj) \
 				$*
 
-quiet_cmd_build_deb = DEB     $*_$(VERSION)_$(TARGET).deb
-      cmd_build_deb = $(priv) $(srctree)/scripts/pbs-deb --build \
-				$(objtree)/binary/$(obj)/install/$* \
-				$(objtree)/binary/$(obj)
-
 PHONY += $(build-packages)
 $(build-packages): build-$(obj)/%:
 	$(call cmd,install_files)
 	$(call cmd,build_package)
-	$(call cmd,build_deb)
 
 PHONY += build
 build: $(build-packages)
