@@ -4,10 +4,12 @@ config VIRTUAL_DEVEL_LIBC
 	bool "C runtime library"
 	default n
 	select VIRTUAL_KERNEL_LINUX_LIBC
+	select PACKAGE_DEVEL_GCC_LIBS
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 
 source "packages/devel/flex/Kconfig"
+source "packages/devel/gcc-libs/Kconfig"
 source "packages/devel/gdb/Kconfig"
 source "packages/devel/glibc/Kconfig"
 source "packages/devel/lua/Kconfig"

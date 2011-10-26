@@ -69,8 +69,6 @@ $(dest-dirs):
 $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install install_utils
-	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libgcc_s.so.1` $(DESTDIR)/lib
-	$(priv) cp `$(CROSS_COMPILE)gcc --print-file-name=libstdc++.so.6` $(DESTDIR)/lib
 	$(priv) cp $(pkgsrctree)/ldconfig.init $(DESTDIR)/etc/init.d/ldconfig
 	$(priv) cp $(pkgsrctree)/ld.so.conf $(DESTDIR)/etc/ld.so.conf
 	$(priv) ln -sf ../init.d/ldconfig $(DESTDIR)/etc/rcS.d/S50ldconfig
@@ -78,8 +76,6 @@ $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 
 stripfiles = \
 	$(prefix)/bin/ldd \
-	/lib/libgcc_s.so.1 \
-	/lib/libstdc++.so.6 \
 	/sbin/ldconfig
 
 include packages/cleanup.mk
