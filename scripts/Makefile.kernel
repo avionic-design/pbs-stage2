@@ -82,7 +82,7 @@ config: $(pkgtree)/kernel-release
 
 quiet_cmd_build_kernel_image = BUILD   $(image)
       cmd_build_kernel_image = \
-			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
+			cd $(KERNELSRC) && $(env) $(MAKE) $(make-conf) \
 					-j $(NUM_CPU) $(image)
 
 PHONY += build-$(image)
