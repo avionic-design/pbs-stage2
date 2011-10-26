@@ -101,6 +101,7 @@ stripfiles = \
 	$(prefix)/sbin/delpart \
 	$(prefix)/sbin/fdformat \
 	$(prefix)/sbin/ldattach \
+	$(prefix)/sbin/partx \
 	$(prefix)/sbin/readprofile \
 	$(prefix)/sbin/rtcwake \
 	$(prefix)/sbin/tunelp \
