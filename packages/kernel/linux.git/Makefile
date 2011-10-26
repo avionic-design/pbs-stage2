@@ -8,9 +8,10 @@ KERNELSRC := $(or $(wildcard $(srctree)/$(obj)/src),"$(srctree)/$(call unquote,$
 ARCH := $(call unquote,$(CONFIG_ARCH))
 export KERNELSRC ARCH
 
-KERNEL_CONFIG = $(CONFIG_KERNEL_CONFIG)
+KERNEL_CONFIG = $(call unquote,$(CONFIG_KERNEL_CONFIG))
+KERNEL_DTB = $(call unquote,$(CONFIG_KERNEL_DTB))
 DESTDIR = $(pkgtree)/install
-export KERNEL_CONFIG DESTDIR
+export KERNEL_CONFIG KERNEL_DTB DESTDIR
 
 MAKEFLAGS =
 KBUILD_SRC =

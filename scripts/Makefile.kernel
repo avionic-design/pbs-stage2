@@ -98,8 +98,32 @@ PHONY += build-modules
 build-modules: $(objtree)/.config
 	$(call cmd,build_kernel_modules)
 
+ifneq ($(KERNEL_DTB),)
+quiet_cmd_build_fdt = BUILD   fdt
+      cmd_build_fdt = cd $(KERNELSRC) && $(MAKE) $(make-conf) \
+					-j $(NUM_CPU) dtbs
+
+PHONY += build-fdt
+build-fdt: $(objtree)/.config
+	$(call cmd,build_fdt)
+
+quiet_cmd_install_fdt = SYMLINK fdt
+      cmd_install_fdt = ln -sf $(KBUILD_OUTPUT)/arch/$(ARCH)/boot/$(KERNEL_DTB).dtb $(objtree)/fdt.dtb
+
+PHONY += install-fdt
+install-fdt:
+	$(call cmd,install_fdt)
+else
+PHONY += build-fdt
+build-fdt:
+
+PHONY += install-fdt
+install-fdt:
+endif
+
+
 PHONY += build
-build: build-$(image) build-modules
+build: build-$(image) build-modules build-fdt
 
 PHONY += headers-check
 headers-check: config
@@ -158,7 +182,7 @@ install-modules: build-modules
 			modules_install
 
 PHONY += install
-install: install-$(image) install-image-link install-modules
+install: install-$(image) install-image-link install-modules install-fdt
 
 PHONY += clean
 clean:

@@ -20,3 +20,8 @@ config KERNEL_CONFIG
 	string "Kernel configuration"
 	depends on PACKAGE_KERNEL_LINUX_KERNEL
 	default "defconfig"
+
+config KERNEL_DTB
+	string "Flattened Device Tree blob"
+	depends on PACKAGE_KERNEL_LINUX_KERNEL
+	default ""
