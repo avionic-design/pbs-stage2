@@ -1,2 +1,2 @@
 version=3
-http://uclibc.org/downloads/uClibc-(\d.+)\.tar\.xz
+http://uclibc.org/downloads/uClibc-([\d\.]+)\.tar\.xz
