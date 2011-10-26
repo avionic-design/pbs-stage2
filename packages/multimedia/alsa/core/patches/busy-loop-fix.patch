@@ -1,0 +1,15 @@
+diff --git a/src/pcm/pcm_plugin.c b/src/pcm/pcm_plugin.c
+index d88e117..8a865a2 100644
+--- a/src/pcm/pcm_plugin.c
++++ b/src/pcm/pcm_plugin.c
+@@ -523,9 +523,9 @@ static int snd_pcm_plugin_status(snd_pcm_t *pcm, snd_pcm_status_t * status)
+ 	snd_atomic_read_t ratom;
+ 	snd_atomic_read_init(&ratom, &plugin->watom);
+  _again:
+-	snd_atomic_read_begin(&ratom);
+ 	/* sync with the latest hw and appl ptrs */
+ 	snd_pcm_plugin_avail_update(pcm);
++	snd_atomic_read_begin(&ratom);
+ 
+ 	err = snd_pcm_status(plugin->gen.slave, status);
+ 	if (err < 0) {

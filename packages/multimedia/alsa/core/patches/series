@@ -1,1 +1,2 @@
 ltmain-sysroot.patch -p1
+busy-loop-fix.patch
