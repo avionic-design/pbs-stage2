@@ -8,13 +8,14 @@ include include/config/depends-dirs.conf
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
+CONFIG_ARCH := $(call unquote,$(CONFIG_ARCH))
+
 ifeq ($(CONFIG_ARCH),arm)
   CONFIG_ARCH_HAS_UBOOT = y
 endif
 
 targets-y := $(obj)/initrd.gz
-targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.img
-targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/u-boot.fit
+targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
 
 packages := $(addprefix install-,$(depends-dirs))
 
@@ -54,6 +55,17 @@ quiet_cmd_gzip = GZIP    $@
 
 $(obj)/initrd.gz: $(obj)/initrd.img
 	$(call cmd,gzip)
+
+$(obj)/multi.its: $(master-platform)/multi.its.in
+	sed -e 's;@VERSION@;$(VERSION);' $< > $@
+
+MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
+
+quiet_cmd_uimage = UIMAGE  $@
+      cmd_uimage = $(MKIMAGE) -f $< $@ $(if $(Q),> /dev/null 2>&1,)
+
+$(obj)/uImage: $(obj)/multi.its $(obj)/initrd.gz
+	$(call cmd,uimage)
 
 all: $(targets-y)
 	@:
