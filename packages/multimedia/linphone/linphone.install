@@ -6,4 +6,4 @@
 /usr/share/linphone
 /usr/share/locale
 /usr/share/pixmaps
-/usr/share/sounds
+/usr/share/sounds/linphone/hello*.wav
