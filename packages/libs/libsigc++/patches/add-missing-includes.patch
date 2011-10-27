@@ -1,0 +1,39 @@
+From a3e9e561fbeca8f60caa4ef52b63e34928a3c06b Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Thu, 27 Oct 2011 13:09:49 +0200
+Subject: [PATCH] Add include for missing size_t definition.
+
+This will add an include to fix a build issue caused by missing definition of
+size types.
+---
+ sigc++/signal.h      |    1 +
+ sigc++/signal_base.h |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/sigc++/signal.h b/sigc++/signal.h
+index 9e81ed0..d5c6800 100644
+--- a/sigc++/signal.h
++++ b/sigc++/signal.h
+@@ -4,6 +4,7 @@
+ #ifndef _SIGC_SIGNAL_H_
+ #define _SIGC_SIGNAL_H_
+ 
++#include <cstddef>
+ #include <list>
+ #include <sigc++/signal_base.h>
+ #include <sigc++/type_traits.h>
+diff --git a/sigc++/signal_base.h b/sigc++/signal_base.h
+index 1638642..e43bd5e 100644
+--- a/sigc++/signal_base.h
++++ b/sigc++/signal_base.h
+@@ -21,6 +21,7 @@
+ #ifndef _SIGC_SIGNAL_BASE_H_
+ #define _SIGC_SIGNAL_BASE_H_
+ 
++#include <cstddef>
+ #include <list>
+ #include <sigc++config.h>
+ #include <sigc++/type_traits.h>
+-- 
+1.7.4.4
+
