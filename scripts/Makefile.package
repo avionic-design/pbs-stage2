@@ -242,7 +242,7 @@ dist: $(dist-deps) $(extra-dist-deps)
 
 PHONY += print
 print:
-	@echo "$(PACKAGE): $(VERSION)"
+	@echo "$(PACKAGE): $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)"
 
 PHONY += FORCE
 FORCE: ;
