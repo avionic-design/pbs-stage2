@@ -294,6 +294,10 @@ distclean: clean $(distclean-dirs)
 	$(Q)$(MAKE) $(package)=$* clean
 	$(Q)$(MAKE) $(package)=$* install
 
+%/binary:
+	@rm -f $(objtree)/build/$*/.binary
+	$(Q)$(MAKE) $(package)=$* install
+
 %/print:
 	$(Q)$(MAKE) $(package)=$* print
 
