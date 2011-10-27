@@ -78,3 +78,6 @@ include $(srctree)/packages/binary.mk
 
 $(objtree)/dist/$(obj)/src.local: SRC_DIR=$(KERNELSRC)
 extra-dist-deps := $(objtree)/dist/$(obj)/src.local
+
+configure:
+	$(Q)$(MAKE) $(kernel)=$(pkgtree)/build menuconfig

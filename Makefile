@@ -283,6 +283,23 @@ PHONY += distclean
 distclean: clean $(distclean-dirs)
 	@:
 
+%/build:
+	@rm -f $(objtree)/build/$*/.build
+	$(Q)$(MAKE) $(package)=$* install
+
+%/clean:
+	$(Q)$(MAKE) $(package)=$* clean
+
+%/rebuild:
+	$(Q)$(MAKE) $(package)=$* clean
+	$(Q)$(MAKE) $(package)=$* install
+
+%/print:
+	$(Q)$(MAKE) $(package)=$* print
+
+%/configure:
+	$(Q)$(MAKE) $(package)=$* configure
+
 endif # skip-makefile
 
 PHONY += FORCE

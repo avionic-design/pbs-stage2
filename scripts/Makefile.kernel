@@ -200,4 +200,10 @@ version:
 		$(MAKE) $(make-conf) \
 			kernelversion
 
+PHONY += menuconfig
+menuconfig:
+	cd $(KERNELSRC) && \
+		$(MAKE) $(make-conf) \
+			$@
+
 .PHONY: $(PHONY)

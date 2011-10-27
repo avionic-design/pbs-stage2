@@ -229,6 +229,13 @@ $(objtree)/dist/$(obj)/src.svn:
 $(objtree)/dist/$(obj)/src.local:
 	$(call cmd,src_export)
 
+quiet_cmd_clean_pkgtree = RM      $(pkgtree)
+      cmd_clean_pkgtree = rm -rf $(pkgtree)
+
+PHONY += clean
+clean:
+	$(call cmd,clean_pkgtree)
+
 PHONY += dist
 dist: $(dist-deps) $(extra-dist-deps)
 	@:
