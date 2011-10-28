@@ -1,3 +1,4 @@
 reinstall-nis-rpc-headers.patch
 export-rpc-interface.patch
 i686.patch
+libdl-fix-segfault.patch
