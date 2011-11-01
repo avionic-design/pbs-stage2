@@ -1,5 +1,5 @@
 PACKAGE = p11-kit
-VERSION = 0.7
+VERSION = 0.8
 
 LOCATION = http://p11-glue.freedesktop.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
