@@ -1,16 +1,33 @@
 diff --git a/Makefile.am b/Makefile.am
-index 6f83c12..5638861 100644
+index 3e699e5..00cba9e 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -66,6 +66,7 @@ DIST_DIR := /data/work/releases/module-init-tools/
+@@ -40,13 +40,10 @@ MAN5 = depmod.conf.5 depmod.d.5 modprobe.conf.5 modprobe.d.5 \
+ 	modules.dep.5 modules.dep.bin.5
+ MAN8 = depmod.8 insmod.8 lsmod.8 rmmod.8 modprobe.8 modinfo.8
+ SGML = $(addprefix doc/,  $(MAN5:%.5=%.sgml) $(MAN8:%.8=%.sgml))
+-dist_man_MANS = $(MAN5) $(MAN8)
+-# If they haven't overridden mandir, fix it (never /man!)
+-mandir =$(shell if [ @mandir@ = $(prefix)/man ]; then if [ $(prefix) = / ]; then echo /usr/share/man; else echo $(prefix)/share/man; fi; else echo @mandir@; fi)
  
+ TESTSUITE := $(shell test -e @srcdir@/tests && find @srcdir@/tests -type f ! -name '*~')
+ 
+-EXTRA_DIST = generate-modprobe.conf FAQ CODING stress_modules.sh install-with-care $(SGML) $(man_MANS) $(TESTSUITE)
++EXTRA_DIST = generate-modprobe.conf FAQ CODING stress_modules.sh install-with-care $(SGML) $(TESTSUITE)
+ 
+ sbin_PROGRAMS = insmod modprobe rmmod depmod modinfo
+ if BUILD_STATIC_UTILS
+@@ -63,7 +60,8 @@ GIT_RELEASE_REMOTE := origin
+ GIT_RELEASE_BRANCH := master
+ SCP_RELEASE_URL := "jcm@master.kernel.org:/pub/linux/utils/kernel/module-init-tools/"
+ 
+-
++if BUILD_DOCS
++dist_man_MANS = $(MAN5) $(MAN8)
  MAINTAINERCLEANFILES := $(man_MANS)
  
-+if BUILD_DOCS
  # docbook2man writes file itself, doesn't do stdout.
- %.8: doc/%.sgml
- 	if [ "$(DOCBOOKTOMAN)" = "docbook2man" ]; then                     \
-@@ -88,6 +89,7 @@ distclean-local: killbuildmanpages
+@@ -88,6 +86,7 @@ distclean-local: killbuildmanpages
  
  killbuildmanpages:
  	rm -f doc/*.tmp manpage.refs manpage.links
@@ -19,7 +36,7 @@ index 6f83c12..5638861 100644
  tarball: $(DIST_DIR)/module-init-tools-$(VERSION).tar.gz
  
 diff --git a/configure.ac b/configure.ac
-index 163148e..6b24731 100644
+index 339e4c9..51cbfb8 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -29,14 +29,18 @@ fi])

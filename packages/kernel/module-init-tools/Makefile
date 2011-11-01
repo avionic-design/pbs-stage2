@@ -1,5 +1,5 @@
 PACKAGE = module-init-tools
-VERSION = 3.13
+VERSION = 3.15
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--prefix=/ \
+	--prefix= \
 	--bindir=/bin
 
 conf-args += \
