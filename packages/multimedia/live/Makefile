@@ -1,5 +1,5 @@
 PACKAGE = live
-VERSION = 2011.10.18
+VERSION = 2011.10.27
 
 LOCATION = http://live555.com/liveMedia/public
 TARBALLS = $(PACKAGE).$(VERSION).tar.gz
