@@ -3,5 +3,6 @@ menu "Console Utilities"
 source "packages/console/fbset/Kconfig"
 source "packages/console/kbd/Kconfig"
 source "packages/console/minicom/Kconfig"
+source "packages/console/tmux/Kconfig"
 
 endmenu
