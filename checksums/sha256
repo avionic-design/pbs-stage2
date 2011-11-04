@@ -97,7 +97,7 @@ dbc2db76fdd4e99f85d5e35aa378ed62c283e0d586b91bd8703aff75a7804c28  download/gmp-5
 cc7ffed03d889175586519c16916b55260171c6ae1a0c94155d4fe15b0b16e2c  download/gnome-shell-2.31.4.tar.bz2
 7cfd0a58b4e0810cbe9ec1c6854b56aeb9a3c29746a93836ee784b04de131181  download/gnutls-2.12.12.tar.bz2
 e60301c5e1acb171949dd62175adcdade95a06aa8b22e6192184b58cc34cae60  download/grep-2.9.tar.xz
-b17707102b4bfa5e0d5095be3608ee2d4388268eab822c9a0ce7a18011bdd73b  download/gst-ffmpeg-0.10.12.tar.bz2
+76fca05b08e00134e3cb92fa347507f42cbd48ddb08ed3343a912def187fbb62  download/gst-ffmpeg-0.10.13.tar.bz2
 d8f7102f43ffea076646427115ffdccb3975954f1e9367bd304f7ee01e12070c  download/gst-plugins-bad-0.10.22.tar.bz2
 cd24f01bb5258a1f400bc4f2c212bb7cee9ee23c9ffb80d537a24ef366d17103  download/gst-plugins-base-0.10.35.tar.bz2
 b12cba90b27d8423cd0a808939098d19db3996cfb9bf528507c6321782e095f6  download/gst-plugins-good-0.10.30.tar.bz2
