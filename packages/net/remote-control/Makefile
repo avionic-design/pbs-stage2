@@ -36,6 +36,12 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_HANDSET_PTIP),y)
 	conf-args += --with-handset-backend=ptip
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_GPIO_GPIODEV),y)
+	conf-args += --with-gpio-backend=gpiodev
+endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_GPIO_SYSFS),y)
+	conf-args += --with-gpio-backend=sysfs
+endif
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \

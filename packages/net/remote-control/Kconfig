@@ -98,3 +98,18 @@ choice
 		bool "PT-IP Murnau"
 
 endchoice
+
+choice
+	prompt "GPIO Support"
+	depends on PACKAGE_NET_REMOTE_CONTROL
+
+	config PACKAGE_NET_REMOTE_CONTROL_GPIO_NONE
+		bool "Not supported"
+
+	config PACKAGE_NET_REMOTE_CONTROL_GPIO_GPIODEV
+		bool "/dev/gpio-* device support"
+
+	config PACKAGE_NET_REMOTE_CONTROL_GPIO_SYSFS
+		bool "sysfs (Linux kernel gpiolib) support"
+
+endchoice
