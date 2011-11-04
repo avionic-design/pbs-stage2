@@ -1,0 +1,5 @@
+PACKAGE = orc
+VERSION = 0.4.16
+
+LOCATION = http://code.entropywave.com/download/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

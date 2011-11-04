@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_ORC
+	bool "ORC - OIL runtime compiler"
+	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_ORC
+	default n
