@@ -8,7 +8,8 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-keypad \
-	--with-framebuffer
+	--with-framebuffer \
+	--with-linphone
 
 stripfiles = \
         $(prefix)/bin/ptip
