@@ -1,5 +1,5 @@
 PACKAGE = nss
-VERSION = 3.13
+VERSION = 3.12.9
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_RTM/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -12,22 +12,25 @@ $(pkgtree)/.setup:
 
 use-64 = $(if $(findstring x86_64,$(shell uname -m)),USE_64=1,)
 
+common-vars = \
+	OS_ARCH=Linux \
+	OS_RELEASE=2.6 \
+	OS_TEST=$(CONFIG_ARCH) \
+	CPU_ARCH=$(CONFIG_ARCH) \
+	BUILD_TREE="$(pkgtree)/build" \
+	NS_USE_GCC=1
+
 conf-vars = \
-	NS_USE_GCC=1 $(use-64) CC=gcc BUILD_TREE="$(pkgtree)/build"
+	$(common-vars) $(use-64) CC=gcc
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree)/mozilla/security/nss && \
 		$(env) $(MAKE) $(conf-vars) build_coreconf
 	$(call cmd,stamp)
 
-common-vars = \
-	OS_ARCH=Linux OS_RELEASE=2.6 OS_TEST=$(CONFIG_ARCH) \
-	CPU_ARCH=$(CONFIG_ARCH) CROSS_COMPILE=1 \
-	BUILD_TREE="$(pkgtree)/build" \
-	NS_USE_GCC=1
-
 build-vars = \
 	$(common-vars) \
+	CROSS_COMPILE=1 \
 	NATIVE_CC="gcc" \
 	CC="$(CC)" \
 	STANDARDS_CFLAGS="$(CFLAGS)" \
@@ -40,7 +43,9 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-vars = \
-	$(common-vars) CC="$(CC)" \
+	$(common-vars) \
+	CROSS_COMPILE=1 \
+	CC="$(CC)" \
 	SOURCE_BIN_DIR=$(DESTDIR)$(prefix)/bin \
 	SOURCE_LIB_DIR=$(DESTDIR)$(prefix)/lib \
 	NSDISTMODE=copy
