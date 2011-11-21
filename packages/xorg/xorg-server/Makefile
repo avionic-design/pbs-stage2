@@ -1,6 +1,13 @@
 PACKAGE = xorg-server
 VERSION = 1.11.0
 
+ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG),y)
+VERSION = 1.9.5
+endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+patchdir = $(pkgsrctree)/patches-$(VERSION)
+VERSION = 1.10.4
+endif
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 1.6.5
 endif
