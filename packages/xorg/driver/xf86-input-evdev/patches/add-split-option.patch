@@ -1,0 +1,51 @@
+diff --git a/src/evdev.c b/src/evdev.c
+index 45873c1..e12da1e 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -472,6 +472,7 @@ EvdevProcessValuators(InputInfoPtr pInfo, int v[MAX_VALUATORS], int *num_v,
+                     pEvdev->calibration.max_y, pEvdev->calibration.min_y);
+         }
+ 
++
+         if (pEvdev->invert_x)
+             v[0] = (pEvdev->absinfo[ABS_X].maximum - v[0] +
+                     pEvdev->absinfo[ABS_X].minimum);
+@@ -479,6 +480,17 @@ EvdevProcessValuators(InputInfoPtr pInfo, int v[MAX_VALUATORS], int *num_v,
+             v[1] = (pEvdev->absinfo[ABS_Y].maximum - v[1] +
+                     pEvdev->absinfo[ABS_Y].minimum);
+ 
++        if (pEvdev->split_at_y > 0) {
++            /* ignore all events below this value */
++            if (pEvdev->split_at_y < v[1])
++                v[1] = pEvdev->split_at_y;
++            /* remap the visible range */
++            v[1] = xf86ScaleAxis(v[1],
++                    pEvdev->absinfo[ABS_Y].maximum,
++                    pEvdev->absinfo[ABS_Y].minimum,
++                    pEvdev->split_at_y, 0);
++        }
++
+         *num_v = pEvdev->num_vals;
+         *first_v = 0;
+     }
+@@ -2043,6 +2055,8 @@ EvdevProbe(InputInfoPtr pInfo)
+         pEvdev->invert_y = xf86SetBoolOption(pInfo->options, "InvertY", FALSE);
+         pEvdev->swap_axes = xf86SetBoolOption(pInfo->options, "SwapAxes", FALSE);
+ 
++        pEvdev->split_at_y = xf86SetIntOption(pInfo->options, "SplitAtY", 0);
++
+         str = xf86CheckStrOption(pInfo->options, "Calibration", NULL);
+         if (str) {
+             num_calibration = sscanf(str, "%d %d %d %d",
+diff --git a/src/evdev.h b/src/evdev.h
+index f640fdd..e7a8b86 100644
+--- a/src/evdev.h
++++ b/src/evdev.h
+@@ -131,6 +131,7 @@ typedef struct {
+     BOOL swap_axes;
+     BOOL invert_x;
+     BOOL invert_y;
++    unsigned int split_at_y;
+ 
+     int delta[REL_CNT];
+     unsigned int abs_queued, rel_queued, prox_queued;
