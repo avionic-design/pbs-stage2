@@ -1,4 +1,4 @@
 config PACKAGE_VENDOR_NVIDIA_TEGRA2_EGL
-	bool "egl"
+	bool "Vibrante EGL"
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_COMMON
 	default n

@@ -1,5 +1,5 @@
 config PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG
-	bool "xorg"
+	bool "Vibrante XOrg Server & Driver"
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_COMMON
 	default n
 	help
