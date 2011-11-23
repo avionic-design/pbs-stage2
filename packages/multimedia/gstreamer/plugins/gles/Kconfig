@@ -1,0 +1,8 @@
+config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_GLES
+	bool "gles"
+	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+	select PACKAGE_LIBS_MESA if !ARCH_TEGRA_2x_SOC
+#	select PACKAGE_VENDOR_NVIDIA_TEGRA2_OPENGLES if ARCH_TEGRA_2x_SOC
+	default n
+	help
+	  This module contains integration libraries and plug-ins for using OpenGL within GStreamer pipelines.
