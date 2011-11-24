@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 7.10.3
+VERSION = 7.11.1
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2
@@ -44,9 +44,11 @@ dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_TDFX) += tdfx
 dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_UNICHROME) += unichrome
 dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_FFB) += ffb
 
+dri-drivers-y := $(subst $(empty) $(empty),$(comma),$(dri-drivers-y))
+
 conf-args += \
-	--with-dri-drivers="$(dri-drivers-y)" \
-	--disable-gallium
+	--with-dri-drivers='$(dri-drivers-y)' \
+	--without-gallium-drivers
 
 ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_EGL),y)
 	conf-args += --enable-egl
