@@ -1,0 +1,4 @@
+config PACKAGE_CORE_LM_SENSORS
+	bool "lm-sensors"
+	select VIRTUAL_DEVEL_LIBC
+	default n
