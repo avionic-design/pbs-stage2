@@ -1,3 +1,5 @@
+if ARCH_TEGRA_2x_SOC
+
 menu "NVIDIA Tegra2"
 
 source "packages/vendor/nvidia/tegra2/common/Kconfig"
@@ -10,3 +12,5 @@ source "packages/vendor/nvidia/tegra2/xorg/Kconfig"
 source "packages/vendor/nvidia/tegra2/samples/Kconfig"
 
 endmenu
+
+endif
