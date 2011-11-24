@@ -22,7 +22,7 @@ diff --git a/Makefile.in b/Makefile.in
 index a44b6aa..eb3e920 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -477,6 +477,7 @@ SUBDIRS = \
+@@ -474,6 +474,7 @@ SUBDIRS = \
  	doc \
  	man \
  	include \
@@ -30,7 +30,7 @@ index a44b6aa..eb3e920 100644
  	dix  \
  	fb \
  	mi \
-@@ -491,7 +492,6 @@ SUBDIRS = \
+@@ -488,7 +489,6 @@ SUBDIRS = \
  	$(RECORD_DIR) \
  	xfixes \
  	damageext \
@@ -56,7 +56,7 @@ diff --git a/dix/Makefile.in b/dix/Makefile.in
 index 0948bf2..f1715aa 100644
 --- a/dix/Makefile.in
 +++ b/dix/Makefile.in
-@@ -60,7 +60,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
+@@ -57,7 +57,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
  CONFIG_CLEAN_FILES =
  CONFIG_CLEAN_VPATH_FILES =
  LTLIBRARIES = $(noinst_LTLIBRARIES)
@@ -65,7 +65,7 @@ index 0948bf2..f1715aa 100644
  am_libdix_la_OBJECTS = atom.lo colormap.lo cursor.lo devices.lo \
  	dispatch.lo dixfonts.lo dixutils.lo enterleave.lo events.lo \
  	eventconvert.lo extension.lo ffs.lo gc.lo getevents.lo \
-@@ -499,6 +499,9 @@ libdix_la_SOURCES = \
+@@ -496,6 +496,9 @@ libdix_la_SOURCES = \
  	tables.c	\
  	window.c
  
