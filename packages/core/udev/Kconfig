@@ -9,3 +9,8 @@ config PACKAGE_CORE_UDEV_GLIB
 	bool "GLib binding"
 	depends on PACKAGE_CORE_UDEV
 	default n
+
+config PACKAGE_CORE_UDEV_DISABLE_EXTRAS
+	bool "disable extras"
+	depends on PACKAGE_CORE_UDEV
+	default n
