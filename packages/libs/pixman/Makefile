@@ -1,5 +1,5 @@
 PACKAGE = pixman
-VERSION = 0.22.2
+VERSION = 0.24.0
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -13,6 +13,7 @@ $(pkgtree)/.autoreconfigure: $(pkgbuildtree)/m4
 
 ifeq ($(CONFIG_ARCH),arm)
 conf-args += \
+	--disable-arm-iwmmxt \
 	--disable-arm-neon \
 	--disable-arm-simd
 endif
