@@ -1,5 +1,5 @@
 PACKAGE = curl
-VERSION = 7.22.0
+VERSION = 7.23.1
 
 LOCATION = http://$(PACKAGE).haxx.se/download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
