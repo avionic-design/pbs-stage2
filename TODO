@@ -37,10 +37,6 @@
   This is mostly implemented now, so t should be safe to remove the special
   handling for VIRTUAL_PROVIDES from scripts/kconfig.
 
-+ Automatically create the download directory for new repository clones. In
-  other words, the directory should be automatically created when the first
-  tarball is downloaded.
-
 + Add additional functionality to fetch tarballs from a local proxy. This
   prevents problems when an upstream mirror is down or (re)moves content.
 
@@ -59,8 +55,10 @@
 + Add wrapper script around toolchain gcc to check that --sysroot is always
   set and that no -I or -L options point to anything outside the sysroot.
 
-+ Build libtool, autoconf and automake as part of the toolchain, so that
-  specific versions will always be available.
++ Build autoconf and automake as part of the toolchain, so that specific
+  versions will always be available.
+
++ Enable libssp support in GCC (currently breaks glibc-based platforms).
 
 --
 vim: tw=78
