@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index b6091a8..ba28ebe 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -143,8 +143,8 @@ sdkdir=`$PKG_CONFIG --variable=sdkdir xorg-server`
+@@ -183,8 +183,8 @@ sdkdir=`$PKG_CONFIG --variable=sdkdir xorg-server`
  if test "x$enable_dri" != "xno"; then
          save_CFLAGS="$CFLAGS"
          save_CPPFLAGS="$CPPFLAGS"
