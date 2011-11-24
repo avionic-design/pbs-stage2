@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--enable-nouveau-experimental-api
+	--enable-nouveau-experimental-api \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
