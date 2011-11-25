@@ -28,6 +28,11 @@ ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
 	--disable-gudev
 endif
 
+ifeq ($(CONFIG_PACKAGE_CORE_UDEV_DISABLE_EXTRAS),y)
+  conf-args += \
+	--disable-hwdb
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
