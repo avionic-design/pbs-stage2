@@ -11,6 +11,7 @@ ACLOCAL_FLAGS += -I Source/autotools
 conf-args += \
 	--with-unicode-backend=glib \
 	--disable-spellcheck \
+	--enable-page-visibility-api \
 	--with-gtk=2.0
 
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO),y)
