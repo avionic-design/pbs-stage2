@@ -16,3 +16,31 @@ config PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO
 	default n
 	help
 	  Enables support for HTML5 video tag.
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_3D
+	bool "Enable 3D support"
+	depends on PACKAGE_WEB_WEBKIT_GTK
+	default n
+	help
+	  Enables support for WebGL and 3D rendering.
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_FS_API
+	bool "Enable FilesystemAPI support"
+	depends on PACKAGE_WEB_WEBKIT_GTK
+	default n
+	help
+	  Enables support for HTML5 Filesystem API.
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_ANIM_API
+	bool "Enable Webkit AnimationAPI support"
+	depends on PACKAGE_WEB_WEBKIT_GTK
+	default n
+	help
+	  Enables support for Webkit Animation API.
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2
+	bool "Enable Webkit2 support"
+	depends on PACKAGE_WEB_WEBKIT_GTK
+	default n
+	help
+	  Enables support for Webkit2.

@@ -17,6 +17,23 @@ conf-args += \
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO),y)
 conf-args += --disable-video
 endif
+ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_3D),y)
+conf-args += \
+	--enable-3d-rendering
+# requires opengl
+#	--enable-webgl
+endif
+ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_FS_API),y)
+conf-args += --enable-file-system
+endif
+ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_ANIM_API),y)
+conf-args += --enable-animation-api
+endif
+ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2),y)
+# requires gtk3
+conf-args += --enable-webkit2
+endif
+
 
 prunefiles = \
 	$(prefix)/lib/*.la
