@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 0.7.8
+VERSION = 0.8.3
 
 LOCATION = http://ffmpeg.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
