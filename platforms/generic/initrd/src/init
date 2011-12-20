@@ -41,11 +41,14 @@ if test -x /usr/sbin/plymouthd; then
 	mkdir -p /var/log
 	mkdir -p /var/lib/plymouth
 
-	/sbin/modprobe i915 modeset=1
+	if [ "x`uname -m`" == "xi786" ]; then
+		log_progress_msg "Loading gfx driver..."
+		/sbin/modprobe i915 modeset=1
 
-	udevadm trigger --attr-match=class=0x030000
-	udevadm trigger --subsystem-match=graphics --subsystem-match=drm --subsystem-match=tty
-	udevadm settle || true
+		/sbin/udevadm trigger --attr-match=class=0x030000
+		/sbin/udevadm trigger --subsystem-match=graphics --subsystem-match=drm --subsystem-match=tty
+		/sbin/udevadm settle || true
+	fi
 
 	log_action_begin_msg "Starting plymouth daemon"
 	/usr/sbin/plymouthd --mode=boot --attach-to-session
