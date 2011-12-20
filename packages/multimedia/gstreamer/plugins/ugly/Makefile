@@ -9,6 +9,12 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT)
 
+ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_FFMPEG),y)
+conf-args += \
+	--disable-mad \
+	--disable-mpeg2dec
+endif
+
 plugin = $(prefix)/lib/gstreamer-0.10
 
 prunefiles = \
