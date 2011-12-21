@@ -1,11 +1,10 @@
 PACKAGE = libcec
-VERSION = git
+VERSION = 1.3.0
 
-LOCATION = git://github.com/Pulse-Eight/libcec.git
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
-
-#conf-args 
 
 prunefiles = \
 	$(prefix)/lib/*.la
