@@ -1,8 +1,8 @@
 PACKAGE = gst-plugins-gles
-VERSION = git
+VERSION = 0.10.0
 
-LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
 
