@@ -1,0 +1,26 @@
+From ccf7575a13a1a8f93f2dc3e1c638255434ca438d Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Wed, 21 Dec 2011 19:43:10 +0100
+Subject: [PATCH] Add missing typedef.
+
+This will add the typedef of GLchar to the GLES2 header file. This patch has
+already been send to nvidia.
+---
+ usr/include/GLES2/gl2.h |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+
+diff --git a/usr/include/GLES2/gl2.h b/usr/include/GLES2/gl2.h
+index 59e376c..e5bad62 100644
+--- a/usr/include/GLES2/gl2.h
++++ b/usr/include/GLES2/gl2.h
+@@ -19,6 +19,7 @@ extern "C" {
+  *-----------------------------------------------------------------------*/
+ 
+ typedef void             GLvoid;
++typedef char             GLchar;
+ typedef unsigned int     GLenum;
+ typedef unsigned char    GLboolean;
+ typedef unsigned int     GLbitfield;
+-- 
+1.7.7.5
+
