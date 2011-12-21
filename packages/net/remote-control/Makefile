@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_AUDIO_ALSA_UCM),y)
+	conf-args += --with-audio-backend=alsa
+endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_BACKLIGHT_DPMS),y)
 	conf-args += --with-backlight-backend=dpms
 endif

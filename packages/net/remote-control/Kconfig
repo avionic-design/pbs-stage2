@@ -17,6 +17,18 @@ config PACKAGE_NET_REMOTE_CONTROL
 	default n
 
 choice
+	prompt "Audio State Support"
+	depends on PACKAGE_NET_REMOTE_CONTROL
+
+	config PACKAGE_NET_REMOTE_CONTROL_AUDIO_NONE
+		bool "Not supported"
+
+	config PACKAGE_NET_REMOTE_CONTROL_AUDIO_ALSA_UCM
+		bool "ALSA UseCaseManager"
+
+endchoice
+
+choice
 	prompt "Backlight Support"
 	depends on PACKAGE_NET_REMOTE_CONTROL
 
