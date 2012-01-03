@@ -3,8 +3,6 @@ menu "Development Tools"
 config VIRTUAL_DEVEL_LIBC
 	bool "C runtime library"
 	default n
-	select VIRTUAL_KERNEL_LINUX_LIBC
-	select PACKAGE_DEVEL_GCC_LIBS
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 

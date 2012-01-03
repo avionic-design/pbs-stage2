@@ -3,8 +3,9 @@ src = $(obj)
 PHONY := build
 build:
 
-include include/config/auto.conf
-include include/config/depends-dirs.conf
+-include include/config/auto.conf
+include include/config/depends-dirs.mk
+include include/config/depends.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
@@ -13,8 +14,8 @@ include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 platform-depends-dirs := $(depends-dirs)
 
-ifneq ($(wildcard toolchains/$(TARGET)/include/config/depends-dirs.conf),)
-include toolchains/$(TARGET)/include/config/depends-dirs.conf
+ifneq ($(wildcard toolchains/$(TARGET)/include/config/depends-dirs.mk),)
+include toolchains/$(TARGET)/include/config/depends-dirs.mk
 toolchain-depends-dirs := $(depends-dirs)
 endif
 
@@ -30,8 +31,12 @@ $(build-dirs): build-%:
 	$(Q)$(MAKE) $(package)=$* install
 
 PHONY += build
-build: $(build-dirs)
+build: build/.install
 	@:
+
+build/%/.install:
+	$(Q)$(MAKE) $(package)=$* clean
+	$(Q)$(MAKE) $(package)=$* install
 
 PHONY += $(rebuild-sysroot-dirs)
 $(rebuild-sysroot-dirs): __clean-files = $(objtree)/build/$*/.install

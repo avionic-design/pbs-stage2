@@ -1,3 +1,4 @@
+#include <libgen.h>
 #include <locale.h>
 #include <ctype.h>
 #include <errno.h>
@@ -8,95 +9,15 @@
 #include <unistd.h>
 #include <sys/stat.h>
 
+#include "list.h"
+
 #define LKC_DIRECT_LINK
 #include "lkc.h"
 
-static const char depfile[] = "include/config/depends.conf";
-
-struct list_head {
-	struct list_head *prev;
-	struct list_head *next;
-};
-
-#define LIST_HEAD_INIT(name) { &(name), &(name) }
-#define LIST_HEAD(name) \
-	struct list_head name = LIST_HEAD_INIT(name)
-
-static void INIT_LIST_HEAD(struct list_head *head)
-{
-	head->prev = head;
-	head->next = head;
-}
-
-static int list_empty(struct list_head *head)
-{
-	return head->next == head;
-}
-
-static void __list_add(struct list_head *new, struct list_head *prev,
-		struct list_head *next)
-{
-	next->prev = new;
-	new->next = next;
-	new->prev = prev;
-	prev->next = new;
-}
-
-static void list_add(struct list_head *new, struct list_head *head)
-{
-	__list_add(new, head, head->next);
-}
-
-static void list_add_tail(struct list_head *new, struct list_head *head)
-{
-	__list_add(new, head->prev, head);
-}
-
-static void __list_del(struct list_head *prev, struct list_head *next)
-{
-	next->prev = prev;
-	prev->next = next;
-}
-
-static void list_del(struct list_head *entry)
-{
-	__list_del(entry->prev, entry->next);
-	entry->prev = NULL;
-	entry->next = NULL;
-}
-
-static void list_del_init(struct list_head *entry)
-{
-	list_del(entry);
-	INIT_LIST_HEAD(entry);
-}
-
-#ifdef __compiler_offsetof
-#define offsetof(type, member) __compiler_offsetof(type, member)
-#else
-#define offsetof(type, member) ((size_t) &((type *)0)->member)
-#endif
-
-#define container_of(ptr, type, member) ({			\
-	const typeof( ((type *)0)->member ) *__mptr = (ptr);	\
-	(type *)( (char *)__mptr - offsetof(type,member) );})
-
-#define list_entry(ptr, type, member) \
-	container_of(ptr, type, member)
-
-#define list_for_each(pos, head) \
-	for (pos = (head)->next; pos != (head); pos = pos->next)
-
-#define list_for_each_safe(pos, n, head) \
-	for (pos = (head)->next, n = pos->next; pos != (head); pos = n, n = pos->next)
-
-#define list_for_each_entry(pos, head, member)				\
-	for (pos = list_entry((head)->next, typeof(*pos), member);	\
-		&(pos)->member != (head);				\
-		pos = list_entry(pos->member.next, typeof(*pos), member))
+static const char depdirs[] = "include/config/depends-dirs.mk";
+static const char depfile[] = "include/config/depends.mk";
 
 struct package;
-struct dependency;
 
 struct dependency {
 	struct package *package;
@@ -107,13 +28,12 @@ static struct dependency *dependency_create(struct package *package)
 {
 	struct dependency *dependency;
 
-	dependency = malloc(sizeof(*dependency));
+	dependency = calloc(1, sizeof(*dependency));
 	if (!dependency)
 		return NULL;
 
-	memset(dependency, 0, sizeof(*dependency));
-	dependency->package = package;
 	INIT_LIST_HEAD(&dependency->list);
+	dependency->package = package;
 
 	return dependency;
 }
@@ -123,34 +43,55 @@ static void dependency_destroy(struct dependency *dependency)
 	free(dependency);
 }
 
+static struct symbol *stable = NULL;
+
 struct package {
 	struct symbol *symbol;
-	struct expr *depends;
 	struct list_head list;
 	struct list_head deps;
 	unsigned long numdeps;
 	unsigned long flags;
+	char *path;
 };
 
 #define	PACKAGE_VIRTUAL		(1 << 0)
+#define	PACKAGE_PLATFORM	(1 << 1)
+#define	PACKAGE_STABLE		(1 << 2)
+#define	PACKAGE_PARENT		(1 << 3)
 
-#define package_is_virtual(pkg)	(((pkg)->flags & PACKAGE_VIRTUAL) != 0)
+static bool package_is_virtual(struct package *package)
+{
+	return (package->flags & PACKAGE_VIRTUAL) != 0;
+}
 
-static struct package *provides = NULL;
+static bool package_is_platform(struct package *package)
+{
+	return (package->flags & PACKAGE_PLATFORM) != 0;
+}
 
-static struct package *package_create(struct symbol *symbol, struct expr *depends)
+static bool package_is_stable(struct package *package)
+{
+	return (package->flags & PACKAGE_STABLE) != 0;
+}
+
+static struct package *package_create(struct symbol *symbol, const char *path)
 {
 	struct package *package = NULL;
 
-	package = malloc(sizeof(*package));
+	package = calloc(1, sizeof(*package));
 	if (!package)
 		return NULL;
 
-	memset(package, 0, sizeof(*package));
 	INIT_LIST_HEAD(&package->list);
 	INIT_LIST_HEAD(&package->deps);
 	package->symbol = symbol;
-	package->depends = depends;
+	package->path = path ? strdup(path) : NULL;
+
+	if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
+		package->flags |= PACKAGE_VIRTUAL;
+
+	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
+		package->flags |= PACKAGE_PLATFORM;
 
 	return package;
 }
@@ -161,6 +102,8 @@ static int package_destroy(struct package *package)
 
 	if (!package)
 		return -EINVAL;
+
+	free(package->path);
 
 	list_for_each_safe(node, next, &package->deps) {
 		struct dependency *dep = list_entry(node, struct dependency, list);
@@ -181,19 +124,19 @@ static int package_add_dependency(struct package *package, struct package *dep)
 	return 0;
 }
 
-static int package_provides(struct package *package, struct package *virtual)
+static struct package *package_resolve_virtual(struct package *package)
 {
-	struct dependency *dep;
+	if (package_is_virtual(package)) {
+		struct dependency *dep;
 
-	if (!package || !virtual)
-		return 0;
-
-	list_for_each_entry(dep, &package->deps, list) {
-		if (dep->package->symbol == virtual->symbol)
-			return 1;
+		/* TODO: recursively resolve virtual packages? */
+		list_for_each_entry(dep, &package->deps, list) {
+			package = dep->package;
+			break;
+		}
 	}
 
-	return 0;
+	return package;
 }
 
 static struct package *find_package(struct list_head *packages, struct symbol *symbol)
@@ -209,6 +152,39 @@ static struct package *find_package(struct list_head *packages, struct symbol *s
 	}
 
 	return ret;
+}
+
+static void count_package_deps(struct list_head *packages,
+		struct package *package)
+{
+	struct dependency *dep;
+
+	list_for_each_entry(dep, &package->deps, list) {
+		struct package *pkg = package_resolve_virtual(dep->package);
+		count_package_deps(packages, pkg);
+		pkg->numdeps++;
+	}
+}
+
+static void resolve_deps(struct list_head *packages)
+{
+	struct package *package;
+
+	list_for_each_entry(package, packages, list)
+		count_package_deps(packages, package);
+
+	list_for_each_entry(package, packages, list) {
+		struct dependency *dep;
+		struct dependency *tmp;
+
+		list_for_each_entry_safe(dep, tmp, &package->deps, list) {
+			dep->package = package_resolve_virtual(dep->package);
+			if (dep->package == package) {
+				list_del_init(&dep->list);
+				dependency_destroy(dep);
+			}
+		}
+	}
 }
 
 static void build_package_deps_expr(struct list_head *packages,
@@ -227,6 +203,7 @@ static void build_package_deps_expr(struct list_head *packages,
 		dep = find_package(packages, expr->left.sym);
 		if (dep)
 			package_add_dependency(dep, package);
+
 		break;
 
 	default:
@@ -243,112 +220,177 @@ static void build_package_deps(struct list_head *packages,
 	}
 }
 
-static void build_deps(struct list_head *packages)
+static bool find_symbol(struct expr *e, struct symbol *sym)
 {
-	struct package *package;
+	if (!e)
+		return false;
 
-	list_for_each_entry(package, packages, list)
-		build_package_deps(packages, package);
-}
-
-static void resolve_virtual_expr(struct list_head *packages,
-		struct package *virtual, struct expr *expr)
-{
-	struct package *package;
-
-	if (!expr)
-		return;
-
-	switch (expr->type) {
+	switch (e->type) {
 	case E_AND:
 	case E_OR:
-		resolve_virtual_expr(packages, virtual, expr->left.expr);
-		resolve_virtual_expr(packages, virtual, expr->right.expr);
+		if (find_symbol(e->left.expr, sym))
+			return true;
+
+		if (find_symbol(e->right.expr, sym))
+			return true;
+
 		break;
 
 	case E_SYMBOL:
-		package = find_package(packages, expr->left.sym);
-		if (package) {
-			if (package_provides(package, virtual))
-				package->numdeps++;
-		}
+		if (sym == e->left.sym)
+			return true;
+
 		break;
 
 	default:
 		break;
 	}
+
+	return false;
 }
 
-static void resolve_virtual(struct list_head *packages,
-		struct package *package)
+static bool package_depends(struct package *package, struct symbol *symbol)
 {
-	struct symbol *sym = provides->symbol;
-
-	if (package == provides)
-		return;
-
-	resolve_virtual_expr(packages, package, sym->rev_dep.expr);
+	return find_symbol(symbol->rev_dep.expr, package->symbol);
 }
 
-static void resolve_package_deps(struct list_head *packages,
-		struct package *package)
+static bool symbol_is_stable_abi(struct symbol *sym)
 {
-	struct dependency *dep;
+	if (!sym || !sym->name)
+		return false;
 
-	list_for_each_entry(dep, &package->deps, list) {
-		if (package_is_virtual(dep->package))
-			resolve_virtual(packages, dep->package);
+	return strcmp(sym->name, "STABLE_ABI") == 0;
+}
 
-		resolve_package_deps(packages, dep->package);
-		dep->package->numdeps++;
+static bool symbol_is_parent(struct list_head *packages, struct symbol *symbol)
+{
+	struct package *package;
+	int len;
+
+	if (!symbol || !symbol->name)
+		return false;
+
+	len = strlen(symbol->name);
+
+	list_for_each_entry(package, packages, list) {
+		if (!package->symbol || !package->symbol->name)
+			continue;
+
+		if (strncmp(package->symbol->name, symbol->name, len) == 0)
+			if (strlen(package->symbol->name) > len)
+				return true;
 	}
+
+	return false;
 }
 
-static void resolve_deps(struct list_head *packages)
+static bool symbol_is_package(struct symbol *symbol)
+{
+	if (!symbol || !symbol->name)
+		return false;
+
+	if (strncmp(symbol->name, "PACKAGE_", 8) == 0)
+		return true;
+
+	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
+		return true;
+
+	if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
+		return true;
+
+	return false;
+}
+
+static bool symbol_is_platform(struct symbol *symbol)
+{
+	if (!symbol || !symbol->name)
+		return false;
+
+	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
+		return true;
+
+	return false;
+}
+
+static void build_deps(struct list_head *packages)
 {
 	struct package *package;
 
-	list_for_each_entry(package, packages, list)
-		resolve_package_deps(packages, package);
+	list_for_each_entry(package, packages, list) {
+		if (package_depends(package, stable))
+			package->flags |= PACKAGE_STABLE;
+
+		build_package_deps(packages, package);
+
+		if (symbol_is_parent(packages, package->symbol))
+			package->flags |= PACKAGE_PARENT;
+	}
 }
 
-static int symbol_is_package(struct symbol *symbol)
+static bool check_deps(struct expr *e)
 {
-	if (!symbol || !symbol->name)
-		return 0;
+	struct symbol *sym;
 
-	if (strncmp(symbol->name, "PACKAGE_", 8) == 0)
-		return 1;
+	if (!e)
+		return true;
 
-	if (strncmp(symbol->name, "PLATFORM_", 9) == 0)
-		return 1;
+	sym = e->left.sym;
 
-	if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
-		return 1;
+	switch (e->type) {
+	case E_AND:
+	case E_OR:
+		if (!check_deps(e->left.expr))
+			return false;
 
-	return 0;
+		if (!check_deps(e->right.expr))
+			return false;
+
+		break;
+
+	case E_SYMBOL:
+		if (symbol_is_package(sym) && !symbol_is_platform(sym))
+			return false;
+
+		break;
+
+	default:
+		break;
+	}
+
+	return true;
 }
 
 static struct package *package_create_from_menu(struct menu *menu)
 {
 	struct package *package = NULL;
-	struct symbol *symbol = NULL;
+	struct symbol *symbol;
+	char *filename = NULL;
+	char *path = NULL;
 
-	if (!menu)
+	if (!menu || !menu->sym)
 		return NULL;
 
 	symbol = menu->sym;
 
 	sym_calc_value(symbol);
 
+	filename = strdup(menu->file->name);
+	path = dirname(filename);
+
 	switch (symbol->type) {
 	case S_BOOLEAN:
 	case S_TRISTATE:
 		if (sym_get_tristate_value(symbol) == yes) {
-			package = package_create(symbol, menu->dep);
+			if (symbol->flags & (SYMBOL_CHOICE | SYMBOL_CHOICEVAL)) {
+				if (!symbol_is_platform(symbol))
+					break;
+			}
+
+			if (!check_deps(symbol->dir_dep.expr))
+				break;
+
+			package = package_create(symbol, path);
 			if (package) {
-				if (strncmp(symbol->name, "VIRTUAL_", 8) == 0)
-					package->flags |= PACKAGE_VIRTUAL;
 			}
 		}
 		break;
@@ -357,39 +399,36 @@ static struct package *package_create_from_menu(struct menu *menu)
 		break;
 	}
 
+	free(filename);
 	return package;
 }
 
-static void set_provides(struct package *package)
+static bool platform_has_child(struct package *package)
 {
-	if (strcmp(package->symbol->name, "VIRTUAL_PROVIDES") == 0) {
-		if (provides != NULL)
-			fprintf(stderr, "provides package exists!\n");
+	if (!package_is_platform(package))
+		return false;
 
-		provides = package;
-	}
+	return (package->flags & PACKAGE_PARENT) != 0;
 }
 
 static int create_package_list(struct list_head *head, struct menu *root)
 {
 	struct menu *menu = root->list;
 	struct package *package;
-	struct symbol *symbol;
 	int ret = 0;
 
 	if (!head || !root)
 		return -EINVAL;
 
 	while (menu) {
-		symbol = menu->sym;
-
-		if (symbol_is_package(symbol)) {
+		if (symbol_is_package(menu->sym)) {
 			package = package_create_from_menu(menu);
-			if (package) {
+			if (package)
 				list_add_tail(&package->list, head);
-				set_provides(package);
-			}
 		}
+
+		if (symbol_is_stable_abi(menu->sym))
+			stable = menu->sym;
 
 		if (menu->list) {
 			menu = menu->list;
@@ -472,12 +511,112 @@ static int list_sort(struct list_head *head)
 	return ret;
 }
 
+static int write_depends(struct list_head *packages, const char *filename)
+{
+	struct package *package;
+	FILE *fp;
+
+	fp = fopen(filename, "w");
+	if (!fp)
+		return -errno;
+
+	list_for_each_entry(package, packages, list) {
+		bool have_stable = false;
+		struct dependency *dep;
+
+		if (package_is_virtual(package) || platform_has_child(package))
+			continue;
+
+		fprintf(fp, "build/%s/.install:", package->path);
+
+		list_for_each_entry(dep, &package->deps, list) {
+			if (!package_is_stable(dep->package)) {
+				char *path = dep->package->path;
+				fprintf(fp, " \\\n\tbuild/%s/.install", path);
+			} else {
+				have_stable = true;
+			}
+		}
+
+		if (have_stable) {
+			fprintf(fp, " |");
+
+			list_for_each_entry(dep, &package->deps, list) {
+				if (package_is_stable(dep->package)) {
+					char *path = dep->package->path;
+					fprintf(fp, " \\\n\tbuild/%s/.install", path);
+				}
+			}
+		}
+
+		fprintf(fp, "\n\n");
+	}
+
+	fprintf(fp, "build/.install:");
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_virtual(package) || platform_has_child(package))
+			continue;
+
+		fprintf(fp, " \\\n\tbuild/%s/.install",
+				package->path);
+	}
+
+	fprintf(fp, "\n");
+	fclose(fp);
+	return 0;
+}
+
+static int write_compat(struct list_head *packages, const char *filename)
+{
+	struct package *master = NULL;
+	struct package *package;
+	FILE *fp;
+
+	list_sort(packages);
+
+	fp = fopen(filename, "w");
+	if (!fp) {
+		return -errno;
+	}
+
+	fprintf(fp, "depends-dirs =");
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_virtual(package) ||
+		    package_is_platform(package))
+			continue;
+
+		fprintf(fp, " \\\n\t%s", package->path);
+	}
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_platform(package) &&
+		    !platform_has_child(package))
+			fprintf(fp, " \\\n\t%s", package->path);
+	}
+
+	fprintf(fp, "\n\ndepends-platforms =");
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_platform(package) &&
+		    !platform_has_child(package)) {
+			fprintf(fp, " \\\n\t%s", package->path);
+			master = package;
+		}
+	}
+
+	if (master)
+		fprintf(fp, "\n\nmaster-platform = %s\n", master->path);
+
+	fclose(fp);
+	return 0;
+}
+
 int main(int argc, char *argv[])
 {
 	LIST_HEAD(packages);
-	struct package *package;
 	const char *name;
-	FILE *fp = NULL;
 	int ret = 0;
 	int opt;
 
@@ -497,34 +636,18 @@ int main(int argc, char *argv[])
 	conf_parse(name);
 	conf_read(NULL);
 
-	fp = fopen(depfile, "w");
-	if (!fp) {
-		fprintf(stderr, _("%s: failed to open file `%s': %s\n"),
-				argv[0], depfile, strerror(errno));
-		return 1;
-	}
-
 	ret = create_package_list(&packages, &rootmenu);
 	if (ret < 0) {
 		fprintf(stderr, _("failed to create package list\n"));
-		fclose(fp);
 		return 1;
 	}
 
 	build_deps(&packages);
 	resolve_deps(&packages);
-	list_sort(&packages);
 
-	fprintf(fp, _("depends ="));
-
-	list_for_each_entry(package, &packages, list) {
-		if (package_is_virtual(package))
-			continue;
-
-		fprintf(fp, _(" \\\n\tCONFIG_%s"), package->symbol->name);
-	}
+	write_depends(&packages, depfile);
+	write_compat(&packages, depdirs);
 
 	destroy_package_list(&packages);
-	fclose(fp);
 	return 0;
 }

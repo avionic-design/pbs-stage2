@@ -6,6 +6,7 @@ all: install
 obj-y :=
 
 -include include/config/auto.conf
+include include/config/depends.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 

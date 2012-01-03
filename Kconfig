@@ -9,10 +9,6 @@ menu "Target Configuration"
 source "arch/Kconfig"
 endmenu
 
-config VIRTUAL_PROVIDES
-	bool
-	default y
-
 # The platforms are sourced before the packages to allow them to define
 # their own default values for the packages options.
 source "platforms/Kconfig"

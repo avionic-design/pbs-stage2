@@ -2,6 +2,9 @@ if GLIBC
 
 config PACKAGE_DEVEL_GLIBC
 	bool
+	select VIRTUAL_KERNEL_LINUX_LIBC
+	select PACKAGE_DEVEL_GCC_LIBS
+	select STABLE_ABI
 	default n
 
 config LIBC

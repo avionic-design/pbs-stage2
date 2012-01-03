@@ -199,43 +199,36 @@ depend: $(depend-dirs)
 quiet_cmd_gen_depends = GEN     $@
       cmd_gen_depends = $< $(src)/Kconfig
 
-include/config/depends.conf: scripts/kconfig/deps \
+include/config/depends.mk: scripts/kconfig/deps \
 		include/config/auto.conf
 	$(call cmd,gen_depends)
 
-quiet_cmd_gen_depends_dirs = GEN     $@
-      cmd_gen_depends_dirs = $(MAKE) -C $(srctree) KBUILD_SRC= V=0 depend | \
-				$(srctree)/scripts/depends-dirs > $@
-
-include/config/depends-dirs.conf: include/config/depends.conf
-	$(call cmd,gen_depends_dirs)
-
 PHONY += build
-build: include/config/depends-dirs.conf
+build: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) build
 
 PHONY += rebuild-sysroot
-rebuild-sysroot: include/config/depends-dirs.conf
+rebuild-sysroot: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) rebuild-sysroot
 
 PHONY += dist
-dist: include/config/depends-dirs.conf
+dist: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) dist
 
 PHONY += uscan
-uscan: include/config/depends-dirs.conf
+uscan: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) uscan
 
 PHONY += watch
-watch: include/config/depends-dirs.conf
+watch: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) watch
 
 PHONY += print
-print: include/config/depends-dirs.conf
+print: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) print
 
 PHONY += fs
-fs: include/config/depends-dirs.conf
+fs: include/config/depends.mk
 	$(Q)$(MAKE) $(fs)=$(obj)
 
 _all: build

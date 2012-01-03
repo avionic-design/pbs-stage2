@@ -9,7 +9,7 @@ PHONY := all
 all: finish
 
 include include/config/auto.conf
-include include/config/depends-dirs.conf
+include include/config/depends-dirs.mk
 include $(srctree)/scripts/Kbuild.include
 include $(srctree)/scripts/Makefile.lib
 

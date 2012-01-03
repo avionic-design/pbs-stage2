@@ -1,6 +1,6 @@
 menu "Platform"
 
-choice
+choice PLATFORM
 	prompt "Platform Selection"
 
 config PLATFORM_GENERIC

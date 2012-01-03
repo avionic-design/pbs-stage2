@@ -1,5 +1,8 @@
 menu "Packages"
 
+config STABLE_ABI
+	bool
+
 source "packages/toolchain/Kconfig"
 source "packages/build-tools/Kconfig"
 source "packages/boot/Kconfig"

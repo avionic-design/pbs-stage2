@@ -1,7 +1,5 @@
 menu "X.Org - Utilities"
 
-config PACKAGE_XORG_UTIL_UTIL_MACROS
-	bool "util-macros"
-	default n
+source "packages/xorg/util/util-macros/Kconfig"
 
 endmenu

@@ -1,8 +1,5 @@
 menu "Shells"
 
-config PACKAGE_SHELLS_BASH
-	bool "bash"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+source "packages/shells/bash/Kconfig"
 
 endmenu
