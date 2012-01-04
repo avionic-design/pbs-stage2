@@ -1,0 +1,3 @@
+config PACKAGE_VENDOR_AVIONIC_DESIGN_MEDCOM_WIDE_UTILS
+	bool "Medcom Wide utilities"
+	select PACKAGE_LIBS_CURL

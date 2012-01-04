@@ -1,5 +1,6 @@
 menu "Avionic Design GmbH"
 
+source "packages/vendor/avionic-design/medcom-wide/Kconfig"
 source "packages/vendor/avionic-design/ptip/Kconfig"
 
 endmenu

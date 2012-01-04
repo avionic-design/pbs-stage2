@@ -1,0 +1,5 @@
+menu "Medcom Wide"
+
+source "packages/vendor/avionic-design/medcom-wide/utils/Kconfig"
+
+endmenu
