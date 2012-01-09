@@ -1,4 +1,4 @@
 config PACKAGE_LIBS_P11_KIT
 	bool "p11-kit"
-	select VIRTUAL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
