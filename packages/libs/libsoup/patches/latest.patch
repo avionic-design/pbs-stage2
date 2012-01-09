@@ -1,0 +1,1174 @@
+diff --git a/configure.ac b/configure.ac
+index 5ce2fcf..3423494 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -72,9 +72,10 @@ dnl ***********************
+ dnl *** Checks for glib ***
+ dnl ***********************
+ 
+-AM_PATH_GLIB_2_0(2.31.0,,,gobject gio)
++GLIB_REQUIRED=2.31.7
++AM_PATH_GLIB_2_0($GLIB_REQUIRED,,,gobject gio)
+ if test "$GLIB_LIBS" = ""; then
+-   AC_MSG_ERROR(GLIB 2.31.0 or later is required to build libsoup)
++   AC_MSG_ERROR(GLIB $GLIB_REQUIRED or later is required to build libsoup)
+ fi
+ GLIB_CFLAGS="$GLIB_CFLAGS -DG_DISABLE_SINGLE_INCLUDES"
+ 
+diff --git a/libsoup/soup-auth-manager-ntlm.c b/libsoup/soup-auth-manager-ntlm.c
+index a1b76c7..33043e7 100644
+--- a/libsoup/soup-auth-manager-ntlm.c
++++ b/libsoup/soup-auth-manager-ntlm.c
+@@ -449,6 +449,7 @@ ntlm_authorize_post (SoupMessage *msg, gpointer ntlm)
+ 	SoupNTLMConnection *conn;
+ 	const char *username = NULL, *password = NULL;
+ 	char *slash, *domain = NULL;
++	SoupMessageFlags flags;
+ 
+ 	conn = get_connection_for_msg (priv, msg);
+ 	if (!conn || !conn->auth)
+@@ -496,6 +497,9 @@ ssofailure:
+ 	conn->response_header = soup_ntlm_response (conn->nonce,
+ 						    username, password,
+ 						    NULL, domain);
++
++	flags = soup_message_get_flags (msg);
++	soup_message_set_flags (msg, flags & ~SOUP_MESSAGE_NEW_CONNECTION);
+ 	soup_session_requeue_message (priv->session, msg);
+ 
+ done:
+diff --git a/libsoup/soup-connection.c b/libsoup/soup-connection.c
+index 15260e4..199be73 100644
+--- a/libsoup/soup-connection.c
++++ b/libsoup/soup-connection.c
+@@ -51,6 +51,7 @@ typedef struct {
+ G_DEFINE_TYPE (SoupConnection, soup_connection, G_TYPE_OBJECT)
+ 
+ enum {
++	EVENT,
+ 	DISCONNECTED,
+ 	LAST_SIGNAL
+ };
+@@ -150,6 +151,16 @@ soup_connection_class_init (SoupConnectionClass *connection_class)
+ 	object_class->get_property = get_property;
+ 
+ 	/* signals */
++	signals[EVENT] =
++		g_signal_new ("event",
++			      G_OBJECT_CLASS_TYPE (object_class),
++			      G_SIGNAL_RUN_FIRST,
++			      0,
++			      NULL, NULL,
++			      NULL,
++			      G_TYPE_NONE, 2,
++			      G_TYPE_SOCKET_CLIENT_EVENT,
++			      G_TYPE_IO_STREAM);
+ 	signals[DISCONNECTED] =
+ 		g_signal_new ("disconnected",
+ 			      G_OBJECT_CLASS_TYPE (object_class),
+@@ -433,8 +444,11 @@ set_current_item (SoupConnection *conn, SoupMessageQueueItem *item)
+ 	g_signal_connect (item->msg, "restarted",
+ 			  G_CALLBACK (current_item_restarted), conn);
+ 
+-	if (priv->state == SOUP_CONNECTION_IDLE ||
+-	    item->msg->method != SOUP_METHOD_CONNECT)
++	if (item->msg->method == SOUP_METHOD_CONNECT) {
++		g_signal_emit (conn, signals[EVENT], 0,
++			       G_SOCKET_CLIENT_PROXY_NEGOTIATING,
++			       soup_socket_get_iostream (priv->socket));
++	} else if (priv->state == SOUP_CONNECTION_IDLE)
+ 		soup_connection_set_state (conn, SOUP_CONNECTION_IN_USE);
+ 
+ 	g_object_thaw_notify (G_OBJECT (conn));
+@@ -461,6 +475,10 @@ clear_current_item (SoupConnection *conn)
+ 
+ 		if (item->msg->method == SOUP_METHOD_CONNECT &&
+ 		    SOUP_STATUS_IS_SUCCESSFUL (item->msg->status_code)) {
++			g_signal_emit (conn, signals[EVENT], 0,
++				       G_SOCKET_CLIENT_PROXY_NEGOTIATED,
++				       soup_socket_get_iostream (priv->socket));
++
+ 			/* We're now effectively no longer proxying */
+ 			soup_uri_free (priv->proxy_uri);
+ 			priv->proxy_uri = NULL;
+@@ -474,6 +492,33 @@ clear_current_item (SoupConnection *conn)
+ }
+ 
+ static void
++soup_connection_event (SoupConnection      *conn,
++		       GSocketClientEvent   event,
++		       GIOStream           *connection)
++{
++	SoupConnectionPrivate *priv = SOUP_CONNECTION_GET_PRIVATE (conn);
++
++	if (!connection && priv->socket)
++		connection = soup_socket_get_iostream (priv->socket);
++
++	g_signal_emit (conn, signals[EVENT], 0,
++		       event, connection);
++}
++
++static void
++proxy_socket_event (SoupSocket          *socket,
++		    GSocketClientEvent   event,
++		    GIOStream           *connection,
++		    gpointer             user_data)
++{
++	SoupConnection *conn = user_data;
++
++	/* We handle COMPLETE ourselves */
++	if (event != G_SOCKET_CLIENT_COMPLETE)
++		soup_connection_event (conn, event, connection);
++}
++
++static void
+ socket_disconnected (SoupSocket *sock, gpointer conn)
+ {
+ 	soup_connection_disconnect (conn);
+@@ -484,6 +529,8 @@ typedef struct {
+ 	SoupConnectionCallback callback;
+ 	gpointer callback_data;
+ 	GCancellable *cancellable;
++	guint event_id;
++	gboolean tls_handshake;
+ } SoupConnectionAsyncConnectData;
+ 
+ static void
+@@ -492,10 +539,23 @@ socket_connect_finished (SoupSocket *socket, guint status, gpointer user_data)
+ 	SoupConnectionAsyncConnectData *data = user_data;
+ 	SoupConnectionPrivate *priv = SOUP_CONNECTION_GET_PRIVATE (data->conn);
+ 
++	g_signal_handler_disconnect (socket, data->event_id);
++
+ 	if (SOUP_STATUS_IS_SUCCESSFUL (status)) {
+ 		g_signal_connect (priv->socket, "disconnected",
+ 				  G_CALLBACK (socket_disconnected), data->conn);
+ 
++		if (data->tls_handshake) {
++			soup_connection_event (data->conn,
++					       G_SOCKET_CLIENT_TLS_HANDSHAKED,
++					       NULL);
++		}
++		if (!priv->ssl || !priv->tunnel_addr) {
++			soup_connection_event (data->conn,
++					       G_SOCKET_CLIENT_COMPLETE,
++					       NULL);
++		}
++
+ 		soup_connection_set_state (data->conn, SOUP_CONNECTION_IN_USE);
+ 		priv->unused_timeout = time (NULL) + SOUP_CONNECTION_UNUSED_TIMEOUT;
+ 		start_idle_timer (data->conn);
+@@ -519,11 +579,13 @@ static void
+ socket_connect_result (SoupSocket *sock, guint status, gpointer user_data)
+ {
+ 	SoupConnectionAsyncConnectData *data = user_data;
+-	SoupConnectionPrivate *priv = SOUP_CONNECTION_GET_PRIVATE (data->conn);
+ 
+ 	if (SOUP_STATUS_IS_SUCCESSFUL (status) &&
+-	    priv->ssl && !priv->tunnel_addr) {
++	    data->tls_handshake) {
+ 		if (soup_socket_start_ssl (sock, data->cancellable)) {
++			soup_connection_event (data->conn,
++					       G_SOCKET_CLIENT_TLS_HANDSHAKING,
++					       NULL);
+ 			soup_socket_handshake_async (sock, data->cancellable,
+ 						     socket_connect_finished, data);
+ 			return;
+@@ -555,6 +617,7 @@ soup_connection_connect_async (SoupConnection *conn,
+ 	data->callback = callback;
+ 	data->callback_data = user_data;
+ 	data->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
++	data->tls_handshake = (priv->ssl && !priv->tunnel_addr);
+ 
+ 	priv->socket =
+ 		soup_socket_new (SOUP_SOCKET_REMOTE_ADDRESS, priv->remote_addr,
+@@ -566,6 +629,9 @@ soup_connection_connect_async (SoupConnection *conn,
+ 				 SOUP_SOCKET_TIMEOUT, priv->io_timeout,
+ 				 "clean-dispose", TRUE,
+ 				 NULL);
++	data->event_id = g_signal_connect (priv->socket, "event",
++					   G_CALLBACK (proxy_socket_event),
++					   conn);
+ 	soup_socket_connect_async (priv->socket, cancellable,
+ 				   socket_connect_result, data);
+ }
+@@ -574,7 +640,7 @@ guint
+ soup_connection_connect_sync (SoupConnection *conn, GCancellable *cancellable)
+ {
+ 	SoupConnectionPrivate *priv;
+-	guint status;
++	guint status, event_id;
+ 
+ 	g_return_val_if_fail (SOUP_IS_CONNECTION (conn), SOUP_STATUS_MALFORMED);
+ 	priv = SOUP_CONNECTION_GET_PRIVATE (conn);
+@@ -592,6 +658,8 @@ soup_connection_connect_sync (SoupConnection *conn, GCancellable *cancellable)
+ 				 "clean-dispose", TRUE,
+ 				 NULL);
+ 
++	event_id = g_signal_connect (priv->socket, "event",
++				     G_CALLBACK (proxy_socket_event), conn);
+ 	status = soup_socket_connect_sync (priv->socket, cancellable);
+ 
+ 	if (!SOUP_STATUS_IS_SUCCESSFUL (status))
+@@ -601,8 +669,15 @@ soup_connection_connect_sync (SoupConnection *conn, GCancellable *cancellable)
+ 		if (!soup_socket_start_ssl (priv->socket, cancellable))
+ 			status = SOUP_STATUS_SSL_FAILED;
+ 		else {
++			soup_connection_event (conn,
++					       G_SOCKET_CLIENT_TLS_HANDSHAKING,
++					       NULL);
+ 			status = soup_socket_handshake_sync (priv->socket, cancellable);
+-			if (status == SOUP_STATUS_TLS_FAILED) {
++			if (status == SOUP_STATUS_OK) {
++				soup_connection_event (conn,
++						       G_SOCKET_CLIENT_TLS_HANDSHAKED,
++						       NULL);
++			} else if (status == SOUP_STATUS_TLS_FAILED) {
+ 				priv->ssl_fallback = TRUE;
+ 				status = SOUP_STATUS_TRY_AGAIN;
+ 			}
+@@ -613,6 +688,11 @@ soup_connection_connect_sync (SoupConnection *conn, GCancellable *cancellable)
+ 		g_signal_connect (priv->socket, "disconnected",
+ 				  G_CALLBACK (socket_disconnected), conn);
+ 
++		if (!priv->ssl || !priv->tunnel_addr) {
++			soup_connection_event (conn,
++					       G_SOCKET_CLIENT_COMPLETE,
++					       NULL);
++		}
+ 		soup_connection_set_state (conn, SOUP_CONNECTION_IN_USE);
+ 		priv->unused_timeout = time (NULL) + SOUP_CONNECTION_UNUSED_TIMEOUT;
+ 		start_idle_timer (conn);
+@@ -625,6 +705,9 @@ soup_connection_connect_sync (SoupConnection *conn, GCancellable *cancellable)
+ 		}
+ 	}
+ 
++	if (priv->socket)
++		g_signal_handler_disconnect (priv->socket, event_id);
++
+ 	if (priv->proxy_uri != NULL)
+ 		status = soup_status_proxify (status);
+ 	return status;
+@@ -659,8 +742,11 @@ soup_connection_start_ssl_sync (SoupConnection *conn,
+ 					  cancellable))
+ 		return SOUP_STATUS_SSL_FAILED;
+ 
++	soup_connection_event (conn, G_SOCKET_CLIENT_TLS_HANDSHAKING, NULL);
+ 	status = soup_socket_handshake_sync (priv->socket, cancellable);
+-	if (status == SOUP_STATUS_TLS_FAILED) {
++	if (status == SOUP_STATUS_OK)
++		soup_connection_event (conn, G_SOCKET_CLIENT_TLS_HANDSHAKED, NULL);
++	else if (status == SOUP_STATUS_TLS_FAILED) {
+ 		priv->ssl_fallback = TRUE;
+ 		status = SOUP_STATUS_TRY_AGAIN;
+ 	}
+@@ -674,7 +760,9 @@ start_ssl_completed (SoupSocket *socket, guint status, gpointer user_data)
+ 	SoupConnectionAsyncConnectData *data = user_data;
+ 	SoupConnectionPrivate *priv = SOUP_CONNECTION_GET_PRIVATE (data->conn);
+ 
+-	if (status == SOUP_STATUS_TLS_FAILED) {
++	if (status == SOUP_STATUS_OK)
++		soup_connection_event (data->conn, G_SOCKET_CLIENT_TLS_HANDSHAKED, NULL);
++	else if (status == SOUP_STATUS_TLS_FAILED) {
+ 		priv->ssl_fallback = TRUE;
+ 		status = SOUP_STATUS_TRY_AGAIN;
+ 	}
+@@ -727,6 +815,7 @@ soup_connection_start_ssl_async (SoupConnection   *conn,
+ 		return;
+ 	}
+ 
++	soup_connection_event (conn, G_SOCKET_CLIENT_TLS_HANDSHAKING, NULL);
+ 	soup_socket_handshake_async (priv->socket, cancellable,
+ 				     start_ssl_completed, data);
+ }
+@@ -796,17 +885,10 @@ soup_connection_get_state (SoupConnection *conn)
+ 			      SOUP_CONNECTION_DISCONNECTED);
+ 	priv = SOUP_CONNECTION_GET_PRIVATE (conn);
+ 
+-#ifdef G_OS_UNIX
+-	if (priv->state == SOUP_CONNECTION_IDLE) {
+-		GPollFD pfd;
++	if (priv->state == SOUP_CONNECTION_IDLE &&
++	    g_socket_condition_check (soup_socket_get_gsocket (priv->socket), G_IO_IN))
++		soup_connection_set_state (conn, SOUP_CONNECTION_REMOTE_DISCONNECTED);
+ 
+-		pfd.fd = soup_socket_get_fd (priv->socket);
+-		pfd.events = G_IO_IN;
+-		pfd.revents = 0;
+-		if (g_poll (&pfd, 1, 0) == 1)
+-			soup_connection_set_state (conn, SOUP_CONNECTION_REMOTE_DISCONNECTED);
+-	}
+-#endif
+ 	if (priv->state == SOUP_CONNECTION_IDLE &&
+ 	    priv->unused_timeout && priv->unused_timeout < time (NULL))
+ 		soup_connection_set_state (conn, SOUP_CONNECTION_REMOTE_DISCONNECTED);
+diff --git a/libsoup/soup-headers.c b/libsoup/soup-headers.c
+index 58d53a6..965f9da 100644
+--- a/libsoup/soup-headers.c
++++ b/libsoup/soup-headers.c
+@@ -17,8 +17,8 @@
+ /**
+  * soup_headers_parse:
+  * @str: the header string (including the Request-Line or Status-Line,
+- * and the trailing blank line)
+- * @len: length of @str up to (but not including) the terminating blank line.
++ *   but not the trailing blank line)
++ * @len: length of @str
+  * @dest: #SoupMessageHeaders to store the header values in
+  *
+  * Parses the headers of an HTTP request or response in @str and
+@@ -37,15 +37,14 @@ soup_headers_parse (const char *str, int len, SoupMessageHeaders *dest)
+ {
+ 	const char *headers_start;
+ 	char *headers_copy, *name, *name_end, *value, *value_end;
+-	char *eol, *sol;
++	char *eol, *sol, *p;
+ 	gboolean success = FALSE;
+ 
+ 	g_return_val_if_fail (str != NULL, FALSE);
+ 	g_return_val_if_fail (dest != NULL, FALSE);
+ 
+-	/* Technically, the grammar does allow NUL bytes in the
+-	 * headers, but this is probably a bug, and if it's not, we
+-	 * can't deal with them anyway.
++	/* RFC 2616 does allow NUL bytes in the headers, but httpbis
++	 * is changing that, and we can't deal with them anyway.
+ 	 */
+ 	if (memchr (str, '\0', len))
+ 		return FALSE;
+@@ -70,11 +69,16 @@ soup_headers_parse (const char *str, int len, SoupMessageHeaders *dest)
+ 	while (*(value_end + 1)) {
+ 		name = value_end + 1;
+ 		name_end = strchr (name, ':');
+-		if (!name_end || name + strcspn (name, " \t\r\n") < name_end) {
+-			/* Bad header; just ignore this line. Note
+-			 * that if it has continuation lines, we'll
+-			 * end up ignoring them too since they'll
+-			 * start with spaces.
++
++		/* Reject if there is no ':', or the header name is
++		 * empty, or it contains whitespace.
++		 */
++		if (!name_end ||
++		    name_end == name ||
++		    name + strcspn (name, " \t\r\n") < name_end) {
++			/* Ignore this line. Note that if it has
++			 * continuation lines, we'll end up ignoring
++			 * them too since they'll start with spaces.
+ 			 */
+ 			value_end = strchr (name, '\n');
+ 			if (!value_end)
+@@ -127,6 +131,10 @@ soup_headers_parse (const char *str, int len, SoupMessageHeaders *dest)
+ 			eol--;
+ 		*eol = '\0';
+ 
++		/* convert (illegal) '\r's to spaces */
++		for (p = strchr (value, '\r'); p; p = strchr (p, '\r'))
++			*p = ' ';
++
+ 		soup_message_headers_append (dest, name, value);
+         }
+ 	success = TRUE;
+@@ -138,8 +146,8 @@ done:
+ 
+ /**
+  * soup_headers_parse_request:
+- * @str: the header string (including the trailing blank line)
+- * @len: length of @str up to (but not including) the terminating blank line.
++ * @str: the headers (up to, but not including, the trailing blank line)
++ * @len: length of @str
+  * @req_headers: #SoupMessageHeaders to store the header values in
+  * @req_method: (out) (allow-none): if non-%NULL, will be filled in with the
+  * request method
+@@ -169,7 +177,7 @@ soup_headers_parse_request (const char          *str,
+ 	unsigned long major_version, minor_version;
+ 	char *p;
+ 
+-	g_return_val_if_fail (str && *str, SOUP_STATUS_MALFORMED);
++	g_return_val_if_fail (str != NULL, SOUP_STATUS_MALFORMED);
+ 
+ 	/* RFC 2616 4.1 "servers SHOULD ignore any empty line(s)
+ 	 * received where a Request-Line is expected."
+@@ -325,8 +333,8 @@ soup_headers_parse_status_line (const char       *status_line,
+ 
+ /**
+  * soup_headers_parse_response:
+- * @str: the header string (including the trailing blank line)
+- * @len: length of @str up to (but not including) the terminating blank line.
++ * @str: the headers (up to, but not including, the trailing blank line)
++ * @len: length of @str
+  * @headers: #SoupMessageHeaders to store the header values in
+  * @ver: (out) (allow-none): if non-%NULL, will be filled in with the HTTP
+  * version
+@@ -352,7 +360,7 @@ soup_headers_parse_response (const char          *str,
+ {
+ 	SoupHTTPVersion version;
+ 
+-	g_return_val_if_fail (str && *str, FALSE);
++	g_return_val_if_fail (str != NULL, FALSE);
+ 
+ 	/* Workaround for broken servers that send extra line breaks
+ 	 * after a response, which we then see prepended to the next
+diff --git a/libsoup/soup-message-private.h b/libsoup/soup-message-private.h
+index 1bb2aab..5625354 100644
+--- a/libsoup/soup-message-private.h
++++ b/libsoup/soup-message-private.h
+@@ -100,4 +100,8 @@ gboolean soup_message_disables_feature (SoupMessage *msg,
+ void soup_message_set_https_status (SoupMessage    *msg,
+ 				    SoupConnection *conn);
+ 
++void soup_message_network_event (SoupMessage         *msg,
++				 GSocketClientEvent   event,
++				 GIOStream           *connection);
++
+ #endif /* SOUP_MESSAGE_PRIVATE_H */
+diff --git a/libsoup/soup-message-queue.c b/libsoup/soup-message-queue.c
+index 0fc655f..7b1e5dd 100644
+--- a/libsoup/soup-message-queue.c
++++ b/libsoup/soup-message-queue.c
+@@ -72,8 +72,7 @@ queue_message_restarted (SoupMessage *msg, gpointer user_data)
+ 	     SOUP_STATUS_IS_REDIRECTION (msg->status_code))) {
+ 		if (soup_connection_get_state (item->conn) == SOUP_CONNECTION_IN_USE)
+ 			soup_connection_set_state (item->conn, SOUP_CONNECTION_IDLE);
+-		g_object_unref (item->conn);
+-		item->conn = NULL;
++		soup_message_queue_item_set_connection (item, NULL);
+ 	}
+ 
+ 	soup_message_cleanup_response (msg);
+@@ -185,11 +184,39 @@ soup_message_queue_item_unref (SoupMessageQueueItem *item)
+ 		g_object_unref (item->proxy_addr);
+ 	if (item->proxy_uri)
+ 		soup_uri_free (item->proxy_uri);
+-	if (item->conn)
+-		g_object_unref (item->conn);
++	soup_message_queue_item_set_connection (item, NULL);
+ 	g_slice_free (SoupMessageQueueItem, item);
+ }
+ 
++static void
++proxy_connection_event (SoupConnection      *conn,
++			GSocketClientEvent   event,
++			GIOStream           *connection,
++			gpointer             user_data)
++{
++	SoupMessageQueueItem *item = user_data;
++
++	soup_message_network_event (item->msg, event, connection);
++}
++
++void
++soup_message_queue_item_set_connection (SoupMessageQueueItem *item,
++					SoupConnection       *conn)
++{
++	if (item->conn) {
++		g_signal_handlers_disconnect_by_func (item->conn, proxy_connection_event, item);
++		g_object_unref (item->conn);
++	}
++
++	item->conn = conn;
++
++	if (item->conn) {
++		g_object_ref (item->conn);
++		g_signal_connect (item->conn, "event",
++				  G_CALLBACK (proxy_connection_event), item);
++	}
++}
++
+ /**
+  * soup_message_queue_lookup:
+  * @queue: a #SoupMessageQueue
+diff --git a/libsoup/soup-message-queue.h b/libsoup/soup-message-queue.h
+index 5fb14c4..a1ae663 100644
+--- a/libsoup/soup-message-queue.h
++++ b/libsoup/soup-message-queue.h
+@@ -74,11 +74,12 @@ SoupMessageQueueItem *soup_message_queue_next       (SoupMessageQueue     *queue
+ void                  soup_message_queue_remove     (SoupMessageQueue     *queue,
+ 						     SoupMessageQueueItem *item);
+ 
+-void                  soup_message_queue_item_ref   (SoupMessageQueueItem *item);
+-void                  soup_message_queue_item_unref (SoupMessageQueueItem *item);
+-
+ void                  soup_message_queue_destroy    (SoupMessageQueue     *queue);
+ 
++void soup_message_queue_item_ref            (SoupMessageQueueItem *item);
++void soup_message_queue_item_unref          (SoupMessageQueueItem *item);
++void soup_message_queue_item_set_connection (SoupMessageQueueItem *item,
++					     SoupConnection       *conn);
+ 
+ G_END_DECLS
+ 
+diff --git a/libsoup/soup-message.c b/libsoup/soup-message.c
+index dc99f38..cdc4392 100644
+--- a/libsoup/soup-message.c
++++ b/libsoup/soup-message.c
+@@ -107,6 +107,8 @@ enum {
+ 	RESTARTED,
+ 	FINISHED,
+ 
++	NETWORK_EVENT,
++
+ 	LAST_SIGNAL
+ };
+ 
+@@ -493,6 +495,38 @@ soup_message_class_init (SoupMessageClass *message_class)
+ 			      soup_marshal_NONE__NONE,
+ 			      G_TYPE_NONE, 0);
+ 
++	/**
++	 * SoupMessage::network-event:
++	 * @msg: the message
++	 * @event: the network event
++	 * @connection: the current state of the network connection
++
++	 * Emitted to indicate that some network-related event
++	 * related to @msg has occurred. This essentially proxies the
++	 * #GSocketClient::event signal, but only for events that
++	 * occur while @msg "owns" the connection; if @msg is sent on
++	 * an existing persistent connection, then this signal will
++	 * not be emitted. (If you want to force the message to be
++	 * sent on a new connection, set the
++	 * %SOUP_MESSAGE_NEW_CONNECTION flag on it.)
++	 *
++	 * See #GSocketClient::event for more information on what
++	 * the different values of @event correspond to, and what
++	 * @connection will be in each case.
++	 *
++	 * Since: 2.38
++	 **/
++	signals[NETWORK_EVENT] =
++		g_signal_new ("network_event",
++			      G_OBJECT_CLASS_TYPE (object_class),
++			      G_SIGNAL_RUN_FIRST,
++			      0,
++			      NULL, NULL,
++			      NULL,
++			      G_TYPE_NONE, 2,
++			      G_TYPE_SOCKET_CLIENT_EVENT,
++			      G_TYPE_IO_STREAM);
++
+ 	/* properties */
+ 	/**
+ 	 * SOUP_MESSAGE_METHOD:
+@@ -1125,6 +1159,15 @@ soup_message_finished (SoupMessage *msg)
+ 	g_signal_emit (msg, signals[FINISHED], 0);
+ }
+ 
++void
++soup_message_network_event (SoupMessage         *msg,
++			    GSocketClientEvent   event,
++			    GIOStream           *connection)
++{
++	g_signal_emit (msg, signals[NETWORK_EVENT], 0,
++		       event, connection);
++}
++
+ static void
+ header_handler_free (gpointer header_name, GClosure *closure)
+ {
+@@ -1430,6 +1473,10 @@ soup_message_cleanup_response (SoupMessage *req)
+  * @SOUP_MESSAGE_CERTIFICATE_TRUSTED: if set after an https response
+  *   has been received, indicates that the server's SSL certificate is
+  *   trusted according to the session's CA.
++ * @SOUP_MESSAGE_NEW_CONNECTION: The message should be sent on a
++ *   newly-created connection, not reusing an existing persistent
++ *   connection. Note that messages with non-idempotent
++ *   #SoupMessage:method<!-- -->s behave this way by default.
+  *
+  * Various flags that can be set on a #SoupMessage to alter its
+  * behavior.
+diff --git a/libsoup/soup-message.h b/libsoup/soup-message.h
+index f1a8c6d..d3c7e3c 100644
+--- a/libsoup/soup-message.h
++++ b/libsoup/soup-message.h
+@@ -118,7 +118,8 @@ typedef enum {
+ 	SOUP_MESSAGE_OVERWRITE_CHUNKS     = (1 << 3),
+ #endif
+ 	SOUP_MESSAGE_CONTENT_DECODED      = (1 << 4),
+-	SOUP_MESSAGE_CERTIFICATE_TRUSTED  = (1 << 5)
++	SOUP_MESSAGE_CERTIFICATE_TRUSTED  = (1 << 5),
++	SOUP_MESSAGE_NEW_CONNECTION       = (1 << 6)
+ } SoupMessageFlags;
+ 
+ void             soup_message_set_flags           (SoupMessage           *msg,
+diff --git a/libsoup/soup-misc-private.h b/libsoup/soup-misc-private.h
+index 8407101..e935168 100644
+--- a/libsoup/soup-misc-private.h
++++ b/libsoup/soup-misc-private.h
+@@ -18,4 +18,8 @@ void  soup_socket_handshake_async (SoupSocket         *sock,
+ 				   SoupSocketCallback  callback,
+ 				   gpointer            user_data);
+ 
++GSocket   *soup_socket_get_gsocket  (SoupSocket *sock);
++GIOStream *soup_socket_get_iostream (SoupSocket *sock);
++
++
+ #endif /* SOUP_URI_PRIVATE_H */
+diff --git a/libsoup/soup-request-http.c b/libsoup/soup-request-http.c
+index d4a2c20..e42a20a 100644
+--- a/libsoup/soup-request-http.c
++++ b/libsoup/soup-request-http.c
+@@ -72,6 +72,8 @@ soup_request_http_finalize (GObject *object)
+ 	if (http->priv->msg)
+ 		g_object_unref (http->priv->msg);
+ 
++	g_free (http->priv->content_type);
++
+ 	G_OBJECT_CLASS (soup_request_http_parent_class)->finalize (object);
+ }
+ 
+diff --git a/libsoup/soup-session-async.c b/libsoup/soup-session-async.c
+index edb6239..e872102 100644
+--- a/libsoup/soup-session-async.c
++++ b/libsoup/soup-session-async.c
+@@ -299,8 +299,7 @@ tunnel_message_completed (SoupMessage *msg, gpointer user_data)
+ 			soup_connection_disconnect (item->conn);
+ 		if (msg->status_code == SOUP_STATUS_TRY_AGAIN) {
+ 			item->related->state = SOUP_MESSAGE_AWAITING_CONNECTION;
+-			g_object_unref (item->related->conn);
+-			item->related->conn = NULL;
++			soup_message_queue_item_set_connection (item->related, NULL);
+ 		} else
+ 			soup_message_set_status (item->related->msg, msg->status_code);
+ 
+@@ -333,8 +332,7 @@ got_connection (SoupConnection *conn, guint status, gpointer user_data)
+ 		soup_connection_disconnect (conn);
+ 
+ 		if (status == SOUP_STATUS_TRY_AGAIN) {
+-			g_object_unref (item->conn);
+-			item->conn = NULL;
++			soup_message_queue_item_set_connection (item, NULL);
+ 			item->state = SOUP_MESSAGE_AWAITING_CONNECTION;
+ 		} else {
+ 			soup_session_set_item_status (session, item, status);
+diff --git a/libsoup/soup-session-sync.c b/libsoup/soup-session-sync.c
+index e0d023e..c54975c 100644
+--- a/libsoup/soup-session-sync.c
++++ b/libsoup/soup-session-sync.c
+@@ -209,8 +209,7 @@ try_again:
+ 	status = soup_connection_connect_sync (item->conn, item->cancellable);
+ 	if (status == SOUP_STATUS_TRY_AGAIN) {
+ 		soup_connection_disconnect (item->conn);
+-		g_object_unref (item->conn);
+-		item->conn = NULL;
++		soup_message_queue_item_set_connection (item, NULL);
+ 		goto try_again;
+ 	}
+ 
+@@ -221,8 +220,7 @@ try_again:
+ 			soup_session_set_item_status (session, item, status);
+ 		item->state = SOUP_MESSAGE_FINISHING;
+ 		soup_connection_disconnect (item->conn);
+-		g_object_unref (item->conn);
+-		item->conn = NULL;
++		soup_message_queue_item_set_connection (item, NULL);
+ 		return;
+ 	}
+ 
+@@ -230,8 +228,7 @@ try_again:
+ 		status = tunnel_connect (session, item);
+ 		if (!SOUP_STATUS_IS_SUCCESSFUL (status)) {
+ 			soup_connection_disconnect (item->conn);
+-			g_object_unref (item->conn);
+-			item->conn = NULL;
++			soup_message_queue_item_set_connection (item, NULL);
+ 			if (status == SOUP_STATUS_TRY_AGAIN)
+ 				goto try_again;
+ 			soup_session_set_item_status (session, item, status);
+diff --git a/libsoup/soup-session.c b/libsoup/soup-session.c
+index 32c1b30..eb5dd6e 100644
+--- a/libsoup/soup-session.c
++++ b/libsoup/soup-session.c
+@@ -1509,11 +1509,22 @@ auth_manager_authenticate (SoupAuthManager *manager, SoupMessage *msg,
+ 		session, msg, auth, retrying);
+ }
+ 
++/* At some point it might be possible to mark additional methods
++ * safe or idempotent...
++ */
+ #define SOUP_METHOD_IS_SAFE(method) (method == SOUP_METHOD_GET || \
+ 				     method == SOUP_METHOD_HEAD || \
+ 				     method == SOUP_METHOD_OPTIONS || \
+ 				     method == SOUP_METHOD_PROPFIND)
+ 
++#define SOUP_METHOD_IS_IDEMPOTENT(method) (method == SOUP_METHOD_GET || \
++					   method == SOUP_METHOD_HEAD || \
++					   method == SOUP_METHOD_OPTIONS || \
++					   method == SOUP_METHOD_PROPFIND || \
++					   method == SOUP_METHOD_PUT || \
++					   method == SOUP_METHOD_DELETE)
++
++
+ #define SOUP_SESSION_WOULD_REDIRECT_AS_GET(session, msg) \
+ 	((msg)->status_code == SOUP_STATUS_SEE_OTHER || \
+ 	 ((msg)->status_code == SOUP_STATUS_FOUND && \
+@@ -1831,7 +1842,7 @@ soup_session_make_connect_message (SoupSession    *session,
+ 	 */
+ 	queue_message (session, msg, NULL, NULL);
+ 	item = soup_message_queue_lookup (priv->queue, msg);
+-	item->conn = g_object_ref (conn);
++	soup_message_queue_item_set_connection (item, conn);
+ 	g_object_unref (msg);
+ 
+ 	g_signal_emit (session, signals[TUNNELING], 0, conn);
+@@ -1850,20 +1861,25 @@ soup_session_get_connection (SoupSession *session,
+ 	GSList *conns;
+ 	int num_pending = 0;
+ 	SoupURI *uri;
++	gboolean need_new_connection;
+ 
+ 	if (item->conn) {
+ 		g_return_val_if_fail (soup_connection_get_state (item->conn) != SOUP_CONNECTION_DISCONNECTED, FALSE);
+ 		return TRUE;
+ 	}
+ 
++	need_new_connection =
++		(soup_message_get_flags (item->msg) & SOUP_MESSAGE_NEW_CONNECTION) ||
++		!SOUP_METHOD_IS_IDEMPOTENT (item->msg->method);
++
+ 	g_mutex_lock (&priv->host_lock);
+ 
+ 	host = get_host_for_message (session, item->msg);
+ 	for (conns = host->connections; conns; conns = conns->next) {
+-		if (soup_connection_get_state (conns->data) == SOUP_CONNECTION_IDLE) {
++		if (!need_new_connection && soup_connection_get_state (conns->data) == SOUP_CONNECTION_IDLE) {
+ 			soup_connection_set_state (conns->data, SOUP_CONNECTION_IN_USE);
+ 			g_mutex_unlock (&priv->host_lock);
+-			item->conn = g_object_ref (conns->data);
++			soup_message_queue_item_set_connection (item, conns->data);
+ 			soup_message_set_https_status (item->msg, item->conn);
+ 			return TRUE;
+ 		} else if (soup_connection_get_state (conns->data) == SOUP_CONNECTION_CONNECTING)
+@@ -1879,6 +1895,8 @@ soup_session_get_connection (SoupSession *session,
+ 	}
+ 
+ 	if (host->num_conns >= priv->max_conns_per_host) {
++		if (need_new_connection)
++			*try_pruning = TRUE;
+ 		g_mutex_unlock (&priv->host_lock);
+ 		return FALSE;
+ 	}
+@@ -1933,7 +1951,7 @@ soup_session_get_connection (SoupSession *session,
+ 	}
+ 
+ 	g_mutex_unlock (&priv->host_lock);
+-	item->conn = g_object_ref (conn);
++	soup_message_queue_item_set_connection (item, conn);
+ 	return TRUE;
+ }
+ 
+@@ -1954,8 +1972,7 @@ soup_session_unqueue_item (SoupSession          *session,
+ 
+ 	if (item->conn) {
+ 		soup_connection_set_state (item->conn, SOUP_CONNECTION_IDLE);
+-		g_object_unref (item->conn);
+-		item->conn = NULL;
++		soup_message_queue_item_set_connection (item, NULL);
+ 	}
+ 
+ 	if (item->state != SOUP_MESSAGE_FINISHED) {
+diff --git a/libsoup/soup-socket.c b/libsoup/soup-socket.c
+index 088ce0e..452fada 100644
+--- a/libsoup/soup-socket.c
++++ b/libsoup/soup-socket.c
+@@ -39,6 +39,7 @@ enum {
+ 	WRITABLE,
+ 	DISCONNECTED,
+ 	NEW_CONNECTION,
++	EVENT,
+ 	LAST_SIGNAL
+ };
+ 
+@@ -263,6 +264,28 @@ soup_socket_class_init (SoupSocketClass *socket_class)
+ 			      soup_marshal_NONE__OBJECT,
+ 			      G_TYPE_NONE, 1,
+ 			      SOUP_TYPE_SOCKET);
++	/**
++	 * SoupSocket::event:
++	 * @sock: the socket
++	 * @event: the event that occurred
++	 * @connection: the current connection state
++	 *
++	 * Emitted when a network-related event occurs. See
++	 * #GSocketClient::event for more details.
++	 *
++	 * Since: 2.38
++	 **/
++	signals[EVENT] =
++		g_signal_new ("event",
++			      G_OBJECT_CLASS_TYPE (object_class),
++			      G_SIGNAL_RUN_LAST,
++			      0,
++			      NULL, NULL,
++			      NULL,
++			      G_TYPE_NONE, 2,
++			      G_TYPE_SOCKET_CLIENT_EVENT,
++			      G_TYPE_IO_STREAM);
++
+ 
+ 	/* properties */
+ 	/**
+@@ -630,6 +653,19 @@ soup_socket_new (const char *optname1, ...)
+ 	return sock;
+ }
+ 
++static void
++proxy_socket_client_event (GSocketClient       *client,
++			   GSocketClientEvent   event,
++			   GSocketConnectable  *connectable,
++			   GIOStream           *connection,
++			   gpointer             user_data)
++{
++	SoupSocket *sock = user_data;
++
++	g_signal_emit (sock, signals[EVENT], 0,
++		       event, connection);
++}
++
+ static guint
+ socket_connected (SoupSocket *sock, GSocketConnection *conn, GError *error)
+ {
+@@ -729,6 +765,8 @@ soup_socket_connect_async (SoupSocket *sock, GCancellable *cancellable,
+ 		g_main_context_push_thread_default (priv->async_context);
+ 
+ 	client = g_socket_client_new ();
++	g_signal_connect (client, "event",
++			  G_CALLBACK (proxy_socket_client_event), sock);
+ 	if (priv->timeout)
+ 		g_socket_client_set_timeout (client, priv->timeout);
+ 	g_socket_client_connect_async (client,
+@@ -772,6 +810,8 @@ soup_socket_connect_sync (SoupSocket *sock, GCancellable *cancellable)
+ 	priv->connect_cancel = cancellable;
+ 
+ 	client = g_socket_client_new ();
++	g_signal_connect (client, "event",
++			  G_CALLBACK (proxy_socket_client_event), sock);
+ 	if (priv->timeout)
+ 		g_socket_client_set_timeout (client, priv->timeout);
+ 	conn = g_socket_client_connect (client,
+@@ -790,6 +830,22 @@ soup_socket_get_fd (SoupSocket *sock)
+ 	return g_socket_get_fd (SOUP_SOCKET_GET_PRIVATE (sock)->gsock);
+ }
+ 
++GSocket *
++soup_socket_get_gsocket (SoupSocket *sock)
++{
++	g_return_val_if_fail (SOUP_IS_SOCKET (sock), NULL);
++
++	return SOUP_SOCKET_GET_PRIVATE (sock)->gsock;
++}
++
++GIOStream *
++soup_socket_get_iostream (SoupSocket *sock)
++{
++	g_return_val_if_fail (SOUP_IS_SOCKET (sock), NULL);
++
++	return SOUP_SOCKET_GET_PRIVATE (sock)->conn;
++}
++
+ static GSource *
+ soup_socket_create_watch (SoupSocketPrivate *priv, GIOCondition cond,
+ 			  GPollableSourceFunc callback, gpointer user_data,
+diff --git a/tests/header-parsing.c b/tests/header-parsing.c
+index 63a29bb..626b27c 100644
+--- a/tests/header-parsing.c
++++ b/tests/header-parsing.c
+@@ -19,7 +19,7 @@ static struct RequestTest {
+ 	guint status;
+ 	const char *method, *path;
+ 	SoupHTTPVersion version;
+-	Header headers[4];
++	Header headers[10];
+ } reqtests[] = {
+ 	/**********************/
+ 	/*** VALID REQUESTS ***/
+@@ -206,7 +206,7 @@ static struct RequestTest {
+ 	/* RFC 2616 section 19.3 says we SHOULD accept these */
+ 
+ 	{ "LF instead of CRLF after header",
+-	  "GET / HTTP/1.1\nHost: example.com\nConnection: close\n", -1,
++	  "GET / HTTP/1.1\r\nHost: example.com\nConnection: close\n", -1,
+ 	  SOUP_STATUS_OK,
+ 	  "GET", "/", SOUP_HTTP_1_1,
+ 	  { { "Host", "example.com" },
+@@ -224,6 +224,18 @@ static struct RequestTest {
+ 	  }
+ 	},
+ 
++	{ "Mixed CRLF/LF",
++	  "GET / HTTP/1.1\r\na: b\r\nc: d\ne: f\r\ng: h\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    { "c", "d" },
++	    { "e", "f" },
++	    { "g", "h" },
++	    { NULL }
++	  }
++	},
++
+ 	{ "Req w/ incorrect whitespace in Request-Line",
+ 	  "GET  /\tHTTP/1.1\r\nHost: example.com\r\n", -1,
+ 	  SOUP_STATUS_OK,
+@@ -242,7 +254,11 @@ static struct RequestTest {
+ 	  }
+ 	},
+ 
+-	/* qv bug 579318, do_bad_header_tests() below */
++	/* If the request/status line is parseable, then we
++	 * just ignore any invalid-looking headers after that.
++	 * (qv bug 579318).
++	 */
++
+ 	{ "Req w/ mangled header",
+ 	  "GET / HTTP/1.1\r\nHost: example.com\r\nFoo one\r\nBar: two\r\n", -1,
+ 	  SOUP_STATUS_OK,
+@@ -253,6 +269,77 @@ static struct RequestTest {
+ 	  }
+ 	},
+ 
++	{ "First header line is continuation",
++	  "GET / HTTP/1.1\r\n b\r\nHost: example.com\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "Host", "example.com" },
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
++	{ "Zero-length header name",
++	  "GET / HTTP/1.1\r\na: b\r\n: example.com\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
++	{ "CR in header name",
++	  "GET / HTTP/1.1\r\na: b\r\na\rb: cd\r\nx\r: y\r\n\rz: w\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
++	{ "CR in header value",
++	  "GET / HTTP/1.1\r\na: b\r\nHost: example\rcom\r\np: \rq\r\ns: t\r\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    { "Host", "example com" },	/* CR in the middle turns to space */
++	    { "p", "q" },		/* CR at beginning is ignored */
++	    { "s", "t" },		/* CR at end is ignored */
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
++	{ "Tab in header name",
++	  "GET / HTTP/1.1\r\na: b\r\na\tb: cd\r\nx\t: y\r\np: q\r\n\tz: w\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    /* Tab anywhere in the header name causes it to be
++	     * ignored... except at beginning of line where it's a
++	     * continuation line
++	     */
++	    { "p", "q z: w" },
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
++	{ "Tab in header value",
++	  "GET / HTTP/1.1\r\na: b\r\nab: c\td\r\nx: \ty\r\nz: w\t\r\nc: d\r\n", -1,
++	  SOUP_STATUS_OK,
++	  "GET", "/", SOUP_HTTP_1_1,
++	  { { "a", "b" },
++	    { "ab", "c\td" },	/* internal tab preserved */
++	    { "x", "y" },	/* leading tab ignored */
++	    { "z", "w" },	/* trailing tab ignored */
++	    { "c", "d" },
++	    { NULL }
++	  }
++	},
++
+ 	/************************/
+ 	/*** INVALID REQUESTS ***/
+ 	/************************/
+@@ -299,6 +386,13 @@ static struct RequestTest {
+ 	  { { NULL } }
+ 	},
+ 
++	{ "NUL at beginning of Method",
++	  "\x00 / HTTP/1.1\r\nHost: example.com\r\n", 35,
++	  SOUP_STATUS_BAD_REQUEST,
++	  NULL, NULL, -1,
++	  { { NULL } }
++	},
++
+ 	{ "NUL in Path",
+ 	  "GET /\x00 HTTP/1.1\r\nHost: example.com\r\n", 38,
+ 	  SOUP_STATUS_BAD_REQUEST,
+@@ -306,7 +400,14 @@ static struct RequestTest {
+ 	  { { NULL } }
+ 	},
+ 
+-	{ "NUL in Header",
++	{ "NUL in header name",
++	  "GET / HTTP/1.1\r\n\x00: silly\r\n", 37,
++	  SOUP_STATUS_BAD_REQUEST,
++	  NULL, NULL, -1,
++	  { { NULL } }
++	},
++
++	{ "NUL in header value",
+ 	  "GET / HTTP/1.1\r\nHost: example\x00com\r\n", 37,
+ 	  SOUP_STATUS_BAD_REQUEST,
+ 	  NULL, NULL, -1,
+@@ -535,13 +636,25 @@ static struct ResponseTest {
+ 	  { { NULL } }
+ 	},
+ 
++	{ "NUL at start",
++	  "\x00HTTP/1.1 200 OK\r\nFoo: bar\r\n", 28,
++	  -1, 0, NULL,
++	  { { NULL } }
++	},
++
+ 	{ "NUL in Reason Phrase",
+ 	  "HTTP/1.1 200 O\x00K\r\nFoo: bar\r\n", 28,
+ 	  -1, 0, NULL,
+ 	  { { NULL } }
+ 	},
+ 
+-	{ "NUL in Header",
++	{ "NUL in header name",
++	  "HTTP/1.1 200 OK\r\nF\x00oo: bar\r\n", 28,
++	  -1, 0, NULL,
++	  { { NULL } }
++	},
++
++	{ "NUL in header value",
+ 	  "HTTP/1.1 200 OK\r\nFoo: b\x00ar\r\n", 28,
+ 	  -1, 0, NULL,
+ 	  { { NULL } }
+diff --git a/tests/misc-test.c b/tests/misc-test.c
+index 332e938..9637dcb 100644
+--- a/tests/misc-test.c
++++ b/tests/misc-test.c
+@@ -136,7 +136,7 @@ server_callback (SoupServer *server, SoupMessage *msg,
+ 		return;
+ 	}
+ 
+-	if (msg->method != SOUP_METHOD_GET) {
++	if (msg->method != SOUP_METHOD_GET && msg->method != SOUP_METHOD_POST) {
+ 		soup_message_set_status (msg, SOUP_STATUS_NOT_IMPLEMENTED);
+ 		return;
+ 	}
+@@ -748,8 +748,8 @@ do_accept_language_test (void)
+ }
+ 
+ static void
+-timeout_test_request_started (SoupSession *session, SoupMessage *msg,
+-			      SoupSocket *socket, gpointer user_data)
++request_started_socket_collector (SoupSession *session, SoupMessage *msg,
++				  SoupSocket *socket, gpointer user_data)
+ {
+ 	SoupSocket **sockets = user_data;
+ 	int i;
+@@ -782,7 +782,7 @@ do_timeout_test_for_session (SoupSession *session)
+ 	int i;
+ 
+ 	g_signal_connect (session, "request-started",
+-			  G_CALLBACK (timeout_test_request_started),
++			  G_CALLBACK (request_started_socket_collector),
+ 			  &sockets);
+ 
+ 	debug_printf (1, "    First message\n");
+@@ -1103,6 +1103,72 @@ do_aliases_test (void)
+ 	soup_test_session_abort_unref (session);
+ }
+ 
++static void
++do_non_persistent_test_for_session (SoupSession *session)
++{
++	SoupMessage *msg;
++	SoupSocket *sockets[4] = { NULL, NULL, NULL, NULL };
++	int i;
++
++	g_signal_connect (session, "request-started",
++			  G_CALLBACK (request_started_socket_collector),
++			  &sockets);
++
++	debug_printf (2, "    GET\n");
++	msg = soup_message_new_from_uri ("GET", base_uri);
++	soup_session_send_message (session, msg);
++	if (msg->status_code != SOUP_STATUS_OK) {
++		debug_printf (1, "      Unexpected response: %d %s\n",
++			      msg->status_code, msg->reason_phrase);
++		errors++;
++	}
++	if (sockets[1]) {
++		debug_printf (1, "      Message was retried??\n");
++		errors++;
++		sockets[1] = sockets[2] = sockets[3] = NULL;
++	}
++	g_object_unref (msg);
++
++	debug_printf (2, "    POST\n");
++	msg = soup_message_new_from_uri ("POST", base_uri);
++	soup_session_send_message (session, msg);
++	if (msg->status_code != SOUP_STATUS_OK) {
++		debug_printf (1, "      Unexpected response: %d %s\n",
++			      msg->status_code, msg->reason_phrase);
++		errors++;
++	}
++	if (sockets[1] == sockets[0]) {
++		debug_printf (1, "      Message was sent on existing connection!\n");
++		errors++;
++	}
++	if (sockets[2]) {
++		debug_printf (1, "      Too many connections used...\n");
++		errors++;
++	}
++	g_object_unref (msg);
++
++	for (i = 0; sockets[i]; i++)
++		g_object_unref (sockets[i]);
++}
++
++static void
++do_non_persistent_connection_test (void)
++{
++	SoupSession *session;
++
++	debug_printf (1, "\nNon-idempotent methods are always sent on new connections\n");
++
++	debug_printf (1, "  Async session\n");
++	session = soup_test_session_new (SOUP_TYPE_SESSION_ASYNC, NULL);
++	do_non_persistent_test_for_session (session);
++	soup_test_session_abort_unref (session);
++
++	debug_printf (1, "  Sync session\n");
++	session = soup_test_session_new (SOUP_TYPE_SESSION_SYNC, NULL);
++	do_non_persistent_test_for_session (session);
++	soup_test_session_abort_unref (session);
++}
++
+ int
+ main (int argc, char **argv)
+ {
+@@ -1139,6 +1205,7 @@ main (int argc, char **argv)
+ 	do_max_conns_test ();
+ 	do_cancel_while_reading_test ();
+ 	do_aliases_test ();
++	do_non_persistent_connection_test ();
+ 
+ 	soup_uri_free (base_uri);
+ 	soup_uri_free (ssl_base_uri);
