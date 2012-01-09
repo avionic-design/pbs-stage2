@@ -1,9 +1,4 @@
-PACKAGE = gmp
-VERSION = 5.0.2
-
-LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/toolchain/gmp/Makefile.location
 include packages/toolchain/common.mk
 
 $(pkgtree)/.setup:
