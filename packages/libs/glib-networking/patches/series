@@ -1,1 +1,1 @@
-without-gnome.patch
+gnutls-fix-null-deref.patch
