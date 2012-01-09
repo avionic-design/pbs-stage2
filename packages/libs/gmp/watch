@@ -1,0 +1,2 @@
+version=3
+ftp://ftp.gmplib.org/pub/gmp-(.*)/gmp-(.*)\.tar\.bz2
