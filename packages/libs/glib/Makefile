@@ -1,5 +1,5 @@
 include packages/libs/glib/Makefile.location
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
