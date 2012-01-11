@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-libgcrypt-prefix=$(SYSROOT)$(prefix)
+	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \
+	--with-sdl-config=$(SYSROOT)$(prefix)/bin/sdl-config
 
 prunefiles = \
 	$(prefix)/bin/libvncserver-config \
