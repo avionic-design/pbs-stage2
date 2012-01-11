@@ -1,0 +1,83 @@
+From b227accf6f993f7ca3325e657feaf8d7fc419c4e Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Fri, 30 Dec 2011 14:52:39 +0100
+Subject: [PATCH 2/2] Fix build issues.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ x11vnc/scan.c      |    2 +-
+ x11vnc/unixpw.c    |    2 +-
+ x11vnc/user.c      |    2 ++
+ x11vnc/userinput.c |    2 +-
+ x11vnc/x11vnc.h    |    3 +++
+ 5 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/x11vnc/scan.c b/x11vnc/scan.c
+index 2b03666..9affb2d 100644
+--- a/x11vnc/scan.c
++++ b/x11vnc/scan.c
+@@ -2454,7 +2454,7 @@ int copy_screen(void) {
+ 	return 0;
+ }
+ 
+-#include <rfb/default8x16.h>
++#include "../rfb/default8x16.h"
+ 
+ /*
+  * Color values from the vcsadump program.
+diff --git a/x11vnc/unixpw.c b/x11vnc/unixpw.c
+index 6d382ff..fa5e88c 100644
+--- a/x11vnc/unixpw.c
++++ b/x11vnc/unixpw.c
+@@ -53,7 +53,7 @@ extern char *crypt(const char*, const char *);
+ #include "sslhelper.h"
+ #include "cursor.h"
+ #include "rates.h"
+-#include <rfb/default8x16.h>
++#include "../rfb/default8x16.h"
+ 
+ #if LIBVNCSERVER_HAVE_FORK
+ #if LIBVNCSERVER_HAVE_SYS_WAIT_H && LIBVNCSERVER_HAVE_WAITPID
+diff --git a/x11vnc/user.c b/x11vnc/user.c
+index 73c4010..e3d9d12 100644
+--- a/x11vnc/user.c
++++ b/x11vnc/user.c
+@@ -32,6 +32,8 @@ so, delete this exception statement from your version.
+ 
+ /* -- user.c -- */
+ 
++#include <grp.h>
++
+ #include "x11vnc.h"
+ #include "solid.h"
+ #include "cleanup.h"
+diff --git a/x11vnc/userinput.c b/x11vnc/userinput.c
+index 5e4c644..62fdc64 100644
+--- a/x11vnc/userinput.c
++++ b/x11vnc/userinput.c
+@@ -7813,7 +7813,7 @@ Bool xcheckmaskevent(Display *d, long mask, XEvent *ev) {
+ #endif
+ }
+ 
+-#include <rfb/default8x16.h>
++#include "../rfb/default8x16.h"
+ 
+ #define EVMAX 2048
+ XEvent Ev[EVMAX];
+diff --git a/x11vnc/x11vnc.h b/x11vnc/x11vnc.h
+index 2eab38f..fca9722 100644
+--- a/x11vnc/x11vnc.h
++++ b/x11vnc/x11vnc.h
+@@ -62,6 +62,9 @@ so, delete this exception statement from your version.
+ #include <fcntl.h>
+ #include <ctype.h>
+ 
++#include <netinet/in.h>
++#include <netinet/tcp.h>
++
+ #include <rfb/rfb.h>
+ #include <rfb/rfbregion.h>
+ 
+-- 
+1.7.8.1
+

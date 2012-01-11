@@ -6,5 +6,6 @@ source "packages/web/libvncserver/Kconfig"
 source "packages/web/mozilla/Kconfig"
 source "packages/web/rdesktop/Kconfig"
 source "packages/web/webkit-gtk/Kconfig"
+source "packages/web/x11vnc/Kconfig"
 
 endmenu
