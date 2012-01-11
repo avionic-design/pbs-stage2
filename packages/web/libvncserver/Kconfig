@@ -1,0 +1,4 @@
+config PACKAGE_WEB_LIBVNCSERVER
+	bool "libvncserver"
+	select PACKAGE_LIBS_GNUTLS
+	default n
