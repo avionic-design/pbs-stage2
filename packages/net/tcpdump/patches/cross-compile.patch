@@ -39,6 +39,32 @@ index 1f03123..832b8dd 100644
  
  extern int print_unknown_data(const u_char *, const char *,int);
  extern void ascii_print(const u_char *, u_int);
+diff --git a/missing/datalinks.c b/missing/datalinks.c
+index 1bd8644..f297b91 100644
+--- a/missing/datalinks.c
++++ b/missing/datalinks.c
+@@ -42,7 +42,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdlib.h>
+ #include <stdio.h>
+ 
+diff --git a/missing/dlnames.c b/missing/dlnames.c
+index 32072b7..00f8be0 100644
+--- a/missing/dlnames.c
++++ b/missing/dlnames.c
+@@ -42,7 +42,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <string.h>
+ 
+ #include "pcap-missing.h"
 diff --git a/netdissect.h b/netdissect.h
 index cd6f2f1..6856ec0 100644
 --- a/netdissect.h
@@ -234,6 +260,19 @@ index c980765..9fa35ab 100644
  #include <stdio.h>
  #include <string.h>
  
+diff --git a/print-ipnet.c b/print-ipnet.c
+index 957bd4f..3194bf1 100644
+--- a/print-ipnet.c
++++ b/print-ipnet.c
+@@ -5,7 +5,7 @@
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "netdissect.h"
+ #include "interface.h"
 diff --git a/print-juniper.c b/print-juniper.c
 index 08a929f..18488fe 100644
 --- a/print-juniper.c
@@ -382,6 +421,19 @@ index 04defa9..c0a384d 100644
 --- a/print-token.c
 +++ b/print-token.c
 @@ -34,7 +34,7 @@ static const char rcsid[] _U_ =
+ 
+ #include <tcpdump-stdinc.h>
+ 
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <stdio.h>
+ #include <string.h>
+ 
+diff --git a/print-usb.c b/print-usb.c
+index 8e15e7b..d15e9d5 100644
+--- a/print-usb.c
++++ b/print-usb.c
+@@ -25,7 +25,7 @@
  
  #include <tcpdump-stdinc.h>
  
