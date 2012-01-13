@@ -22,6 +22,10 @@ conf-args += \
 	--enable-3d-rendering
 # requires opengl
 #	--enable-webgl
+else
+conf-args += \
+	--disable-3d-rendering \
+	--disable-webgl
 endif
 ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_FS_API),y)
 conf-args += --enable-file-system
