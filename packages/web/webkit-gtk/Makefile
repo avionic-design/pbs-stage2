@@ -1,8 +1,8 @@
 PACKAGE = webkit
-VERSION = 1.6.1
+VERSION = 1.7.3
 
 LOCATION = http://www.webkitgtk.org
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
