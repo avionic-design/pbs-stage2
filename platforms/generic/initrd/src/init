@@ -117,6 +117,14 @@ while ! test -e "$dev"; do
 done
 log_action_end_msg $?
 
+# if initrd contains a utils for filesystem check use them at least
+# on the filesystem containing the rootfs.img file.
+if test -x /usr/sbin/fsck; then
+	log_action_begin_msg "Checking root device: $dev"
+	PATH=$PATH:/usr/sbin /usr/sbin/fsck -p $dev
+	log_action_end_msg $?
+fi
+
 log_action_begin_msg "Mounting root filesystem: $mp"
 mkdir -p "$mp"
 
