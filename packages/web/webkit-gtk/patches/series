@@ -1,1 +1,2 @@
 autotools.patch
+fix-arm-build-warnings.patch

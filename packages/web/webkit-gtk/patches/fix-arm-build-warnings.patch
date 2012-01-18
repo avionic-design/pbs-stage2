@@ -1,0 +1,106 @@
+diff --git a/Source/JavaScriptCore/heap/HandleTypes.h b/Source/JavaScriptCore/heap/HandleTypes.h
+index 780ab85..bdfbcfd 100644
+--- a/Source/JavaScriptCore/heap/HandleTypes.h
++++ b/Source/JavaScriptCore/heap/HandleTypes.h
+@@ -35,7 +35,7 @@ typedef JSValue* HandleSlot;
+ 
+ template<typename T> struct HandleTypes {
+     typedef T* ExternalType;
+-    static ExternalType getFromSlot(HandleSlot slot) { return (slot && *slot) ? reinterpret_cast<ExternalType>(slot->asCell()) : 0; }
++    static ExternalType getFromSlot(HandleSlot slot) { return (slot && *slot) ? reinterpret_cast<ExternalType>(static_cast<void*>(slot->asCell())) : 0; }
+     static JSValue toJSValue(T* cell) { return reinterpret_cast<JSCell*>(cell); }
+     template<typename U> static void validateUpcast() { T* temp; temp = (U*)0; }
+ };
+diff --git a/Source/JavaScriptCore/heap/MarkedBlock.cpp b/Source/JavaScriptCore/heap/MarkedBlock.cpp
+index d6fb853..6b10f9a 100644
+--- a/Source/JavaScriptCore/heap/MarkedBlock.cpp
++++ b/Source/JavaScriptCore/heap/MarkedBlock.cpp
+@@ -90,7 +90,7 @@ MarkedBlock::FreeCell* MarkedBlock::specializedSweep()
+         if (blockState == Marked && m_marks.get(i))
+             continue;
+ 
+-        JSCell* cell = reinterpret_cast<JSCell*>(&atoms()[i]);
++        JSCell* cell = reinterpret_cast_ptr<JSCell*>(&atoms()[i]);
+         if (blockState == Zapped && !cell->isZapped())
+             continue;
+ 
+diff --git a/Source/JavaScriptCore/heap/MarkedBlock.h b/Source/JavaScriptCore/heap/MarkedBlock.h
+index adc6572..9efa91a 100644
+--- a/Source/JavaScriptCore/heap/MarkedBlock.h
++++ b/Source/JavaScriptCore/heap/MarkedBlock.h
+@@ -320,7 +320,7 @@ namespace JSC {
+     template <typename Functor> inline void MarkedBlock::forEachCell(Functor& functor)
+     {
+         for (size_t i = firstAtom(); i < m_endAtom; i += m_atomsPerCell) {
+-            JSCell* cell = reinterpret_cast<JSCell*>(&atoms()[i]);
++            JSCell* cell = reinterpret_cast_ptr<JSCell*>(&atoms()[i]);
+             if (!isLive(cell))
+                 continue;
+ 
+diff --git a/Source/JavaScriptCore/runtime/WriteBarrier.h b/Source/JavaScriptCore/runtime/WriteBarrier.h
+index 525fc09..3548c41 100644
+--- a/Source/JavaScriptCore/runtime/WriteBarrier.h
++++ b/Source/JavaScriptCore/runtime/WriteBarrier.h
+@@ -93,7 +93,7 @@ public:
+     {
+         if (m_cell)
+             validateCell(m_cell);
+-        return reinterpret_cast<T*>(m_cell);
++        return reinterpret_cast<T*>(static_cast<void*>(m_cell));
+     }
+ 
+     T* operator*() const
+@@ -128,7 +128,7 @@ public:
+     }
+ 
+ #if ENABLE(GC_VALIDATION)
+-    T* unvalidatedGet() const { return reinterpret_cast<T*>(m_cell); }
++    T* unvalidatedGet() const { return reinterpret_cast<T*>(static_cast<void*>(m_cell)); }
+ #endif
+ 
+ private:
+diff --git a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h b/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
+index 610fb14..8a36740 100644
+--- a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
++++ b/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
+@@ -41,6 +41,7 @@ struct SVGAnimatedPropertyDescription {
+     // Deleted value
+     SVGAnimatedPropertyDescription(WTF::HashTableDeletedValueType)
+         : m_element(reinterpret_cast<SVGElement*>(-1))
++        , m_attributeName(0)
+     {
+     }
+ 
+diff --git a/Source/JavaScriptCore/assembler/MacroAssemblerARM.h b/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
+index 5117389..d1143e8 100644
+--- a/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
++++ b/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
+@@ -443,9 +443,8 @@ public:
+             m_assembler.ldr_un_imm(ARMRegisters::S0, right.m_value);
+             m_assembler.cmp_r(left, ARMRegisters::S0);
+         } else {
+-            ARMWord tmp = (right.m_value == 0x80000000) ? ARMAssembler::INVALID_IMM : m_assembler.getOp2(-right.m_value);
+-            if (tmp != ARMAssembler::INVALID_IMM)
+-                m_assembler.cmn_r(left, tmp);
++            if ((uint32_t)right.m_value == 0x80000000)
++                m_assembler.cmn_r(left, m_assembler.getOp2(-right.m_value));
+             else
+                 m_assembler.cmp_r(left, m_assembler.getImm(right.m_value, ARMRegisters::S0));
+         }
+ 
+diff --git a/Source/WebCore/inspector/InspectorMemoryAgent.cpp b/Source/WebCore/inspector/InspectorMemoryAgent.cpp
+index 5e64188..0e51e29 100644
+--- a/Source/WebCore/inspector/InspectorMemoryAgent.cpp
++++ b/Source/WebCore/inspector/InspectorMemoryAgent.cpp
+@@ -151,8 +151,9 @@ InspectorMemoryAgent::~InspectorMemoryAgent()
+ void InspectorMemoryAgent::getDOMNodeCount(ErrorString*, RefPtr<InspectorArray>* result)
+ {
+     CounterVisitor counterVisitor(m_page);
++#if ENABLE(JAVASCRIPT_DEBUGGER)
+     ScriptProfiler::visitJSDOMWrappers(&counterVisitor);
+-
++#endif
+     // Make sure all documents reachable from the main frame are accounted.
+     for (Frame* frame = m_page->mainFrame(); frame; frame = frame->tree()->traverseNext()) {
+         if (Document* doc = frame->document())
+ 
