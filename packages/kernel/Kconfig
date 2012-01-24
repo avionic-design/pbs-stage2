@@ -2,7 +2,6 @@ menu "Operating System Kernel"
 
 source "packages/kernel/kmod/Kconfig"
 source "packages/kernel/linux.git/Kconfig"
-source "packages/kernel/module-init-tools/Kconfig"
 source "packages/kernel/psb-kernel-source/Kconfig"
 
 endmenu
