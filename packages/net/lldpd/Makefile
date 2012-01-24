@@ -1,7 +1,7 @@
 PACKAGE = lldpd
 VERSION = 0.5.2
 
-LOCATION = http://www.luffy.cx/$(PACKAGE)
+LOCATION = http://media.luffy.cx/files/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
