@@ -1,3 +1,4 @@
+obj-$(CONFIG_PACKAGE_KERNEL_KMOD) += kmod
 obj-$(CONFIG_PACKAGE_KERNEL_LINUX_KERNEL) += linux.git
 obj-$(CONFIG_PACKAGE_KERNEL_MODULE_INIT_TOOLS) += module-init-tools
 obj-$(CONFIG_PACKAGE_KERNEL_PSB_KERNEL_SOURCE) += psb-kernel-source
