@@ -11,8 +11,16 @@ DESTDIR := $(pkgtree)/install
 
 DEF_CONFIG = minimal
 CPU_CONFIG = minimal-$(CONFIG_CPU)
-DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
+CONFIGS = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
+
+ifeq ($(CONFIG_PACKAGE_KERNEL_KMOD),y)
+  CONFIGS += modutils-n
+else
+  CONFIGS += modutils-y
+endif
+
+CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -24,8 +32,10 @@ conf-args = \
 	CROSS_COMPILE=$(TARGET)- \
 	ARCH=$(CONFIG_ARCH)
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+$(pkgbuildtree)/.config:
+	cat $(CONFIGS) > $@
+
+$(pkgtree)/.configure: $(pkgtree)/.patch $(pkgbuildtree)/.config
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
