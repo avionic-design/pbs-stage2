@@ -1,0 +1,17 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+log_action_begin_msg "Running shutdown scripts"
+echo && run-parts -a $1 /scripts/shutdown
+log_action_end_msg $?
+
+case $1 in
+	poweroff | shutdown | halt | reboot)
+		"$1" -f
+		;;
+
+	*)
+		poweroff -f
+		;;
+esac

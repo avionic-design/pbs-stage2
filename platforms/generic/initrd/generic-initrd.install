@@ -2,3 +2,4 @@
 /init
 /lib/lsb
 /run
+/shutdown

@@ -29,8 +29,9 @@ log_action_begin_msg "Creating devices"
 log_action_end_msg $?
 
 log_action_begin_msg "Mounting /run filesystem"
-mount -o size=512K,mode=0755 -t tmpfs none /run &&
-	mkdir /run/lock
+mount -o nosuid,nodev,mode=0755 -t tmpfs run /run &&
+	mkdir /run/lock &&
+	mkdir /run/initramfs
 log_action_end_msg $?
 
 log_action_begin_msg "Starting udev daemon"
@@ -189,6 +190,10 @@ fi
 
 log_action_begin_msg "Moving /run to root filesystem"
 mount --move /run "$mp/run"
+log_action_end_msg $?
+
+log_action_begin_msg "Keeping initial ramdisk"
+cp -a /bin /etc /init /lib /sbin /scripts /shutdown /usr "$mp/run/initramfs"
 log_action_end_msg $?
 
 if test -x /usr/bin/plymouth; then

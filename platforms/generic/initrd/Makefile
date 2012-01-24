@@ -7,7 +7,8 @@ dirs = \
 	/run
 
 scripts = \
-	/init
+	/init \
+	/shutdown
 
 files = \
 	/etc/fstab \
