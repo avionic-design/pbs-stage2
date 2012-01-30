@@ -1,9 +1,9 @@
 diff --git a/Makefile.am b/Makefile.am
-index 120c603..cea4fc8 100644
+index 4bb0609..a099489 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -115,6 +115,12 @@ AM_CPPFLAGS += \
- 	-DKBD_SETFONT=\"/usr/bin/setfont\" \
+@@ -148,6 +148,12 @@ AM_CPPFLAGS += \
+ 	-DKBD_SETFONT=\"/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
 +if TARGET_PBS
@@ -15,7 +15,7 @@ index 120c603..cea4fc8 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -125,6 +131,7 @@ endif
+@@ -159,6 +165,7 @@ endif
  endif
  endif
  endif
@@ -24,10 +24,10 @@ index 120c603..cea4fc8 100644
  rootbin_PROGRAMS = \
  	systemd \
 diff --git a/configure.ac b/configure.ac
-index e0a0792..e8f7e07 100644
+index 80d0156..b0359e6 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -355,7 +355,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -408,7 +408,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
@@ -36,9 +36,9 @@ index e0a0792..e8f7e07 100644
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -458,6 +458,11 @@ case $with_distro in
-                 AC_DEFINE(TARGET_ANGSTROM, [], [Target is Ångström])
-                 M4_DEFINES=-DTARGET_ANGSTROM=1
+@@ -518,6 +518,11 @@ case $with_distro in
+                 M4_DISTRO_FLAG=-DTARGET_MAGEIA=1
+                 have_plymouth=yes
                  ;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
@@ -48,10 +48,10 @@ index e0a0792..e8f7e07 100644
          other)
                  ;;
          *)
-@@ -515,6 +520,7 @@ AM_CONDITIONAL(TARGET_ALTLINUX, test x"$with_distro" = xaltlinux)
- AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+@@ -576,6 +581,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)
+ AM_CONDITIONAL(TARGET_MAGEIA, test x"$with_distro" = xmageia)
 +AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
  
  AM_CONDITIONAL(HAVE_PLYMOUTH, test "$have_plymouth" = "yes")

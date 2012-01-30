@@ -1,8 +1,8 @@
 PACKAGE = systemd
-VERSION = 37
+VERSION = 39
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
@@ -11,8 +11,9 @@ env += \
 
 conf-args += \
 	--libexecdir=$(prefix)/lib/systemd \
+	--with-rootprefix=$(prefix) \
 	--with-distro=pbs \
-	--with-rootdir=
+	--disable-acl
 
 ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
 conf-args += --disable-binfmt
@@ -25,61 +26,101 @@ ifneq ($(CONFIG_PACKAGE_DESKTOP_PLYMOUTH),y)
 conf-args += --enable-plymouth
 endif
 
+compat-links = \
+	/bin/systemctl \
+	/bin/systemd
+
+compat-links := $(addprefix $(DESTDIR),$(compat-links))
+
+$(compat-links): $(DESTDIR)%: $(obj)/src%
+	$(call cmd,install_link)
+
+$(pkgtree)/.prune: $(compat-links)
+
+systemunitdir = $(prefix)/lib/systemd/system
+
 prunefiles = \
-	/lib/systemd/system/multi-user.target.wants/systemd-user-sessions.service \
-	/lib/systemd/system/basic.target.wants/sys-kernel-security.automount \
-	/lib/systemd/system/basic.target.wants/tmpwatch.service \
-	/lib/systemd/system/basic.target.wants/tmpwatch.timer \
-	/lib/systemd/system/local-fs.target.wants/media.mount \
-	/lib/systemd/system/media.mount \
-	/lib/systemd/system/systemd-user-sessions.service \
-	/lib/systemd/system/sys-kernel-security.automount \
-	/lib/systemd/system/sys-kernel-security.mount \
-	/lib/systemd/system/tmpwatch.service \
-	/lib/systemd/system/tmpwatch.timer \
-	/lib/security/pam_systemd.la \
+	$(systemunitdir)/multi-user.target.wants/systemd-user-sessions.service \
+	$(systemunitdir)/basic.target.wants/sys-kernel-security.automount \
+	$(systemunitdir)/sysinit.target.wants/sys-kernel-security.mount \
+	$(systemunitdir)/basic.target.wants/tmpwatch.service \
+	$(systemunitdir)/basic.target.wants/tmpwatch.timer \
+	$(systemunitdir)/local-fs.target.wants/media.mount \
+	$(systemunitdir)/media.mount \
+	$(systemunitdir)/systemd-user-sessions.service \
+	$(systemunitdir)/sys-kernel-security.automount \
+	$(systemunitdir)/sys-kernel-security.mount \
+	$(systemunitdir)/tmpwatch.service \
+	$(systemunitdir)/tmpwatch.timer \
+	$(prefix)/lib/security/pam_systemd.la \
 	$(prefix)/lib/tmpfiles.d/tmp.conf \
 	$(prefix)/lib/*.la \
 
+ifneq ($(CONFIG_PACKAGE_DESKTOP_PLYMOUTH),y)
+prunefiles += \
+	$(systemunitdir)/halt.target.wants/plymouth-halt.service \
+	$(systemunitdir)/kexec.target.wants/plymouth-kexec.service \
+	$(systemunitdir)/multi-user.target.wants/plymouth-quit.service \
+	$(systemunitdir)/multi-user.target.wants/plymouth-quit-wait.service \
+	$(systemunitdir)/plymouth-halt.service \
+	$(systemunitdir)/plymouth-kexec.service \
+	$(systemunitdir)/plymouth-poweroff.service \
+	$(systemunitdir)/plymouth-quit.service \
+	$(systemunitdir)/plymouth-quit-wait.service \
+	$(systemunitdir)/plymouth-read-write.service \
+	$(systemunitdir)/plymouth-reboot.service \
+	$(systemunitdir)/plymouth-start.service \
+	$(systemunitdir)/poweroff.target.wants/plymouth-poweroff.service \
+	$(systemunitdir)/reboot.target.wants/plymouth-reboot.service \
+	$(systemunitdir)/sysinit.target.wants/plymouth-read-write.service \
+	$(systemunitdir)/sysinit.target.wants/plymouth-start.service
+endif
+
 stripfiles = \
-	/bin/systemctl \
-	/bin/systemd \
-	/bin/systemd-ask-password \
-	/bin/systemd-loginctl \
-	/bin/systemd-machine-id-setup \
-	/bin/systemd-notify \
-	/bin/systemd-tmpfiles \
-	/bin/systemd-tty-ask-password-agent \
-	/lib/security/pam_systemd.so \
-	/lib/systemd/systemd-ac-power \
-	/lib/systemd/systemd-binfmt \
-	/lib/systemd/systemd-cgroups-agent \
-	/lib/systemd/systemd-detect-virt \
-	/lib/systemd/systemd-fsck \
-	/lib/systemd/systemd-hostnamed \
-	/lib/systemd/systemd-initctl \
-	/lib/systemd/systemd-kmsg-syslogd \
-	/lib/systemd/systemd-localed \
-	/lib/systemd/systemd-logger \
-	/lib/systemd/systemd-logind \
-	/lib/systemd/systemd-modules-load \
-	/lib/systemd/systemd-quotacheck \
-	/lib/systemd/systemd-random-seed \
-	/lib/systemd/systemd-readahead-collect \
-	/lib/systemd/systemd-readahead-replay \
-	/lib/systemd/systemd-remount-api-vfs \
-	/lib/systemd/systemd-reply-password \
-	/lib/systemd/systemd-stdout-syslog-bridge \
-	/lib/systemd/systemd-shutdown \
-	/lib/systemd/systemd-shutdownd \
-	/lib/systemd/systemd-sysctl \
-	/lib/systemd/systemd-timedated \
-	/lib/systemd/systemd-timestamp \
-	/lib/systemd/systemd-uaccess \
-	/lib/systemd/systemd-update-utmp \
-	/lib/systemd/systemd-user-sessions \
-	/lib/systemd/systemd-vconsole-setup \
-	/lib/systemd/system-generators/systemd-getty-generator \
+	$(prefix)/bin/systemctl \
+	$(prefix)/bin/systemd \
+	$(prefix)/bin/systemd-ask-password \
+	$(prefix)/bin/systemd-cat \
+	$(prefix)/bin/systemd-cgtop \
+	$(prefix)/bin/systemd-journalctl \
+	$(prefix)/bin/systemd-loginctl \
+	$(prefix)/bin/systemd-machine-id-setup \
+	$(prefix)/bin/systemd-notify \
+	$(prefix)/bin/systemd-tmpfiles \
+	$(prefix)/bin/systemd-tty-ask-password-agent \
+	$(prefix)/lib/security/pam_systemd.so \
+	$(prefix)/lib/systemd/systemd-ac-power \
+	$(prefix)/lib/systemd/systemd-binfmt \
+	$(prefix)/lib/systemd/systemd-cgroups-agent \
+	$(prefix)/lib/systemd/systemd-coredump \
+	$(prefix)/lib/systemd/systemd-detect-virt \
+	$(prefix)/lib/systemd/systemd-fsck \
+	$(prefix)/lib/systemd/systemd-hostnamed \
+	$(prefix)/lib/systemd/systemd-initctl \
+	$(prefix)/lib/systemd/systemd-journald \
+	$(prefix)/lib/systemd/systemd-kmsg-syslogd \
+	$(prefix)/lib/systemd/systemd-localed \
+	$(prefix)/lib/systemd/systemd-logger \
+	$(prefix)/lib/systemd/systemd-logind \
+	$(prefix)/lib/systemd/systemd-modules-load \
+	$(prefix)/lib/systemd/systemd-multi-seat-x \
+	$(prefix)/lib/systemd/systemd-quotacheck \
+	$(prefix)/lib/systemd/systemd-random-seed \
+	$(prefix)/lib/systemd/systemd-readahead-collect \
+	$(prefix)/lib/systemd/systemd-readahead-replay \
+	$(prefix)/lib/systemd/systemd-remount-api-vfs \
+	$(prefix)/lib/systemd/systemd-reply-password \
+	$(prefix)/lib/systemd/systemd-stdout-syslog-bridge \
+	$(prefix)/lib/systemd/systemd-shutdown \
+	$(prefix)/lib/systemd/systemd-shutdownd \
+	$(prefix)/lib/systemd/systemd-sysctl \
+	$(prefix)/lib/systemd/systemd-timedated \
+	$(prefix)/lib/systemd/systemd-timestamp \
+	$(prefix)/lib/systemd/systemd-uaccess \
+	$(prefix)/lib/systemd/systemd-update-utmp \
+	$(prefix)/lib/systemd/systemd-user-sessions \
+	$(prefix)/lib/systemd/systemd-vconsole-setup \
+	$(prefix)/lib/systemd/system-generators/systemd-getty-generator \
 	$(prefix)/bin/systemadm \
 	$(prefix)/bin/systemd-ask-password-agent \
 	$(prefix)/bin/systemd-cgls \
