@@ -3,14 +3,14 @@ index f14732c..9f2ae5e 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -2,7 +2,7 @@
- # (c) 1998--2010 Martin Mares <mj@ucw.cz>
+ # (c) 1998--2012 Martin Mares <mj@ucw.cz>
  
  OPT=-O2
 -CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes
 +CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes $(EXTRA_CFLAGS)
  
- VERSION=3.1.7
- DATE=2010-01-31
+ VERSION=3.1.9
+ DATE=2012-01-14
 @@ -37,7 +37,6 @@ PKGCFDIR=$(LIBDIR)/pkgconfig
  # Commands
  INSTALL=install

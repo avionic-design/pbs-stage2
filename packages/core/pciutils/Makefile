@@ -1,5 +1,5 @@
 PACKAGE = pciutils
-VERSION = 3.1.7
+VERSION = 3.1.9
 
 LOCATION = http://www.kernel.org/pub/software/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -29,6 +29,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 install-args = \
 	PREFIX=$(prefix) \
+	IDSDIR=$(prefix)/share/hwdata \
 	MANDIR=$(prefix)/share/man \
 	DESTDIR=$(DESTDIR) \
 	SHARED=yes
