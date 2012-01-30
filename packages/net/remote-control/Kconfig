@@ -129,3 +129,13 @@ choice
 		bool "sysfs (Linux kernel gpiolib) support"
 
 endchoice
+
+config PACKAGE_NET_REMOTE_CONTROL_JS_API
+	bool "Webkit JavaScript API"
+	depends on PACKAGE_NET_REMOTE_CONTROL
+	default n
+
+config PACKAGE_NET_REMOTE_CONTROL_JS_API_IR_SUPPORT
+	bool "IR support"
+	depends on PACKAGE_NET_REMOTE_CONTROL_JS_API
+	default n

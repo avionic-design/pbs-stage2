@@ -45,6 +45,16 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_GPIO_SYSFS),y)
 	conf-args += --with-gpio-backend=sysfs
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JS_API),y)
+	conf-args += --enable-webkit-js-api=yes
+else
+	conf-args += --enable-webkit-js-api=no
+endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JS_API_IR_SUPPORT),y)
+	conf-args += --enable-ir-support=yes
+else
+	conf-args += --enable-ir-support=no
+endif
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
