@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 7.10.3
+VERSION = 7.11.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2
@@ -17,6 +17,14 @@ env += \
 	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
 
 $(pkgtree)/.setup:
+	$(call cmd,stamp)
+
+ACLOCAL_FLAGS = \
+	-I $(srctree)/toolchains/$(TARGET)/usr/share/aclocal -I m4
+
+$(pkgtree)/.autoreconfigure: $(pkgtree)/.patch
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --install --verbose $(ACLOCAL_FLAGS)
 	$(call cmd,stamp)
 
 conf-args += \
@@ -44,9 +52,12 @@ dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_TDFX) += tdfx
 dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_UNICHROME) += unichrome
 dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_FFB) += ffb
 
+dri-drivers-y := $(subst $(empty) $(empty),$(comma),$(dri-drivers-y))
+
 conf-args += \
-	--with-dri-drivers="$(dri-drivers-y)" \
-	--disable-gallium
+	--with-dri-drivers='$(dri-drivers-y)' \
+	--without-gallium-drivers \
+	--enable-shared-glapi
 
 ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_EGL),y)
 	conf-args += --enable-egl
@@ -74,7 +85,7 @@ conf-vars += \
 	CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
+$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 	cd $(pkgbuildtree) && \
 		$(env) ./configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
