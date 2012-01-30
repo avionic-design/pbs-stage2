@@ -1,0 +1,42 @@
+From 7abda1278a924d5b967fe199b001ff20a4003464 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 25 Jan 2012 07:44:45 +0100
+Subject: [PATCH] Update systemd service file and create symlinks.
+
+---
+ Makefile.am        |    6 ++++++
+ rsyslog.service.in |    1 -
+ 2 files changed, 6 insertions(+), 1 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index d689b9e..0fea33f 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -53,6 +53,12 @@ CLEANFILES = \
+ %.service: %.service.in
+ 	$(AM_V_GEN)sed -e 's,@sbindir\@,$(sbindir),g' $< > $@
+ 
++install-data-hook:
++	$(MKDIR_P) -m 0755 \
++		$(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants
++	( cd $(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants && \
++		rm -f rsyslog.service && \
++		$(LN_S) ../rsyslog.service rsyslog.service )
+ endif
+ 
+ EXTRA_DIST = \
+diff --git a/rsyslog.service.in b/rsyslog.service.in
+index 23234cd..569238f 100644
+--- a/rsyslog.service.in
++++ b/rsyslog.service.in
+@@ -2,7 +2,6 @@
+ Description=System Logging Service
+ 
+ [Service]
+-ExecStartPre=/bin/systemctl stop systemd-kmsg-syslogd.service
+ ExecStart=@sbindir@/rsyslogd -n -c6
+ Sockets=syslog.socket
+ StandardOutput=null
+-- 
+1.7.8.4
+

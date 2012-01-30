@@ -1,21 +1,14 @@
 PACKAGE = rsyslog
-VERSION = 5.8.5
+VERSION = 6.2.0
 
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
-
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+include packages/autotools-reconf.mk
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
-	--with-systemdsystemunitdir=/etc/systemd/system
+	--with-systemdsystemunitdir=$(prefix)/lib/systemd/system
 endif
 
 conf-vars-$(CONFIG_GLIBC) += ac_cv_func_malloc_0_nonnull=yes
@@ -23,11 +16,9 @@ conf-vars-$(CONFIG_GLIBC) += ac_cv_func_realloc_0_nonnull=yes
 
 conf-vars += $(conf-vars-y)
 
-plugin = $(prefix)/lib/rsyslog
-
 prunefiles = \
-	$(plugin)/*.la
+	$(prefix)/lib/rsyslog/*.la
 
 stripfiles = \
-	$(plugin)/*.so \
+	$(prefix)/lib/rsyslog/*.so \
 	$(prefix)/sbin/rsyslogd
