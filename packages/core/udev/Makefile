@@ -1,22 +1,18 @@
 PACKAGE = udev
-VERSION = 173
+VERSION = 180
 
 LOCATION = http://www.kernel.org/pub/linux/utils/kernel/hotplug
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
-	--prefix= \
-	--sbindir=/sbin \
-	--includedir=$(prefix)/include \
-	--datarootdir=$(prefix)/share \
 	--libdir=$(prefix)/lib \
-	--libexecdir=/lib/udev \
-	--with-pci-ids-path=$(prefix)/share/pci.ids.gz \
-	--with-sysroot=$(SYSROOT) \
-	--disable-introspection \
-	--disable-rpath
+	--libexecdir=$(prefix)/lib \
+	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
+	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \
+	--with-firmware-path=/lib/firmware \
+	--disable-introspection
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
@@ -28,35 +24,41 @@ ifneq ($(CONFIG_PACKAGE_CORE_UDEV_GLIB),y)
 	--disable-gudev
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_UDEV_DISABLE_EXTRAS),y)
-  conf-args += \
-	--disable-hwdb
-endif
+compat-links = \
+	/sbin/udevadm \
+	/sbin/udevd
+
+compat-links := $(addprefix $(DESTDIR),$(compat-links))
+
+$(compat-links): $(DESTDIR)%: $(obj)/src%
+	$(call cmd,install_link)
+
+$(pkgtree)/.prune: $(compat-links)
 
 prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	/lib/udev/accelerometer \
-	/lib/udev/ata_id \
-	/lib/udev/cdrom_id \
-	/lib/udev/collect \
-	/lib/udev/create_floppy_devices \
-	/lib/udev/edd_id \
-	/lib/udev/firmware \
-	/lib/udev/fstab_import \
-	/lib/udev/hid2hci \
-	/lib/udev/input_id \
-	/lib/udev/keymap \
-	/lib/udev/mobile-action-modeswitch \
-	/lib/udev/mtd_probe \
-	/lib/udev/path_id \
-	/lib/udev/pci-db \
-	/lib/udev/scsi_id \
-	/lib/udev/usb-db \
-	/lib/udev/usb_id \
-	/lib/udev/v4l_id \
-	/lib/udev/vol_id \
-	/sbin/udevadm \
-	/sbin/udevd \
+	$(prefix)/bin/udevadm \
+	$(prefix)/lib/udev/accelerometer \
+	$(prefix)/lib/udev/ata_id \
+	$(prefix)/lib/udev/cdrom_id \
+	$(prefix)/lib/udev/collect \
+	$(prefix)/lib/udev/create_floppy_devices \
+	$(prefix)/lib/udev/edd_id \
+	$(prefix)/lib/udev/firmware \
+	$(prefix)/lib/udev/fstab_import \
+	$(prefix)/lib/udev/hid2hci \
+	$(prefix)/lib/udev/input_id \
+	$(prefix)/lib/udev/keymap \
+	$(prefix)/lib/udev/mobile-action-modeswitch \
+	$(prefix)/lib/udev/mtd_probe \
+	$(prefix)/lib/udev/path_id \
+	$(prefix)/lib/udev/pci-db \
+	$(prefix)/lib/udev/scsi_id \
+	$(prefix)/lib/udev/udevd \
+	$(prefix)/lib/udev/usb-db \
+	$(prefix)/lib/udev/usb_id \
+	$(prefix)/lib/udev/v4l_id \
+	$(prefix)/lib/udev/vol_id \
 	$(prefix)/lib/*.so.*

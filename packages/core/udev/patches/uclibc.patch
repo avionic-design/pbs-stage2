@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index ceaeeb8..931069b 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -21,7 +21,7 @@ AC_PREFIX_DEFAULT([/usr])
+ AC_PATH_PROG([XSLTPROC], [xsltproc])
+ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+ 
+-AC_SEARCH_LIBS([clock_gettime], [rt], [], [AC_MSG_ERROR([POSIX RT library not found])])
++AC_SEARCH_LIBS([mq_getattr], [rt], [], [AC_MSG_ERROR([POSIX RT library not found])])
+ 
+ PKG_CHECK_MODULES(BLKID, blkid >= 2.20)
+ 

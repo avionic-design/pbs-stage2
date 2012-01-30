@@ -57,4 +57,3 @@ KERNEL=="uinput",		NAME="input/%k"
 
 # device mapper creates its own device nodes, so ignore these
 KERNEL=="device-mapper",	NAME="mapper/control"
-
