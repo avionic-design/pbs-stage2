@@ -11,7 +11,6 @@ conf-args += \
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_FFMPEG),y)
 conf-args += \
-	--disable-mad \
 	--disable-mpeg2dec
 endif
 
