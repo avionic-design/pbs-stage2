@@ -1,2 +1,2 @@
 version=3
-http://download.videolan.org/pub/videolan/vlc/([\d\.]+[\d])/vlc-(.*)\.tar\.bz2
+http://download.videolan.org/pub/videolan/vlc/([\d\.]+\d+)/vlc-(.*)\.tar\.bz2

@@ -3,6 +3,7 @@ v4l2-std.patch
 v4l2-dev.patch
 v4l2-open.patch
 v4l2-radio.patch
+v4l2-buffer-error.patch
 i786-sse.patch
 vout-event.patch
 omxil-tegra2.patch
