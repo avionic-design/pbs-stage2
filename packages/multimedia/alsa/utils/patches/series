@@ -1,2 +1,2 @@
-cross-compile.patch -p1
-uclibc-fix.patch -p1
+cross-compile.patch
+#uclibc-fix.patch -p1
