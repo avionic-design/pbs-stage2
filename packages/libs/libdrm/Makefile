@@ -1,10 +1,10 @@
 PACKAGE = libdrm
-VERSION = 2.4.27
+VERSION = 2.4.30
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--enable-nouveau-experimental-api \
