@@ -10,7 +10,7 @@ index 8843435..41838b5 100755
  	--with-hook) HOOKSCRIPTS="$HOOKSCRIPTS${HOOKSCRIPTS:+ }$var";;
  	--with-hooks|HOOKSCRIPTS) HOOKSCRIPTS=$var; HOOKSET=true;;
  	--build) BUILD=$var;;
-@@ -193,6 +194,9 @@ fi
+@@ -194,6 +195,9 @@ fi
  if [ -n "$CPPLAGS" ]; then
  	echo "CPPLAGS=		$CPPLAGS" >>$CONFIG_MK
  fi
@@ -20,7 +20,7 @@ index 8843435..41838b5 100755
  for x in $INCLUDEDIR; do
  	echo "CPPFLAGS+=	-I$x" >>$CONFIG_MK
  done
-@@ -252,8 +256,8 @@ if [ -e "$LDELF" ]; then
+@@ -253,8 +257,8 @@ if [ -e "$LDELF" ]; then
  fi
  
  # Add CPPFLAGS and CFLAGS to CC for testing features
