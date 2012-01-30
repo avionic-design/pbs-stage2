@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 0.8.3
+VERSION = 0.10
 
 LOCATION = http://ffmpeg.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -26,6 +26,7 @@ conf-vars = \
 	$(platform-conf-vars)
 
 stripfiles = \
+	$(prefix)/bin/avconv \
 	$(prefix)/bin/ffmpeg \
 	$(prefix)/bin/ffplay \
 	$(prefix)/bin/ffprobe \
