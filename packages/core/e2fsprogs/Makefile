@@ -1,5 +1,5 @@
 PACKAGE = e2fsprogs
-VERSION = 1.41.14
+VERSION = 1.42
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -25,6 +25,7 @@ stripfiles = \
 	$(prefix)/sbin/e2image \
 	$(prefix)/sbin/e2label \
 	$(prefix)/sbin/e2undo \
+	$(prefix)/sbin/e4defrag \
 	$(prefix)/sbin/filefrag \
 	$(prefix)/sbin/findfs \
 	$(prefix)/sbin/fsck \
