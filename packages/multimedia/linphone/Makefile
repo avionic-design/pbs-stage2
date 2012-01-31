@@ -1,10 +1,18 @@
 PACKAGE = linphone
-VERSION = 3.4.3
+VERSION = 3.5.0
 
-LOCATION = http://download-mirror.savannah.gnu.org/releases/$(PACKAGE)/stable/source
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://download-mirror.savannah.gnu.org/releases/$(PACKAGE)/$(MAJOR).$(MINOR).x/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
+
+$(pkgbuildtree)/mediastreamer2/m4:
+	$(call cmd,mkdir_p)
+
+$(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/mediastreamer2/m4
 
 conf-args += \
 	--disable-speex \
@@ -25,6 +33,7 @@ stripfiles = \
 	$(prefix)/bin/linphone-3 \
 	$(prefix)/bin/linphonec \
 	$(prefix)/bin/linphonecsh \
+	$(prefix)/bin/mediastream \
 	$(prefix)/bin/sipomatic \
 	$(prefix)/libexec/mediastream \
 	$(prefix)/lib/*.so.*

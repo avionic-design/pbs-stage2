@@ -1,0 +1,14 @@
+diff --git a/gtk/main.c b/gtk/main.c
+index 73e99cc..aa53280 100644
+--- a/gtk/main.c
++++ b/gtk/main.c
+@@ -1619,7 +1619,9 @@ int main(int argc, char *argv[]){
+ 	GdkPixbuf *pbuf;
+ 	const char *app_name="Linphone";
+ 
++#if !GLIB_CHECK_VERSION(2, 31, 0)
+ 	g_thread_init(NULL);
++#endif
+ 	gdk_threads_init();
+ 	
+ 	progpath = strdup(argv[0]);
