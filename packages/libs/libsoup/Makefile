@@ -1,5 +1,5 @@
 PACKAGE = libsoup
-VERSION = 2.37.3
+VERSION = 2.37.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -7,7 +7,7 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
