@@ -1,5 +1,5 @@
 PACKAGE = glib-networking
-VERSION = 2.30.2
+VERSION = 2.31.6
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -15,7 +15,6 @@ $(pkgbuildtree)/m4:
 $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 conf-args += \
-	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \
 	--disable-static \
 	--with-gnutls
 
@@ -24,5 +23,5 @@ plugin = $(prefix)/lib/gio/modules
 prunefiles = \
 	$(plugin)/*.la
 
-#stripfiles = \
+stripfiles = \
 	$(plugin)/*.so

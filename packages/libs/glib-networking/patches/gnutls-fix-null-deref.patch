@@ -12,7 +12,7 @@ diff --git a/tls/gnutls/gtlsconnection-gnutls.c b/tls/gnutls/gtlsconnection-gnut
 index c636f89..55c21a1 100644
 --- a/tls/gnutls/gtlsconnection-gnutls.c
 +++ b/tls/gnutls/gtlsconnection-gnutls.c
-@@ -851,8 +851,9 @@ handshake_internal (GTlsConnectionGnutls  *gnutls,
+@@ -805,8 +805,9 @@ handshake_internal (GTlsConnectionGnutls  *gnutls,
    GTlsCertificateFlags peer_certificate_errors = 0;
    int ret;
  
