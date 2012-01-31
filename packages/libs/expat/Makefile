@@ -4,11 +4,11 @@ VERSION = 2.0.1
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 prunefiles = \
-	$(prefix)/lib/libexpat.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/xmlwf \
-	$(prefix)/lib/libexpat.so.1.5.2
+	$(prefix)/lib/*.so.*

@@ -1,1 +1,1 @@
-ltmain-sysroot.patch -p1
+autotools-pkgconfig.patch
