@@ -2,6 +2,7 @@ menu "Desktop Environments"
 
 source "packages/desktop/evdev-calibrate/Kconfig"
 source "packages/desktop/gnome/Kconfig"
+source "packages/desktop/gtk-engines/Kconfig"
 source "packages/desktop/icons/Kconfig"
 source "packages/desktop/nodm/Kconfig"
 source "packages/desktop/plymouth/Kconfig"
