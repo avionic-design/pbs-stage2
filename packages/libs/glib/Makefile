@@ -1,5 +1,5 @@
 include packages/libs/glib/Makefile.location
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
@@ -18,6 +18,7 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/gdbus \
 	$(prefix)/bin/gio-querymodules \
+	$(prefix)/bin/glib-compile-resources \
 	$(prefix)/bin/glib-compile-schemas \
 	$(prefix)/bin/glib-genmarshal \
 	$(prefix)/bin/gobject-query \
