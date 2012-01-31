@@ -1,24 +1,71 @@
-Cross-compilation fixes.
-
-From: Thierry Reding <thierry.reding@avionic-design.de>
-
-
----
- MCONFIG.build        |    4 ++--
- com32/MCONFIG        |    9 +++++----
- com32/tools/Makefile |    5 ++++-
- extlinux/Makefile    |    4 ++--
- linux/Makefile       |    5 +++--
- lzo/Makefile         |    5 ++++-
- mtools/Makefile      |    5 +++--
- utils/Makefile       |    5 +++--
- 8 files changed, 26 insertions(+), 16 deletions(-)
-
-diff --git a/MCONFIG.build b/MCONFIG.build
-index d1abff2..63f2e30 100644
---- a/MCONFIG.build
-+++ b/MCONFIG.build
-@@ -19,8 +19,8 @@ include $(topdir)/MCONFIG
+diff --git a/com32/tools/Makefile b/com32/tools/Makefile
+index 7badabd..38b5d53 100644
+--- a/com32/tools/Makefile
++++ b/com32/tools/Makefile
+@@ -18,7 +18,10 @@ BINS    = relocs
+ all : $(BINS)
+ 
+ relocs : relocs.o
+-	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
++	$(HOST_CC) $(HOST_LDFLAGS) -o $@ $^ $(LIBS)
++
++relocs.o : relocs.c
++	$(HOST_CC) $(HOST_CFLAGS) -o $@ -c $<
+ 
+ tidy dist clean spotless:
+ 	rm -f $(BINS)
+diff --git a/extlinux/Makefile b/extlinux/Makefile
+index 12213d8..0675b90 100644
+--- a/extlinux/Makefile
++++ b/extlinux/Makefile
+@@ -21,8 +21,8 @@ include $(MAKEDIR)/syslinux.mk
+ OPTFLAGS = -g -Os
+ INCLUDES = -I. -I.. -I../libinstaller
+ CFLAGS	 = $(GCCWARN) -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
+-	   $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = 
++	   $(OPTFLAGS) $(INCLUDES) $(EXTRA_CFLAGS)
++LDFLAGS	 = $(EXTRA_LDFLAGS)
+ 
+ SRCS     = main.c \
+ 	   ../libinstaller/syslxmod.c \
+diff --git a/linux/Makefile b/linux/Makefile
+index 82bf111..f7c940f 100644
+--- a/linux/Makefile
++++ b/linux/Makefile
+@@ -20,8 +20,9 @@ include $(MAKEDIR)/syslinux.mk
+ 
+ OPTFLAGS = -g -Os
+ INCLUDES = -I. -I.. -I../libinstaller
+-CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
+-LDFLAGS	 = 
++CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
++	   $(EXRTA_CFLAGS)
++LDFLAGS	 = $(EXTRA_LDFLAGS)
+ 
+ SRCS     = syslinux.c \
+ 	   ../libinstaller/syslxopt.c \
+diff --git a/lzo/Makefile b/lzo/Makefile
+index cf8f985..d2de29d 100644
+--- a/lzo/Makefile
++++ b/lzo/Makefile
+@@ -28,7 +28,10 @@ $(LIB) : $(LIBOBJS)
+ 	$(RANLIB) $@
+ 
+ prepcore : prepcore.o $(LIB)
+-	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
++	$(HOST_CC) $(HOST_LDFLAGS) -o $@ $^ $(LIBS)
++
++$(LIBOBJS) prepcore.o : %.o: %.c
++	$(HOST_CC) $(HOST_CFLAGS) $(INCLUDES) -o $@ -c $<
+ 
+ tidy dist clean spotless:
+ 	rm -f $(BINS)
+diff --git a/mk/build.mk b/mk/build.mk
+index 0ca82be..a7bb126 100644
+--- a/mk/build.mk
++++ b/mk/build.mk
+@@ -19,8 +19,8 @@ include $(MAKEDIR)/syslinux.mk
  OPTFLAGS   = -g -Os
  INCLUDES   =
  CFLAGS     = -W -Wall -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
@@ -29,11 +76,11 @@ index d1abff2..63f2e30 100644
  LIBS	   =
  
  .SUFFIXES: .c .o .S .s .i .elf .com .bin .asm .lst .c32 .lss
-diff --git a/com32/MCONFIG b/com32/MCONFIG
-index a74ed32..95df33b 100644
---- a/com32/MCONFIG
-+++ b/com32/MCONFIG
-@@ -48,20 +48,21 @@ endif
+diff --git a/mk/com32.mk b/mk/com32.mk
+index 4a6caae..2d21639 100644
+--- a/mk/com32.mk
++++ b/mk/com32.mk
+@@ -48,20 +48,22 @@ endif
  CFLAGS     = $(GCCOPT) $(GCCWARN) -march=i386 \
  	     -fomit-frame-pointer -D__COM32__ \
  	     -nostdinc -iwithprefix include \
@@ -52,52 +99,22 @@ index a74ed32..95df33b 100644
  
  LNXCFLAGS  = -I$(com32)/libutil/include $(GCCWARN) -O -g \
 -	     -D_GNU_SOURCE -D_FORTIFY_SOURCE=0 -Wno-error
-+	     -D_GNU_SOURCE -D_FORTIFY_SOURCE=0 -Wno-error $(EXTRA_CFLAGS)
++	     -D_GNU_SOURCE -D_FORTIFY_SOURCE=0 -Wno-error \
++	     $(EXTRA_CFLAGS)
  LNXSFLAGS  = -g
 -LNXLDFLAGS = -g
 +LNXLDFLAGS = -g $(EXTRA_LDFLAGS)
  
  C_LIBS	   = $(com32)/libutil/libutil_com.a $(GPLLIB) \
  	     $(com32)/lib/libcom32.a $(LIBGCC)
-diff --git a/com32/tools/Makefile b/com32/tools/Makefile
-index e34296b..6c485f3 100644
---- a/com32/tools/Makefile
-+++ b/com32/tools/Makefile
-@@ -18,7 +18,10 @@ BINS    = relocs
- all : $(BINS)
+diff --git a/mtools/Makefile b/mtools/Makefile
+index 3e172fd..bc17ade 100755
+--- a/mtools/Makefile
++++ b/mtools/Makefile
+@@ -4,8 +4,9 @@ include $(MAKEDIR)/syslinux.mk
  
- relocs : relocs.o
--	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
-+	$(HOST_CC) $(HOST_LDFLAGS) -o $@ $^ $(LIBS)
-+
-+relocs.o: relocs.c
-+	$(HOST_CC) $(HOST_CFLAGS) -o $@ -c $<
- 
- tidy dist clean spotless:
- 	rm -f $(BINS)
-diff --git a/extlinux/Makefile b/extlinux/Makefile
-index 83cf1a5..b0a55e8 100644
---- a/extlinux/Makefile
-+++ b/extlinux/Makefile
-@@ -20,8 +20,8 @@ include $(topdir)/MCONFIG
  OPTFLAGS = -g -Os
- INCLUDES = -I. -I.. -I../libinstaller
- CFLAGS	 = $(GCCWARN) -Wno-sign-compare -D_FILE_OFFSET_BITS=64 \
--	   $(OPTFLAGS) $(INCLUDES)
--LDFLAGS	 = # -s
-+	   $(OPTFLAGS) $(INCLUDES) $(EXTRA_CFLAGS)
-+LDFLAGS	 = $(EXTRA_LDFLAGS)
- 
- SRCS     = main.c \
- 	   ../libinstaller/syslxmod.c \
-diff --git a/linux/Makefile b/linux/Makefile
-index ffe2272..33e81b7 100644
---- a/linux/Makefile
-+++ b/linux/Makefile
-@@ -19,8 +19,9 @@ include $(topdir)/MCONFIG
- 
- OPTFLAGS = -g -O0 -Dalloca=malloc
- INCLUDES = -I. -I.. -I../libinstaller
+ INCLUDES = -I. -I.. -I../libfat -I../libinstaller
 -CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
 -LDFLAGS	 = 
 +CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
@@ -105,52 +122,20 @@ index ffe2272..33e81b7 100644
 +LDFLAGS	 = $(EXTRA_LDFLAGS)
  
  SRCS     = syslinux.c \
- 	   ../libinstaller/syslxopt.c \
-diff --git a/lzo/Makefile b/lzo/Makefile
-index d88279d..ed5c589 100644
---- a/lzo/Makefile
-+++ b/lzo/Makefile
-@@ -27,7 +27,10 @@ $(LIB) : $(LIBOBJS)
- 	$(RANLIB) $@
- 
- prepcore : prepcore.o $(LIB)
--	$(CC) $(LDFLAGS) -o $@ $^ $(LIBS)
-+	$(HOST_CC) $(HOST_LDFLAGS) -o $@ $^ $(LIBS)
-+
-+$(LIBOBJS) prepcore.o: %.o: %.c
-+	$(HOST_CC) $(HOST_CFLAGS) $(INCLUDES) -o $@ -c $<
- 
- tidy dist clean spotless:
- 	rm -f $(BINS)
-diff --git a/mtools/Makefile b/mtools/Makefile
-index 6164d24..2faa1a3 100755
---- a/mtools/Makefile
-+++ b/mtools/Makefile
-@@ -3,8 +3,9 @@ include $(topdir)/MCONFIG
- 
- OPTFLAGS = -g -Os
- INCLUDES = -I. -I.. -I../libfat -I../libinstaller
--CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
--LDFLAGS	 = -s
-+CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
-+	   $(EXTRA_CFLAGS)
-+LDFLAGS	 = $(EXTRA_LDFLAGS)
- 
- SRCS     = syslinux.c \
  	   ../libinstaller/fat.c \
 diff --git a/utils/Makefile b/utils/Makefile
-index 455eb82..b81fd34 100644
+index 44cb54f..26d572f 100644
 --- a/utils/Makefile
 +++ b/utils/Makefile
-@@ -17,8 +17,9 @@
- topdir = ..
- include $(topdir)/MCONFIG
+@@ -18,8 +18,9 @@ topdir = ..
+ MAKEDIR = $(topdir)/mk
+ include $(MAKEDIR)/syslinux.mk
  
 -CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64
--LDFLAGS  = -O2 -s
+-LDFLAGS  = -O2
 +CFLAGS   = $(GCCWARN) -Os -fomit-frame-pointer -D_FILE_OFFSET_BITS=64 \
 +	   $(EXTRA_CFLAGS)
-+LDFLAGS  = -O2 -s $(EXTRA_LDFLAGS)
++LDFLAGS  = -O2 $(EXTRA_LDFLAGS)
  
- TARGETS	 = mkdiskimage isohybrid gethostip memdiskfind
- TARGETS += isohybrid.pl  # about to be obsoleted
+ C_TARGETS	 = isohybrid gethostip memdiskfind
+ SCRIPT_TARGETS	 = mkdiskimage

@@ -1,5 +1,5 @@
 PACKAGE = syslinux
-VERSION = 4.04
+VERSION = 4.05
 
 LOCATION = http://www.kernel.org/pub/linux/utils/boot/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -10,15 +10,15 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	cd $(pkgbuildtree) && rm -f MCONFIG.local && \
-		echo 'CC = $(CC)' >> MCONFIG.local && \
-		echo 'EXTRA_CFLAGS = $(CFLAGS)' >> MCONFIG.local && \
-		echo 'LD = $(LD)' >> MCONFIG.local && \
-		echo 'EXTRA_LDFLAGS = $(LDFLAGS)' >> MCONFIG.local && \
-		echo 'HOST_CC = gcc' >> MCONFIG.local && \
-		echo 'HOST_CFLAGS = -O2 -g' >> MCONFIG.local && \
-		echo 'HOST_LD = gcc' >> MCONFIG.local && \
-		echo 'HOST_LDFLAGS =' >> MCONFIG.local
+	cd $(pkgbuildtree)/mk && rm -f local.mk && \
+		echo 'CC = $(CC)' >> local.mk && \
+		echo 'EXTRA_CFLAGS = $(CFLAGS)' >> local.mk && \
+		echo 'LD = $(LD)' >> local.mk && \
+		echo 'EXTRA_LDFLAGS = $(LDFLAGS)' >> local.mk && \
+		echo 'HOST_CC = gcc' >> local.mk && \
+		echo 'HOST_CFLAGS = -O2 -g' >> local.mk && \
+		echo 'HOST_LD = gcc' >> local.mk && \
+		echo 'HOST_LDFLAGS =' >> local.mk
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
@@ -35,6 +35,9 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 stripfiles = \
+	$(prefix)/bin/gethostip \
+	$(prefix)/bin/isohybrid \
+	$(prefix)/bin/memdiskfind \
 	$(prefix)/bin/syslinux \
 	$(prefix)/sbin/extlinux
 
