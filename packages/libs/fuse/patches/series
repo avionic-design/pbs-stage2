@@ -1,4 +1,2 @@
-ltmain-sysroot-2.2.6.patch
-fusermount-include.diff
-install-util.diff
-gnu-source.patch
+out-of-tree.patch
+no-update-rc.d.patch

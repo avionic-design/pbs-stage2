@@ -1,11 +1,18 @@
---- fuse-2.8.5/util/Makefile.am	2010-09-28 10:03:09.000000000 +0200
-+++ /home/alban/Development/CabineCamera/pbs2/build/csc-rootfs/build/packages/libs/fuse/fuse-2.8.5/util/Makefile.am	2010-11-25 10:50:08.820988469 +0100
-@@ -29,13 +29,9 @@
- 
- install-exec-local:
- 	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
--	$(INSTALL_PROGRAM) $(srcdir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
-+	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+From fb9cd9b910f57ee674bb78335320c477a57d0a61 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 26 Jan 2012 08:08:48 +0100
+Subject: [PATCH 2/2] Do not run update-rc.d on install.
+
+---
+ util/Makefile.am |    8 --------
+ 1 files changed, 0 insertions(+), 8 deletions(-)
+
+diff --git a/util/Makefile.am b/util/Makefile.am
+index 1b61266..b3ab035 100644
+--- a/util/Makefile.am
++++ b/util/Makefile.am
+@@ -32,10 +32,6 @@ install-exec-local:
+ 	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
  	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
 -	@if test -x /usr/sbin/update-rc.d; then \
@@ -15,7 +22,7 @@
  
  install-data-local:
  	$(mkdir_p) $(DESTDIR)$(UDEV_RULES_PATH)
-@@ -45,7 +41,3 @@
+@@ -45,7 +41,3 @@ uninstall-local:
  	rm -f $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	rm -f $(DESTDIR)$(UDEV_RULES_PATH)/99-fuse.rules
  	rm -f $(DESTDIR)$(INIT_D_PATH)/fuse
@@ -23,3 +30,6 @@
 -		echo "/usr/sbin/update-rc.d fuse remove || true"; \
 -		/usr/sbin/update-rc.d fuse remove || true; \
 -	fi
+-- 
+1.7.8.4
+

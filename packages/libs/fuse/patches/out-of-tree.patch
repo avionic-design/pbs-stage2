@@ -1,0 +1,35 @@
+From 31ecb16541b41f4b079c719b3b55c220489d8f76 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 26 Jan 2012 08:08:01 +0100
+Subject: [PATCH 1/2] Fix out-of-tree build.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ util/Makefile.am |    4 ++--
+ 1 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/util/Makefile.am b/util/Makefile.am
+index b9bcdaa..1b61266 100644
+--- a/util/Makefile.am
++++ b/util/Makefile.am
+@@ -6,7 +6,7 @@ noinst_PROGRAMS = mount.fuse
+ 
+ fusermount_SOURCES = fusermount.c
+ fusermount_LDADD = ../lib/mount_util.lo
+-fusermount_CPPFLAGS = -I../lib
++fusermount_CPPFLAGS = -I$(top_srcdir)/lib
+ mount_fuse_SOURCES = mount.fuse.c
+ 
+ ulockmgr_server_SOURCES = ulockmgr_server.c
+@@ -29,7 +29,7 @@ INIT_D_PATH = @INIT_D_PATH@
+ 
+ install-exec-local:
+ 	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
+-	$(INSTALL_PROGRAM) $(srcdir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
++	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+ 	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
+ 	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
+ 	@if test -x /usr/sbin/update-rc.d; then \
+-- 
+1.7.8.4
+

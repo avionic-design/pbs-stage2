@@ -1,10 +1,13 @@
 PACKAGE = fuse
-VERSION = 2.8.6
+VERSION = 2.8.7
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
+
+prunefiles = \
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	/sbin/mount.fuse \
