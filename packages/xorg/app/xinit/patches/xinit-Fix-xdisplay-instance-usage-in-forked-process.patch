@@ -20,7 +20,7 @@ diff --git a/xinit.c b/xinit.c
 index 42ff008..b6e8577 100644
 --- a/xinit.c
 +++ b/xinit.c
-@@ -334,6 +334,7 @@ main(int argc, char *argv[])
+@@ -332,6 +332,7 @@ main(int argc, char *argv[])
  static Bool
  waitforserver(void)
  {
@@ -28,7 +28,7 @@ index 42ff008..b6e8577 100644
      int    ncycles     = 120;        /* # of cycles to wait */
      int    cycles;            /* Wait cycle count */
  
-@@ -348,7 +349,12 @@ waitforserver(void)
+@@ -346,7 +347,12 @@ waitforserver(void)
  #endif
  
      for (cycles = 0; cycles < ncycles; cycles++) {
@@ -42,7 +42,7 @@ index 42ff008..b6e8577 100644
              return(TRUE);
          }
          else {
-@@ -491,6 +497,13 @@ setWindowPath(void)
+@@ -489,6 +495,13 @@ setWindowPath(void)
      char nums[10];
      int numn;
      size_t len;
@@ -56,7 +56,7 @@ index 42ff008..b6e8577 100644
      prop = XInternAtom(xd, "XFree86_VT", False);
      if (prop == None) {
          Errorx("Unable to intern XFree86_VT atom");
-@@ -599,7 +612,8 @@ shutdown(void)
+@@ -597,7 +610,8 @@ shutdown(void)
      if (clientpid > 0) {
          XSetIOErrorHandler(ignorexio);
          if (! setjmp(close_env)) {
