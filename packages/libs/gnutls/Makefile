@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.0.11
+VERSION = 3.0.12
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -21,6 +21,7 @@ stripfiles = \
 	$(prefix)/bin/gnutls-cli \
 	$(prefix)/bin/gnutls-cli-debug \
 	$(prefix)/bin/gnutls-serv \
+	$(prefix)/bin/ocsptool \
 	$(prefix)/bin/p11tool \
 	$(prefix)/bin/psktool \
 	$(prefix)/bin/srptool \
