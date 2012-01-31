@@ -1,5 +1,5 @@
 PACKAGE = SDL
-VERSION = 1.2.14
+VERSION = 1.2.15
 
 LOCATION = http://www.libsdl.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -15,7 +15,7 @@ conf-args += \
 	--disable-video-directfb
 
 prunefiles = \
-	$(prefix)/lib/libSDL.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libSDL-1.2.so.0.11.3
+	$(prefix)/lib/*.so.*
