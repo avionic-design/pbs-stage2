@@ -1,5 +1,59 @@
+From 9a17ef2e12b05f42586f973e51d85431b7484fa3 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Tue, 31 Jan 2012 08:46:16 +0100
+Subject: [PATCH] Miscellaneous fixes.
+
+---
+ gdb/common/gdb_thread_db.h |   23 +++---
+ gdb/config.in              |    7 ++
+ gdb/configure              |   36 +++++++++
+ gdb/configure.ac           |    1 +
+ gdb/gdbserver/config.in    |   14 ++++
+ gdb/gdbserver/configure    |  180 +++++++++++++++++++++++++++++++-------------
+ gdb/gdbserver/configure.ac |    3 +
+ gdb/gdbserver/linux-low.h  |    2 +
+ gdb/gdbserver/thread-db.c  |   10 ++-
+ 9 files changed, 209 insertions(+), 67 deletions(-)
+
+diff --git a/gdb/common/gdb_thread_db.h b/gdb/common/gdb_thread_db.h
+index 3f6b6c1..2d21f4b 100644
+--- a/gdb/common/gdb_thread_db.h
++++ b/gdb/common/gdb_thread_db.h
+@@ -1,17 +1,5 @@
+ #ifdef HAVE_THREAD_DB_H
+ #include <thread_db.h>
+-
+-#ifndef LIBTHREAD_DB_SO
+-#define LIBTHREAD_DB_SO "libthread_db.so.1"
+-#endif
+-
+-#ifndef LIBTHREAD_DB_SEARCH_PATH
+-/* $sdir appears before $pdir for some minimal security protection:
+-   we trust the system libthread_db.so a bit more than some random
+-   libthread_db associated with whatever libpthread the app is using.  */
+-#define LIBTHREAD_DB_SEARCH_PATH "$sdir:$pdir"
+-#endif
+-
+ #else
+ 
+ /* Copyright (C) 1999-2000, 2007-2012 Free Software Foundation, Inc.
+@@ -453,3 +441,14 @@ extern td_err_e td_thr_dbresume (const td_thrhandle_t *__th);
+ #endif	/* thread_db.h */
+ 
+ #endif /* HAVE_THREAD_DB_H */
++
++#ifndef LIBTHREAD_DB_SO
++#define LIBTHREAD_DB_SO "libthread_db.so.1"
++#endif
++
++#ifndef LIBTHREAD_DB_SEARCH_PATH
++/* $sdir appears before $pdir for some minimal security protection:
++   we trust the system libthread_db.so a bit more than some random
++   libthread_db associated with whatever libpthread the app is using.  */
++#define LIBTHREAD_DB_SEARCH_PATH "$sdir:$pdir"
++#endif
 diff --git a/gdb/config.in b/gdb/config.in
-index 01ba750..736dccd 100644
+index 4af4e69..4d34efa 100644
 --- a/gdb/config.in
 +++ b/gdb/config.in
 @@ -665,6 +665,9 @@
@@ -12,7 +66,7 @@ index 01ba750..736dccd 100644
  /* Define to 1 if you have the <unistd.h> header file. */
  #undef HAVE_UNISTD_H
  
-@@ -964,6 +967,10 @@
+@@ -967,6 +970,10 @@
  # define __restrict__
  #endif
  
@@ -24,10 +78,10 @@ index 01ba750..736dccd 100644
      be used.  This helps to reduce warnings, such as from
      GCC -Wunused-parameter.  */
 diff --git a/gdb/configure b/gdb/configure
-index 30e5e45..81c8610 100755
+index 6408fc2..a60dfd1 100755
 --- a/gdb/configure
 +++ b/gdb/configure
-@@ -11638,6 +11638,42 @@ _ACEOF
+@@ -11967,6 +11967,42 @@ _ACEOF
  fi
  
  
@@ -71,10 +125,10 @@ index 30e5e45..81c8610 100755
  # Checks for compiler characteristics.  #
  # ------------------------------------- #
 diff --git a/gdb/configure.ac b/gdb/configure.ac
-index f51a567..d2a67da 100644
+index 6a7af7e..f664303 100644
 --- a/gdb/configure.ac
 +++ b/gdb/configure.ac
-@@ -976,6 +976,7 @@ AC_CHECK_TYPES(socklen_t, [], [],
+@@ -1043,6 +1043,7 @@ AC_CHECK_TYPES(socklen_t, [], [],
  [#include <sys/types.h>
  #include <sys/socket.h>
  ])
@@ -82,42 +136,11 @@ index f51a567..d2a67da 100644
  
  # ------------------------------------- #
  # Checks for compiler characteristics.  #
-diff --git a/gdb/gdb_thread_db.h b/gdb/gdb_thread_db.h
-index 957ed2c..93e2e33 100644
---- a/gdb/gdb_thread_db.h
-+++ b/gdb/gdb_thread_db.h
-@@ -1,14 +1,5 @@
- #ifdef HAVE_THREAD_DB_H
- #include <thread_db.h>
--
--#ifndef LIBTHREAD_DB_SO
--#define LIBTHREAD_DB_SO "libthread_db.so.1"
--#endif
--
--#ifndef LIBTHREAD_DB_SEARCH_PATH
--#define LIBTHREAD_DB_SEARCH_PATH ""
--#endif
--
- #else
- 
- /* Copyright (C) 1999, 2000, 2007, 2008, 2009, 2010, 2011
-@@ -461,3 +452,11 @@ extern td_err_e td_thr_dbresume (const td_thrhandle_t *__th);
- #endif	/* thread_db.h */
- 
- #endif /* HAVE_THREAD_DB_H */
-+
-+#ifndef LIBTHREAD_DB_SO
-+#define LIBTHREAD_DB_SO "libthread_db.so.1"
-+#endif
-+
-+#ifndef LIBTHREAD_DB_SEARCH_PATH
-+#define LIBTHREAD_DB_SEARCH_PATH ""
-+#endif
 diff --git a/gdb/gdbserver/config.in b/gdb/gdbserver/config.in
-index 909dcb9..3b55470 100644
+index a9472ea..352d397 100644
 --- a/gdb/gdbserver/config.in
 +++ b/gdb/gdbserver/config.in
-@@ -53,6 +53,9 @@
+@@ -61,6 +61,9 @@
  /* Define to 1 if you have the <fcntl.h> header file. */
  #undef HAVE_FCNTL_H
  
@@ -127,7 +150,7 @@ index 909dcb9..3b55470 100644
  /* Define to 1 if you have the <inttypes.h> header file. */
  #undef HAVE_INTTYPES_H
  
-@@ -174,6 +177,9 @@
+@@ -196,6 +199,9 @@
  /* Define to 1 if you have the <thread_db.h> header file. */
  #undef HAVE_THREAD_DB_H
  
@@ -137,7 +160,7 @@ index 909dcb9..3b55470 100644
  /* Define to 1 if you have the <unistd.h> header file. */
  #undef HAVE_UNISTD_H
  
-@@ -266,3 +272,11 @@
+@@ -288,3 +294,11 @@
  
  /* Define to 1 if you need to in order for `stat' and other things to work. */
  #undef _POSIX_SOURCE
@@ -150,7 +173,7 @@ index 909dcb9..3b55470 100644
 +   pointer, if such a type exists, and if the system does not define it. */
 +#undef uintptr_t
 diff --git a/gdb/gdbserver/configure b/gdb/gdbserver/configure
-index aaa73fc..6b35247 100755
+index d92a00f..cb49fb0 100755
 --- a/gdb/gdbserver/configure
 +++ b/gdb/gdbserver/configure
 @@ -1651,6 +1651,60 @@ $as_echo "$ac_res" >&6; }
@@ -275,7 +298,7 @@ index aaa73fc..6b35247 100755
  cat >config.log <<_ACEOF
  This file contains any messages produced by compilers while
  running configure, to aid debugging if configure makes a mistake.
-@@ -3800,6 +3800,78 @@ $as_echo "#define STDC_HEADERS 1" >>confdefs.h
+@@ -3959,6 +3959,78 @@ fi
  fi
  
  
@@ -355,12 +378,12 @@ index aaa73fc..6b35247 100755
  # for constant arguments.  Useless!
  { $as_echo "$as_me:${as_lineno-$LINENO}: checking for working alloca.h" >&5
 diff --git a/gdb/gdbserver/configure.ac b/gdb/gdbserver/configure.ac
-index 07ac26a..e84fd3f 100644
+index 30666ec..979f5a4 100644
 --- a/gdb/gdbserver/configure.ac
 +++ b/gdb/gdbserver/configure.ac
 @@ -36,6 +36,9 @@ AC_ARG_PROGRAM
- 
  AC_HEADER_STDC
+ AC_HEADER_DIRENT
  
 +AC_TYPE_INTPTR_T
 +AC_TYPE_UINTPTR_T
@@ -369,7 +392,7 @@ index 07ac26a..e84fd3f 100644
  AC_CHECK_HEADERS(sgtty.h termio.h termios.h sys/reg.h string.h dnl
  		 proc_service.h sys/procfs.h thread_db.h linux/elf.h dnl
 diff --git a/gdb/gdbserver/linux-low.h b/gdb/gdbserver/linux-low.h
-index 6635bc6..edc2c02 100644
+index 2befc48..808454f 100644
 --- a/gdb/gdbserver/linux-low.h
 +++ b/gdb/gdbserver/linux-low.h
 @@ -21,6 +21,8 @@
@@ -382,10 +405,10 @@ index 6635bc6..edc2c02 100644
  
  #ifdef HAVE_LINUX_REGSETS
 diff --git a/gdb/gdbserver/thread-db.c b/gdb/gdbserver/thread-db.c
-index 529516e..373e5ac 100644
+index 795f926..d09dc33 100644
 --- a/gdb/gdbserver/thread-db.c
 +++ b/gdb/gdbserver/thread-db.c
-@@ -313,7 +313,9 @@ find_one_thread (ptid_t ptid)
+@@ -312,7 +312,9 @@ find_one_thread (ptid_t ptid)
      return 0;
  
    lwp->thread_known = 1;
@@ -395,7 +418,7 @@ index 529516e..373e5ac 100644
  
    return 1;
  }
-@@ -338,7 +340,9 @@ attach_thread (const td_thrhandle_t *th_p, td_thrinfo_t *ti_p)
+@@ -337,7 +339,9 @@ attach_thread (const td_thrhandle_t *th_p, td_thrinfo_t *ti_p)
      }
  
    lwp->thread_known = 1;
@@ -405,7 +428,7 @@ index 529516e..373e5ac 100644
  
    if (thread_db_use_events)
      {
-@@ -489,6 +493,7 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
+@@ -488,6 +492,7 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
    struct thread_info *saved_inferior;
    struct process_info *proc;
    struct thread_db *thread_db;
@@ -413,7 +436,7 @@ index 529516e..373e5ac 100644
  
    proc = get_thread_process (thread);
    thread_db = proc->private->thread_db;
-@@ -511,9 +516,12 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
+@@ -510,9 +515,12 @@ thread_db_get_tls_address (struct thread_info *thread, CORE_ADDR offset,
    /* Note the cast through uintptr_t: this interface only works if
       a target address fits in a psaddr_t, which is a host pointer.
       So a 32-bit debugger can not access 64-bit TLS through this.  */
@@ -427,3 +450,6 @@ index 529516e..373e5ac 100644
    current_inferior = saved_inferior;
    if (err == TD_OK)
      {
+-- 
+1.7.9
+
