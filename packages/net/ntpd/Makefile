@@ -1,5 +1,5 @@
 PACKAGE = ntp
-VERSION = 4.2.6p4
+VERSION = 4.2.6p5
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
