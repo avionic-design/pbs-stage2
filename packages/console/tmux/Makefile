@@ -1,5 +1,5 @@
 PACKAGE = tmux
-VERSION = 1.5
+VERSION = 1.6
 
 LOCATION = http://downloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
