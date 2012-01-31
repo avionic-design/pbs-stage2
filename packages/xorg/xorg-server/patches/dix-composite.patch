@@ -19,10 +19,10 @@ index cea140b..e3cbdc8 100644
  	exa \
  	config \
 diff --git a/Makefile.in b/Makefile.in
-index a44b6aa..eb3e920 100644
+index 7511d4e..3d44764 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -474,6 +474,7 @@ SUBDIRS = \
+@@ -425,6 +425,7 @@ SUBDIRS = \
  	doc \
  	man \
  	include \
@@ -30,7 +30,7 @@ index a44b6aa..eb3e920 100644
  	dix  \
  	fb \
  	mi \
-@@ -488,7 +489,6 @@ SUBDIRS = \
+@@ -439,7 +440,6 @@ SUBDIRS = \
  	$(RECORD_DIR) \
  	xfixes \
  	damageext \
@@ -39,33 +39,10 @@ index a44b6aa..eb3e920 100644
  	exa \
  	config \
 diff --git a/dix/Makefile.am b/dix/Makefile.am
-index f5af619..b9185f2 100644
+index f5af619..b4c9eec 100644
 --- a/dix/Makefile.am
 +++ b/dix/Makefile.am
 @@ -41,6 +41,9 @@ libdix_la_SOURCES = 	\
- 	tables.c	\
- 	window.c
- 
-+libdix_la_LIBADD =	\
-+	../composite/libcomposite.la
-+
- EXTRA_DIST = buildatoms BuiltInAtoms Xserver.d Xserver-dtrace.h.in
- 
- # Install list of protocol names
-diff --git a/dix/Makefile.in b/dix/Makefile.in
-index 0948bf2..f1715aa 100644
---- a/dix/Makefile.in
-+++ b/dix/Makefile.in
-@@ -57,7 +57,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
- CONFIG_CLEAN_FILES =
- CONFIG_CLEAN_VPATH_FILES =
- LTLIBRARIES = $(noinst_LTLIBRARIES)
--libdix_la_LIBADD =
-+libdix_la_DEPENDENCIES = ../composite/libcomposite.la
- am_libdix_la_OBJECTS = atom.lo colormap.lo cursor.lo devices.lo \
- 	dispatch.lo dixfonts.lo dixutils.lo enterleave.lo events.lo \
- 	eventconvert.lo extension.lo ffs.lo gc.lo getevents.lo \
-@@ -496,6 +496,9 @@ libdix_la_SOURCES = \
  	tables.c	\
  	window.c
  
@@ -75,3 +52,16 @@ index 0948bf2..f1715aa 100644
  EXTRA_DIST = buildatoms BuiltInAtoms Xserver.d Xserver-dtrace.h.in
  
  # Install list of protocol names
+diff --git a/dix/Makefile.in b/dix/Makefile.in
+index 6fecceb..eacfe86 100644
+--- a/dix/Makefile.in
++++ b/dix/Makefile.in
+@@ -57,7 +57,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
+ 	$(top_builddir)/include/version-config.h
+ CONFIG_CLEAN_FILES =
+ LTLIBRARIES = $(noinst_LTLIBRARIES)
+-libdix_la_LIBADD =
++libdix_la_LIBADD = ../composite/libcomposite.la
+ am_libdix_la_OBJECTS = atom.lo colormap.lo cursor.lo devices.lo \
+ 	dispatch.lo dixfonts.lo dixutils.lo enterleave.lo events.lo \
+ 	eventconvert.lo extension.lo ffs.lo gc.lo getevents.lo \
