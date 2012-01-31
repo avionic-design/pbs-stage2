@@ -1,5 +1,5 @@
 PACKAGE = tcpdump
-VERSION = 4.1.1
+VERSION = 4.2.1
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

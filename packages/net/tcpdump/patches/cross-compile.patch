@@ -30,7 +30,7 @@ diff --git a/interface.h b/interface.h
 index 1f03123..832b8dd 100644
 --- a/interface.h
 +++ b/interface.h
-@@ -156,7 +156,7 @@ extern u_int16_t create_osi_cksum(const u_int8_t *, int, int);
+@@ -153,7 +153,7 @@ extern u_int16_t create_osi_cksum(const u_int8_t *, int, int);
  
  /* The printer routines. */
  
@@ -69,15 +69,15 @@ diff --git a/netdissect.h b/netdissect.h
 index cd6f2f1..6856ec0 100644
 --- a/netdissect.h
 +++ b/netdissect.h
-@@ -261,7 +261,7 @@ extern const char *dnnum_string(netdissect_options *, u_short);
+@@ -266,7 +266,7 @@ extern const char *dnnum_string(netdissect_options *, u_short);
  
  /* The printer routines. */
  
 -#include <pcap.h>
 +#include <pcap/pcap.h>
  
- 
- extern void eap_print(netdissect_options *,const u_char *, u_int);
+ typedef u_int (*if_ndo_printer)(struct netdissect_options *ndo,
+				const struct pcap_pkthdr *, const u_char *);
 diff --git a/pcap_dump_ftell.c b/pcap_dump_ftell.c
 index 6eb3a4a..f07edb1 100644
 --- a/pcap_dump_ftell.c
@@ -212,7 +212,7 @@ diff --git a/print-ether.c b/print-ether.c
 index b66e885..2d38e75 100644
 --- a/print-ether.c
 +++ b/print-ether.c
-@@ -30,7 +30,7 @@ static const char rcsid[] _U_ =
+@@ -31,7 +31,7 @@ static const char rcsid[] _U_ =
  #include <tcpdump-stdinc.h>
  
  #include <stdio.h>
