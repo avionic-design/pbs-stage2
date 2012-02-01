@@ -104,6 +104,19 @@ index 835d21b..4edf746 100644
  #include <string.h>
  
  #include "interface.h"
+diff --git a/print-802_15_4.c b/print-802_15_4.c
+index 2016552..fef7bb3 100644
+--- a/print-802_15_4.c
++++ b/print-802_15_4.c
+@@ -27,7 +27,7 @@
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ #include <string.h>
+ 
+ #include "interface.h"
 diff --git a/print-ap1394.c b/print-ap1394.c
 index dd9bc5a..931aeec 100644
 --- a/print-ap1394.c
@@ -337,6 +350,19 @@ index 972cb4b..a3a2e1d 100644
 +#include <pcap/pcap.h>
  
  #include "extract.h"
+ #include "interface.h"
+diff --git a/print-ppi.c b/print-ppi.c
+index 38873c8..2b8eea6 100644
+--- a/print-ppi.c
++++ b/print-ppi.c
+@@ -8,7 +8,7 @@
+ #include <tcpdump-stdinc.h>
+ 
+ #include <stdio.h>
+-#include <pcap.h>
++#include <pcap/pcap.h>
+ 
+ #include "netdissect.h"
  #include "interface.h"
 diff --git a/print-ppp.c b/print-ppp.c
 index 708e934..248a329 100644
