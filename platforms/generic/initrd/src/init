@@ -33,7 +33,7 @@ mount -o nosuid,nodev,mode=0755 -t tmpfs run /run &&
 log_action_end_msg $?
 
 log_action_begin_msg "Starting udev daemon"
-/sbin/udevd --daemon --resolve-names=never
+/usr/lib/udev/udevd --daemon --resolve-names=never
 log_action_end_msg $?
 
 if test -x /usr/sbin/plymouthd; then
@@ -44,9 +44,9 @@ if test -x /usr/sbin/plymouthd; then
 		log_progress_msg "Loading gfx driver..."
 		/sbin/modprobe i915 modeset=1
 
-		/sbin/udevadm trigger --attr-match=class=0x030000
-		/sbin/udevadm trigger --subsystem-match=graphics --subsystem-match=drm --subsystem-match=tty
-		/sbin/udevadm settle || true
+		/usr/bin/udevadm trigger --attr-match=class=0x030000
+		/usr/bin/udevadm trigger --subsystem-match=graphics --subsystem-match=drm --subsystem-match=tty
+		/usr/bin/udevadm settle || true
 	fi
 
 	log_action_begin_msg "Starting plymouth daemon"
@@ -61,8 +61,8 @@ if test -x /usr/sbin/plymouthd; then
 fi
 
 log_action_begin_msg "Waiting for /dev filesystem to be populated"
-/sbin/udevadm trigger
-/sbin/udevadm settle || true
+/usr/bin/udevadm trigger
+/usr/bin/udevadm settle || true
 log_action_end_msg $?
 
 cmdline=`cat /proc/cmdline`
@@ -168,7 +168,7 @@ fi
 log_action_begin_msg "Stopping udevd"
 for proc in /proc/[0-9]*; do
 	[ -x $proc/exe ] || continue
-	if [ "`readlink $proc/exe`" = /sbin/udevd ]; then
+	if [ "`readlink $proc/exe`" = /usr/lib/udev/udevd ]; then
 		kill ${proc#/proc/} 2> /dev/null || true
 	fi
 done
