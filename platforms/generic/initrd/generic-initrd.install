@@ -1,5 +1,8 @@
+/dev
 /etc
 /init
 /lib/lsb
+/proc
 /run
 /shutdown
+/sys

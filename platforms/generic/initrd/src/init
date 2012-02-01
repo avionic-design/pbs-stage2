@@ -3,12 +3,10 @@
 . /lib/lsb/init-functions
 
 log_action_begin_msg "Mounting /proc filesystem"
-mkdir -p /proc
 mount -t proc none /proc
 log_action_end_msg $?
 
 log_action_begin_msg "Mounting /sys filesystem"
-mkdir -p /sys
 mount -t sysfs none /sys
 log_action_end_msg $?
 

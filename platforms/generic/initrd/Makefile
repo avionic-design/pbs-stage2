@@ -2,9 +2,12 @@ PACKAGE = generic-initrd
 VERSION = 0.0.0
 
 dirs = \
+	/dev \
 	/etc \
 	/etc/plymouth \
-	/run
+	/proc \
+	/run \
+	/sys
 
 scripts = \
 	/init \
