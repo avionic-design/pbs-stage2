@@ -1,29 +1,26 @@
-From 3477a95a32e8631c916512a4ea9f491a4354f63a Mon Sep 17 00:00:00 2001
+From 62281fc400614a4522d1029afe6d0deeab449290 Mon Sep 17 00:00:00 2001
 From: Julian Scheel <julian.scheel@avionic-design.de>
 Date: Mon, 9 Jan 2012 13:58:37 +0100
 Subject: [PATCH] gnutls: Fix potential NULL-pointer dereference.
 
 Signed-off-by: Julian Scheel <julian.scheel@avionic-design.de>
 ---
- tls/gnutls/gtlsconnection-gnutls.c |    5 +++--
- 1 files changed, 3 insertions(+), 2 deletions(-)
+ tls/gnutls/gtlsconnection-gnutls.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
 diff --git a/tls/gnutls/gtlsconnection-gnutls.c b/tls/gnutls/gtlsconnection-gnutls.c
-index c636f89..55c21a1 100644
+index 4bed055..3da7d7a 100644
 --- a/tls/gnutls/gtlsconnection-gnutls.c
 +++ b/tls/gnutls/gtlsconnection-gnutls.c
-@@ -805,8 +805,9 @@ handshake_internal (GTlsConnectionGnutls  *gnutls,
+@@ -805,6 +805,8 @@ handshake_internal (GTlsConnectionGnutls  *gnutls,
    GTlsCertificateFlags peer_certificate_errors = 0;
    int ret;
  
--  if (G_IS_TLS_SERVER_CONNECTION_GNUTLS (gnutls) &&
--      gnutls->priv->ever_handshaked && !gnutls->priv->handshaking &&
-+  g_return_val_if_fail (G_IS_TLS_SERVER_CONNECTION_GNUTLS (gnutls), FALSE);
++  g_return_val_if_fail (G_IS_TLS_CONNECTION_GNUTLS (gnutls), FALSE);
 +
-+  if (gnutls->priv->ever_handshaked && !gnutls->priv->handshaking &&
+   if (G_IS_TLS_SERVER_CONNECTION_GNUTLS (gnutls) &&
+       gnutls->priv->ever_handshaked && !gnutls->priv->handshaking &&
        !gnutls->priv->need_handshake)
-     {
-       BEGIN_GNUTLS_IO (gnutls, blocking, cancellable);
 -- 
-1.7.8.3
+1.7.9
 
