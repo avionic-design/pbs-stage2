@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_NSS
 	bool "nss"
 	select PACKAGE_LIBS_NSPR
+	select PACKAGE_LIBS_SQLITE
 	default n
