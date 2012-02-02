@@ -1,4 +1,5 @@
 config PACKAGE_CORE_RSYSLOG
 	bool "rsyslog"
 	select PACKAGE_LIBS_LIBEE
+	select PACKAGE_LIBS_ZLIB
 	default n
