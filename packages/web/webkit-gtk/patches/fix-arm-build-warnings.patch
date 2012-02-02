@@ -1,5 +1,33 @@
+Subversion Revision: 105030
+diff --git a/Source/JavaScriptCore/ChangeLog b/Source/JavaScriptCore/ChangeLog
+index 613d4cb663f5d12b2489fcaca06c2be7774ef8c3..c16fe651a46b0aa17f4eae04be805f4391ec70a9 100644
+--- a/Source/JavaScriptCore/ChangeLog
++++ b/Source/JavaScriptCore/ChangeLog
+@@ -1,3 +1,22 @@
++2012-01-15  Rob Buis  <rbuis@rim.com>
++
++        Fix alignment warnings in ARMv7
++        https://bugs.webkit.org/show_bug.cgi?id=55368
++
++        Reviewed by NOBODY (OOPS!).
++
++        Use reinterpret_cast_ptr and static_cast to get rid of alignment issues in ARMv7 code.
++
++        * heap/HandleTypes.h:
++        (JSC::HandleTypes::getFromSlot):
++        * heap/MarkedBlock.cpp:
++        (JSC::MarkedBlock::specializedSweep):
++        * heap/MarkedBlock.h:
++        (JSC::MarkedBlock::forEachCell):
++        * runtime/WriteBarrier.h:
++        (JSC::WriteBarrierBase::get):
++        (JSC::WriteBarrierBase::unvalidatedGet):
++
+ 2012-01-16  Carlos Garcia Campos  <cgarcia@igalia.com>
+ 
+         Unreviewed. Fix make distcheck.
 diff --git a/Source/JavaScriptCore/heap/HandleTypes.h b/Source/JavaScriptCore/heap/HandleTypes.h
-index 780ab85..bdfbcfd 100644
+index 780ab85cdd5422aa3769b5aa3a412907f6e8e370..bdfbcfda312949c3dfe55dde91474cc7a92e88f3 100644
 --- a/Source/JavaScriptCore/heap/HandleTypes.h
 +++ b/Source/JavaScriptCore/heap/HandleTypes.h
 @@ -35,7 +35,7 @@ typedef JSValue* HandleSlot;
@@ -12,10 +40,10 @@ index 780ab85..bdfbcfd 100644
      template<typename U> static void validateUpcast() { T* temp; temp = (U*)0; }
  };
 diff --git a/Source/JavaScriptCore/heap/MarkedBlock.cpp b/Source/JavaScriptCore/heap/MarkedBlock.cpp
-index d6fb853..6b10f9a 100644
+index 771c9c082f5cfeecfd5e32a9e403b88e4334fac1..bf833cb558e2bd981579cb2ac29a950a1a3668f3 100644
 --- a/Source/JavaScriptCore/heap/MarkedBlock.cpp
 +++ b/Source/JavaScriptCore/heap/MarkedBlock.cpp
-@@ -90,7 +90,7 @@ MarkedBlock::FreeCell* MarkedBlock::specializedSweep()
+@@ -88,7 +88,7 @@ MarkedBlock::FreeCell* MarkedBlock::specializedSweep()
          if (blockState == Marked && m_marks.get(i))
              continue;
  
@@ -25,7 +53,7 @@ index d6fb853..6b10f9a 100644
              continue;
  
 diff --git a/Source/JavaScriptCore/heap/MarkedBlock.h b/Source/JavaScriptCore/heap/MarkedBlock.h
-index adc6572..9efa91a 100644
+index 8c665dd5bed5b2413dd30217ff74e4007af1c97a..7f7151af9aeff722237d18ccea6d3a2abdeed7d3 100644
 --- a/Source/JavaScriptCore/heap/MarkedBlock.h
 +++ b/Source/JavaScriptCore/heap/MarkedBlock.h
 @@ -320,7 +320,7 @@ namespace JSC {
@@ -38,7 +66,7 @@ index adc6572..9efa91a 100644
                  continue;
  
 diff --git a/Source/JavaScriptCore/runtime/WriteBarrier.h b/Source/JavaScriptCore/runtime/WriteBarrier.h
-index 525fc09..3548c41 100644
+index a7bd7a100dca62300023cb8569758faea96518ab..6ac52b7c712adabc73aec13476b5b0b9c94e257d 100644
 --- a/Source/JavaScriptCore/runtime/WriteBarrier.h
 +++ b/Source/JavaScriptCore/runtime/WriteBarrier.h
 @@ -93,7 +93,7 @@ public:
@@ -59,48 +87,3 @@ index 525fc09..3548c41 100644
  #endif
  
  private:
-diff --git a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h b/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
-index 610fb14..8a36740 100644
---- a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
-+++ b/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
-@@ -41,6 +41,7 @@ struct SVGAnimatedPropertyDescription {
-     // Deleted value
-     SVGAnimatedPropertyDescription(WTF::HashTableDeletedValueType)
-         : m_element(reinterpret_cast<SVGElement*>(-1))
-+        , m_attributeName(0)
-     {
-     }
- 
-diff --git a/Source/JavaScriptCore/assembler/MacroAssemblerARM.h b/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
-index 5117389..d1143e8 100644
---- a/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
-+++ b/Source/JavaScriptCore/assembler/MacroAssemblerARM.h
-@@ -443,9 +443,8 @@ public:
-             m_assembler.ldr_un_imm(ARMRegisters::S0, right.m_value);
-             m_assembler.cmp_r(left, ARMRegisters::S0);
-         } else {
--            ARMWord tmp = (right.m_value == 0x80000000) ? ARMAssembler::INVALID_IMM : m_assembler.getOp2(-right.m_value);
--            if (tmp != ARMAssembler::INVALID_IMM)
--                m_assembler.cmn_r(left, tmp);
-+            if ((uint32_t)right.m_value == 0x80000000)
-+                m_assembler.cmn_r(left, m_assembler.getOp2(-right.m_value));
-             else
-                 m_assembler.cmp_r(left, m_assembler.getImm(right.m_value, ARMRegisters::S0));
-         }
- 
-diff --git a/Source/WebCore/inspector/InspectorMemoryAgent.cpp b/Source/WebCore/inspector/InspectorMemoryAgent.cpp
-index 5e64188..0e51e29 100644
---- a/Source/WebCore/inspector/InspectorMemoryAgent.cpp
-+++ b/Source/WebCore/inspector/InspectorMemoryAgent.cpp
-@@ -151,8 +151,9 @@ InspectorMemoryAgent::~InspectorMemoryAgent()
- void InspectorMemoryAgent::getDOMNodeCount(ErrorString*, RefPtr<InspectorArray>* result)
- {
-     CounterVisitor counterVisitor(m_page);
-+#if ENABLE(JAVASCRIPT_DEBUGGER)
-     ScriptProfiler::visitJSDOMWrappers(&counterVisitor);
--
-+#endif
-     // Make sure all documents reachable from the main frame are accounted.
-     for (Frame* frame = m_page->mainFrame(); frame; frame = frame->tree()->traverseNext()) {
-         if (Document* doc = frame->document())
- 
