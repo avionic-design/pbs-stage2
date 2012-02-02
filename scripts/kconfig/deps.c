@@ -527,7 +527,8 @@ static int write_depends(struct list_head *packages, const char *filename)
 		if (package_is_virtual(package) || platform_has_child(package))
 			continue;
 
-		fprintf(fp, "build/%s/.install:", package->path);
+		fprintf(fp, "build/%s/.install: \\\n", package->path);
+		fprintf(fp, "\tbuild/%s.hash", package->path);
 
 		list_for_each_entry(dep, &package->deps, list) {
 			if (!package_is_stable(dep->package)) {
@@ -562,7 +563,30 @@ static int write_depends(struct list_head *packages, const char *filename)
 				package->path);
 	}
 
-	fprintf(fp, "\n");
+	fputs("\n\n", fp);
+
+	fputs("build/%.hash: %/Makefile\n", fp);
+	fputs("\t$(call cmd,hash_file)\n", fp);
+	fputs("\n", fp);
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_virtual(package) || platform_has_child(package))
+			continue;
+
+		fprintf(fp, "build/%s.hash: $(wildcard $(srctree)/%s/depends.mk)\n",
+				package->path, package->path);
+	}
+
+	list_for_each_entry(package, packages, list) {
+		if (package_is_virtual(package) || platform_has_child(package))
+			continue;
+
+		fputs("\n", fp);
+		fprintf(fp, "dep-hash-file := build/%s.hash\n", package->path);
+		fprintf(fp, "dep-obj := %s\n", package->path);
+		fprintf(fp, "-include %s/depends.mk\n", package->path);
+	}
+
 	fclose(fp);
 	return 0;
 }
