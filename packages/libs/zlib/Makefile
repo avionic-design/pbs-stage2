@@ -1,5 +1,5 @@
 PACKAGE = zlib
-VERSION = 1.2.5
+VERSION = 1.2.6
 
 LOCATION = http://prdownloads.sourceforge.net/libpng/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
