@@ -1,8 +1,11 @@
 include packages/libs/glib/Makefile.location
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
-conf-args += \
-	--with-sysroot=$(SYSROOT)
+$(pkgtree)/.patch-fixup:
+	chmod a+x $(pkgbuildtree)/gio/data-to-c.pl
+	$(call cmd,stamp)
+
+$(pkgtree)/.configure: $(pkgtree)/.patch-fixup
 
 conf-vars += \
 	glib_cv_stack_grows=no \
