@@ -1,2 +1,3 @@
 autotools-update.patch
+sdl-pkg-config.patch
 build-fixes.patch

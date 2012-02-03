@@ -1,18 +1,18 @@
-From 1f334e0e883296b1a380ae95c9ca88c28831320f Mon Sep 17 00:00:00 2001
+From e050acb48a0d2e5fb8a3460bcd2359fc13a9db21 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
 Date: Fri, 30 Dec 2011 14:17:11 +0100
-Subject: [PATCH 1/2] Update autotools build system.
+Subject: [PATCH] Update autotools build system.
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
  Makefile.am              |    2 +
  acinclude.m4             | 7001 ----------------------------------------------
- configure.ac             |  108 +-
+ configure.ac             |  110 +-
  libvncserver/Makefile.am |    5 +-
  m4/ax_create_stdint_h.m4 |  727 +++++
  m4/ax_prefix_config_h.m4 |  209 ++
  m4/ax_type_socklen_t.m4  |   61 +
- 7 files changed, 1021 insertions(+), 7092 deletions(-)
+ 7 files changed, 1021 insertions(+), 7094 deletions(-)
  delete mode 100644 acinclude.m4
  create mode 100644 m4/ax_create_stdint_h.m4
  create mode 100644 m4/ax_prefix_config_h.m4
@@ -7036,7 +7036,7 @@ index a16dd11..0000000
 -AC_MSG_RESULT([$SED])
 -])
 diff --git a/configure.ac b/configure.ac
-index 6f664d0..8ed3271 100644
+index 6f664d0..d74b3c1 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1,8 +1,15 @@
@@ -7161,7 +7161,16 @@ index 6f664d0..8ed3271 100644
  
  AC_ARG_WITH(jpeg,
  [  --without-jpeg          disable support for jpeg]
-@@ -740,12 +670,12 @@ AC_C_BIGENDIAN
+@@ -680,8 +610,6 @@ AM_CONDITIONAL(HAVE_LIBSDL, test "x$with_sdl" = "xyes")
+ AC_SUBST(SDL_CFLAGS)
+ AC_SUBST(SDL_LIBS)
+ 
+-
+-AC_CANONICAL_HOST
+ MINGW=`echo $host_os | grep mingw32  2>/dev/null`
+ AM_CONDITIONAL(MINGW, test ! -z "$MINGW" )
+ if test ! -z "$MINGW"; then
+@@ -740,12 +668,12 @@ AC_C_BIGENDIAN
  AC_TYPE_SIZE_T
  AC_HEADER_TIME
  AC_HEADER_SYS_WAIT
@@ -7176,7 +7185,7 @@ index 6f664d0..8ed3271 100644
  AC_CACHE_CHECK([for in_addr_t],
          vnc_cv_inaddrt, [
                  AC_TRY_COMPILE([#include <sys/types.h>
-@@ -845,9 +775,9 @@ if test "$build_x11vnc" = "yes"; then
+@@ -845,9 +773,9 @@ if test "$build_x11vnc" = "yes"; then
  		echo "with-system-libvncserver: moving aside headers $hdrs"
  		for hdr in $hdrs
  		do
@@ -8223,5 +8232,5 @@ index 0000000..834c4cf
 +  fi
 +])
 -- 
-1.7.8.1
+1.7.8.3
 

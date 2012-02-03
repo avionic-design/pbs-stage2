@@ -1,7 +1,7 @@
-From b227accf6f993f7ca3325e657feaf8d7fc419c4e Mon Sep 17 00:00:00 2001
+From 3ada684e8c6aecc6369a3b07d5b5195ab52acf90 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
 Date: Fri, 30 Dec 2011 14:52:39 +0100
-Subject: [PATCH 2/2] Fix build issues.
+Subject: [PATCH] Fix build issues.
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
@@ -79,5 +79,5 @@ index 2eab38f..fca9722 100644
  #include <rfb/rfbregion.h>
  
 -- 
-1.7.8.1
+1.7.8.3
 
