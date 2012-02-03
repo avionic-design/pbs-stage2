@@ -28,6 +28,7 @@ config TOOLCHAIN_LANG_JAVA
 endmenu
 
 source "packages/toolchain/binutils/Kconfig"
+source "packages/toolchain/ccache/Kconfig"
 source "packages/toolchain/gcc-core/Kconfig"
 source "packages/toolchain/gcc/Kconfig"
 source "packages/toolchain/gdb/Kconfig"
