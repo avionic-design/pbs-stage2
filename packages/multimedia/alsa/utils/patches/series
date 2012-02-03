@@ -1,2 +1,1 @@
 cross-compile.patch
-#uclibc-fix.patch -p1
