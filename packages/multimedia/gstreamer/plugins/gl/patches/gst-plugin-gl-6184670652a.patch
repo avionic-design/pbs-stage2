@@ -26,7 +26,7 @@ index 087e8be..2f0e6ec 100644
    filter->external_gl_context = 0;
  }
  
-@@ -252,7 +254,8 @@ gst_gl_filter_start (GstBaseTransform * bt)
+@@ -261,7 +263,8 @@ gst_gl_filter_start (GstBaseTransform * bt)
      else {
        /* this gl filter is a sink in terms of the gl chain */
        filter->display = gst_gl_display_new ();
@@ -36,7 +36,7 @@ index 087e8be..2f0e6ec 100644
      }
    }
  
-@@ -442,3 +445,55 @@ gst_gl_filter_render_to_target (GstGLFilter * filter,
+@@ -451,3 +454,55 @@ gst_gl_filter_render_to_target (GstGLFilter * filter,
        0, filter->width, 0, filter->height,
        GST_GL_DISPLAY_PROJECTION_ORTHO2D, data);
  }
