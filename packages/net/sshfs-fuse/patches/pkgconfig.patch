@@ -1,0 +1,25 @@
+From 0497700f5f778ad7cf8ce8198b484426c705c90b Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Mon, 2 Jan 2012 16:10:30 +0100
+Subject: [PATCH] Don't modify PKG_CONFIG_PATH.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ configure.ac |    1 -
+ 1 files changed, 0 insertions(+), 1 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 1cf48b3..ac70482 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -36,7 +36,6 @@ fi
+ 
+ AM_CONDITIONAL(SSH_NODELAY_SO, test "$enable_sshnodelay" = "yes")
+ 
+-export PKG_CONFIG_PATH=/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH
+ PKG_CHECK_MODULES(SSHFS, [fuse >= 2.3 glib-2.0 gthread-2.0])
+ have_fuse_opt_parse=no
+ oldlibs="$LIBS"
+-- 
+1.7.8.1
+
