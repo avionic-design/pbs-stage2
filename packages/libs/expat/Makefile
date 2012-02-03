@@ -1,9 +1,4 @@
-PACKAGE = expat
-VERSION = 2.0.1
-
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/expat/Makefile.location
 include packages/autotools-reconf.mk
 
 prunefiles = \
