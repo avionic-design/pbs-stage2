@@ -1,4 +1,5 @@
 config PACKAGE_LIBS_GETTEXT
 	bool "gettext"
 	select PACKAGE_LIBS_ICONV if !GLIBC
+	select VIRTUAL_DEVEL_LIBC if GLIBC
 	default n
