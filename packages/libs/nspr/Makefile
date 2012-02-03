@@ -25,7 +25,9 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--infodir=$(prefix)/share/info \
 	--localstatedir=/var \
-	--sysconfdir=/etc
+	--sysconfdir=/etc \
+	--enable-optimize \
+	--disable-debug
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
