@@ -8,6 +8,8 @@ include include/config/depends-dirs.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
+KERNEL_DTB = $(call unquote,$(CONFIG_KERNEL_DTB))
+
 targets-y := $(obj)/initrd.gz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
 
@@ -51,8 +53,17 @@ quiet_cmd_gzip = GZIP    $@
 $(obj)/initrd.gz: $(obj)/initrd.img
 	$(call cmd,gzip)
 
-$(obj)/multi.its: $(master-platform)/multi.its.in $(kernel-release)
-	@echo '  GEN     $@'; sed -e 's;@VERSION@;$(VERSION);' $< > $@
+m4-defines = -DVERSION="$(VERSION)"
+
+ifneq ($(KERNEL_DTB),)
+m4-defines += -DUIMAGE_ENABLE_DTB
+endif
+
+quiet_cmd_gen_multi = GEN     $@
+      cmd_gen_multi = m4 -P $(m4-defines) $< > $@
+
+$(obj)/multi.its: $(master-platform)/multi.its.m4 $(kernel-release)
+	$(call cmd,gen_multi)
 
 MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
 
