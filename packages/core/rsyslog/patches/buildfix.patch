@@ -1,0 +1,25 @@
+From 62670ee6508e34bdc94945c2c5eca4b5f605cd50 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Fri, 3 Feb 2012 08:03:44 +0100
+Subject: [PATCH] link librsyslog against libestr
+
+---
+ runtime/Makefile.am |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/runtime/Makefile.am b/runtime/Makefile.am
+index c8e8ce2..f314cfc 100644
+--- a/runtime/Makefile.am
++++ b/runtime/Makefile.am
+@@ -115,7 +115,7 @@ else
+ librsyslog_la_CPPFLAGS = -DSD_EXPORT_SYMBOLS -D_PATH_MODDIR=\"$(pkglibdir)/\" -I$(top_srcdir) $(PTHREADS_CFLAGS) $(LIBEE_CFLAGS)
+ endif
+ #librsyslog_la_LDFLAGS = -module -avoid-version
+-librsyslog_la_LIBADD =  $(DL_LIBS) $(RT_LIBS) $(LIBEE_LIBS)
++librsyslog_la_LIBADD =  $(DL_LIBS) $(RT_LIBS) $(LIBEE_LIBS) $(LIBESTR_LIBS)
+ 
+ #
+ # regular expression support
+-- 
+1.7.9
+
