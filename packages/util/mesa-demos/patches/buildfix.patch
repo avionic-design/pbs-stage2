@@ -1,0 +1,28 @@
+diff --git a/src/egl/opengl/Makefile.am b/src/egl/opengl/Makefile.am
+index 4555450..cde3469 100644
+--- a/src/egl/opengl/Makefile.am
++++ b/src/egl/opengl/Makefile.am
+@@ -67,3 +67,6 @@ egltri_screen_LDADD = ../eglut/libeglut_screen.la
+ 
+ eglgears_x11_LDADD = ../eglut/libeglut_x11.la
+ egltri_x11_LDADD = ../eglut/libeglut_x11.la
++
++xeglgears_LDADD = @X11_LIBS@
++xeglthreads_LDADD = @X11_LIBS@ -lpthread
+diff --git a/src/egl/opengl/Makefile.in b/src/egl/opengl/Makefile.in
+index c01516a..ab32893 100644
+--- a/src/egl/opengl/Makefile.in
++++ b/src/egl/opengl/Makefile.in
+@@ -111,10 +111,10 @@ peglgears_OBJECTS = peglgears.$(OBJEXT)
+ peglgears_LDADD = $(LDADD)
+ xeglgears_SOURCES = xeglgears.c
+ xeglgears_OBJECTS = xeglgears.$(OBJEXT)
+-xeglgears_LDADD = $(LDADD)
++xeglgears_LDADD = $(LDADD) $(X11_LIBS)
+ xeglthreads_SOURCES = xeglthreads.c
+ xeglthreads_OBJECTS = xeglthreads.$(OBJEXT)
+-xeglthreads_LDADD = $(LDADD)
++xeglthreads_LDADD = $(LDADD) $(X11_LIBS) -lpthread
+ DEFAULT_INCLUDES = -I.@am__isrc@
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
