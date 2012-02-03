@@ -45,15 +45,15 @@ endif
 ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_GPIO_SYSFS),y)
 	conf-args += --with-gpio-backend=sysfs
 endif
-ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JS_API),y)
-	conf-args += --enable-javascript=yes
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT),y)
+	conf-args += --enable-javascript
 else
-	conf-args += --enable-javascript=no
+	conf-args += --disable-javascript
 endif
-ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JS_API_IR_SUPPORT),y)
-	conf-args += --enable-javascript-ir=yes
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT_IR),y)
+	conf-args += --enable-javascript-ir
 else
-	conf-args += --enable-javascript-ir=no
+	conf-args += --disable-javascript-ir
 endif
 
 stripfiles = \

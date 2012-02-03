@@ -130,12 +130,10 @@ choice
 
 endchoice
 
-config PACKAGE_NET_REMOTE_CONTROL_JS_API
-	bool "Webkit JavaScript API"
+config PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT
+	bool "JavaScript binding"
 	depends on PACKAGE_NET_REMOTE_CONTROL
-	default n
 
-config PACKAGE_NET_REMOTE_CONTROL_JS_API_IR_SUPPORT
-	bool "IR support"
-	depends on PACKAGE_NET_REMOTE_CONTROL_JS_API
-	default n
+config PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT_IR
+	bool "JavaScript binding - IR support"
+	depends on PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT
