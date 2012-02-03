@@ -18,5 +18,6 @@ source "packages/xorg/app/xset/Kconfig"
 source "packages/xorg/app/xsetpointer/Kconfig"
 source "packages/xorg/app/xsetroot/Kconfig"
 source "packages/xorg/app/xterm/Kconfig"
+source "packages/xorg/app/xwininfo/Kconfig"
 
 endmenu
