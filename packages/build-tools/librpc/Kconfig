@@ -1,3 +1,4 @@
 config PACKAGE_BUILD_TOOLS_LIBRPC
 	bool "librpc"
+	select PACKAGE_BUILD_TOOLS_EXPAT
 	default n
