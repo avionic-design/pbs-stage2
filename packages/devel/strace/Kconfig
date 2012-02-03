@@ -1,4 +1,4 @@
 config PACKAGE_DEVEL_STRACE
 	bool "strace"
-	select PACKAGE_DEVEL_LIBC
+	select VIRTUAL_DEVEL_LIBC
 	default n
