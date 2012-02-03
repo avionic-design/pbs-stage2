@@ -37,6 +37,10 @@ priv = fakeroot
 env = env -i PATH=$(objtree)/build-tools/bin:$(PATH)
 export priv env
 
+ifdef CCACHE
+env += CCACHE=$(CCACHE) CCACHE_DIR=$(srctree)/ccache
+endif
+
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 ifeq ($(NUM_CPU),)
   NUM_CPU = 1
