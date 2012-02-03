@@ -1,0 +1,49 @@
+From b8710922c50b18a1135023d994da9d6739756fde Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Fri, 3 Feb 2012 15:10:00 +0100
+Subject: [PATCH] Fix potentital endless loop in linked list.
+
+If an element is added twice to a linked list it references to itself as it's
+successor and predecessor, which is not a good idea.
+---
+ src/ucm/main.c |   21 ++++++++++++++++-----
+ 1 files changed, 16 insertions(+), 5 deletions(-)
+
+diff --git a/src/ucm/main.c b/src/ucm/main.c
+index 76ca151..5489fbc 100644
+--- a/src/ucm/main.c
++++ b/src/ucm/main.c
+@@ -635,14 +635,25 @@ static int set_device(snd_use_case_mgr_t *uc_mgr,
+ 		      struct use_case_device *device,
+ 		      int enable)
+ {
+-	struct list_head *seq;
++	struct list_head *seq = NULL;
++	struct list_head *dev;
+ 	int err;
+ 
+-	if (enable) {
+-		seq = &device->enable_list;
+-	} else {
+-		seq = &device->disable_list;
++	seq = enable ? &device->enable_list : NULL;
++	list_for_each (dev, &uc_mgr->active_devices) {
++		if (dev == &device->active_list) {
++			if (enable)
++				return -EEXIST;
++			else {
++				seq = &device->disable_list;
++				break;
++			}
++		}
+ 	}
++
++	if (seq == NULL)
++		return -EINVAL;
++
+ 	err = execute_sequence(uc_mgr, seq,
+ 			       &device->value_list,
+ 			       &uc_mgr->active_verb->value_list,
+-- 
+1.7.8.4
+
