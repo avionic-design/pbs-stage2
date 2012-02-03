@@ -1,4 +1,7 @@
 config PACKAGE_WEB_LIBVNCSERVER
 	bool "libvncserver"
 	select PACKAGE_LIBS_GNUTLS
+	select PACKAGE_LIBS_LIBGCRYPT
+	select PACKAGE_LIBS_LIBJPEG
+	select PACKAGE_LIBS_ZLIB
 	default n

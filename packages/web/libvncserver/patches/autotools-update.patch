@@ -1,4 +1,4 @@
-From 17e42b019ed6b5fe48d58060f6fdda8eda41bc08 Mon Sep 17 00:00:00 2001
+From 0f8b865d01b7772013686f09d0927eb89ab41177 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
 Date: Fri, 30 Dec 2011 14:02:52 +0100
 Subject: [PATCH] Update autotools build system.
@@ -7,11 +7,11 @@ Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
  Makefile.am              |    4 +-
  acinclude.m4             | 7110 ----------------------------------------------
- configure.ac             |   58 +-
+ configure.ac             |   60 +-
  m4/ax_create_stdint_h.m4 |  727 +++++
  m4/ax_prefix_config_h.m4 |  209 ++
  m4/ax_type_socklen_t.m4  |   61 +
- 6 files changed, 1014 insertions(+), 7155 deletions(-)
+ 6 files changed, 1014 insertions(+), 7157 deletions(-)
  delete mode 100644 acinclude.m4
  create mode 100644 m4/ax_create_stdint_h.m4
  create mode 100644 m4/ax_prefix_config_h.m4
@@ -7146,7 +7146,7 @@ index fc947ac..0000000
 -  AC_SUBST(LIBGCRYPT_LIBS)
 -])
 diff --git a/configure.ac b/configure.ac
-index 8536d8a..77fcfae 100644
+index 8536d8a..e6bb573 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -1,7 +1,14 @@
@@ -7167,7 +7167,16 @@ index 8536d8a..77fcfae 100644
  AX_PREFIX_CONFIG_H([rfb/rfbconfig.h])
  
  # Checks for programs.
-@@ -756,12 +763,12 @@ AC_C_BIGENDIAN
+@@ -680,8 +687,6 @@ AM_CONDITIONAL(HAVE_LIBSDL, test "x$with_sdl" = "xyes")
+ AC_SUBST(SDL_CFLAGS)
+ AC_SUBST(SDL_LIBS)
+ 
+-
+-AC_CANONICAL_HOST
+ MINGW=`echo $host_os | grep mingw32  2>/dev/null`
+ AM_CONDITIONAL(MINGW, test ! -z "$MINGW" )
+ if test ! -z "$MINGW"; then
+@@ -756,12 +761,12 @@ AC_C_BIGENDIAN
  AC_TYPE_SIZE_T
  AC_HEADER_TIME
  AC_HEADER_SYS_WAIT
@@ -7182,7 +7191,7 @@ index 8536d8a..77fcfae 100644
  AC_CACHE_CHECK([for in_addr_t],
          vnc_cv_inaddrt, [
                  AC_TRY_COMPILE([#include <sys/types.h>
-@@ -828,7 +835,8 @@ AM_CONDITIONAL(HAVE_RPM, test "$RPMSOURCEDIR" != "NOT-FOUND")
+@@ -828,7 +833,8 @@ AM_CONDITIONAL(HAVE_RPM, test "$RPMSOURCEDIR" != "NOT-FOUND")
  AM_CONDITIONAL(WITH_X11VNC,  test "$build_x11vnc" = "yes")
  AC_SUBST(RPMSOURCEDIR)
  
@@ -7192,7 +7201,7 @@ index 8536d8a..77fcfae 100644
  	libvncserver.pc
  	libvncclient.pc
  	libvncserver/Makefile
-@@ -840,39 +848,5 @@ AC_CONFIG_FILES([Makefile
+@@ -840,39 +846,5 @@ AC_CONFIG_FILES([Makefile
  	client_examples/Makefile
  	test/Makefile
  	libvncserver-config
@@ -8250,5 +8259,5 @@ index 0000000..834c4cf
 +  fi
 +])
 -- 
-1.7.8.1
+1.7.8.3
 
