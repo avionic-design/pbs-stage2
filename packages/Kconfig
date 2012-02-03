@@ -25,5 +25,6 @@ source "packages/games/Kconfig"
 source "packages/java/Kconfig"
 source "packages/ti/Kconfig"
 source "packages/vendor/Kconfig"
+source "packages/virtual/Kconfig"
 
 endmenu

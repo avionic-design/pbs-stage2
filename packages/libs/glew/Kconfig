@@ -1,5 +1,6 @@
 config PACKAGE_LIBS_GLEW
 	bool "glew"
-	select PACKAGE_LIBS_MESA
+	select VIRTUAL_OPENGL if HAVE_OPENGL
+	select VIRTUAL_OPENGL_ES if HAVE_OPENGL_ES && !HAVE_OPENGL
 	select PACKAGE_XORG_LIB_XI
 	default n

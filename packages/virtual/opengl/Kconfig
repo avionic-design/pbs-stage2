@@ -1,0 +1,39 @@
+menu "OpenGL"
+
+config HAVE_OPENGL
+	bool
+
+config HAVE_OPENGL_ES
+	bool
+
+config VIRTUAL_OPENGL
+	bool
+	select PACKAGE_LIBS_MESA if OPENGL_MESA
+
+config VIRTUAL_OPENGL_ES
+	bool
+	select PACKAGE_LIBS_MESA if OPENGL_MESA
+	select PACKAGE_LIBS_MESA_OPENGL_ES2 if OPENGL_MESA
+	select PACKAGE_VENDOR_NVIDIA_TEGRA2_OPENGLES if OPENGL_NVIDIA_VIBRANTE
+	select PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T if OPENGL_NVIDIA_L4T
+
+# choose the OpenGL implementation
+choice OPENGL
+	prompt "OpenGL implementation"
+
+config OPENGL_MESA
+	bool "Mesa 3D"
+
+config OPENGL_NVIDIA_VIBRANTE
+	bool "NVIDIA Vibrante"
+	select HAVE_OPENGL_ES
+
+config OPENGL_NVIDIA_L4T
+	bool "NVIDIA Linux4Tegra"
+	select HAVE_OPENGL_ES
+
+endchoice
+
+source "packages/virtual/opengl/mesa/Kconfig"
+
+endmenu

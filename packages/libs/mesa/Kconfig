@@ -1,6 +1,4 @@
-menu "mesa"
-
-config PACKAGE_LIBS_MESA
+menuconfig PACKAGE_LIBS_MESA
 	bool "mesa"
 	select PACKAGE_BUILD_TOOLS_LIBXML2
 	select PACKAGE_LIBS_EXPAT
@@ -11,7 +9,6 @@ config PACKAGE_LIBS_MESA
 	select PACKAGE_XORG_LIB_XDAMAGE
 	select PACKAGE_XORG_LIB_XT
 	select PACKAGE_XORG_LIB_XXF86VM
-	default n
 
 if PACKAGE_LIBS_MESA
 
@@ -74,27 +71,3 @@ config PACKAGE_LIBS_MESA_DRI_FFB
 	default n
 
 endif
-
-if PACKAGE_LIBS_MESA
-
-comment "GL Backends"
-
-config PACKAGE_LIBS_MESA_GL_EGL
-	bool "EGL"
-	default n
-
-config PACKAGE_LIBS_MESA_GL_ESV1
-	bool "OpenGL ES v1"
-	default n
-
-config PACKAGE_LIBS_MESA_GL_ESV2
-	bool "OpenGL ES v2"
-	default n
-
-config PACKAGE_LIBS_MESA_GL_OGL
-	bool "OpenGL"
-	default n
-
-endif
-
-endmenu

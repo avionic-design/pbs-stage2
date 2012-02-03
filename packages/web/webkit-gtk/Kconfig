@@ -20,8 +20,7 @@ config PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO
 config PACKAGE_WEB_WEBKIT_GTK_ENABLE_3D
 	bool "Enable 3D support"
 	depends on PACKAGE_WEB_WEBKIT_GTK
-	select PACKAGE_LIBS_MESA_GL_EGL
-	select PACKAGE_LIBS_MESA_GL_ESV2
+	select VIRTUAL_OPENGL_ES
 	default n
 	help
 	  Enables support for WebGL and 3D rendering.

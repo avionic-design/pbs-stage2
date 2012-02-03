@@ -59,22 +59,22 @@ conf-args += \
 	--without-gallium-drivers \
 	--enable-shared-glapi
 
-ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_EGL),y)
+ifeq ($(CONFIG_OPENGL_MESA_EGL),y)
 	conf-args += --enable-egl
 else
 	conf-args += --disable-egl
 endif
-ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_ESV1),y)
+ifeq ($(CONFIG_OPENGL_MESA_OPENGL_ES1),y)
 	conf-args += --enable-gles1
 else
 	conf-args += --disable-gles1
 endif
-ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_ESV2),y)
+ifeq ($(CONFIG_OPENGL_MESA_OPENGL_ES2),y)
 	conf-args += --enable-gles2
 else
 	conf-args += --disable-gles2
 endif
-ifeq ($(CONFIG_PACKAGE_LIBS_MESA_GL_OGL),y)
+ifeq ($(CONFIG_OPENGL_MESA_OPENGL),y)
 	conf-args += --enable-opengl
 else
 	conf-args += --disable-opengl

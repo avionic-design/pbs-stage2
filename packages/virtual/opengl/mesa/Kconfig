@@ -1,0 +1,23 @@
+if OPENGL_MESA
+
+config OPENGL_MESA_EGL
+	bool "EGL"
+	default n
+
+config OPENGL_MESA_OPENGL_ES1
+	bool "OpenGL ES v1"
+	select PACKAGE_LIBS_MESA_EGL
+	default n
+
+config OPENGL_MESA_OPENGL_ES2
+	bool "OpenGL ES v2"
+	select PACKAGE_LIBS_MESA_EGL
+	select HAVE_OPENGL_ES
+	default n
+
+config OPENGL_MESA_OPENGL
+	bool "OpenGL"
+	select HAVE_OPENGL
+	default n
+
+endif

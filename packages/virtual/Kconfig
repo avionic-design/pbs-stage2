@@ -1,0 +1,5 @@
+menu "Virtual Packages"
+
+source "packages/virtual/opengl/Kconfig"
+
+endmenu
