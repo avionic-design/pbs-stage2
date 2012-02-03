@@ -1,4 +1,4 @@
-menu "TI sotfware"
+menu "TI software"
 
 source "packages/ti/xdctools/Kconfig"
 source "packages/ti/xdais/Kconfig"
