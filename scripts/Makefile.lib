@@ -230,7 +230,7 @@ quiet_cmd_install_link = INSTALL $*
 
 quiet_cmd_hash_file = SHA1    $(abspath $@)
       cmd_hash_file = \
-		( sha1sum $^ | sha1sum | sha1sum --check --status $@ 2> /dev/null) || \
+		( sha1sum $^ | sha1sum --check --status $@ 2> /dev/null) || \
 		( mkdir -p $(@D) && sha1sum $^ | sha1sum > $@ )
 
 # vim: ft=make noet
