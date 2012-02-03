@@ -1,10 +1,10 @@
 PACKAGE = linux
-VERSION = 3.1
+VERSION = 3.2
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = http://www.de.kernel.org/pub/linux/kernel/v$(MAJOR).x
+LOCATION = http://www.kernel.org/pub/linux/kernel/v$(MAJOR).x
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
