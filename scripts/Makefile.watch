@@ -17,10 +17,10 @@ all: watch
 watch-dirs := $(addprefix watch-$(obj)/,$(filter %/,$(obj-y)))
 watch-pkgs := $(addprefix watch-$(obj)/,$(filter-out %/,$(obj-y)))
 
-watch = $(srctree)/scripts/watch -c $(VERSION) -q $(srctree)/$(obj)/watch
+watch-cmd = $(srctree)/scripts/watch -c $(VERSION) -q $(srctree)/$(obj)/watch
 
 cmd-watch = \
-	@if version=`$(watch)`; then \
+	@if version=`$(watch-cmd)`; then \
 		echo "package is up-to-date: $(obj)"; \
 	elif test x$$? = x1; then \
 		echo "new version available: $(obj) (current: $(VERSION), new: $$version)"; \
