@@ -6,12 +6,12 @@ config OPENGL_MESA_EGL
 
 config OPENGL_MESA_OPENGL_ES1
 	bool "OpenGL ES v1"
-	select PACKAGE_LIBS_MESA_EGL
+	select OPENGL_MESA_EGL
 	default n
 
 config OPENGL_MESA_OPENGL_ES2
 	bool "OpenGL ES v2"
-	select PACKAGE_LIBS_MESA_EGL
+	select OPENGL_MESA_EGL
 	select HAVE_OPENGL_ES
 	default n
 
