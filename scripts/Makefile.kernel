@@ -57,7 +57,7 @@ $(KBUILD_OUTPUT)/.config:
 
 quiet_cmd_gen_kernel_version = GEN     $@
       cmd_gen_kernel_version = \
-			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) V=0 \
 				kernelversion > $@
 
 $(pkgtree)/kernel-version:
@@ -65,7 +65,7 @@ $(pkgtree)/kernel-version:
 
 quiet_cmd_gen_kernel_release = GEN     $@
       cmd_gen_kernel_release = \
-			cd $(KERNELSRC) && $(MAKE) $(make-conf) \
+			cd $(KERNELSRC) && $(MAKE) $(make-conf) V=0 \
 				include/config/kernel.release
 
 $(KBUILD_OUTPUT)/include/config/kernel.release:
