@@ -1,5 +1,6 @@
 config PACKAGE_XORG_APP_XRANDR
 	bool "xrandr"
+	select PACKAGE_XORG_LIB_XRANDR
 	select PACKAGE_XORG_LIB_XCURSOR
 	default n
 	help
