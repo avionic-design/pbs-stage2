@@ -1,13 +1,10 @@
 PACKAGE = gst-plugins-gles
-VERSION = 0.10.0
+VERSION = 0.10.2
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
-
-conf-args += \
-	--disable-examples
+include packages/autotools.mk
 
 conf-vars += \
 	CFLAGS='-UG_DISABLE_DEPRECATED'
