@@ -12,7 +12,9 @@ conf-args += \
 	--enable-256-color \
 	--enable-88-color \
 	--enable-mini-luit \
-	--enable-luit
+	--enable-luit \
+	--x-includes=$(SYSROOT)$(prefix)/include \
+	--x-libraries=$(SYSROOT)$(prefix)/lib
 
 stripfiles = \
 	$(prefix)/bin/resize \
