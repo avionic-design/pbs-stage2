@@ -1,5 +1,7 @@
 config PACKAGE_XORG_LIB_XFIXES
 	bool "xfixes"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_XORG_LIB_X11
 	select PACKAGE_XORG_PROTO_FIXES
+	select PACKAGE_XORG_UTIL_UTIL_MACROS
 	default n
