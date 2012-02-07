@@ -180,6 +180,10 @@ if test -b /dev/disk/by-label/persist; then
 	fi
 fi
 
+log_action_begin_msg "Moving /dev to root filesystem"
+mount --move /dev "$mp/dev"
+log_action_end_msg $?
+
 log_action_begin_msg "Moving /run to root filesystem"
 mount --move /run "$mp/run"
 log_action_end_msg $?
