@@ -23,4 +23,7 @@ files = \
 	/etc/sysctl.conf \
 	/lib/lsb/init-functions
 
+links = \
+	/etc/mtab
+
 include platforms/common.mk
