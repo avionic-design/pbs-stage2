@@ -21,6 +21,13 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 		echo 'HOST_LDFLAGS =' >> local.mk
 	$(call cmd,stamp)
 
+# syslinux' build system goes crazy if ARCH is defined. This should really
+# only happen if it is set via the command-line. By overriding the special
+# MAKEFLAGS variable, we make sure it is not passed to the syslinux build
+# system.
+build-args += \
+	MAKEFLAGS=
+
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
