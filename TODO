@@ -60,5 +60,30 @@
 
 + Enable libssp support in GCC (currently breaks glibc-based platforms).
 
++ Add support for package revisions. This should follow the standards set by
+  major distributions by incrementing the REVISION variable. Such a method is
+  useful to distinguish versions with different patch sets. As a nice side-
+  effect, this will cause automatic rebuilds because the package's Makefile
+  is modified.
+
++ Add minimal package manager to keep track of installed packages and files.
+  Integrate some even smaller version of that package manager with the root
+  filesystem to retrieve a list of installed packages (and perhaps files) at
+  runtime.
+
++ Split up the vendor/nvidia/tegra2/l4t package to allow more fine grained
+  control over what components to select (OpenGL ES, OpenMAX, ...). They
+  should also ship pkg-config files that are compatible with those provided
+  by the libs/mesa package.
+
++ Provide development files in the OpenGL ES and OpenMAX packages based on
+  the NVIDIA Vibrante releases.
+
++ Move the packages/ti directory into packages/vendor. Move the net/rum and
+  net/remote-control packages into packages/vendor/avionic-design.
+
++ Make packages/kernel/linux a normal package such that it can easily be
+  used to build releases (from tarball, git checkout, ...).
+
 --
 vim: tw=78
