@@ -15,7 +15,6 @@ $(pkgbuildtree)/mediastreamer2/m4:
 $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/mediastreamer2/m4
 
 conf-args += \
-	--disable-speex \
 	--disable-video \
 	--disable-rpath
 
