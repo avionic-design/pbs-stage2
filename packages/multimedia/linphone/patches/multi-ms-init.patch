@@ -1,0 +1,31 @@
+--- a/mediastreamer2/src/mscommon.c	2012-02-09 16:33:13.810154638 +0100
++++ b/mediastreamer2/src/mscommon.c	2012-02-09 16:35:39.020501810 +0100
+@@ -607,10 +607,16 @@
+ }
+ #endif
+ 
++static unsigned int init_count = 0;
++
+ void ms_init(){
+ 	int i;
+ 	MSSndCardManager *cm;
+ 
++	init_count += 1;
++	if (init_count > 1)
++		return;
++
+ #if defined(ENABLE_NLS)
+ 	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
+ #endif
+@@ -670,6 +676,11 @@
+ }
+ 
+ void ms_exit(){
++	if (init_count > 0) {
++		init_count -= 1;
++		return;
++	}
++
+ 	ms_filter_unregister_all();
+ 	ms_snd_card_manager_destroy();
+ #ifdef VIDEO_ENABLED
