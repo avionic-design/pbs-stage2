@@ -8,7 +8,7 @@ include include/config/depends-dirs.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-KERNEL_DTB = $(call unquote,$(CONFIG_KERNEL_DTB))
+KERNEL_DTB = $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
 
 targets-y := $(obj)/initrd.gz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
@@ -30,8 +30,7 @@ mount-$(obj)/initrd: mount-%:
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
 
-kernel-release = $(objtree)/build/packages/kernel/linux.git/kernel-release
-include $(kernel-release)
+include $(objtree)/build/packages/kernel/linux/kernel-version
 
 $(obj)/initrd: KERNEL_VERSION = $(VERSION)
 $(obj)/initrd: %: mount-% $(packages) FORCE

@@ -5,8 +5,8 @@ CXXFLAGS += $(EXTRA_CXXFLAGS)
 LDFLAGS  += $(EXTRA_LDFLAGS)
 
 ## Get the kernel to build against ##
-KERNEL_PACKAGE   := linux.git
-KERNEL_VERSION   := $(shell cat $(objtree)/build/packages/kernel/$(KERNEL_PACKAGE)/kernel-version)
+KERNEL_PACKAGE   := linux
+KERNEL_VERSION   := $(shell cat $(objtree)/build/packages/kernel/$(KERNEL_PACKAGE)/build/include/config/kernel.release)
 KERNEL_MOD_DIR   := $(SYSROOT)/lib/modules/$(KERNEL_VERSION)
 KERNEL_BUILD_DIR := $(KERNEL_MOD_DIR)/build
 KERNEL_SRC_DIR   := $(KERNEL_MOD_DIR)/source

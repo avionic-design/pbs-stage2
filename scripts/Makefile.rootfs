@@ -33,7 +33,7 @@ rm-$(obj)/rootfs.img: rm-%:
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
 
-include $(objtree)/build/packages/kernel/linux.git/kernel-release
+include $(objtree)/build/packages/kernel/linux/kernel-version
 
 $(obj)/rootfs: KERNEL_VERSION = $(VERSION)
 $(obj)/rootfs: %: mount-% $(packages) FORCE

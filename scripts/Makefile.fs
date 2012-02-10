@@ -84,10 +84,10 @@ endif
 #
 
 # Run depmod if linux-modules get installed
-ifneq ($(filter packages/kernel/linux.git/linux-modules,$(packages)),)
+ifneq ($(filter packages/kernel/linux/linux-modules,$(packages)),)
 postprocess: depmod
 # This is not very nice, but it might not be possible to do better.
-include $(objtree)/build/packages/kernel/linux.git/kernel-release
+include $(objtree)/build/packages/kernel/linux/kernel-version
 depmod: KERNEL_VERSION := $(VERSION)
 endif
 

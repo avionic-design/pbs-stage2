@@ -1,4 +1,0 @@
-Package: linux-modules
-Version: @VERSION@
-Architecture: @TARGET@
-Description: Linux kernel modules

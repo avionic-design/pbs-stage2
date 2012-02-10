@@ -1,0 +1,60 @@
+config OS
+	string
+	default "linux"
+
+config VIRTUAL_KERNEL_LINUX_LIBC
+	bool
+	select PACKAGE_KERNEL_LINUX
+
+config PACKAGE_KERNEL_LINUX
+	bool "Linux kernel"
+	select PACKAGE_BUILD_TOOLS_UBOOT if ARCH_HAS_UBOOT
+	select STABLE_ABI
+
+if PACKAGE_KERNEL_LINUX
+
+choice PACKAGE_KERNEL_LINUX_SOURCE
+	prompt "source"
+
+config PACKAGE_KERNEL_LINUX_SOURCE_TARBALL
+	bool "tarball"
+
+config PACKAGE_KERNEL_LINUX_SOURCE_GIT
+	bool "git repository"
+
+config PACKAGE_KERNEL_LINUX_SOURCE_LOCAL
+	bool "local directory"
+
+endchoice
+
+if PACKAGE_KERNEL_LINUX_SOURCE_TARBALL
+
+config PACKAGE_KERNEL_LINUX_SOURCE_TARBALL_URL
+	string "URL of tarball to download"
+
+endif
+
+if PACKAGE_KERNEL_LINUX_SOURCE_GIT
+
+config PACKAGE_KERNEL_LINUX_SOURCE_GIT_URL
+	string "URL of repository to check out"
+
+config PACKAGE_KERNEL_LINUX_SOURCE_GIT_CHECKOUT
+	string "git ref to check out"
+
+endif
+
+if PACKAGE_KERNEL_LINUX_SOURCE_LOCAL
+
+config PACKAGE_KERNEL_LINUX_SOURCE_LOCAL_PATH
+	string "path to local directory"
+
+endif
+
+config PACKAGE_KERNEL_LINUX_CONFIG
+	string "configuration"
+
+config PACKAGE_KERNEL_LINUX_DTB
+	string "Flattened Device Tree blob"
+
+endif

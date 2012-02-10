@@ -156,7 +156,6 @@ platform := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.platform obj
 initrd := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.initrd obj
 rootfs := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.rootfs obj
 host := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.host obj
-kernel := --no-print-directory -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.kernel obj
 toolchain := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.toolchain obj
 fs := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.fs obj
 

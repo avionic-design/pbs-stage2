@@ -9,36 +9,51 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/common.mk
 
-ARCH := $(CONFIG_ARCH)
-export ARCH
+ARCH := $(call unquote,$(CONFIG_ARCH))
+ARCH := $(patsubst mips%,mips,$(ARCH))
+ARCH := $(patsubst i%86,x86,$(ARCH))
 
-MAKEFLAGS =
-KBUILD_SRC =
-KBUILD_OUTPUT =
-unexport MAKEFLAGS KBUILD_SRC KBUILD_OUTPUT
+common-args = --no-print-directory -j $(NUM_CPU)
+common-vars = \
+	KBUILD_OUTPUT='$(pkgtree)/build' \
+	ARCH='$(ARCH)'
 
-KERNELSRC = $(pkgbuildtree)
-KERNEL_CONFIG = defconfig
-export KERNELSRC KERNEL_CONFIG
+KERNEL_CONFIG := defconfig
 
-DESTDIR := $(sysroot)
-prefix := /usr
-export DESTDIR prefix
+$(pkgtree)/build:
+	$(call cmd,mkdir_p)
 
-$(pkgtree)/.setup:
+$(pkgtree)/.setup: | $(pkgtree)/build
 	$(call cmd,stamp)
+
+conf-args = $(common-args)
+conf-vars = $(common-vars)
+
+quiet_cmd_configure = CONFIG  $(KERNEL_CONFIG)
+      cmd_configure = $(env) $(MAKE) -C $(pkgbuildtree) $(conf-args) $(conf-vars) $(KERNEL_CONFIG)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	$(Q)$(MAKE) $(kernel)=$(pkgtree) config
+	$(call cmd,configure)
 	$(call cmd,stamp)
+
+build-args = $(common-args)
+build-vars = $(common-vars)
+
+quiet_cmd_check_headers = CHECK   headers
+      cmd_check_headers = $(env) $(MAKE) -C $(pkgbuildtree) $(build-args) $(build-vars) headers_check
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	$(Q)$(MAKE) $(kernel)=$(pkgtree) headers-check
+	$(call cmd,check_headers)
 	$(call cmd,stamp)
+
+install-args = $(common-args)
+install-vars = \
+	INSTALL_HDR_PATH=$(sysroot)/usr \
+	$(common-vars)
+
+quiet_cmd_install_headers = INSTALL headers
+      cmd_install_headers = $(env) $(MAKE) -C $(pkgbuildtree) $(install-args) $(install-vars) headers_install
 
 $(pkgtree)/.install: $(pkgtree)/.build
-	$(Q)$(MAKE) $(kernel)=$(pkgtree) headers-install
+	$(call cmd,install_headers)
 	$(call cmd,stamp)
-
-kernel-version:
-	$(Q)$(MAKE) $(kernel)=$(pkgtree) version
