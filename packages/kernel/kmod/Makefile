@@ -1,5 +1,5 @@
 PACKAGE = kmod
-VERSION = 4
+VERSION = 5
 
 LOCATION = http://packages.profusion.mobi/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
