@@ -139,8 +139,7 @@ endif
 
 quiet_cmd_git_clone = GIT     $(GIT_URL)
       cmd_git_clone = rm -rf $(pkgbuildtree) && \
-			cd $(dir $(pkgbuildtree)) && \
-			git clone -q $(GIT_URL) $(notdir $(pkgbuildtree))
+			git clone --depth 1 -q $(GIT_URL) $(pkgbuildtree)
 
 $(pkgtree)/.git-clone: $(pkgtree)/.directory
 	$(call cmd,git_clone)
