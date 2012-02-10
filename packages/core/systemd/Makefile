@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 39
+VERSION = 43
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -10,8 +10,9 @@ env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 
 conf-args += \
-	--libexecdir=$(prefix)/lib/systemd \
 	--with-rootprefix=$(prefix) \
+	--libexecdir=$(prefix)/lib \
+	--enable-split-usr \
 	--with-distro=pbs \
 	--disable-acl
 
@@ -78,7 +79,6 @@ endif
 
 stripfiles = \
 	$(prefix)/bin/systemctl \
-	$(prefix)/bin/systemd \
 	$(prefix)/bin/systemd-ask-password \
 	$(prefix)/bin/systemd-cat \
 	$(prefix)/bin/systemd-cgtop \
@@ -89,6 +89,7 @@ stripfiles = \
 	$(prefix)/bin/systemd-tmpfiles \
 	$(prefix)/bin/systemd-tty-ask-password-agent \
 	$(prefix)/lib/security/pam_systemd.so \
+	$(prefix)/lib/systemd/systemd \
 	$(prefix)/lib/systemd/systemd-ac-power \
 	$(prefix)/lib/systemd/systemd-binfmt \
 	$(prefix)/lib/systemd/systemd-cgroups-agent \

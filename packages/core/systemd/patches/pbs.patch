@@ -1,5 +1,16 @@
+From 8da3ea0db90c9f95d703dec0c9a24ad315f581f9 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 15 Feb 2012 08:05:13 +0100
+Subject: [PATCH] Add PBS distribution support.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Makefile.am  |    7 +++++++
+ configure.ac |    8 +++++++-
+ 2 files changed, 14 insertions(+), 1 deletions(-)
+
 diff --git a/Makefile.am b/Makefile.am
-index 4bb0609..a099489 100644
+index 9762da1..ea97d19 100644
 --- a/Makefile.am
 +++ b/Makefile.am
 @@ -148,6 +148,12 @@ AM_CPPFLAGS += \
@@ -22,21 +33,21 @@ index 4bb0609..a099489 100644
 +endif
  
  rootbin_PROGRAMS = \
- 	systemd \
+ 	systemctl \
 diff --git a/configure.ac b/configure.ac
-index 80d0156..b0359e6 100644
+index 62e8cdf..3ca9efa 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -408,7 +408,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -395,7 +395,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
--AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux or other]))
-+AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, pbs or other]))
+-AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinuxi, mandriva, meego, mageia, angstrom or other]))
++AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinuxi, mandriva, meego, mageia, angstrom, pbs or other]))
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -518,6 +518,11 @@ case $with_distro in
+@@ -491,6 +491,11 @@ case $with_distro in
                  M4_DISTRO_FLAG=-DTARGET_MAGEIA=1
                  have_plymouth=yes
                  ;;
@@ -48,7 +59,7 @@ index 80d0156..b0359e6 100644
          other)
                  ;;
          *)
-@@ -576,6 +581,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+@@ -549,6 +554,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)
  AM_CONDITIONAL(TARGET_MAGEIA, test x"$with_distro" = xmageia)
@@ -56,3 +67,6 @@ index 80d0156..b0359e6 100644
  
  AM_CONDITIONAL(HAVE_PLYMOUTH, test "$have_plymouth" = "yes")
  AM_CONDITIONAL(HAVE_SYSV_COMPAT, test "$SYSTEM_SYSV_COMPAT" = "yes")
+-- 
+1.7.9.1
+
