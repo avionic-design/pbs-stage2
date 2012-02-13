@@ -36,9 +36,17 @@ build/.install:
 build: build/.install
 	@:
 
+PHONY += touch
+touch: build/.install
+	@:
+
 build/%/.install:
+ifeq ($(MAKECMDGOALS),touch)
+	$(call cmd,stamp)
+else
 	$(Q)$(MAKE) $(package)=$* clean
 	$(Q)$(MAKE) $(package)=$* install
+endif
 
 PHONY += $(rebuild-sysroot-dirs)
 $(rebuild-sysroot-dirs): __clean-files = $(objtree)/build/$*/.install

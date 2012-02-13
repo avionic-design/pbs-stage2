@@ -227,6 +227,10 @@ PHONY += print
 print: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) print
 
+PHONY += touch
+touch: include/config/depends.mk
+	$(Q)$(MAKE) $(platform)=$(obj) touch
+
 PHONY += fs
 fs: include/config/depends.mk
 	$(Q)$(MAKE) $(fs)=$(obj)
