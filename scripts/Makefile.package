@@ -47,9 +47,6 @@ extract-bin     := $(filter %.bin,$(extract))
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
 remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS)) $(FILES)
 
-quiet_cmd_stamp = STAMP   $@
-      cmd_stamp = mkdir -p $(@D); touch $@
-
 dlurl = $(call url-pathname,$(filter %$*,$(remote-files)))
 destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
 

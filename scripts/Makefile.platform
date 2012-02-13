@@ -30,7 +30,9 @@ PHONY += $(build-dirs)
 $(build-dirs): build-%:
 	$(Q)$(MAKE) $(package)=$* install
 
-PHONY += build
+build/.install:
+	$(call cmd,stamp)
+
 build: build/.install
 	@:
 
