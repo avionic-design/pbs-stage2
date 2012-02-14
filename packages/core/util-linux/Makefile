@@ -1,11 +1,11 @@
 PACKAGE = util-linux
-VERSION = 2.20
+VERSION = 2.20.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v$(MAJOR).$(MINOR)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
@@ -20,6 +20,12 @@ endif
 ifneq ($(CONFIG_LIBC),gnu)
   conf-args += \
 	--disable-nls
+endif
+
+ifeq ($(CONFIG_LIBC),gnu)
+conf-vars += scanf_cv_type_modifier=ms
+else
+conf-vars += scanf_cv_type_modifier=
 endif
 
 prunefiles = \
