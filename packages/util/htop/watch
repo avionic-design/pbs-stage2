@@ -1,2 +1,2 @@
 version=3
-http://sf.net/htop/htop-(\d+\.\d+\.\d+)\.tar\.gz
+http://sf.net/htop/htop-([\d\.]+)\.tar\.gz
