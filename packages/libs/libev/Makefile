@@ -1,17 +1,15 @@
 PACKAGE = libev
-VERSION = 4.04
+VERSION = 4.11
 
 LOCATION = http://dist.schmorp.de/$(PACKAGE)/Attic
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && mkdir -p m4 && \
-		$(env) autoreconf --force --install
-	$(call cmd,stamp)
+$(pkgbuildtree)/m4:
+	$(call cmd,mkdir_p)
 
-$(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
+$(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 prunefiles = \
 	$(prefix)/lib/*.la

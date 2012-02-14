@@ -1,23 +1,33 @@
-Add pkg-config file.
-
+From 7ff8f4ab5d9ecb0488e1b7dab05140ac080d0ea2 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 8 Feb 2012 15:35:06 +0100
+Subject: [PATCH 2/2] Add pkg-config file.
 
+---
+ Makefile.am  |    3 +++
+ configure.ac |    2 +-
+ libev.pc.in  |    9 +++++++++
+ 3 files changed, 13 insertions(+), 1 deletions(-)
+ create mode 100644 libev.pc.in
 
 diff --git a/Makefile.am b/Makefile.am
-index 2acbb79..7075ee4 100644
+index f3a5eb1..0a1837c 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -17,3 +17,5 @@ lib_LTLIBRARIES = libev.la
+@@ -17,5 +17,8 @@ lib_LTLIBRARIES = libev.la
  libev_la_SOURCES = ev.c event.c
  libev_la_LDFLAGS = -version-info $(VERSION_INFO)
  
 +pkgconfigdir = $(libdir)/pkgconfig
 +pkgconfig_DATA = libev.pc
++
+ ev.3: ev.pod
+ 	pod2man -n LIBEV -r "libev-$(VERSION)" -c "libev - high performance full featured event loop" -s3 <$< >$@
 diff --git a/configure.ac b/configure.ac
-index c6d1d7f..7828d30 100644
+index 4d0a478..a2fda59 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -15,5 +15,5 @@ fi
+@@ -22,5 +22,5 @@ AC_PROG_LIBTOOL
  
  m4_include([libev.m4])
  
@@ -39,3 +49,6 @@ index 0000000..8ef423f
 +Description: a full-featured and high-performance event loop
 +Version: @VERSION@
 +Libs: -lev
+-- 
+1.7.9
+
