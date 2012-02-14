@@ -1,2 +1,2 @@
 autotools.patch
-fix-arm-build-warnings.patch
+out-of-tree.patch

@@ -1,0 +1,15 @@
+diff --git a/Tools/gtk/common.py b/Tools/gtk/common.py
+index 88ca7fc..2a279ab 100644
+--- a/Tools/gtk/common.py
++++ b/Tools/gtk/common.py
+@@ -42,6 +42,10 @@ def get_build_path():
+     def is_valid_build_directory(path):
+         return os.path.exists(os.path.join(path, 'GNUmakefile'))
+ 
++    build_dir = os.getcwd()
++    if is_valid_build_directory(build_dir):
++        return build_dir
++
+     build_types = ['Release', 'Debug']
+     if '--debug' in sys.argv:
+         build_types.reverse()
