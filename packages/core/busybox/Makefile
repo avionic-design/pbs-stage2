@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.19.3
+VERSION = 1.19.4
 
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -18,6 +18,12 @@ ifeq ($(CONFIG_PACKAGE_KERNEL_KMOD),y)
   CONFIGS += modutils-n
 else
   CONFIGS += modutils-y
+endif
+
+ifeq ($(CONFIG_PACKAGE_LIBS_XZ),y)
+  CONFIGS += xz-n
+else
+  CONFIGS += xz-y
 endif
 
 CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))
