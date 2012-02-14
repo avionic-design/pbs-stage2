@@ -24,6 +24,12 @@ else
   conf-args += --enable-gtk_ui=no
 endif
 
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LINPHONE_SPEEX),y)
+  conf-args += --disable-speex
+else
+  conf-args += --enable-speex
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
