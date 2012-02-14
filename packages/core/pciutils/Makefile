@@ -14,6 +14,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	PREFIX=$(prefix) \
+	IDSDIR=$(prefix)/share/hwdata \
 	CROSS_COMPILE='$(CROSS_COMPILE)' \
 	EXTRA_CFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)' \
