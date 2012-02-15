@@ -2,3 +2,4 @@ autotools.patch
 optional-speex.patch
 glib-2.31.patch
 multi-ms-init.patch
+fix-crash.patch

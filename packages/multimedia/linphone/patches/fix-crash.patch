@@ -1,0 +1,27 @@
+From b4fa62c68aea2402e6465bbd057f451b444a5bfd Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 8 Feb 2012 11:48:40 +0100
+Subject: [PATCH] mediastreamer2: Fix potential NULL pointer dereference.
+
+This commit ensures that the echo canceller filter is only destroyed if
+it has previously been initialized.
+---
+ mediastreamer2/src/audiostream.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/mediastreamer2/src/audiostream.c b/mediastreamer2/src/audiostream.c
+index 2274f0d..9ac83d0 100644
+--- a/mediastreamer2/src/audiostream.c
++++ b/mediastreamer2/src/audiostream.c
+@@ -389,7 +389,7 @@ int audio_stream_start_full(AudioStream *stream, RtpProfile *profile, const char
+ 	ms_filter_call_method(stream->soundwrite,MS_FILTER_SET_NCHANNELS, &tmp);
+ 
+ 	/*configure the echo canceller if required */
+-	if (!use_ec) {
++	if (!use_ec && stream->ec != NULL) {
+ 		ms_filter_destroy(stream->ec);
+ 		stream->ec=NULL;
+ 	}
+-- 
+1.7.9
+
