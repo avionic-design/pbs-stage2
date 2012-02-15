@@ -9,10 +9,14 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
 
-$(pkgbuildtree)/mediastreamer2/m4:
+m4-dirs = \
+	$(pkgbuildtree)/mediastreamer2/m4 \
+	$(pkgbuildtree)/oRTP/m4
+
+$(m4-dirs):
 	$(call cmd,mkdir_p)
 
-$(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/mediastreamer2/m4
+$(pkgtree)/.autoreconfigure: | $(m4-dirs)
 
 conf-args += \
 	--disable-video \

@@ -1,0 +1,24 @@
+diff --git a/oRTP/Makefile.am b/oRTP/Makefile.am
+index 9dcbb13..1ba1275 100644
+--- a/oRTP/Makefile.am
++++ b/oRTP/Makefile.am
+@@ -1,5 +1,7 @@
+ # linphone/oRTP/Makefile.am -- 
+ 
++ACLOCAL_AMFLAGS = -I m4
++
+ EXTRA_DIST = oRTP.prj ortp-config.h.in TODO pkg.list autogen.sh ortp.pc.in ortp.spec.in ortp.spec ortp.doxygen
+ 
+ SUBDIRS=src build include
+diff --git a/oRTP/configure.ac b/oRTP/configure.ac
+index b2e9c62..806a008 100644
+--- a/oRTP/configure.ac
++++ b/oRTP/configure.ac
+@@ -31,6 +31,7 @@ PACKAGE=ortp
+ AM_INIT_AUTOMAKE([tar-ustar])
+ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])],)
+ AC_CONFIG_HEADERS(ortp-config.h)
++AC_CONFIG_MACRO_DIR([m4])
+ AC_DEFINE_UNQUOTED(ORTP_MAJOR_VERSION,$ORTP_MAJOR_VERSION, [major version])
+ AC_DEFINE_UNQUOTED(ORTP_MINOR_VERSION,$ORTP_MINOR_VERSION, [minor version])
+ AC_DEFINE_UNQUOTED(ORTP_MICRO_VERSION,$ORTP_MICRO_VERSION, [micro version])
