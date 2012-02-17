@@ -3,8 +3,14 @@ config PACKAGE_NET_LLDPD
 	select VIRTUAL_DEVEL_LIBC
 	default n
 
+if PACKAGE_NET_LLDPD
+
 config PACKAGE_NET_LLDPD_SNMP
 	bool "SNMP support"
-	depends on PACKAGE_NET_LLDPD
 	select PACKAGE_NET_NET_SNMP
-	default n
+
+config PACKAGE_NET_LLDPD_XML
+	bool "XML output support"
+	select PACKAGE_LIBS_LIBXML2
+
+endif

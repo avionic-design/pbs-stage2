@@ -4,9 +4,10 @@ VERSION = 0.5.2
 LOCATION = http://media.luffy.cx/files/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args-$(CONFIG_PACKAGE_NET_LLDPD_SNMP) += --with-snmp
+conf-args-$(CONFIG_PACKAGE_NET_LLDPD_XML) += --with-xml
 conf-args-$(CONFIG_PACKAGE_CORE_SYSTEMD) += \
 	--with-systemdsystemunitdir=/etc/systemd/system
 
