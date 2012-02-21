@@ -2,5 +2,6 @@ menu "PT-IP"
 
 source "packages/vendor/avionic-design/ptip/murnau/Kconfig"
 source "packages/vendor/avionic-design/ptip/classic/Kconfig"
+source "packages/vendor/avionic-design/ptip/devbusd/Kconfig"
 
 endmenu

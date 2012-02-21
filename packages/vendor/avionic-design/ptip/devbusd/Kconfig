@@ -1,0 +1,4 @@
+config PACKAGE_VENDOR_AVIONIC_DESIGN_PTIP_DEVBUSD
+	bool "devbusd"
+	select VIRTUAL_DEVEL_LIBC
+	default n
