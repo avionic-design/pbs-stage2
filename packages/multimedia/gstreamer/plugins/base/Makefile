@@ -1,8 +1,8 @@
 PACKAGE = gst-plugins-base
-VERSION = 0.10.35
+VERSION = 0.10.36
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
