@@ -1,3 +1,4 @@
 /etc
 /lib
-/usr
+/usr/lib
+/usr/lib/xorg
