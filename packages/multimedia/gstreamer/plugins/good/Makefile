@@ -1,8 +1,8 @@
 PACKAGE = gst-plugins-good
-VERSION = 0.10.30
+VERSION = 0.10.31
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
