@@ -1,8 +1,8 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 0.10.18
+VERSION = 0.10.19
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
