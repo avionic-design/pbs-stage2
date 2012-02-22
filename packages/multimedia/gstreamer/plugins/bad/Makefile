@@ -1,8 +1,8 @@
 PACKAGE = gst-plugins-bad
-VERSION = 0.10.22
+VERSION = 0.10.23
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
