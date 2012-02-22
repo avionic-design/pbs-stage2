@@ -178,8 +178,10 @@ quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
 				quilt --quiltrc /dev/null push -a || \
 				test $$? = 2
 
+patch-series = $(if $(wildcard $(pkgsrctree)/source),,$(wildcard $(patchdir)/series))
+
 $(pkgtree)/.patch: $(pkgtree)/.setup
-	$(if $(wildcard $(patchdir)/series),$(call cmd,quilt_patch))
+	$(if $(patch-series),$(call cmd,quilt_patch))
 	$(call cmd,stamp)
 
 PHONY += install
