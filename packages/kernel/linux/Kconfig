@@ -57,4 +57,10 @@ config PACKAGE_KERNEL_LINUX_CONFIG
 config PACKAGE_KERNEL_LINUX_DTB
 	string "Flattened Device Tree blob"
 
+config PACKAGE_KERNEL_LINUX_IMAGE
+	string "Image type (zImage, bzImage, etc)"
+
+config PACKAGE_KERNEL_LINUX_INSTALL_TARGET
+	string "Install target (zinstall, install, etc)"
+
 endif

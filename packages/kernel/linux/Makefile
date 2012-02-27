@@ -25,17 +25,13 @@ install-x86_64 = install
   image-arm = zImage
 install-arm = zinstall
 
-ifneq ($(image-$(ARCH)),)
-  image = $(image-$(ARCH))
-else
-  image = zImage
-endif
+image = $(or $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_IMAGE)), \
+             $(image-$(ARCH)), \
+             zImage)
 
-ifneq ($(install-$(ARCH)),)
-  install-target = $(install-$(ARCH))
-else
-  install-target = zinstall
-endif
+install-target = $(or $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_INSTALL_TARGET)), \
+                      $(install-$(ARCH)), \
+                      zinstall)
 
 #
 # setup source directory depending on source configuration
