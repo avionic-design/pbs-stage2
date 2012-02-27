@@ -65,4 +65,136 @@ config ABI
 	default "eabi"
 endif
 
+#
+# CPU Extensions
+#
+config ARCH_ARM_EXT_A
+       bool
+
+config ARCH_ARM_EXT_T
+       bool
+
+config ARCH_ARM_EXT_T2
+       bool
+
+config ARCH_ARM_EXT_E
+       bool
+
+config ARCH_ARM_EXT_J
+       bool
+
+config ARCH_ARM_EXT_Z
+       bool
+
+config ARCH_ARM_EXT_ZK
+       bool
+
+#
+# CPU Type
+#
+
+choice
+        prompt "ARM architecture"
+
+config ARCH_ARM_ARCH_V1
+       bool "v1"
+
+config ARCH_ARM_ARCH_V2
+       bool "v2"
+
+config ARCH_ARM_ARCH_V3
+       bool "v3"
+
+config ARCH_ARM_ARCH_V4
+       bool "v4"
+
+config ARCH_ARM_ARCH_V5
+       bool "v5"
+
+config ARCH_ARM_ARCH_V6
+       bool "v6"
+
+config ARCH_ARM_ARCH_V7
+       bool "v7"
+
+endchoice
+
+config ARCH_ARM_ARCH_VERSION
+       string
+       default "7" if ARCH_ARM_ARCH_V7
+       default "6" if ARCH_ARM_ARCH_V6
+       default "5" if ARCH_ARM_ARCH_V5
+       default "4" if ARCH_ARM_ARCH_V4
+       default "3" if ARCH_ARM_ARCH_V3
+       default "2" if ARCH_ARM_ARCH_V2
+       default "1" if ARCH_ARM_ARCH_V1
+
+choice
+        prompt "ARM architecture variant"
+
+config ARCH_ARM_ARCH_NO_EXT
+       bool "none"
+
+config ARCH_ARM_ARCH_V2A
+       bool "armv2a" if ARCH_ARM_ARCH_V2
+       select ARCH_ARM_EXT_A
+
+config ARCH_ARM_ARCH_V3M
+       bool "armv3m" if ARCH_ARM_ARCH_V3
+       select ARCH_ARM_EXT_M
+
+config ARCH_ARM_ARCH_V4T
+       bool "armv4t" if ARCH_ARM_ARCH_V4
+       select ARCH_ARM_EXT_T
+
+config ARCH_ARM_ARCH_V5T
+       bool "armv5t" if ARCH_ARM_ARCH_V5
+       select ARCH_ARM_EXT_T
+
+config ARCH_ARM_ARCH_V5E
+       bool "armv5e" if ARCH_ARM_ARCH_V5
+       select ARCH_ARM_EXT_E
+
+config ARCH_ARM_ARCH_V5TE
+       bool "armv5te" if ARCH_ARM_ARCH_V5
+       select ARCH_ARM_EXT_T
+       select ARCH_ARM_EXT_E
+
+config ARCH_ARM_ARCH_V6J
+       bool "armv6j" if ARCH_ARM_ARCH_V6
+       select ARCH_ARM_EXT_J
+
+config ARCH_ARM_ARCH_V6T2
+       bool "armv6t2" if ARCH_ARM_ARCH_V6
+       select ARCH_ARM_EXT_T2
+
+config ARCH_ARM_ARCH_V6Z
+       bool "armv6z" if ARCH_ARM_ARCH_V6
+       select ARCH_ARM_EXT_Z
+
+config ARCH_ARM_ARCH_V6ZK
+       bool "armv6zk" if ARCH_ARM_ARCH_V6
+       select ARCH_ARM_EXT_ZK
+
+endchoice
+
+
+config MARCH
+       default "armv7"      if ARCH_ARM_ARCH_V7
+       default "armv6zk"    if ARCH_ARM_ARCH_V6ZK
+       default "armv6z"     if ARCH_ARM_ARCH_V6Z
+       default "armv6t2"    if ARCH_ARM_ARCH_V6T2
+       default "armv6j"     if ARCH_ARM_ARCH_V6J
+       default "armv6"      if ARCH_ARM_ARCH_V6
+       default "armv5te"    if ARCH_ARM_ARCH_V5TE
+       default "armv5e"     if ARCH_ARM_ARCH_V5E
+       default "armv5t"     if ARCH_ARM_ARCH_V5T
+       default "armv5"      if ARCH_ARM_ARCH_V5
+       default "armv4t"     if ARCH_ARM_ARCH_V4T
+       default "armv4"      if ARCH_ARM_ARCH_V4
+       default "armv3m"     if ARCH_ARM_ARCH_V3M
+       default "armv3"      if ARCH_ARM_ARCH_V3
+       default "armv2a"     if ARCH_ARM_ARCH_V2A
+       default "armv2"      if ARCH_ARM_ARCH_V2
+
 endif
