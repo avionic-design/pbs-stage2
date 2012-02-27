@@ -11,4 +11,8 @@ config LIBC
 	string
 	default "uclibc"
 
+config PACKAGE_UCLIB_WITH_LOCALE
+	bool "uclibc with locale support"
+	default n
+
 endif
