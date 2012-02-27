@@ -19,6 +19,9 @@ config ARCH_MIPS
 
 endchoice
 
+config MARCH
+        string "Machine architecture (-march)"
+
 config ARCH_HAS_UBOOT
 	bool
 	default n

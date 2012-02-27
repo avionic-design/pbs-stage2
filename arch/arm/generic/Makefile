@@ -1,7 +1,7 @@
 OPTFLAGS := -g -Os
 
-ifneq ($(ARCH_LONG),)
-  OPTFLAGS += -march=$(ARCH_LONG)
+ifneq ($(CONFIG_MARCH),)
+  OPTFLAGS += -march=$(call unquote,$(CONFIG_MARCH))
 endif
 
 ifneq ($(ARCH),)
