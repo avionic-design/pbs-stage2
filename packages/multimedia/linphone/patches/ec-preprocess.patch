@@ -1,0 +1,159 @@
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index 1567221..c6178b2 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -829,15 +829,18 @@ void linphone_call_init_media_streams(LinphoneCall *call){
+ 	}
+ 	audio_stream_enable_gain_control(audiostream,TRUE);
+ 	if (linphone_core_echo_cancellation_enabled(lc)){
+-		int len,delay,framesize;
++		int len,delay,framesize,preprocess;
+ 		const char *statestr=lp_config_get_string(lc->config,"sound","ec_state",NULL);
+ 		len=lp_config_get_int(lc->config,"sound","ec_tail_len",0);
+ 		delay=lp_config_get_int(lc->config,"sound","ec_delay",0);
+ 		framesize=lp_config_get_int(lc->config,"sound","ec_framesize",0);
++		preprocess=lp_config_get_int(lc->config,"sound","ec_preprocess",1);
+ 		audio_stream_set_echo_canceller_params(audiostream,len,delay,framesize);
+ 		if (statestr && audiostream->ec){
+ 			ms_filter_call_method(audiostream->ec,MS_ECHO_CANCELLER_SET_STATE_STRING,(void*)statestr);
+ 		}
++		if (audiostream->ec)
++			ms_filter_call_method(audiostream->ec,MS_ECHO_CANCELLER_SET_PREPROCESS,&preprocess);
+ 	}
+ 	audio_stream_enable_automatic_gain_control(audiostream,linphone_core_agc_enabled(lc));
+ 	{
+diff --git a/coreapi/linphonecore.c b/coreapi/linphonecore.c
+index e9554b0..293f5e6 100644
+--- a/coreapi/linphonecore.c
++++ b/coreapi/linphonecore.c
+@@ -3125,6 +3125,26 @@ bool_t linphone_core_echo_limiter_enabled(const LinphoneCore *lc){
+ }
+ 
+ /**
++ * Enables or disable echo cancellation preprocessor. Value is saved an used for subsequent calls
++ *
++ * @ingroup media_parameters
++**/
++void linphone_core_enable_echo_cancellation_preprocessor(LinphoneCore *lc, bool_t val){
++	lc->sound_conf.ec_preprocess=val;
++	if ( linphone_core_ready(lc))
++		lp_config_set_int(lc->config,"sound","ec_preprocess",val);
++}
++
++/**
++ * Returns TRUE if echo cancellation preprocessor is enabled.
++ *
++ * @ingroup media_parameters
++**/
++bool_t linphone_core_echo_cancellation_preprocessor_enabled(LinphoneCore *lc){
++	return lc->sound_conf.ec_preprocess;
++}
++
++/**
+  * Mutes or unmutes the local microphone.
+  *
+  * @ingroup media_parameters
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index e32c4d0..a2e1bc8 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -892,6 +892,9 @@ int linphone_core_preview_ring(LinphoneCore *lc, const char *ring,LinphoneCoreCb
+ void linphone_core_enable_echo_cancellation(LinphoneCore *lc, bool_t val);
+ bool_t linphone_core_echo_cancellation_enabled(LinphoneCore *lc);
+ 
++void linphone_core_enable_echo_cancellation_preprocessor(LinphoneCore *lc, bool_t val);
++bool_t linphone_core_echo_cancellation_preprocessor_enabled(LinphoneCore *lc);
++
+ void linphone_core_enable_echo_limiter(LinphoneCore *lc, bool_t val);
+ bool_t linphone_core_echo_limiter_enabled(const LinphoneCore *lc);
+ 
+diff --git a/coreapi/private.h b/coreapi/private.h
+index bda52f0..1e651a1 100644
+--- a/coreapi/private.h
++++ b/coreapi/private.h
+@@ -364,6 +364,7 @@ typedef struct sound_config
+ 	char *remote_ring;
+ 	char *ringback_tone;
+ 	bool_t ec;
++	bool_t ec_preprocess;
+ 	bool_t ea;
+ 	bool_t agc;
+ } sound_config_t;
+diff --git a/mediastreamer2/include/mediastreamer2/msinterfaces.h b/mediastreamer2/include/mediastreamer2/msinterfaces.h
+index 6c7ef06..e2191ec 100644
+--- a/mediastreamer2/include/mediastreamer2/msinterfaces.h
++++ b/mediastreamer2/include/mediastreamer2/msinterfaces.h
+@@ -115,7 +115,13 @@ typedef enum _MSPlayerState MSPlayerState;
+ #define MS_ECHO_CANCELLER_SET_STATE_STRING \
+ 	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,6, const char *)
+ 
++/** get the preprocessor mode */
++#define MS_ECHO_CANCELLER_GET_PREPROCESS \
++	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,7,bool_t)
+ 
++/** enable/disable the preprocessor  */
++#define MS_ECHO_CANCELLER_SET_PREPROCESS \
++	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,8,bool_t)
+ 
+ /** Interface definitions for video decoders */
+ #define MS_VIDEO_DECODER_DECODING_ERRORS \
+diff --git a/mediastreamer2/src/speexec.c b/mediastreamer2/src/speexec.c
+index 0464781..921638c 100644
+--- a/mediastreamer2/src/speexec.c
++++ b/mediastreamer2/src/speexec.c
+@@ -154,6 +154,7 @@ typedef struct SpeexECState{
+ 	bool_t echostarted;
+ 	bool_t bypass_mode;
+ 	bool_t using_zeroes;
++	bool_t preprocess;
+ }SpeexECState;
+ 
+ static void speex_ec_init(MSFilter *f){
+@@ -172,6 +173,7 @@ static void speex_ec_init(MSFilter *f){
+ 	s->using_zeroes=FALSE;
+ 	s->echostarted=FALSE;
+ 	s->bypass_mode=FALSE;
++	s->preprocess=TRUE;
+ 
+ #ifdef EC_DUMP
+ 	{
+@@ -368,7 +370,8 @@ static void speex_ec_process(MSFilter *f){
+ 			fwrite(echo,nbytes,1,s->echofile);
+ #endif
+ 		speex_echo_cancellation(s->ecstate,(short*)echo,(short*)ref,(short*)oecho->b_wptr);
+-		speex_preprocess_run(s->den, (short*)oecho->b_wptr);
++		if (s->preprocess)
++			speex_preprocess_run(s->den, (short*)oecho->b_wptr);
+ #ifdef EC_DUMP
+ 		if (s->cleanfile)
+ 			fwrite(oecho->b_wptr,nbytes,1,s->cleanfile);
+@@ -455,6 +458,18 @@ static int speex_ec_get_state(MSFilter *f, void *arg){
+ 	return 0;
+ }
+ 
++static int speex_ec_set_preprocess(MSFilter *f, void *arg) {
++	SpeexECState *s=(SpeexECState*)f->data;
++	s->preprocess=*(bool_t*)arg;
++	ms_message("set EC preprocess [%i]",s->preprocess);
++	return 0;
++}
++static int speex_ec_get_preprocess(MSFilter *f, void *arg) {
++	SpeexECState *s=(SpeexECState*)f->data;
++	*(bool_t*)arg=s->preprocess;
++	return 0;
++}
++
+ static MSFilterMethod speex_ec_methods[]={
+ 	{	MS_FILTER_SET_SAMPLE_RATE		,	speex_ec_set_sr 		},
+ 	{	MS_ECHO_CANCELLER_SET_TAIL_LENGTH	,	speex_ec_set_tail_length	},
+@@ -463,7 +478,9 @@ static MSFilterMethod speex_ec_methods[]={
+ 	{	MS_ECHO_CANCELLER_SET_BYPASS_MODE	,	speex_ec_set_bypass_mode	},
+ 	{	MS_ECHO_CANCELLER_GET_BYPASS_MODE	,	speex_ec_get_bypass_mode	},
+ 	{	MS_ECHO_CANCELLER_GET_STATE_STRING	,	speex_ec_get_state		},
+-	{	MS_ECHO_CANCELLER_SET_STATE_STRING	,	speex_ec_set_state		}
++	{	MS_ECHO_CANCELLER_SET_STATE_STRING	,	speex_ec_set_state		},
++	{	MS_ECHO_CANCELLER_SET_PREPROCESS	,	speex_ec_set_preprocess		},
++	{	MS_ECHO_CANCELLER_GET_PREPROCESS	,	speex_ec_get_preprocess		}
+ };
+ 
+ #ifdef _MSC_VER
