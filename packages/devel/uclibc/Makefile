@@ -1,21 +1,9 @@
 include packages/toolchain/uclibc/Makefile.location
 include packages/common.mk
+include packages/devel/uclibc/Makefile.dotconfig
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 DESTDIR := $(pkgtree)/install
-
-ARCH := $(subst bfin,blackfin,$(ARCH))
-
-ifneq ($(ABI),)
-DEF_CONFIG = $(ARCH)-$(ABI).config
-CPU_CONFIG = $(ARCH)-$(CPU)-$(ABI).config
-else
-DEF_CONFIG = $(ARCH).config
-CPU_CONFIG = $(ARCH)-$(CPU).config
-endif
-
-DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
-		$(CPU_CONFIG), $(DEF_CONFIG)))
 
 $(pkgtree)/build:
 	$(call cmd,mkdir_p)
@@ -28,8 +16,7 @@ conf-args = \
 	CROSS=$(CROSS_COMPILE) \
 	O=$(pkgtree)/build
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgtree)/build/.config
+$(pkgtree)/.configure: $(pkgtree)/.dotconfig
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 

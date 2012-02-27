@@ -1,16 +1,6 @@
 include packages/toolchain/uclibc/Makefile.location
 include packages/toolchain/common.mk
-
-ifneq ($(CONFIG_ABI),)
-DEF_CONFIG = $(ARCH)-$(CONFIG_ABI).config
-CPU_CONFIG = $(ARCH)-$(CONFIG_CPU)-$(CONFIG_ABI).config
-else
-DEF_CONFIG = $(ARCH).config
-CPU_CONFIG = $(ARCH)-$(CONFIG_CPU).config
-endif
-
-DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
-		$(CPU_CONFIG), $(DEF_CONFIG)))
+include packages/devel/uclibc/Makefile.dotconfig
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -21,8 +11,7 @@ conf-args = \
 	DEVEL_PREFIX=/usr/ \
 	PREFIX=$(sysroot)
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+$(pkgtree)/.configure: $(pkgtree)/.dotconfig
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)

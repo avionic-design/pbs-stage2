@@ -1,0 +1,15 @@
+
+ARCH := $(subst bfin,blackfin,$(ARCH))
+
+CONFIGS := $(or $(wildcard $(pkgsrctree)/conf/$(ARCH)-$(CPU)$(if $(ABI),-$(ABI)).config), \
+                $(wildcard $(pkgsrctree)/conf/$(ARCH)$(if $(ABI),-$(ABI)).config))
+
+ifeq ($(CONFIGS),)
+$(error No config file found for $(ARCH) / $(CPU))
+endif
+
+CONFIGS += $(pkgsrctree)/conf/common.config
+
+$(pkgtree)/.dotconfig: $(pkgtree)/.patch
+	cat $(CONFIGS) > $(pkgtree)/build/.config
+	$(call cmd,stamp)
