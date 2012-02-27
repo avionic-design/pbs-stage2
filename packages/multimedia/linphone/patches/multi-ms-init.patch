@@ -1,6 +1,8 @@
---- a/mediastreamer2/src/mscommon.c	2012-02-09 16:33:13.810154638 +0100
-+++ b/mediastreamer2/src/mscommon.c	2012-02-09 16:35:39.020501810 +0100
-@@ -607,10 +607,16 @@
+diff --git a/mediastreamer2/src/mscommon.c b/mediastreamer2/src/mscommon.c
+index ce9bfdd..86093ee 100644
+--- a/mediastreamer2/src/mscommon.c
++++ b/mediastreamer2/src/mscommon.c
+@@ -607,10 +607,16 @@ static void ms_android_log_handler(OrtpLogLevel lev, const char *fmt, va_list ar
  }
  #endif
  
@@ -17,14 +19,15 @@
  #if defined(ENABLE_NLS)
  	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
  #endif
-@@ -670,6 +676,11 @@
+@@ -670,6 +676,12 @@ void ms_init(){
  }
  
  void ms_exit(){
-+	if (init_count > 0) {
-+		init_count -= 1;
++	if (init_count == 0)
 +		return;
-+	}
++	init_count -= 1;
++	if (init_count > 0)
++		return;
 +
  	ms_filter_unregister_all();
  	ms_snd_card_manager_destroy();
