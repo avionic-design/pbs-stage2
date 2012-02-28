@@ -11,7 +11,7 @@ config LIBC
 	string
 	default "uclibc"
 
-if PACKAGE_DEVEL_UCLIB
+if PACKAGE_DEVEL_UCLIBC
 config PACKAGE_DEVEL_UCLIB_WITH_LOCALE
 	bool "uclibc with locale support"
 
