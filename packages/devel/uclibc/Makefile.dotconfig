@@ -9,7 +9,7 @@ $(error No config file found for $(ARCH) / $(CPU))
 endif
 
 CONFIGS += $(pkgsrctree)/conf/common.config
-CONFIGS += $(pkgsrctree)/conf/locale-$(or $(CONFIG_PACKAGE_DEVEL_UCLIB_WITH_LOCALE),n)
+CONFIGS += $(pkgsrctree)/conf/locale-$(or $(CONFIG_PACKAGE_DEVEL_UCLIBC_WITH_LOCALE),n)
 
 $(pkgtree)/.dotconfig: $(pkgtree)/.patch
 	cat $(CONFIGS) > $(pkgtree)/build/.config
