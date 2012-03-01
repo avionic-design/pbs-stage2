@@ -1,0 +1,28 @@
+From 7a5d8b37c302cdfd73933b1ba034c79877894bc3 Mon Sep 17 00:00:00 2001
+From: Ramin Jeyrani-Mameghani <ramin.jeyrani-mameghani@avionic-design.de>
+Date: Thu, 1 Mar 2012 16:00:28 +0100
+Subject: [PATCH] linphone sound daemon: decrease number of input branches to increase performance (on PTIP)
+
+This patch decreases the number of input branches from initially 10 to 2.
+This way other sounds (e.g. key tones) can be played while running a call on the PTIP platform.
+Furthermore the playback quality is increased.
+---
+ coreapi/lsd.c |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/coreapi/lsd.c b/coreapi/lsd.c
+index e47023f..a338406 100644
+--- a/coreapi/lsd.c
++++ b/coreapi/lsd.c
+@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ 
+ static struct _MSSndCard *linphone_sound_daemon_get_proxy_card(LinphoneSoundDaemon *obj);
+ 
+-#define MAX_BRANCHES 10
++#define MAX_BRANCHES 2
+ 
+ 
+ struct _LsdPlayer{
+-- 
+1.7.4.1
+
