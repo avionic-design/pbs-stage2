@@ -17,6 +17,7 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(prefix) \
 	--with-gmp=$(prefix) \
+	--with-ppl=$(prefix) \
 	--enable-languages=c
 
 ifeq ($(CONFIG_OS_NONE),y)
