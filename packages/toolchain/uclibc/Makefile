@@ -9,7 +9,8 @@ conf-args = \
 	CROSS=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot)
+	PREFIX=$(sysroot) \
+	O=$(pkgtree)/build
 
 $(pkgtree)/.configure: $(pkgtree)/.dotconfig
 	cd $(pkgbuildtree) && \
@@ -21,6 +22,7 @@ build-args = \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
 	PREFIX=$(sysroot) \
+	O=$(pkgtree)/build \
 	-j $(NUM_CPU)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
@@ -32,7 +34,8 @@ install-args = \
 	CROSS=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot)
+	PREFIX=$(sysroot) \
+	O=$(pkgtree)/build
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \

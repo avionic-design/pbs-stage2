@@ -13,6 +13,7 @@ ifneq ($(wildcard $(srctree)/$(master-platform)/binary.mk),)
 endif
 
 pkgtree := $(objtree)/build/$(obj)
+pkgsrctree := $(srctree)/$(obj)
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)

@@ -1,5 +1,6 @@
 include packages/toolchain/uclibc/Makefile.location
 include packages/toolchain/common.mk
+include packages/devel/uclibc/Makefile.dotconfig
 
 ifneq ($(ABI),)
 DEF_CONFIG = $(ARCH)-$(CONFIG_ABI).config
@@ -18,10 +19,10 @@ $(pkgtree)/.setup:
 conf-args = \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot)
+	PREFIX=$(sysroot) \
+	O=$(pkgtree)/build
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/conf/$(DOT_CONFIG) $(pkgbuildtree)/.config
+$(pkgtree)/.configure: $(pkgtree)/.patch $(pkgtree)/.dotconfig
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
 	$(call cmd,stamp)
 
@@ -31,7 +32,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 install-args = \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot)
+	PREFIX=$(sysroot) \
+	O=$(pkgtree)/build
 
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
