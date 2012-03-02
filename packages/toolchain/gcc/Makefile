@@ -44,6 +44,11 @@ ifeq ($(CONFIG_OS_NONE),y)
   endif
 endif
 
+ifeq ($(CONFIG_ARCH),x86_64)
+  conf-args += \
+	--disable-multilib
+endif
+
 conf-args += \
 	--with-as=$(prefix)/bin/$(TARGET)-as \
 	--with-ld=$(prefix)/bin/$(TARGET)-ld \
