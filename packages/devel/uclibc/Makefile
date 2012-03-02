@@ -5,10 +5,7 @@ include packages/devel/uclibc/Makefile.dotconfig
 pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)
 DESTDIR := $(pkgtree)/install
 
-$(pkgtree)/build:
-	$(call cmd,mkdir_p)
-
-$(pkgtree)/.setup: | $(pkgtree)/build
+$(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \

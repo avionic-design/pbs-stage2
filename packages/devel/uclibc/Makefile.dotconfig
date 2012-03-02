@@ -11,6 +11,9 @@ endif
 CONFIGS += $(pkgsrctree)/conf/common.config
 CONFIGS += $(pkgsrctree)/conf/locale-$(or $(CONFIG_PACKAGE_DEVEL_UCLIBC_WITH_LOCALE),n)
 
-$(pkgtree)/.dotconfig: $(pkgtree)/.patch
+$(pkgtree)/build:
+	$(call cmd,mkdir_p)
+
+$(pkgtree)/.dotconfig: $(pkgtree)/.patch | $(pkgtree)/build
 	cat $(CONFIGS) > $(pkgtree)/build/.config
 	$(call cmd,stamp)
