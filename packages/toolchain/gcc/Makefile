@@ -31,6 +31,7 @@ conf-args = \
 	--program-prefix=$(TARGET)- \
 	--with-mpfr=$(prefix) \
 	--with-gmp=$(prefix) \
+	--with-ppl=$(prefix) \
 	--enable-languages=$(languages) \
 	--disable-libssp
 
