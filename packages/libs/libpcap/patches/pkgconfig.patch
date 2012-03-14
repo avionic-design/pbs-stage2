@@ -1,0 +1,123 @@
+From c01cad4b5d68678b63e5919c6ec82e9d51822f71 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 14 Mar 2012 15:42:57 +0100
+Subject: [PATCH] Add pkg-config support
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Makefile.in  |   18 +++++++++++++++---
+ configure.in |    2 +-
+ pcap.pc.in   |   10 ++++++++++
+ 3 files changed, 26 insertions(+), 4 deletions(-)
+ create mode 100644 pcap.pc.in
+
+diff --git a/Makefile.in b/Makefile.in
+index 912b7e3..b29af72 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -35,6 +35,8 @@ includedir = @includedir@
+ libdir =  @libdir@
+ # Pathname of directory to install the man pages
+ mandir = @mandir@
++# Pathname of directory to install the pkg-config data
++pkgconfigdir = @libdir@/pkgconfig
+ 
+ # VPATH
+ srcdir = @srcdir@
+@@ -148,7 +150,7 @@ TAGFILES = \
+ 
+ CLEANFILES = $(OBJ) libpcap.* $(TESTS) \
+ 	$(PROG)-`cat $(srcdir)/VERSION`.tar.gz $(GENSRC) $(GENHDR) \
+-	lex.yy.c pcap-config
++	lex.yy.c pcap-config pcap.pc
+ 
+ MAN1 = pcap-config.1
+ 
+@@ -290,6 +292,7 @@ EXTRA_DIST = \
+ 	pcap-can-linux.c \
+ 	pcap-can-linux.h \
+ 	pcap-config.in \
++	pcap.pc.in \
+ 	pcap-dag.c \
+ 	pcap-dag.h \
+ 	pcap-dlpi.c \
+@@ -343,7 +346,7 @@ EXTRA_DIST = \
+ 	Win32/Src/inet_net.c \
+ 	Win32/Src/inet_pton.c
+ 
+-all: libpcap.a shared pcap-config
++all: libpcap.a shared pcap-config pcap.pc
+ 
+ libpcap.a: $(OBJ)
+ 	@rm -f $@
+@@ -508,6 +511,11 @@ pcap-config: $(srcdir)/pcap-config.in ./config.status
+ 	mv $@.tmp $@
+ 	chmod a+x $@
+ 
++pcap.pc: $(srcdir)/pcap.pc.in ./config.status
++	@rm -f $@ $@.tmp
++	./config.status --file=$@.tmp:$(srcdir)/pcap.pc.in
++	mv $@.tmp $@
++
+ #
+ # Test programs - not built by default, and not installed.
+ #
+@@ -528,7 +536,7 @@ opentest: tests/opentest.c libpcap.a
+ selpolltest: tests/selpolltest.c libpcap.a
+ 	$(CC) $(FULL_CFLAGS) -I. -L. -o selpolltest $(srcdir)/tests/selpolltest.c libpcap.a $(LIBS)
+ 
+-install: install-shared install-archive pcap-config
++install: install-shared install-archive pcap-config pcap.pc
+ 	[ -d $(DESTDIR)$(libdir) ] || \
+ 	    (mkdir -p $(DESTDIR)$(libdir); chmod 755 $(DESTDIR)$(libdir))
+ 	[ -d $(DESTDIR)$(includedir) ] || \
+@@ -549,6 +557,9 @@ install: install-shared install-archive pcap-config
+ 	[ -d $(DESTDIR)$(bindir) ] || \
+ 	    (mkdir -p $(DESTDIR)$(bindir); chmod 755 $(DESTDIR)$(bindir))
+ 	$(INSTALL_PROGRAM) pcap-config $(DESTDIR)$(bindir)/pcap-config
++	[ -d $(DESTDIR)$(pkgconfigdir) ] || \
++	    (mkdir -p $(DESTDIR)$(pkgconfigdir); chmod 755 $(DESTDIR)$(pkgconfigdir))
++	$(INSTALL_DATA) pcap.pc $(DESTDIR)$(pkgconfigdir)/pcap.pc
+ 	for i in $(MAN1); do \
+ 		$(INSTALL_DATA) $(srcdir)/$$i \
+ 		    $(DESTDIR)$(mandir)/man1/$$i; done
+@@ -655,6 +666,7 @@ uninstall: uninstall-shared
+ 	for i in $(PUBHDR); do \
+ 		rm -f $(DESTDIR)$(includedir)/$$i; done
+ 	-rmdir $(DESTDIR)$(includedir)/pcap
++	rm -f $(DESTDIR)$(pkgconfigdir)/pcap.pc
+ 	rm -f $(DESTDIR)/$(bindir)/pcap-config
+ 	for i in $(MAN1); do \
+ 		rm -f $(DESTDIR)$(mandir)/man1/$$i; done
+diff --git a/configure.in b/configure.in
+index 6a146ca..d11f007 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1428,7 +1428,7 @@ AC_PROG_INSTALL
+ 
+ AC_CONFIG_HEADER(config.h)
+ 
+-AC_OUTPUT(Makefile pcap-filter.manmisc pcap-linktype.manmisc
++AC_OUTPUT(Makefile pcap.pc pcap-filter.manmisc pcap-linktype.manmisc
+ 	pcap-tstamp.manmisc pcap-savefile.manfile pcap.3pcap
+ 	pcap_compile.3pcap pcap_datalink.3pcap pcap_dump_open.3pcap
+ 	pcap_list_datalinks.3pcap pcap_list_tstamp_types.3pcap
+diff --git a/pcap.pc.in b/pcap.pc.in
+new file mode 100644
+index 0000000..170cdc3
+--- /dev/null
++++ b/pcap.pc.in
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: pcap
++Description: a system-independent interface for user-level packet capture
++Version: @VERSION@
++Cflags: -I${includedir}
++Libs: -L${libdir} -lpcap
+-- 
+1.7.9.4
+

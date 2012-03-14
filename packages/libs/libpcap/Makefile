@@ -4,7 +4,7 @@ VERSION = 1.2.1
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-pcap=linux \
