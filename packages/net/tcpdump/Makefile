@@ -4,7 +4,16 @@ VERSION = 4.2.1
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
+
+ACLOCAL_FLAGS += -I $(pkgbuildtree)/m4
+
+$(pkgtree)/.aclocal-force:
+	cd $(pkgbuildtree) && \
+		$(env) aclocal --force --install $(ACLOCAL_FLAGS)
+	$(call cmd,stamp)
+
+$(pkgtree)/.autoreconfigure: $(pkgtree)/.aclocal-force
 
 conf-args += \
 	--without-crypto \
