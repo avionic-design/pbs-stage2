@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index fadc32a..96c9273 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -72,7 +72,7 @@ CLEANFILES     = default.supp
+ default.supp: $(DEFAULT_SUPP_FILES)
+ 	echo "# This is a generated file, composed of the following suppression rules:" > default.supp
+ 	echo "# " $(DEFAULT_SUPP_FILES) >> default.supp
+-	cat $(DEFAULT_SUPP_FILES) >> default.supp
++	cat $^ >> default.supp
+ 
+ ## Preprend @PERL@ because tests/vg_regtest isn't executable
+ regtest: check
