@@ -1,5 +1,5 @@
 PACKAGE = sqlite-autoconf
-VERSION = 3070500
+VERSION = 3071000
 
 LOCATION = http://www.sqlite.org
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
