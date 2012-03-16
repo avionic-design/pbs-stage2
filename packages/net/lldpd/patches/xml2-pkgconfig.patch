@@ -1,9 +1,9 @@
 diff --git a/configure.ac b/configure.ac
-index c3edd53..e4e3464 100644
+index 2087160..8593f9b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -209,7 +209,7 @@ AC_ARG_WITH([xml],
-     [Enable XML output via libxml2 @<:@default=no:>@]
+     [Enable XML output via libxml2 @<:@default=no@:>@]
    ))
  if test x"$with_xml" = x"yes"; then
 -   lldp_CHECK_XML2

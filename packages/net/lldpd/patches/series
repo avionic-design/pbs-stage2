@@ -1,4 +1,3 @@
 systemd.patch
-power-via-mdi.patch
 net-snmp-pkgconfig.patch
 xml2-pkgconfig.patch

@@ -1,2 +1,2 @@
 version=3
-http://media.luffy.cx/files/lldpd/lldpd-(.*)\.tar\.gz
+https://github.com/vincentbernat/lldpd/wiki lldpd-(.*)\.tar\.gz
