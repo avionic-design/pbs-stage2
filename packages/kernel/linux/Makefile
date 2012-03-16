@@ -1,4 +1,5 @@
 PACKAGE = linux
+LICENSE = GPL
 
 include packages/common.mk
 

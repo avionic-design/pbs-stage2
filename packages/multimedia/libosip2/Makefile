@@ -1,5 +1,6 @@
 PACKAGE = libosip2
 VERSION = 3.6.0
+LICENSE = LGPL
 
 LOCATION = http://download.savannah.gnu.org/releases/osip
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

@@ -1,5 +1,6 @@
 PACKAGE = linphone
 VERSION = 3.5.0
+LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))

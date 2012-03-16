@@ -1,5 +1,6 @@
 PACKAGE = readline
 VERSION = 6.2
+LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

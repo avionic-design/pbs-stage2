@@ -1,5 +1,6 @@
 PACKAGE = busybox
 VERSION = 1.19.4
+LICENSE = GPL
 
 LOCATION = http://busybox.net/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

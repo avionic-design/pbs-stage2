@@ -1,5 +1,6 @@
 PACKAGE = u-boot
 VERSION = git
+LICENSE = GPL
 
 GIT_URL      = git://git.adnet.avionic-design.de/kernel/u-boot-adx.git
 GIT_CHECKOUT = $(CONFIG_U_BOOT_BRANCH)

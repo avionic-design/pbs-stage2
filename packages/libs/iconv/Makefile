@@ -1,5 +1,6 @@
 PACKAGE = libiconv
 VERSION = 1.13.1
+LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

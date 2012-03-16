@@ -1,5 +1,6 @@
 PACKAGE = freetype
 VERSION = 2.4.8
+LICENSE = FreeType/GPL
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

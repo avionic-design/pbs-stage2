@@ -1,5 +1,6 @@
 PACKAGE = gdb
 VERSION = 7.4
+LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

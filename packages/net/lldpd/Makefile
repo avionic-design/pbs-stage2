@@ -1,5 +1,6 @@
 PACKAGE = lldpd
 VERSION = 0.5.2
+LICENSE = ISC
 
 LOCATION = http://media.luffy.cx/files/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

@@ -1,5 +1,6 @@
 PACKAGE = libeXosip2
 VERSION = 3.6.0
+LICENSE = GPL
 
 LOCATION = http://download.savannah.gnu.org/releases/exosip
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

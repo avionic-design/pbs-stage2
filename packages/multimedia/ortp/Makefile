@@ -1,5 +1,6 @@
 PACKAGE = ortp
 VERSION = 0.18.0
+LICENSE = LGPL
 
 LOCATION = http://download.savannah.gnu.org/releases/linphone/$(PACKAGE)/sources
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

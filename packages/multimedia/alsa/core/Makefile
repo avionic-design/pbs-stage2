@@ -1,5 +1,6 @@
 PACKAGE = alsa-lib
 VERSION = 1.0.25
+LICENSE = LGPL
 
 LOCATION = ftp://ftp.alsa-project.org/pub/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

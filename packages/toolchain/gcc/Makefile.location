@@ -1,5 +1,6 @@
 PACKAGE = gcc
 VERSION = 4.6.2
+LICENSE = GPL with run-time exception
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)
 TARBALLS = $(PACKAGE)-core-$(VERSION).tar.bz2

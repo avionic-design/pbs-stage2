@@ -1,5 +1,6 @@
 PACKAGE = speex
 VERSION = 1.2rc1
+LICENSE = Xiph BSD
 
 LOCATION = http://downloads.xiph.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

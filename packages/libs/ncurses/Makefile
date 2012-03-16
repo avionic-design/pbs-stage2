@@ -1,5 +1,6 @@
 PACKAGE = ncurses
 VERSION = 5.9
+LICENSE = MIT
 
 LOCATION = http://ftp.gnu.org/pub/gnu/ncurses
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

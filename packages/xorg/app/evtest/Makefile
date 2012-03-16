@@ -1,5 +1,6 @@
 PACKAGE = evtest
 VERSION = 1.25
+LICENSE = GPL
 
 LOCATION = http://cgit.freedesktop.org/~whot/$(PACKAGE)/snapshot
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

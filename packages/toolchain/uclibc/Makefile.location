@@ -1,5 +1,6 @@
 PACKAGE = uClibc
 VERSION = 0.9.32.1
+LICENSE = LGPL
 
 LOCATION = http://uclibc.org/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz

@@ -1,5 +1,6 @@
 PACKAGE = i2c-tools
 VERSION = 3.1.0
+LICENSE = GPL
 
 LOCATION = http://dl.lm-sensors.org/$(PACKAGE)/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

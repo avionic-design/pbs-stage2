@@ -1,5 +1,6 @@
 PACKAGE = glibc
 VERSION = 2.14.1
+LICENSE = LGPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
