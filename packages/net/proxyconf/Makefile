@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+conf-args += --with-sysroot=$(SYSROOT)
+
 plugin = $(prefix)/lib/gio/modules
 
 prunefiles = \
