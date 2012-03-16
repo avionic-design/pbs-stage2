@@ -2,10 +2,9 @@ PACKAGE = ptip-classic
 VERSION = 0.0.0
 LICENSE = GPL
 
-LOCATION =
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+GIT_URL = git://git.adnet.avionic-design.de/avionic-design/ptip.git
 
-include packages/autotools.mk
+include packages/autotools-git.mk
 
 conf-args += \
 	--enable-maintainer-mode \
