@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.20.1
+VERSION = 2.21
 LICENSE = GPL/BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -24,9 +24,9 @@ ifneq ($(CONFIG_LIBC),gnu)
 endif
 
 ifeq ($(CONFIG_LIBC),gnu)
-conf-vars += scanf_cv_type_modifier=ms
+conf-vars += scanf_cv_alloc_modifier=ms
 else
-conf-vars += scanf_cv_type_modifier=
+conf-vars += scanf_cv_alloc_modifier=
 endif
 
 prunefiles = \
@@ -43,6 +43,7 @@ stripfiles = \
 	/sbin/agetty \
 	/sbin/blkid \
 	/sbin/blockdev \
+	/sbin/chcpu \
 	/sbin/cfdisk \
 	/sbin/ctrlaltdel \
 	/sbin/fdisk \
@@ -60,6 +61,7 @@ stripfiles = \
 	/sbin/mkfs.minix \
 	/sbin/mkswap \
 	/sbin/pivot_root \
+	/sbin/raw \
 	/sbin/sfdisk \
 	/sbin/swaplabel \
 	/sbin/swapon \
@@ -89,6 +91,7 @@ stripfiles = \
 	$(prefix)/bin/mcookie \
 	$(prefix)/bin/namei \
 	$(prefix)/bin/pg \
+	$(prefix)/bin/prlimit \
 	$(prefix)/bin/rename \
 	$(prefix)/bin/renice \
 	$(prefix)/bin/rev \

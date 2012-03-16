@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index f0e244b..61f81b6 100644
+index d3b298c..d66086f 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -267,7 +267,7 @@ esac
+@@ -330,7 +330,7 @@ esac
  
  
  AC_MSG_CHECKING(whether program_invocation_short_name is defined)
@@ -11,3 +11,16 @@ index f0e244b..61f81b6 100644
                 [program_invocation_short_name = "test";],
                 AC_DEFINE(HAVE_PROGRAM_INVOCATION_SHORT_NAME, 1,
                           [Define if program_invocation_short_name is defined])
+diff --git a/misc-utils/cal.c b/misc-utils/cal.c
+index c9efdf0..1c810ca 100644
+--- a/misc-utils/cal.c
++++ b/misc-utils/cal.c
+@@ -297,7 +297,7 @@ main(int argc, char **argv) {
+  * the locale database, which can be overridden with the
+  * -s (Sunday) or -m (Monday) options.
+  */
+-#ifdef HAVE_DECL__NL_TIME_WEEK_1STDAY
++#if HAVE_DECL__NL_TIME_WEEK_1STDAY
+ 	/*
+ 	 * You need to use 2 locale variables to get the first day of the week.
+ 	 * This is needed to support first_weekday=2 and first_workday=1 for
