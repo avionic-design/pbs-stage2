@@ -431,15 +431,15 @@ diff --git a/crypto/modes/Makefile b/crypto/modes/Makefile
 index 6c85861..7a7624a 100644
 --- a/crypto/modes/Makefile
 +++ b/crypto/modes/Makefile
-@@ -10,7 +10,7 @@ CFLAG=-g
- MAKEFILE=	Makefile
- AR=		ar r
+@@ -12,7 +12,7 @@ CFLAG=-g
+ 
+ MODES_ASM_OBJ=
  
 -CFLAGS= $(INCLUDES) $(CFLAG)
 +CFLAGS= $(EXTRA_CPPFLAGS) $(INCLUDES) $(CFLAG) $(EXTRA_CFLAGS)
+ ASFLAGS= $(INCLUDES) $(ASFLAG)
+ AFLAGS= $(ASFLAGS)
  
- GENERAL=Makefile
- TEST=
 diff --git a/crypto/objects/Makefile b/crypto/objects/Makefile
 index a8aedbd..6999ac2 100644
 --- a/crypto/objects/Makefile
