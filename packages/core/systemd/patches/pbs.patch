@@ -38,16 +38,16 @@ diff --git a/configure.ac b/configure.ac
 index 62e8cdf..3ca9efa 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -395,7 +395,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
+@@ -396,7 +396,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
  AC_PATH_PROG([M4], [m4])
  
--AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinuxi, mandriva, meego, mageia, angstrom or other]))
-+AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinuxi, mandriva, meego, mageia, angstrom, pbs or other]))
+-AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom or other]))
++AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom, pbs or other]))
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -491,6 +491,11 @@ case $with_distro in
+@@ -492,6 +492,11 @@ case $with_distro in
                  M4_DISTRO_FLAG=-DTARGET_MAGEIA=1
                  have_plymouth=yes
                  ;;
@@ -59,7 +59,7 @@ index 62e8cdf..3ca9efa 100644
          other)
                  ;;
          *)
-@@ -549,6 +554,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+@@ -550,6 +555,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)
  AM_CONDITIONAL(TARGET_MAGEIA, test x"$with_distro" = xmageia)
