@@ -1,7 +1,7 @@
 PACKAGE = lm_sensors
-VERSION = 3.3.1
+VERSION = 3.3.2
 
-LOCATION = http://dl.lm-sensors.org/$(PACKAGE)/releases
+LOCATION = http://dl.lm-sensors.org/lm-sensors/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
