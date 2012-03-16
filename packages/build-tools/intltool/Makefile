@@ -1,5 +1,5 @@
 PACKAGE = intltool
-VERSION = 0.50.1
+VERSION = 0.50.2
 
 LOCATION = http://edge.launchpad.net/$(PACKAGE)/trunk/$(VERSION)/+download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
