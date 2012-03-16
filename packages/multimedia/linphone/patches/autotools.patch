@@ -1,3 +1,17 @@
+From 09f6e9a4559248d29b3a96ae33d823c5f4091b25 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 23 Feb 2012 07:48:47 +0100
+Subject: [PATCH oRTP] Put autoconf macros into m4/ subdirectory
+
+This is standard practice and is consistent with how the linphone and
+mediastreamer2 projects.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Makefile.am  |    2 ++
+ configure.ac |    1 +
+ 2 files changed, 3 insertions(+), 0 deletions(-)
+
 diff --git a/oRTP/Makefile.am b/oRTP/Makefile.am
 index 9dcbb13..1ba1275 100644
 --- a/oRTP/Makefile.am
@@ -11,7 +25,7 @@ index 9dcbb13..1ba1275 100644
  
  SUBDIRS=src build include
 diff --git a/oRTP/configure.ac b/oRTP/configure.ac
-index b2e9c62..806a008 100644
+index cc706fa..e1c0156 100644
 --- a/oRTP/configure.ac
 +++ b/oRTP/configure.ac
 @@ -31,6 +31,7 @@ PACKAGE=ortp
@@ -22,3 +36,6 @@ index b2e9c62..806a008 100644
  AC_DEFINE_UNQUOTED(ORTP_MAJOR_VERSION,$ORTP_MAJOR_VERSION, [major version])
  AC_DEFINE_UNQUOTED(ORTP_MINOR_VERSION,$ORTP_MINOR_VERSION, [minor version])
  AC_DEFINE_UNQUOTED(ORTP_MICRO_VERSION,$ORTP_MICRO_VERSION, [micro version])
+-- 
+1.7.9.1
+

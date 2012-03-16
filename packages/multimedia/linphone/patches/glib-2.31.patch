@@ -1,8 +1,25 @@
+From 2ace05d88d0b82bacd8bb30c129308d8f30108ec Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 23 Feb 2012 08:00:01 +0100
+Subject: [PATCH linphone 2/2] Allow building against glib 2.31 and later
+
+The threading API was largely reworked in glib 2.31. g_thread_init() no
+longer needs to be called explicitly and g_thread_create() was replaced
+by g_thread_new(). For further details, see here:
+
+  http://developer.gnome.org/glib/2.31/glib-Deprecated-Thread-APIs.html
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ gtk/main.c        |    2 ++
+ gtk/setupwizard.c |    6 ++++++
+ 2 files changed, 8 insertions(+), 0 deletions(-)
+
 diff --git a/gtk/main.c b/gtk/main.c
-index 73e99cc..aa53280 100644
+index f7ea40e..0262c5e 100644
 --- a/gtk/main.c
 +++ b/gtk/main.c
-@@ -1619,7 +1619,9 @@ int main(int argc, char *argv[]){
+@@ -1643,7 +1643,9 @@ int main(int argc, char *argv[]){
  	GdkPixbuf *pbuf;
  	const char *app_name="Linphone";
  
@@ -12,3 +29,32 @@ index 73e99cc..aa53280 100644
  	gdk_threads_init();
  	
  	progpath = strdup(argv[0]);
+diff --git a/gtk/setupwizard.c b/gtk/setupwizard.c
+index 1c54fca..ae1bcfa 100644
+--- a/gtk/setupwizard.c
++++ b/gtk/setupwizard.c
+@@ -270,7 +270,11 @@ static void account_username_changed(GtkEntry *entry, GtkWidget *w) {
+ 	linphone_account_creator_set_username(creator, gtk_entry_get_text(username));
+ 
+ 	if (g_regex_match_simple("^[a-zA-Z]+[a-zA-Z0-9.\\-_]{3,}$", gtk_entry_get_text(username), 0, 0)) {
++#if !GLIB_CHECK_VERSION(2, 31, 0)
+ 		g_thread_create(check_username_availability, (void*)w, FALSE, NULL);
++#else
++		g_thread_new(NULL, check_username_availability, w);
++#endif
+ 	}
+ 	else {
+ 		if (gtk_entry_get_text_length(username) < LOGIN_MIN_SIZE) {
+@@ -534,7 +538,9 @@ GtkWidget * linphone_gtk_create_assistant(void){
+ 	ok = create_pixbuf(linphone_gtk_get_ui_config("ok","ok.png"));
+ 	notok = create_pixbuf(linphone_gtk_get_ui_config("notok","notok.png"));
+ 
++#if !GLIB_CHECK_VERSION(2, 31, 0)
+ 	g_thread_init (NULL);
++#endif
+ 	gdk_threads_init ();
+ 
+ 	GtkWidget *p1=create_intro();
+-- 
+1.7.9.1
+

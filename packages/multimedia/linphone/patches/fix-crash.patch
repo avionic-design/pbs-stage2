@@ -1,12 +1,16 @@
-From b4fa62c68aea2402e6465bbd057f451b444a5bfd Mon Sep 17 00:00:00 2001
+From 8b91e44cdcc73e4534e052e9de7818c6d89315d8 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Wed, 8 Feb 2012 11:48:40 +0100
-Subject: [PATCH] mediastreamer2: Fix potential NULL pointer dereference.
+Date: Thu, 23 Feb 2012 07:54:36 +0100
+Subject: [PATCH mediastreamer2] Do not destroy uninitialized echo canceller
 
-This commit ensures that the echo canceller filter is only destroyed if
-it has previously been initialized.
+Under certain circumstances it can happen that the echo canceller is not
+initialized before it is destroyed. The ms_filter_destroy() function
+does not check for a NULL pointer before dereferencing so we must make
+sure that the caller does not pass one in.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- mediastreamer2/src/audiostream.c |    2 +-
+ src/audiostream.c |    2 +-
  1 files changed, 1 insertions(+), 1 deletions(-)
 
 diff --git a/mediastreamer2/src/audiostream.c b/mediastreamer2/src/audiostream.c
@@ -23,5 +27,5 @@ index 2274f0d..9ac83d0 100644
  		stream->ec=NULL;
  	}
 -- 
-1.7.9
+1.7.9.1
 

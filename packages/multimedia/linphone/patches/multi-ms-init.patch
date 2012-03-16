@@ -19,7 +19,7 @@ index ce9bfdd..86093ee 100644
  #if defined(ENABLE_NLS)
  	bindtextdomain (GETTEXT_PACKAGE, LOCALEDIR);
  #endif
-@@ -670,6 +676,12 @@ void ms_init(){
+@@ -668,6 +674,12 @@
  }
  
  void ms_exit(){
