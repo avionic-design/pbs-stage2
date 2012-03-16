@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.gnu.org/gnu/coreutils/coreutils-(.+)\.tar\.bz2
+ftp://ftp.gnu.org/gnu/coreutils/coreutils-(.+)\.tar\.xz

@@ -1,8 +1,8 @@
 PACKAGE = coreutils
-VERSION = 6.9
+VERSION = 8.15
 
 LOCATION = ftp://ftp.gnu.org/gnu/coreutils
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
