@@ -243,6 +243,10 @@ PHONY += print
 print:
 	@echo "$(PACKAGE): $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)"
 
+PHONY += license
+license:
+	@echo "$(PACKAGE): $(LICENSE)"
+
 PHONY += FORCE
 FORCE: ;
 

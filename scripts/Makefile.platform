@@ -25,6 +25,7 @@ dist-dirs  := $(addprefix dist-, $(platform-depends-dirs) $(toolchain-depends-di
 uscan-dirs := $(addprefix uscan-,$(platform-depends-dirs))
 watch-dirs := $(addprefix watch-,$(platform-depends-dirs))
 print-dirs := $(addprefix print-,$(platform-depends-dirs))
+license-dirs := $(addprefix license-,$(platform-depends-dirs))
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
@@ -126,6 +127,14 @@ $(print-dirs): print-%:
 
 PHONY += print
 print: $(print-dirs)
+	@:
+
+PHONY += $(license-dirs)
+$(license-dirs): license-%:
+	$(Q)$(MAKE) $(package)=$* license
+
+PHONY += license
+license: $(license-dirs)
 	@:
 
 PHONY += FORCE
