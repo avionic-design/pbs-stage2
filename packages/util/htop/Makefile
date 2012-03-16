@@ -1,5 +1,5 @@
 PACKAGE = htop
-VERSION = 1.0
+VERSION = 1.0.1
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
