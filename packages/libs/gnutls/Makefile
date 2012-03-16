@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.0.12
+VERSION = 3.0.17
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -12,6 +12,9 @@ conf-args += \
 	--with-libz-prefix=$(SYSROOT)$(prefix) \
 	--disable-rpath \
 	--disable-doc
+
+conf-vars += \
+	gl_cv_func_gettimeofday_clobber=no
 
 prunefiles = \
 	$(prefix)/lib/*.la
