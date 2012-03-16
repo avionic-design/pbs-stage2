@@ -1,5 +1,6 @@
 PACKAGE = dtc
 VERSION = v1.3.0
+LICENSE = GPL
 
 LOCATION = http://jdl.com/software
 TARBALLS = $(PACKAGE)-$(VERSION).tgz

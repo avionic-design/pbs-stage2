@@ -1,5 +1,6 @@
 PACKAGE = u-boot
 VERSION = 2011.09
+LICENSE = GPL
 
 LOCATION = ftp://ftp.denx.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
