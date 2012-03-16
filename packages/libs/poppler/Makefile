@@ -1,5 +1,5 @@
 PACKAGE = poppler
-VERSION = 0.18.3
+VERSION = 0.18.4
 
 LOCATION = http://poppler.freedesktop.org
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
