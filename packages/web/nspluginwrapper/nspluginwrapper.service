@@ -1,0 +1,10 @@
+[Unit]
+Description = nspluginwrapper
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/nspluginwrapper --auto --install
+
+[Install]
+WantedBy=graphical.target

@@ -1,0 +1,19 @@
+diff --git a/configure b/configure
+index 5f3dd86..53ba906 100755
+--- a/configure
++++ b/configure
+@@ -78,8 +78,12 @@ build_biarch="guess"
+ strip="no"
+ cc="gcc"
+ cxx="g++"
+-host_os=`uname -s | tr '[A-Z]' '[a-z]'`
+-host_cpu=`uname -m`
++if test -z "$host_os"; then
++	host_os=`uname -s | tr '[A-Z]' '[a-z]'`
++fi
++if test -z "$host_cpu"; then
++	host_cpu=`uname -m`
++fi
+ target_os="linux"
+ target_cpu="i386"
+ rpc_init_timeout=5

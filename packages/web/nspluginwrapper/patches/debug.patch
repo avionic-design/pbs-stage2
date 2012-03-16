@@ -1,0 +1,80 @@
+diff --git a/src/npw-config.c b/src/npw-config.c
+index 058941d..eec6338 100644
+--- a/src/npw-config.c
++++ b/src/npw-config.c
+@@ -388,6 +388,11 @@ static int detect_plugin_viewer(const char *filename, NPW_PluginInfo *out_plugin
+   };
+   const int target_arch_table_size = sizeof(target_arch_table) / sizeof(target_arch_table[0]);
+ 
++  fprintf(stderr, "Host: ARCH:%s OS:%s\n", HOST_ARCH, HOST_OS);
++  if (out_plugin_info)
++	  fprintf(stderr, "Plugin: ARCH:%s OS:%s\n", out_plugin_info->target_arch,
++			out_plugin_info->target_os);
++
+   if (out_plugin_info && out_plugin_info->target_arch[0] != '\0')
+ 	target_arch_table[0] = out_plugin_info->target_arch;
+   else
+@@ -409,8 +414,10 @@ static int detect_plugin_viewer(const char *filename, NPW_PluginInfo *out_plugin
+   if (!g_allow_native
+ 	  && out_plugin_info
+ 	  && out_plugin_info->target_arch && strcmp(out_plugin_info->target_arch, HOST_ARCH) == 0
+-	  && out_plugin_info->target_os && strcmp(out_plugin_info->target_os, HOST_OS) == 0)
++	  && out_plugin_info->target_os && strcmp(out_plugin_info->target_os, HOST_OS) == 0) {
++	fprintf(stderr, "native viewer\n");
+ 	return EXIT_VIEWER_NATIVE;
++  }
+ 
+   enum { VAR_ARCH, VAR_OS, VAR_COUNT };
+   Var vars[VAR_COUNT+1];
+@@ -423,6 +430,7 @@ static int detect_plugin_viewer(const char *filename, NPW_PluginInfo *out_plugin
+   const int viewer_path_len = sizeof(viewer_path) - strlen(NPW_VIEWER) - 1;
+   const char viewer_paths[] = NPW_VIEWER_PATHS;
+   const char *viewer_path_spec_end, *viewer_path_spec = viewer_paths;
++  fprintf(stderr, "checking viewers...\n");
+   do {
+ 	int len;
+ 	if ((viewer_path_spec_end = strchr(viewer_path_spec, ':')) != NULL)
+@@ -432,21 +440,30 @@ static int detect_plugin_viewer(const char *filename, NPW_PluginInfo *out_plugin
+ 
+ 	for (int i = 0; i < target_arch_table_size; i++) {
+ 	  const char *target_arch = target_arch_table[i];
+-	  if (target_arch == NULL)
++	  if (target_arch == NULL) {
++		fprintf(stderr, "  invalid target architecture\n");
+ 		continue;
++	  }
+ 	  vars[VAR_ARCH].value = target_arch;
+ 
+ 	  for (int j = 0; j < target_os_table_size; j++) {
+ 		const char *target_os = target_os_table[j];
+-		if (target_os == NULL)
++		if (target_os == NULL) {
++		  fprintf(stderr, "  invalid target OS\n");
+ 		  continue;
++		}
+ 		vars[VAR_OS].value = target_os;
+ 
+-		if (strexpand(viewer_path, viewer_path_len, viewer_path_spec, len, vars) < 0)
++		if (strexpand(viewer_path, viewer_path_len, viewer_path_spec, len, vars) < 0) {
++		  fprintf(stderr, "  cannot expand path\n");
+ 		  continue;
++		}
+ 		strcat(viewer_path, "/" NPW_VIEWER);
+-		if (access(viewer_path, F_OK) != 0)
++		fprintf(stderr, "  viewer: %s\n", viewer_path);
++		if (access(viewer_path, F_OK) != 0) {
++		  fprintf(stderr, "  cannot access viewer\n");
+ 		  continue;
++		}
+ 
+ 		if (is_plugin_viewer_ok(viewer_path, filename)) {
+ 		  strcpy(out_plugin_info->target_arch, target_arch);
+@@ -455,6 +472,8 @@ static int detect_plugin_viewer(const char *filename, NPW_PluginInfo *out_plugin
+ 		  return EXIT_VIEWER_OK;
+ 		}
+ 
++		fprintf(stderr, "  viewer %s is not okay\n", viewer_path);
++
+ 		if (strnstr(viewer_path_spec, len, "%OS%") == NULL)
+ 		  break; // don't iterate over OS table if there is no "%OS%" pattern
+ 	  }
