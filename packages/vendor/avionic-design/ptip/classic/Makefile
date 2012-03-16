@@ -1,5 +1,6 @@
 PACKAGE = ptip-classic
 VERSION = 0.0.0
+LICENSE = GPL
 
 LOCATION =
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
