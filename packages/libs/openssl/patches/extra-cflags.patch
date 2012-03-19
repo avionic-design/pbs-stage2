@@ -1,5 +1,28 @@
+diff --git a/Makefile b/Makefile
+index c4abc71..366b7f8 100644
+--- a/Makefile
++++ b/Makefile
+@@ -60,7 +60,8 @@ OPENSSLDIR=/usr/local/ssl
+ # PKCS1_CHECK - pkcs1 tests.
+ 
+ CC= cc
+-CFLAG= -O
++CFLAG=
++CFLAGS=$(EXTRA_CPPFLAGS) $(CFLAG) $(EXTRA_CFLAGS)
+ DEPFLAG= -DOPENSSL_NO_EC_NISTP_64_GCC_128 -DOPENSSL_NO_GMP -DOPENSSL_NO_JPAKE -DOPENSSL_NO_MD2 -DOPENSSL_NO_RC5 -DOPENSSL_NO_RFC3779 -DOPENSSL_NO_SCTP -DOPENSSL_NO_STORE
+ PEX_LIBS= 
+ EX_LIBS= 
+@@ -292,7 +293,7 @@ build_testapps:
+ 	@dir=crypto; target=testapps; $(BUILD_ONE_CMD)
+ 
+ fips_premain_dso$(EXE_EXT): libcrypto.a
+-	[ -z "$(FIPSCANLIB)" ] || $(CC) $(CFLAG) -Iinclude \
++	[ -z "$(FIPSCANLIB)" ] || $(CC) $(CFLAGS) -Iinclude \
+ 		-DFINGERPRINT_PREMAIN_DSO_LOAD -o $@  \
+ 		$(FIPSLIBDIR)fips_premain.c $(FIPSLIBDIR)fipscanister.o \
+ 		libcrypto.a $(EX_LIBS)
 diff --git a/Makefile.shared b/Makefile.shared
-index 3569832..89a2156 100644
+index 6e3f886..3bc2455 100644
 --- a/Makefile.shared
 +++ b/Makefile.shared
 @@ -7,7 +7,7 @@
@@ -12,7 +35,7 @@ index 3569832..89a2156 100644
  # shared libraries) are created, or when an application is linked.
  # SHARED_LDFLAGS contains flags to be used when the shared library is created.
 diff --git a/apps/Makefile b/apps/Makefile
-index fa32d2d..ad8fff9 100644
+index 95f499e..a18c92e 100644
 --- a/apps/Makefile
 +++ b/apps/Makefile
 @@ -20,7 +20,7 @@ EXE_EXT=
@@ -25,7 +48,7 @@ index fa32d2d..ad8fff9 100644
  GENERAL=Makefile makeapps.com install.com
  
 diff --git a/crypto/Makefile b/crypto/Makefile
-index c1033f6..9295086 100644
+index 947dd5d..e383aeb 100644
 --- a/crypto/Makefile
 +++ b/crypto/Makefile
 @@ -23,7 +23,7 @@ RECURSIVE_MAKE=	[ -n "$(SDIRS)" ] && for i in $(SDIRS) ; do \
@@ -38,7 +61,7 @@ index c1033f6..9295086 100644
  AFLAGS=$(ASFLAGS)
  CPUID_OBJ=mem_clr.o
 diff --git a/crypto/aes/Makefile b/crypto/aes/Makefile
-index c501a43..8e0dd51 100644
+index 45ede0a..c5cdc59 100644
 --- a/crypto/aes/Makefile
 +++ b/crypto/aes/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -51,7 +74,7 @@ index c501a43..8e0dd51 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/asn1/Makefile b/crypto/asn1/Makefile
-index 160544e..506ea5c 100644
+index f778700..c7744fb 100644
 --- a/crypto/asn1/Makefile
 +++ b/crypto/asn1/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -64,7 +87,7 @@ index 160544e..506ea5c 100644
  GENERAL=Makefile README
  TEST=
 diff --git a/crypto/bf/Makefile b/crypto/bf/Makefile
-index dd2c2c7..966f360 100644
+index d01bfaa..bbfd5bb 100644
 --- a/crypto/bf/Makefile
 +++ b/crypto/bf/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -90,7 +113,7 @@ index c395d80..f37aa1b 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/bn/Makefile b/crypto/bn/Makefile
-index aabc4f5..75f536c 100644
+index 6727734..d1fa7be 100644
 --- a/crypto/bn/Makefile
 +++ b/crypto/bn/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -103,7 +126,7 @@ index aabc4f5..75f536c 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/buffer/Makefile b/crypto/buffer/Makefile
-index 9f3a88d..b410f0d 100644
+index 2efba47..dbf5616 100644
 --- a/crypto/buffer/Makefile
 +++ b/crypto/buffer/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -116,7 +139,7 @@ index 9f3a88d..b410f0d 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/camellia/Makefile b/crypto/camellia/Makefile
-index ff5fe4a..e49284d 100644
+index 6ce6fc9..2377a20 100644
 --- a/crypto/camellia/Makefile
 +++ b/crypto/camellia/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -129,7 +152,7 @@ index ff5fe4a..e49284d 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/cast/Makefile b/crypto/cast/Makefile
-index 0acc38f..9fb36e9 100644
+index f3f4859..d787e9e 100644
 --- a/crypto/cast/Makefile
 +++ b/crypto/cast/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -142,7 +165,7 @@ index 0acc38f..9fb36e9 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/cms/Makefile b/crypto/cms/Makefile
-index 5837049..531e8be 100644
+index 9820adb..29e56d0 100644
 --- a/crypto/cms/Makefile
 +++ b/crypto/cms/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -181,7 +204,7 @@ index 78bb324..c483106 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/des/Makefile b/crypto/des/Makefile
-index ae98226..e072e05 100644
+index a6e1001..26bca77 100644
 --- a/crypto/des/Makefile
 +++ b/crypto/des/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -207,7 +230,7 @@ index f23b4f7..15a9eef 100644
  GENERAL=Makefile
  TEST= dhtest.c
 diff --git a/crypto/dsa/Makefile b/crypto/dsa/Makefile
-index 8073c4e..b87cf20 100644
+index 5fef4ca..f509b79 100644
 --- a/crypto/dsa/Makefile
 +++ b/crypto/dsa/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -233,7 +256,7 @@ index fb2709e..0f0cec0 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/ec/Makefile b/crypto/ec/Makefile
-index db380ed..7e818ee 100644
+index f85fc84..7948acb 100644
 --- a/crypto/ec/Makefile
 +++ b/crypto/ec/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -272,7 +295,7 @@ index e89e0c0..8658954 100644
  GENERAL=Makefile
  TEST=ecdsatest.c
 diff --git a/crypto/engine/Makefile b/crypto/engine/Makefile
-index 9c21482..9269979 100644
+index d29bdd0..d382e42 100644
 --- a/crypto/engine/Makefile
 +++ b/crypto/engine/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -298,7 +321,7 @@ index 862b23b..38fefbb 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/evp/Makefile b/crypto/evp/Makefile
-index 82825e5..3ccd510 100644
+index 9c79f66..48f1367 100644
 --- a/crypto/evp/Makefile
 +++ b/crypto/evp/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -324,7 +347,7 @@ index 0e91709..1464180 100644
  GENERAL=Makefile
  TEST=hmactest.c
 diff --git a/crypto/idea/Makefile b/crypto/idea/Makefile
-index b2e7add..79b7feb 100644
+index 8af0acd..30daa52 100644
 --- a/crypto/idea/Makefile
 +++ b/crypto/idea/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -389,7 +412,7 @@ index 17f878a..50ff27a 100644
  GENERAL=Makefile
  TEST=md2test.c
 diff --git a/crypto/md4/Makefile b/crypto/md4/Makefile
-index c94a139..8f5e10d 100644
+index e6f1e44..8e1147c 100644
 --- a/crypto/md4/Makefile
 +++ b/crypto/md4/Makefile
 @@ -11,7 +11,7 @@ CFLAG=-g
@@ -402,7 +425,7 @@ index c94a139..8f5e10d 100644
  GENERAL=Makefile
  TEST=md4test.c
 diff --git a/crypto/md5/Makefile b/crypto/md5/Makefile
-index 9858d53..b9f52be 100644
+index b9e2ce9..5fbe4bf 100644
 --- a/crypto/md5/Makefile
 +++ b/crypto/md5/Makefile
 @@ -13,7 +13,7 @@ AR=             ar r
@@ -415,7 +438,7 @@ index 9858d53..b9f52be 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/mdc2/Makefile b/crypto/mdc2/Makefile
-index 1d064f1..9f28cfd 100644
+index 1415531..9c42e58 100644
 --- a/crypto/mdc2/Makefile
 +++ b/crypto/mdc2/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -428,10 +451,10 @@ index 1d064f1..9f28cfd 100644
  GENERAL=Makefile
  TEST= mdc2test.c
 diff --git a/crypto/modes/Makefile b/crypto/modes/Makefile
-index 6c85861..7a7624a 100644
+index c825b12..d4d6986 100644
 --- a/crypto/modes/Makefile
 +++ b/crypto/modes/Makefile
-@@ -12,7 +12,7 @@ CFLAG=-g
+@@ -12,7 +12,7 @@ AR=		ar r
  
  MODES_ASM_OBJ=
  
@@ -534,7 +557,7 @@ index 27694aa..0a67679 100644
  GENERAL=Makefile
  TEST= randtest.c
 diff --git a/crypto/rc2/Makefile b/crypto/rc2/Makefile
-index 73eac34..2a866bc 100644
+index 8a9d49a..6df6b73 100644
 --- a/crypto/rc2/Makefile
 +++ b/crypto/rc2/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -547,7 +570,7 @@ index 73eac34..2a866bc 100644
  GENERAL=Makefile
  TEST=rc2test.c
 diff --git a/crypto/rc4/Makefile b/crypto/rc4/Makefile
-index 264451a..a3ee7f0 100644
+index 1614d47..c000c8e 100644
 --- a/crypto/rc4/Makefile
 +++ b/crypto/rc4/Makefile
 @@ -12,7 +12,7 @@ AR=		ar r
@@ -573,7 +596,7 @@ index 8a8b00e..f855817 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/ripemd/Makefile b/crypto/ripemd/Makefile
-index d5b1067..7cd063e 100644
+index 25140b2..c6f4405 100644
 --- a/crypto/ripemd/Makefile
 +++ b/crypto/ripemd/Makefile
 @@ -13,7 +13,7 @@ AR=             ar r
@@ -586,7 +609,7 @@ index d5b1067..7cd063e 100644
  AFLAGS= $(ASFLAGS)
  
 diff --git a/crypto/rsa/Makefile b/crypto/rsa/Makefile
-index bb64223..77a488f 100644
+index ec9c74d..5073c0a 100644
 --- a/crypto/rsa/Makefile
 +++ b/crypto/rsa/Makefile
 @@ -10,7 +10,7 @@ CFLAG=-g
@@ -612,7 +635,7 @@ index 4bc55e4..24df7c8 100644
  GENERAL=Makefile
  TEST=
 diff --git a/crypto/sha/Makefile b/crypto/sha/Makefile
-index e6eccb0..72aae15 100644
+index 6d191d3..1ff7582 100644
 --- a/crypto/sha/Makefile
 +++ b/crypto/sha/Makefile
 @@ -13,7 +13,7 @@ AR=             ar r
@@ -651,7 +674,7 @@ index 0dcfd78..588f6ed 100644
  GENERAL=Makefile
  #TEST= storetest.c
 diff --git a/crypto/ts/Makefile b/crypto/ts/Makefile
-index ad29b67..33be92a 100644
+index c182345..65e0008 100644
 --- a/crypto/ts/Makefile
 +++ b/crypto/ts/Makefile
 @@ -17,8 +17,8 @@ AR=		ar r
@@ -692,7 +715,7 @@ index a685659..bd25fea 100644
  GENERAL=Makefile
  #TEST= uitest.c
 diff --git a/crypto/whrlpool/Makefile b/crypto/whrlpool/Makefile
-index 566b996..9e201ec 100644
+index f4d46e4..04c41ea 100644
 --- a/crypto/whrlpool/Makefile
 +++ b/crypto/whrlpool/Makefile
 @@ -13,7 +13,7 @@ AR=		ar r
@@ -731,7 +754,7 @@ index 556ef35..d75adc5 100644
  GENERAL=Makefile README
  TEST=
 diff --git a/engines/Makefile b/engines/Makefile
-index e024205..605253c 100644
+index 2fa9534..43b29ce 100644
 --- a/engines/Makefile
 +++ b/engines/Makefile
 @@ -19,7 +19,7 @@ RECURSIVE_MAKE=	[ -z "$(ENGDIRS)" ] || for i in $(ENGDIRS) ; do \
@@ -744,7 +767,7 @@ index e024205..605253c 100644
  GENERAL=Makefile engines.com install.com engine_vector.mar
  TEST=
 diff --git a/engines/ccgost/Makefile b/engines/ccgost/Makefile
-index 64be962..43b5fd3 100644
+index dadb523..b109a60 100644
 --- a/engines/ccgost/Makefile
 +++ b/engines/ccgost/Makefile
 @@ -5,7 +5,7 @@ INCLUDES= -I../../include
@@ -757,7 +780,7 @@ index 64be962..43b5fd3 100644
  
  LIBSRC= gost2001.c gost2001_keyx.c gost89.c gost94_keyx.c gost_ameth.c gost_asn1.c gost_crypt.c gost_ctl.c gost_eng.c gosthash.c gost_keywrap.c gost_md.c gost_params.c gost_pmeth.c gost_sign.c
 diff --git a/ssl/Makefile b/ssl/Makefile
-index 2b275fa..ede2edc 100644
+index feaf3e3..b100ba1 100644
 --- a/ssl/Makefile
 +++ b/ssl/Makefile
 @@ -12,7 +12,7 @@ AR=		ar r
@@ -770,7 +793,7 @@ index 2b275fa..ede2edc 100644
  GENERAL=Makefile README ssl-lib.com install.com
  TEST=ssltest.c
 diff --git a/test/Makefile b/test/Makefile
-index 3912f82..b3497fa 100644
+index 09e6848..df0fe00 100644
 --- a/test/Makefile
 +++ b/test/Makefile
 @@ -16,7 +16,7 @@ LIBKRB5=
@@ -782,6 +805,3 @@ index 3912f82..b3497fa 100644
  
  GENERAL=Makefile maketests.com \
  	tests.com testenc.com tx509.com trsa.com tcrl.com tsid.com treq.com \
--- 
-1.7.3.2
-

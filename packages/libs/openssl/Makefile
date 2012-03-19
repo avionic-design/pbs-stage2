@@ -46,6 +46,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args = \
+	EXTRA_CPPFLAGS='$(CPPFLAGS)' \
+	EXTRA_CFLAGS='$(CFLAGS)' \
 	MANDIR=$(prefix)/share/man \
 	MANSUFFIX=ssl \
 	INSTALL_PREFIX=$(DESTDIR)
