@@ -55,6 +55,11 @@ ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_JAVASCRIPT_IR),y)
 else
 	conf-args += --disable-javascript-ir
 endif
+ifeq ($(CONFIG_PACKAGE_NET_REMOTE_CONTROL_WATCHDOG),y)
+	conf-args += --enable-watchdog
+else
+	conf-args += --disable-watchdog
+endif
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
