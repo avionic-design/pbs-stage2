@@ -1,16 +1,16 @@
 PACKAGE = fontconfig
-VERSION = 2.8.0
+VERSION = 2.9.0
 
 LOCATION = http://fontconfig.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-arch=$(ARCH)
 
 prunefiles = \
-	$(prefix)/lib/libfontconfig.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/bin/fc-cache \
@@ -19,4 +19,4 @@ stripfiles = \
 	$(prefix)/bin/fc-match \
 	$(prefix)/bin/fc-query \
 	$(prefix)/bin/fc-scan \
-	$(prefix)/lib/libfontconfig.so.1.4.4
+	$(prefix)/lib/*.so.*

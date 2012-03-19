@@ -1,17 +1,18 @@
-Check for freetype using pkg-config.
-
+From f5909df5cb68a9829c5793c0240b506da7863060 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Mon, 19 Mar 2012 12:26:24 +0100
+Subject: [PATCH] Check for freetype using pkg-config
 
-
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
  configure.in |   30 +++++++++++++++++-------------
- 1 files changed, 17 insertions(+), 13 deletions(-)
+ 1 file changed, 17 insertions(+), 13 deletions(-)
 
 diff --git a/configure.in b/configure.in
-index 87df067..b9d7892 100644
+index da6ef95..ba19dea 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -213,22 +213,26 @@ AC_DEFINE_UNQUOTED(USE_ICONV,$use_iconv,[Use iconv.])
+@@ -158,22 +158,26 @@ AC_DEFINE_UNQUOTED(USE_ICONV,$use_iconv,[Use iconv.])
  # Checks for FreeType
  #
  
@@ -21,10 +22,10 @@ index 87df067..b9d7892 100644
 -	AC_PATH_PROG(ft_config,freetype-config,no)
 -	if test "$ft_config" = "no"; then
 -		AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
-+AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=)
++AC_ARG_WITH(freetype-config, [  --with-freetype-config=PROG   Use FreeType configuration program PROG], freetype_config=$withval, freetype_config=no)
 +
-+if test -n "$freetype_config"; then
-+	if test "$freetype_config" = "yes"; then 
++if test "$freetype_config" != "no"; then
++	if test "$freetype_config" = "yes"; then
 +		AC_PATH_PROG(ft_config,freetype-config,no)
 +		if test "$ft_config" = "no"; then
 +			AC_MSG_ERROR([You must have freetype installed; see http://www.freetype.org/])
@@ -51,3 +52,6 @@ index 87df067..b9d7892 100644
  
  fontconfig_save_libs="$LIBS"
  fontconfig_save_cflags="$CFLAGS"
+-- 
+1.7.9.4
+
