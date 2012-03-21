@@ -1,0 +1,36 @@
+commit 0490e2bf3c65a78c35878de1ae56a5b2d2c8be48
+Author: Alban Bedel <alban.bedel@avionic-design.de>
+Date:   Wed Mar 21 16:19:28 2012 +0100
+
+    audiomixer: Optimize the mixing of inactive channels
+    
+    The data comming from a channel would always be read in the input
+    buffer, even if it would never be used. Instead the data is now
+    dropped without doing any useless copy.
+
+diff --git a/mediastreamer2/src/audiomixer.c b/mediastreamer2/src/audiomixer.c
+index 34186f0..51ffd4e 100644
+--- a/mediastreamer2/src/audiomixer.c
++++ b/mediastreamer2/src/audiomixer.c
+@@ -70,15 +70,16 @@ static void channel_prepare(Channel *chan, int bytes_per_tick){
+ 
+ static int channel_process_in(Channel *chan, MSQueue *q, int32_t *sum, int nsamples){
+ 	ms_bufferizer_put_from_queue(&chan->bufferizer,q);
+-	if (ms_bufferizer_read(&chan->bufferizer,(uint8_t*)chan->input,nsamples*2)!=0){
+-		if (chan->active){
++	if (chan->active){
++		if (ms_bufferizer_read(&chan->bufferizer,(uint8_t*)chan->input,nsamples*2)!=0){
+ 			if (chan->gain!=1.0){
+ 				apply_gain(chan->input,nsamples,chan->gain);
+ 			}
+ 			accumulate(sum,chan->input,nsamples);
+-		}
+-		return nsamples;
+-	}else memset(chan->input,0,nsamples*2);
++			return nsamples;
++		}else memset(chan->input,0,nsamples*2);
++	} else
++		ms_bufferizer_skip_bytes(&chan->bufferizer, nsamples*2);
+ 	return 0;
+ }
+ 

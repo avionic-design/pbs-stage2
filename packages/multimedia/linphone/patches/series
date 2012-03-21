@@ -4,5 +4,5 @@ glib-2.31.patch
 multi-ms-init.patch
 fix-crash.patch
 ec-preprocess.patch
-lsd-decrease-branches.patch
+audiomixer-optimization.patch
 remove-config.h.patch
