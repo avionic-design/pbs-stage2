@@ -1,5 +1,5 @@
 PACKAGE = iw
-VERSION = 0.9.22
+VERSION = 3.3
 
 LOCATION = http://wireless.kernel.org/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -20,8 +20,8 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	CC='$(CC)' V=1 \
-	CFLAGS='$(CFLAGS)' \
-	LDFLAGS='$(LDFLAGS)'
+	EXTRA_CFLAGS='$(CFLAGS)' \
+	EXTRA_LDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
@@ -38,8 +38,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 stripfiles = \
-	$(prefix)/sbin/iw \
-	$(prefix)/lib/*.so.*
+	$(prefix)/sbin/iw
 
 include packages/cleanup.mk
 include packages/binary.mk

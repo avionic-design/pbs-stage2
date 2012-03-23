@@ -1,0 +1,13 @@
+diff --git a/version.sh b/version.sh
+index d5fc374..b673175 100755
+--- a/version.sh
++++ b/version.sh
+@@ -3,7 +3,7 @@
+ VERSION="3.3"
+ OUT="$1"
+ 
+-if head=`git rev-parse --verify HEAD 2>/dev/null`; then
++if test 0 -gt 1; then
+ 	git update-index --refresh --unmerged > /dev/null
+ 	descr=$(git describe)
+ 

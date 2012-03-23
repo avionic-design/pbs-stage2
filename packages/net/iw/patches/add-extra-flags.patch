@@ -1,0 +1,18 @@
+diff --git a/Makefile b/Makefile
+index 5747b5a..d22a5d1 100644
+--- a/Makefile
++++ b/Makefile
+@@ -86,11 +86,11 @@ version.c: version.sh $(patsubst %.o,%.c,$(VERSION_OBJS)) nl80211.h iw.h Makefil
+ 
+ %.o: %.c iw.h nl80211.h
+ 	@$(NQ) ' CC  ' $@
+-	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
++	$(Q)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -c -o $@ $<
+ 
+ iw:	$(OBJS)
+ 	@$(NQ) ' CC  ' iw
+-	$(Q)$(CC) $(LDFLAGS) $(OBJS) $(LIBS) -o iw
++	$(Q)$(CC) $(LDFLAGS) $(EXTRA_LDFLAGS) $(OBJS) $(LIBS) -o iw
+ 
+ check:
+ 	$(Q)$(MAKE) all CC="REAL_CC=$(CC) CHECK=\"sparse -Wall\" cgcc"
