@@ -20,7 +20,7 @@ index 59a5aa4..811a65e 100644
 +AC_ARG_WITH([systemdsystemunitdir],
 +  AS_HELP_STRING([--with-systemdsystemunitdir=DIR], [Directory for systemd service files]),
 +  [], [with_systemdsystemunitdir=$($PKG_CONFIG --variable=systemdsystemunitdir sytsemd)])
-+if test "x$with_systemdsystemunitdir" != xno; then
++if test -n "$with_systemdsystemunitdir" -a "x$with_systemdsystemunitdir" != xno; then
 +  PKG_CHECK_MODULES([SYSTEMD], libsystemd-daemon)
 +  AC_SUBST([systemdsystemunitdir], [$with_systemdsystemunitdir])
 +  enable_systemd=yes
