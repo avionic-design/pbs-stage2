@@ -1,5 +1,5 @@
 include packages/libs/expat/Makefile.location
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la

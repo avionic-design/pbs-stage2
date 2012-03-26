@@ -1,4 +1,3 @@
 config PACKAGE_LIBS_EXPAT
 	bool "expat"
 	select VIRTUAL_DEVEL_LIBC
-	default n
