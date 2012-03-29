@@ -1,22 +1,29 @@
 PACKAGE = wpa_supplicant
-VERSION = 0.7.3
+VERSION = 1.0-rc2
+SNAPSHOT = git20120302
 
 LOCATION = http://hostap.epitest.fi/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).$(SNAPSHOT).tar.gz
 
 include packages/common.mk
+
+env += \
+	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
+	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree)/wpa_supplicant && \
-		echo "CC = $(CC)" > .config && \
+		echo "CC = $(CC)" >> .config && \
 		echo "CFLAGS += $(CFLAGS)" >> .config && \
 		echo "LDFLAGS += $(LDFLAGS)" >> .config && \
 		echo "BINDIR = $(prefix)/sbin" >> .config && \
 		echo "LIBDIR = $(prefix)/lib" >> .config && \
-		echo "CONFIG_DRIVER_WEXT=y" >> .config
+		echo "SYSTEMDUNITDIR = /usr/lib/systemd/system" >> .config && \
+		echo "SYSCONFDIR = /etc" >> .config && \
+		echo "DATADIR = $(prefix)/share" >> .config
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure

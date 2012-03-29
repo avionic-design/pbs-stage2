@@ -1,0 +1,55 @@
+diff --git a/wpa_supplicant/Makefile b/wpa_supplicant/Makefile
+index 22df8a0..7c60649 100644
+--- a/wpa_supplicant/Makefile
++++ b/wpa_supplicant/Makefile
+@@ -6,6 +6,10 @@ ifndef CFLAGS
+ CFLAGS = -MMD -O2 -Wall -g
+ endif
+ 
++export DESTDIR ?= 
++export SYSTEMDUNITDIR ?= /usr/local/lib/systemd/system/
++export DATADIR ?= /usr/local/share/
++export SYSCONFDIR ?= /usr/local/etc/
+ export LIBDIR ?= /usr/local/lib/
+ export BINDIR ?= /usr/local/sbin/
+ PKG_CONFIG ?= pkg-config
+@@ -54,6 +58,8 @@ $(DESTDIR)$(BINDIR)/%: %
+ 
+ install: $(addprefix $(DESTDIR)$(BINDIR)/,$(BINALL))
+ 	$(MAKE) -C ../src install
++	$(MAKE) -C dbus install
++	$(MAKE) -C systemd install
+ 
+ OBJS = config.o
+ OBJS += notify.o
+diff --git a/wpa_supplicant/dbus/Makefile b/wpa_supplicant/dbus/Makefile
+index d64c65c..139b918 100644
+--- a/wpa_supplicant/dbus/Makefile
++++ b/wpa_supplicant/dbus/Makefile
+@@ -5,7 +5,9 @@ clean:
+ 	rm -f libwpadbus.a
+ 
+ install:
+-	@echo Nothing to be made.
++	install -D -m 0644 dbus-wpa_supplicant.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/wpa_supplicant.conf
++	install -D -m 0644 fi.w1.wpa_supplicant1.service $(DESTDIR)$(DATADIR)/dbus-1/system-services/fi.w1.wpa_supplicant1.service
++	install -D -m 0644 fi.epitest.hostap.WPASupplicant.service $(DESTDIR)$(DATADIR)/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
+ 
+ ifndef CC
+ CC=gcc
+diff --git a/wpa_supplicant/systemd/Makefile b/wpa_supplicant/systemd/Makefile
+new file mode 100644
+index 0000000..fe087cb
+--- /dev/null
++++ b/wpa_supplicant/systemd/Makefile
+@@ -0,0 +1,10 @@
++
++
++install:
++	install -D -m 0755 wpa_supplicant.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant.service
++	install -D -m 0755 wpa_supplicant@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant@.service
++	install -D -m 0755 wpa_supplicant-nl80211@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant-nl80211@.service
++	install -D -m 0755 wpa_supplicant-wired@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant-wired@.service
++
++clean:
++	rm -f *.service

@@ -2,4 +2,5 @@ config PACKAGE_NET_WPA_SUPPLICANT
 	bool "wpa-supplicant"
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_LIBS_OPENSSL
+	select PACKAGE_LIBS_LIBNL
 	default n

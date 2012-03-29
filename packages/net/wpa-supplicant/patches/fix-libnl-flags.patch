@@ -1,0 +1,27 @@
+diff --git a/src/drivers/drivers.mak b/src/drivers/drivers.mak
+index b1f70e0..74d3062 100644
+--- a/src/drivers/drivers.mak
++++ b/src/drivers/drivers.mak
+@@ -46,9 +46,8 @@ NEED_LINUX_IOCTL=y
+ NEED_RFKILL=y
+ 
+ ifdef CONFIG_LIBNL32
+-  DRV_LIBS += -lnl-3
+-  DRV_LIBS += -lnl-genl-3
+-  DRV_CFLAGS += -DCONFIG_LIBNL20
++  DRV_LIBS += `pkg-config --libs libnl-3.0 libnl-genl-3.0`
++  DRV_CFLAGS += -DCONFIG_LIBNL20 `pkg-config --cflags libnl-3.0 libnl-genl-3.0`
+ else
+   ifdef CONFIG_LIBNL_TINY
+     DRV_LIBS += -lnl-tiny
+@@ -57,8 +56,8 @@ else
+   endif
+ 
+   ifdef CONFIG_LIBNL20
+-    DRV_LIBS += -lnl-genl
+-    DRV_CFLAGS += -DCONFIG_LIBNL20
++    DRV_LIBS += `pkg-config --libs libnl-2.0 libnl-genl-2.0`
++    DRV_CFLAGS += -DCONFIG_LIBNL20 `pkg-config --cflags libnl-2.0 libnl-genl-2.0`
+   endif
+ endif
+ endif
