@@ -27,6 +27,7 @@ obj-$(CONFIG_PACKAGE_NET_REMOTE_CONTROL) += remote-control
 obj-$(CONFIG_PACKAGE_NET_RUM) += rum
 obj-$(CONFIG_PACKAGE_NET_FUSE_SSHFS) += sshfs-fuse
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
+obk-$(CONFIG_PACKAGE_NET_TUNCTL) += tunctl
 obj-$(CONFIG_PACKAGE_NET_UPDATED) += updated
 obj-$(CONFIG_PACKAGE_NET_WIRELESS_TOOLS) += wireless-tools
 obj-$(CONFIG_PACKAGE_NET_WPA_SUPPLICANT) += wpa-supplicant

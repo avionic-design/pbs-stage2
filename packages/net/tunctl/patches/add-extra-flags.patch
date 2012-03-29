@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index a0aa7f6..6954439 100644
+--- a/Makefile
++++ b/Makefile
+@@ -14,7 +14,7 @@ MAN_DIR ?= /usr/share/man/man$(MANS)
+ all : $(BIN) $(MAN)
+ 
+ $(BIN) : $(BIN).c
+-	$(CC) $(CFLAGS) -o $(BIN) $(BIN).c
++	$(CC) $(CFLAGS) $(EXTRA_CFLAGS) $(EXTRA_LDFLAGS)  -o $(BIN) $(BIN).c
+ 
+ $(MAN) : $(PACKAGE).sgml
+ 	docbook2man $(PACKAGE).sgml
