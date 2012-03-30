@@ -1,0 +1,4 @@
+/usr/bin/neon-config
+/usr/include/neon
+/usr/lib/libneon.so
+/usr/lib/pkgconfig/neon.pc
