@@ -1,0 +1,92 @@
+diff --git a/Source/WebCore/page/EventHandler.cpp b/Source/WebCore/page/EventHandler.cpp
+index 6651e76..1e2f97a 100644
+--- a/Source/WebCore/page/EventHandler.cpp
++++ b/Source/WebCore/page/EventHandler.cpp
+@@ -2816,6 +2816,7 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
+ }
+ 
+ #if ENABLE(DRAG_SUPPORT)
++#if !PLATFORM(GTK)
+ bool EventHandler::dragHysteresisExceeded(const IntPoint& floatDragViewportLocation) const
+ {
+     FloatPoint dragViewportLocation(floatDragViewportLocation.x(), floatDragViewportLocation.y());
+@@ -2850,6 +2851,7 @@ bool EventHandler::dragHysteresisExceeded(const FloatPoint& dragViewportLocation
+     
+     return abs(delta.width()) >= threshold || abs(delta.height()) >= threshold;
+ }
++#endif
+     
+ void EventHandler::freeClipboard()
+ {
+diff --git a/Source/WebCore/page/gtk/EventHandlerGtk.cpp b/Source/WebCore/page/gtk/EventHandlerGtk.cpp
+index 4386a4d..8e3b581 100644
+--- a/Source/WebCore/page/gtk/EventHandlerGtk.cpp
++++ b/Source/WebCore/page/gtk/EventHandlerGtk.cpp
+@@ -26,6 +26,7 @@
+ #include "config.h"
+ #include "EventHandler.h"
+ 
++#include "Chrome.h"
+ #include "ClipboardGtk.h"
+ #include "FloatPoint.h"
+ #include "FocusController.h"
+@@ -39,6 +40,7 @@
+ #include "PlatformWheelEvent.h"
+ #include "RenderWidget.h"
+ #include "Scrollbar.h"
++#include <gtk/gtk.h>
+ 
+ namespace WebCore {
+ 
+@@ -99,6 +101,51 @@ PassRefPtr<Clipboard> EventHandler::createDraggingClipboard() const
+     return ClipboardGtk::create(ClipboardWritable, DataObjectGtk::create(), Clipboard::DragAndDrop, m_frame);
+ }
+ 
++bool EventHandler::dragHysteresisExceeded(const IntPoint& dragViewportLocation) const
++{
++    FrameView* view = m_frame->view();
++    if (!view)
++        return false;
++
++    IntPoint dragLocation = view->windowToContents(dragViewportLocation);
++    IntSize delta = dragLocation - m_mouseDownPos;
++   
++    int threshold = GeneralDragHysteresis;
++    switch (dragState().m_dragType) {
++    case DragSourceActionSelection:
++        threshold = TextDragHysteresis;
++        break;
++    case DragSourceActionImage:
++        threshold = ImageDragHysteresis;
++        break;
++    case DragSourceActionLink:
++        threshold = LinkDragHysteresis;
++        break;
++    case DragSourceActionDHTML:
++        break;
++    case DragSourceActionNone:
++    case DragSourceActionAny:
++        ASSERT_NOT_REACHED();
++    }
++
++    Page* page = m_frame->page();
++    if (page) {
++        Chrome* chrome = page->chrome();
++        if (chrome) {
++            GtkWidget* client = GTK_WIDGET(chrome->platformPageClient());
++            gint widgetDragHysteresis = 0;
++            if (client) {
++                g_object_get(gtk_widget_get_settings(client),
++                    "gtk-dnd-drag-threshold", &widgetDragHysteresis,
++                    0);
++                threshold = max(widgetDragHysteresis, threshold);
++            }
++        }
++    }
++
++    return abs(delta.width()) >= threshold || abs(delta.height()) >= threshold;
++}
++
+ bool EventHandler::passMousePressEventToSubframe(MouseEventWithHitTestResults& mev, Frame* subframe)
+ {
+     subframe->eventHandler()->handleMousePressEvent(mev.event());
