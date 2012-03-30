@@ -1,15 +1,13 @@
-diff --git a/Tools/gtk/common.py b/Tools/gtk/common.py
-index 88ca7fc..2a279ab 100644
---- a/Tools/gtk/common.py
-+++ b/Tools/gtk/common.py
-@@ -42,6 +42,10 @@ def get_build_path():
-     def is_valid_build_directory(path):
-         return os.path.exists(os.path.join(path, 'GNUmakefile'))
+diff --git a/Source/WebKit2/GNUmakefile.am b/Source/WebKit2/GNUmakefile.am
+index 0e13715..cea8470 100644
+--- a/Source/WebKit2/GNUmakefile.am
++++ b/Source/WebKit2/GNUmakefile.am
+@@ -1126,7 +1126,7 @@ BUILT_SOURCES += generate-webkit2-forwarding-headers
  
-+    build_dir = os.getcwd()
-+    if is_valid_build_directory(build_dir):
-+        return build_dir
-+
-     build_types = ['Release', 'Debug']
-     if '--debug' in sys.argv:
-         build_types.reverse()
+ $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2: $(libwebkit2gtkinclude_HEADERS)
+ 	$(AM_V_GEN)mkdir -p $(GENSOURCES_WEBKIT2)/webkit2gtk/include \
+-	&& ln -n -s -f ${shell pwd}/$(WebKit2)/UIProcess/API/gtk $@
++	&& ln -n -s -f $(WebKit2)/UIProcess/API/gtk $@
+ 
+ BUILT_SOURCES += $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2
+ 

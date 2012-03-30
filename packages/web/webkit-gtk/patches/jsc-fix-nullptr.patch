@@ -1,0 +1,86 @@
+From 0235f4d13d17a2822187223abaa27888ee437802 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Wed, 28 Mar 2012 10:03:30 +0200
+Subject: [PATCH 3/3] JSC: Prevent null pointer access in JSObject.get
+ methodes.
+
+This will check the pointer within the loop before accessing.
+
+Signed-off-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+---
+ Source/JavaScriptCore/runtime/JSObject.h |   12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
+
+diff --git a/Source/JavaScriptCore/runtime/JSObject.h b/Source/JavaScriptCore/runtime/JSObject.h
+index 9b5516c..3c17e48 100644
+--- a/Source/JavaScriptCore/runtime/JSObject.h
++++ b/Source/JavaScriptCore/runtime/JSObject.h
+@@ -595,7 +595,7 @@ ALWAYS_INLINE JSValue JSCell::fastGetOwnProperty(ExecState* exec, const UString&
+ ALWAYS_INLINE bool JSObject::getPropertySlot(ExecState* exec, const Identifier& propertyName, PropertySlot& slot)
+ {
+     JSObject* object = this;
+-    while (true) {
++    while (object) {
+         if (object->fastGetOwnPropertySlot(exec, propertyName, slot))
+             return true;
+         JSValue prototype = object->prototype();
+@@ -603,12 +603,13 @@ ALWAYS_INLINE bool JSObject::getPropertySlot(ExecState* exec, const Identifier&
+             return false;
+         object = asObject(prototype);
+     }
++    return false;
+ }
+ 
+ ALWAYS_INLINE bool JSObject::getPropertySlot(ExecState* exec, unsigned propertyName, PropertySlot& slot)
+ {
+     JSObject* object = this;
+-    while (true) {
++    while (object) {
+         if (object->methodTable()->getOwnPropertySlotByIndex(object, exec, propertyName, slot))
+             return true;
+         JSValue prototype = object->prototype();
+@@ -616,6 +617,7 @@ ALWAYS_INLINE bool JSObject::getPropertySlot(ExecState* exec, unsigned propertyN
+             return false;
+         object = asObject(prototype);
+     }
++    return false;
+ }
+ 
+ inline JSValue JSObject::get(ExecState* exec, const Identifier& propertyName) const
+@@ -810,7 +812,7 @@ inline JSValue JSValue::get(ExecState* exec, const Identifier& propertyName, Pro
+         return slot.getValue(exec, propertyName);
+     }
+     JSCell* cell = asCell();
+-    while (true) {
++    while (cell) {
+         if (cell->fastGetOwnPropertySlot(exec, propertyName, slot))
+             return slot.getValue(exec, propertyName);
+         JSValue prototype = asObject(cell)->prototype();
+@@ -818,6 +820,7 @@ inline JSValue JSValue::get(ExecState* exec, const Identifier& propertyName, Pro
+             return jsUndefined();
+         cell = asObject(prototype);
+     }
++    return jsUndefined();
+ }
+ 
+ inline JSValue JSValue::get(ExecState* exec, unsigned propertyName) const
+@@ -835,7 +838,7 @@ inline JSValue JSValue::get(ExecState* exec, unsigned propertyName, PropertySlot
+         return slot.getValue(exec, propertyName);
+     }
+     JSCell* cell = const_cast<JSCell*>(asCell());
+-    while (true) {
++    while (cell) {
+         if (cell->methodTable()->getOwnPropertySlotByIndex(cell, exec, propertyName, slot))
+             return slot.getValue(exec, propertyName);
+         JSValue prototype = asObject(cell)->prototype();
+@@ -843,6 +846,7 @@ inline JSValue JSValue::get(ExecState* exec, unsigned propertyName, PropertySlot
+             return jsUndefined();
+         cell = prototype.asCell();
+     }
++    return jsUndefined();
+ }
+ 
+ inline void JSValue::put(ExecState* exec, const Identifier& propertyName, JSValue value, PutPropertySlot& slot)
+-- 
+1.7.9.3
+

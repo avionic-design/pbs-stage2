@@ -1,0 +1,160 @@
+From 487159c7ba34db9523ebf159bd619aa4a6c380e9 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 28 Mar 2012 11:04:47 +0200
+Subject: [PATCH] Fix --disable-geolocation build
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ .../bindings/scripts/CodeGeneratorGObject.pm       |    4 ++++
+ Source/WebCore/loader/EmptyClients.h               |    2 ++
+ Source/WebCore/page/ChromeClient.h                 |    2 ++
+ .../WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp  |    2 ++
+ Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.h |    2 ++
+ .../WebProcess/WebCoreSupport/WebChromeClient.cpp  |    2 ++
+ .../WebProcess/WebCoreSupport/WebChromeClient.h    |    2 ++
+ 7 files changed, 16 insertions(+)
+
+diff --git a/Source/WebCore/bindings/scripts/CodeGeneratorGObject.pm b/Source/WebCore/bindings/scripts/CodeGeneratorGObject.pm
+index 960912a..129bb87 100644
+--- a/Source/WebCore/bindings/scripts/CodeGeneratorGObject.pm
++++ b/Source/WebCore/bindings/scripts/CodeGeneratorGObject.pm
+@@ -543,6 +543,7 @@ EOF
+     my $txtGetProp = << "EOF";
+ static void ${lowerCaseIfaceName}_get_property(GObject* object, guint prop_id, GValue* value, GParamSpec* pspec)
+ {
++$conditionGuardStart
+     WebCore::JSMainThreadNullState state;
+ EOF
+     push(@txtGetProps, $txtGetProp);
+@@ -564,6 +565,7 @@ EOF
+     my $txtSetProps = << "EOF";
+ static void ${lowerCaseIfaceName}_set_property(GObject* object, guint prop_id, const GValue* value, GParamSpec* pspec)
+ {
++$conditionGuardStart
+     WebCore::JSMainThreadNullState state;
+ EOF
+     push(@txtSetProps, $txtSetProps);
+@@ -595,6 +597,7 @@ EOF
+         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+         break;
+     }
++$conditionGuardEnd
+ }
+ EOF
+     push(@txtGetProps, $txtGetProp);
+@@ -604,6 +607,7 @@ EOF
+         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
+         break;
+     }
++$conditionGuardEnd
+ }
+ EOF
+     push(@txtSetProps, $txtSetProps);
+diff --git a/Source/WebCore/loader/EmptyClients.h b/Source/WebCore/loader/EmptyClients.h
+index 125e078..af0df08 100644
+--- a/Source/WebCore/loader/EmptyClients.h
++++ b/Source/WebCore/loader/EmptyClients.h
+@@ -217,8 +217,10 @@ public:
+ 
+     virtual void scrollRectIntoView(const IntRect&) const { }
+ 
++#if ENABLE(GEOLOCATION)
+     virtual void requestGeolocationPermissionForFrame(Frame*, Geolocation*) {}
+     virtual void cancelGeolocationPermissionRequestForFrame(Frame*, Geolocation*) {}
++#endif
+ 
+ #if USE(ACCELERATED_COMPOSITING)
+     virtual void attachRootGraphicsLayer(Frame*, GraphicsLayer*) {}
+diff --git a/Source/WebCore/page/ChromeClient.h b/Source/WebCore/page/ChromeClient.h
+index 33b1c4b..670a302 100644
+--- a/Source/WebCore/page/ChromeClient.h
++++ b/Source/WebCore/page/ChromeClient.h
+@@ -212,12 +212,14 @@ namespace WebCore {
+ 
+         virtual bool paintCustomOverhangArea(GraphicsContext*, const IntRect&, const IntRect&, const IntRect&);
+ 
++#if ENABLE(GEOLOCATION)
+         // FIXME: Remove once all ports are using client-based geolocation. https://bugs.webkit.org/show_bug.cgi?id=40373
+         // For client-based geolocation, these two methods have moved to GeolocationClient. https://bugs.webkit.org/show_bug.cgi?id=50061
+         // This can be either a synchronous or asynchronous call. The ChromeClient can display UI asking the user for permission
+         // to use Geolocation.
+         virtual void requestGeolocationPermissionForFrame(Frame*, Geolocation*) = 0;
+         virtual void cancelGeolocationPermissionRequestForFrame(Frame*, Geolocation*) = 0;
++#endif
+ 
+ #if ENABLE(INPUT_COLOR)
+         virtual PassOwnPtr<ColorChooser> createColorChooser(ColorChooserClient*, const Color&) = 0;
+diff --git a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp b/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp
+index 591a092..26b498d 100644
+--- a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp
++++ b/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp
+@@ -858,6 +858,7 @@ void ChromeClient::setCursorHiddenUntilMouseMoves(bool)
+     notImplemented();
+ }
+ 
++#if ENABLE(GEOLOCATION)
+ void ChromeClient::requestGeolocationPermissionForFrame(Frame* frame, Geolocation* geolocation)
+ {
+     WebKitWebFrame* webFrame = kit(frame);
+@@ -873,6 +874,7 @@ void ChromeClient::cancelGeolocationPermissionRequestForFrame(WebCore::Frame* fr
+ {
+     g_signal_emit_by_name(m_webView, "geolocation-policy-decision-cancelled", kit(frame));
+ }
++#endif
+ 
+ bool ChromeClient::selectItemWritingDirectionIsNatural()
+ {
+diff --git a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.h b/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.h
+index e4239e3..6f92a50 100644
+--- a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.h
++++ b/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.h
+@@ -137,8 +137,10 @@ namespace WebKit {
+         virtual void setCursorHiddenUntilMouseMoves(bool);
+ 
+         virtual void scrollRectIntoView(const IntRect&) const { }
++#if ENABLE(GEOLOCATION)
+         virtual void requestGeolocationPermissionForFrame(Frame*, Geolocation*);
+         virtual void cancelGeolocationPermissionRequestForFrame(Frame*, Geolocation*);
++#endif
+ 
+         virtual bool selectItemWritingDirectionIsNatural();
+         virtual bool selectItemAlignmentFollowsMenuWritingDirection();
+diff --git a/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.cpp b/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.cpp
+index 5a48fff..8c1225f 100644
+--- a/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.cpp
++++ b/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.cpp
+@@ -593,6 +593,7 @@ bool WebChromeClient::paintCustomOverhangArea(GraphicsContext* context, const In
+     return true;
+ }
+ 
++#if ENABLE(GEOLOCATION)
+ void WebChromeClient::requestGeolocationPermissionForFrame(Frame*, Geolocation*)
+ {
+     notImplemented();
+@@ -602,6 +603,7 @@ void WebChromeClient::cancelGeolocationPermissionRequestForFrame(Frame*, Geoloca
+ {
+     notImplemented();
+ }
++#endif
+ 
+ void WebChromeClient::runOpenPanel(Frame* frame, PassRefPtr<FileChooser> prpFileChooser)
+ {
+diff --git a/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.h b/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.h
+index 9761c15..2be2e8c 100644
+--- a/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.h
++++ b/Source/WebKit2/WebProcess/WebCoreSupport/WebChromeClient.h
+@@ -153,10 +153,12 @@ private:
+     
+     virtual bool paintCustomOverhangArea(WebCore::GraphicsContext*, const WebCore::IntRect&, const WebCore::IntRect&, const WebCore::IntRect&) OVERRIDE;
+ 
++#if ENABLE(GEOLOCATION)
+     // This is an asynchronous call. The ChromeClient can display UI asking the user for permission
+     // to use Geolococation. The ChromeClient must call Geolocation::setShouldClearCache() appropriately.
+     virtual void requestGeolocationPermissionForFrame(WebCore::Frame*, WebCore::Geolocation*) OVERRIDE;
+     virtual void cancelGeolocationPermissionRequestForFrame(WebCore::Frame*, WebCore::Geolocation*) OVERRIDE;
++#endif
+ 
+     virtual void runOpenPanel(WebCore::Frame*, PassRefPtr<WebCore::FileChooser>) OVERRIDE;
+     virtual void loadIconForFiles(const Vector<String>&, WebCore::FileIconLoader*) OVERRIDE;
+-- 
+1.7.9.4

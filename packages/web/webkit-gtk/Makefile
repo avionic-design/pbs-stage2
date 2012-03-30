@@ -1,7 +1,7 @@
 PACKAGE = webkit
-VERSION = 1.7.5
+VERSION = 1.8.0
 
-LOCATION = http://www.webkitgtk.org
+LOCATION = http://www.webkitgtk.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
@@ -11,8 +11,14 @@ ACLOCAL_FLAGS += -I Source/autotools
 conf-args += \
 	--with-unicode-backend=glib \
 	--disable-spellcheck \
+	--disable-geolocation \
 	--enable-page-visibility-api \
 	--with-gtk=2.0
+
+ifeq ($(CONFIG_ARCH),arm)
+conf-args += \
+	--disable-jit
+endif
 
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO),y)
 conf-args += --disable-video

@@ -1,2 +1,7 @@
 autotools.patch
 out-of-tree.patch
+fix-no-geolocation-build.patch
+fix-no-js-debugger-build.patch
+fix-79728.patch
+jsc-fix-nullptr.patch
+silence-arm-build.patch
