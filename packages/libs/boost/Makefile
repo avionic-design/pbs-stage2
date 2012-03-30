@@ -1,5 +1,5 @@
 PACKAGE = boost
-VERSION = 1.41.0
+VERSION = 1.49.0
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)_$(subst .,_,$(VERSION)).tar.bz2
