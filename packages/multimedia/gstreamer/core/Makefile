@@ -4,7 +4,7 @@ VERSION = 0.10.36
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib \
