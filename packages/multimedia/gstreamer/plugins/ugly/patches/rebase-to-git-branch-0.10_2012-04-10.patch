@@ -1,0 +1,4061 @@
+diff --git a/autogen.sh b/autogen.sh
+index 9a0ebde..c41ff0f 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -29,6 +29,9 @@ then
+     ln -s ../../common/hooks/pre-commit.hook .git/hooks/pre-commit
+ fi
+ 
++# GNU gettext automake support doesn't get along with git.
++# https://bugzilla.gnome.org/show_bug.cgi?id=661128
++touch -t 200001010000 po/$package-0.10.pot
+ 
+ CONFIGURE_DEF_OPT='--enable-maintainer-mode --enable-gtk-doc'
+ 
+diff --git a/configure.ac b/configure.ac
+index 04e2a93..18f2904 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -5,7 +5,7 @@ dnl please read gstreamer/docs/random/autotools before changing this file
+ dnl initialize autoconf
+ dnl releases only do -Wall, cvs and prerelease does -Werror too
+ dnl use a three digit version number for releases, and four for cvs/prerelease
+-AC_INIT(GStreamer Ugly Plug-ins, 0.10.19,
++AC_INIT(GStreamer Ugly Plug-ins, 0.10.19.1,
+     http://bugzilla.gnome.org/enter_bug.cgi?product=GStreamer,
+     gst-plugins-ugly)
+ 
+@@ -152,8 +154,8 @@ AG_GST_CHECK_FUNCTION
+ dnl *** checks for dependency libraries ***
+ 
+ dnl GLib is required
+-AG_GST_GLIB_CHECK([2.24])
+-ORC_CHECK([0.4.11])
++AG_GST_GLIB_CHECK([2.20])
++ORC_CHECK([0.4.6])
+ 
+ dnl checks for gstreamer
+ dnl uninstalled is selected preferentially -- see pkg-config(1)
+@@ -187,14 +189,14 @@ AG_GST_SET_PACKAGE_RELEASE_DATETIME_WITH_NANO([$PACKAGE_VERSION_NANO],
+   [$PACKAGE_VERSION_MAJOR.$PACKAGE_VERSION_MINOR.$PACKAGE_VERSION_MICRO])
+ 
+ dnl define an ERROR_CFLAGS Makefile variable
+-AG_GST_SET_ERROR_CFLAGS($GST_GIT, [
++AG_GST_SET_ERROR_CFLAGS($FATAL_WARNINGS, [
+     -Wmissing-declarations -Wmissing-prototypes -Wredundant-decls
+     -Wwrite-strings -Wformat-nonliteral -Wformat-security -Wold-style-definition
+     -Winit-self -Wmissing-include-dirs -Waddress
+     -Waggregate-return -Wno-multichar -Wnested-externs ])
+ 
+ dnl define an ERROR_CXXFLAGS Makefile variable
+-AG_GST_SET_ERROR_CXXFLAGS($GST_GIT, [
++AG_GST_SET_ERROR_CXXFLAGS($FATAL_WARNINGS, [
+     -Wmissing-declarations -Wredundant-decls
+     -Wwrite-strings -Wformat-nonliteral -Wformat-security
+     -Winit-self -Wmissing-include-dirs -Waddress -Waggregate-return
+@@ -248,12 +250,14 @@ AG_GST_CHECK_FEATURE(A52DEC, [a52dec], a52dec, [
+ dnl *** amr-nb ***
+ translit(dnm, m, l) AM_CONDITIONAL(USE_AMRNB, true)
+ AG_GST_CHECK_FEATURE(AMRNB, [amrnb library], amrnb, [
+-  PKG_CHECK_MODULES(AMRNB, opencore-amrnb, HAVE_AMRNB="yes",
+-      [ AG_GST_CHECK_LIBHEADER(AMRNB, opencore-amrnb,
+-		           Decoder_Interface_init, $LIBM,
+-		           opencore-amrnb/interf_dec.h,
+-			   AMRNB_LIBS="-lopencore-amrnb")
+-      ])
++  PKG_CHECK_MODULES(AMRNB, opencore-amrnb, [
++    if $PKG_CONFIG --atleast-version=0.1.3 opencore-amrnb; then
++      AC_DEFINE(HAVE_OPENCORE_AMRNB_0_1_3_OR_LATER, 1, [Defined for newer opencore-amrnb])
++    fi
++    HAVE_AMRNB="yes"
++  ], [
++    HAVE_AMRNB="no"
++  ])
+   AC_SUBST(AMRNB_CFLAGS)
+   AC_SUBST(AMRNB_LIBS)
+ ])
+@@ -261,12 +265,14 @@ AG_GST_CHECK_FEATURE(AMRNB, [amrnb library], amrnb, [
+ dnl *** amr-wb dec ***
+ translit(dnm, m, l) AM_CONDITIONAL(USE_AMRWB, true)
+ AG_GST_CHECK_FEATURE(AMRWB, [amrwb library], amrwbdec, [
+-  PKG_CHECK_MODULES(AMRWB, opencore-amrwb, HAVE_AMRWB="yes",
+-      [ AG_GST_CHECK_LIBHEADER(AMRWB, opencore-amrwb,
+-			   D_IF_decode, ,
+-			   opencore-amrwb/dec_if.h,
+-			   AMRWB_LIBS="-lopencore-amrwb")
+-      ])
++  PKG_CHECK_MODULES(AMRWB, opencore-amrwb, [
++    if $PKG_CONFIG --atleast-version=0.1.3 opencore-amrwb; then
++      AC_DEFINE(HAVE_OPENCORE_AMRWB_0_1_3_OR_LATER, 1, [Defined for newer opencore-amrwb])
++    fi
++    HAVE_AMRWB="yes"
++  ], [
++    HAVE_AMRWB="no"
++  ])
+   AC_SUBST(AMRWB_CFLAGS)
+   AC_SUBST(AMRWB_LIBS)
+ ])
+diff --git a/docs/plugins/gst-plugins-ugly-plugins.args b/docs/plugins/gst-plugins-ugly-plugins.args
+index 9853ba3..7e649e4 100644
+--- a/docs/plugins/gst-plugins-ugly-plugins.args
++++ b/docs/plugins/gst-plugins-ugly-plugins.args
+@@ -31,7 +31,7 @@
+ <ARG>
+ <NAME>GstMPEGParse::max-scr-gap</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Max SCR gap</NICK>
+ <BLURB>Maximum allowed gap between expected and actual SCR values. -1 means never adjust.</BLURB>
+@@ -81,7 +81,7 @@
+ <ARG>
+ <NAME>GstCdioCddaSrc::read-speed</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Read speed</NICK>
+ <BLURB>Read from device at the specified speed (-1 = default).</BLURB>
+@@ -291,7 +291,7 @@
+ <ARG>
+ <NAME>GstLame::highpass-width</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Highpass width</NICK>
+ <BLURB>frequency(kHz) - default 15% of highpass freq.</BLURB>
+@@ -311,7 +311,7 @@
+ <ARG>
+ <NAME>GstLame::lowpass-width</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Lowpass width</NICK>
+ <BLURB>frequency(kHz) - default 15% of lowpass freq.</BLURB>
+@@ -711,7 +711,7 @@
+ <ARG>
+ <NAME>GstTwoLame::psymodel</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,4]</RANGE>
++<RANGE>[G_MAXULONG,4]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Psychoacoustic Model</NICK>
+ <BLURB>Psychoacoustic model used to encode the audio.</BLURB>
+@@ -1101,7 +1101,7 @@
+ <ARG>
+ <NAME>GstX264Enc::sync-lookahead</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,250]</RANGE>
++<RANGE>[G_MAXULONG,250]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Sync Lookahead</NICK>
+ <BLURB>Number of buffer frames for threaded lookahead (-1 for automatic).</BLURB>
+diff --git a/docs/plugins/gst-plugins-ugly-plugins.hierarchy b/docs/plugins/gst-plugins-ugly-plugins.hierarchy
+index b7c19a2..feb4e97 100644
+--- a/docs/plugins/gst-plugins-ugly-plugins.hierarchy
++++ b/docs/plugins/gst-plugins-ugly-plugins.hierarchy
+@@ -4,11 +4,12 @@ GObject
+     GstClock
+     GstElement
+       AC3IEC
+-      GstA52Dec
+       GstASFDemux
+       GstAudioDecoder
++        GstA52Dec
+         GstAmrnbDec
+         GstAmrwbDec
++        GstMad
+       GstAudioEncoder
+         GstAmrnbEnc
+         GstLame
+@@ -31,7 +32,6 @@ GObject
+       GstMPEGParse
+         GstMPEGDemux
+           GstDVDDemux
+-      GstMad
+       GstMpeg2dec
+       GstRDTDepay
+       GstRDTManager
+diff --git a/docs/plugins/inspect/plugin-a52dec.xml b/docs/plugins/inspect/plugin-a52dec.xml
+index c571856..ed0c162 100644
+--- a/docs/plugins/inspect/plugin-a52dec.xml
++++ b/docs/plugins/inspect/plugin-a52dec.xml
+@@ -3,10 +3,10 @@
+   <description>Decodes ATSC A/52 encoded audio streams</description>
+   <filename>../../ext/a52dec/.libs/libgsta52dec.so</filename>
+   <basename>libgsta52dec.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-amrnb.xml b/docs/plugins/inspect/plugin-amrnb.xml
+index a90debc..e7bf07b 100644
+--- a/docs/plugins/inspect/plugin-amrnb.xml
++++ b/docs/plugins/inspect/plugin-amrnb.xml
+@@ -3,10 +3,10 @@
+   <description>Adaptive Multi-Rate Narrow-Band</description>
+   <filename>../../ext/amrnb/.libs/libgstamrnb.so</filename>
+   <basename>libgstamrnb.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>unknown</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-amrwbdec.xml b/docs/plugins/inspect/plugin-amrwbdec.xml
+index 0478ac9..08c8d85 100644
+--- a/docs/plugins/inspect/plugin-amrwbdec.xml
++++ b/docs/plugins/inspect/plugin-amrwbdec.xml
+@@ -3,10 +3,10 @@
+   <description>Adaptive Multi-Rate Wide-Band Decoder</description>
+   <filename>../../ext/amrwbdec/.libs/libgstamrwbdec.so</filename>
+   <basename>libgstamrwbdec.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>unknown</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-asf.xml b/docs/plugins/inspect/plugin-asf.xml
+index b50c1bc..7f63bee 100644
+--- a/docs/plugins/inspect/plugin-asf.xml
++++ b/docs/plugins/inspect/plugin-asf.xml
+@@ -3,10 +3,10 @@
+   <description>Demuxes and muxes audio and video in Microsofts ASF format</description>
+   <filename>../../gst/asfdemux/.libs/libgstasf.so</filename>
+   <basename>libgstasf.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-cdio.xml b/docs/plugins/inspect/plugin-cdio.xml
+index feb7b7b..237e20f 100644
+--- a/docs/plugins/inspect/plugin-cdio.xml
++++ b/docs/plugins/inspect/plugin-cdio.xml
+@@ -3,10 +3,10 @@
+   <description>Read audio from audio CDs</description>
+   <filename>../../ext/cdio/.libs/libgstcdio.so</filename>
+   <basename>libgstcdio.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvdlpcmdec.xml b/docs/plugins/inspect/plugin-dvdlpcmdec.xml
+index 0124c3e..c137da1 100644
+--- a/docs/plugins/inspect/plugin-dvdlpcmdec.xml
++++ b/docs/plugins/inspect/plugin-dvdlpcmdec.xml
+@@ -3,10 +3,10 @@
+   <description>Decode DVD LPCM frames into standard PCM</description>
+   <filename>../../gst/dvdlpcmdec/.libs/libgstdvdlpcmdec.so</filename>
+   <basename>libgstdvdlpcmdec.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvdread.xml b/docs/plugins/inspect/plugin-dvdread.xml
+index e0b53df..07e08cc 100644
+--- a/docs/plugins/inspect/plugin-dvdread.xml
++++ b/docs/plugins/inspect/plugin-dvdread.xml
+@@ -3,10 +3,10 @@
+   <description>Access a DVD with dvdread</description>
+   <filename>../../ext/dvdread/.libs/libgstdvdread.so</filename>
+   <basename>libgstdvdread.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvdsub.xml b/docs/plugins/inspect/plugin-dvdsub.xml
+index 0d958b3..1156c32 100644
+--- a/docs/plugins/inspect/plugin-dvdsub.xml
++++ b/docs/plugins/inspect/plugin-dvdsub.xml
+@@ -3,10 +3,10 @@
+   <description>DVD subtitle parser and decoder</description>
+   <filename>../../gst/dvdsub/.libs/libgstdvdsub.so</filename>
+   <basename>libgstdvdsub.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-iec958.xml b/docs/plugins/inspect/plugin-iec958.xml
+index 0848472..bec8e71 100644
+--- a/docs/plugins/inspect/plugin-iec958.xml
++++ b/docs/plugins/inspect/plugin-iec958.xml
+@@ -3,10 +3,10 @@
+   <description>Convert raw AC3 into IEC958 (S/PDIF) frames</description>
+   <filename>../../gst/iec958/.libs/libgstiec958.so</filename>
+   <basename>libgstiec958.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-lame.xml b/docs/plugins/inspect/plugin-lame.xml
+index 69a7851..ec65bd1 100644
+--- a/docs/plugins/inspect/plugin-lame.xml
++++ b/docs/plugins/inspect/plugin-lame.xml
+@@ -3,10 +3,10 @@
+   <description>Encode MP3s with LAME</description>
+   <filename>../../ext/lame/.libs/libgstlame.so</filename>
+   <basename>libgstlame.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mad.xml b/docs/plugins/inspect/plugin-mad.xml
+index f2894b3..d06e34c 100644
+--- a/docs/plugins/inspect/plugin-mad.xml
++++ b/docs/plugins/inspect/plugin-mad.xml
+@@ -3,10 +3,10 @@
+   <description>mp3 decoding based on the mad library</description>
+   <filename>../../ext/mad/.libs/libgstmad.so</filename>
+   <basename>libgstmad.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpeg2dec.xml b/docs/plugins/inspect/plugin-mpeg2dec.xml
+index fd8ea2a..d7e07ee 100644
+--- a/docs/plugins/inspect/plugin-mpeg2dec.xml
++++ b/docs/plugins/inspect/plugin-mpeg2dec.xml
+@@ -3,10 +3,10 @@
+   <description>LibMpeg2 decoder</description>
+   <filename>../../ext/mpeg2dec/.libs/libgstmpeg2dec.so</filename>
+   <basename>libgstmpeg2dec.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegaudioparse.xml b/docs/plugins/inspect/plugin-mpegaudioparse.xml
+index b19ead5..24b1fed 100644
+--- a/docs/plugins/inspect/plugin-mpegaudioparse.xml
++++ b/docs/plugins/inspect/plugin-mpegaudioparse.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG-1 layer 1/2/3 audio stream elements</description>
+   <filename>../../gst/mpegaudioparse/.libs/libgstmpegaudioparse.so</filename>
+   <basename>libgstmpegaudioparse.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegstream.xml b/docs/plugins/inspect/plugin-mpegstream.xml
+index 841bb7a..1890110 100644
+--- a/docs/plugins/inspect/plugin-mpegstream.xml
++++ b/docs/plugins/inspect/plugin-mpegstream.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG system stream parser</description>
+   <filename>../../gst/mpegstream/.libs/libgstmpegstream.so</filename>
+   <basename>libgstmpegstream.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-realmedia.xml b/docs/plugins/inspect/plugin-realmedia.xml
+index 2dda50e..3132fb7 100644
+--- a/docs/plugins/inspect/plugin-realmedia.xml
++++ b/docs/plugins/inspect/plugin-realmedia.xml
+@@ -3,10 +3,10 @@
+   <description>RealMedia support plugins</description>
+   <filename>../../gst/realmedia/.libs/libgstrmdemux.so</filename>
+   <basename>libgstrmdemux.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-siddec.xml b/docs/plugins/inspect/plugin-siddec.xml
+index 856c71a..12b1245 100644
+--- a/docs/plugins/inspect/plugin-siddec.xml
++++ b/docs/plugins/inspect/plugin-siddec.xml
+@@ -3,10 +3,10 @@
+   <description>Uses libsidplay to decode .sid files</description>
+   <filename>../../ext/sidplay/.libs/libgstsid.so</filename>
+   <basename>libgstsid.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-twolame.xml b/docs/plugins/inspect/plugin-twolame.xml
+index ddad53b..88f68fe 100644
+--- a/docs/plugins/inspect/plugin-twolame.xml
++++ b/docs/plugins/inspect/plugin-twolame.xml
+@@ -3,10 +3,10 @@
+   <description>Encode MP2s with TwoLAME</description>
+   <filename>../../ext/twolame/.libs/libgsttwolame.so</filename>
+   <basename>libgsttwolame.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-x264.xml b/docs/plugins/inspect/plugin-x264.xml
+index da3b640..574a73c 100644
+--- a/docs/plugins/inspect/plugin-x264.xml
++++ b/docs/plugins/inspect/plugin-x264.xml
+@@ -3,10 +3,10 @@
+   <description>libx264-based H264 plugins</description>
+   <filename>../../ext/x264/.libs/libgstx264.so</filename>
+   <basename>libgstx264.so</basename>
+-  <version>0.10.19</version>
++  <version>0.10.19.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-ugly</source>
+-  <package>GStreamer Ugly Plug-ins source release</package>
++  <package>GStreamer Ugly Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+@@ -26,7 +26,7 @@
+           <name>src</name>
+           <direction>source</direction>
+           <presence>always</presence>
+-          <details>video/x-h264, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], stream-format=(string){ byte-stream, avc }, alignment=(string){ au }, profile=(string){ high-10, high, main, constrained-baseline, high-10-intra }</details>
++          <details>video/x-h264, framerate=(fraction)[ 0/1, 2147483647/1 ], width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], stream-format=(string){ byte-stream, avc }, alignment=(string){ au }, profile=(string){ high-10, high, main, baseline, constrained-baseline, high-10-intra }</details>
+         </caps>
+       </pads>
+     </element>
+diff --git a/ext/a52dec/Makefile.am b/ext/a52dec/Makefile.am
+index d572236..bf56cc9 100644
+--- a/ext/a52dec/Makefile.am
++++ b/ext/a52dec/Makefile.am
+@@ -3,12 +3,15 @@ plugin_LTLIBRARIES = libgsta52dec.la
+ libgsta52dec_la_SOURCES = gsta52dec.c
+ libgsta52dec_la_CFLAGS = \
+ 	$(GST_PLUGINS_BASE_CFLAGS) \
+-	$(GST_CFLAGS) \
++        $(GST_BASE_CFLAGS) \
++        $(GST_CFLAGS) \
+ 	$(ORC_CFLAGS) \
+ 	$(A52DEC_CFLAGS)
+ libgsta52dec_la_LIBADD = \
+ 	$(GST_PLUGINS_BASE_LIBS) \
+-	-lgstaudio-$(GST_MAJORMINOR) \
++        $(GST_BASE_LIBS) \
++        $(GST_LIBS) \
++        -lgstaudio-$(GST_MAJORMINOR) \
+ 	$(ORC_LIBS) \
+ 	$(A52DEC_LIBS)
+ libgsta52dec_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+diff --git a/ext/a52dec/gsta52dec.c b/ext/a52dec/gsta52dec.c
+index 3840c44..aeab8a1 100644
+--- a/ext/a52dec/gsta52dec.c
++++ b/ext/a52dec/gsta52dec.c
+@@ -86,14 +86,18 @@ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
+         "rate = (int) [ 4000, 96000 ], " "channels = (int) [ 1, 6 ]")
+     );
+ 
+-GST_BOILERPLATE (GstA52Dec, gst_a52dec, GstElement, GST_TYPE_ELEMENT);
++GST_BOILERPLATE (GstA52Dec, gst_a52dec, GstAudioDecoder,
++    GST_TYPE_AUDIO_DECODER);
++
++static gboolean gst_a52dec_start (GstAudioDecoder * dec);
++static gboolean gst_a52dec_stop (GstAudioDecoder * dec);
++static gboolean gst_a52dec_set_format (GstAudioDecoder * bdec, GstCaps * caps);
++static gboolean gst_a52dec_parse (GstAudioDecoder * dec, GstAdapter * adapter,
++    gint * offset, gint * length);
++static GstFlowReturn gst_a52dec_handle_frame (GstAudioDecoder * dec,
++    GstBuffer * buffer);
+ 
+ static GstFlowReturn gst_a52dec_chain (GstPad * pad, GstBuffer * buffer);
+-static GstFlowReturn gst_a52dec_chain_raw (GstPad * pad, GstBuffer * buf);
+-static gboolean gst_a52dec_sink_setcaps (GstPad * pad, GstCaps * caps);
+-static gboolean gst_a52dec_sink_event (GstPad * pad, GstEvent * event);
+-static GstStateChangeReturn gst_a52dec_change_state (GstElement * element,
+-    GstStateChange transition);
+ 
+ static void gst_a52dec_set_property (GObject * object, guint prop_id,
+     const GValue * value, GParamSpec * pspec);
+@@ -143,16 +147,20 @@ static void
+ gst_a52dec_class_init (GstA52DecClass * klass)
+ {
+   GObjectClass *gobject_class;
+-  GstElementClass *gstelement_class;
++  GstAudioDecoderClass *gstbase_class;
+   guint cpuflags;
+ 
+   gobject_class = (GObjectClass *) klass;
+-  gstelement_class = (GstElementClass *) klass;
++  gstbase_class = (GstAudioDecoderClass *) klass;
+ 
+   gobject_class->set_property = gst_a52dec_set_property;
+   gobject_class->get_property = gst_a52dec_get_property;
+ 
+-  gstelement_class->change_state = GST_DEBUG_FUNCPTR (gst_a52dec_change_state);
++  gstbase_class->start = GST_DEBUG_FUNCPTR (gst_a52dec_start);
++  gstbase_class->stop = GST_DEBUG_FUNCPTR (gst_a52dec_stop);
++  gstbase_class->set_format = GST_DEBUG_FUNCPTR (gst_a52dec_set_format);
++  gstbase_class->parse = GST_DEBUG_FUNCPTR (gst_a52dec_parse);
++  gstbase_class->handle_frame = GST_DEBUG_FUNCPTR (gst_a52dec_handle_frame);
+ 
+   /**
+    * GstA52Dec::drc
+@@ -213,27 +221,109 @@ gst_a52dec_class_init (GstA52DecClass * klass)
+ static void
+ gst_a52dec_init (GstA52Dec * a52dec, GstA52DecClass * g_class)
+ {
+-  /* create the sink and src pads */
+-  a52dec->sinkpad = gst_pad_new_from_static_template (&sink_factory, "sink");
+-  gst_pad_set_setcaps_function (a52dec->sinkpad,
+-      GST_DEBUG_FUNCPTR (gst_a52dec_sink_setcaps));
+-  gst_pad_set_chain_function (a52dec->sinkpad,
+-      GST_DEBUG_FUNCPTR (gst_a52dec_chain));
+-  gst_pad_set_event_function (a52dec->sinkpad,
+-      GST_DEBUG_FUNCPTR (gst_a52dec_sink_event));
+-  gst_element_add_pad (GST_ELEMENT (a52dec), a52dec->sinkpad);
+-
+-  a52dec->srcpad = gst_pad_new_from_static_template (&src_factory, "src");
+-  gst_pad_use_fixed_caps (a52dec->srcpad);
+-  gst_element_add_pad (GST_ELEMENT (a52dec), a52dec->srcpad);
+-
+   a52dec->request_channels = A52_CHANNEL;
+   a52dec->dynamic_range_compression = FALSE;
+ 
+   a52dec->state = NULL;
+   a52dec->samples = NULL;
+ 
+-  gst_segment_init (&a52dec->segment, GST_FORMAT_UNDEFINED);
++  /* retrieve and intercept base class chain.
++   * Quite HACKish, but that's dvd specs/caps for you,
++   * since one buffer needs to be split into 2 frames */
++  a52dec->base_chain = GST_PAD_CHAINFUNC (GST_AUDIO_DECODER_SINK_PAD (a52dec));
++  gst_pad_set_chain_function (GST_AUDIO_DECODER_SINK_PAD (a52dec),
++      GST_DEBUG_FUNCPTR (gst_a52dec_chain));
++}
++
++static gboolean
++gst_a52dec_start (GstAudioDecoder * dec)
++{
++  GstA52Dec *a52dec = GST_A52DEC (dec);
++  GstA52DecClass *klass;
++
++  GST_DEBUG_OBJECT (dec, "start");
++
++  klass = GST_A52DEC_CLASS (G_OBJECT_GET_CLASS (a52dec));
++  a52dec->state = a52_init (klass->a52_cpuflags);
++
++  if (!a52dec->state) {
++    GST_ELEMENT_ERROR (GST_ELEMENT (a52dec), LIBRARY, INIT, (NULL),
++        ("failed to initialize a52 state"));
++    return FALSE;
++  }
++
++  a52dec->samples = a52_samples (a52dec->state);
++  a52dec->bit_rate = -1;
++  a52dec->sample_rate = -1;
++  a52dec->stream_channels = A52_CHANNEL;
++  a52dec->using_channels = A52_CHANNEL;
++  a52dec->level = 1;
++  a52dec->bias = 0;
++  a52dec->flag_update = TRUE;
++
++  /* call upon legacy upstream byte support (e.g. seeking) */
++  gst_audio_decoder_set_byte_time (dec, TRUE);
++
++  return TRUE;
++}
++
++static gboolean
++gst_a52dec_stop (GstAudioDecoder * dec)
++{
++  GstA52Dec *a52dec = GST_A52DEC (dec);
++
++  GST_DEBUG_OBJECT (dec, "stop");
++
++  a52dec->samples = NULL;
++  if (a52dec->state) {
++    a52_free (a52dec->state);
++    a52dec->state = NULL;
++  }
++
++  return TRUE;
++}
++
++static GstFlowReturn
++gst_a52dec_parse (GstAudioDecoder * bdec, GstAdapter * adapter,
++    gint * _offset, gint * len)
++{
++  GstA52Dec *a52dec;
++  guint8 *data;
++  gint av, size;
++  gint length = 0, flags, sample_rate, bit_rate;
++  GstFlowReturn result = GST_FLOW_UNEXPECTED;
++
++  a52dec = GST_A52DEC (bdec);
++
++  size = av = gst_adapter_available (adapter);
++  data = (guint8 *) gst_adapter_peek (adapter, av);
++
++  /* find and read header */
++  bit_rate = a52dec->bit_rate;
++  sample_rate = a52dec->sample_rate;
++  flags = 0;
++  while (size >= 7) {
++    length = a52_syncinfo (data, &flags, &sample_rate, &bit_rate);
++
++    if (length == 0) {
++      /* shift window to re-find sync */
++      data++;
++      size--;
++    } else if (length <= size) {
++      GST_LOG_OBJECT (a52dec, "Sync: frame size %d", length);
++      result = GST_FLOW_OK;
++      break;
++    } else {
++      GST_LOG_OBJECT (a52dec, "Not enough data available (needed %d had %d)",
++          length, size);
++      break;
++    }
++  }
++
++  *_offset = av - size;
++  *len = length;
++
++  return result;
+ }
+ 
+ static gint
+@@ -324,106 +414,6 @@ gst_a52dec_channels (int flags, GstAudioChannelPosition ** _pos)
+   return chans;
+ }
+ 
+-static void
+-clear_queued (GstA52Dec * dec)
+-{
+-  g_list_foreach (dec->queued, (GFunc) gst_mini_object_unref, NULL);
+-  g_list_free (dec->queued);
+-  dec->queued = NULL;
+-}
+-
+-static GstFlowReturn
+-flush_queued (GstA52Dec * dec)
+-{
+-  GstFlowReturn ret = GST_FLOW_OK;
+-
+-  while (dec->queued) {
+-    GstBuffer *buf = GST_BUFFER_CAST (dec->queued->data);
+-
+-    GST_LOG_OBJECT (dec, "pushing buffer %p, timestamp %"
+-        GST_TIME_FORMAT ", duration %" GST_TIME_FORMAT, buf,
+-        GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+-        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
+-
+-    /* iterate ouput queue an push downstream */
+-    ret = gst_pad_push (dec->srcpad, buf);
+-
+-    dec->queued = g_list_delete_link (dec->queued, dec->queued);
+-  }
+-  return ret;
+-}
+-
+-static GstFlowReturn
+-gst_a52dec_drain (GstA52Dec * dec)
+-{
+-  GstFlowReturn ret = GST_FLOW_OK;
+-
+-  if (dec->segment.rate < 0.0) {
+-    /* if we have some queued frames for reverse playback, flush
+-     * them now */
+-    ret = flush_queued (dec);
+-  }
+-  return ret;
+-}
+-
+-static GstFlowReturn
+-gst_a52dec_push (GstA52Dec * a52dec,
+-    GstPad * srcpad, int flags, sample_t * samples, GstClockTime timestamp)
+-{
+-  GstBuffer *buf;
+-  int chans, n, c;
+-  GstFlowReturn result;
+-
+-  flags &= (A52_CHANNEL_MASK | A52_LFE);
+-  chans = gst_a52dec_channels (flags, NULL);
+-  if (!chans) {
+-    GST_ELEMENT_ERROR (GST_ELEMENT (a52dec), STREAM, DECODE, (NULL),
+-        ("invalid channel flags: %d", flags));
+-    return GST_FLOW_ERROR;
+-  }
+-
+-  result =
+-      gst_pad_alloc_buffer_and_set_caps (srcpad, 0,
+-      256 * chans * (SAMPLE_WIDTH / 8), GST_PAD_CAPS (srcpad), &buf);
+-  if (result != GST_FLOW_OK)
+-    return result;
+-
+-  for (n = 0; n < 256; n++) {
+-    for (c = 0; c < chans; c++) {
+-      ((sample_t *) GST_BUFFER_DATA (buf))[n * chans + c] =
+-          samples[c * 256 + n];
+-    }
+-  }
+-
+-  GST_BUFFER_TIMESTAMP (buf) = timestamp;
+-  GST_BUFFER_DURATION (buf) = 256 * GST_SECOND / a52dec->sample_rate;
+-
+-  result = GST_FLOW_OK;
+-  if ((buf = gst_audio_buffer_clip (buf, &a52dec->segment,
+-              a52dec->sample_rate, (SAMPLE_WIDTH / 8) * chans))) {
+-    /* set discont when needed */
+-    if (a52dec->discont) {
+-      GST_LOG_OBJECT (a52dec, "marking DISCONT");
+-      GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
+-      a52dec->discont = FALSE;
+-    }
+-
+-    if (a52dec->segment.rate > 0.0) {
+-      GST_DEBUG_OBJECT (a52dec,
+-          "Pushing buffer with ts %" GST_TIME_FORMAT " duration %"
+-          GST_TIME_FORMAT, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+-          GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
+-
+-      result = gst_pad_push (srcpad, buf);
+-    } else {
+-      /* reverse playback, queue frame till later when we get a discont. */
+-      GST_DEBUG_OBJECT (a52dec, "queued frame");
+-      a52dec->queued = g_list_prepend (a52dec->queued, buf);
+-    }
+-  }
+-  return result;
+-}
+-
+ static gboolean
+ gst_a52dec_reneg (GstA52Dec * a52dec, GstPad * pad)
+ {
+@@ -457,102 +447,52 @@ done:
+   return result;
+ }
+ 
+-static gboolean
+-gst_a52dec_sink_event (GstPad * pad, GstEvent * event)
+-{
+-  GstA52Dec *a52dec = GST_A52DEC (gst_pad_get_parent (pad));
+-  gboolean ret = FALSE;
+-
+-  GST_LOG ("Handling %s event", GST_EVENT_TYPE_NAME (event));
+-
+-  switch (GST_EVENT_TYPE (event)) {
+-    case GST_EVENT_NEWSEGMENT:
+-    {
+-      GstFormat fmt;
+-      gboolean update;
+-      gint64 start, end, pos;
+-      gdouble rate, arate;
+-
+-      gst_event_parse_new_segment_full (event, &update, &rate, &arate, &fmt,
+-          &start, &end, &pos);
+-
+-      /* drain queued buffers before activating the segment so that we can clip
+-       * against the old segment first */
+-      gst_a52dec_drain (a52dec);
+-
+-      if (fmt != GST_FORMAT_TIME || !GST_CLOCK_TIME_IS_VALID (start)) {
+-        GST_WARNING ("No time in newsegment event %p (format is %s)",
+-            event, gst_format_get_name (fmt));
+-        gst_event_unref (event);
+-        a52dec->sent_segment = FALSE;
+-        /* set some dummy values, FIXME: do proper conversion */
+-        a52dec->time = start = pos = 0;
+-        fmt = GST_FORMAT_TIME;
+-        end = -1;
+-      } else {
+-        a52dec->time = start;
+-        a52dec->sent_segment = TRUE;
+-        GST_DEBUG_OBJECT (a52dec,
+-            "Pushing newseg rate %g, applied rate %g, format %d, start %"
+-            G_GINT64_FORMAT ", stop %" G_GINT64_FORMAT ", pos %"
+-            G_GINT64_FORMAT, rate, arate, fmt, start, end, pos);
+-
+-        ret = gst_pad_push_event (a52dec->srcpad, event);
+-      }
+-
+-      gst_segment_set_newsegment (&a52dec->segment, update, rate, fmt, start,
+-          end, pos);
+-      break;
+-    }
+-    case GST_EVENT_TAG:
+-      ret = gst_pad_push_event (a52dec->srcpad, event);
+-      break;
+-    case GST_EVENT_EOS:
+-      gst_a52dec_drain (a52dec);
+-      ret = gst_pad_push_event (a52dec->srcpad, event);
+-      break;
+-    case GST_EVENT_FLUSH_START:
+-      ret = gst_pad_push_event (a52dec->srcpad, event);
+-      break;
+-    case GST_EVENT_FLUSH_STOP:
+-      if (a52dec->cache) {
+-        gst_buffer_unref (a52dec->cache);
+-        a52dec->cache = NULL;
+-      }
+-      clear_queued (a52dec);
+-      gst_segment_init (&a52dec->segment, GST_FORMAT_UNDEFINED);
+-      ret = gst_pad_push_event (a52dec->srcpad, event);
+-      break;
+-    default:
+-      ret = gst_pad_push_event (a52dec->srcpad, event);
+-      break;
+-  }
+-
+-  gst_object_unref (a52dec);
+-  return ret;
+-}
+-
+ static void
+ gst_a52dec_update_streaminfo (GstA52Dec * a52dec)
+ {
+   GstTagList *taglist;
+ 
+   taglist = gst_tag_list_new ();
++  gst_tag_list_add (taglist, GST_TAG_MERGE_APPEND, GST_TAG_BITRATE,
++      (guint) a52dec->bit_rate, NULL);
+ 
+-  gst_tag_list_add (taglist, GST_TAG_MERGE_APPEND,
+-      GST_TAG_AUDIO_CODEC, "Dolby Digital (AC-3)",
+-      GST_TAG_BITRATE, (guint) a52dec->bit_rate, NULL);
+-
+-  gst_element_found_tags_for_pad (GST_ELEMENT (a52dec),
+-      GST_PAD (a52dec->srcpad), taglist);
++  gst_audio_decoder_merge_tags (GST_AUDIO_DECODER (a52dec), taglist,
++      GST_TAG_MERGE_REPLACE);
++  gst_tag_list_free (taglist);
+ }
+ 
+ static GstFlowReturn
+-gst_a52dec_handle_frame (GstA52Dec * a52dec, guint8 * data,
+-    guint length, gint flags, gint sample_rate, gint bit_rate)
++gst_a52dec_handle_frame (GstAudioDecoder * bdec, GstBuffer * buffer)
+ {
++  GstA52Dec *a52dec;
+   gint channels, i;
+   gboolean need_reneg = FALSE;
++  gint size, chans;
++  gint length = 0, flags, sample_rate, bit_rate;
++  guint8 *data;
++  GstFlowReturn result = GST_FLOW_OK;
++  GstBuffer *outbuf;
++  const gint num_blocks = 6;
++
++  a52dec = GST_A52DEC (bdec);
++
++  /* no fancy draining */
++  if (G_UNLIKELY (!buffer))
++    return GST_FLOW_OK;
++
++  /* parsed stuff already, so this should work out fine */
++  data = GST_BUFFER_DATA (buffer);
++  size = GST_BUFFER_SIZE (buffer);
++  g_assert (size >= 7);
++
++  /* re-obtain some sync header info,
++   * should be same as during _parse and could also be cached there,
++   * but anyway ... */
++  bit_rate = a52dec->bit_rate;
++  sample_rate = a52dec->sample_rate;
++  flags = 0;
++  length = a52_syncinfo (data, &flags, &sample_rate, &bit_rate);
++  g_assert (length == size);
+ 
+   /* update stream information, renegotiate or re-streaminfo if needed */
+   need_reneg = FALSE;
+@@ -582,7 +522,7 @@ gst_a52dec_handle_frame (GstA52Dec * a52dec, guint8 * data,
+ 
+     a52dec->flag_update = FALSE;
+ 
+-    caps = gst_pad_get_allowed_caps (a52dec->srcpad);
++    caps = gst_pad_get_allowed_caps (GST_AUDIO_DECODER_SRC_PAD (a52dec));
+     if (caps && gst_caps_get_size (caps) > 0) {
+       GstCaps *copy = gst_caps_copy_nth (caps, 0);
+       GstStructure *structure = gst_caps_get_structure (copy, 0);
+@@ -618,14 +558,16 @@ gst_a52dec_handle_frame (GstA52Dec * a52dec, guint8 * data,
+   } else {
+     flags = a52dec->using_channels;
+   }
++
+   /* process */
+   flags |= A52_ADJUST_LEVEL;
+   a52dec->level = 1;
+   if (a52_frame (a52dec->state, data, &flags, &a52dec->level, a52dec->bias)) {
+-    GST_WARNING ("a52_frame error");
+-    a52dec->discont = TRUE;
+-    return GST_FLOW_OK;
++    GST_AUDIO_DECODER_ERROR (a52dec, 1, STREAM, DECODE, (NULL),
++        ("a52_frame error"), result);
++    goto exit;
+   }
++
+   channels = flags & (A52_CHANNEL_MASK | A52_LFE);
+   if (a52dec->using_channels != channels) {
+     need_reneg = TRUE;
+@@ -634,43 +576,74 @@ gst_a52dec_handle_frame (GstA52Dec * a52dec, guint8 * data,
+ 
+   /* negotiate if required */
+   if (need_reneg) {
+-    GST_DEBUG ("a52dec reneg: sample_rate:%d stream_chans:%d using_chans:%d",
++    GST_DEBUG_OBJECT (a52dec,
++        "a52dec reneg: sample_rate:%d stream_chans:%d using_chans:%d",
+         a52dec->sample_rate, a52dec->stream_channels, a52dec->using_channels);
+-    if (!gst_a52dec_reneg (a52dec, a52dec->srcpad)) {
+-      GST_ELEMENT_ERROR (a52dec, CORE, NEGOTIATION, (NULL), (NULL));
+-      return GST_FLOW_ERROR;
+-    }
++    if (!gst_a52dec_reneg (a52dec, GST_AUDIO_DECODER_SRC_PAD (a52dec)))
++      goto failed_negotiation;
+   }
+ 
+   if (a52dec->dynamic_range_compression == FALSE) {
+     a52_dynrng (a52dec->state, NULL, NULL);
+   }
+ 
+-  /* each frame consists of 6 blocks */
+-  for (i = 0; i < 6; i++) {
++  flags &= (A52_CHANNEL_MASK | A52_LFE);
++  chans = gst_a52dec_channels (flags, NULL);
++  if (!chans)
++    goto invalid_flags;
++
++  /* handle decoded data;
++   * each frame has 6 blocks, one block is 256 samples, ea */
++  result =
++      gst_pad_alloc_buffer_and_set_caps (GST_AUDIO_DECODER_SRC_PAD (a52dec), 0,
++      256 * chans * (SAMPLE_WIDTH / 8) * num_blocks,
++      GST_PAD_CAPS (GST_AUDIO_DECODER_SRC_PAD (a52dec)), &outbuf);
++  if (result != GST_FLOW_OK)
++    goto exit;
++
++  data = GST_BUFFER_DATA (outbuf);
++  for (i = 0; i < num_blocks; i++) {
+     if (a52_block (a52dec->state)) {
+-      /* ignore errors but mark a discont */
+-      GST_WARNING ("a52_block error %d", i);
+-      a52dec->discont = TRUE;
++      /* also marks discont */
++      GST_AUDIO_DECODER_ERROR (a52dec, 1, STREAM, DECODE, (NULL),
++          ("error decoding block %d", i), result);
++      if (result != GST_FLOW_OK)
++        goto exit;
+     } else {
+-      GstFlowReturn ret;
++      gint n, c;
+ 
+-      /* push on */
+-      ret = gst_a52dec_push (a52dec, a52dec->srcpad, a52dec->using_channels,
+-          a52dec->samples, a52dec->time);
+-      if (ret != GST_FLOW_OK)
+-        return ret;
++      for (n = 0; n < 256; n++) {
++        for (c = 0; c < chans; c++) {
++          ((sample_t *) data)[n * chans + c] = a52dec->samples[c * 256 + n];
++        }
++      }
+     }
+-    a52dec->time += 256 * GST_SECOND / a52dec->sample_rate;
++    data += 256 * chans * (SAMPLE_WIDTH / 8);
+   }
+ 
+-  return GST_FLOW_OK;
++  result = gst_audio_decoder_finish_frame (bdec, outbuf, 1);
++
++exit:
++  return result;
++
++  /* ERRORS */
++failed_negotiation:
++  {
++    GST_ELEMENT_ERROR (a52dec, CORE, NEGOTIATION, (NULL), (NULL));
++    return GST_FLOW_ERROR;
++  }
++invalid_flags:
++  {
++    GST_ELEMENT_ERROR (GST_ELEMENT (a52dec), STREAM, DECODE, (NULL),
++        ("Invalid channel flags: %d", flags));
++    return GST_FLOW_ERROR;
++  }
+ }
+ 
+ static gboolean
+-gst_a52dec_sink_setcaps (GstPad * pad, GstCaps * caps)
++gst_a52dec_set_format (GstAudioDecoder * bdec, GstCaps * caps)
+ {
+-  GstA52Dec *a52dec = GST_A52DEC (gst_pad_get_parent (pad));
++  GstA52Dec *a52dec = GST_A52DEC (bdec);
+   GstStructure *structure;
+ 
+   structure = gst_caps_get_structure (caps, 0);
+@@ -680,8 +653,6 @@ gst_a52dec_sink_setcaps (GstPad * pad, GstCaps * caps)
+   else
+     a52dec->dvdmode = FALSE;
+ 
+-  gst_object_unref (a52dec);
+-
+   return TRUE;
+ }
+ 
+@@ -689,20 +660,9 @@ static GstFlowReturn
+ gst_a52dec_chain (GstPad * pad, GstBuffer * buf)
+ {
+   GstA52Dec *a52dec = GST_A52DEC (GST_PAD_PARENT (pad));
+-  GstFlowReturn ret;
++  GstFlowReturn ret = GST_FLOW_OK;
+   gint first_access;
+ 
+-  if (GST_BUFFER_IS_DISCONT (buf)) {
+-    GST_LOG_OBJECT (a52dec, "received DISCONT");
+-    gst_a52dec_drain (a52dec);
+-    /* clear cache on discont and mark a discont in the element */
+-    if (a52dec->cache) {
+-      gst_buffer_unref (a52dec->cache);
+-      a52dec->cache = NULL;
+-    }
+-    a52dec->discont = TRUE;
+-  }
+-
+   if (a52dec->dvdmode) {
+     gint size = GST_BUFFER_SIZE (buf);
+     guchar *data = GST_BUFFER_DATA (buf);
+@@ -726,33 +686,37 @@ gst_a52dec_chain (GstPad * pad, GstBuffer * buf)
+         goto bad_first_access_parameter;
+ 
+       subbuf = gst_buffer_create_sub (buf, offset, len);
++      gst_buffer_copy_metadata (subbuf, buf, GST_BUFFER_COPY_ALL);
+       GST_BUFFER_TIMESTAMP (subbuf) = GST_CLOCK_TIME_NONE;
+-      ret = gst_a52dec_chain_raw (pad, subbuf);
+-      if (ret != GST_FLOW_OK)
++      ret = a52dec->base_chain (pad, subbuf);
++      if (ret != GST_FLOW_OK) {
++        gst_buffer_unref (buf);
+         goto done;
++      }
+ 
+       offset += len;
+       len = size - offset;
+ 
+       if (len > 0) {
+         subbuf = gst_buffer_create_sub (buf, offset, len);
++        gst_buffer_copy_metadata (subbuf, buf, GST_BUFFER_COPY_ALL);
+         GST_BUFFER_TIMESTAMP (subbuf) = GST_BUFFER_TIMESTAMP (buf);
+ 
+-        ret = gst_a52dec_chain_raw (pad, subbuf);
++        ret = a52dec->base_chain (pad, subbuf);
+       }
++      gst_buffer_unref (buf);
+     } else {
+       /* first_access = 0 or 1, so if there's a timestamp it applies to the first byte */
+       subbuf = gst_buffer_create_sub (buf, offset, size - offset);
+-      GST_BUFFER_TIMESTAMP (subbuf) = GST_BUFFER_TIMESTAMP (buf);
+-      ret = gst_a52dec_chain_raw (pad, subbuf);
++      gst_buffer_copy_metadata (subbuf, buf, GST_BUFFER_COPY_ALL);
++      gst_buffer_unref (buf);
++      ret = a52dec->base_chain (pad, subbuf);
+     }
+   } else {
+-    gst_buffer_ref (buf);
+-    ret = gst_a52dec_chain_raw (pad, buf);
++    ret = a52dec->base_chain (pad, buf);
+   }
+ 
+ done:
+-  gst_buffer_unref (buf);
+   return ret;
+ 
+ /* ERRORS */
+@@ -772,162 +736,6 @@ bad_first_access_parameter:
+   }
+ }
+ 
+-static GstFlowReturn
+-gst_a52dec_chain_raw (GstPad * pad, GstBuffer * buf)
+-{
+-  GstA52Dec *a52dec;
+-  guint8 *data;
+-  guint size;
+-  gint length = 0, flags, sample_rate, bit_rate;
+-  GstFlowReturn result = GST_FLOW_OK;
+-
+-  a52dec = GST_A52DEC (GST_PAD_PARENT (pad));
+-
+-  if (!a52dec->sent_segment) {
+-    GstSegment segment;
+-
+-    /* Create a basic segment. Usually, we'll get a new-segment sent by
+-     * another element that will know more information (a demuxer). If we're
+-     * just looking at a raw AC3 stream, we won't - so we need to send one
+-     * here, but we don't know much info, so just send a minimal TIME
+-     * new-segment event
+-     */
+-    gst_segment_init (&segment, GST_FORMAT_TIME);
+-    gst_pad_push_event (a52dec->srcpad, gst_event_new_new_segment (FALSE,
+-            segment.rate, segment.format, segment.start,
+-            segment.duration, segment.start));
+-    a52dec->sent_segment = TRUE;
+-  }
+-
+-  /* merge with cache, if any. Also make sure timestamps match */
+-  if (GST_BUFFER_TIMESTAMP_IS_VALID (buf)) {
+-    a52dec->time = GST_BUFFER_TIMESTAMP (buf);
+-    GST_DEBUG_OBJECT (a52dec,
+-        "Received buffer with ts %" GST_TIME_FORMAT " duration %"
+-        GST_TIME_FORMAT, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+-        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
+-  }
+-
+-  if (a52dec->cache) {
+-    buf = gst_buffer_join (a52dec->cache, buf);
+-    a52dec->cache = NULL;
+-  }
+-  data = GST_BUFFER_DATA (buf);
+-  size = GST_BUFFER_SIZE (buf);
+-
+-  /* find and read header */
+-  bit_rate = a52dec->bit_rate;
+-  sample_rate = a52dec->sample_rate;
+-  flags = 0;
+-  while (size >= 7) {
+-    length = a52_syncinfo (data, &flags, &sample_rate, &bit_rate);
+-
+-    if (length == 0) {
+-      /* no sync */
+-      data++;
+-      size--;
+-    } else if (length <= size) {
+-      GST_DEBUG ("Sync: %d", length);
+-
+-      if (flags != a52dec->prev_flags)
+-        a52dec->flag_update = TRUE;
+-      a52dec->prev_flags = flags;
+-
+-      result = gst_a52dec_handle_frame (a52dec, data,
+-          length, flags, sample_rate, bit_rate);
+-      if (result != GST_FLOW_OK) {
+-        size = 0;
+-        break;
+-      }
+-      size -= length;
+-      data += length;
+-    } else {
+-      /* not enough data */
+-      GST_LOG ("Not enough data available");
+-      break;
+-    }
+-  }
+-
+-  /* keep cache */
+-  if (length == 0) {
+-    GST_LOG ("No sync found");
+-  }
+-
+-  if (size > 0) {
+-    a52dec->cache = gst_buffer_create_sub (buf,
+-        GST_BUFFER_SIZE (buf) - size, size);
+-  }
+-
+-  gst_buffer_unref (buf);
+-
+-  return result;
+-}
+-
+-static GstStateChangeReturn
+-gst_a52dec_change_state (GstElement * element, GstStateChange transition)
+-{
+-  GstStateChangeReturn ret = GST_STATE_CHANGE_SUCCESS;
+-  GstA52Dec *a52dec = GST_A52DEC (element);
+-
+-  switch (transition) {
+-    case GST_STATE_CHANGE_NULL_TO_READY:{
+-      GstA52DecClass *klass;
+-
+-      klass = GST_A52DEC_CLASS (G_OBJECT_GET_CLASS (a52dec));
+-      a52dec->state = a52_init (klass->a52_cpuflags);
+-
+-      if (!a52dec->state) {
+-        GST_ELEMENT_ERROR (GST_ELEMENT (a52dec), STREAM, DECODE, (NULL),
+-            ("Failed to initialize a52 state"));
+-        ret = GST_STATE_CHANGE_FAILURE;
+-      }
+-      break;
+-    }
+-    case GST_STATE_CHANGE_READY_TO_PAUSED:
+-      a52dec->samples = a52_samples (a52dec->state);
+-      a52dec->bit_rate = -1;
+-      a52dec->sample_rate = -1;
+-      a52dec->stream_channels = A52_CHANNEL;
+-      a52dec->using_channels = A52_CHANNEL;
+-      a52dec->level = 1;
+-      a52dec->bias = 0;
+-      a52dec->time = 0;
+-      a52dec->sent_segment = FALSE;
+-      a52dec->flag_update = TRUE;
+-      gst_segment_init (&a52dec->segment, GST_FORMAT_UNDEFINED);
+-      break;
+-    case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
+-      break;
+-    default:
+-      break;
+-  }
+-
+-  ret = GST_ELEMENT_CLASS (parent_class)->change_state (element, transition);
+-
+-  switch (transition) {
+-    case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
+-      break;
+-    case GST_STATE_CHANGE_PAUSED_TO_READY:
+-      a52dec->samples = NULL;
+-      if (a52dec->cache) {
+-        gst_buffer_unref (a52dec->cache);
+-        a52dec->cache = NULL;
+-      }
+-      clear_queued (a52dec);
+-      break;
+-    case GST_STATE_CHANGE_READY_TO_NULL:
+-      if (a52dec->state) {
+-        a52_free (a52dec->state);
+-        a52dec->state = NULL;
+-      }
+-      break;
+-    default:
+-      break;
+-  }
+-
+-  return ret;
+-}
+-
+ static void
+ gst_a52dec_set_property (GObject * object, guint prop_id, const GValue * value,
+     GParamSpec * pspec)
+diff --git a/ext/a52dec/gsta52dec.h b/ext/a52dec/gsta52dec.h
+index e575b81..0c1dc5f 100644
+--- a/ext/a52dec/gsta52dec.h
++++ b/ext/a52dec/gsta52dec.h
+@@ -22,6 +22,7 @@
+ #define __GST_A52DEC_H__
+ 
+ #include <gst/gst.h>
++#include <gst/audio/gstaudiodecoder.h>
+ 
+ G_BEGIN_DECLS
+ 
+@@ -40,41 +41,31 @@ typedef struct _GstA52Dec GstA52Dec;
+ typedef struct _GstA52DecClass GstA52DecClass;
+ 
+ struct _GstA52Dec {
+-  GstElement     element;
++  GstAudioDecoder element;
+ 
+-  /* pads */
+-  GstPad        *sinkpad,
+-                *srcpad;
+-  GstSegment     segment;
++  GstPadChainFunction base_chain;
+ 
+   gboolean       dvdmode;
+-  gboolean       sent_segment;
+-  gboolean       discont;
+-
+   gboolean       flag_update;
+   int            prev_flags;
+ 
++  /* stream properties */
+   int            bit_rate;
+   int            sample_rate;
+   int            stream_channels;
+   int            request_channels;
+   int            using_channels;
+ 
++  /* decoding properties */
+   sample_t       level;
+   sample_t       bias;
+   gboolean       dynamic_range_compression;
+   sample_t      *samples;
+   a52_state_t   *state;
+-
+-  GstBuffer     *cache;
+-  GstClockTime   time;
+-
+-  /* reverse */
+-  GList         *queued;
+ };
+ 
+ struct _GstA52DecClass {
+-  GstElementClass parent_class;
++  GstAudioDecoderClass parent_class;
+ 
+   guint32 a52_cpuflags;
+ };
+diff --git a/ext/amrnb/amrnbdec.h b/ext/amrnb/amrnbdec.h
+index 1e81839..5fe6982 100644
+--- a/ext/amrnb/amrnbdec.h
++++ b/ext/amrnb/amrnbdec.h
+@@ -22,7 +22,12 @@
+ 
+ #include <gst/gst.h>
+ #include <gst/audio/gstaudiodecoder.h>
++
++#ifdef HAVE_OPENCORE_AMRNB_0_1_3_OR_LATER
++#include <opencore-amrnb/interf_dec.h>
++#else
+ #include <interf_dec.h>
++#endif
+ 
+ G_BEGIN_DECLS
+ 
+diff --git a/ext/amrnb/amrnbenc.h b/ext/amrnb/amrnbenc.h
+index 7f673ac..48a8fe8 100644
+--- a/ext/amrnb/amrnbenc.h
++++ b/ext/amrnb/amrnbenc.h
+@@ -21,9 +21,14 @@
+ #define __GST_AMRNBENC_H__
+ 
+ #include <gst/gst.h>
+-#include <interf_enc.h>
+ #include <gst/audio/gstaudioencoder.h>
+ 
++#ifdef HAVE_OPENCORE_AMRNB_0_1_3_OR_LATER
++#include <opencore-amrnb/interf_enc.h>
++#else
++#include <interf_enc.h>
++#endif
++
+ G_BEGIN_DECLS
+ 
+ #define GST_TYPE_AMRNBENC \
+diff --git a/ext/amrwbdec/amrwbdec.h b/ext/amrwbdec/amrwbdec.h
+index c3528fc..6b82ae9 100644
+--- a/ext/amrwbdec/amrwbdec.h
++++ b/ext/amrwbdec/amrwbdec.h
+@@ -22,8 +22,14 @@
+ 
+ #include <gst/gst.h>
+ #include <gst/audio/gstaudiodecoder.h>
++
++#ifdef HAVE_OPENCORE_AMRWB_0_1_3_OR_LATER
++#include <opencore-amrwb/dec_if.h>
++#include <opencore-amrwb/if_rom.h>
++#else
+ #include <dec_if.h>
+ #include <if_rom.h>
++#endif
+ 
+ G_BEGIN_DECLS
+ 
+diff --git a/ext/dvdread/dvdreadsrc.c b/ext/dvdread/dvdreadsrc.c
+index 9877f07..d0ebcaf 100644
+--- a/ext/dvdread/dvdreadsrc.c
++++ b/ext/dvdread/dvdreadsrc.c
+@@ -536,7 +536,7 @@ gst_dvd_read_src_goto_title (GstDvdReadSrc * src, gint title, gint angle)
+ 
+     sid = i;
+     if (pgc0 != NULL) {
+-      if (v->display_aspect_ratio == 0)         /* 4:3 */
++      if (v->display_aspect_ratio == 0) /* 4:3 */
+         sid = (pgc0->subp_control[i] >> 24) & 0x1f;
+       else if (v->display_aspect_ratio == 3)    /* 16:9 */
+         sid = (pgc0->subp_control[i] >> 8) & 0x1f;
+@@ -1073,7 +1073,7 @@ gst_dvd_read_src_get_size (GstDvdReadSrc * src, gint64 * size)
+   gboolean ret = FALSE;
+ 
+   if (src->dvd_title) {
+-    gsize blocks;
++    gssize blocks;
+ 
+     blocks = DVDFileSize (src->dvd_title);
+     if (blocks >= 0) {
+diff --git a/ext/mad/Makefile.am b/ext/mad/Makefile.am
+index 85a22ff..95117dd 100644
+--- a/ext/mad/Makefile.am
++++ b/ext/mad/Makefile.am
+@@ -3,11 +3,11 @@ plugin_LTLIBRARIES = libgstmad.la
+ libgstmad_la_SOURCES = gstmad.c
+ 
+ libgstmad_la_CFLAGS = \
+-	$(GST_PLUGINS_BASE_CFLAGS) $(GST_CFLAGS) \
++        $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS) \
+ 	$(MAD_CFLAGS)
+ libgstmad_la_LIBADD = \
+-	$(GST_PLUGINS_BASE_LIBS) -lgsttag-$(GST_MAJORMINOR) \
+-	-lgstaudio-$(GST_MAJORMINOR) $(MAD_LIBS)
++        $(GST_PLUGINS_BASE_LIBS) -lgstaudio-$(GST_MAJORMINOR) \
++	$(GST_BASE_LIBS) $(GST_LIBS) $(MAD_LIBS)
+ libgstmad_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
+ libgstmad_la_LIBTOOLFLAGS = --tag=disable-static
+ 
+diff --git a/ext/mad/gstmad.c b/ext/mad/gstmad.c
+index 89c5027..1c063a7 100644
+--- a/ext/mad/gstmad.c
++++ b/ext/mad/gstmad.c
+@@ -75,96 +75,22 @@ GST_STATIC_PAD_TEMPLATE ("sink",
+         "channels = (int) [ 1, 2 ]")
+     );
+ 
+-static void gst_mad_dispose (GObject * object);
+-static void gst_mad_clear_queues (GstMad * mad);
++
++static gboolean gst_mad_start (GstAudioDecoder * dec);
++static gboolean gst_mad_stop (GstAudioDecoder * dec);
++static gboolean gst_mad_parse (GstAudioDecoder * dec, GstAdapter * adapter,
++    gint * offset, gint * length);
++static GstFlowReturn gst_mad_handle_frame (GstAudioDecoder * dec,
++    GstBuffer * buffer);
++static void gst_mad_flush (GstAudioDecoder * dec, gboolean hard);
+ 
+ static void gst_mad_set_property (GObject * object, guint prop_id,
+     const GValue * value, GParamSpec * pspec);
+ static void gst_mad_get_property (GObject * object, guint prop_id,
+     GValue * value, GParamSpec * pspec);
+ 
+-static gboolean gst_mad_src_event (GstPad * pad, GstEvent * event);
+-
+-static const GstQueryType *gst_mad_get_query_types (GstPad * pad);
+-
+-static gboolean gst_mad_src_query (GstPad * pad, GstQuery * query);
+-static gboolean gst_mad_convert_sink (GstPad * pad, GstFormat src_format,
+-    gint64 src_value, GstFormat * dest_format, gint64 * dest_value);
+-static gboolean gst_mad_convert_src (GstPad * pad, GstFormat src_format,
+-    gint64 src_value, GstFormat * dest_format, gint64 * dest_value);
+-
+-static gboolean gst_mad_sink_event (GstPad * pad, GstEvent * event);
+-static GstFlowReturn gst_mad_chain (GstPad * pad, GstBuffer * buffer);
+-static GstFlowReturn gst_mad_chain_reverse (GstMad * mad, GstBuffer * buf);
+-
+-static GstStateChangeReturn gst_mad_change_state (GstElement * element,
+-    GstStateChange transition);
+-
+-static void gst_mad_set_index (GstElement * element, GstIndex * index);
+-static GstIndex *gst_mad_get_index (GstElement * element);
+-
+-GST_BOILERPLATE (GstMad, gst_mad, GstElement, GST_TYPE_ELEMENT);
+-
+-/*
+-#define GST_TYPE_MAD_LAYER (gst_mad_layer_get_type())
+-static GType
+-gst_mad_layer_get_type (void)
+-{
+-  static GType mad_layer_type = 0;
+-  static GEnumValue mad_layer[] = {
+-    {0, "Unknown", "unknown"},
+-    {MAD_LAYER_I, "Layer I", "1"},
+-    {MAD_LAYER_II, "Layer II", "2"},
+-    {MAD_LAYER_III, "Layer III", "3"},
+-    {0, NULL, NULL},
+-  };
+-
+-  if (!mad_layer_type) {
+-    mad_layer_type = g_enum_register_static ("GstMadLayer", mad_layer);
+-  }
+-  return mad_layer_type;
+-}
+-*/
+-
+-#define GST_TYPE_MAD_MODE (gst_mad_mode_get_type())
+-static GType
+-gst_mad_mode_get_type (void)
+-{
+-  static GType mad_mode_type = 0;
+-  static GEnumValue mad_mode[] = {
+-    {-1, "Unknown", "unknown"},
+-    {MAD_MODE_SINGLE_CHANNEL, "Mono", "mono"},
+-    {MAD_MODE_DUAL_CHANNEL, "Dual Channel", "dual"},
+-    {MAD_MODE_JOINT_STEREO, "Joint Stereo", "joint"},
+-    {MAD_MODE_STEREO, "Stereo", "stereo"},
+-    {0, NULL, NULL},
+-  };
+-
+-  if (!mad_mode_type) {
+-    mad_mode_type = g_enum_register_static ("GstMadMode", mad_mode);
+-  }
+-  return mad_mode_type;
+-}
+ 
+-#define GST_TYPE_MAD_EMPHASIS (gst_mad_emphasis_get_type())
+-static GType
+-gst_mad_emphasis_get_type (void)
+-{
+-  static GType mad_emphasis_type = 0;
+-  static GEnumValue mad_emphasis[] = {
+-    {-1, "Unknown", "unknown"},
+-    {MAD_EMPHASIS_NONE, "None", "none"},
+-    {MAD_EMPHASIS_50_15_US, "50/15 Microseconds", "50-15"},
+-    {MAD_EMPHASIS_CCITT_J_17, "CCITT J.17", "j-17"},
+-    {MAD_EMPHASIS_RESERVED, "Reserved", "reserved"},
+-    {0, NULL, NULL},
+-  };
+-
+-  if (!mad_emphasis_type) {
+-    mad_emphasis_type = g_enum_register_static ("GstMadEmphasis", mad_emphasis);
+-  }
+-  return mad_emphasis_type;
+-}
++GST_BOILERPLATE (GstMad, gst_mad, GstAudioDecoder, GST_TYPE_AUDIO_DECODER);
+ 
+ static void
+ gst_mad_base_init (gpointer g_class)
+@@ -183,21 +109,19 @@ gst_mad_base_init (gpointer g_class)
+ static void
+ gst_mad_class_init (GstMadClass * klass)
+ {
+-  GObjectClass *gobject_class;
+-  GstElementClass *gstelement_class;
+-
+-  gobject_class = (GObjectClass *) klass;
+-  gstelement_class = (GstElementClass *) klass;
++  GObjectClass *gobject_class = (GObjectClass *) klass;
++  GstAudioDecoderClass *base_class = (GstAudioDecoderClass *) klass;
+ 
+   parent_class = g_type_class_peek_parent (klass);
+ 
++  base_class->start = GST_DEBUG_FUNCPTR (gst_mad_start);
++  base_class->stop = GST_DEBUG_FUNCPTR (gst_mad_stop);
++  base_class->parse = GST_DEBUG_FUNCPTR (gst_mad_parse);
++  base_class->handle_frame = GST_DEBUG_FUNCPTR (gst_mad_handle_frame);
++  base_class->flush = GST_DEBUG_FUNCPTR (gst_mad_flush);
++
+   gobject_class->set_property = gst_mad_set_property;
+   gobject_class->get_property = gst_mad_get_property;
+-  gobject_class->dispose = gst_mad_dispose;
+-
+-  gstelement_class->change_state = gst_mad_change_state;
+-  gstelement_class->set_index = gst_mad_set_index;
+-  gstelement_class->get_index = gst_mad_get_index;
+ 
+   /* init properties */
+   /* currently, string representations are used, we might want to change that */
+@@ -209,605 +133,60 @@ gst_mad_class_init (GstMadClass * klass)
+   g_object_class_install_property (gobject_class, ARG_IGNORE_CRC,
+       g_param_spec_boolean ("ignore-crc", "Ignore CRC", "Ignore CRC errors",
+           TRUE, G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+-
+-  /* register tags */
+-#define GST_TAG_LAYER    "layer"
+-#define GST_TAG_MODE     "mode"
+-#define GST_TAG_EMPHASIS "emphasis"
+-
+-  /* FIXME 0.11: strings!? why? */
+-  gst_tag_register (GST_TAG_LAYER, GST_TAG_FLAG_ENCODED, G_TYPE_UINT,
+-      "layer", "MPEG audio layer", NULL);
+-  gst_tag_register (GST_TAG_MODE, GST_TAG_FLAG_ENCODED, G_TYPE_STRING,
+-      "mode", "MPEG audio channel mode", NULL);
+-  gst_tag_register (GST_TAG_EMPHASIS, GST_TAG_FLAG_ENCODED, G_TYPE_STRING,
+-      "emphasis", "MPEG audio emphasis", NULL);
+-
+-  /* ref these here from a thread-safe context (ie. not the streaming thread) */
+-  g_type_class_ref (GST_TYPE_MAD_MODE);
+-  g_type_class_ref (GST_TYPE_MAD_EMPHASIS);
+ }
+ 
+ static void
+ gst_mad_init (GstMad * mad, GstMadClass * klass)
+ {
+-  GstPadTemplate *template;
+-
+-  /* create the sink and src pads */
+-  template = gst_static_pad_template_get (&mad_sink_template_factory);
+-  mad->sinkpad = gst_pad_new_from_template (template, "sink");
+-  gst_object_unref (template);
+-  gst_element_add_pad (GST_ELEMENT (mad), mad->sinkpad);
+-  gst_pad_set_chain_function (mad->sinkpad, GST_DEBUG_FUNCPTR (gst_mad_chain));
+-  gst_pad_set_event_function (mad->sinkpad,
+-      GST_DEBUG_FUNCPTR (gst_mad_sink_event));
+-
+-  template = gst_static_pad_template_get (&mad_src_template_factory);
+-  mad->srcpad = gst_pad_new_from_template (template, "src");
+-  gst_object_unref (template);
+-  gst_element_add_pad (GST_ELEMENT (mad), mad->srcpad);
+-  gst_pad_set_event_function (mad->srcpad,
+-      GST_DEBUG_FUNCPTR (gst_mad_src_event));
+-  gst_pad_set_query_function (mad->srcpad,
+-      GST_DEBUG_FUNCPTR (gst_mad_src_query));
+-  gst_pad_set_query_type_function (mad->srcpad,
+-      GST_DEBUG_FUNCPTR (gst_mad_get_query_types));
+-  gst_pad_use_fixed_caps (mad->srcpad);
+-
+-  mad->tempbuffer = g_malloc (MAD_BUFFER_MDLEN * 3);
+-  mad->tempsize = 0;
+-  mad->base_byte_offset = 0;
+-  mad->bytes_consumed = 0;
+-  mad->total_samples = 0;
+-  mad->new_header = TRUE;
+-  mad->framecount = 0;
+-  mad->vbr_average = 0;
+-  mad->vbr_rate = 0;
+-  mad->restart = TRUE;
+-  mad->segment_start = 0;
+-  gst_segment_init (&mad->segment, GST_FORMAT_TIME);
+-  mad->header.mode = -1;
+-  mad->header.emphasis = -1;
+-  mad->tags = NULL;
++  GstAudioDecoder *dec;
++
++  dec = GST_AUDIO_DECODER (mad);
++  gst_audio_decoder_set_tolerance (dec, 20 * GST_MSECOND);
+ 
+   mad->half = FALSE;
+   mad->ignore_crc = TRUE;
+-  mad->check_for_xing = TRUE;
+-  mad->xing_found = FALSE;
+-}
+-
+-static void
+-gst_mad_dispose (GObject * object)
+-{
+-  GstMad *mad = GST_MAD (object);
+-
+-  gst_mad_set_index (GST_ELEMENT (object), NULL);
+-
+-  g_free (mad->tempbuffer);
+-  mad->tempbuffer = NULL;
+-
+-  g_list_foreach (mad->pending_events, (GFunc) gst_mini_object_unref, NULL);
+-  g_list_free (mad->pending_events);
+-  mad->pending_events = NULL;
+-
+-  G_OBJECT_CLASS (parent_class)->dispose (object);
+-}
+-
+-static void
+-gst_mad_set_index (GstElement * element, GstIndex * index)
+-{
+-  GstMad *mad = GST_MAD (element);
+-
+-  mad->index = index;
+-
+-  if (index)
+-    gst_index_get_writer_id (index, GST_OBJECT (element), &mad->index_id);
+-}
+-
+-static GstIndex *
+-gst_mad_get_index (GstElement * element)
+-{
+-  GstMad *mad = GST_MAD (element);
+-
+-  return mad->index;
+-}
+-
+-static gboolean
+-gst_mad_convert_sink (GstPad * pad, GstFormat src_format, gint64 src_value,
+-    GstFormat * dest_format, gint64 * dest_value)
+-{
+-  gboolean res = TRUE;
+-  GstMad *mad;
+-
+-  if (src_format == *dest_format) {
+-    *dest_value = src_value;
+-    return TRUE;
+-  }
+-
+-  /* -1 always maps to -1, and 0 to 0, we don't need any more info for that */
+-  if (src_value == -1 || src_value == 0) {
+-    *dest_value = src_value;
+-    return TRUE;
+-  }
+-
+-  mad = GST_MAD (GST_PAD_PARENT (pad));
+-
+-  if (mad->vbr_average == 0)
+-    return FALSE;
+-
+-  switch (src_format) {
+-    case GST_FORMAT_BYTES:
+-      switch (*dest_format) {
+-        case GST_FORMAT_TIME:
+-          /* multiply by 8 because vbr is in bits/second */
+-          *dest_value = gst_util_uint64_scale (src_value, 8 * GST_SECOND,
+-              mad->vbr_average);
+-          break;
+-        default:
+-          res = FALSE;
+-      }
+-      break;
+-    case GST_FORMAT_TIME:
+-      switch (*dest_format) {
+-        case GST_FORMAT_BYTES:
+-          /* multiply by 8 because vbr is in bits/second */
+-          *dest_value = gst_util_uint64_scale (src_value, mad->vbr_average,
+-              8 * GST_SECOND);
+-          break;
+-        default:
+-          res = FALSE;
+-      }
+-      break;
+-    default:
+-      res = FALSE;
+-  }
+-  return res;
+-}
+-
+-static gboolean
+-gst_mad_convert_src (GstPad * pad, GstFormat src_format, gint64 src_value,
+-    GstFormat * dest_format, gint64 * dest_value)
+-{
+-  gboolean res = TRUE;
+-  guint scale = 1;
+-  gint bytes_per_sample;
+-  GstMad *mad;
+-
+-  if (src_format == *dest_format) {
+-    *dest_value = src_value;
+-    return TRUE;
+-  }
+-
+-  /* -1 always maps to -1, and 0 to 0, we don't need any more info for that */
+-  if (src_value == -1 || src_value == 0) {
+-    *dest_value = src_value;
+-    return TRUE;
+-  }
+-
+-  mad = GST_MAD (GST_PAD_PARENT (pad));
+-
+-  bytes_per_sample = mad->channels * 4;
+-
+-  switch (src_format) {
+-    case GST_FORMAT_BYTES:
+-      switch (*dest_format) {
+-        case GST_FORMAT_DEFAULT:
+-          if (bytes_per_sample == 0)
+-            return FALSE;
+-          *dest_value = src_value / bytes_per_sample;
+-          break;
+-        case GST_FORMAT_TIME:
+-        {
+-          gint byterate = bytes_per_sample * mad->rate;
+-
+-          if (byterate == 0)
+-            return FALSE;
+-          *dest_value =
+-              gst_util_uint64_scale_int (src_value, GST_SECOND, byterate);
+-          break;
+-        }
+-        default:
+-          res = FALSE;
+-      }
+-      break;
+-    case GST_FORMAT_DEFAULT:
+-      switch (*dest_format) {
+-        case GST_FORMAT_BYTES:
+-          *dest_value = src_value * bytes_per_sample;
+-          break;
+-        case GST_FORMAT_TIME:
+-          if (mad->rate == 0)
+-            return FALSE;
+-          *dest_value = gst_util_uint64_scale_int (src_value, GST_SECOND,
+-              mad->rate);
+-          break;
+-        default:
+-          res = FALSE;
+-      }
+-      break;
+-    case GST_FORMAT_TIME:
+-      switch (*dest_format) {
+-        case GST_FORMAT_BYTES:
+-          scale = bytes_per_sample;
+-          /* fallthrough */
+-        case GST_FORMAT_DEFAULT:
+-          *dest_value = gst_util_uint64_scale_int (src_value,
+-              scale * mad->rate, GST_SECOND);
+-          break;
+-        default:
+-          res = FALSE;
+-      }
+-      break;
+-    default:
+-      res = FALSE;
+-  }
+-  return res;
+-}
+-
+-static const GstQueryType *
+-gst_mad_get_query_types (GstPad * pad)
+-{
+-  static const GstQueryType gst_mad_src_query_types[] = {
+-    GST_QUERY_POSITION,
+-    GST_QUERY_DURATION,
+-    GST_QUERY_CONVERT,
+-    0
+-  };
+-
+-  return gst_mad_src_query_types;
+-}
+-
+-static gboolean
+-gst_mad_src_query (GstPad * pad, GstQuery * query)
+-{
+-  gboolean res = TRUE;
+-  GstPad *peer;
+-  GstMad *mad;
+-
+-  mad = GST_MAD (GST_PAD_PARENT (pad));
+-
+-  peer = gst_pad_get_peer (mad->sinkpad);
+-
+-  switch (GST_QUERY_TYPE (query)) {
+-    case GST_QUERY_FORMATS:
+-      gst_query_set_formats (query, 3, GST_FORMAT_DEFAULT, GST_FORMAT_TIME,
+-          GST_FORMAT_BYTES);
+-      break;
+-    case GST_QUERY_POSITION:
+-    {
+-      GstFormat format;
+-      gint64 cur;
+-
+-      /* save requested format */
+-      gst_query_parse_position (query, &format, NULL);
+-
+-      /* try any demuxer before us first */
+-      if (format == GST_FORMAT_TIME && peer && gst_pad_query (peer, query)) {
+-        gst_query_parse_position (query, NULL, &cur);
+-        GST_LOG_OBJECT (mad, "peer returned position %" GST_TIME_FORMAT,
+-            GST_TIME_ARGS (cur));
+-        break;
+-      }
+-
+-      /* and convert to the requested format */
+-      if (format != GST_FORMAT_DEFAULT) {
+-        if (!gst_mad_convert_src (pad, GST_FORMAT_DEFAULT, mad->total_samples,
+-                &format, &cur))
+-          goto error;
+-      } else {
+-        cur = mad->total_samples;
+-      }
+-
+-      gst_query_set_position (query, format, cur);
+-
+-      if (format == GST_FORMAT_TIME) {
+-        GST_LOG ("position=%" GST_TIME_FORMAT, GST_TIME_ARGS (cur));
+-      } else {
+-        GST_LOG ("position=%" G_GINT64_FORMAT ", format=%u", cur, format);
+-      }
+-      break;
+-    }
+-    case GST_QUERY_DURATION:
+-    {
+-      GstFormat bytes_format = GST_FORMAT_BYTES;
+-      GstFormat time_format = GST_FORMAT_TIME;
+-      GstFormat req_format;
+-      gint64 total, total_bytes;
+-
+-      /* save requested format */
+-      gst_query_parse_duration (query, &req_format, NULL);
+-
+-      if (peer == NULL)
+-        goto error;
+-
+-      /* try any demuxer before us first */
+-      if (req_format == GST_FORMAT_TIME && gst_pad_query (peer, query)) {
+-        gst_query_parse_duration (query, NULL, &total);
+-        GST_LOG_OBJECT (mad, "peer returned duration %" GST_TIME_FORMAT,
+-            GST_TIME_ARGS (total));
+-        break;
+-      }
+-
+-      /* query peer for total length in bytes */
+-      if (!gst_pad_query_peer_duration (mad->sinkpad, &bytes_format,
+-              &total_bytes) || total_bytes <= 0) {
+-        GST_LOG_OBJECT (mad, "duration query on peer pad failed");
+-        goto error;
+-      }
+-
+-      GST_LOG_OBJECT (mad, "peer pad returned total=%" G_GINT64_FORMAT
+-          " bytes", total_bytes);
+-
+-      if (!gst_mad_convert_sink (pad, GST_FORMAT_BYTES, total_bytes,
+-              &time_format, &total)) {
+-        GST_DEBUG_OBJECT (mad, "conversion BYTE => TIME failed");
+-        goto error;
+-      }
+-      if (!gst_mad_convert_src (pad, GST_FORMAT_TIME, total,
+-              &req_format, &total)) {
+-        GST_DEBUG_OBJECT (mad, "conversion TIME => %s failed",
+-            gst_format_get_name (req_format));
+-        goto error;
+-      }
+-
+-      gst_query_set_duration (query, req_format, total);
+-
+-      if (req_format == GST_FORMAT_TIME) {
+-        GST_LOG_OBJECT (mad, "duration=%" GST_TIME_FORMAT,
+-            GST_TIME_ARGS (total));
+-      } else {
+-        GST_LOG_OBJECT (mad, "duration=%" G_GINT64_FORMAT " (%s)",
+-            total, gst_format_get_name (req_format));
+-      }
+-      break;
+-    }
+-    case GST_QUERY_CONVERT:
+-    {
+-      GstFormat src_fmt, dest_fmt;
+-      gint64 src_val, dest_val;
+-
+-      gst_query_parse_convert (query, &src_fmt, &src_val, &dest_fmt, &dest_val);
+-      if (!(res =
+-              gst_mad_convert_src (pad, src_fmt, src_val, &dest_fmt,
+-                  &dest_val)))
+-        goto error;
+-      gst_query_set_convert (query, src_fmt, src_val, dest_fmt, dest_val);
+-      break;
+-    }
+-    default:
+-      res = gst_pad_query_default (pad, query);
+-      break;
+-  }
+-
+-  if (peer)
+-    gst_object_unref (peer);
+-
+-  return res;
+-
+-error:
+-
+-  GST_DEBUG ("error handling query");
+-
+-  if (peer)
+-    gst_object_unref (peer);
+-
+-  return FALSE;
+ }
+ 
+ static gboolean
+-index_seek (GstMad * mad, GstPad * pad, GstEvent * event)
+-{
+-  gdouble rate;
+-  GstFormat format;
+-  GstSeekFlags flags;
+-  GstSeekType cur_type, stop_type;
+-  gint64 cur, stop;
+-  GstIndexEntry *entry = NULL;
+-
+-  /* since we know the exact byteoffset of the frame,
+-     make sure to try bytes first */
+-
+-  const GstFormat try_all_formats[] = {
+-    GST_FORMAT_BYTES,
+-    GST_FORMAT_TIME,
+-    0
+-  };
+-  const GstFormat *try_formats = try_all_formats;
+-  const GstFormat *peer_formats;
+-
+-  gst_event_parse_seek (event, &rate, &format, &flags,
+-      &cur_type, &cur, &stop_type, &stop);
+-
+-  if (rate < 0.0)
+-    return FALSE;
+-
+-  if (format == GST_FORMAT_TIME) {
+-    gst_segment_set_seek (&mad->segment, rate, format, flags, cur_type,
+-        cur, stop_type, stop, NULL);
+-  } else {
+-    gst_segment_init (&mad->segment, GST_FORMAT_UNDEFINED);
+-  }
+-
+-  entry = gst_index_get_assoc_entry (mad->index, mad->index_id,
+-      GST_INDEX_LOOKUP_BEFORE, 0, format, cur);
+-
+-  GST_DEBUG ("index seek");
+-
+-  if (!entry)
+-    return FALSE;
+-
+-#if 0
+-  peer_formats = gst_pad_get_formats (GST_PAD_PEER (mad->sinkpad));
+-#else
+-  peer_formats = try_all_formats;       /* FIXME */
+-#endif
+-
+-  while (gst_formats_contains (peer_formats, *try_formats)) {
+-    gint64 value;
+-    GstEvent *seek_event;
+-
+-    if (gst_index_entry_assoc_map (entry, *try_formats, &value)) {
+-      /* lookup succeeded, create the seek */
+-
+-      GST_DEBUG ("index %s %" G_GINT64_FORMAT
+-          " -> %s %" G_GINT64_FORMAT,
+-          gst_format_get_details (format)->nick,
+-          cur, gst_format_get_details (*try_formats)->nick, value);
+-
+-      seek_event = gst_event_new_seek (rate, *try_formats, flags,
+-          cur_type, value, stop_type, stop);
+-
+-      if (gst_pad_send_event (GST_PAD_PEER (mad->sinkpad), seek_event)) {
+-        /* seek worked, we're done, loop will exit */
+-        mad->restart = TRUE;
+-        g_assert (format == GST_FORMAT_TIME);
+-        mad->segment_start = cur;
+-        return TRUE;
+-      }
+-    }
+-    try_formats++;
+-  }
+-
+-  return FALSE;
+-}
+-
+-static gboolean
+-normal_seek (GstMad * mad, GstPad * pad, GstEvent * event)
+-{
+-  gdouble rate;
+-  GstFormat format, conv;
+-  GstSeekFlags flags;
+-  GstSeekType cur_type, stop_type;
+-  gint64 cur, stop;
+-  gint64 time_cur, time_stop;
+-  gint64 bytes_cur, bytes_stop;
+-  gboolean flush;
+-
+-  /* const GstFormat *peer_formats; */
+-  gboolean res;
+-
+-  GST_DEBUG ("normal seek");
+-
+-  gst_event_parse_seek (event, &rate, &format, &flags,
+-      &cur_type, &cur, &stop_type, &stop);
+-
+-  if (rate < 0.0)
+-    return FALSE;
+-
+-  if (format != GST_FORMAT_TIME) {
+-    conv = GST_FORMAT_TIME;
+-    if (!gst_mad_convert_src (pad, format, cur, &conv, &time_cur))
+-      goto convert_error;
+-    if (!gst_mad_convert_src (pad, format, stop, &conv, &time_stop))
+-      goto convert_error;
+-  } else {
+-    time_cur = cur;
+-    time_stop = stop;
+-  }
+-
+-  gst_segment_set_seek (&mad->segment, rate, GST_FORMAT_TIME, flags, cur_type,
+-      time_cur, stop_type, time_stop, NULL);
+-
+-  GST_DEBUG ("seek to time %" GST_TIME_FORMAT "-%" GST_TIME_FORMAT,
+-      GST_TIME_ARGS (time_cur), GST_TIME_ARGS (time_stop));
+-
+-  /* shave off the flush flag, we'll need it later */
+-  flush = ((flags & GST_SEEK_FLAG_FLUSH) != 0);
+-
+-  conv = GST_FORMAT_BYTES;
+-  if (!gst_mad_convert_sink (pad, GST_FORMAT_TIME, time_cur, &conv, &bytes_cur))
+-    goto convert_error;
+-  if (!gst_mad_convert_sink (pad, GST_FORMAT_TIME, time_stop, &conv,
+-          &bytes_stop))
+-    goto convert_error;
+-
+-  {
+-    GstEvent *seek_event;
+-
+-    /* conversion succeeded, create the seek */
+-    seek_event =
+-        gst_event_new_seek (rate, GST_FORMAT_BYTES, flags, cur_type,
+-        bytes_cur, stop_type, bytes_stop);
+-
+-    /* do the seek */
+-    res = gst_pad_push_event (mad->sinkpad, seek_event);
+-
+-    if (res) {
+-      /* we need to break out of the processing loop on flush */
+-      mad->restart = flush;
+-      mad->segment_start = time_cur;
+-      mad->last_ts = time_cur;
+-    }
+-  }
+-#if 0
+-  peer_formats = gst_pad_get_formats (GST_PAD_PEER (mad->sinkpad));
+-  /* while we did not exhaust our seek formats without result */
+-  while (peer_formats && *peer_formats && !res) {
+-    gint64 desired_offset;
+-
+-    format = *peer_formats;
+-
+-    /* try to convert requested format to one we can seek with on the sinkpad */
+-    if (gst_pad_convert (mad->sinkpad, GST_FORMAT_TIME, src_offset,
+-            &format, &desired_offset)) {
+-      GstEvent *seek_event;
+-
+-      /* conversion succeeded, create the seek */
+-      seek_event =
+-          gst_event_new_seek (format | GST_EVENT_SEEK_METHOD (event) | flush,
+-          desired_offset);
+-      /* do the seek */
+-      if (gst_pad_send_event (GST_PAD_PEER (mad->sinkpad), seek_event)) {
+-        /* seek worked, we're done, loop will exit */
+-        res = TRUE;
+-      }
+-    }
+-    /* at this point, either the seek worked or res == FALSE */
+-    if (res)
+-      /* we need to break out of the processing loop on flush */
+-      mad->restart = flush;
+-
+-    peer_formats++;
+-  }
+-#endif
++gst_mad_start (GstAudioDecoder * dec)
++{
++  GstMad *mad = GST_MAD (dec);
++  guint options = 0;
++
++  GST_DEBUG_OBJECT (dec, "start");
++  mad_stream_init (&mad->stream);
++  mad_frame_init (&mad->frame);
++  mad_synth_init (&mad->synth);
++  mad->rate = 0;
++  mad->channels = 0;
++  mad->caps_set = FALSE;
++  mad->frame.header.samplerate = 0;
++  if (mad->ignore_crc)
++    options |= MAD_OPTION_IGNORECRC;
++  if (mad->half)
++    options |= MAD_OPTION_HALFSAMPLERATE;
++  mad_stream_options (&mad->stream, options);
++  mad->header.mode = -1;
++  mad->header.emphasis = -1;
++  mad->eos = FALSE;
+ 
+-  return res;
++  /* call upon legacy upstream byte support (e.g. seeking) */
++  gst_audio_decoder_set_byte_time (dec, TRUE);
+ 
+-  /* ERRORS */
+-convert_error:
+-  {
+-    /* probably unsupported seek format */
+-    GST_DEBUG ("failed to convert format %u into GST_FORMAT_TIME", format);
+-    return FALSE;
+-  }
++  return TRUE;
+ }
+ 
+ static gboolean
+-gst_mad_src_event (GstPad * pad, GstEvent * event)
++gst_mad_stop (GstAudioDecoder * dec)
+ {
+-  gboolean res = TRUE;
+-  GstMad *mad;
++  GstMad *mad = GST_MAD (dec);
+ 
+-  mad = GST_MAD (GST_PAD_PARENT (pad));
+-
+-  switch (GST_EVENT_TYPE (event)) {
+-    case GST_EVENT_SEEK:
+-      /* the all-formats seek logic, ref the event, we need it later */
+-      gst_event_ref (event);
+-      if (!(res = gst_pad_push_event (mad->sinkpad, event))) {
+-        if (mad->index)
+-          res = index_seek (mad, pad, event);
+-        else
+-          res = normal_seek (mad, pad, event);
+-      }
+-      gst_event_unref (event);
+-      break;
+-    default:
+-      res = gst_pad_push_event (mad->sinkpad, event);
+-      break;
+-  }
++  GST_DEBUG_OBJECT (dec, "stop");
++  mad_synth_finish (&mad->synth);
++  mad_frame_finish (&mad->frame);
++  mad_stream_finish (&mad->stream);
+ 
+-  return res;
++  return TRUE;
+ }
+ 
+ static inline gint32
+@@ -833,381 +212,13 @@ scale (mad_fixed_t sample)
+   return (gint32) (sample << 3);
+ }
+ 
+-/* do we need this function? */
+-static void
+-gst_mad_set_property (GObject * object, guint prop_id,
+-    const GValue * value, GParamSpec * pspec)
+-{
+-  GstMad *mad;
+-
+-  mad = GST_MAD (object);
+-
+-  switch (prop_id) {
+-    case ARG_HALF:
+-      mad->half = g_value_get_boolean (value);
+-      break;
+-    case ARG_IGNORE_CRC:
+-      mad->ignore_crc = g_value_get_boolean (value);
+-      break;
+-    default:
+-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+-      break;
+-  }
+-}
+-
+-static void
+-gst_mad_get_property (GObject * object, guint prop_id,
+-    GValue * value, GParamSpec * pspec)
+-{
+-  GstMad *mad;
+-
+-  mad = GST_MAD (object);
+-
+-  switch (prop_id) {
+-    case ARG_HALF:
+-      g_value_set_boolean (value, mad->half);
+-      break;
+-    case ARG_IGNORE_CRC:
+-      g_value_set_boolean (value, mad->ignore_crc);
+-      break;
+-    default:
+-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+-      break;
+-  }
+-}
+-
+-static void
+-gst_mad_update_info (GstMad * mad)
+-{
+-  struct mad_header *header = &mad->frame.header;
+-  gboolean changed = FALSE;
+-  GstTagList *list = NULL;
+-
+-#define CHECK_HEADER(h1,str)                                    \
+-G_STMT_START{                                                   \
+-  if (mad->header.h1 != header->h1 || mad->new_header) {        \
+-    mad->header.h1 = header->h1;                                \
+-     changed = TRUE;                                            \
+-  };                                                            \
+-} G_STMT_END
+-
+-  /* update average bitrate */
+-  if (mad->new_header) {
+-    mad->framecount = 1;
+-    mad->vbr_rate = header->bitrate;
+-  } else {
+-    mad->framecount++;
+-    mad->vbr_rate += header->bitrate;
+-  }
+-  mad->vbr_average = (gint) (mad->vbr_rate / mad->framecount);
+-
+-  CHECK_HEADER (layer, "layer");
+-  CHECK_HEADER (mode, "mode");
+-  CHECK_HEADER (emphasis, "emphasis");
+-  mad->new_header = FALSE;
+-
+-  if (changed) {
+-    GEnumValue *mode;
+-    GEnumValue *emphasis;
+-
+-    mode =
+-        g_enum_get_value (g_type_class_peek (GST_TYPE_MAD_MODE),
+-        mad->header.mode);
+-    emphasis =
+-        g_enum_get_value (g_type_class_peek (GST_TYPE_MAD_EMPHASIS),
+-        mad->header.emphasis);
+-    list = gst_tag_list_new ();
+-    gst_tag_list_add (list, GST_TAG_MERGE_REPLACE,
+-        GST_TAG_LAYER, mad->header.layer,
+-        GST_TAG_MODE, mode->value_nick,
+-        GST_TAG_EMPHASIS, emphasis->value_nick, NULL);
+-    if (!mad->framed) {
+-      gchar *str;
+-
+-      str = g_strdup_printf ("MPEG-1 layer %d", mad->header.layer);
+-      gst_tag_list_add (list, GST_TAG_MERGE_REPLACE,
+-          GST_TAG_AUDIO_CODEC, str, NULL);
+-      g_free (str);
+-    }
+-  }
+-
+-  changed = FALSE;
+-  CHECK_HEADER (bitrate, "bitrate");
+-  if (!mad->xing_found && changed) {
+-    if (!list)
+-      list = gst_tag_list_new ();
+-    gst_tag_list_add (list, GST_TAG_MERGE_REPLACE,
+-        GST_TAG_BITRATE, mad->header.bitrate, NULL);
+-  }
+-  mad->header.bitrate = header->bitrate;
+-#undef CHECK_HEADER
+-
+-  if (list) {
+-    gst_element_post_message (GST_ELEMENT (mad),
+-        gst_message_new_tag (GST_OBJECT (mad), gst_tag_list_copy (list)));
+-
+-    if (mad->need_newsegment)
+-      mad->pending_events =
+-          g_list_append (mad->pending_events, gst_event_new_tag (list));
+-    else
+-      gst_pad_push_event (mad->srcpad, gst_event_new_tag (list));
+-  }
+-}
+-
+-static gboolean
+-gst_mad_sink_event (GstPad * pad, GstEvent * event)
+-{
+-  GstMad *mad = GST_MAD (GST_PAD_PARENT (pad));
+-  gboolean result;
+-
+-  GST_DEBUG ("handling %s event", GST_EVENT_TYPE_NAME (event));
+-
+-  switch (GST_EVENT_TYPE (event)) {
+-    case GST_EVENT_NEWSEGMENT:{
+-      GstFormat format;
+-      gboolean update;
+-      gdouble rate, applied_rate;
+-      gint64 start, stop, pos;
+-
+-      gst_event_parse_new_segment_full (event, &update, &rate, &applied_rate,
+-          &format, &start, &stop, &pos);
+-
+-      if (format == GST_FORMAT_TIME) {
+-        /* FIXME: is this really correct? */
+-        mad->tempsize = 0;
+-        result = gst_pad_push_event (mad->srcpad, event);
+-        /* we don't need to restart when we get here */
+-        mad->restart = FALSE;
+-        mad->framed = TRUE;
+-        gst_segment_set_newsegment_full (&mad->segment, update, rate,
+-            applied_rate, GST_FORMAT_TIME, start, stop, pos);
+-      } else {
+-        GST_DEBUG ("dropping newsegment event in format %s",
+-            gst_format_get_name (format));
+-        /* on restart the chain function will generate a new
+-         * newsegment event, so we can just drop this one */
+-        mad->restart = TRUE;
+-        gst_event_unref (event);
+-        mad->tempsize = 0;
+-        mad->framed = FALSE;
+-        result = TRUE;
+-      }
+-      break;
+-    }
+-    case GST_EVENT_EOS:
+-      if (mad->segment.rate < 0.0)
+-        gst_mad_chain_reverse (mad, NULL);
+-      mad->caps_set = FALSE;    /* could be a new stream */
+-      result = gst_pad_push_event (mad->srcpad, event);
+-      break;
+-    case GST_EVENT_FLUSH_STOP:
+-      /* Clear any stored data, as it won't make sense once
+-       * the new data arrives */
+-      mad->tempsize = 0;
+-      mad_frame_mute (&mad->frame);
+-      mad_synth_mute (&mad->synth);
+-      gst_mad_clear_queues (mad);
+-      /* fall-through */
+-    case GST_EVENT_FLUSH_START:
+-      result = gst_pad_event_default (pad, event);
+-      break;
+-    default:
+-      if (mad->restart) {
+-        /* Cache all other events if we still have to send a NEWSEGMENT */
+-        mad->pending_events = g_list_append (mad->pending_events, event);
+-        result = TRUE;
+-      } else {
+-        result = gst_pad_event_default (pad, event);
+-      }
+-      break;
+-  }
+-  return result;
+-}
+-
+-static gboolean
+-gst_mad_check_restart (GstMad * mad)
+-{
+-  gboolean yes = mad->restart;
+-
+-  if (mad->restart) {
+-    mad->restart = FALSE;
+-    mad->tempsize = 0;
+-  }
+-  return yes;
+-}
+-
+-
+-/* The following code has been taken from
+- * rhythmbox/metadata/monkey-media/stream-info-impl/id3-vfs/mp3bitrate.c
+- * which took it from xine-lib/src/demuxers/demux_mpgaudio.c
+- * This code has been kindly relicensed to LGPL by Thibaut Mattern and
+- * Bastien Nocera
+- */
+-#define BE_32(x) GST_READ_UINT32_BE(x)
+-
+-#define FOURCC_TAG( ch0, ch1, ch2, ch3 )                \
+-        ( (long)(unsigned char)(ch3) |                  \
+-          ( (long)(unsigned char)(ch2) << 8 ) |         \
+-          ( (long)(unsigned char)(ch1) << 16 ) |        \
+-          ( (long)(unsigned char)(ch0) << 24 ) )
+-
+-/* Xing header stuff */
+-#define XING_TAG FOURCC_TAG('X', 'i', 'n', 'g')
+-#define XING_FRAMES_FLAG     0x0001
+-#define XING_BYTES_FLAG      0x0002
+-#define XING_TOC_FLAG        0x0004
+-#define XING_VBR_SCALE_FLAG  0x0008
+-#define XING_TOC_LENGTH      100
+-
+-/* check for valid "Xing" VBR header */
+-static int
+-is_xhead (unsigned char *buf)
+-{
+-  return (BE_32 (buf) == XING_TAG);
+-}
+-
+-
+-#undef LOG
+-/*#define LOG*/
+-#ifdef LOG
+-#ifndef WIN32
+-#define lprintf(x...) g_print(x)
+-#else
+-#define lprintf GST_DEBUG
+-#endif
+-#else
+-#ifndef WIN32
+-#define lprintf(x...)
+-#else
+-#define lprintf GST_DEBUG
+-#endif
+-#endif
+-
+-static int
+-mpg123_parse_xing_header (struct mad_header *header,
+-    const guint8 * buf, int bufsize, int *bitrate, int *time)
+-{
+-  int i;
+-  guint8 *ptr = (guint8 *) buf;
+-  double frame_duration;
+-  int xflags, xframes, xbytes;
+-  int abr;
+-  guint8 xtoc[XING_TOC_LENGTH];
+-  int lsf_bit = !(header->flags & MAD_FLAG_LSF_EXT);
+-
+-  xframes = xbytes = 0;
+-
+-  /* offset of the Xing header */
+-  if (lsf_bit) {
+-    if (header->mode != MAD_MODE_SINGLE_CHANNEL)
+-      ptr += (32 + 4);
+-    else
+-      ptr += (17 + 4);
+-  } else {
+-    if (header->mode != MAD_MODE_SINGLE_CHANNEL)
+-      ptr += (17 + 4);
+-    else
+-      ptr += (9 + 4);
+-  }
+-
+-  if (ptr >= (buf + bufsize - 4))
+-    return 0;
+-
+-  if (is_xhead (ptr)) {
+-    lprintf ("Xing header found\n");
+-
+-    ptr += 4;
+-    if (ptr >= (buf + bufsize - 4))
+-      return 0;
+-
+-    xflags = BE_32 (ptr);
+-    ptr += 4;
+-
+-    if (xflags & XING_FRAMES_FLAG) {
+-      if (ptr >= (buf + bufsize - 4))
+-        return 0;
+-      xframes = BE_32 (ptr);
+-      lprintf ("xframes: %d\n", xframes);
+-      ptr += 4;
+-    }
+-    if (xflags & XING_BYTES_FLAG) {
+-      if (ptr >= (buf + bufsize - 4))
+-        return 0;
+-      xbytes = BE_32 (ptr);
+-      lprintf ("xbytes: %d\n", xbytes);
+-      ptr += 4;
+-    }
+-    if (xflags & XING_TOC_FLAG) {
+-      guchar old = 0;
+-
+-      lprintf ("toc found\n");
+-      if (ptr >= (buf + bufsize - XING_TOC_LENGTH))
+-        return 0;
+-      if (*ptr != 0) {
+-        lprintf ("skipping broken Xing TOC\n");
+-        goto skip_toc;
+-      }
+-      for (i = 0; i < XING_TOC_LENGTH; i++) {
+-        xtoc[i] = *(ptr + i);
+-        if (old > xtoc[i]) {
+-          lprintf ("skipping broken Xing TOC\n");
+-          goto skip_toc;
+-        }
+-        lprintf ("%d ", xtoc[i]);
+-      }
+-      lprintf ("\n");
+-    skip_toc:
+-      ptr += XING_TOC_LENGTH;
+-    }
+-
+-    if (xflags & XING_VBR_SCALE_FLAG) {
+-      if (ptr >= (buf + bufsize - 4))
+-        return 0;
+-      lprintf ("xvbr_scale: %d\n", BE_32 (ptr));
+-    }
+-
+-    /* 1 kbit = 1000 bits ! (and not 1024 bits) */
+-    if (xflags & (XING_FRAMES_FLAG | XING_BYTES_FLAG)) {
+-      if (header->layer == MAD_LAYER_I) {
+-        frame_duration = 384.0 / (double) header->samplerate;
+-      } else {
+-        int slots_per_frame;
+-
+-        slots_per_frame = ((header->layer == MAD_LAYER_III)
+-            && !lsf_bit) ? 72 : 144;
+-        frame_duration = slots_per_frame * 8.0 / (double) header->samplerate;
+-      }
+-      abr = ((double) xbytes * 8.0) / ((double) xframes * frame_duration);
+-      lprintf ("abr: %d bps\n", abr);
+-      if (bitrate != NULL) {
+-        *bitrate = abr;
+-      }
+-      if (time != NULL) {
+-        *time = (double) xframes *frame_duration;
+-
+-        lprintf ("stream_length: %d s, %d min %d s\n", *time,
+-            *time / 60, *time % 60);
+-      }
+-    } else {
+-      /* it's a stupid Xing header */
+-      lprintf ("not a Xing VBR file\n");
+-    }
+-    return 1;
+-  } else {
+-    lprintf ("Xing header not found\n");
+-    return 0;
+-  }
+-}
+-
+-/* End of Xine code */
+-
+ /* internal function to check if the header has changed and thus the
+  * caps need to be reset.  Only call during normal mode, not resyncing */
+ static void
+ gst_mad_check_caps_reset (GstMad * mad)
+ {
+   guint nchannels;
+-  guint rate, old_rate = mad->rate;
++  guint rate;
+ 
+   nchannels = MAD_NCHANNELS (&mad->frame.header);
+ 
+@@ -1222,10 +233,12 @@ gst_mad_check_caps_reset (GstMad * mad)
+ 
+   /* only set caps if they weren't already set for this continuous stream */
+   if (mad->channels != nchannels || mad->rate != rate) {
++    GstCaps *caps;
++
+     if (mad->caps_set) {
+-      GST_DEBUG
+-          ("Header changed from %d Hz/%d ch to %d Hz/%d ch, failed sync after seek ?",
+-          mad->rate, mad->channels, rate, nchannels);
++      GST_DEBUG_OBJECT (mad, "Header changed from %d Hz/%d ch to %d Hz/%d ch, "
++          "failed sync after seek ?", mad->rate, mad->channels, rate,
++          nchannels);
+       /* we're conservative on stream changes. However, our *initial* caps
+        * might have been wrong as well - mad ain't perfect in syncing. So,
+        * we count caps changes and change if we pass a limit treshold (3). */
+@@ -1237,17 +250,10 @@ gst_mad_check_caps_reset (GstMad * mad)
+       if (++mad->times_pending < 3)
+         return;
+     }
+-  }
+-  gst_mad_update_info (mad);
+-
+-  if (mad->channels != nchannels || mad->rate != rate) {
+-    GstCaps *caps;
+ 
+     if (mad->stream.options & MAD_OPTION_HALFSAMPLERATE)
+       rate >>= 1;
+ 
+-    /* FIXME see if peer can accept the caps */
+-
+     /* we set the caps even when the pad is not connected so they
+      * can be gotten for streaminfo */
+     caps = gst_caps_new_simple ("audio/x-raw-int",
+@@ -1257,619 +263,292 @@ gst_mad_check_caps_reset (GstMad * mad)
+         "depth", G_TYPE_INT, 32,
+         "rate", G_TYPE_INT, rate, "channels", G_TYPE_INT, nchannels, NULL);
+ 
+-    gst_pad_set_caps (mad->srcpad, caps);
++    gst_pad_set_caps (GST_AUDIO_DECODER_SRC_PAD (mad), caps);
+     gst_caps_unref (caps);
+ 
+-    mad->caps_set = TRUE;       /* set back to FALSE on discont */
++    mad->caps_set = TRUE;
+     mad->channels = nchannels;
+     mad->rate = rate;
+-
+-    /* update sample count so we don't come up with crazy timestamps */
+-    if (mad->total_samples && old_rate) {
+-      mad->total_samples = mad->total_samples * rate / old_rate;
+-    }
+-  }
+-}
+-
+-static void
+-gst_mad_clear_queues (GstMad * mad)
+-{
+-  g_list_foreach (mad->queued, (GFunc) gst_mini_object_unref, NULL);
+-  g_list_free (mad->queued);
+-  mad->queued = NULL;
+-  g_list_foreach (mad->gather, (GFunc) gst_mini_object_unref, NULL);
+-  g_list_free (mad->gather);
+-  mad->gather = NULL;
+-  g_list_foreach (mad->decode, (GFunc) gst_mini_object_unref, NULL);
+-  g_list_free (mad->decode);
+-  mad->decode = NULL;
+-}
+-
+-static GstFlowReturn
+-gst_mad_flush_decode (GstMad * mad)
+-{
+-  GstFlowReturn res = GST_FLOW_OK;
+-  GList *walk;
+-
+-  walk = mad->decode;
+-
+-  GST_DEBUG_OBJECT (mad, "flushing buffers to decoder");
+-
+-  /* clear buffer and decoder state */
+-  mad->tempsize = 0;
+-  mad_frame_mute (&mad->frame);
+-  mad_synth_mute (&mad->synth);
+-
+-  mad->process = TRUE;
+-  while (walk) {
+-    GList *next;
+-    GstBuffer *buf = GST_BUFFER_CAST (walk->data);
+-
+-    GST_DEBUG_OBJECT (mad, "decoding buffer %p, ts %" GST_TIME_FORMAT,
+-        buf, GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)));
+-
+-    next = g_list_next (walk);
+-    /* decode buffer, resulting data prepended to output queue */
+-    gst_buffer_ref (buf);
+-    res = gst_mad_chain (mad->sinkpad, buf);
+-
+-    /* if we generated output, we can discard the buffer, else we
+-     * keep it in the queue */
+-    if (mad->queued) {
+-      GST_DEBUG_OBJECT (mad, "decoded buffer to %p", mad->queued->data);
+-      mad->decode = g_list_delete_link (mad->decode, walk);
+-      gst_buffer_unref (buf);
+-    } else {
+-      GST_DEBUG_OBJECT (mad, "buffer did not decode, keeping");
+-    }
+-    walk = next;
+   }
+-  mad->process = FALSE;
+-
+-  /* now send queued data downstream */
+-  while (mad->queued) {
+-    GstBuffer *buf = GST_BUFFER_CAST (mad->queued->data);
+-
+-    GST_DEBUG_OBJECT (mad, "pushing buffer %p of size %u, "
+-        "time %" GST_TIME_FORMAT ", dur %" GST_TIME_FORMAT, buf,
+-        GST_BUFFER_SIZE (buf), GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+-        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
+-    res = gst_pad_push (mad->srcpad, buf);
+-
+-    mad->queued = g_list_delete_link (mad->queued, mad->queued);
+-  }
+-
+-  return res;
+ }
+ 
+ static GstFlowReturn
+-gst_mad_chain_reverse (GstMad * mad, GstBuffer * buf)
+-{
+-  GstFlowReturn result = GST_FLOW_OK;
+-
+-  /* if we have a discont, move buffers to the decode list */
+-  if (!buf || GST_BUFFER_FLAG_IS_SET (buf, GST_BUFFER_FLAG_DISCONT)) {
+-    GST_DEBUG_OBJECT (mad, "received discont");
+-    while (mad->gather) {
+-      GstBuffer *gbuf;
+-
+-      gbuf = GST_BUFFER_CAST (mad->gather->data);
+-      /* remove from the gather list */
+-      mad->gather = g_list_delete_link (mad->gather, mad->gather);
+-      /* copy to decode queue */
+-      mad->decode = g_list_prepend (mad->decode, gbuf);
+-    }
+-    /* decode stuff in the decode queue */
+-    gst_mad_flush_decode (mad);
+-  }
+-
+-  if (G_LIKELY (buf)) {
+-    GST_DEBUG_OBJECT (mad, "gathering buffer %p of size %u, "
+-        "time %" GST_TIME_FORMAT ", dur %" GST_TIME_FORMAT, buf,
+-        GST_BUFFER_SIZE (buf), GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (buf)),
+-        GST_TIME_ARGS (GST_BUFFER_DURATION (buf)));
+-
+-    /* add buffer to gather queue */
+-    mad->gather = g_list_prepend (mad->gather, buf);
+-  }
+-
+-  return result;
+-}
+-
+-static GstFlowReturn
+-gst_mad_chain (GstPad * pad, GstBuffer * buffer)
++gst_mad_parse (GstAudioDecoder * dec, GstAdapter * adapter,
++    gint * _offset, gint * len)
+ {
+   GstMad *mad;
+-  guint8 *data;
+-  glong size, tempsize;
+-  gboolean new_pts = FALSE;
+-  gboolean discont;
+-  GstClockTime timestamp;
+-  GstFlowReturn result = GST_FLOW_OK;
+-
+-  mad = GST_MAD (GST_PAD_PARENT (pad));
+-
+-  /* restarts happen on discontinuities, ie. seek, flush, PAUSED to PLAYING */
+-  if (gst_mad_check_restart (mad)) {
+-    mad->need_newsegment = TRUE;
+-    GST_DEBUG ("mad restarted");
+-  }
+-
+-  if (mad->segment.rate < 0.0) {
+-    if (!mad->process)
+-      return gst_mad_chain_reverse (mad, buffer);
+-    /* no output discont */
+-    discont = FALSE;
+-  } else {
+-    /* take discont flag */
+-    discont = GST_BUFFER_IS_DISCONT (buffer);
+-  }
+-
+-  timestamp = GST_BUFFER_TIMESTAMP (buffer);
+-  GST_DEBUG ("mad in timestamp %" GST_TIME_FORMAT " duration:%" GST_TIME_FORMAT,
+-      GST_TIME_ARGS (timestamp), GST_TIME_ARGS (GST_BUFFER_DURATION (buffer)));
+-
+-  /* handle timestamps */
+-  if (GST_CLOCK_TIME_IS_VALID (timestamp)) {
+-    /* if there is nothing left to process in our temporary buffer,
+-     * we can set this timestamp on the next outgoing buffer */
+-    if (mad->tempsize == 0) {
+-      /* we have to save the result here because we can't yet convert
+-       * the timestamp to a sample offset, as the samplerate might not
+-       * be known yet */
+-      mad->last_ts = timestamp;
+-      mad->base_byte_offset = GST_BUFFER_OFFSET (buffer);
+-      mad->bytes_consumed = 0;
+-    }
+-    /* else we need to finish the current partial frame with the old timestamp
+-     * and queue this timestamp for the next frame */
+-    else {
+-      new_pts = TRUE;
+-    }
+-  }
+-  GST_DEBUG ("last_ts %" GST_TIME_FORMAT, GST_TIME_ARGS (mad->last_ts));
+-
+-  /* handle data */
+-  data = GST_BUFFER_DATA (buffer);
+-  size = GST_BUFFER_SIZE (buffer);
+-
+-  tempsize = mad->tempsize;
+-
+-  /* process the incoming buffer in chunks of maximum MAD_BUFFER_MDLEN bytes;
+-   * this is the upper limit on processable chunk sizes set by mad */
+-  while (size > 0) {
+-    gint tocopy;
+-    guchar *mad_input_buffer;   /* convenience pointer to tempbuffer */
+-
+-    if (mad->tempsize == 0 && discont) {
+-      mad->discont = TRUE;
+-      discont = FALSE;
+-    }
+-    tocopy =
+-        MIN (MAD_BUFFER_MDLEN, MIN (size,
+-            MAD_BUFFER_MDLEN * 3 - mad->tempsize));
+-    if (tocopy == 0) {
+-      GST_ELEMENT_ERROR (mad, STREAM, DECODE, (NULL),
+-          ("mad claims to need more data than %u bytes, we don't have that much",
+-              MAD_BUFFER_MDLEN * 3));
+-      result = GST_FLOW_ERROR;
+-      goto end;
+-    }
+-
+-    /* append the chunk to process to our internal temporary buffer */
+-    GST_LOG ("tempbuffer size %ld, copying %d bytes from incoming buffer",
+-        mad->tempsize, tocopy);
+-    memcpy (mad->tempbuffer + mad->tempsize, data, tocopy);
+-    mad->tempsize += tocopy;
+-
+-    /* update our incoming buffer's parameters to reflect this */
+-    size -= tocopy;
+-    data += tocopy;
+-
+-    mad_input_buffer = mad->tempbuffer;
+-
+-    /* while we have data we can consume it */
+-    while (mad->tempsize > 0) {
+-      gint consumed = 0;
+-      guint nsamples;
+-      guint64 time_offset = GST_CLOCK_TIME_NONE;
+-      guint64 time_duration = GST_CLOCK_TIME_NONE;
+-      unsigned char const *before_sync, *after_sync;
+-      gboolean goto_exit = FALSE;
+-
+-      mad->in_error = FALSE;
+-
+-      mad_stream_buffer (&mad->stream, mad_input_buffer, mad->tempsize);
+-
+-      /* added separate header decoding to catch errors earlier, also fixes
+-       * some weird decoding errors... */
+-      GST_LOG ("decoding the header now");
+-      if (mad_header_decode (&mad->frame.header, &mad->stream) == -1) {
+-        if (mad->stream.error == MAD_ERROR_BUFLEN) {
+-          GST_LOG ("not enough data in tempbuffer (%ld), breaking to get more",
+-              mad->tempsize);
+-          break;
+-        } else {
+-          GST_WARNING ("mad_header_decode had an error: %s",
+-              mad_stream_errorstr (&mad->stream));
+-        }
+-      }
+-
+-      GST_LOG ("decoding one frame now");
+-
+-      if (mad_frame_decode (&mad->frame, &mad->stream) == -1) {
+-        GST_LOG ("got error %d", mad->stream.error);
+-
+-        /* not enough data, need to wait for next buffer? */
+-        if (mad->stream.error == MAD_ERROR_BUFLEN) {
+-          if (mad->stream.next_frame == mad_input_buffer) {
+-            GST_LOG
+-                ("not enough data in tempbuffer (%ld), breaking to get more",
+-                mad->tempsize);
+-            break;
+-          } else {
+-            GST_LOG ("sync error, flushing unneeded data");
+-            goto next_no_samples;
++  GstFlowReturn ret = GST_FLOW_UNEXPECTED;
++  gint av, size, offset;
++  const guint8 *data;
++  gboolean eos, sync;
++  GstBuffer *guard = NULL;
++
++  mad = GST_MAD (dec);
++
++  av = gst_adapter_available (adapter);
++  data = gst_adapter_peek (adapter, av);
++
++  gst_audio_decoder_get_parse_state (dec, &sync, &eos);
++  GST_LOG_OBJECT (mad, "parse state sync %d, eos %d", sync, eos);
++
++  if (eos) {
++    /* This is one streaming hack right there.
++     * mad will not decode the last frame if it is not followed by
++     * a number of 0 bytes, due to some buffer overflow, which can
++     * not be fixed for reasons I did not inquire into, see
++     * http://www.mars.org/mailman/public/mad-dev/2001-May/000262.html
++     */
++    guard = gst_buffer_new_and_alloc (av + MAD_BUFFER_GUARD);
++    /* let's be nice and not mess with baseclass state and keep hacks local */
++    memset (GST_BUFFER_DATA (guard), 0, GST_BUFFER_SIZE (guard));
++    memcpy (GST_BUFFER_DATA (guard), data, av);
++    GST_DEBUG_OBJECT (mad, "added %u zero guard bytes in the adapter; "
++        "using fallback buffer of size %u",
++        GST_BUFFER_SIZE (guard) - av, GST_BUFFER_SIZE (guard));
++    data = GST_BUFFER_DATA (guard);
++    av = GST_BUFFER_SIZE (guard);
++  }
++
++  /* we basically let mad library do parsing,
++   * and translate that back to baseclass.
++   * if a frame is found (and also decoded), subsequent handle_frame
++   * only needs to synthesize it */
++
++  offset = 0;
++  size = 0;
++
++resume:
++  if (G_UNLIKELY (offset + MAD_BUFFER_GUARD > av))
++    goto exit;
++
++  GST_LOG_OBJECT (mad, "setup mad stream at offset %d (of av %d)", offset, av);
++  mad_stream_buffer (&mad->stream, data + offset, av - offset);
++  /* convey sync idea to mad */
++  mad->stream.sync = sync;
++  /* if we get back here, lost sync anyway */
++  sync = FALSE;
++
++  while (TRUE) {
++    GST_LOG_OBJECT (mad, "decoding the header now");
++    if (mad_header_decode (&mad->frame.header, &mad->stream) == -1) {
++      /* HACK it seems mad reports wrong error when it is trying to determine
++       * free bitrate and scanning for next header */
++      if (mad->stream.error == MAD_ERROR_LOSTSYNC) {
++        const guint8 *ptr = mad->stream.this_frame;
++        guint32 header;
++
++        if (ptr >= data && ptr < data + av) {
++          header = GST_READ_UINT32_BE (ptr);
++          /* looks like possible freeform header with not much data */
++          if (((header & 0xFFE00000) == 0xFFE00000) &&
++              (((header >> 12) & 0xF) == 0x0) && (av < 4096)) {
++            GST_DEBUG_OBJECT (mad, "overriding freeform LOST_SYNC to BUFLEN");
++            mad->stream.error = MAD_ERROR_BUFLEN;
+           }
+-        } else if (mad->stream.error == MAD_ERROR_BADDATAPTR) {
+-          /* Flush data */
+-          goto next_no_samples;
+-        }
+-        /* we are in an error state */
+-        mad->in_error = TRUE;
+-        GST_WARNING ("mad_frame_decode had an error: %s",
+-            mad_stream_errorstr (&mad->stream));
+-        if (!MAD_RECOVERABLE (mad->stream.error)) {
+-          GST_ELEMENT_ERROR (mad, STREAM, DECODE, (NULL), (NULL));
+-          result = GST_FLOW_ERROR;
+-          goto end;
+-        } else if (mad->stream.error == MAD_ERROR_LOSTSYNC) {
+-          /* lost sync, force a resync */
+-          GST_INFO ("recoverable lost sync error");
+         }
+-
+-        mad_frame_mute (&mad->frame);
+-        mad_synth_mute (&mad->synth);
+-        before_sync = mad->stream.ptr.byte;
+-        if (mad_stream_sync (&mad->stream) != 0)
+-          GST_WARNING ("mad_stream_sync failed");
+-        after_sync = mad->stream.ptr.byte;
+-        /* a succesful resync should make us drop bytes as consumed, so
+-           calculate from the byte pointers before and after resync */
+-        consumed = after_sync - before_sync;
+-        GST_DEBUG ("resynchronization consumes %d bytes", consumed);
+-        GST_DEBUG ("synced to data: 0x%0x 0x%0x", *mad->stream.ptr.byte,
+-            *(mad->stream.ptr.byte + 1));
+-
+-        mad_stream_sync (&mad->stream);
+-        /* recoverable errors pass */
+-        goto next_no_samples;
+       }
+-
+-      if (mad->check_for_xing) {
+-        int bitrate = 0, time = 0;
+-        GstTagList *list;
+-        int frame_len = mad->stream.next_frame - mad->stream.this_frame;
+-
+-        mad->check_for_xing = FALSE;
+-
+-        /* Assume Xing headers can only be the first frame in a mp3 file */
+-        if (mpg123_parse_xing_header (&mad->frame.header,
+-                mad->stream.this_frame, frame_len, &bitrate, &time)) {
+-          mad->xing_found = TRUE;
+-          list = gst_tag_list_new ();
+-          gst_tag_list_add (list, GST_TAG_MERGE_REPLACE,
+-              GST_TAG_DURATION, (gint64) time * 1000 * 1000 * 1000,
+-              GST_TAG_BITRATE, bitrate, NULL);
+-          gst_element_post_message (GST_ELEMENT (mad),
+-              gst_message_new_tag (GST_OBJECT (mad), gst_tag_list_copy (list)));
+-
+-          if (mad->need_newsegment)
+-            mad->pending_events =
+-                g_list_append (mad->pending_events, gst_event_new_tag (list));
+-          else
+-            gst_pad_push_event (mad->srcpad, gst_event_new_tag (list));
+-
+-          goto next_no_samples;
+-        }
++      if (mad->stream.error == MAD_ERROR_BUFLEN) {
++        GST_LOG_OBJECT (mad, "not enough data, getting more");
++        offset = mad->stream.next_frame - data;
++        break;
++      } else if (mad->stream.error == MAD_ERROR_LOSTSYNC) {
++        GST_LOG_OBJECT (mad, "lost sync");
++        continue;
++      } else {
++        /* probably some bogus header, basically also lost sync */
++        GST_DEBUG_OBJECT (mad, "mad_header_decode had an error: %s",
++            mad_stream_errorstr (&mad->stream));
++        continue;
+       }
++    }
+ 
+-      /* if we're not resyncing/in error, check if caps need to be set again */
+-      if (!mad->in_error)
+-        gst_mad_check_caps_reset (mad);
+-      nsamples = MAD_NSBSAMPLES (&mad->frame.header) *
+-          (mad->stream.options & MAD_OPTION_HALFSAMPLERATE ? 16 : 32);
+-
+-      if (mad->rate == 0) {
+-        g_warning ("mad->rate is 0; timestamps cannot be calculated");
++    /* could have a frame now, subsequent will confirm */
++    offset = mad->stream.this_frame - data;
++    size = mad->stream.next_frame - mad->stream.this_frame;
++    g_assert (size);
++
++    GST_LOG_OBJECT (mad, "parsing and decoding one frame now "
++        "(offset %d, size %d)", offset, size);
++    if (mad_frame_decode (&mad->frame, &mad->stream) == -1) {
++      GST_LOG_OBJECT (mad, "got error %d", mad->stream.error);
++
++      /* not enough data, need to wait for next buffer? */
++      if (mad->stream.error == MAD_ERROR_BUFLEN) {
++        /* not really expect this error at this stage anymore
++         * assume bogus frame and bad sync and move along a bit */
++        GST_WARNING_OBJECT (mad, "not enough data (unexpected), moving along");
++        offset++;
++        goto resume;
++      } else if (mad->stream.error == MAD_ERROR_BADDATAPTR) {
++        GST_DEBUG_OBJECT (mad, "bad data ptr, skipping presumed frame");
++        /* flush past presumed frame */
++        offset += size;
++        goto resume;
+       } else {
+-        /* if we have a pending timestamp, we can use it now to calculate the sample offset */
+-        if (GST_CLOCK_TIME_IS_VALID (mad->last_ts)) {
+-          GstFormat format = GST_FORMAT_DEFAULT;
+-          gint64 total;
+-
+-          /* Convert incoming timestamp to a number of encoded samples */
+-          gst_pad_query_convert (mad->srcpad, GST_FORMAT_TIME, mad->last_ts,
+-              &format, &total);
+-
+-          GST_DEBUG_OBJECT (mad, "calculated samples offset from ts is %"
+-              G_GUINT64_FORMAT " accumulated samples offset is %"
+-              G_GUINT64_FORMAT, total, mad->total_samples);
+-
+-          /* We are using the incoming timestamps to generate the outgoing ones
+-           * if available. However some muxing formats are not precise enough
+-           * to allow us to generate a perfect stream. When converting the
+-           * timestamp to a number of encoded samples so far we are introducing
+-           * a lot of potential error compared to our accumulated number of
+-           * samples encoded. If the difference between those 2 numbers is
+-           * bigger than half a frame we then use the incoming timestamp
+-           * as a reference, otherwise we continue using our accumulated samples
+-           * counter */
+-          if (ABS (((gint64) (mad->total_samples)) - total) > nsamples / 2) {
+-            GST_DEBUG_OBJECT (mad, "difference is bigger than half a frame, "
+-                "using calculated samples offset %" G_GUINT64_FORMAT, total);
+-            /* Override our accumulated samples counter */
+-            mad->total_samples = total;
+-            /* We use that timestamp directly */
+-            time_offset = mad->last_ts;
+-          }
+-
+-          mad->last_ts = GST_CLOCK_TIME_NONE;
+-        }
+-
+-        if (!GST_CLOCK_TIME_IS_VALID (time_offset)) {
+-          time_offset = gst_util_uint64_scale_int (mad->total_samples,
+-              GST_SECOND, mad->rate);
++        GST_WARNING_OBJECT (mad, "mad_frame_decode had an error: %s",
++            mad_stream_errorstr (&mad->stream));
++        if (!MAD_RECOVERABLE (mad->stream.error)) {
++          /* well, all may be well enough bytes later on ... */
++          GST_AUDIO_DECODER_ERROR (mad, 1, STREAM, DECODE, (NULL),
++              ("mad error: %s", mad_stream_errorstr (&mad->stream)), ret);
+         }
+-        /* Duration is next timestamp - this one to generate a continuous
+-         * stream */
+-        time_duration =
+-            gst_util_uint64_scale_int (mad->total_samples + nsamples,
+-            GST_SECOND, mad->rate) - time_offset;
+-      }
+-
+-      if (mad->index) {
+-        guint64 x_bytes = mad->base_byte_offset + mad->bytes_consumed;
+-
+-        gst_index_add_association (mad->index, mad->index_id,
+-            GST_ASSOCIATION_FLAG_DELTA_UNIT,
+-            GST_FORMAT_BYTES, x_bytes, GST_FORMAT_TIME, time_offset, NULL);
++        /* move along and try again */
++        offset++;
++        goto resume;
+       }
++      g_assert_not_reached ();
++    }
+ 
+-      if (mad->segment_start <= (time_offset ==
+-              GST_CLOCK_TIME_NONE ? 0 : time_offset)) {
+-
+-        /* for sample accurate seeking, calculate how many samples
+-           to skip and send the remaining pcm samples */
+-
+-        GstBuffer *outbuffer = NULL;
+-        gint32 *outdata;
+-        mad_fixed_t const *left_ch, *right_ch;
+-
+-        if (mad->need_newsegment) {
+-          gint64 start = time_offset;
+-
+-          GST_DEBUG ("Sending NEWSEGMENT event, start=%" GST_TIME_FORMAT,
+-              GST_TIME_ARGS (start));
+-
+-          gst_segment_set_newsegment (&mad->segment, FALSE, 1.0,
+-              GST_FORMAT_TIME, start, GST_CLOCK_TIME_NONE, start);
+-
+-          gst_pad_push_event (mad->srcpad,
+-              gst_event_new_new_segment (FALSE, 1.0, GST_FORMAT_TIME,
+-                  start, GST_CLOCK_TIME_NONE, start));
+-          mad->need_newsegment = FALSE;
+-        }
+-
+-        if (mad->pending_events) {
+-          GList *l;
+-
+-          for (l = mad->pending_events; l != NULL; l = l->next) {
+-            gst_pad_push_event (mad->srcpad, GST_EVENT (l->data));
+-          }
+-          g_list_free (mad->pending_events);
+-          mad->pending_events = NULL;
+-        }
+-
+-        /* will attach the caps to the buffer */
+-        result =
+-            gst_pad_alloc_buffer_and_set_caps (mad->srcpad, 0,
+-            nsamples * mad->channels * 4, GST_PAD_CAPS (mad->srcpad),
+-            &outbuffer);
+-        if (result != GST_FLOW_OK) {
+-          /* Head for the exit, dropping samples as we go */
+-          GST_LOG ("Skipping frame synthesis due to pad_alloc return value");
+-          goto_exit = TRUE;
+-          goto skip_frame;
+-        }
++    /* so decoded ok, got a frame now */
++    ret = GST_FLOW_OK;
++    break;
++  }
+ 
+-        if (GST_BUFFER_SIZE (outbuffer) != nsamples * mad->channels * 4) {
+-          gst_buffer_unref (outbuffer);
++exit:
++  *_offset = offset;
++  *len = size;
+ 
+-          outbuffer = gst_buffer_new_and_alloc (nsamples * mad->channels * 4);
+-          gst_buffer_set_caps (outbuffer, GST_PAD_CAPS (mad->srcpad));
+-        }
++  /* ensure that if we added some dummy guard bytes above, we don't claim
++     to have used them as they're unknown to the caller. */
++  if (eos) {
++    g_assert (av >= MAD_BUFFER_GUARD);
++    av -= MAD_BUFFER_GUARD;
++    if (*_offset > av)
++      *_offset = av;
++    if (*len > av)
++      *len = av;
++    g_assert (guard);
++    gst_buffer_unref (guard);
++  }
+ 
+-        mad_synth_frame (&mad->synth, &mad->frame);
+-        left_ch = mad->synth.pcm.samples[0];
+-        right_ch = mad->synth.pcm.samples[1];
++  return ret;
++}
+ 
+-        outdata = (gint32 *) GST_BUFFER_DATA (outbuffer);
++static GstFlowReturn
++gst_mad_handle_frame (GstAudioDecoder * dec, GstBuffer * buffer)
++{
++  GstMad *mad;
++  GstFlowReturn ret = GST_FLOW_UNEXPECTED;
++  GstBuffer *outbuffer;
++  guint nsamples;
++  gint32 *outdata;
++  mad_fixed_t const *left_ch, *right_ch;
+ 
+-        GST_DEBUG ("mad out timestamp %" GST_TIME_FORMAT " dur: %"
+-            GST_TIME_FORMAT, GST_TIME_ARGS (time_offset),
+-            GST_TIME_ARGS (time_duration));
++  mad = GST_MAD (dec);
+ 
+-        GST_BUFFER_TIMESTAMP (outbuffer) = time_offset;
+-        GST_BUFFER_DURATION (outbuffer) = time_duration;
+-        GST_BUFFER_OFFSET (outbuffer) = mad->total_samples;
+-        GST_BUFFER_OFFSET_END (outbuffer) = mad->total_samples + nsamples;
++  /* no fancy draining */
++  if (G_UNLIKELY (!buffer))
++    return GST_FLOW_OK;
+ 
+-        /* output sample(s) in 16-bit signed native-endian PCM */
+-        if (mad->channels == 1) {
+-          gint count = nsamples;
++  /* _parse prepared a frame */
++  nsamples = MAD_NSBSAMPLES (&mad->frame.header) *
++      (mad->stream.options & MAD_OPTION_HALFSAMPLERATE ? 16 : 32);
++  GST_LOG_OBJECT (mad, "mad frame with %d samples", nsamples);
+ 
+-          while (count--) {
+-            *outdata++ = scale (*left_ch++) & 0xffffffff;
+-          }
+-        } else {
+-          gint count = nsamples;
++  /* arrange for initial caps before pushing data,
++   * and update later on if needed */
++  gst_mad_check_caps_reset (mad);
+ 
+-          while (count--) {
+-            *outdata++ = scale (*left_ch++) & 0xffffffff;
+-            *outdata++ = scale (*right_ch++) & 0xffffffff;
+-          }
+-        }
++  ret = gst_pad_alloc_buffer_and_set_caps (GST_AUDIO_DECODER_SRC_PAD (dec),
++      0, nsamples * mad->channels * 4,
++      GST_PAD_CAPS (GST_AUDIO_DECODER_SRC_PAD (dec)), &outbuffer);
++  if (ret != GST_FLOW_OK) {
++    /* Head for the exit, dropping samples as we go */
++    GST_LOG_OBJECT (dec,
++        "Skipping frame synthesis due to pad_alloc return value");
++    gst_audio_decoder_finish_frame (dec, NULL, 1);
++    goto exit;
++  }
+ 
+-        if ((outbuffer = gst_audio_buffer_clip (outbuffer, &mad->segment,
+-                    mad->rate, 4 * mad->channels))) {
+-          GST_LOG_OBJECT (mad,
+-              "pushing buffer, off=%" G_GUINT64_FORMAT ", ts=%" GST_TIME_FORMAT,
+-              GST_BUFFER_OFFSET (outbuffer),
+-              GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (outbuffer)));
+-
+-          /* apply discont */
+-          if (mad->discont) {
+-            GST_BUFFER_FLAG_SET (outbuffer, GST_BUFFER_FLAG_DISCONT);
+-            mad->discont = FALSE;
+-          }
++  /* TODO would be nice if core or some helper handled this surprise ... */
++  if (GST_BUFFER_SIZE (outbuffer) != nsamples * mad->channels * 4) {
++    gst_buffer_unref (outbuffer);
++    outbuffer = gst_buffer_new_and_alloc (nsamples * mad->channels * 4);
++  }
+ 
+-          mad->segment.last_stop = GST_BUFFER_TIMESTAMP (outbuffer);
+-          if (mad->segment.rate > 0.0) {
+-            result = gst_pad_push (mad->srcpad, outbuffer);
+-          } else {
+-            GST_LOG_OBJECT (mad, "queued buffer");
+-            mad->queued = g_list_prepend (mad->queued, outbuffer);
+-            result = GST_FLOW_OK;
+-          }
+-          if (result != GST_FLOW_OK) {
+-            /* Head for the exit, dropping samples as we go */
+-            goto_exit = TRUE;
+-          }
+-        } else {
+-          GST_LOG_OBJECT (mad, "Dropping buffer");
+-        }
+-      }
++  mad_synth_frame (&mad->synth, &mad->frame);
++  left_ch = mad->synth.pcm.samples[0];
++  right_ch = mad->synth.pcm.samples[1];
+ 
+-    skip_frame:
+-      mad->total_samples += nsamples;
++  outdata = (gint32 *) GST_BUFFER_DATA (outbuffer);
+ 
+-      /* we have a queued timestamp on the incoming buffer that we should
+-       * use for the next frame */
+-      if (new_pts && (mad->stream.next_frame - mad_input_buffer >= tempsize)) {
+-        new_pts = FALSE;
+-        mad->last_ts = timestamp;
+-        mad->base_byte_offset = GST_BUFFER_OFFSET (buffer);
+-        mad->bytes_consumed = 0;
+-      }
+-      tempsize = 0;
+-      if (discont) {
+-        mad->discont = TRUE;
+-        discont = FALSE;
+-      }
++  /* output sample(s) in 16-bit signed native-endian PCM */
++  if (mad->channels == 1) {
++    gint count = nsamples;
+ 
+-      if (gst_mad_check_restart (mad)) {
+-        goto end;
+-      }
++    while (count--) {
++      *outdata++ = scale (*left_ch++) & 0xffffffff;
++    }
++  } else {
++    gint count = nsamples;
+ 
+-    next_no_samples:
+-      /* figure out how many bytes mad consumed */
+-      /* if consumed is already set, it's from the resync higher up, so
+-         we need to use that value instead.  Otherwise, recalculate from
+-         mad's consumption */
+-      if (consumed == 0)
+-        consumed = mad->stream.next_frame - mad_input_buffer;
+-
+-      GST_LOG ("mad consumed %d bytes", consumed);
+-      /* move out pointer to where mad want the next data */
+-      mad_input_buffer += consumed;
+-      mad->tempsize -= consumed;
+-      mad->bytes_consumed += consumed;
+-      if (goto_exit == TRUE)
+-        goto end;
++    while (count--) {
++      *outdata++ = scale (*left_ch++) & 0xffffffff;
++      *outdata++ = scale (*right_ch++) & 0xffffffff;
+     }
+-    /* we only get here from breaks, tempsize never actually drops below 0 */
+-    memmove (mad->tempbuffer, mad_input_buffer, mad->tempsize);
+   }
+-  result = GST_FLOW_OK;
+ 
+-end:
+-  gst_buffer_unref (buffer);
++  ret = gst_audio_decoder_finish_frame (dec, outbuffer, 1);
++exit:
++  return ret;
++}
+ 
+-  return result;
++static void
++gst_mad_flush (GstAudioDecoder * dec, gboolean hard)
++{
++  GstMad *mad;
++
++  mad = GST_MAD (dec);
++  if (hard) {
++    mad_frame_mute (&mad->frame);
++    mad_synth_mute (&mad->synth);
++  }
+ }
+ 
+-static GstStateChangeReturn
+-gst_mad_change_state (GstElement * element, GstStateChange transition)
++static void
++gst_mad_set_property (GObject * object, guint prop_id,
++    const GValue * value, GParamSpec * pspec)
+ {
+   GstMad *mad;
+-  GstStateChangeReturn ret;
+ 
+-  mad = GST_MAD (element);
++  mad = GST_MAD (object);
+ 
+-  switch (transition) {
+-    case GST_STATE_CHANGE_NULL_TO_READY:
+-      break;
+-    case GST_STATE_CHANGE_READY_TO_PAUSED:
+-    {
+-      guint options = 0;
+-
+-      mad_stream_init (&mad->stream);
+-      mad_frame_init (&mad->frame);
+-      mad_synth_init (&mad->synth);
+-      mad->tempsize = 0;
+-      mad->discont = TRUE;
+-      mad->total_samples = 0;
+-      mad->rate = 0;
+-      mad->channels = 0;
+-      mad->caps_set = FALSE;
+-      mad->times_pending = mad->pending_rate = mad->pending_channels = 0;
+-      mad->vbr_average = 0;
+-      gst_segment_init (&mad->segment, GST_FORMAT_TIME);
+-      mad->new_header = TRUE;
+-      mad->framed = FALSE;
+-      mad->framecount = 0;
+-      mad->vbr_rate = 0;
+-      mad->frame.header.samplerate = 0;
+-      mad->last_ts = GST_CLOCK_TIME_NONE;
+-      if (mad->ignore_crc)
+-        options |= MAD_OPTION_IGNORECRC;
+-      if (mad->half)
+-        options |= MAD_OPTION_HALFSAMPLERATE;
+-      mad_stream_options (&mad->stream, options);
++  switch (prop_id) {
++    case ARG_HALF:
++      mad->half = g_value_get_boolean (value);
+       break;
+-    }
+-    case GST_STATE_CHANGE_PAUSED_TO_PLAYING:
++    case ARG_IGNORE_CRC:
++      mad->ignore_crc = g_value_get_boolean (value);
+       break;
+     default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+   }
++}
+ 
+-  ret = parent_class->change_state (element, transition);
++static void
++gst_mad_get_property (GObject * object, guint prop_id,
++    GValue * value, GParamSpec * pspec)
++{
++  GstMad *mad;
+ 
+-  switch (transition) {
+-    case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
+-      break;
+-    case GST_STATE_CHANGE_PAUSED_TO_READY:
+-      mad_synth_finish (&mad->synth);
+-      mad_frame_finish (&mad->frame);
+-      mad_stream_finish (&mad->stream);
+-      mad->restart = TRUE;
+-      mad->check_for_xing = TRUE;
+-      if (mad->tags) {
+-        gst_tag_list_free (mad->tags);
+-        mad->tags = NULL;
+-      }
+-      gst_mad_clear_queues (mad);
++  mad = GST_MAD (object);
++
++  switch (prop_id) {
++    case ARG_HALF:
++      g_value_set_boolean (value, mad->half);
+       break;
+-    case GST_STATE_CHANGE_READY_TO_NULL:
++    case ARG_IGNORE_CRC:
++      g_value_set_boolean (value, mad->ignore_crc);
+       break;
+     default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+       break;
+   }
+-  return ret;
+ }
+ 
++/* plugin initialisation */
++
+ static gboolean
+ plugin_init (GstPlugin * plugin)
+ {
+diff --git a/ext/mad/gstmad.h b/ext/mad/gstmad.h
+index 730911d..889ea9a 100644
+--- a/ext/mad/gstmad.h
++++ b/ext/mad/gstmad.h
+@@ -23,6 +23,8 @@
+ 
+ #include <gst/gst.h>
+ #include <gst/tag/tag.h>
++#include <gst/audio/gstaudiodecoder.h>
++
+ #include <mad.h>
+ 
+ G_BEGIN_DECLS
+@@ -44,70 +46,36 @@ typedef struct _GstMadClass GstMadClass;
+ 
+ struct _GstMad
+ {
+-  GstElement element;
+-
+-  /* pads */
+-  GstPad *sinkpad, *srcpad;
++  GstAudioDecoder element;
+ 
+   /* state */
+   struct mad_stream stream;
+   struct mad_frame frame;
+   struct mad_synth synth;
+-  guchar *tempbuffer;           /* temporary buffer to serve to mad */
+-  glong tempsize;               /* running count of temp buffer size */
+-  GstClockTime last_ts;
+-  guint64 base_byte_offset;
+-  guint64 bytes_consumed;       /* since the base_byte_offset */
+-  guint64 total_samples;        /* the number of samples since the sync point */
+-
+-  gboolean in_error;            /* set when mad's in an error state */
+-  gboolean restart;
+-  gboolean discont;
+-  guint64 segment_start;
+-  GstSegment segment;
+-  gboolean need_newsegment;
+ 
+   /* info */
+   struct mad_header header;
+-  gboolean new_header;
+-  guint framecount;
+-  gint vbr_average;             /* average bitrate */
+-  guint64 vbr_rate;             /* average * framecount */
+-
+-  gboolean half;
+-  gboolean ignore_crc;
+-
+-  GstTagList *tags;
+ 
+   /* negotiated format */
+   gint rate, pending_rate;
+   gint channels, pending_channels;
+   gint times_pending;
+-
+   gboolean caps_set;            /* used to keep track of whether to change/update caps */
+-  GstIndex *index;
+-  gint index_id;
+-
+-  gboolean check_for_xing;
+-  gboolean xing_found;
+-
+-  gboolean framed;              /* whether there is a demuxer in front of us */
+ 
+-  GList *pending_events;
++  gboolean eos;
+ 
+-  /* reverse playback */
+-  GList *decode;
+-  GList *gather;
+-  GList *queued;
+-  gboolean process;
++  /* properties */
++  gboolean half;
++  gboolean ignore_crc;
+ };
+ 
+ struct _GstMadClass
+ {
+-  GstElementClass parent_class;
++  GstAudioDecoderClass parent_class;
+ };
+ 
+ GType                   gst_mad_get_type (void);
++gboolean                gst_mad_register (GstPlugin * plugin);
+ 
+ G_END_DECLS
+ 
+diff --git a/ext/mpeg2dec/gstmpeg2dec.c b/ext/mpeg2dec/gstmpeg2dec.c
+index 51c47e6..5c3d2a0 100644
+--- a/ext/mpeg2dec/gstmpeg2dec.c
++++ b/ext/mpeg2dec/gstmpeg2dec.c
+@@ -357,10 +357,20 @@ gst_mpeg2dec_crop_buffer (GstMpeg2dec * dec, GstBuffer ** buf)
+         gst_video_format_get_component_height (dec->format, c, dec->height);
+     c_width = gst_video_format_get_component_width (dec->format, c, dec->width);
+ 
+-    for (line = 0; line < c_height; line++) {
+-      memcpy (dest, src, c_width);
+-      dest += stride_out;
+-      src += stride_in;
++    GST_DEBUG ("stride_in:%d _out:%d c_width:%d c_height:%d",
++        stride_in, stride_out, c_width, c_height);
++
++    if (stride_in == stride_out && stride_in == c_width) {
++      /* FAST PATH */
++      memcpy (dest, src, c_height * stride_out);
++      dest += stride_out * c_height;
++      src += stride_out * c_height;
++    } else {
++      for (line = 0; line < c_height; line++) {
++        memcpy (dest, src, c_width);
++        dest += stride_out;
++        src += stride_in;
++      }
+     }
+   }
+ 
+diff --git a/ext/x264/gstx264enc.c b/ext/x264/gstx264enc.c
+index ea3cf0b..e81630d 100644
+--- a/ext/x264/gstx264enc.c
++++ b/ext/x264/gstx264enc.c
+@@ -97,6 +97,7 @@
+ #include "gstx264enc.h"
+ 
+ #include <gst/pbutils/pbutils.h>
++#include <gst/video/video.h>
+ 
+ #if X264_BUILD >= 71
+ #define X264_DELAYED_FRAMES_API
+@@ -127,6 +128,10 @@
+ #define X264_PRESETS
+ #endif
+ 
++#if X264_BUILD >= 95
++#define FORCE_INTRA_API
++#endif
++
+ #include <string.h>
+ #include <stdlib.h>
+ 
+@@ -473,8 +478,8 @@ static GstStaticPadTemplate src_factory = GST_STATIC_PAD_TEMPLATE ("src",
+         "width = (int) [ 1, MAX ], " "height = (int) [ 1, MAX ], "
+         "stream-format = (string) { byte-stream, avc }, "
+         "alignment = (string) { au }, "
+-        "profile = (string) { high-10, high, main, constrained-baseline, "
+-        "high-10-intra }")
++        "profile = (string) { high-10, high, main, baseline, "
++        "constrained-baseline, high-10-intra }")
+     );
+ 
+ static void gst_x264_enc_finalize (GObject * object);
+@@ -936,6 +941,8 @@ gst_x264_enc_init (GstX264Enc * encoder, GstX264EncClass * klass)
+   encoder->x264param.p_log_private = encoder;
+   encoder->x264param.i_log_level = X264_LOG_DEBUG;
+ 
++  gst_segment_init (&encoder->segment, GST_FORMAT_TIME);
++  encoder->force_key_unit_event = NULL;
+   gst_x264_enc_reset (encoder);
+ }
+ 
+@@ -946,12 +953,11 @@ gst_x264_enc_reset (GstX264Enc * encoder)
+   encoder->width = 0;
+   encoder->height = 0;
+   encoder->current_byte_stream = GST_X264_ENC_STREAM_FORMAT_FROM_PROPERTY;
++  gst_segment_init (&encoder->segment, GST_FORMAT_UNDEFINED);
+ 
+   GST_OBJECT_LOCK (encoder);
+-  encoder->i_type = X264_TYPE_AUTO;
+-  if (encoder->forcekeyunit_event)
+-    gst_event_unref (encoder->forcekeyunit_event);
+-  encoder->forcekeyunit_event = NULL;
++  gst_event_replace (&encoder->force_key_unit_event, NULL);
++  encoder->pending_key_unit_ts = GST_CLOCK_TIME_NONE;
+   GST_OBJECT_UNLOCK (encoder);
+ }
+ 
+@@ -1595,7 +1601,11 @@ gst_x264_enc_sink_set_caps (GstPad * pad, GstCaps * caps)
+ 
+     profile = gst_structure_get_string (s, "profile");
+     if (profile) {
+-      if (!strcmp (profile, "constrained-baseline")) {
++      /* FIXME - if libx264 ever adds support for FMO, ASO or redundant slices
++       * make sure constrained profile has a separate case which disables
++       * those */
++      if (!strcmp (profile, "constrained-baseline") ||
++          !strcmp (profile, "baseline")) {
+         encoder->peer_profile = "baseline";
+       } else if (!strcmp (profile, "high-10-intra")) {
+         encoder->peer_intra_profile = TRUE;
+@@ -1743,25 +1753,31 @@ gst_x264_enc_src_event (GstPad * pad, GstEvent * event)
+ 
+   switch (GST_EVENT_TYPE (event)) {
+     case GST_EVENT_CUSTOM_UPSTREAM:{
+-      const GstStructure *s;
+-      s = gst_event_get_structure (event);
+-      if (gst_structure_has_name (s, "GstForceKeyUnit")) {
+-        /* Set I frame request */
+-        GST_OBJECT_LOCK (encoder);
+-        encoder->i_type = X264_TYPE_I;
+-        encoder->forcekeyunit_event = gst_event_copy (event);
+-        GST_EVENT_TYPE (encoder->forcekeyunit_event) =
+-            GST_EVENT_CUSTOM_DOWNSTREAM;
+-        GST_OBJECT_UNLOCK (encoder);
+-        forward = FALSE;
+-        gst_event_unref (event);
+-      }
++      guint count;
++      gboolean all_headers;
++
++      if (!gst_video_event_is_force_key_unit (event))
++        goto out;
++
++      GST_OBJECT_LOCK (encoder);
++      gst_video_event_parse_upstream_force_key_unit (event,
++          &encoder->pending_key_unit_ts, &all_headers, &count);
++      GST_INFO_OBJECT (encoder, "received upstream force-key-unit event, "
++          "seqnum %d running_time %" GST_TIME_FORMAT " all_headers %d count %d",
++          gst_event_get_seqnum (event),
++          GST_TIME_ARGS (encoder->pending_key_unit_ts), all_headers, count);
++
++      gst_event_replace (&encoder->force_key_unit_event, event);
++      gst_event_unref (event);
++      GST_OBJECT_UNLOCK (encoder);
++      forward = FALSE;
+       break;
+     }
+     default:
+       break;
+   }
+ 
++out:
+   if (forward)
+     ret = gst_pad_push_event (encoder->sinkpad, event);
+ 
+@@ -1778,6 +1794,22 @@ gst_x264_enc_sink_event (GstPad * pad, GstEvent * event)
+   encoder = GST_X264_ENC (gst_pad_get_parent (pad));
+ 
+   switch (GST_EVENT_TYPE (event)) {
++    case GST_EVENT_NEWSEGMENT:
++    {
++      gboolean update;
++      gdouble rate, applied_rate;
++      GstFormat format;
++      gint64 start, stop, position;
++
++      gst_event_parse_new_segment_full (event, &update, &rate, &applied_rate,
++          &format, &start, &stop, &position);
++      gst_segment_set_newsegment (&encoder->segment, update, rate, format,
++          start, stop, position);
++      break;
++    }
++    case GST_EVENT_FLUSH_STOP:
++      gst_segment_init (&encoder->segment, GST_FORMAT_UNDEFINED);
++      break;
+     case GST_EVENT_EOS:
+       gst_x264_enc_flush_frames (encoder, TRUE);
+       break;
+@@ -1799,13 +1831,24 @@ gst_x264_enc_sink_event (GstPad * pad, GstEvent * event)
+        * buffers in encoder are considered (in the) past */
+     }
+     case GST_EVENT_CUSTOM_DOWNSTREAM:{
+-      const GstStructure *s;
+-      s = gst_event_get_structure (event);
+-      if (gst_structure_has_name (s, "GstForceKeyUnit")) {
+-        GST_OBJECT_LOCK (encoder);
+-        encoder->i_type = X264_TYPE_I;
+-        GST_OBJECT_UNLOCK (encoder);
+-      }
++      guint count;
++      gboolean all_headers;
++
++      if (!gst_video_event_is_force_key_unit (event))
++        break;
++
++      GST_OBJECT_LOCK (encoder);
++
++      gst_video_event_parse_downstream_force_key_unit (event, NULL, NULL,
++          &encoder->pending_key_unit_ts, &all_headers, &count);
++      GST_INFO_OBJECT (encoder, "received downstream force-key-unit event, "
++          "seqnum %d running_time %" GST_TIME_FORMAT " all_headers %d count %d",
++          gst_event_get_seqnum (event),
++          GST_TIME_ARGS (encoder->pending_key_unit_ts), all_headers, count);
++
++      gst_event_replace (&encoder->force_key_unit_event, event);
++      gst_event_unref (event);
++      GST_OBJECT_UNLOCK (encoder);
+       break;
+     }
+     default:
+@@ -1849,13 +1892,7 @@ gst_x264_enc_chain (GstPad * pad, GstBuffer * buf)
+     pic_in.img.i_stride[i] = encoder->stride[i];
+   }
+ 
+-  GST_OBJECT_LOCK (encoder);
+-  pic_in.i_type = encoder->i_type;
+-
+-  /* Reset encoder forced picture type */
+-  encoder->i_type = X264_TYPE_AUTO;
+-  GST_OBJECT_UNLOCK (encoder);
+-
++  pic_in.i_type = X264_TYPE_AUTO;
+   pic_in.i_pts = GST_BUFFER_TIMESTAMP (buf);
+ 
+   ret = gst_x264_enc_encode_frame (encoder, &pic_in, &i_nal, TRUE);
+@@ -1881,6 +1918,45 @@ wrong_buffer_size:
+   }
+ }
+ 
++static GstEvent *
++check_pending_key_unit_event (GstEvent * pending_event, GstSegment * segment,
++    GstClockTime timestamp, GstClockTime pending_key_unit_ts)
++{
++  GstClockTime running_time, stream_time;
++  gboolean all_headers;
++  guint count;
++  GstEvent *event = NULL;
++
++  g_return_val_if_fail (pending_event != NULL, NULL);
++  g_return_val_if_fail (segment != NULL, NULL);
++
++  if (pending_event == NULL || timestamp == GST_CLOCK_TIME_NONE)
++    goto out;
++
++  running_time = gst_segment_to_running_time (segment,
++      GST_FORMAT_TIME, timestamp);
++
++  GST_INFO ("now %" GST_TIME_FORMAT " wanted %" GST_TIME_FORMAT,
++      GST_TIME_ARGS (running_time), GST_TIME_ARGS (pending_key_unit_ts));
++
++  if (running_time < pending_key_unit_ts)
++    goto out;
++
++  stream_time = gst_segment_to_stream_time (segment,
++      GST_FORMAT_TIME, timestamp);
++
++  gst_video_event_parse_upstream_force_key_unit (pending_event,
++      NULL, &all_headers, &count);
++
++  event =
++      gst_video_event_new_downstream_force_key_unit (timestamp, stream_time,
++      running_time, all_headers, count);
++  gst_event_set_seqnum (event, gst_event_get_seqnum (pending_event));
++
++out:
++  return event;
++}
++
+ static GstFlowReturn
+ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+     int *i_nal, gboolean send)
+@@ -1897,7 +1973,7 @@ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+   GstFlowReturn ret;
+   GstClockTime duration;
+   guint8 *data;
+-  GstEvent *forcekeyunit_event = NULL;
++  GstEvent *event = NULL;
+ 
+   if (G_UNLIKELY (encoder->x264enc == NULL))
+     return GST_FLOW_NOT_NEGOTIATED;
+@@ -1908,6 +1984,24 @@ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+     if (x264_encoder_reconfig (encoder->x264enc, &encoder->x264param) < 0)
+       GST_WARNING_OBJECT (encoder, "Could not reconfigure");
+   }
++
++  if (encoder->pending_key_unit_ts != GST_CLOCK_TIME_NONE && pic_in != NULL) {
++    event = check_pending_key_unit_event (encoder->force_key_unit_event,
++        &encoder->segment, pic_in->i_pts, encoder->pending_key_unit_ts);
++    if (event) {
++      encoder->pending_key_unit_ts = GST_CLOCK_TIME_NONE;
++      gst_event_replace (&encoder->force_key_unit_event, NULL);
++
++#ifdef FORCE_INTRA_API
++      if (encoder->intra_refresh)
++        x264_encoder_intra_refresh (encoder->x264enc);
++      else
++        pic_in->i_type = X264_TYPE_IDR;
++#else
++      pic_in->i_type = X264_TYPE_IDR;
++#endif
++    }
++  }
+   GST_OBJECT_UNLOCK (encoder);
+ 
+   encoder_return = x264_encoder_encode (encoder->x264enc,
+@@ -1916,11 +2010,13 @@ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+   if (encoder_return < 0) {
+     GST_ELEMENT_ERROR (encoder, STREAM, ENCODE, ("Encode x264 frame failed."),
+         ("x264_encoder_encode return code=%d", encoder_return));
+-    return GST_FLOW_ERROR;
++    ret = GST_FLOW_ERROR;
++    goto out;
+   }
+ 
+   if (!*i_nal) {
+-    return GST_FLOW_OK;
++    ret = GST_FLOW_OK;
++    goto out;
+   }
+ #ifndef X264_ENC_NALS
+   i_size = 0;
+@@ -1957,16 +2053,19 @@ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+   } else {
+     GST_ELEMENT_ERROR (encoder, STREAM, ENCODE, (NULL),
+         ("Timestamp queue empty."));
+-    return GST_FLOW_ERROR;
++    ret = GST_FLOW_ERROR;
++    goto out;
+   }
+ 
+-  if (!send)
+-    return GST_FLOW_OK;
++  if (!send) {
++    ret = GST_FLOW_OK;
++    goto out;
++  }
+ 
+   ret = gst_pad_alloc_buffer (encoder->srcpad, GST_BUFFER_OFFSET_NONE,
+       i_size, GST_PAD_CAPS (encoder->srcpad), &out_buf);
+   if (ret != GST_FLOW_OK)
+-    return ret;
++    goto out;
+ 
+   memcpy (GST_BUFFER_DATA (out_buf), data, i_size);
+   GST_BUFFER_SIZE (out_buf) = i_size;
+@@ -1989,17 +2088,16 @@ gst_x264_enc_encode_frame (GstX264Enc * encoder, x264_picture_t * pic_in,
+     GST_BUFFER_FLAG_SET (out_buf, GST_BUFFER_FLAG_DELTA_UNIT);
+   }
+ 
+-  GST_OBJECT_LOCK (encoder);
+-  forcekeyunit_event = encoder->forcekeyunit_event;
+-  encoder->forcekeyunit_event = NULL;
+-  GST_OBJECT_UNLOCK (encoder);
+-  if (forcekeyunit_event) {
+-    gst_structure_set (forcekeyunit_event->structure,
+-        "timestamp", G_TYPE_UINT64, GST_BUFFER_TIMESTAMP (out_buf), NULL);
+-    gst_pad_push_event (encoder->srcpad, forcekeyunit_event);
+-  }
++  if (event)
++    gst_pad_push_event (encoder->srcpad, gst_event_ref (event));
++
++  ret = gst_pad_push (encoder->srcpad, out_buf);
+ 
+-  return gst_pad_push (encoder->srcpad, out_buf);
++out:
++  if (event)
++    gst_event_unref (event);
++
++  return ret;
+ }
+ 
+ static void
+diff --git a/ext/x264/gstx264enc.h b/ext/x264/gstx264enc.h
+index a2f1145..4686465 100644
+--- a/ext/x264/gstx264enc.h
++++ b/ext/x264/gstx264enc.h
+@@ -49,6 +49,7 @@ struct _GstX264Enc
+   /*< private >*/
+   GstPad *sinkpad;
+   GstPad *srcpad;
++  GstSegment segment;
+ 
+   x264_t *x264enc;
+   x264_param_t x264param;
+@@ -111,9 +112,6 @@ struct _GstX264Enc
+   guint8 *buffer;
+   gulong buffer_size;
+ 
+-  gint i_type;
+-  GstEvent *forcekeyunit_event;
+-
+   /* configuration changed  while playing */
+   gboolean reconfig;
+ 
+@@ -121,6 +119,9 @@ struct _GstX264Enc
+   const gchar *peer_profile;
+   gboolean peer_intra_profile;
+   const x264_level_t *peer_level;
++
++  GstClockTime pending_key_unit_ts;
++  GstEvent *force_key_unit_event;
+ };
+ 
+ struct _GstX264EncClass
+diff --git a/gst-plugins-ugly.doap b/gst-plugins-ugly.doap
+index 90dfefb..65b8db2 100644
+--- a/gst-plugins-ugly.doap
++++ b/gst-plugins-ugly.doap
+@@ -35,18 +35,6 @@ might be widely known to present patent problems.
+ 
+  <release>
+   <Version>
+-   <revision>0.10.19</revision>
+-   <branch>0.10</branch>
+-   <name>Stronger</name>
+-   <created>2012-02-20</created>
+-   <file-release rdf:resource="http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-0.10.19.tar.bz2" />
+-   <file-release rdf:resource="http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-0.10.19.tar.gz" />
+-   <file-release rdf:resource="http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-0.10.19.tar.xz" />
+-  </Version>
+- </release>
+-
+- <release>
+-  <Version>
+    <revision>0.10.18</revision>
+    <branch>0.10</branch>
+    <name>Extra Life</name>
+diff --git a/win32/common/config.h b/win32/common/config.h
+index 956fdbf..e42bcdc 100644
+--- a/win32/common/config.h
++++ b/win32/common/config.h
+@@ -46,13 +46,13 @@
+ #define GST_LICENSE "LGPL"
+ 
+ /* package name in plugins */
+-#define GST_PACKAGE_NAME "GStreamer Ugly Plug-ins source release"
++#define GST_PACKAGE_NAME "GStreamer Ugly Plug-ins git"
+ 
+ /* package origin */
+ #define GST_PACKAGE_ORIGIN "Unknown package origin"
+ 
+ /* GStreamer package release date/time for plugins as YYYY-MM-DD */
+-#define GST_PACKAGE_RELEASE_DATETIME "2012-02-20"
++#define GST_PACKAGE_RELEASE_DATETIME "2012-02-23T11:17Z"
+ 
+ /* Define to enable a52dec (used by a52dec). */
+ #undef HAVE_A52DEC
+@@ -233,7 +233,7 @@
+ #define PACKAGE_NAME "GStreamer Ugly Plug-ins"
+ 
+ /* Define to the full name and version of this package. */
+-#define PACKAGE_STRING "GStreamer Ugly Plug-ins 0.10.19"
++#define PACKAGE_STRING "GStreamer Ugly Plug-ins 0.10.19.1"
+ 
+ /* Define to the one symbol short name of this package. */
+ #define PACKAGE_TARNAME "gst-plugins-ugly"
+@@ -242,7 +242,7 @@
+ #undef PACKAGE_URL
+ 
+ /* Define to the version of this package. */
+-#define PACKAGE_VERSION "0.10.19"
++#define PACKAGE_VERSION "0.10.19.1"
+ 
+ /* directory where plugins are located */
+ #ifdef _DEBUG
+@@ -270,7 +270,7 @@
+ #undef STDC_HEADERS
+ 
+ /* Version number of package */
+-#define VERSION "0.10.19"
++#define VERSION "0.10.19.1"
+ 
+ /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
+    significant byte first (like Motorola and SPARC, unlike Intel). */
