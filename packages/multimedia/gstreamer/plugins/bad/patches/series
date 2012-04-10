@@ -1,2 +1,3 @@
 ltmain-sysroot.patch -p1
 revert-live-timestamps.patch -p1
+rebase-to-git-branch-0.10_2012-04-02.patch

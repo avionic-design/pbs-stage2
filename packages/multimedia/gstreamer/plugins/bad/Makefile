@@ -4,7 +4,7 @@ VERSION = 0.10.23
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
@@ -20,7 +20,9 @@ conf-args += \
 	--disable-fieldanalysis \
 	--disable-gaudieffects \
 	--disable-geometrictransform \
-	--disable-colorspace
+	--disable-colorspace \
+	--disable-decklink \
+	--disable-rsvg
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
