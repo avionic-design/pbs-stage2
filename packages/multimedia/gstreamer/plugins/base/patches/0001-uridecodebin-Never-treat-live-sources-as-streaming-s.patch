@@ -1,0 +1,51 @@
+From 0da79bc3680ef1eb4425c37c4ac44b638aeacb89 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Fri, 13 Apr 2012 16:29:50 +0200
+Subject: [PATCH] uridecodebin: Never treat live sources as streaming sources.
+
+For streaming sources a queue is added before the demuxer, which can not be
+properly filled by live sources. As http source can be live sources, this
+caused issues for example with http live sources.
+---
+ gst/playback/gsturidecodebin.c |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+
+diff --git a/gst/playback/gsturidecodebin.c b/gst/playback/gsturidecodebin.c
+index 30f8028..fbf14ee 100644
+--- a/gst/playback/gsturidecodebin.c
++++ b/gst/playback/gsturidecodebin.c
+@@ -1994,6 +1994,21 @@ could_not_link:
+   }
+ }
+ 
++static gboolean
++is_live_source (GstElement * source)
++{
++  GObjectClass *source_class = NULL;
++  gboolean is_live = FALSE;
++
++  source_class = G_OBJECT_GET_CLASS (source);
++  if (!g_object_class_find_property (source_class, "is-live"))
++    return FALSE;
++
++  g_object_get (G_OBJECT (source), "is-live", &is_live, NULL);
++
++  return is_live;
++}
++
+ /* construct and run the source and decoder elements until we found
+  * all the streams or until a preroll queue has been filled.
+ */
+@@ -2023,6 +2038,9 @@ setup_source (GstURIDecodeBin * decoder)
+   g_signal_emit (decoder, gst_uri_decode_bin_signals[SIGNAL_SOURCE_SETUP],
+       0, decoder->source);
+ 
++  if (is_live_source (decoder->source))
++    decoder->is_stream = FALSE;
++
+   /* remove the old decoders now, if any */
+   remove_decoders (decoder, FALSE);
+ 
+-- 
+1.7.10
+
