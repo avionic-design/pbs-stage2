@@ -14,7 +14,7 @@ index 8a56c7a..a7f26df 100755
  
  autogen_options $@
 diff --git a/configure.ac b/configure.ac
-index d56cd57..a2a265b 100644
+index d56cd57..ec821e2 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -3,7 +3,7 @@ AC_PREREQ(2.60)
@@ -172,7 +172,7 @@ index d56cd57..a2a265b 100644
  dnl *** Cog ***
  translit(dnm, m, l) AM_CONDITIONAL(USE_COG, true)
  AG_GST_CHECK_FEATURE(COG, [Cog plugin], cog, [
-@@ -813,6 +855,31 @@ AG_GST_CHECK_FEATURE(DIRECTFB, [directfb], dfbvideosink , [
+@@ -813,6 +843,31 @@ AG_GST_CHECK_FEATURE(DIRECTFB, [directfb], dfbvideosink , [
    ])
  ])
  
@@ -204,7 +204,7 @@ index d56cd57..a2a265b 100644
  dnl **** Dirac ****
  translit(dnm, m, l) AM_CONDITIONAL(USE_DIRAC, true)
  AG_GST_CHECK_FEATURE(DIRAC, [dirac], dirac, [
-@@ -1377,22 +1444,22 @@ AG_GST_CHECK_FEATURE(OPENCV, [opencv plugins], opencv, [
+@@ -1377,22 +1432,22 @@ AG_GST_CHECK_FEATURE(OPENCV, [opencv plugins], opencv, [
      AC_LANG_CPLUSPLUS
      OLD_CPPFLAGS=$CPPFLAGS
      CPPFLAGS=$OPENCV_CFLAGS
@@ -236,7 +236,7 @@ index d56cd57..a2a265b 100644
    AC_SUBST(OPENCV_CFLAGS)
    AC_SUBST(OPENCV_LIBS)
  ])
-@@ -1695,7 +1762,7 @@ AG_GST_CHECK_FEATURE(VDPAU, [VDPAU], vdpau, [
+@@ -1695,7 +1750,7 @@ AG_GST_CHECK_FEATURE(VDPAU, [VDPAU], vdpau, [
  dnl *** schroedinger ***
  translit(dnm, m, l) AM_CONDITIONAL(USE_SCHRO, true)
  AG_GST_CHECK_FEATURE(SCHRO, [Schroedinger video codec], schro, [
@@ -245,7 +245,7 @@ index d56cd57..a2a265b 100644
  ])
  
  dnl *** zbar ***
-@@ -1783,11 +1850,13 @@ AM_CONDITIONAL(USE_APEXSINK, false)
+@@ -1783,11 +1838,13 @@ AM_CONDITIONAL(USE_APEXSINK, false)
  AM_CONDITIONAL(USE_BZ2, false)
  AM_CONDITIONAL(USE_CDAUDIO, false)
  AM_CONDITIONAL(USE_CELT, false)
@@ -259,7 +259,7 @@ index d56cd57..a2a265b 100644
  AM_CONDITIONAL(USE_DIRAC, false)
  AM_CONDITIONAL(USE_DTS, false)
  AM_CONDITIONAL(USE_DIVX, false)
-@@ -2040,11 +2109,13 @@ ext/apexsink/Makefile
+@@ -2040,11 +2097,13 @@ ext/apexsink/Makefile
  ext/bz2/Makefile
  ext/cdaudio/Makefile
  ext/celt/Makefile
@@ -12235,7 +12235,7 @@ index 8e78de7..a1ec3ab 100644
    return TRUE;
  }
 diff --git a/gst/h264parse/gsth264parse.c b/gst/h264parse/gsth264parse.c
-index 8ae6075..2919737 100644
+index 8ae6075..0db2434 100644
 --- a/gst/h264parse/gsth264parse.c
 +++ b/gst/h264parse/gsth264parse.c
 @@ -895,10 +895,8 @@ gst_h264_parse_base_init (gpointer g_class)
@@ -12251,48 +12251,66 @@ index 8ae6075..2919737 100644
    gst_element_class_set_details_simple (gstelement_class, "H264Parse",
        "Codec/Parser/Video",
        "Parses raw h264 stream",
-@@ -1732,7 +1730,7 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
+@@ -1730,9 +1728,10 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
+           /* insert config NALs into AU */
+           GstByteWriter bw;
            GstBuffer *codec_nal, *new_buf;
++          gboolean ok;
  
            gst_byte_writer_init_with_size (&bw, GST_BUFFER_SIZE (buf), FALSE);
 -          gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (buf),
-+          gst_byte_writer_put_data_unchecked (&bw, GST_BUFFER_DATA (buf),
++          ok = gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (buf),
                h264parse->idr_offset);
            GST_DEBUG_OBJECT (h264parse, "- inserting SPS/PPS");
            for (i = 0; i < MAX_SPS_COUNT; i++) {
-@@ -1741,8 +1739,8 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
+@@ -1741,8 +1740,8 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
                codec_nal = gst_buffer_copy (h264parse->sps_nals[i]);
                codec_nal =
                    gst_h264_parse_write_nal_prefix (h264parse, codec_nal);
 -              gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (codec_nal),
 -                  GST_BUFFER_SIZE (codec_nal));
-+              gst_byte_writer_put_data_unchecked (&bw,
++              ok &= gst_byte_writer_put_data (&bw,
 +                  GST_BUFFER_DATA (codec_nal), GST_BUFFER_SIZE (codec_nal));
                h264parse->last_report = timestamp;
              }
            }
-@@ -1752,12 +1750,12 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
+@@ -1752,12 +1751,12 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
                codec_nal = gst_buffer_copy (h264parse->pps_nals[i]);
                codec_nal =
                    gst_h264_parse_write_nal_prefix (h264parse, codec_nal);
 -              gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (codec_nal),
 -                  GST_BUFFER_SIZE (codec_nal));
-+              gst_byte_writer_put_data_unchecked (&bw,
++              ok &= gst_byte_writer_put_data (&bw,
 +                  GST_BUFFER_DATA (codec_nal), GST_BUFFER_SIZE (codec_nal));
                h264parse->last_report = timestamp;
              }
            }
 -          gst_byte_writer_put_data (&bw,
-+          gst_byte_writer_put_data_unchecked (&bw,
++          ok &= gst_byte_writer_put_data (&bw,
                GST_BUFFER_DATA (buf) + h264parse->idr_offset,
                GST_BUFFER_SIZE (buf) - h264parse->idr_offset);
            /* collect result and push */
+@@ -1765,6 +1764,10 @@ gst_h264_parse_push_buffer (GstH264Parse * h264parse, GstBuffer * buf)
+           gst_buffer_copy_metadata (new_buf, buf, GST_BUFFER_COPY_ALL);
+           gst_buffer_unref (buf);
+           buf = new_buf;
++          /* some result checking seems to make some compilers happy */
++          if (G_UNLIKELY (!ok)) {
++            GST_ERROR_OBJECT (h264parse, "failed to insert SPS/PPS");
++          }
+         }
+       }
+     }
 diff --git a/gst/hls/Makefile.am b/gst/hls/Makefile.am
-index 687b568..fec8eeb 100644
+index 687b568..05f0ac8 100644
 --- a/gst/hls/Makefile.am
 +++ b/gst/hls/Makefile.am
-@@ -6,8 +6,8 @@ libgstfragmented_la_SOURCES =			\
+@@ -4,17 +4,21 @@ plugin_LTLIBRARIES = libgstfragmented.la
+ libgstfragmented_la_SOURCES =			\
+ 	m3u8.c					\
  	gsthlsdemux.c				\
++	gstfragment.c				\
++	gsturidownloader.c			\
  	gstfragmentedplugin.c
  
 -libgstfragmented_la_CFLAGS = $(GST_CFLAGS) $(GST_BASE_CFLAGS) $(SOUP_CFLAGS)
@@ -12302,8 +12320,320 @@ index 687b568..fec8eeb 100644
  libgstfragmented_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS) -no-undefined
  libgstfragmented_la_LIBTOOLFLAGS = --tag=disable-static
  
+ # headers we need but don't want installed
+ noinst_HEADERS = 			\
+ 	gstfragmented.h		\
++	gstfragment.h				\
+ 	gsthlsdemux.h			\
++	gsturidownloader.h			\
+ 	m3u8.h
+ 
+ Android.mk: Makefile.am $(BUILT_SOURCES)
+diff --git a/gst/hls/gstfragment.c b/gst/hls/gstfragment.c
+new file mode 100644
+index 0000000..00a3b4c
+--- /dev/null
++++ b/gst/hls/gstfragment.c
+@@ -0,0 +1,222 @@
++/* GStreamer
++ * Copyright (C) 2011 Andoni Morales Alastruey <ylatuya@gmail.com>
++ *
++ * gstfragment.c:
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#include <glib.h>
++#include "gstfragmented.h"
++#include "gstfragment.h"
++
++#define GST_CAT_DEFAULT fragmented_debug
++
++#define GST_FRAGMENT_GET_PRIVATE(obj) (G_TYPE_INSTANCE_GET_PRIVATE ((obj), GST_TYPE_FRAGMENT, GstFragmentPrivate))
++
++enum
++{
++  PROP_0,
++  PROP_INDEX,
++  PROP_NAME,
++  PROP_DURATION,
++  PROP_DISCONTINOUS,
++  PROP_BUFFER_LIST,
++  PROP_LAST
++};
++
++struct _GstFragmentPrivate
++{
++  GstBufferList *buffer_list;
++  GstBufferListIterator *buffer_iterator;
++  gboolean headers_set;
++};
++
++G_DEFINE_TYPE (GstFragment, gst_fragment, G_TYPE_OBJECT);
++
++static void gst_fragment_dispose (GObject * object);
++static void gst_fragment_finalize (GObject * object);
++
++static void
++gst_fragment_get_property (GObject * object,
++    guint property_id, GValue * value, GParamSpec * pspec)
++{
++  GstFragment *fragment = GST_FRAGMENT (object);
++
++  switch (property_id) {
++    case PROP_INDEX:
++      g_value_set_uint (value, fragment->index);
++      break;
++
++    case PROP_NAME:
++      g_value_set_string (value, fragment->name);
++      break;
++
++    case PROP_DURATION:
++      g_value_set_uint64 (value, fragment->stop_time - fragment->start_time);
++      break;
++
++    case PROP_DISCONTINOUS:
++      g_value_set_boolean (value, fragment->discontinuous);
++      break;
++
++    case PROP_BUFFER_LIST:
++      g_value_set_object (value, gst_fragment_get_buffer_list (fragment));
++      break;
++
++    default:
++      /* We don't have any other property... */
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
++      break;
++  }
++}
++
++static void
++gst_fragment_class_init (GstFragmentClass * klass)
++{
++  GObjectClass *gobject_class = G_OBJECT_CLASS (klass);
++
++  g_type_class_add_private (klass, sizeof (GstFragmentPrivate));
++
++  gobject_class->get_property = gst_fragment_get_property;
++  gobject_class->dispose = gst_fragment_dispose;
++  gobject_class->finalize = gst_fragment_finalize;
++
++  g_object_class_install_property (gobject_class, PROP_INDEX,
++      g_param_spec_uint ("index", "Index", "Index of the fragment", 0,
++          G_MAXUINT, 0, G_PARAM_READABLE));
++
++  g_object_class_install_property (gobject_class, PROP_NAME,
++      g_param_spec_string ("name", "Name",
++          "Name of the fragment (eg:fragment-12.ts)", NULL, G_PARAM_READABLE));
++
++  g_object_class_install_property (gobject_class, PROP_DISCONTINOUS,
++      g_param_spec_boolean ("discontinuous", "Discontinous",
++          "Whether this fragment has a discontinuity or not",
++          FALSE, G_PARAM_READABLE));
++
++  g_object_class_install_property (gobject_class, PROP_DURATION,
++      g_param_spec_uint64 ("duration", "Fragment duration",
++          "Duration of the fragment", 0, G_MAXUINT64, 0, G_PARAM_READABLE));
++
++  g_object_class_install_property (gobject_class, PROP_BUFFER_LIST,
++      g_param_spec_object ("buffer-list", "Buffer List",
++          "A list with the fragment's buffers", GST_TYPE_FRAGMENT,
++          G_PARAM_READABLE));
++}
++
++static void
++gst_fragment_init (GstFragment * fragment)
++{
++  GstFragmentPrivate *priv;
++
++  fragment->priv = priv = GST_FRAGMENT_GET_PRIVATE (fragment);
++
++  priv->buffer_list = gst_buffer_list_new ();
++  priv->buffer_iterator = gst_buffer_list_iterate (priv->buffer_list);
++  gst_buffer_list_iterator_add_group (priv->buffer_iterator);
++  priv->headers_set = FALSE;
++  fragment->download_start_time = g_get_real_time ();
++  fragment->start_time = 0;
++  fragment->stop_time = 0;
++  fragment->index = 0;
++  fragment->name = g_strdup ("");
++  fragment->completed = FALSE;
++  fragment->discontinuous = FALSE;
++}
++
++GstFragment *
++gst_fragment_new (void)
++{
++  return GST_FRAGMENT (g_object_new (GST_TYPE_FRAGMENT, NULL));
++}
++
++static void
++gst_fragment_finalize (GObject * gobject)
++{
++  GstFragment *fragment = GST_FRAGMENT (gobject);
++
++  g_free (fragment->name);
++
++  G_OBJECT_CLASS (gst_fragment_parent_class)->finalize (gobject);
++}
++
++void
++gst_fragment_dispose (GObject * object)
++{
++  GstFragmentPrivate *priv = GST_FRAGMENT (object)->priv;
++
++  if (priv->buffer_list != NULL) {
++    gst_buffer_list_iterator_free (priv->buffer_iterator);
++    gst_buffer_list_unref (priv->buffer_list);
++    priv->buffer_list = NULL;
++  }
++
++  G_OBJECT_CLASS (gst_fragment_parent_class)->dispose (object);
++}
++
++GstBufferList *
++gst_fragment_get_buffer_list (GstFragment * fragment)
++{
++  g_return_val_if_fail (fragment != NULL, NULL);
++
++  if (!fragment->completed)
++    return NULL;
++
++  gst_buffer_list_ref (fragment->priv->buffer_list);
++  return fragment->priv->buffer_list;
++}
++
++gboolean
++gst_fragment_set_headers (GstFragment * fragment, GstBuffer ** buffer,
++    guint count)
++{
++  guint i;
++
++  g_return_val_if_fail (fragment != NULL, FALSE);
++  g_return_val_if_fail (buffer != NULL, FALSE);
++
++  if (fragment->priv->headers_set)
++    return FALSE;
++
++  for (i = 0; i < count; i++) {
++    /* We steal the buffers you pass in */
++    gst_buffer_list_iterator_add (fragment->priv->buffer_iterator, buffer[i]);
++    gst_buffer_list_iterator_add_group (fragment->priv->buffer_iterator);
++  }
++  return TRUE;
++}
++
++gboolean
++gst_fragment_add_buffer (GstFragment * fragment, GstBuffer * buffer)
++{
++  g_return_val_if_fail (fragment != NULL, FALSE);
++  g_return_val_if_fail (buffer != NULL, FALSE);
++
++  if (fragment->completed) {
++    GST_WARNING ("Fragment is completed, could not add more buffers");
++    return FALSE;
++  }
++
++  /* if this is the first buffer forbid setting the headers anymore */
++  if (G_UNLIKELY (fragment->priv->headers_set == FALSE))
++    fragment->priv->headers_set = TRUE;
++
++  GST_DEBUG ("Adding new buffer to the fragment");
++  /* We steal the buffers you pass in */
++  gst_buffer_list_iterator_add (fragment->priv->buffer_iterator, buffer);
++  return TRUE;
++}
+diff --git a/gst/hls/gstfragment.h b/gst/hls/gstfragment.h
+new file mode 100644
+index 0000000..9ea0186
+--- /dev/null
++++ b/gst/hls/gstfragment.h
+@@ -0,0 +1,69 @@
++/* GStreamer
++ * Copyright (C) 2011 Andoni Morales Alastruey <ylatuya@gmail.com>
++ *
++ * gstfragment.h:
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#ifndef __GSTFRAGMENT_H__
++#define __GSTFRAGMENT_H__
++
++#include <glib-object.h>
++#include <gst/gst.h>
++
++G_BEGIN_DECLS
++
++#define GST_TYPE_FRAGMENT (gst_fragment_get_type())
++#define GST_FRAGMENT(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_FRAGMENT,GstFragment))
++#define GST_FRAGMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_FRAGMENT,GstFragmentClass))
++#define GST_IS_FRAGMENT(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_FRAGMENT))
++#define GST_IS_FRAGMENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_FRAGMENT))
++
++typedef struct _GstFragment GstFragment;
++typedef struct _GstFragmentPrivate GstFragmentPrivate;
++typedef struct _GstFragmentClass GstFragmentClass;
++
++struct _GstFragment
++{
++  GObject parent;
++
++  gchar * name;                 /* Name of the fragment */
++  gboolean completed;           /* Whether the fragment is complete or not */
++  guint64 download_start_time;  /* Epoch time when the download started */
++  guint64 download_stop_time;   /* Epoch time when the download finished */
++  guint64 start_time;           /* Start time of the fragment */
++  guint64 stop_time;            /* Stop time of the fragment */
++  gboolean index;               /* Index of the fragment */
++  gboolean discontinuous;       /* Whether this fragment is discontinuous or not */
++
++  GstFragmentPrivate *priv;
++};
++
++struct _GstFragmentClass
++{
++  GObjectClass parent_class;
++};
++
++GType gst_fragment_get_type (void);
++
++GstBufferList * gst_fragment_get_buffer_list (GstFragment *fragment);
++gboolean gst_fragment_set_headers (GstFragment *fragment, GstBuffer **buffer, guint count);
++gboolean gst_fragment_add_buffer (GstFragment *fragment, GstBuffer *buffer);
++GstFragment * gst_fragment_new (void);
++
++G_END_DECLS
++#endif /* __GSTFRAGMENT_H__ */
 diff --git a/gst/hls/gsthlsdemux.c b/gst/hls/gsthlsdemux.c
-index d840ae0..900f25f 100644
+index d840ae0..f0054bf 100644
 --- a/gst/hls/gsthlsdemux.c
 +++ b/gst/hls/gsthlsdemux.c
 @@ -41,9 +41,13 @@
@@ -12320,7 +12650,180 @@ index d840ae0..900f25f 100644
  #include "gsthlsdemux.h"
  
  static GstStaticPadTemplate srctemplate = GST_STATIC_PAD_TEMPLATE ("src%d",
-@@ -337,9 +341,8 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
+@@ -56,11 +60,6 @@ static GstStaticPadTemplate sinktemplate = GST_STATIC_PAD_TEMPLATE ("sink",
+     GST_PAD_ALWAYS,
+     GST_STATIC_CAPS ("application/x-hls"));
+ 
+-static GstStaticPadTemplate fetchertemplate = GST_STATIC_PAD_TEMPLATE ("sink",
+-    GST_PAD_SINK,
+-    GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS_ANY);
+-
+ GST_DEBUG_CATEGORY_STATIC (gst_hls_demux_debug);
+ #define GST_CAT_DEFAULT gst_hls_demux_debug
+ 
+@@ -91,31 +90,23 @@ static GstStateChangeReturn
+ gst_hls_demux_change_state (GstElement * element, GstStateChange transition);
+ 
+ /* GstHLSDemux */
+-static GstBusSyncReply gst_hls_demux_fetcher_bus_handler (GstBus * bus,
+-    GstMessage * message, gpointer data);
+ static GstFlowReturn gst_hls_demux_chain (GstPad * pad, GstBuffer * buf);
+ static gboolean gst_hls_demux_sink_event (GstPad * pad, GstEvent * event);
+ static gboolean gst_hls_demux_src_event (GstPad * pad, GstEvent * event);
+ static gboolean gst_hls_demux_src_query (GstPad * pad, GstQuery * query);
+-static GstFlowReturn gst_hls_demux_fetcher_chain (GstPad * pad,
+-    GstBuffer * buf);
+-static gboolean gst_hls_demux_fetcher_sink_event (GstPad * pad,
+-    GstEvent * event);
+-static void gst_hls_demux_loop (GstHLSDemux * demux);
++static void gst_hls_demux_stream_loop (GstHLSDemux * demux);
++static void gst_hls_demux_updates_loop (GstHLSDemux * demux);
+ static void gst_hls_demux_stop (GstHLSDemux * demux);
+-static void gst_hls_demux_stop_fetcher_locked (GstHLSDemux * demux,
+-    gboolean cancelled);
+-static void gst_hls_demux_stop_update (GstHLSDemux * demux);
+-static gboolean gst_hls_demux_start_update (GstHLSDemux * demux);
+ static gboolean gst_hls_demux_cache_fragments (GstHLSDemux * demux);
+ static gboolean gst_hls_demux_schedule (GstHLSDemux * demux);
+ static gboolean gst_hls_demux_switch_playlist (GstHLSDemux * demux);
+-static gboolean gst_hls_demux_get_next_fragment (GstHLSDemux * demux);
++static gboolean gst_hls_demux_get_next_fragment (GstHLSDemux * demux,
++    gboolean caching);
+ static gboolean gst_hls_demux_update_playlist (GstHLSDemux * demux);
+ static void gst_hls_demux_reset (GstHLSDemux * demux, gboolean dispose);
+ static gboolean gst_hls_demux_set_location (GstHLSDemux * demux,
+     const gchar * uri);
+-static gchar *gst_hls_src_buf_to_utf8_playlist (gchar * string, guint size);
++static gchar *gst_hls_src_buf_to_utf8_playlist (GstBuffer * buf);
+ 
+ static void
+ _do_init (GType type)
+@@ -149,23 +140,37 @@ gst_hls_demux_dispose (GObject * obj)
+ {
+   GstHLSDemux *demux = GST_HLS_DEMUX (obj);
+ 
+-  g_cond_free (demux->fetcher_cond);
+-  g_mutex_free (demux->fetcher_lock);
+-
+-  g_cond_free (demux->thread_cond);
+-  g_mutex_free (demux->thread_lock);
++  if (demux->stream_task) {
++    if (GST_TASK_STATE (demux->stream_task) != GST_TASK_STOPPED) {
++      GST_DEBUG_OBJECT (demux, "Leaving streaming task");
++      gst_task_stop (demux->stream_task);
++      gst_task_join (demux->stream_task);
++    }
++    gst_object_unref (demux->stream_task);
++    g_static_rec_mutex_free (&demux->stream_lock);
++    demux->stream_task = NULL;
++  }
+ 
+-  gst_task_join (demux->task);
+-  gst_object_unref (demux->task);
+-  g_static_rec_mutex_free (&demux->task_lock);
++  if (demux->updates_task) {
++    if (GST_TASK_STATE (demux->updates_task) != GST_TASK_STOPPED) {
++      GST_DEBUG_OBJECT (demux, "Leaving updates task");
++      gst_task_stop (demux->updates_task);
++      gst_task_join (demux->updates_task);
++    }
++    gst_object_unref (demux->updates_task);
++    g_mutex_free (demux->updates_timed_lock);
++    g_static_rec_mutex_free (&demux->updates_lock);
++    demux->updates_task = NULL;
++  }
+ 
+-  gst_object_unref (demux->fetcher_bus);
+-  gst_object_unref (demux->fetcherpad);
++  if (demux->downloader != NULL) {
++    g_object_unref (demux->downloader);
++    demux->downloader = NULL;
++  }
+ 
+   gst_hls_demux_reset (demux, TRUE);
+ 
+   g_queue_free (demux->queue);
+-  gst_object_unref (demux->download);
+ 
+   G_OBJECT_CLASS (parent_class)->dispose (obj);
+ }
+@@ -212,15 +217,8 @@ gst_hls_demux_init (GstHLSDemux * demux, GstHLSDemuxClass * klass)
+       GST_DEBUG_FUNCPTR (gst_hls_demux_sink_event));
+   gst_element_add_pad (GST_ELEMENT (demux), demux->sinkpad);
+ 
+-  /* fetcher pad */
+-  demux->fetcherpad =
+-      gst_pad_new_from_static_template (&fetchertemplate, "sink");
+-  gst_pad_set_chain_function (demux->fetcherpad,
+-      GST_DEBUG_FUNCPTR (gst_hls_demux_fetcher_chain));
+-  gst_pad_set_event_function (demux->fetcherpad,
+-      GST_DEBUG_FUNCPTR (gst_hls_demux_fetcher_sink_event));
+-  gst_pad_set_element_private (demux->fetcherpad, demux);
+-  gst_pad_activate_push (demux->fetcherpad, TRUE);
++  /* Downloader */
++  demux->downloader = gst_uri_downloader_new ();
+ 
+   demux->do_typefind = TRUE;
+ 
+@@ -228,19 +226,20 @@ gst_hls_demux_init (GstHLSDemux * demux, GstHLSDemuxClass * klass)
+   demux->fragments_cache = DEFAULT_FRAGMENTS_CACHE;
+   demux->bitrate_switch_tol = DEFAULT_BITRATE_SWITCH_TOLERANCE;
+ 
+-  demux->download = gst_adapter_new ();
+-  demux->fetcher_bus = gst_bus_new ();
+-  gst_bus_set_sync_handler (demux->fetcher_bus,
+-      gst_hls_demux_fetcher_bus_handler, demux);
+-  demux->thread_cond = g_cond_new ();
+-  demux->thread_lock = g_mutex_new ();
+-  demux->fetcher_cond = g_cond_new ();
+-  demux->fetcher_lock = g_mutex_new ();
+   demux->queue = g_queue_new ();
+-  g_static_rec_mutex_init (&demux->task_lock);
+-  /* FIXME: This really should be a pad task instead */
+-  demux->task = gst_task_create ((GstTaskFunction) gst_hls_demux_loop, demux);
+-  gst_task_set_lock (demux->task, &demux->task_lock);
++
++  /* Updates task */
++  g_static_rec_mutex_init (&demux->updates_lock);
++  demux->updates_task =
++      gst_task_create ((GstTaskFunction) gst_hls_demux_updates_loop, demux);
++  gst_task_set_lock (demux->updates_task, &demux->updates_lock);
++  demux->updates_timed_lock = g_mutex_new ();
++
++  /* Streaming task */
++  g_static_rec_mutex_init (&demux->stream_lock);
++  demux->stream_task =
++      gst_task_create ((GstTaskFunction) gst_hls_demux_stream_loop, demux);
++  gst_task_set_lock (demux->stream_task, &demux->stream_lock);
+ }
+ 
+ static void
+@@ -297,7 +296,7 @@ gst_hls_demux_change_state (GstElement * element, GstStateChange transition)
+          state and we filled our queue with enough cached fragments
+        */
+       if (gst_m3u8_client_get_uri (demux->client)[0] != '\0')
+-        gst_hls_demux_start_update (demux);
++        gst_task_start (demux->updates_task);
+       break;
+     default:
+       break;
+@@ -307,12 +306,12 @@ gst_hls_demux_change_state (GstElement * element, GstStateChange transition)
+ 
+   switch (transition) {
+     case GST_STATE_CHANGE_PLAYING_TO_PAUSED:
+-      gst_hls_demux_stop_update (demux);
++      gst_task_stop (demux->updates_task);
+       break;
+     case GST_STATE_CHANGE_PAUSED_TO_READY:
+       demux->cancelled = TRUE;
+       gst_hls_demux_stop (demux);
+-      gst_task_join (demux->task);
++      gst_task_join (demux->stream_task);
+       gst_hls_demux_reset (demux, FALSE);
+       break;
+     default:
+@@ -337,9 +336,8 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
        GstSeekType start_type, stop_type;
        gint64 start, stop;
        GList *walk;
@@ -12331,7 +12834,7 @@ index d840ae0..900f25f 100644
        GstM3U8MediaFile *file;
  
        GST_INFO_OBJECT (demux, "Received GST_EVENT_SEEK");
-@@ -363,14 +366,13 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
+@@ -363,14 +361,13 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
        file = GST_M3U8_MEDIA_FILE (demux->client->current->files->data);
        current_sequence = file->sequence;
        current_pos = 0;
@@ -12349,23 +12852,1115 @@ index d840ae0..900f25f 100644
            break;
          }
          current_pos += file->duration;
-@@ -841,7 +843,6 @@ gst_hls_demux_make_fetcher_locked (GstHLSDemux * demux, const gchar * uri)
-   demux->stopping_fetcher = FALSE;
-   gst_element_set_bus (GST_ELEMENT (demux->fetcher), demux->fetcher_bus);
+@@ -388,23 +385,20 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
+       }
  
+       demux->cancelled = TRUE;
+-      gst_task_pause (demux->task);
+-      g_mutex_lock (demux->fetcher_lock);
+-      gst_hls_demux_stop_fetcher_locked (demux, TRUE);
+-      g_mutex_unlock (demux->fetcher_lock);
+-      gst_hls_demux_stop_update (demux);
+-      gst_task_pause (demux->task);
++      gst_task_pause (demux->stream_task);
++      gst_uri_downloader_cancel (demux->downloader);
++      gst_task_stop (demux->updates_task);
++      gst_task_pause (demux->stream_task);
+ 
+       /* wait for streaming to finish */
+-      g_static_rec_mutex_lock (&demux->task_lock);
++      g_static_rec_mutex_lock (&demux->stream_lock);
+ 
+       demux->need_cache = TRUE;
+       while (!g_queue_is_empty (demux->queue)) {
+-        GstBuffer *buf = g_queue_pop_head (demux->queue);
+-        gst_buffer_unref (buf);
++        GstBufferList *buf_list = g_queue_pop_head (demux->queue);
++        gst_buffer_list_unref (buf_list);
+       }
+       g_queue_clear (demux->queue);
+-      gst_adapter_clear (demux->download);
+ 
+       GST_M3U8_CLIENT_LOCK (demux->client);
+       GST_DEBUG_OBJECT (demux, "seeking to sequence %d", current_sequence);
+@@ -421,8 +415,8 @@ gst_hls_demux_src_event (GstPad * pad, GstEvent * event)
+       }
+ 
+       demux->cancelled = FALSE;
+-      gst_task_start (demux->task);
+-      g_static_rec_mutex_unlock (&demux->task_lock);
++      gst_task_start (demux->stream_task);
++      g_static_rec_mutex_unlock (&demux->stream_lock);
+ 
+       return TRUE;
+     }
+@@ -463,9 +457,7 @@ gst_hls_demux_sink_event (GstPad * pad, GstEvent * event)
+       }
+       gst_query_unref (query);
+ 
+-      playlist = gst_hls_src_buf_to_utf8_playlist ((gchar *)
+-          GST_BUFFER_DATA (demux->playlist), GST_BUFFER_SIZE (demux->playlist));
+-      gst_buffer_unref (demux->playlist);
++      playlist = gst_hls_src_buf_to_utf8_playlist (demux->playlist);
+       demux->playlist = NULL;
+       if (playlist == NULL) {
+         GST_WARNING_OBJECT (demux, "Error validating first playlist.");
+@@ -485,7 +477,7 @@ gst_hls_demux_sink_event (GstPad * pad, GstEvent * event)
+         return FALSE;
+       }
+ 
+-      gst_task_start (demux->task);
++      gst_task_start (demux->stream_task);
+       gst_event_unref (event);
+       return TRUE;
+     }
+@@ -568,27 +560,6 @@ gst_hls_demux_src_query (GstPad * pad, GstQuery * query)
+   return ret;
+ }
+ 
+-static gboolean
+-gst_hls_demux_fetcher_sink_event (GstPad * pad, GstEvent * event)
+-{
+-  GstHLSDemux *demux = GST_HLS_DEMUX (gst_pad_get_element_private (pad));
+-
+-  switch (event->type) {
+-    case GST_EVENT_EOS:{
+-      GST_DEBUG_OBJECT (demux, "Got EOS on the fetcher pad");
+-      /* signal we have fetched the URI */
+-      if (!demux->cancelled) {
+-        g_cond_broadcast (demux->fetcher_cond);
+-      }
+-    }
+-    default:
+-      break;
+-  }
+-
+-  gst_event_unref (event);
+-  return FALSE;
+-}
+-
+ static GstFlowReturn
+ gst_hls_demux_chain (GstPad * pad, GstBuffer * buf)
+ {
+@@ -604,72 +575,19 @@ gst_hls_demux_chain (GstPad * pad, GstBuffer * buf)
+   return GST_FLOW_OK;
+ }
+ 
+-static GstFlowReturn
+-gst_hls_demux_fetcher_chain (GstPad * pad, GstBuffer * buf)
+-{
+-  GstHLSDemux *demux = GST_HLS_DEMUX (gst_pad_get_element_private (pad));
+-
+-  /* The source element can be an http source element. In case we get a 404,
+-   * the html response will be sent downstream and the adapter
+-   * will not be null, which might make us think that the request proceed
+-   * successfully. But it will also post an error message in the bus that
+-   * is handled synchronously and that will set demux->fetcher_error to TRUE,
+-   * which is used to discard this buffer with the html response. */
+-  if (demux->fetcher_error) {
+-    goto done;
+-  }
+-
+-  gst_adapter_push (demux->download, buf);
+-
+-done:
+-  {
+-    return GST_FLOW_OK;
+-  }
+-}
+-
+ static void
+-gst_hls_demux_stop_fetcher_locked (GstHLSDemux * demux, gboolean cancelled)
++gst_hls_demux_stop (GstHLSDemux * demux)
+ {
+-  GstPad *pad;
+-
+-  /* When the fetcher is stopped while it's downloading, we will get an EOS that
+-   * unblocks the fetcher thread and tries to stop it again from that thread.
+-   * Here we check if the fetcher as already been stopped before continuing */
+-  if (demux->fetcher == NULL || demux->stopping_fetcher)
+-    return;
+-
+-  GST_DEBUG_OBJECT (demux, "Stopping fetcher.");
+-  demux->stopping_fetcher = TRUE;
+-  /* set the element state to NULL */
+-  gst_element_set_state (demux->fetcher, GST_STATE_NULL);
+-  gst_element_get_state (demux->fetcher, NULL, NULL, GST_CLOCK_TIME_NONE);
+-  /* unlink it from the internal pad */
+-  pad = gst_pad_get_peer (demux->fetcherpad);
+-  if (pad) {
+-    gst_pad_unlink (pad, demux->fetcherpad);
+-    gst_object_unref (pad);
+-  }
+-  /* and finally unref it */
+-  gst_object_unref (demux->fetcher);
+-  demux->fetcher = NULL;
++  gst_uri_downloader_cancel (demux->downloader);
+ 
+-  /* if we stopped it to cancell a download, free the cached buffer */
+-  if (cancelled && gst_adapter_available (demux->download)) {
+-    gst_adapter_clear (demux->download);
++  if (GST_TASK_STATE (demux->updates_task) != GST_TASK_STOPPED) {
++    demux->stop_stream_task = TRUE;
++    gst_task_stop (demux->updates_task);
++    GST_TASK_SIGNAL (demux->updates_task);
+   }
+-  /* signal the fetcher thread that the download has finished/cancelled */
+-  if (cancelled)
+-    g_cond_broadcast (demux->fetcher_cond);
+-}
+ 
+-static void
+-gst_hls_demux_stop (GstHLSDemux * demux)
+-{
+-  g_mutex_lock (demux->fetcher_lock);
+-  gst_hls_demux_stop_fetcher_locked (demux, TRUE);
+-  g_mutex_unlock (demux->fetcher_lock);
+-  gst_task_stop (demux->task);
+-  gst_hls_demux_stop_update (demux);
++  if (GST_TASK_STATE (demux->stream_task) != GST_TASK_STOPPED)
++    gst_task_stop (demux->stream_task);
+ }
+ 
+ static void
+@@ -677,7 +595,8 @@ switch_pads (GstHLSDemux * demux, GstCaps * newcaps)
+ {
+   GstPad *oldpad = demux->srcpad;
+ 
+-  GST_DEBUG ("Switching pads (oldpad:%p)", oldpad);
++  GST_DEBUG ("Switching pads (oldpad:%p) with caps: %" GST_PTR_FORMAT, oldpad,
++      newcaps);
+ 
+   /* FIXME: This is a workaround for a bug in playsink.
+    * If we're switching from an audio-only or video-only fragment
+@@ -713,8 +632,9 @@ switch_pads (GstHLSDemux * demux, GstCaps * newcaps)
+ }
+ 
+ static void
+-gst_hls_demux_loop (GstHLSDemux * demux)
++gst_hls_demux_stream_loop (GstHLSDemux * demux)
+ {
++  GstBufferList *buffer_list;
+   GstBuffer *buf;
+   GstFlowReturn ret;
+ 
+@@ -730,7 +650,7 @@ gst_hls_demux_loop (GstHLSDemux * demux)
+ 
+     /* we can start now the updates thread (only if on playing) */
+     if (GST_STATE (demux) == GST_STATE_PLAYING)
+-      gst_hls_demux_start_update (demux);
++      gst_task_start (demux->updates_task);
+     GST_INFO_OBJECT (demux, "First fragments cached successfully");
+   }
+ 
+@@ -741,8 +661,9 @@ gst_hls_demux_loop (GstHLSDemux * demux)
+     goto pause_task;
+   }
+ 
+-  buf = g_queue_pop_head (demux->queue);
+-
++  buffer_list = g_queue_pop_head (demux->queue);
++  /* Work with the first buffer of the list */
++  buf = gst_buffer_list_get (buffer_list, 0, 0);
+   /* Figure out if we need to create/switch pads */
+   if (G_UNLIKELY (!demux->srcpad
+           || GST_BUFFER_CAPS (buf) != GST_PAD_CAPS (demux->srcpad)
+@@ -765,9 +686,9 @@ gst_hls_demux_loop (GstHLSDemux * demux)
+   if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DURATION (buf)))
+     demux->position += GST_BUFFER_DURATION (buf);
+ 
+-  ret = gst_pad_push (demux->srcpad, buf);
++  ret = gst_pad_push_list (demux->srcpad, buffer_list);
+   if (ret != GST_FLOW_OK)
+-    goto error;
++    goto error_pushing;
+ 
+   return;
+ 
+@@ -781,7 +702,7 @@ end_of_playlist:
+ 
+ cache_error:
+   {
+-    gst_task_pause (demux->task);
++    gst_task_pause (demux->stream_task);
+     if (!demux->cancelled) {
+       GST_ELEMENT_ERROR (demux, RESOURCE, NOT_FOUND,
+           ("Could not cache the first fragments"), (NULL));
+@@ -790,71 +711,26 @@ cache_error:
+     return;
+   }
+ 
+-error:
++error_pushing:
+   {
+     /* FIXME: handle error */
+-    GST_DEBUG_OBJECT (demux, "error, stopping task");
++    GST_DEBUG_OBJECT (demux, "Error pushing buffer: %s... stopping task",
++        gst_flow_get_name (ret));
+     gst_hls_demux_stop (demux);
+     return;
+   }
+ 
+ pause_task:
+   {
+-    gst_task_pause (demux->task);
++    gst_task_pause (demux->stream_task);
+     return;
+   }
+ }
+ 
+-static GstBusSyncReply
+-gst_hls_demux_fetcher_bus_handler (GstBus * bus,
+-    GstMessage * message, gpointer data)
+-{
+-  GstHLSDemux *demux = GST_HLS_DEMUX (data);
+-
+-  if (GST_MESSAGE_TYPE (message) == GST_MESSAGE_ERROR) {
+-    demux->fetcher_error = TRUE;
+-    if (!demux->cancelled) {
+-      g_mutex_lock (demux->fetcher_lock);
+-      g_cond_broadcast (demux->fetcher_cond);
+-      g_mutex_unlock (demux->fetcher_lock);
+-    }
+-  }
+-
+-  gst_message_unref (message);
+-  return GST_BUS_DROP;
+-}
+-
+-static gboolean
+-gst_hls_demux_make_fetcher_locked (GstHLSDemux * demux, const gchar * uri)
+-{
+-  GstPad *pad;
+-
+-  if (!gst_uri_is_valid (uri))
+-    return FALSE;
+-
+-  GST_DEBUG_OBJECT (demux, "Creating fetcher for the URI:%s", uri);
+-  demux->fetcher = gst_element_make_from_uri (GST_URI_SRC, uri, NULL);
+-  if (!demux->fetcher)
+-    return FALSE;
+-
+-  demux->fetcher_error = FALSE;
+-  demux->stopping_fetcher = FALSE;
+-  gst_element_set_bus (GST_ELEMENT (demux->fetcher), demux->fetcher_bus);
+-
 -  g_object_set (G_OBJECT (demux->fetcher), "location", uri, NULL);
-   pad = gst_element_get_static_pad (demux->fetcher, "src");
-   if (pad) {
-     gst_pad_link (pad, demux->fetcherpad);
-@@ -1063,6 +1064,8 @@ gst_hls_demux_cache_fragments (GstHLSDemux * demux)
+-  pad = gst_element_get_static_pad (demux->fetcher, "src");
+-  if (pad) {
+-    gst_pad_link (pad, demux->fetcherpad);
+-    gst_object_unref (pad);
+-  }
+-  return TRUE;
+-}
+-
+ static void
+ gst_hls_demux_reset (GstHLSDemux * demux, gboolean dispose)
+ {
+   demux->need_cache = TRUE;
+-  demux->thread_return = FALSE;
+   demux->accumulated_delay = 0;
+   demux->end_of_playlist = FALSE;
+   demux->cancelled = FALSE;
+@@ -870,8 +746,6 @@ gst_hls_demux_reset (GstHLSDemux * demux, gboolean dispose)
+     demux->playlist = NULL;
+   }
+ 
+-  gst_adapter_clear (demux->download);
+-
+   if (demux->client) {
+     gst_m3u8_client_free (demux->client);
+     demux->client = NULL;
+@@ -882,8 +756,8 @@ gst_hls_demux_reset (GstHLSDemux * demux, gboolean dispose)
+   }
+ 
+   while (!g_queue_is_empty (demux->queue)) {
+-    GstBuffer *buf = g_queue_pop_head (demux->queue);
+-    gst_buffer_unref (buf);
++    GstBufferList *buffer_list = g_queue_pop_head (demux->queue);
++    gst_buffer_list_unref (buffer_list);
+   }
+   g_queue_clear (demux->queue);
+ 
+@@ -902,8 +776,8 @@ gst_hls_demux_set_location (GstHLSDemux * demux, const gchar * uri)
+   return TRUE;
+ }
+ 
+-static gboolean
+-gst_hls_demux_update_thread (GstHLSDemux * demux)
++void
++gst_hls_demux_updates_loop (GstHLSDemux * demux)
+ {
+   /* Loop for the updates. It's started when the first fragments are cached and
+    * schedules the next update of the playlist (for lives sources) and the next
+@@ -911,15 +785,14 @@ gst_hls_demux_update_thread (GstHLSDemux * demux)
+    * download time with the next scheduled update to check if we can or should
+    * switch to a different bitrate */
+ 
+-  g_mutex_lock (demux->thread_lock);
+-  GST_DEBUG_OBJECT (demux, "Started updates thread");
++  /* block until the next scheduled update or the signal to quit this thread */
++  g_mutex_lock (demux->updates_timed_lock);
++  GST_DEBUG_OBJECT (demux, "Started updates task");
+   while (TRUE) {
+-    /* block until the next scheduled update or the signal to quit this thread */
+-    if (g_cond_timed_wait (demux->thread_cond, demux->thread_lock,
+-            &demux->next_update)) {
++    if (g_cond_timed_wait (GST_TASK_GET_COND (demux->updates_task),
++            demux->updates_timed_lock, &demux->next_update)) {
+       goto quit;
+     }
+-
+     /* update the playlist for live sources */
+     if (gst_m3u8_client_is_live (demux->client)) {
+       if (!gst_hls_demux_update_playlist (demux)) {
+@@ -952,7 +825,7 @@ gst_hls_demux_update_thread (GstHLSDemux * demux)
+ 
+     /* fetch the next fragment */
+     if (g_queue_is_empty (demux->queue)) {
+-      if (!gst_hls_demux_get_next_fragment (demux)) {
++      if (!gst_hls_demux_get_next_fragment (demux, FALSE)) {
+         if (!demux->end_of_playlist && !demux->cancelled) {
+           demux->client->update_failed_count++;
+           if (demux->client->update_failed_count < DEFAULT_FAILED_COUNT) {
+@@ -975,39 +848,10 @@ gst_hls_demux_update_thread (GstHLSDemux * demux)
+ 
+ quit:
+   {
+-    GST_DEBUG_OBJECT (demux, "Stopped updates thread");
+-    demux->updates_thread = NULL;
+-    g_mutex_unlock (demux->thread_lock);
+-    return TRUE;
+-  }
+-}
+-
+-
+-static void
+-gst_hls_demux_stop_update (GstHLSDemux * demux)
+-{
+-  GST_DEBUG_OBJECT (demux, "Stopping updates thread");
+-  while (demux->updates_thread) {
+-    g_mutex_lock (demux->thread_lock);
+-    g_cond_signal (demux->thread_cond);
+-    g_mutex_unlock (demux->thread_lock);
+-  }
+-}
+-
+-static gboolean
+-gst_hls_demux_start_update (GstHLSDemux * demux)
+-{
+-  GError *error;
+-
+-  /* creates a new thread for the updates */
+-  g_mutex_lock (demux->thread_lock);
+-  if (demux->updates_thread == NULL) {
+-    GST_DEBUG_OBJECT (demux, "Starting updates thread");
+-    demux->updates_thread = g_thread_create (
+-        (GThreadFunc) gst_hls_demux_update_thread, demux, FALSE, &error);
++    GST_DEBUG_OBJECT (demux, "Stopped updates task");
++    gst_hls_demux_stop (demux);
++    g_mutex_unlock (demux->updates_timed_lock);
+   }
+-  g_mutex_unlock (demux->thread_lock);
+-  return (error != NULL);
+ }
+ 
+ static gboolean
+@@ -1062,7 +906,9 @@ gst_hls_demux_cache_fragments (GstHLSDemux * demux)
+     g_time_val_add (&demux->next_update,
          gst_m3u8_client_get_target_duration (demux->client)
          / GST_SECOND * G_USEC_PER_SEC);
-     if (!gst_hls_demux_get_next_fragment (demux)) {
+-    if (!gst_hls_demux_get_next_fragment (demux)) {
++    if (!gst_hls_demux_get_next_fragment (demux, TRUE)) {
 +      if (demux->end_of_playlist)
 +        break;
        if (!demux->cancelled)
          GST_ERROR_OBJECT (demux, "Error caching the first fragments");
        return FALSE;
+@@ -1079,98 +925,58 @@ gst_hls_demux_cache_fragments (GstHLSDemux * demux)
+ 
+   demux->need_cache = FALSE;
+   return TRUE;
+-}
+-
+-static gboolean
+-gst_hls_demux_fetch_location (GstHLSDemux * demux, const gchar * uri)
+-{
+-  GstStateChangeReturn ret;
+-  gboolean bret = FALSE;
+-
+-  g_mutex_lock (demux->fetcher_lock);
+-
+-  while (demux->fetcher)
+-    g_cond_wait (demux->fetcher_cond, demux->fetcher_lock);
+-
+-  if (demux->cancelled)
+-    goto quit;
+-
+-  if (!gst_hls_demux_make_fetcher_locked (demux, uri)) {
+-    goto uri_error;
+-  }
+-
+-  ret = gst_element_set_state (demux->fetcher, GST_STATE_PLAYING);
+-  if (ret == GST_STATE_CHANGE_FAILURE)
+-    goto state_change_error;
+-
+-  /* wait until we have fetched the uri */
+-  GST_DEBUG_OBJECT (demux, "Waiting to fetch the URI");
+-  g_cond_wait (demux->fetcher_cond, demux->fetcher_lock);
+-
+-  gst_hls_demux_stop_fetcher_locked (demux, FALSE);
+-
+-  if (!demux->fetcher_error && gst_adapter_available (demux->download)) {
+-    GST_INFO_OBJECT (demux, "URI fetched successfully");
+-    bret = TRUE;
+-  }
+-  goto quit;
+ 
+-uri_error:
+-  {
+-    GST_ELEMENT_ERROR (demux, RESOURCE, OPEN_READ,
+-        ("Could not create an element to fetch the given URI."), ("URI: \"%s\"",
+-            uri));
+-    bret = FALSE;
+-    goto quit;
+-  }
+-
+-state_change_error:
+-  {
+-    GST_ELEMENT_ERROR (demux, CORE, STATE_CHANGE,
+-        ("Error changing state of the fetcher element."), (NULL));
+-    bret = FALSE;
+-    goto quit;
+-  }
+-
+-quit:
+-  {
+-    /* Unlock any other fetcher that might be waiting */
+-    g_cond_broadcast (demux->fetcher_cond);
+-    g_mutex_unlock (demux->fetcher_lock);
+-    return bret;
+-  }
+ }
+ 
+ static gchar *
+-gst_hls_src_buf_to_utf8_playlist (gchar * data, guint size)
++gst_hls_src_buf_to_utf8_playlist (GstBuffer * buf)
+ {
++  gint size;
++  gchar *data;
+   gchar *playlist;
+ 
++  data = (gchar *) GST_BUFFER_DATA (buf);
++  size = GST_BUFFER_SIZE (buf);
++
+   if (!g_utf8_validate (data, size, NULL))
+     return NULL;
+ 
+   /* alloc size + 1 to end with a null character */
+   playlist = g_malloc0 (size + 1);
+   memcpy (playlist, data, size + 1);
++
++  gst_buffer_unref (buf);
+   return playlist;
+ }
+ 
+ static gboolean
+ gst_hls_demux_update_playlist (GstHLSDemux * demux)
+ {
+-  const guint8 *data;
++  GstFragment *download;
++  GstBufferListIterator *it;
++  GstBuffer *buf;
+   gchar *playlist;
+-  guint avail;
++
+   const gchar *uri = gst_m3u8_client_get_current_uri (demux->client);
+ 
+-  GST_INFO_OBJECT (demux, "Updating the playlist %s", uri);
+-  if (!gst_hls_demux_fetch_location (demux, uri))
++  download = gst_uri_downloader_fetch_uri (demux->downloader, uri);
++
++  if (download == NULL)
+     return FALSE;
+ 
+-  avail = gst_adapter_available (demux->download);
+-  data = gst_adapter_peek (demux->download, avail);
+-  playlist = gst_hls_src_buf_to_utf8_playlist ((gchar *) data, avail);
+-  gst_adapter_clear (demux->download);
++  /* Merge all the buffers in the list to build a unique buffer with the
++   * playlist */
++  it = gst_buffer_list_iterate (gst_fragment_get_buffer_list (download));
++
++  /* skip the first group, which contains the headers, which are not set in the
++   * demuxer*/
++  gst_buffer_list_iterator_next_group (it);
++  buf = gst_buffer_list_iterator_merge_group (it);
++
++  playlist = gst_hls_src_buf_to_utf8_playlist (buf);
++  gst_buffer_list_iterator_free (it);
++  g_object_unref (download);
++
+   if (playlist == NULL) {
+     GST_WARNING_OBJECT (demux, "Couldn't not validate playlist encoding");
+     return FALSE;
+@@ -1298,37 +1104,34 @@ gst_hls_demux_switch_playlist (GstHLSDemux * demux)
+ }
+ 
+ static gboolean
+-gst_hls_demux_get_next_fragment (GstHLSDemux * demux)
++gst_hls_demux_get_next_fragment (GstHLSDemux * demux, gboolean caching)
+ {
+-  GstBuffer *buf;
+-  guint avail;
++  GstFragment *download;
+   const gchar *next_fragment_uri;
+   GstClockTime duration;
+   GstClockTime timestamp;
++  GstBufferList *buffer_list;
++  GstBuffer *buf;
+   gboolean discont;
+ 
+   if (!gst_m3u8_client_get_next_fragment (demux->client, &discont,
+           &next_fragment_uri, &duration, &timestamp)) {
+     GST_INFO_OBJECT (demux, "This playlist doesn't contain more fragments");
+     demux->end_of_playlist = TRUE;
+-    gst_task_start (demux->task);
++    gst_task_start (demux->stream_task);
+     return FALSE;
+   }
+ 
+   GST_INFO_OBJECT (demux, "Fetching next fragment %s", next_fragment_uri);
+ 
+-  if (!gst_hls_demux_fetch_location (demux, next_fragment_uri)) {
+-    /* FIXME: The gst_m3u8_get_next_fragment increments the sequence number
+-       but another thread might call get_next_fragment and this decrement
+-       will not redownload the failed fragment, but might duplicate the
+-       download of a succeeded fragment
+-     */
+-    g_atomic_int_add (&demux->client->sequence, -1);
+-    return FALSE;
+-  }
++  download = gst_uri_downloader_fetch_uri (demux->downloader,
++      next_fragment_uri);
++
++  if (download == NULL)
++    goto error;
+ 
+-  avail = gst_adapter_available (demux->download);
+-  buf = gst_adapter_take_buffer (demux->download, avail);
++  buffer_list = gst_fragment_get_buffer_list (download);
++  buf = gst_buffer_list_get (buffer_list, 0, 0);
+   GST_BUFFER_DURATION (buf) = duration;
+   GST_BUFFER_TIMESTAMP (buf) = timestamp;
+ 
+@@ -1352,8 +1155,17 @@ gst_hls_demux_get_next_fragment (GstHLSDemux * demux)
+     GST_BUFFER_FLAG_SET (buf, GST_BUFFER_FLAG_DISCONT);
+   }
+ 
+-  g_queue_push_tail (demux->queue, buf);
+-  gst_task_start (demux->task);
+-  gst_adapter_clear (demux->download);
++  g_queue_push_tail (demux->queue, buffer_list);
++  g_object_unref (download);
++  if (!caching) {
++    GST_TASK_SIGNAL (demux->updates_task);
++  }
++
+   return TRUE;
++
++error:
++  {
++    gst_hls_demux_stop (demux);
++    return FALSE;
++  }
+ }
+diff --git a/gst/hls/gsthlsdemux.h b/gst/hls/gsthlsdemux.h
+index a09a88b..16c8677 100644
+--- a/gst/hls/gsthlsdemux.h
++++ b/gst/hls/gsthlsdemux.h
+@@ -27,6 +27,8 @@
+ #include <gst/gst.h>
+ #include <gst/base/gstadapter.h>
+ #include "m3u8.h"
++#include "gstfragmented.h"
++#include "gsturidownloader.h"
+ 
+ G_BEGIN_DECLS
+ #define GST_TYPE_HLS_DEMUX \
+@@ -51,12 +53,12 @@ struct _GstHLSDemux
+ {
+   GstElement parent;
+ 
+-  GstTask *task;
+-  GStaticRecMutex task_lock;
+   GstPad *srcpad;
+   GstPad *sinkpad;
++
+   GstBuffer *playlist;
+   GstCaps *input_caps;
++  GstUriDownloader *downloader;
+   GstM3U8Client *client;        /* M3U8 client */
+   GQueue *queue;                /* Queue storing the fetched fragments */
+   gboolean need_cache;          /* Wheter we need to cache some fragments before starting to push data */
+@@ -67,25 +69,18 @@ struct _GstHLSDemux
+   guint fragments_cache;        /* number of fragments needed to be cached to start playing */
+   gfloat bitrate_switch_tol;    /* tolerance with respect to the fragment duration to switch the bitarate*/
+ 
+-  /* Updates thread */
+-  GThread *updates_thread;      /* Thread handling the playlist and fragments updates */
+-  GMutex *thread_lock;          /* Thread lock */
+-  GCond *thread_cond;           /* Signals the thread to quit */
+-  gboolean thread_return;       /* Instructs the thread to return after the thread_quit condition is meet */
++  /* Streaming task */
++  GstTask *stream_task;
++  GStaticRecMutex stream_lock;
++  gboolean stop_stream_task;
++
++  /* Updates task */
++  GstTask *updates_task;
++  GStaticRecMutex updates_lock;
++  GMutex *updates_timed_lock;
+   GTimeVal next_update;         /* Time of the next update */
+   gint64 accumulated_delay;     /* Delay accumulated fetching fragments, used to decide a playlist switch */
+-
+-  /* Fragments fetcher */
+-  GstElement *fetcher;
+-  GstBus *fetcher_bus;
+-  GstPad *fetcherpad;
+-  GMutex *fetcher_lock;
+-  GCond *fetcher_cond;
+-  GTimeVal *timeout;
+-  gboolean fetcher_error;
+-  gboolean stopping_fetcher;
+   gboolean cancelled;
+-  GstAdapter *download;
+ 
+   /* Position in the stream */
+   GstClockTime position;
+diff --git a/gst/hls/gsturidownloader.c b/gst/hls/gsturidownloader.c
+new file mode 100644
+index 0000000..e208efe
+--- /dev/null
++++ b/gst/hls/gsturidownloader.c
+@@ -0,0 +1,347 @@
++/* GStreamer
++ * Copyright (C) 2011 Andoni Morales Alastruey <ylatuya@gmail.com>
++ *
++ * gstfragment.c:
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#include <glib.h>
++#include "gstfragmented.h"
++#include "gstfragment.h"
++#include "gsturidownloader.h"
++
++GST_DEBUG_CATEGORY_STATIC (uridownloader_debug);
++#define GST_CAT_DEFAULT (uridownloader_debug)
++
++#define GST_URI_DOWNLOADER_GET_PRIVATE(obj)  \
++   (G_TYPE_INSTANCE_GET_PRIVATE ((obj), \
++    GST_TYPE_URI_DOWNLOADER, GstUriDownloaderPrivate))
++
++struct _GstUriDownloaderPrivate
++{
++  /* Fragments fetcher */
++  GstElement *urisrc;
++  GstBus *bus;
++  GstPad *pad;
++  GTimeVal *timeout;
++  GstFragment *download;
++  GMutex *lock;
++  GCond *cond;
++};
++
++static void gst_uri_downloader_finalize (GObject * object);
++static void gst_uri_downloader_dispose (GObject * object);
++
++static GstFlowReturn gst_uri_downloader_chain (GstPad * pad, GstBuffer * buf);
++static gboolean gst_uri_downloader_sink_event (GstPad * pad, GstEvent * event);
++static GstBusSyncReply gst_uri_downloader_bus_handler (GstBus * bus,
++    GstMessage * message, gpointer data);
++
++static GstStaticPadTemplate sinkpadtemplate = GST_STATIC_PAD_TEMPLATE ("sink",
++    GST_PAD_SINK,
++    GST_PAD_ALWAYS,
++    GST_STATIC_CAPS_ANY);
++
++#define _do_init \
++{ \
++  GST_DEBUG_CATEGORY_INIT (uridownloader_debug, "uridownloader", 0, "URI downloader"); \
++}
++
++G_DEFINE_TYPE_WITH_CODE (GstUriDownloader, gst_uri_downloader, GST_TYPE_OBJECT,
++    _do_init);
++
++static void
++gst_uri_downloader_class_init (GstUriDownloaderClass * klass)
++{
++  GObjectClass *gobject_class;
++
++  gobject_class = (GObjectClass *) klass;
++
++  g_type_class_add_private (klass, sizeof (GstUriDownloaderPrivate));
++
++  gobject_class->dispose = gst_uri_downloader_dispose;
++  gobject_class->finalize = gst_uri_downloader_finalize;
++}
++
++static void
++gst_uri_downloader_init (GstUriDownloader * downloader)
++{
++  downloader->priv = GST_URI_DOWNLOADER_GET_PRIVATE (downloader);
++
++  /* Initialize the sink pad. This pad will be connected to the src pad of the
++   * element created with gst_element_make_from_uri and will handle the download */
++  downloader->priv->pad =
++      gst_pad_new_from_static_template (&sinkpadtemplate, "sink");
++  gst_pad_set_chain_function (downloader->priv->pad,
++      GST_DEBUG_FUNCPTR (gst_uri_downloader_chain));
++  gst_pad_set_event_function (downloader->priv->pad,
++      GST_DEBUG_FUNCPTR (gst_uri_downloader_sink_event));
++  gst_pad_set_element_private (downloader->priv->pad, downloader);
++  gst_pad_activate_push (downloader->priv->pad, TRUE);
++
++  /* Create a bus to handle error and warning message from the source element */
++  downloader->priv->bus = gst_bus_new ();
++
++  downloader->priv->lock = g_mutex_new ();
++  downloader->priv->cond = g_cond_new ();
++}
++
++static void
++gst_uri_downloader_dispose (GObject * object)
++{
++  GstUriDownloader *downloader = GST_URI_DOWNLOADER (object);
++
++  if (downloader->priv->urisrc != NULL) {
++    gst_object_unref (downloader->priv->urisrc);
++    downloader->priv->urisrc = NULL;
++  }
++
++  if (downloader->priv->bus != NULL) {
++    gst_object_unref (downloader->priv->bus);
++    downloader->priv->bus = NULL;
++  }
++
++  if (downloader->priv->pad) {
++    gst_object_unref (downloader->priv->pad);
++    downloader->priv->pad = NULL;
++  }
++
++  if (downloader->priv->download) {
++    g_object_unref (downloader->priv->download);
++    downloader->priv->download = NULL;
++  }
++
++  G_OBJECT_CLASS (gst_uri_downloader_parent_class)->dispose (object);
++}
++
++static void
++gst_uri_downloader_finalize (GObject * object)
++{
++  GstUriDownloader *downloader = GST_URI_DOWNLOADER (object);
++
++  g_mutex_free (downloader->priv->lock);
++  g_cond_free (downloader->priv->cond);
++
++  G_OBJECT_CLASS (gst_uri_downloader_parent_class)->finalize (object);
++}
++
++GstUriDownloader *
++gst_uri_downloader_new (void)
++{
++  return g_object_new (GST_TYPE_URI_DOWNLOADER, NULL);
++}
++
++static gboolean
++gst_uri_downloader_sink_event (GstPad * pad, GstEvent * event)
++{
++  GstUriDownloader *downloader =
++      (GstUriDownloader *) (gst_pad_get_element_private (pad));
++
++  switch (event->type) {
++    case GST_EVENT_EOS:{
++      GST_OBJECT_LOCK (downloader);
++      GST_DEBUG_OBJECT (downloader, "Got EOS on the fetcher pad");
++      if (downloader->priv->download != NULL) {
++        /* signal we have fetched the URI */
++        downloader->priv->download->completed = TRUE;
++        downloader->priv->download->download_stop_time = g_get_real_time ();
++        GST_OBJECT_UNLOCK (downloader);
++        GST_DEBUG_OBJECT (downloader, "Signaling chain funtion");
++        g_cond_signal (downloader->priv->cond);
++
++      } else {
++        GST_OBJECT_UNLOCK (downloader);
++      }
++      break;
++    }
++    default:
++      break;
++  }
++
++  gst_event_unref (event);
++  return FALSE;
++}
++
++static GstBusSyncReply
++gst_uri_downloader_bus_handler (GstBus * bus,
++    GstMessage * message, gpointer data)
++{
++  GstUriDownloader *downloader = (GstUriDownloader *) (data);
++
++  if (GST_MESSAGE_TYPE (message) == GST_MESSAGE_ERROR ||
++      GST_MESSAGE_TYPE (message) == GST_MESSAGE_WARNING) {
++    GError *err = NULL;
++    gchar *dbg_info = NULL;
++
++    gst_message_parse_error (message, &err, &dbg_info);
++    GST_WARNING_OBJECT (downloader,
++        "Received error: %s from %s, the download will be cancelled",
++        GST_OBJECT_NAME (message->src), err->message);
++    GST_DEBUG ("Debugging info: %s\n", (dbg_info) ? dbg_info : "none");
++    g_error_free (err);
++    g_free (dbg_info);
++
++    /* remove the sync handler to avoid duplicated messages */
++    gst_bus_set_sync_handler (downloader->priv->bus, NULL, NULL);
++    gst_uri_downloader_cancel (downloader);
++  }
++
++  gst_message_unref (message);
++  return GST_BUS_DROP;
++}
++
++static GstFlowReturn
++gst_uri_downloader_chain (GstPad * pad, GstBuffer * buf)
++{
++  GstUriDownloader *downloader =
++      (GstUriDownloader *) gst_pad_get_element_private (pad);
++
++  /* HTML errors (404, 500, etc...) are also pushed through this pad as
++   * response but the source element will also post a warning or error message
++   * in the bus, which is handled synchronously cancelling the download.
++   */
++  GST_OBJECT_LOCK (downloader);
++  if (downloader->priv->download == NULL) {
++    /* Download cancelled, quit */
++    GST_OBJECT_UNLOCK (downloader);
++    goto done;
++  }
++
++  GST_LOG_OBJECT (downloader, "The uri fetcher received a new buffer "
++      "of size %u", GST_BUFFER_SIZE (buf));
++  if (!gst_fragment_add_buffer (downloader->priv->download, buf))
++    GST_WARNING_OBJECT (downloader, "Could not add buffer to fragment");
++  GST_OBJECT_UNLOCK (downloader);
++
++done:
++  {
++    return GST_FLOW_OK;
++  }
++}
++
++static void
++gst_uri_downloader_stop (GstUriDownloader * downloader)
++{
++  GstPad *pad;
++
++  GST_DEBUG_OBJECT (downloader, "Stopping source element");
++
++  /* remove the bus' sync handler */
++  gst_bus_set_sync_handler (downloader->priv->bus, NULL, NULL);
++  /* unlink the source element from the internal pad */
++  pad = gst_pad_get_peer (downloader->priv->pad);
++  if (pad) {
++    gst_pad_unlink (pad, downloader->priv->pad);
++    gst_object_unref (pad);
++  }
++  /* set the element state to NULL */
++  gst_element_set_state (downloader->priv->urisrc, GST_STATE_NULL);
++  gst_element_get_state (downloader->priv->urisrc, NULL, NULL,
++      GST_CLOCK_TIME_NONE);
++}
++
++void
++gst_uri_downloader_cancel (GstUriDownloader * downloader)
++{
++  GST_OBJECT_LOCK (downloader);
++  if (downloader->priv->download != NULL) {
++    GST_DEBUG_OBJECT (downloader, "Cancelling download");
++    g_object_unref (downloader->priv->download);
++    downloader->priv->download = NULL;
++    GST_OBJECT_UNLOCK (downloader);
++    GST_DEBUG_OBJECT (downloader, "Signaling chain funtion");
++    g_cond_signal (downloader->priv->cond);
++  } else {
++    GST_OBJECT_UNLOCK (downloader);
++    GST_DEBUG_OBJECT (downloader,
++        "Trying to cancell a download that was alredy cancelled");
++  }
++}
++
++static gboolean
++gst_uri_downloader_set_uri (GstUriDownloader * downloader, const gchar * uri)
++{
++  GstPad *pad;
++
++  if (!gst_uri_is_valid (uri))
++    return FALSE;
++
++  GST_DEBUG_OBJECT (downloader, "Creating source element for the URI:%s", uri);
++  downloader->priv->urisrc = gst_element_make_from_uri (GST_URI_SRC, uri, NULL);
++  if (!downloader->priv->urisrc)
++    return FALSE;
++
++  /* add a sync handler for the bus messages to detect errors in the download */
++  gst_element_set_bus (GST_ELEMENT (downloader->priv->urisrc),
++      downloader->priv->bus);
++  gst_bus_set_sync_handler (downloader->priv->bus,
++      gst_uri_downloader_bus_handler, downloader);
++
++  pad = gst_element_get_static_pad (downloader->priv->urisrc, "src");
++  if (!pad)
++    return FALSE;
++  gst_pad_link (pad, downloader->priv->pad);
++  gst_object_unref (pad);
++  return TRUE;
++}
++
++GstFragment *
++gst_uri_downloader_fetch_uri (GstUriDownloader * downloader, const gchar * uri)
++{
++  GstStateChangeReturn ret;
++  GstFragment *download = NULL;
++
++  g_mutex_lock (downloader->priv->lock);
++
++  if (!gst_uri_downloader_set_uri (downloader, uri)) {
++    goto quit;
++  }
++
++  downloader->priv->download = gst_fragment_new ();
++
++  ret = gst_element_set_state (downloader->priv->urisrc, GST_STATE_PLAYING);
++  if (ret == GST_STATE_CHANGE_FAILURE) {
++    g_object_unref (downloader->priv->download);
++    downloader->priv->download = NULL;
++    goto quit;
++  }
++
++  /* wait until:
++   *   - the download succeed (EOS in the src pad)
++   *   - the download failed (Error message on the fetcher bus)
++   *   - the download was canceled
++   */
++  GST_DEBUG_OBJECT (downloader, "Waiting to fetch the URI");
++  g_cond_wait (downloader->priv->cond, downloader->priv->lock);
++
++  GST_OBJECT_LOCK (downloader);
++  download = downloader->priv->download;
++  downloader->priv->download = NULL;
++  GST_OBJECT_UNLOCK (downloader);
++
++  if (download != NULL)
++    GST_INFO_OBJECT (downloader, "URI fetched successfully");
++  else
++    GST_INFO_OBJECT (downloader, "Error fetching URI");
++
++quit:
++  {
++    gst_uri_downloader_stop (downloader);
++    g_mutex_unlock (downloader->priv->lock);
++    return download;
++  }
++}
+diff --git a/gst/hls/gsturidownloader.h b/gst/hls/gsturidownloader.h
+new file mode 100644
+index 0000000..bfb5157
+--- /dev/null
++++ b/gst/hls/gsturidownloader.h
+@@ -0,0 +1,64 @@
++/* GStreamer
++ * Copyright (C) 2011 Andoni Morales Alastruey <ylatuya@gmail.com>
++ *
++ * gsturidownloader.h:
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * Youshould have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
++
++#ifndef __GSTURI_DOWNLOADER_H__
++#define __GSTURI_DOWNLOADER_H__
++
++#include <glib-object.h>
++#include <gst/gst.h>
++#include "gstfragment.h"
++
++G_BEGIN_DECLS
++
++#define GST_TYPE_URI_DOWNLOADER (gst_uri_downloader_get_type())
++#define GST_URI_DOWNLOADER(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj),GST_TYPE_URI_DOWNLOADER,GstUriDownloader))
++#define GST_URI_DOWNLOADER_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass),GST_TYPE_URI_DOWNLOADER,GstUriDownloaderClass))
++#define GST_IS_URI_DOWNLOADER(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj),GST_TYPE_URI_DOWNLOADER))
++#define GST_IS_URI_DOWNLOADER_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass),GST_TYPE_URI_DOWNLOADER))
++
++typedef struct _GstUriDownloader GstUriDownloader;
++typedef struct _GstUriDownloaderPrivate GstUriDownloaderPrivate;
++typedef struct _GstUriDownloaderClass GstUriDownloaderClass;
++
++struct _GstUriDownloader
++{
++  GstObject parent;
++
++  GstUriDownloaderPrivate *priv;
++};
++
++struct _GstUriDownloaderClass
++{
++  GstObjectClass parent_class;
++
++  /*< private >*/
++  gpointer _gst_reserved[GST_PADDING];
++};
++
++GType gst_uri_downloader_get_type (void);
++
++GstUriDownloader * gst_uri_downloader_new (void);
++GstFragment * gst_uri_downloader_fetch_uri (GstUriDownloader * downloader, const gchar * uri);
++void gst_uri_downloader_cancel (GstUriDownloader *downloader);
++void gst_uri_downloader_free (GstUriDownloader *downloader);
++
++G_END_DECLS
++#endif /* __GSTURIDOWNLOADER_H__ */
 diff --git a/gst/hls/m3u8.c b/gst/hls/m3u8.c
 index 449b63e..eecb467 100644
 --- a/gst/hls/m3u8.c
@@ -17399,10 +18994,17 @@ index 7f7a480..0000000
 -					MpegTSPacketizerPacket * packet,
 -					gboolean *need_more);
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 166089b..8f4d78d 100644
+index 166089b..7f098f2 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -41,10 +41,9 @@
+@@ -35,16 +35,16 @@
+ #include <string.h>
+ 
+ #include <glib.h>
++#include <gst/tag/tag.h>
+ 
+ #include "mpegtsbase.h"
+ #include "tsdemux.h"
  #include "gstmpegdesc.h"
  #include "gstmpegdefs.h"
  #include "mpegtspacketizer.h"
@@ -17414,7 +19016,7 @@ index 166089b..8f4d78d 100644
   * tsdemux
   *
   * See TODO for explanations on improvements needed
-@@ -56,7 +55,7 @@
+@@ -56,7 +56,7 @@
  #define TABLE_ID_UNSET 0xFF
  
  /* Size of the pendingbuffers array. */
@@ -17423,7 +19025,7 @@ index 166089b..8f4d78d 100644
  
  #define PCR_WRAP_SIZE_128KBPS (((gint64)1490)*(1024*1024))
  /* small PCR for wrap detection */
-@@ -65,10 +64,23 @@
+@@ -65,10 +65,23 @@
  #define PCR_MAX_VALUE (((((guint64)1)<<33) * 300) + 298)
  #define PTS_DTS_MAX_VALUE (((guint64)1) << 33)
  
@@ -17448,7 +19050,7 @@ index 166089b..8f4d78d 100644
  
  GST_DEBUG_CATEGORY_STATIC (ts_demux_debug);
  #define GST_CAT_DEFAULT ts_demux_debug
-@@ -102,6 +114,8 @@ struct _TSDemuxStream
+@@ -102,6 +115,8 @@ struct _TSDemuxStream
    MpegTSBaseStream stream;
  
    GstPad *pad;
@@ -17457,7 +19059,7 @@ index 166089b..8f4d78d 100644
  
    /* the return of the latest push */
    GstFlowReturn flow_return;
-@@ -114,6 +128,11 @@ struct _TSDemuxStream
+@@ -114,6 +129,11 @@ struct _TSDemuxStream
    GstBuffer *pendingbuffers[TS_MAX_PENDING_BUFFERS];
    guint8 nbpending;
  
@@ -17469,7 +19071,7 @@ index 166089b..8f4d78d 100644
    /* Current data to be pushed out */
    GstBufferList *current;
    GstBufferListIterator *currentit;
-@@ -125,9 +144,15 @@ struct _TSDemuxStream
+@@ -125,9 +145,17 @@ struct _TSDemuxStream
    /* Raw value of current PTS/DTS */
    guint64 raw_pts;
    guint64 raw_dts;
@@ -17482,10 +19084,12 @@ index 166089b..8f4d78d 100644
 +
 +  /* Whether this stream needs to send a newsegment */
 +  gboolean need_newsegment;
++
++  GstTagList *taglist;
  };
  
  #define VIDEO_CAPS \
-@@ -148,8 +173,11 @@ struct _TSDemuxStream
+@@ -148,8 +176,11 @@ struct _TSDemuxStream
      "audio/mpeg, " \
        "mpegversion = (int) 1;" \
      "audio/mpeg, " \
@@ -17498,7 +19102,7 @@ index 166089b..8f4d78d 100644
      "audio/x-lpcm, " \
        "width = (int) { 16, 20, 24 }, " \
        "rate = (int) { 48000, 96000 }, " \
-@@ -198,8 +226,6 @@ enum
+@@ -198,8 +229,6 @@ enum
  };
  
  /* Pad functions */
@@ -17507,7 +19111,7 @@ index 166089b..8f4d78d 100644
  
  
  /* mpegtsbase methods */
-@@ -215,23 +241,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * stream,
+@@ -215,23 +244,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * stream,
      MpegTSBaseProgram * program);
  static void
  gst_ts_demux_stream_removed (MpegTSBase * base, MpegTSBaseStream * stream);
@@ -17533,7 +19137,7 @@ index 166089b..8f4d78d 100644
  
  static gboolean push_event (MpegTSBase * base, GstEvent * event);
  static void _extra_init (GType type);
-@@ -256,14 +274,11 @@ gst_ts_demux_base_init (gpointer klass)
+@@ -256,14 +277,11 @@ gst_ts_demux_base_init (gpointer klass)
  {
    GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
  
@@ -17551,7 +19155,7 @@ index 166089b..8f4d78d 100644
  
    gst_element_class_set_details_simple (element_class,
        "MPEG transport stream demuxer",
-@@ -282,7 +297,6 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
+@@ -282,7 +300,6 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
    gobject_class = G_OBJECT_CLASS (klass);
    gobject_class->set_property = gst_ts_demux_set_property;
    gobject_class->get_property = gst_ts_demux_get_property;
@@ -17559,7 +19163,7 @@ index 166089b..8f4d78d 100644
  
    g_object_class_install_property (gobject_class, PROP_PROGRAM_NUMBER,
        g_param_spec_int ("program-number", "Program number",
-@@ -302,56 +316,37 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
+@@ -302,56 +319,37 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
    ts_class->program_started = GST_DEBUG_FUNCPTR (gst_ts_demux_program_started);
    ts_class->stream_added = gst_ts_demux_stream_added;
    ts_class->stream_removed = gst_ts_demux_stream_removed;
@@ -17631,7 +19235,7 @@ index 166089b..8f4d78d 100644
  
  
  static void
-@@ -398,6 +393,7 @@ gst_ts_demux_srcpad_query_types (GstPad * pad)
+@@ -398,6 +396,7 @@ gst_ts_demux_srcpad_query_types (GstPad * pad)
    static const GstQueryType query_types[] = {
      GST_QUERY_DURATION,
      GST_QUERY_SEEKING,
@@ -17639,7 +19243,7 @@ index 166089b..8f4d78d 100644
      0
    };
  
-@@ -417,18 +413,57 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -417,18 +416,57 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
  
    switch (GST_QUERY_TYPE (query)) {
      case GST_QUERY_DURATION:
@@ -17700,7 +19304,7 @@ index 166089b..8f4d78d 100644
        GST_DEBUG ("query seeking");
        gst_query_parse_seeking (query, &format, NULL, NULL, NULL);
        if (format == GST_FORMAT_TIME) {
-@@ -448,6 +483,7 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -448,6 +486,7 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
          res = FALSE;
        }
        break;
@@ -17708,7 +19312,7 @@ index 166089b..8f4d78d 100644
      default:
        res = gst_pad_query_default (pad, query);
    }
-@@ -457,374 +493,8 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -457,374 +496,8 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
  
  }
  
@@ -18084,7 +19688,7 @@ index 166089b..8f4d78d 100644
  {
    GstTSDemux *demux = (GstTSDemux *) base;
    GstFlowReturn res = GST_FLOW_ERROR;
-@@ -835,6 +505,7 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
+@@ -835,6 +508,7 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
    gint64 start, stop;
    GstSegment seeksegment;
    gboolean update;
@@ -18092,7 +19696,7 @@ index 166089b..8f4d78d 100644
  
    gst_event_parse_seek (event, &rate, &format, &flags, &start_type, &start,
        &stop_type, &stop);
-@@ -855,31 +526,35 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
+@@ -855,31 +529,35 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
    /* copy segment, we need this because we still need the old
     * segment when we close the current segment. */
    memcpy (&seeksegment, &demux->segment, sizeof (GstSegment));
@@ -18146,7 +19750,59 @@ index 166089b..8f4d78d 100644
    /* commit the new segment */
    memcpy (&demux->segment, &seeksegment, sizeof (GstSegment));
  
-@@ -1006,8 +681,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -968,6 +646,43 @@ done:
+   return ret;
+ }
+ 
++static void
++gst_ts_demux_create_tags (TSDemuxStream * stream)
++{
++  guint8 *desc = NULL;
++  int i;
++
++  desc = mpegts_get_descriptor_from_stream ((MpegTSBaseStream *) stream,
++      DESC_ISO_639_LANGUAGE);
++  if (desc) {
++    if (!stream->taglist)
++      stream->taglist = gst_tag_list_new ();
++
++    for (i = 0; i < DESC_ISO_639_LANGUAGE_codes_n (desc); i++) {
++      const gchar *lc;
++      gchar lang_code[4];
++      gchar *language_n;
++
++      language_n = (gchar *)
++          DESC_ISO_639_LANGUAGE_language_code_nth (desc, i);
++
++      GST_LOG ("Add language code for stream: %s", language_n);
++
++      lang_code[0] = language_n[0];
++      lang_code[1] = language_n[1];
++      lang_code[2] = language_n[2];
++      lang_code[3] = 0;
++
++      /* descriptor contains ISO 639-2 code, we want the ISO 639-1 code */
++      lc = gst_tag_get_language_code (lang_code);
++      gst_tag_list_add (stream->taglist, GST_TAG_MERGE_REPLACE,
++          GST_TAG_LANGUAGE_CODE, (lc) ? lc : lang_code, NULL);
++    }
++
++    g_free (desc);
++  }
++}
++
+ static GstPad *
+ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+     MpegTSBaseProgram * program)
+@@ -979,6 +694,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+   guint8 *desc = NULL;
+   GstPad *pad = NULL;
+ 
++  gst_ts_demux_create_tags (stream);
+ 
+   GST_LOG ("Attempting to create pad for stream 0x%04x with stream_type %d",
+       bstream->pid, bstream->stream_type);
+@@ -1006,8 +722,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
        break;
      case ST_PRIVATE_DATA:
        GST_LOG ("private data");
@@ -18156,7 +19812,7 @@ index 166089b..8f4d78d 100644
            DESC_DVB_AC3);
        if (desc) {
          GST_LOG ("ac3 audio");
-@@ -1017,8 +691,8 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1017,8 +732,8 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -18167,7 +19823,7 @@ index 166089b..8f4d78d 100644
            DESC_DVB_ENHANCED_AC3);
        if (desc) {
          GST_LOG ("ac3 audio");
-@@ -1028,8 +702,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1028,8 +743,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -18177,7 +19833,7 @@ index 166089b..8f4d78d 100644
            DESC_DVB_TELETEXT);
        if (desc) {
          GST_LOG ("teletext");
-@@ -1050,6 +723,26 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1050,6 +764,26 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -18204,7 +19860,7 @@ index 166089b..8f4d78d 100644
        /* hack for itv hd (sid 10510, video pid 3401 */
        if (program->program_number == 10510 && bstream->pid == 3401) {
          template = gst_static_pad_template_get (&video_template);
-@@ -1080,13 +773,20 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1080,13 +814,20 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
      case ST_DSMCC_D:
        MPEGTS_BIT_UNSET (base->is_pes, bstream->pid);
        break;
@@ -18227,7 +19883,7 @@ index 166089b..8f4d78d 100644
      case ST_VIDEO_MPEG4:
        template = gst_static_pad_template_get (&video_template);
        name = g_strdup_printf ("video_%04x", bstream->pid);
-@@ -1146,18 +846,35 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1146,18 +887,35 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
        desc = mpegts_get_descriptor_from_program (program, DESC_REGISTRATION);
        if (desc) {
          if (DESC_REGISTRATION_format_identifier (desc) == DRF_ID_HDMV) {
@@ -18268,7 +19924,7 @@ index 166089b..8f4d78d 100644
            DESC_DVB_ENHANCED_AC3);
        if (desc) {
          template = gst_static_pad_template_get (&audio_template);
-@@ -1226,10 +943,13 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1226,10 +984,13 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
      gst_pad_set_query_type_function (pad, gst_ts_demux_srcpad_query_types);
      gst_pad_set_query_function (pad, gst_ts_demux_srcpad_query);
      gst_pad_set_event_function (pad, gst_ts_demux_srcpad_event);
@@ -18284,7 +19940,7 @@ index 166089b..8f4d78d 100644
  
    return pad;
  }
-@@ -1244,11 +964,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1244,11 +1005,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
      /* Create the pad */
      if (bstream->stream_type != 0xff)
        stream->pad = create_pad_for_stream (base, bstream, program);
@@ -18300,7 +19956,7 @@ index 166089b..8f4d78d 100644
      stream->nb_pts_rollover = 0;
      stream->nb_dts_rollover = 0;
    }
-@@ -1258,32 +982,24 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1258,32 +1023,24 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
  static void
  gst_ts_demux_stream_removed (MpegTSBase * base, MpegTSBaseStream * bstream)
  {
@@ -18336,7 +19992,7 @@ index 166089b..8f4d78d 100644
    stream->flow_return = GST_FLOW_NOT_LINKED;
  }
  
-@@ -1295,6 +1011,7 @@ activate_pad_for_stream (GstTSDemux * tsdemux, TSDemuxStream * stream)
+@@ -1295,6 +1052,7 @@ activate_pad_for_stream (GstTSDemux * tsdemux, TSDemuxStream * stream)
          GST_DEBUG_PAD_NAME (stream->pad), stream);
      gst_pad_set_active (stream->pad, TRUE);
      gst_element_add_pad ((GstElement *) tsdemux, stream->pad);
@@ -18344,7 +20000,7 @@ index 166089b..8f4d78d 100644
      GST_DEBUG_OBJECT (stream->pad, "done adding pad");
    } else
      GST_WARNING_OBJECT (tsdemux,
-@@ -1315,7 +1032,34 @@ gst_ts_demux_stream_flush (TSDemuxStream * stream)
+@@ -1315,7 +1073,34 @@ gst_ts_demux_stream_flush (TSDemuxStream * stream)
    memset (stream->pendingbuffers, 0, TS_MAX_PENDING_BUFFERS);
    stream->nbpending = 0;
  
@@ -18379,7 +20035,7 @@ index 166089b..8f4d78d 100644
  }
  
  static void
-@@ -1335,493 +1079,32 @@ gst_ts_demux_program_started (MpegTSBase * base, MpegTSBaseProgram * program)
+@@ -1335,493 +1120,32 @@ gst_ts_demux_program_started (MpegTSBase * base, MpegTSBaseProgram * program)
  
    if (demux->program_number == -1 ||
        demux->program_number == program->program_number) {
@@ -18558,7 +20214,7 @@ index 166089b..8f4d78d 100644
 -    GST_WARNING ("No PCR found!");
 -    ret = GST_FLOW_ERROR;
 -    goto beach;
-   }
+-  }
 -
 -beach:
 -  mpegts_packetizer_flush (base->packetizer);
@@ -18631,8 +20287,8 @@ index 166089b..8f4d78d 100644
 -
 -  demux->last_pcr = *last;
 -  return TRUE;
- }
- 
+-}
+-
 -static GstFlowReturn
 -find_timestamps (MpegTSBase * base, guint64 initoff, guint64 * offset)
 -{
@@ -18741,13 +20397,13 @@ index 166089b..8f4d78d 100644
 -  if (base->pat) {
 -    gst_structure_free (base->pat);
 -    base->pat = NULL;
--  }
+   }
 -  mpegts_base_remove_program (base, demux->current_program_number);
 -  demux->program = NULL;
 -
 -  return ret;
--}
--
+ }
+ 
 -static GstFlowReturn
 -process_pcr (MpegTSBase * base, guint64 initoff, TSPcrOffset * pcroffset,
 -    guint numpcr, gboolean isinitial)
@@ -18887,7 +20543,7 @@ index 166089b..8f4d78d 100644
  
  
  static inline void
-@@ -1834,17 +1117,7 @@ gst_ts_demux_record_pcr (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1834,17 +1158,7 @@ gst_ts_demux_record_pcr (GstTSDemux * demux, TSDemuxStream * stream,
        G_GUINT64_FORMAT, bs->pid,
        GST_TIME_ARGS (PCRTIME_TO_GSTTIME (pcr)), offset);
  
@@ -18906,7 +20562,7 @@ index 166089b..8f4d78d 100644
  
    if (G_UNLIKELY (demux->emit_statistics)) {
      GstStructure *st;
-@@ -1868,6 +1141,8 @@ gst_ts_demux_record_opcr (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1868,6 +1182,8 @@ gst_ts_demux_record_opcr (GstTSDemux * demux, TSDemuxStream * stream,
        G_GUINT64_FORMAT, bs->pid,
        GST_TIME_ARGS (PCRTIME_TO_GSTTIME (opcr)), offset);
  
@@ -18915,7 +20571,7 @@ index 166089b..8f4d78d 100644
    if (G_UNLIKELY (demux->emit_statistics)) {
      GstStructure *st;
      st = gst_structure_id_empty_new (QUARK_TSDEMUX);
-@@ -1907,8 +1182,8 @@ gst_ts_demux_record_pts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1907,8 +1223,8 @@ gst_ts_demux_record_pts (GstTSDemux * demux, TSDemuxStream * stream,
  
    /* Compute PTS in GstClockTime */
    stream->raw_pts = pts;
@@ -18926,7 +20582,7 @@ index 166089b..8f4d78d 100644
  
    GST_LOG ("pid 0x%04x Stored PTS %" G_GUINT64_FORMAT " (%" GST_TIME_FORMAT ")",
        bs->pid, stream->raw_pts, GST_TIME_ARGS (stream->pts));
-@@ -1953,8 +1228,8 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1953,8 +1269,8 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
  
    /* Compute DTS in GstClockTime */
    stream->raw_dts = dts;
@@ -18937,7 +20593,7 @@ index 166089b..8f4d78d 100644
  
    GST_LOG ("pid 0x%04x Stored DTS %" G_GUINT64_FORMAT " (%" GST_TIME_FORMAT ")",
        bs->pid, stream->raw_dts, GST_TIME_ARGS (stream->dts));
-@@ -1971,32 +1246,6 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1971,32 +1287,6 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
    }
  }
  
@@ -18970,7 +20626,7 @@ index 166089b..8f4d78d 100644
  static GstFlowReturn
  gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
  {
-@@ -2030,63 +1279,26 @@ gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2030,63 +1320,26 @@ gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
    if (header.PTS != -1) {
      gst_ts_demux_record_pts (demux, stream, header.PTS, bufferoffset);
  
@@ -19048,7 +20704,7 @@ index 166089b..8f4d78d 100644
    GST_BUFFER_DATA (stream->pendingbuffers[0]) += header.header_size;
    GST_BUFFER_SIZE (stream->pendingbuffers[0]) -= header.header_size;
  
-@@ -2152,19 +1364,35 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2152,105 +1405,147 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
      }
    }
  
@@ -19094,7 +20750,24 @@ index 166089b..8f4d78d 100644
    return;
  }
  
-@@ -2172,85 +1400,77 @@ static void
+ static void
++gst_ts_demux_push_tags (GstTSDemux * demux, TSDemuxStream * stream)
++{
++  if (stream->taglist) {
++    gchar *str;
++    str = gst_structure_to_string ((GstStructure *) stream->taglist);
++
++    GST_DEBUG_OBJECT (demux, "Sending tags %s for pad %s:%s",
++        str, GST_DEBUG_PAD_NAME (stream->pad));
++    gst_element_found_tags_for_pad (GST_ELEMENT (demux), stream->pad,
++        stream->taglist);
++
++    stream->taglist = NULL;
++    g_free (str);
++  }
++}
++
++static void
  calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
  {
    MpegTSBase *base = (MpegTSBase *) demux;
@@ -19120,11 +20793,11 @@ index 166089b..8f4d78d 100644
 +   * 2) If we need to calculate a new newsegment, do it
 +   * 3) If an update_segment is valid, push it
 +   * 4) If a newsegment is valid, push it */
- 
++
 +  /* Speedup : if we don't need to calculate anything, go straight to pushing */
 +  if (!demux->calculate_update_segment && demux->segment_event)
 +    goto push_new_segment;
-+
+ 
 +  /* Calculate the 'new_start' value, used for both updates and newsegment */
    for (tmp = demux->program->stream_list; tmp; tmp = tmp->next) {
      TSDemuxStream *pstream = (TSDemuxStream *) tmp->data;
@@ -19139,8 +20812,26 @@ index 166089b..8f4d78d 100644
 +      if (!GST_CLOCK_TIME_IS_VALID (lowest_pts) || pstream->dts < lowest_pts)
 +        lowest_pts = pstream->dts;
 +    }
++  }
++  if (GST_CLOCK_TIME_IS_VALID (lowest_pts))
++    firstts = mpegts_packetizer_pts_to_ts (base->packetizer, lowest_pts);
++  GST_DEBUG ("lowest_pts %" G_GUINT64_FORMAT " => clocktime %" GST_TIME_FORMAT,
++      lowest_pts, GST_TIME_ARGS (firstts));
++
++  if (demux->calculate_update_segment) {
++    GST_DEBUG ("Calculating update segment");
++    /* If we have a valid segment, create an update of that */
++    if (demux->segment.format == GST_FORMAT_TIME) {
++      GST_DEBUG ("Re-using segment " SEGMENT_FORMAT,
++          SEGMENT_ARGS (demux->segment));
++      demux->update_segment =
++          gst_event_new_new_segment_full (TRUE, demux->segment.rate,
++          demux->segment.applied_rate, GST_FORMAT_TIME, demux->segment.start,
++          firstts, demux->segment.time);
++    }
++    demux->calculate_update_segment = FALSE;
    }
--
+ 
 -  if (base->mode == BASE_MODE_PUSHING) {
 -    /* FIXME : We're just ignore the upstream format for the time being */
 -    /* FIXME : We should use base->segment.format and a upstream latency query
@@ -19163,22 +20854,23 @@ index 166089b..8f4d78d 100644
 -    if (base->segment.format == GST_FORMAT_TIME) {
 -      start = base->segment.start;
 -      stop = base->segment.stop;
-+  if (GST_CLOCK_TIME_IS_VALID (lowest_pts))
-+    firstts = mpegts_packetizer_pts_to_ts (base->packetizer, lowest_pts);
-+  GST_DEBUG ("lowest_pts %" G_GUINT64_FORMAT " => clocktime %" GST_TIME_FORMAT,
-+      lowest_pts, GST_TIME_ARGS (firstts));
++  if (!demux->segment_event) {
++    gint64 start, stop, time;
 +
-+  if (demux->calculate_update_segment) {
-+    GST_DEBUG ("Calculating update segment");
-+    /* If we have a valid segment, create an update of that */
++    GST_DEBUG ("Calculating actual segment");
++
 +    if (demux->segment.format == GST_FORMAT_TIME) {
-+      GST_DEBUG ("Re-using segment " SEGMENT_FORMAT,
-+          SEGMENT_ARGS (demux->segment));
-+      demux->update_segment =
-+          gst_event_new_new_segment_full (TRUE, demux->segment.rate,
-+          demux->segment.applied_rate, GST_FORMAT_TIME, demux->segment.start,
-+          firstts, demux->segment.time);
-+      GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
++      /* if we have a TIME segment, set NS.start to the target ts so downstream
++       * can clip
++       */
++      start = demux->segment.start;
++      stop = demux->segment.stop;
++      time = demux->segment.time;
++    } else {
++      /* ...else start from the first ts/pts */
++      start = firstts;
++      stop = GST_CLOCK_TIME_NONE;
++      time = firstts;
      }
 -    /* Shift the start depending on our position in the stream */
 -    start += firstpts + base->in_gap - base->first_buf_ts;
@@ -19200,7 +20892,17 @@ index 166089b..8f4d78d 100644
 -    start = demux->first_pcr.gsttime + demux->segment.start;
 -    stop = demux->first_pcr.gsttime + demux->segment.duration;
 -    position = demux->segment.time;
-+    demux->calculate_update_segment = FALSE;
++    demux->segment_event =
++        gst_event_new_new_segment_full (FALSE, demux->segment.rate,
++        demux->segment.applied_rate, GST_FORMAT_TIME, start, stop, time);
++  }
++
++push_new_segment:
++  if (demux->update_segment) {
++    GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
++    GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
++    gst_event_ref (demux->update_segment);
++    gst_pad_push_event (stream->pad, demux->update_segment);
    }
  
 -  GST_DEBUG ("new segment:   start: %" GST_TIME_FORMAT " stop: %"
@@ -19209,35 +20911,22 @@ index 166089b..8f4d78d 100644
 -  newsegmentevent =
 -      gst_event_new_new_segment (FALSE, 1.0, GST_FORMAT_TIME, start, stop,
 -      position);
-+  if (!demux->segment_event) {
-+    GST_DEBUG ("Calculating actual segment");
-+    /* FIXME : Set proper values */
-+    demux->segment_event =
-+        gst_event_new_new_segment_full (FALSE, 1.0, 1.0, GST_FORMAT_TIME,
-+        firstts, GST_CLOCK_TIME_NONE, firstts);
-+    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
-+  }
- 
--  push_event ((MpegTSBase *) demux, newsegmentevent);
-+push_new_segment:
-+  if (demux->update_segment) {
-+    GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
-+    gst_event_ref (demux->update_segment);
-+    gst_pad_push_event (stream->pad, demux->update_segment);
-+  }
- 
--  demux->need_newsegment = FALSE;
 +  if (demux->segment_event) {
 +    GST_DEBUG_OBJECT (stream->pad, "Pushing newsegment event");
++    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
 +    gst_event_ref (demux->segment_event);
 +    gst_pad_push_event (stream->pad, demux->segment_event);
 +  }
-+
+ 
+-  push_event ((MpegTSBase *) demux, newsegmentevent);
++  gst_ts_demux_push_tags (demux, stream);
+ 
+-  demux->need_newsegment = FALSE;
 +  stream->need_newsegment = FALSE;
  }
  
  static GstFlowReturn
-@@ -2258,10 +1478,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2258,10 +1553,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
  {
    GstFlowReturn res = GST_FLOW_OK;
    MpegTSBaseStream *bs = (MpegTSBaseStream *) stream;
@@ -19254,7 +20943,7 @@ index 166089b..8f4d78d 100644
  
    if (G_UNLIKELY (stream->current == NULL)) {
      GST_LOG ("stream->current == NULL");
-@@ -2273,8 +1496,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2273,30 +1571,46 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
      goto beach;
    }
  
@@ -19269,7 +20958,10 @@ index 166089b..8f4d78d 100644
  
    if (G_UNLIKELY (stream->pad == NULL)) {
      g_list_foreach (stream->currentlist, (GFunc) gst_buffer_unref, NULL);
-@@ -2284,19 +1512,28 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+     g_list_free (stream->currentlist);
+     gst_buffer_list_iterator_free (stream->currentit);
+     gst_buffer_list_unref (stream->current);
++    stream->currentit = NULL;
      goto beach;
    }
  
@@ -19284,7 +20976,8 @@ index 166089b..8f4d78d 100644
    gst_buffer_list_iterator_add_list (stream->currentit, stream->currentlist);
 +  stream->currentlist = NULL;
    gst_buffer_list_iterator_free (stream->currentit);
- 
++  stream->currentit = NULL;
++
 +  firstbuffer = gst_buffer_list_get (stream->current, 0, 0);
 +
 +  GST_DEBUG_OBJECT (stream->pad, "stream->pts %" GST_TIME_FORMAT,
@@ -19293,7 +20986,7 @@ index 166089b..8f4d78d 100644
 +      && !GST_CLOCK_TIME_IS_VALID (GST_BUFFER_TIMESTAMP (firstbuffer)))
 +    GST_BUFFER_TIMESTAMP (firstbuffer) =
 +        mpegts_packetizer_pts_to_ts (packetizer, stream->pts);
-+
+ 
    GST_DEBUG_OBJECT (stream->pad,
        "Pushing buffer list with timestamp: %" GST_TIME_FORMAT,
 -      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (gst_buffer_list_get
@@ -19302,7 +20995,7 @@ index 166089b..8f4d78d 100644
  
    res = gst_pad_push_list (stream->pad, stream->current);
    GST_DEBUG_OBJECT (stream->pad, "Returned %s", gst_flow_get_name (res));
-@@ -2305,11 +1542,14 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2305,11 +1619,14 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
  
  beach:
    /* Reset everything */
@@ -19318,7 +21011,7 @@ index 166089b..8f4d78d 100644
  
    return res;
  }
-@@ -2348,9 +1588,14 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2348,9 +1665,14 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
            GST_BUFFER_OFFSET (packet->buffer));
    }
  
@@ -19335,7 +21028,7 @@ index 166089b..8f4d78d 100644
      gst_buffer_unref (packet->buffer);
  
    return res;
-@@ -2361,7 +1606,6 @@ gst_ts_demux_flush (MpegTSBase * base)
+@@ -2361,7 +1683,6 @@ gst_ts_demux_flush (MpegTSBase * base)
  {
    GstTSDemux *demux = GST_TS_DEMUX_CAST (base);
  
@@ -19343,7 +21036,7 @@ index 166089b..8f4d78d 100644
    gst_ts_demux_flush_streams (demux);
  }
  
-@@ -2395,5 +1639,5 @@ gst_ts_demux_plugin_init (GstPlugin * plugin)
+@@ -2395,5 +1716,5 @@ gst_ts_demux_plugin_init (GstPlugin * plugin)
    init_pes_parser ();
  
    return gst_element_register (plugin, "tsdemux",
@@ -21037,7 +22730,7 @@ index 85028c2..d488d5a 100644
  
  out:
 diff --git a/gst/videoparsers/gsth264parse.c b/gst/videoparsers/gsth264parse.c
-index cf81657..0c8455d 100644
+index cf81657..bfdc4d4 100644
 --- a/gst/videoparsers/gsth264parse.c
 +++ b/gst/videoparsers/gsth264parse.c
 @@ -177,11 +177,7 @@ gst_h264_parse_reset_frame (GstH264Parse * h264parse)
@@ -21399,23 +23092,26 @@ index cf81657..0c8455d 100644
  
    stream_time = gst_segment_to_stream_time (segment,
        GST_FORMAT_TIME, timestamp);
-@@ -1481,30 +1491,30 @@ gst_h264_parse_pre_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
+@@ -1479,32 +1489,33 @@ gst_h264_parse_pre_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
+           GstByteWriter bw;
+           GstBuffer *new_buf;
            const gboolean bs = h264parse->format == GST_H264_PARSE_FORMAT_BYTE;
++          gboolean ok;
  
            gst_byte_writer_init_with_size (&bw, GST_BUFFER_SIZE (buffer), FALSE);
 -          gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (buffer),
-+          gst_byte_writer_put_data_unchecked (&bw, GST_BUFFER_DATA (buffer),
++          ok = gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (buffer),
                h264parse->idr_pos);
            GST_DEBUG_OBJECT (h264parse, "- inserting SPS/PPS");
            for (i = 0; i < GST_H264_MAX_SPS_COUNT; i++) {
              if ((codec_nal = h264parse->sps_nals[i])) {
                GST_DEBUG_OBJECT (h264parse, "inserting SPS nal");
 -              gst_byte_writer_put_uint32_be (&bw,
-+              gst_byte_writer_put_uint32_be_unchecked (&bw,
++              ok &= gst_byte_writer_put_uint32_be (&bw,
                    bs ? 1 : GST_BUFFER_SIZE (codec_nal));
 -              gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (codec_nal),
 -                  GST_BUFFER_SIZE (codec_nal));
-+              gst_byte_writer_put_data_unchecked (&bw,
++              ok &= gst_byte_writer_put_data (&bw,
 +                  GST_BUFFER_DATA (codec_nal), GST_BUFFER_SIZE (codec_nal));
                h264parse->last_report = new_ts;
              }
@@ -21424,21 +23120,29 @@ index cf81657..0c8455d 100644
              if ((codec_nal = h264parse->pps_nals[i])) {
                GST_DEBUG_OBJECT (h264parse, "inserting PPS nal");
 -              gst_byte_writer_put_uint32_be (&bw,
-+              gst_byte_writer_put_uint32_be_unchecked (&bw,
++              ok &= gst_byte_writer_put_uint32_be (&bw,
                    bs ? 1 : GST_BUFFER_SIZE (codec_nal));
 -              gst_byte_writer_put_data (&bw, GST_BUFFER_DATA (codec_nal),
 -                  GST_BUFFER_SIZE (codec_nal));
-+              gst_byte_writer_put_data_unchecked (&bw,
++              ok &= gst_byte_writer_put_data (&bw,
 +                  GST_BUFFER_DATA (codec_nal), GST_BUFFER_SIZE (codec_nal));
                h264parse->last_report = new_ts;
              }
            }
 -          gst_byte_writer_put_data (&bw,
-+          gst_byte_writer_put_data_unchecked (&bw,
++          ok &= gst_byte_writer_put_data (&bw,
                GST_BUFFER_DATA (buffer) + h264parse->idr_pos,
                GST_BUFFER_SIZE (buffer) - h264parse->idr_pos);
            /* collect result and push */
-@@ -1519,6 +1529,8 @@ gst_h264_parse_pre_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
+@@ -1515,10 +1526,16 @@ gst_h264_parse_pre_push_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
+           GST_BUFFER_FLAG_UNSET (new_buf, GST_BUFFER_FLAG_DELTA_UNIT);
+           gst_buffer_replace (&frame->buffer, new_buf);
+           gst_buffer_unref (new_buf);
++          /* some result checking seems to make some compilers happy */
++          if (G_UNLIKELY (!ok)) {
++            GST_ERROR_OBJECT (h264parse, "failed to insert SPS/PPS");
++          }
+         }
        }
        /* we pushed whatever we had */
        h264parse->push_codec = FALSE;
@@ -21447,7 +23151,20 @@ index cf81657..0c8455d 100644
      }
    }
  
-@@ -1665,6 +1677,8 @@ gst_h264_parse_set_caps (GstBaseParse * parse, GstCaps * caps)
+@@ -1623,10 +1640,10 @@ gst_h264_parse_set_caps (GstBaseParse * parse, GstCaps * caps)
+ 
+     /* if upstream sets codec_data without setting stream-format and alignment, we
+      * assume stream-format=avc,alignment=au */
+-    if (format == GST_H264_PARSE_FORMAT_NONE) {
++    if (format == GST_H264_PARSE_FORMAT_NONE)
+       format = GST_H264_PARSE_FORMAT_AVC;
++    if (align == GST_H264_PARSE_ALIGN_NONE)
+       align = GST_H264_PARSE_ALIGN_AU;
+-    }
+   } else {
+     GST_DEBUG_OBJECT (h264parse, "have bytestream h264");
+     /* nothing to pre-process */
+@@ -1665,6 +1682,8 @@ gst_h264_parse_set_caps (GstBaseParse * parse, GstCaps * caps)
      /* arrange to insert codec-data in-stream if needed.
       * src caps are only arranged for later on */
      h264parse->push_codec = TRUE;
@@ -21765,7 +23482,7 @@ index 4486cf7..f00a795 100644
      if (profile)
        gst_caps_set_simple (caps, "profile", G_TYPE_STRING, profile, NULL);
      else
-diff --git a/sys/Makefile.am b/sys/Makefile.am
+iff --git a/sys/Makefile.am b/sys/Makefile.am
 index a48b0d2..879f5f0 100644
 --- a/sys/Makefile.am
 +++ b/sys/Makefile.am
@@ -23689,6 +25406,1377 @@ index 60dd6d8..dcf7c05 100644
      DirectXAPI* api;                                                                                                                              \
      api = &DIRECTX_ ## version ## _API;                                                                                                           \
      api->d3d->api      = api;                                                                                                                     \
+diff --git a/sys/decklink/Makefile.am b/sys/decklink/Makefile.am
+index 63fe397..23895d7 100644
+--- a/sys/decklink/Makefile.am
++++ b/sys/decklink/Makefile.am
+@@ -10,6 +10,8 @@ libgstdecklink_la_LIBADD = \
+ 	$(GST_PLUGINS_BASE_LIBS) \
+ 	$(GST_BASE_LIBS) \
+ 	$(GST_LIBS) \
++	-lgstvideo-@GST_MAJORMINOR@ \
++	-lgstinterfaces-@GST_MAJORMINOR@ \
+ 	$(DECKLINK_LIBS) \
+ 	$(LIBM)
+ libgstdecklink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS) 
+diff --git a/sys/decklink/capture.cpp b/sys/decklink/capture.cpp
+index bc3d9e0..8804eeb 100644
+--- a/sys/decklink/capture.cpp
++++ b/sys/decklink/capture.cpp
+@@ -31,6 +31,8 @@
+ #include <unistd.h>
+ #include <fcntl.h>
+ 
++#include <gst/glib-compat-private.h>
++
+ #include "gstdecklinksrc.h"
+ 
+ #include "capture.h"
+@@ -41,11 +43,11 @@ IDeckLink *deckLink;
+ IDeckLinkInput *deckLinkInput;
+ IDeckLinkDisplayModeIterator *displayModeIterator;
+ 
+-static BMDTimecodeFormat g_timecodeFormat = (BMDTimecodeFormat)0;
++static BMDTimecodeFormat g_timecodeFormat = (BMDTimecodeFormat) 0;
+ 
+ DeckLinkCaptureDelegate::DeckLinkCaptureDelegate ():m_refCount (0)
+ {
+-  m_mutex = g_mutex_new();
++  m_mutex = g_mutex_new ();
+ }
+ 
+ DeckLinkCaptureDelegate::~DeckLinkCaptureDelegate ()
+@@ -53,8 +55,7 @@ DeckLinkCaptureDelegate::~DeckLinkCaptureDelegate ()
+   g_mutex_free (m_mutex);
+ }
+ 
+-ULONG
+-DeckLinkCaptureDelegate::AddRef (void)
++ULONG DeckLinkCaptureDelegate::AddRef (void)
+ {
+   g_mutex_lock (m_mutex);
+   m_refCount++;
+@@ -63,15 +64,15 @@ DeckLinkCaptureDelegate::AddRef (void)
+   return (ULONG) m_refCount;
+ }
+ 
+-ULONG
+-DeckLinkCaptureDelegate::Release (void)
++ULONG DeckLinkCaptureDelegate::Release (void)
+ {
+   g_mutex_lock (m_mutex);
+   m_refCount--;
+   g_mutex_unlock (m_mutex);
+ 
+   if (m_refCount == 0) {
+-    delete this;
++    delete
++        this;
+     return 0;
+   }
+ 
+diff --git a/sys/decklink/gstdecklink.cpp b/sys/decklink/gstdecklink.cpp
+index 0920cca..d747fcf 100644
+--- a/sys/decklink/gstdecklink.cpp
++++ b/sys/decklink/gstdecklink.cpp
+@@ -94,7 +94,8 @@ gst_decklink_audio_connection_get_type (void)
+   if (!type) {
+     static const GEnumValue connections[] = {
+       {GST_DECKLINK_AUDIO_CONNECTION_AUTO, "auto", "Automatic"},
+-      {GST_DECKLINK_AUDIO_CONNECTION_EMBEDDED, "embedded", "SDI/HDMI embedded audio"},
++      {GST_DECKLINK_AUDIO_CONNECTION_EMBEDDED, "embedded",
++          "SDI/HDMI embedded audio"},
+       {GST_DECKLINK_AUDIO_CONNECTION_AES_EBU, "aes", "AES/EBU input"},
+       {GST_DECKLINK_AUDIO_CONNECTION_ANALOG, "analog", "Analog input"},
+       {0, NULL, NULL}
+@@ -110,29 +111,29 @@ gst_decklink_audio_connection_get_type (void)
+ #define HD 1, 1, false, true
+ 
+ static const GstDecklinkMode modes[] = {
+-  {bmdModeNTSC, 720, 486, 30000, 1001, true, NTSC },
+-  {bmdModeNTSC2398, 720, 486, 24000, 1001, true, NTSC },
+-  {bmdModePAL, 720, 576, 25, 1, true, PAL },
+-  {bmdModeNTSCp, 720, 486, 30000, 1001, false, NTSC },
+-  {bmdModePALp, 720, 576, 25, 1, false, PAL },
+-
+-  {bmdModeHD1080p2398, 1920, 1080, 24000, 1001, false, HD },
+-  {bmdModeHD1080p24, 1920, 1080, 24, 1, false, HD },
+-  {bmdModeHD1080p25, 1920, 1080, 25, 1, false, HD },
+-  {bmdModeHD1080p2997, 1920, 1080, 30000, 1001, false, HD },
+-  {bmdModeHD1080p30, 1920, 1080, 30, 1, false, HD },
+-
+-  {bmdModeHD1080i50, 1920, 1080, 25, 1, true, HD },
+-  {bmdModeHD1080i5994, 1920, 1080, 30000, 1001, true, HD },
+-  {bmdModeHD1080i6000, 1920, 1080, 30, 1, true, HD },
+-
+-  {bmdModeHD1080p50, 1920, 1080, 50, 1, false, HD },
+-  {bmdModeHD1080p5994, 1920, 1080, 30000, 1001, false, HD },
+-  {bmdModeHD1080p6000, 1920, 1080, 60, 1, false, HD },
+-
+-  {bmdModeHD720p50, 1280, 720, 50, 1, false, HD },
+-  {bmdModeHD720p5994, 1280, 720, 60000, 1001, false, HD },
+-  {bmdModeHD720p60, 1280, 720, 60, 1, false, HD }
++  {bmdModeNTSC, 720, 486, 30000, 1001, true, NTSC},
++  {bmdModeNTSC2398, 720, 486, 24000, 1001, true, NTSC},
++  {bmdModePAL, 720, 576, 25, 1, true, PAL},
++  {bmdModeNTSCp, 720, 486, 30000, 1001, false, NTSC},
++  {bmdModePALp, 720, 576, 25, 1, false, PAL},
++
++  {bmdModeHD1080p2398, 1920, 1080, 24000, 1001, false, HD},
++  {bmdModeHD1080p24, 1920, 1080, 24, 1, false, HD},
++  {bmdModeHD1080p25, 1920, 1080, 25, 1, false, HD},
++  {bmdModeHD1080p2997, 1920, 1080, 30000, 1001, false, HD},
++  {bmdModeHD1080p30, 1920, 1080, 30, 1, false, HD},
++
++  {bmdModeHD1080i50, 1920, 1080, 25, 1, true, HD},
++  {bmdModeHD1080i5994, 1920, 1080, 30000, 1001, true, HD},
++  {bmdModeHD1080i6000, 1920, 1080, 30, 1, true, HD},
++
++  {bmdModeHD1080p50, 1920, 1080, 50, 1, false, HD},
++  {bmdModeHD1080p5994, 1920, 1080, 30000, 1001, false, HD},
++  {bmdModeHD1080p6000, 1920, 1080, 60, 1, false, HD},
++
++  {bmdModeHD720p50, 1280, 720, 50, 1, false, HD},
++  {bmdModeHD720p5994, 1280, 720, 60000, 1001, false, HD},
++  {bmdModeHD720p60, 1280, 720, 60, 1, false, HD}
+ 
+ };
+ 
+@@ -155,8 +156,7 @@ gst_decklink_mode_get_structure (GstDecklinkModeEnum e)
+       "interlaced", G_TYPE_BOOLEAN, mode->interlaced,
+       "pixel-aspect-ratio", GST_TYPE_FRACTION, mode->par_n, mode->par_d,
+       "color-matrix", G_TYPE_STRING, mode->is_hdtv ? "hdtv" : "sdtv",
+-      "chroma-site", G_TYPE_STRING, "mpeg2",
+-      NULL);
++      "chroma-site", G_TYPE_STRING, "mpeg2", NULL);
+ }
+ 
+ GstCaps *
+@@ -178,14 +178,44 @@ gst_decklink_mode_get_template_caps (void)
+   GstStructure *s;
+ 
+   caps = gst_caps_new_empty ();
+-  for(i=0;i<(int)G_N_ELEMENTS(modes);i++) {
+-    s = gst_decklink_mode_get_structure ((GstDecklinkModeEnum)i);
++  for (i = 0; i < (int) G_N_ELEMENTS (modes); i++) {
++    s = gst_decklink_mode_get_structure ((GstDecklinkModeEnum) i);
+     gst_caps_append_structure (caps, s);
+   }
+ 
+   return caps;
+ }
+ 
++IDeckLink *
++gst_decklink_get_nth_device (int n)
++{
++  IDeckLinkIterator *iterator;
++  IDeckLink *decklink = NULL;
++  HRESULT ret;
++  int i;
++
++  iterator = CreateDeckLinkIteratorInstance ();
++  if (iterator == NULL) {
++    GST_ERROR ("no driver");
++    return NULL;
++  }
++
++  ret = iterator->Next (&decklink);
++  if (ret != S_OK) {
++    GST_ERROR ("no card");
++    return NULL;
++  }
++  for (i = 0; i < n; i++) {
++    ret = iterator->Next (&decklink);
++    if (ret != S_OK) {
++      GST_ERROR ("no card");
++      return NULL;
++    }
++  }
++
++  return decklink;
++}
++
+ static gboolean
+ plugin_init (GstPlugin * plugin)
+ {
+diff --git a/sys/decklink/gstdecklink.h b/sys/decklink/gstdecklink.h
+index e69d14b..77c5cc4 100644
+--- a/sys/decklink/gstdecklink.h
++++ b/sys/decklink/gstdecklink.h
+@@ -107,34 +107,7 @@ const GstDecklinkMode * gst_decklink_get_mode (GstDecklinkModeEnum e);
+ GstCaps * gst_decklink_mode_get_caps (GstDecklinkModeEnum e);
+ GstCaps * gst_decklink_mode_get_template_caps (void);
+ 
+-#define GST_DECKLINK_MODE_CAPS(w,h,n,d,i) \
+-  "video/x-raw-yuv,format=(fourcc)UYVY,width=" #w ",height=" #h \
+-  ",framerate=" #n "/" #d ",interlaced=" #i
+-
+-#define GST_DECKLINK_CAPS \
+-  GST_DECKLINK_MODE_CAPS(720,486,30000,1001,true) ";" \
+-  GST_DECKLINK_MODE_CAPS(720,486,24000,1001,true) ";" \
+-  GST_DECKLINK_MODE_CAPS(720,576,25,1,true) ";" \
+-  GST_DECKLINK_MODE_CAPS(720,486,30000,1001,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(720,576,25,1,false) ";" \
+-  \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,24000,1001,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,24,1,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,25,1,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,30000,1001,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,30,1,false) ";" \
+-  \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,25,1,true) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,30000,1001,true) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,30,1,true) ";" \
+-  \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,50,1,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,60000,1001,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1920,1080,60,1,false) ";" \
+-  \
+-  GST_DECKLINK_MODE_CAPS(1280,720,50,1,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1280,720,60000,1001,false) ";" \
+-  GST_DECKLINK_MODE_CAPS(1280,720,60,1,false)
++IDeckLink * gst_decklink_get_nth_device (int n);
+ 
+ 
+ #endif
+diff --git a/sys/decklink/gstdecklinksink.cpp b/sys/decklink/gstdecklinksink.cpp
+index bc24cfe..bbf08a7 100644
+--- a/sys/decklink/gstdecklinksink.cpp
++++ b/sys/decklink/gstdecklinksink.cpp
+@@ -35,7 +35,8 @@
+ #endif
+ 
+ #include <gst/gst.h>
+-#include <gst/gst.h>
++#include <gst/video/video.h>
++#include <gst/interfaces/propertyprobe.h>
+ #include "gstdecklink.h"
+ #include "gstdecklinksink.h"
+ #include <string.h>
+@@ -117,24 +118,25 @@ static GstFlowReturn gst_decklink_sink_audiosink_bufferalloc (GstPad * pad,
+     guint64 offset, guint size, GstCaps * caps, GstBuffer ** buf);
+ static GstIterator *gst_decklink_sink_audiosink_iterintlink (GstPad * pad);
+ 
++static void
++gst_decklink_sink_property_probe_interface_init (GstPropertyProbeInterface *
++    iface);
++
+ #ifdef _MSC_VER
+ /* COM initialization/uninitialization thread */
+-static void gst_decklink_sink_com_thread (GstDecklinkSink * src);
++static void gst_decklink_sink_com_thread (GstDecklinkSink * sink);
+ #endif /* _MSC_VER */
+ 
+ enum
+ {
+   PROP_0,
+-  PROP_MODE
++  PROP_MODE,
++  PROP_DEVICE
+ };
+ 
+ /* pad templates */
+ 
+-static GstStaticPadTemplate gst_decklink_sink_videosink_template =
+-GST_STATIC_PAD_TEMPLATE ("videosink",
+-    GST_PAD_SINK,
+-    GST_PAD_ALWAYS,
+-    GST_STATIC_CAPS (GST_DECKLINK_CAPS));
++/* the video sink pad template is created on the fly */
+ 
+ static GstStaticPadTemplate gst_decklink_sink_audiosink_template =
+ GST_STATIC_PAD_TEMPLATE ("audiosink",
+@@ -150,16 +152,37 @@ GST_STATIC_PAD_TEMPLATE ("audiosink",
+   GST_DEBUG_CATEGORY_INIT (gst_decklink_sink_debug_category, "decklinksink", 0, \
+       "debug category for decklinksink element");
+ 
++static void
++gst_decklink_sink_init_interfaces (GType type)
++{
++  static const GInterfaceInfo decklink_sink_propertyprobe_info = {
++    (GInterfaceInitFunc) gst_decklink_sink_property_probe_interface_init,
++    NULL,
++    NULL,
++  };
++
++  GST_DEBUG_CATEGORY_INIT (gst_decklink_sink_debug_category, "decklinksink", 0,
++      "debug category for decklinksink element");
++
++  g_type_add_interface_static (type, GST_TYPE_PROPERTY_PROBE,
++      &decklink_sink_propertyprobe_info);
++}
++
++
+ GST_BOILERPLATE_FULL (GstDecklinkSink, gst_decklink_sink, GstElement,
+-    GST_TYPE_ELEMENT, DEBUG_INIT);
++    GST_TYPE_ELEMENT, gst_decklink_sink_init_interfaces);
+ 
+ static void
+ gst_decklink_sink_base_init (gpointer g_class)
+ {
+   GstElementClass *element_class = GST_ELEMENT_CLASS (g_class);
++  GstPadTemplate *pad_template;
+ 
+-  gst_element_class_add_static_pad_template (element_class,
+-      &gst_decklink_sink_videosink_template);
++  pad_template =
++      gst_pad_template_new ("videosink", GST_PAD_SINK, GST_PAD_ALWAYS,
++      gst_decklink_mode_get_template_caps ());
++  gst_element_class_add_pad_template (element_class, pad_template);
++  gst_object_unref (pad_template);
+   gst_element_class_add_static_pad_template (element_class,
+       &gst_decklink_sink_audiosink_template);
+ 
+@@ -188,11 +211,18 @@ gst_decklink_sink_class_init (GstDecklinkSinkClass * klass)
+   element_class->query = GST_DEBUG_FUNCPTR (gst_decklink_sink_query);
+ 
+   g_object_class_install_property (gobject_class, PROP_MODE,
+-      g_param_spec_enum ("mode", "Mode", "Mode",
++      g_param_spec_enum ("mode", "Playback Mode",
++          "Video Mode to use for playback",
+           GST_TYPE_DECKLINK_MODE, GST_DECKLINK_MODE_NTSC,
+           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
+               G_PARAM_CONSTRUCT)));
+ 
++  g_object_class_install_property (gobject_class, PROP_DEVICE,
++      g_param_spec_int ("device", "Device", "Capture device instance to use",
++          0, G_MAXINT, 0,
++          (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
++              G_PARAM_CONSTRUCT)));
++
+ }
+ 
+ static void
+@@ -201,8 +231,8 @@ gst_decklink_sink_init (GstDecklinkSink * decklinksink,
+ {
+ 
+   decklinksink->videosinkpad =
+-      gst_pad_new_from_static_template (&gst_decklink_sink_videosink_template,
+-      "sink");
++      gst_pad_new_from_template (gst_element_class_get_pad_template
++      (GST_ELEMENT_CLASS (decklinksink_class), "videosink"), "videosink");
+   gst_pad_set_getcaps_function (decklinksink->videosinkpad,
+       GST_DEBUG_FUNCPTR (gst_decklink_sink_videosink_getcaps));
+   gst_pad_set_setcaps_function (decklinksink->videosinkpad,
+@@ -270,22 +300,23 @@ gst_decklink_sink_init (GstDecklinkSink * decklinksink,
+   decklinksink->audio_mutex = g_mutex_new ();
+ 
+   decklinksink->mode = GST_DECKLINK_MODE_NTSC;
++  decklinksink->device = 0;
+ 
+   decklinksink->callback = new Output;
+   decklinksink->callback->decklinksink = decklinksink;
+ 
+ #ifdef _MSC_VER
+-  decklinksink->com_init_lock = g_mutex_new();
+-  decklinksink->com_deinit_lock = g_mutex_new();
+-  decklinksink->com_initialized = g_cond_new();
+-  decklinksink->com_uninitialize = g_cond_new();
+-  decklinksink->com_uninitialized = g_cond_new();
++  decklinksink->com_init_lock = g_mutex_new ();
++  decklinksink->com_deinit_lock = g_mutex_new ();
++  decklinksink->com_initialized = g_cond_new ();
++  decklinksink->com_uninitialize = g_cond_new ();
++  decklinksink->com_uninitialized = g_cond_new ();
+ 
+   g_mutex_lock (decklinksink->com_init_lock);
+ 
+   /* create the COM initialization thread */
+-  g_thread_create ((GThreadFunc)gst_decklink_sink_com_thread,
+-    decklinksink, FALSE, NULL);
++  g_thread_create ((GThreadFunc) gst_decklink_sink_com_thread,
++      decklinksink, FALSE, NULL);
+ 
+   /* wait until the COM thread signals that COM has been initialized */
+   g_cond_wait (decklinksink->com_initialized, decklinksink->com_init_lock);
+@@ -306,6 +337,9 @@ gst_decklink_sink_set_property (GObject * object, guint property_id,
+     case PROP_MODE:
+       decklinksink->mode = (GstDecklinkModeEnum) g_value_get_enum (value);
+       break;
++    case PROP_DEVICE:
++      decklinksink->device = g_value_get_int (value);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+       break;
+@@ -325,6 +359,9 @@ gst_decklink_sink_get_property (GObject * object, guint property_id,
+     case PROP_MODE:
+       g_value_set_enum (value, decklinksink->mode);
+       break;
++    case PROP_DEVICE:
++      g_value_set_int (value, decklinksink->device);
++      break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+       break;
+@@ -333,11 +370,11 @@ gst_decklink_sink_get_property (GObject * object, guint property_id,
+ 
+ #ifdef _MSC_VER
+ static void
+-gst_decklink_sink_com_thread (GstDecklinkSink * src)
++gst_decklink_sink_com_thread (GstDecklinkSink * sink)
+ {
+   HRESULT res;
+ 
+-  g_mutex_lock (src->com_init_lock);
++  g_mutex_lock (sink->com_init_lock);
+ 
+   /* Initialize COM with a MTA for this process. This thread will
+    * be the first one to enter the apartement and the last one to leave
+@@ -345,28 +382,29 @@ gst_decklink_sink_com_thread (GstDecklinkSink * src)
+ 
+   res = CoInitializeEx (0, COINIT_MULTITHREADED);
+   if (res == S_FALSE)
+-    GST_WARNING_OBJECT (src, "COM has been already initialized in the same process");
++    GST_WARNING_OBJECT (sink,
++        "COM has been already initialized in the same process");
+   else if (res == RPC_E_CHANGED_MODE)
+-    GST_WARNING_OBJECT (src, "The concurrency model of COM has changed.");
++    GST_WARNING_OBJECT (sink, "The concurrency model of COM has changed.");
+   else
+-    GST_INFO_OBJECT (src, "COM intialized succesfully");
++    GST_INFO_OBJECT (sink, "COM intialized succesfully");
+ 
+-  src->comInitialized = TRUE;
++  sink->comInitialized = TRUE;
+ 
+   /* Signal other threads waiting on this condition that COM was initialized */
+-  g_cond_signal (src->com_initialized);
++  g_cond_signal (sink->com_initialized);
+ 
+-  g_mutex_unlock (src->com_init_lock);
++  g_mutex_unlock (sink->com_init_lock);
+ 
+   /* Wait until the unitialize condition is met to leave the COM apartement */
+-  g_mutex_lock (src->com_deinit_lock);
+-  g_cond_wait (src->com_uninitialize, src->com_deinit_lock);
++  g_mutex_lock (sink->com_deinit_lock);
++  g_cond_wait (sink->com_uninitialize, sink->com_deinit_lock);
+ 
+   CoUninitialize ();
+-  GST_INFO_OBJECT (src, "COM unintialized succesfully");
+-  src->comInitialized = FALSE;
+-  g_cond_signal (src->com_uninitialized);
+-  g_mutex_unlock (src->com_deinit_lock);
++  GST_INFO_OBJECT (sink, "COM unintialized succesfully");
++  sink->comInitialized = FALSE;
++  g_cond_signal (sink->com_uninitialized);
++  g_mutex_unlock (sink->com_deinit_lock);
+ }
+ #endif /* _MSC_VER */
+ 
+@@ -400,7 +438,8 @@ gst_decklink_sink_finalize (GObject * object)
+   if (decklinksink->comInitialized) {
+     g_mutex_lock (decklinksink->com_deinit_lock);
+     g_cond_signal (decklinksink->com_uninitialize);
+-    g_cond_wait (decklinksink->com_uninitialized, decklinksink->com_deinit_lock);
++    g_cond_wait (decklinksink->com_uninitialized,
++        decklinksink->com_deinit_lock);
+     g_mutex_unlock (decklinksink->com_deinit_lock);
+   }
+ 
+@@ -417,27 +456,19 @@ gst_decklink_sink_finalize (GObject * object)
+ static gboolean
+ gst_decklink_sink_start (GstDecklinkSink * decklinksink)
+ {
+-  IDeckLinkIterator *iterator;
+   HRESULT ret;
+   const GstDecklinkMode *mode;
+   BMDAudioSampleType sample_depth;
+ 
+-  iterator = CreateDeckLinkIteratorInstance ();
+-  if (iterator == NULL) {
+-    GST_ERROR ("no driver");
+-    return FALSE;
+-  }
+-
+-  ret = iterator->Next (&decklinksink->decklink);
+-  if (ret != S_OK) {
+-    GST_ERROR ("no card");
++  decklinksink->decklink = gst_decklink_get_nth_device (decklinksink->device);
++  if (decklinksink->decklink) {
+     return FALSE;
+   }
+ 
+   ret = decklinksink->decklink->QueryInterface (IID_IDeckLinkOutput,
+       (void **) &decklinksink->output);
+   if (ret != S_OK) {
+-    GST_ERROR ("no output");
++    GST_ERROR ("selected device does not have output interface");
+     return FALSE;
+   }
+ 
+@@ -453,8 +484,8 @@ gst_decklink_sink_start (GstDecklinkSink * decklinksink)
+   }
+   //decklinksink->video_enabled = TRUE;
+ 
+-  decklinksink->output->
+-      SetScheduledFrameCompletionCallback (decklinksink->callback);
++  decklinksink->output->SetScheduledFrameCompletionCallback (decklinksink->
++      callback);
+ 
+   sample_depth = bmdAudioSampleType16bitInteger;
+   ret = decklinksink->output->EnableAudioOutput (bmdAudioSampleRate48kHz,
+@@ -596,11 +627,24 @@ static gboolean
+ gst_decklink_sink_videosink_setcaps (GstPad * pad, GstCaps * caps)
+ {
+   GstDecklinkSink *decklinksink;
++  gboolean ret;
++  GstVideoFormat format;
++  int width;
++  int height;
+ 
+   decklinksink = GST_DECKLINK_SINK (gst_pad_get_parent (pad));
+ 
+   GST_DEBUG_OBJECT (decklinksink, "setcaps");
+ 
++  ret = gst_video_format_parse_caps (caps, &format, &width, &height);
++  if (ret) {
++    if (format == GST_VIDEO_FORMAT_v210) {
++      decklinksink->pixel_format = bmdFormat10BitYUV;
++    } else {
++      decklinksink->pixel_format = bmdFormat8BitYUV;
++    }
++  }
++
+ 
+   gst_object_unref (decklinksink);
+   return TRUE;
+@@ -713,7 +757,7 @@ gst_decklink_sink_videosink_chain (GstPad * pad, GstBuffer * buffer)
+   mode = gst_decklink_get_mode (decklinksink->mode);
+ 
+   decklinksink->output->CreateVideoFrame (mode->width,
+-      mode->height, mode->width * 2, bmdFormat8BitYUV,
++      mode->height, mode->width * 2, decklinksink->pixel_format,
+       bmdFrameFlagDefault, &frame);
+ 
+   frame->GetBytes (&data);
+@@ -864,7 +908,6 @@ gst_decklink_sink_audiosink_setcaps (GstPad * pad, GstCaps * caps)
+ 
+   GST_DEBUG_OBJECT (decklinksink, "setcaps");
+ 
+-
+   gst_object_unref (decklinksink);
+   return TRUE;
+ }
+@@ -1075,16 +1118,18 @@ HRESULT
+   return S_OK;
+ }
+ 
+-HRESULT Output::ScheduledPlaybackHasStopped ()
++HRESULT
++Output::ScheduledPlaybackHasStopped ()
+ {
+   GST_ERROR ("ScheduledPlaybackHasStopped");
+   return S_OK;
+ }
+ 
+-HRESULT Output::RenderAudioSamples (bool preroll)
++HRESULT
++Output::RenderAudioSamples (bool preroll)
+ {
+   uint32_t samplesWritten;
+-  GstBuffer * buffer;
++  GstBuffer *buffer;
+ 
+   // guint64 samplesToWrite;
+ 
+@@ -1094,9 +1139,7 @@ HRESULT Output::RenderAudioSamples (bool preroll)
+     // running = true;
+   } else {
+     g_mutex_lock (decklinksink->audio_mutex);
+-    decklinksink->output->ScheduleAudioSamples (
+-        GST_BUFFER_DATA (decklinksink->audio_buffer),
+-        GST_BUFFER_SIZE (decklinksink->audio_buffer) / 4, // 2 bytes per sample, stereo
++    decklinksink->output->ScheduleAudioSamples (GST_BUFFER_DATA (decklinksink->audio_buffer), GST_BUFFER_SIZE (decklinksink->audio_buffer) / 4, // 2 bytes per sample, stereo
+         0, 0, &samplesWritten);
+ 
+     buffer =
+@@ -1119,3 +1162,125 @@ HRESULT Output::RenderAudioSamples (bool preroll)
+ 
+   return S_OK;
+ }
++
++
++static const GList *
++gst_decklink_sink_probe_get_properties (GstPropertyProbe * probe)
++{
++  GObjectClass *klass = G_OBJECT_GET_CLASS (probe);
++  static GList *list = NULL;
++  static gsize init = 0;
++
++  if (g_once_init_enter (&init)) {
++    list = g_list_append (NULL, g_object_class_find_property (klass, "device"));
++
++    g_once_init_leave (&init, 1);
++  }
++
++  return list;
++}
++
++
++static gboolean probed = FALSE;
++static int n_devices;
++
++static void
++gst_decklink_sink_class_probe_devices (GstElementClass * klass)
++{
++  IDeckLinkIterator *iterator;
++  IDeckLink *decklink;
++
++  n_devices = 0;
++  iterator = CreateDeckLinkIteratorInstance ();
++  if (iterator) {
++    while (iterator->Next (&decklink) == S_OK) {
++      n_devices++;
++    }
++  }
++
++  probed = TRUE;
++}
++
++static void
++gst_decklink_sink_probe_probe_property (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  GstElementClass *klass = GST_ELEMENT_GET_CLASS (probe);
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      gst_decklink_sink_class_probe_devices (klass);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++}
++
++static gboolean
++gst_decklink_sink_probe_needs_probe (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  gboolean ret = FALSE;
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      ret = !probed;
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++  return ret;
++}
++
++static GValueArray *
++gst_decklink_sink_class_list_devices (GstElementClass * klass)
++{
++  GValueArray *array;
++  GValue value = {
++  0};
++  GList *item;
++  int i;
++
++  array = g_value_array_new (n_devices);
++  g_value_init (&value, G_TYPE_INT);
++  for (i = 0; i < n_devices; i++) {
++    g_value_set_int (&value, i);
++    g_value_array_append (array, &value);
++
++    item = item->next;
++  }
++  g_value_unset (&value);
++
++  return array;
++}
++
++static GValueArray *
++gst_decklink_sink_probe_get_values (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  GstElementClass *klass = GST_ELEMENT_GET_CLASS (probe);
++  GValueArray *array = NULL;
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      array = gst_decklink_sink_class_list_devices (klass);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++
++  return array;
++}
++
++static void
++gst_decklink_sink_property_probe_interface_init (GstPropertyProbeInterface *
++    iface)
++{
++  iface->get_properties = gst_decklink_sink_probe_get_properties;
++  iface->probe_property = gst_decklink_sink_probe_probe_property;
++  iface->needs_probe = gst_decklink_sink_probe_needs_probe;
++  iface->get_values = gst_decklink_sink_probe_get_values;
++}
+diff --git a/sys/decklink/gstdecklinksink.h b/sys/decklink/gstdecklinksink.h
+index b5f0700..20c47ed 100644
+--- a/sys/decklink/gstdecklinksink.h
++++ b/sys/decklink/gstdecklinksink.h
+@@ -67,6 +67,7 @@ struct _GstDecklinkSink
+   IDeckLinkOutput *output;
+   Output *callback;
+   BMDDisplayMode display_mode;
++  BMDPixelFormat pixel_format;
+   gboolean video_enabled;
+   gboolean sched_started;
+ 
+@@ -74,6 +75,7 @@ struct _GstDecklinkSink
+ 
+   /* properties */
+   GstDecklinkModeEnum mode;
++  int device;
+ 
+ #ifdef _MSC_VER
+   gboolean comInitialized;
+diff --git a/sys/decklink/gstdecklinksrc.cpp b/sys/decklink/gstdecklinksrc.cpp
+index b2e2c51..7108023 100644
+--- a/sys/decklink/gstdecklinksrc.cpp
++++ b/sys/decklink/gstdecklinksrc.cpp
+@@ -35,11 +35,18 @@
+ #include "config.h"
+ #endif
+ 
++/* FIXME 0.11: suppress warnings for deprecated API such as GStaticRecMutex
++ * with newer GLib versions (>= 2.31.0) */
++#define GLIB_DISABLE_DEPRECATION_WARNINGS
++
+ #include <gst/gst.h>
++#include <gst/glib-compat-private.h>
+ #include "gstdecklink.h"
+ #include "gstdecklinksrc.h"
+ #include "capture.h"
+ #include <string.h>
++#include <gst/interfaces/propertyprobe.h>
++
+ 
+ GST_DEBUG_CATEGORY (gst_decklink_src_debug_category);
+ #define GST_CAT_DEFAULT gst_decklink_src_debug_category
+@@ -113,6 +120,10 @@ static gboolean gst_decklink_src_video_src_query (GstPad * pad,
+     GstQuery * query);
+ static GstIterator *gst_decklink_src_video_src_iterintlink (GstPad * pad);
+ 
++static void
++gst_decklinksrc_property_probe_interface_init (GstPropertyProbeInterface *
++    iface);
++
+ static void gst_decklink_src_task (void *priv);
+ 
+ #ifdef _MSC_VER
+@@ -126,7 +137,7 @@ enum
+   PROP_MODE,
+   PROP_CONNECTION,
+   PROP_AUDIO_INPUT,
+-  PROP_SUBDEVICE
++  PROP_DEVICE
+ };
+ 
+ /* pad templates */
+@@ -142,12 +153,24 @@ GST_STATIC_PAD_TEMPLATE ("audiosrc",
+ 
+ /* class initialization */
+ 
+-#define DEBUG_INIT(bla) \
+-  GST_DEBUG_CATEGORY_INIT (gst_decklink_src_debug_category, "decklinksrc", 0, \
++static void
++gst_decklinksrc_init_interfaces (GType type)
++{
++  static const GInterfaceInfo decklinksrc_propertyprobe_info = {
++    (GInterfaceInitFunc) gst_decklinksrc_property_probe_interface_init,
++    NULL,
++    NULL,
++  };
++
++  GST_DEBUG_CATEGORY_INIT (gst_decklink_src_debug_category, "decklinksrc", 0,
+       "debug category for decklinksrc element");
+ 
++  g_type_add_interface_static (type, GST_TYPE_PROPERTY_PROBE,
++      &decklinksrc_propertyprobe_info);
++}
++
+ GST_BOILERPLATE_FULL (GstDecklinkSrc, gst_decklink_src, GstElement,
+-    GST_TYPE_ELEMENT, DEBUG_INIT);
++    GST_TYPE_ELEMENT, gst_decklinksrc_init_interfaces);
+ 
+ static void
+ gst_decklink_src_base_init (gpointer g_class)
+@@ -191,27 +214,29 @@ gst_decklink_src_class_init (GstDecklinkSrcClass * klass)
+   element_class->query = GST_DEBUG_FUNCPTR (gst_decklink_src_query);
+ 
+   g_object_class_install_property (gobject_class, PROP_MODE,
+-      g_param_spec_enum ("mode", "Mode", "Mode",
++      g_param_spec_enum ("mode", "Mode", "Video Mode to use for capture",
+           GST_TYPE_DECKLINK_MODE, GST_DECKLINK_MODE_NTSC,
+           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
+               G_PARAM_CONSTRUCT)));
+ 
+   g_object_class_install_property (gobject_class, PROP_CONNECTION,
+-      g_param_spec_enum ("connection", "Connection", "Connection",
++      g_param_spec_enum ("connection", "Connection",
++          "Video Input Connection to use",
+           GST_TYPE_DECKLINK_CONNECTION, GST_DECKLINK_CONNECTION_SDI,
+           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
+               G_PARAM_CONSTRUCT)));
+ 
+   g_object_class_install_property (gobject_class, PROP_AUDIO_INPUT,
+-      g_param_spec_enum ("audio-input", "Audio Input", "Audio Input Connection",
++      g_param_spec_enum ("audio-input", "Audio Input",
++          "Audio Input Connection",
+           GST_TYPE_DECKLINK_AUDIO_CONNECTION,
+           GST_DECKLINK_AUDIO_CONNECTION_AUTO,
+           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
+               G_PARAM_CONSTRUCT)));
+ 
+-  g_object_class_install_property (gobject_class, PROP_SUBDEVICE,
+-      g_param_spec_int ("subdevice", "Subdevice", "Subdevice",
+-          0, 3, 0,
++  g_object_class_install_property (gobject_class, PROP_DEVICE,
++      g_param_spec_int ("device", "Device", "Capture device instance to use",
++          0, G_MAXINT, 0,
+           (GParamFlags) (G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS |
+               G_PARAM_CONSTRUCT)));
+ }
+@@ -292,25 +317,25 @@ gst_decklink_src_init (GstDecklinkSrc * decklinksrc,
+   decklinksrc->mode = GST_DECKLINK_MODE_NTSC;
+   decklinksrc->connection = GST_DECKLINK_CONNECTION_SDI;
+   decklinksrc->audio_connection = GST_DECKLINK_AUDIO_CONNECTION_AUTO;
+-  decklinksrc->subdevice = 0;
++  decklinksrc->device = 0;
+ 
+   decklinksrc->stop = FALSE;
+   decklinksrc->dropped_frames = 0;
+   decklinksrc->dropped_frames_old = 0;
+-  decklinksrc->frame_num = -1; /* -1 so will be 0 after incrementing */
++  decklinksrc->frame_num = -1;  /* -1 so will be 0 after incrementing */
+ 
+ #ifdef _MSC_VER
+-  decklinksrc->com_init_lock = g_mutex_new();
+-  decklinksrc->com_deinit_lock = g_mutex_new();
+-  decklinksrc->com_initialized = g_cond_new();
+-  decklinksrc->com_uninitialize = g_cond_new();
+-  decklinksrc->com_uninitialized = g_cond_new();
++  decklinksrc->com_init_lock = g_mutex_new ();
++  decklinksrc->com_deinit_lock = g_mutex_new ();
++  decklinksrc->com_initialized = g_cond_new ();
++  decklinksrc->com_uninitialize = g_cond_new ();
++  decklinksrc->com_uninitialized = g_cond_new ();
+ 
+   g_mutex_lock (decklinksrc->com_init_lock);
+ 
+   /* create the COM initialization thread */
+-  g_thread_create ((GThreadFunc)gst_decklink_src_com_thread,
+-    decklinksrc, FALSE, NULL);
++  g_thread_create ((GThreadFunc) gst_decklink_src_com_thread,
++      decklinksrc, FALSE, NULL);
+ 
+   /* wait until the COM thread signals that COM has been initialized */
+   g_cond_wait (decklinksrc->com_initialized, decklinksrc->com_init_lock);
+@@ -339,8 +364,8 @@ gst_decklink_src_set_property (GObject * object, guint property_id,
+       decklinksrc->audio_connection =
+           (GstDecklinkAudioConnectionEnum) g_value_get_enum (value);
+       break;
+-    case PROP_SUBDEVICE:
+-      decklinksrc->subdevice = g_value_get_int (value);
++    case PROP_DEVICE:
++      decklinksrc->device = g_value_get_int (value);
+       break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+@@ -367,8 +392,8 @@ gst_decklink_src_get_property (GObject * object, guint property_id,
+     case PROP_AUDIO_INPUT:
+       g_value_set_enum (value, decklinksrc->audio_connection);
+       break;
+-    case PROP_SUBDEVICE:
+-      g_value_set_int (value, decklinksrc->subdevice);
++    case PROP_DEVICE:
++      g_value_set_int (value, decklinksrc->device);
+       break;
+     default:
+       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+@@ -390,7 +415,8 @@ gst_decklink_src_com_thread (GstDecklinkSrc * src)
+ 
+   res = CoInitializeEx (0, COINIT_MULTITHREADED);
+   if (res == S_FALSE)
+-    GST_WARNING_OBJECT (src, "COM has been already initialized in the same process");
++    GST_WARNING_OBJECT (src,
++        "COM has been already initialized in the same process");
+   else if (res == RPC_E_CHANGED_MODE)
+     GST_WARNING_OBJECT (src, "The concurrency model of COM has changed.");
+   else
+@@ -445,7 +471,6 @@ gst_decklink_src_finalize (GObject * object)
+   if (decklinksrc->video_caps) {
+     gst_caps_unref (decklinksrc->video_caps);
+   }
+-
+ #ifdef _MSC_VER
+   /* signal the COM thread that it should uninitialize COM */
+   if (decklinksrc->comInitialized) {
+@@ -485,7 +510,6 @@ static gboolean
+ gst_decklink_src_start (GstElement * element)
+ {
+   GstDecklinkSrc *decklinksrc = GST_DECKLINK_SRC (element);
+-  IDeckLinkIterator *iterator;
+   DeckLinkCaptureDelegate *delegate;
+   //IDeckLinkDisplayModeIterator *mode_iterator;
+   //IDeckLinkDisplayMode *mode;
+@@ -496,33 +520,18 @@ gst_decklink_src_start (GstElement * element)
+   IDeckLinkConfiguration *config;
+   BMDVideoConnection conn;
+   BMDAudioConnection aconn;
+-  int i;
+ 
+   GST_DEBUG_OBJECT (decklinksrc, "start");
+ 
+-  iterator = CreateDeckLinkIteratorInstance ();
+-  if (iterator == NULL) {
+-    GST_ERROR ("no driver");
+-    return FALSE;
+-  }
+-
+-  ret = iterator->Next (&decklinksrc->decklink);
+-  if (ret != S_OK) {
+-    GST_ERROR ("no card");
++  decklinksrc->decklink = gst_decklink_get_nth_device (decklinksrc->device);
++  if (decklinksrc->decklink == NULL) {
+     return FALSE;
+   }
+-  for (i = 0; i < decklinksrc->subdevice; i++) {
+-    ret = iterator->Next (&decklinksrc->decklink);
+-    if (ret != S_OK) {
+-      GST_ERROR ("no card");
+-      return FALSE;
+-    }
+-  }
+ 
+   ret = decklinksrc->decklink->QueryInterface (IID_IDeckLinkInput,
+       (void **) &decklinksrc->input);
+   if (ret != S_OK) {
+-    GST_ERROR ("query interface failed");
++    GST_ERROR ("selected device does not have input interface");
+     return FALSE;
+   }
+ 
+@@ -670,6 +679,9 @@ gst_decklink_src_stop (GstElement * element)
+   decklinksrc->input->Release ();
+   decklinksrc->input = NULL;
+ 
++  decklinksrc->decklink->Release ();
++  decklinksrc->decklink = NULL;
++
+   return TRUE;
+ }
+ 
+@@ -757,8 +769,18 @@ gst_decklink_src_send_event (GstElement * element, GstEvent * event)
+ static gboolean
+ gst_decklink_src_query (GstElement * element, GstQuery * query)
+ {
++  GstDecklinkSrc *decklinksrc = GST_DECKLINK_SRC (element);
++  gboolean ret;
+ 
+-  return FALSE;
++  GST_DEBUG_OBJECT (decklinksrc, "query");
++
++  switch (GST_QUERY_TYPE (query)) {
++    default:
++      ret = GST_ELEMENT_CLASS (parent_class)->query (element, query);
++      break;
++  }
++
++  return ret;
+ }
+ 
+ static GstCaps *
+@@ -781,28 +803,39 @@ static gboolean
+ gst_decklink_src_audio_src_setcaps (GstPad * pad, GstCaps * caps)
+ {
+   GstDecklinkSrc *decklinksrc;
++  GstCaps *pad_caps;
++  gboolean can_intersect;
+ 
+   decklinksrc = GST_DECKLINK_SRC (gst_pad_get_parent (pad));
+ 
++  pad_caps = gst_pad_get_caps_reffed (pad);
++  can_intersect = gst_caps_can_intersect (pad_caps, caps);
++  gst_caps_unref (pad_caps);
++
+   GST_DEBUG_OBJECT (decklinksrc, "setcaps");
+ 
+ 
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return can_intersect;
+ }
+ 
+ static gboolean
+ gst_decklink_src_audio_src_acceptcaps (GstPad * pad, GstCaps * caps)
+ {
+   GstDecklinkSrc *decklinksrc;
++  GstCaps *pad_caps;
++  gboolean can_intersect;
+ 
+   decklinksrc = GST_DECKLINK_SRC (gst_pad_get_parent (pad));
+ 
+-  GST_DEBUG_OBJECT (decklinksrc, "acceptcaps");
++  pad_caps = gst_pad_get_caps_reffed (pad);
++  can_intersect = gst_caps_can_intersect (pad_caps, caps);
++  gst_caps_unref (pad_caps);
+ 
++  GST_DEBUG_OBJECT (decklinksrc, "acceptcaps");
+ 
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return can_intersect;
+ }
+ 
+ static void
+@@ -863,9 +896,8 @@ gst_decklink_src_audio_src_activatepull (GstPad * pad, gboolean active)
+ 
+   GST_DEBUG_OBJECT (decklinksrc, "activatepull");
+ 
+-
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return FALSE;
+ }
+ 
+ static GstPadLinkReturn
+@@ -974,28 +1006,39 @@ static gboolean
+ gst_decklink_src_video_src_setcaps (GstPad * pad, GstCaps * caps)
+ {
+   GstDecklinkSrc *decklinksrc;
++  GstCaps *mode_caps;
++  gboolean can_intersect;
+ 
+   decklinksrc = GST_DECKLINK_SRC (gst_pad_get_parent (pad));
+ 
+   GST_DEBUG_OBJECT (decklinksrc, "setcaps");
+ 
++  mode_caps = gst_decklink_mode_get_caps (decklinksrc->mode);
++  can_intersect = gst_caps_can_intersect (mode_caps, caps);
++  gst_caps_unref (mode_caps);
+ 
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return can_intersect;
+ }
+ 
+ static gboolean
+ gst_decklink_src_video_src_acceptcaps (GstPad * pad, GstCaps * caps)
+ {
+   GstDecklinkSrc *decklinksrc;
++  GstCaps *mode_caps;
++  gboolean can_intersect;
++
+ 
+   decklinksrc = GST_DECKLINK_SRC (gst_pad_get_parent (pad));
+ 
+   GST_DEBUG_OBJECT (decklinksrc, "acceptcaps");
+ 
++  mode_caps = gst_decklink_mode_get_caps (decklinksrc->mode);
++  can_intersect = gst_caps_can_intersect (mode_caps, caps);
++  gst_caps_unref (mode_caps);
+ 
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return can_intersect;
+ }
+ 
+ static void
+@@ -1058,7 +1101,7 @@ gst_decklink_src_video_src_activatepull (GstPad * pad, gboolean active)
+ 
+ 
+   gst_object_unref (decklinksrc);
+-  return TRUE;
++  return FALSE;
+ }
+ 
+ static GstPadLinkReturn
+@@ -1113,7 +1156,7 @@ gst_decklink_src_video_src_event (GstPad * pad, GstEvent * event)
+ static gboolean
+ gst_decklink_src_video_src_query (GstPad * pad, GstQuery * query)
+ {
+-  gboolean res;
++  gboolean ret;
+   GstDecklinkSrc *decklinksrc;
+ 
+   decklinksrc = GST_DECKLINK_SRC (gst_pad_get_parent (pad));
+@@ -1121,13 +1164,45 @@ gst_decklink_src_video_src_query (GstPad * pad, GstQuery * query)
+   GST_DEBUG_OBJECT (decklinksrc, "query");
+ 
+   switch (GST_QUERY_TYPE (query)) {
++    case GST_QUERY_LATENCY:{
++      GstClockTime min_latency, max_latency;
++      const GstDecklinkMode *mode;
++
++      /* device must be open */
++      if (decklinksrc->decklink == NULL) {
++        GST_WARNING_OBJECT (decklinksrc,
++            "Can't give latency since device isn't open !");
++        goto done;
++      }
++
++      mode = gst_decklink_get_mode (decklinksrc->mode);
++
++      /* min latency is the time to capture one frame */
++      min_latency =
++          gst_util_uint64_scale_int (GST_SECOND, mode->fps_d, mode->fps_n);
++
++      /* max latency is total duration of the frame buffer */
++      max_latency = 2 * min_latency;
++
++      GST_DEBUG_OBJECT (decklinksrc,
++          "report latency min %" GST_TIME_FORMAT " max %" GST_TIME_FORMAT,
++          GST_TIME_ARGS (min_latency), GST_TIME_ARGS (max_latency));
++
++      /* we are always live, the min latency is 1 frame and the max latency is
++       * the complete buffer of frames. */
++      gst_query_set_latency (query, TRUE, min_latency, max_latency);
++
++      ret = TRUE;
++      break;
++    }
+     default:
+-      res = gst_pad_query_default (pad, query);
++      ret = gst_pad_query_default (pad, query);
+       break;
+   }
+ 
++done:
+   gst_object_unref (decklinksrc);
+-  return res;
++  return ret;
+ }
+ 
+ static GstIterator *
+@@ -1188,10 +1263,9 @@ gst_decklink_src_task (void *priv)
+   /* warning on dropped frames */
+   if (decklinksrc->dropped_frames - decklinksrc->dropped_frames_old > 0) {
+     GST_ELEMENT_WARNING (decklinksrc, RESOURCE, READ,
+-                         ("Dropped %d frame(s), for a total of %d frame(s)",
+-                          decklinksrc->dropped_frames - decklinksrc->dropped_frames_old,
+-                          decklinksrc->dropped_frames),
+-                         (NULL));
++        ("Dropped %d frame(s), for a total of %d frame(s)",
++            decklinksrc->dropped_frames - decklinksrc->dropped_frames_old,
++            decklinksrc->dropped_frames), (NULL));
+     decklinksrc->dropped_frames_old = decklinksrc->dropped_frames;
+   }
+ 
+@@ -1231,11 +1305,28 @@ gst_decklink_src_task (void *priv)
+     event = gst_event_new_new_segment (FALSE, 1.0, GST_FORMAT_TIME, 0,
+         GST_CLOCK_TIME_NONE, 0);
+ 
+-    ret = gst_pad_push_event (decklinksrc->videosrcpad, event);
+-    if (!ret) {
+-      GST_ERROR_OBJECT (decklinksrc, "new segment event ret=%d", ret);
+-      return;
++    if (gst_pad_is_linked (decklinksrc->videosrcpad)) {
++      gst_event_ref (event);
++      ret = gst_pad_push_event (decklinksrc->videosrcpad, event);
++      if (!ret) {
++        GST_ERROR_OBJECT (decklinksrc, "new segment event ret=%d", ret);
++        gst_event_unref (event);
++        return;
++      }
++    } else {
++      gst_event_unref (event);
+     }
++
++    if (gst_pad_is_linked (decklinksrc->audiosrcpad)) {
++      ret = gst_pad_push_event (decklinksrc->audiosrcpad, event);
++      if (!ret) {
++        GST_ERROR_OBJECT (decklinksrc, "new segment event ret=%d", ret);
++        gst_event_unref (event);
++      }
++    } else {
++      gst_event_unref (event);
++    }
++
+   }
+ 
+   if (decklinksrc->video_caps == NULL) {
+@@ -1244,8 +1335,11 @@ gst_decklink_src_task (void *priv)
+   gst_buffer_set_caps (buffer, decklinksrc->video_caps);
+ 
+   ret = gst_pad_push (decklinksrc->videosrcpad, buffer);
+-  if (ret != GST_FLOW_OK) {
+-    GST_ELEMENT_ERROR (decklinksrc, CORE, NEGOTIATION, (NULL), (NULL));
++  if (!(ret == GST_FLOW_OK || ret == GST_FLOW_NOT_LINKED ||
++          ret == GST_FLOW_WRONG_STATE)) {
++    GST_ELEMENT_ERROR (decklinksrc, STREAM, FAILED,
++        ("Internal data stream error."),
++        ("stream stopped, reason %s", gst_flow_get_name (ret)));
+   }
+ 
+   if (gst_pad_is_linked (decklinksrc->audiosrcpad)) {
+@@ -1258,9 +1352,7 @@ gst_decklink_src_task (void *priv)
+         gst_util_uint64_scale_int (decklinksrc->num_audio_samples * GST_SECOND,
+         1, 48000);
+     GST_BUFFER_DURATION (audio_buffer) =
+-        gst_util_uint64_scale_int ((decklinksrc->num_audio_samples +
+-            n_samples) * GST_SECOND, 1,
+-        48000) - GST_BUFFER_TIMESTAMP (audio_buffer);
++        gst_util_uint64_scale_int (n_samples * GST_SECOND, 1, 48000);
+     decklinksrc->num_audio_samples += n_samples;
+ 
+     if (decklinksrc->audio_caps == NULL) {
+@@ -1274,9 +1366,132 @@ gst_decklink_src_task (void *priv)
+     gst_buffer_set_caps (audio_buffer, decklinksrc->audio_caps);
+ 
+     ret = gst_pad_push (decklinksrc->audiosrcpad, audio_buffer);
+-    if (ret != GST_FLOW_OK) {
+-      GST_ELEMENT_ERROR (decklinksrc, CORE, NEGOTIATION, (NULL), (NULL));
++    if (!(ret == GST_FLOW_OK || ret == GST_FLOW_NOT_LINKED ||
++            ret == GST_FLOW_WRONG_STATE)) {
++      GST_ELEMENT_ERROR (decklinksrc, STREAM, FAILED,
++          ("Internal data stream error."),
++          ("stream stopped, reason %s", gst_flow_get_name (ret)));
+     }
+   }
+   audio_frame->Release ();
+ }
++
++
++static const GList *
++gst_decklinksrc_probe_get_properties (GstPropertyProbe * probe)
++{
++  GObjectClass *klass = G_OBJECT_GET_CLASS (probe);
++  static GList *list = NULL;
++  static gsize init = 0;
++
++  if (g_once_init_enter (&init)) {
++    list = g_list_append (NULL, g_object_class_find_property (klass, "device"));
++
++    g_once_init_leave (&init, 1);
++  }
++
++  return list;
++}
++
++static gboolean probed = FALSE;
++static int n_devices;
++
++static void
++gst_decklinksrc_class_probe_devices (GstElementClass * klass)
++{
++  IDeckLinkIterator *iterator;
++  IDeckLink *decklink;
++
++  n_devices = 0;
++  iterator = CreateDeckLinkIteratorInstance ();
++  if (iterator) {
++    while (iterator->Next (&decklink) == S_OK) {
++      n_devices++;
++    }
++  }
++
++  probed = TRUE;
++}
++
++static void
++gst_decklinksrc_probe_probe_property (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  GstElementClass *klass = GST_ELEMENT_GET_CLASS (probe);
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      gst_decklinksrc_class_probe_devices (klass);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++}
++
++static gboolean
++gst_decklinksrc_probe_needs_probe (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  gboolean ret = FALSE;
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      ret = !probed;
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++  return ret;
++}
++
++static GValueArray *
++gst_decklinksrc_class_list_devices (GstElementClass * klass)
++{
++  GValueArray *array;
++  GValue value = { 0 };
++  GList *item;
++  int i;
++
++  array = g_value_array_new (n_devices);
++  g_value_init (&value, G_TYPE_INT);
++  for (i = 0; i < n_devices; i++) {
++    g_value_set_int (&value, i);
++    g_value_array_append (array, &value);
++
++    item = item->next;
++  }
++  g_value_unset (&value);
++
++  return array;
++}
++
++static GValueArray *
++gst_decklinksrc_probe_get_values (GstPropertyProbe * probe,
++    guint prop_id, const GParamSpec * pspec)
++{
++  GstElementClass *klass = GST_ELEMENT_GET_CLASS (probe);
++  GValueArray *array = NULL;
++
++  switch (prop_id) {
++    case PROP_DEVICE:
++      array = gst_decklinksrc_class_list_devices (klass);
++      break;
++    default:
++      G_OBJECT_WARN_INVALID_PROPERTY_ID (probe, prop_id, pspec);
++      break;
++  }
++
++  return array;
++}
++
++static void
++gst_decklinksrc_property_probe_interface_init (GstPropertyProbeInterface *
++    iface)
++{
++  iface->get_properties = gst_decklinksrc_probe_get_properties;
++  iface->probe_property = gst_decklinksrc_probe_probe_property;
++  iface->needs_probe = gst_decklinksrc_probe_needs_probe;
++  iface->get_values = gst_decklinksrc_probe_get_values;
++}
+diff --git a/sys/decklink/gstdecklinksrc.h b/sys/decklink/gstdecklinksrc.h
+index 69dea49..c47279a 100644
+--- a/sys/decklink/gstdecklinksrc.h
++++ b/sys/decklink/gstdecklinksrc.h
+@@ -73,7 +73,7 @@ struct _GstDecklinkSrc
+   GstDecklinkModeEnum mode;
+   GstDecklinkConnectionEnum connection;
+   GstDecklinkAudioConnectionEnum audio_connection;
+-  int subdevice;
++  int device;
+ 
+ #ifdef _MSC_VER
+   gboolean comInitialized;
 diff --git a/sys/directdraw/gstdirectdrawsink.c b/sys/directdraw/gstdirectdrawsink.c
 index bd9b79c..518ca7c 100644
 --- a/sys/directdraw/gstdirectdrawsink.c
@@ -25149,59 +28237,3 @@ index ea4458c..c2904cf 100644
  
  /* Define to 1 if your processor stores words with the most significant byte
     first (like Motorola and SPARC, unlike Intel and VAX). */
-diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 8f4d78d..3ae47f9 100644
---- a/gst/mpegtsdemux/tsdemux.c
-+++ b/gst/mpegtsdemux/tsdemux.c
-@@ -1443,7 +1443,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
-           gst_event_new_new_segment_full (TRUE, demux->segment.rate,
-           demux->segment.applied_rate, GST_FORMAT_TIME, demux->segment.start,
-           firstts, demux->segment.time);
--      GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
-     }
-     demux->calculate_update_segment = FALSE;
-   }
-@@ -1454,18 +1453,19 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
-     demux->segment_event =
-         gst_event_new_new_segment_full (FALSE, 1.0, 1.0, GST_FORMAT_TIME,
-         firstts, GST_CLOCK_TIME_NONE, firstts);
--    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
-   }
- 
- push_new_segment:
-   if (demux->update_segment) {
-     GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
-+    GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
-     gst_event_ref (demux->update_segment);
-     gst_pad_push_event (stream->pad, demux->update_segment);
-   }
- 
-   if (demux->segment_event) {
-     GST_DEBUG_OBJECT (stream->pad, "Pushing newsegment event");
-+    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
-     gst_event_ref (demux->segment_event);
-     gst_pad_push_event (stream->pad, demux->segment_event);
-   }
-@@ -1509,6 +1509,7 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
-     g_list_free (stream->currentlist);
-     gst_buffer_list_iterator_free (stream->currentit);
-     gst_buffer_list_unref (stream->current);
-+    stream->currentit = NULL;
-     goto beach;
-   }
- 
-@@ -1521,6 +1522,7 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
-   gst_buffer_list_iterator_add_list (stream->currentit, stream->currentlist);
-   stream->currentlist = NULL;
-   gst_buffer_list_iterator_free (stream->currentit);
-+  stream->currentit = NULL;
- 
-   firstbuffer = gst_buffer_list_get (stream->current, 0, 0);
- 
-@@ -1547,7 +1549,6 @@ beach:
-   memset (stream->pendingbuffers, 0, TS_MAX_PENDING_BUFFERS);
-   stream->nbpending = 0;
-   stream->current = NULL;
--  stream->currentit = NULL;
-   stream->expected_size = 0;
-   stream->current_size = 0;
