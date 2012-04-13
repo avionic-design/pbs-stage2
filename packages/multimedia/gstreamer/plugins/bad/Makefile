@@ -22,7 +22,8 @@ conf-args += \
 	--disable-geometrictransform \
 	--disable-colorspace \
 	--disable-decklink \
-	--disable-rsvg
+	--disable-rsvg \
+	--disable-hls
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl
