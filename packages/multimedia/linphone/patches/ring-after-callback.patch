@@ -1,0 +1,89 @@
+commit c2a41f1c8c06e1bca91d7d4fd1031ddc337ca316
+Author: Alban Bedel <alban.bedel@avionic-design.de>
+Date:   Mon Apr 16 11:41:42 2012 +0200
+
+    Start the ring tone only if the call was not rejected
+    
+    The ring tone was started before calling the callback allowing the
+    user to reject calls. In some case this would lead to the ring tone
+    being played for a few milliseconds.
+    
+    Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+
+diff --git a/coreapi/callbacks.c b/coreapi/callbacks.c
+index a2dfffe..e277b1c 100644
+--- a/coreapi/callbacks.c
++++ b/coreapi/callbacks.c
+@@ -138,6 +138,32 @@ static bool_t already_a_call_pending(LinphoneCore *lc){
+ 	return FALSE;
+ }
+ 
++static void call_ring_start(LinphoneCore *lc, LinphoneCall *call){
++	/* play the ring if this is the only call*/
++	if (ms_list_size(lc->calls)==1){
++		if (lc->ringstream && lc->dmfs_playing_start_time!=0){
++			ring_stop(lc->ringstream);
++			lc->ringstream=NULL;
++			lc->dmfs_playing_start_time=0;
++		}
++		if (lc->sound_conf.ring_sndcard!=NULL){
++			if(lc->ringstream==NULL && lc->sound_conf.local_ring){
++				MSSndCard *ringcard=lc->sound_conf.lsd_card ?lc->sound_conf.lsd_card : lc->sound_conf.ring_sndcard;
++				ms_message("Starting local ring...");
++				lc->ringstream=ring_start(lc->sound_conf.local_ring,2000,ringcard);
++			}
++			else
++			{
++				ms_message("the local ring is already started");
++			}
++		}
++	}else{
++		/* else play a tone within the context of the current call */
++		call->ringing_beep=TRUE;
++		linphone_core_play_tone(lc);
++	}
++}
++
+ static void call_received(SalOp *h){
+ 	LinphoneCore *lc=(LinphoneCore *)sal_get_user_pointer(sal_op_get_sal(h));
+ 	char *barmesg;
+@@ -209,36 +235,15 @@ static void call_received(SalOp *h){
+ 	if (lc->vtable.display_status) 
+ 	    lc->vtable.display_status(lc,barmesg);
+ 
+-	/* play the ring if this is the only call*/
+-	if (ms_list_size(lc->calls)==1){
++	/* set the current call */
++	if (ms_list_size(lc->calls)==1)
+ 		lc->current_call=call;
+-		if (lc->ringstream && lc->dmfs_playing_start_time!=0){
+-			ring_stop(lc->ringstream);
+-			lc->ringstream=NULL;
+-			lc->dmfs_playing_start_time=0;
+-		}
+-		if (lc->sound_conf.ring_sndcard!=NULL){
+-			if(lc->ringstream==NULL && lc->sound_conf.local_ring){
+-				MSSndCard *ringcard=lc->sound_conf.lsd_card ?lc->sound_conf.lsd_card : lc->sound_conf.ring_sndcard;
+-				ms_message("Starting local ring...");
+-				lc->ringstream=ring_start(lc->sound_conf.local_ring,2000,ringcard);
+-			}
+-			else
+-			{
+-				ms_message("the local ring is already started");
+-			}
+-		}
+-	}else{
+-		/* else play a tone within the context of the current call */
+-		call->ringing_beep=TRUE;
+-		linphone_core_play_tone(lc);
+-	}
+ 
+-	
+ 	linphone_call_ref(call); /*prevent the call from being destroyed while we are notifying, if the user declines within the state callback */
+ 	linphone_call_set_state(call,LinphoneCallIncomingReceived,"Incoming call");
+ 	
+ 	if (call->state==LinphoneCallIncomingReceived){
++		call_ring_start(lc, call);
+ 		sal_call_notify_ringing(h,propose_early_media || ringback_tone!=NULL);
+ 
+ 		if (propose_early_media || ringback_tone!=NULL){
