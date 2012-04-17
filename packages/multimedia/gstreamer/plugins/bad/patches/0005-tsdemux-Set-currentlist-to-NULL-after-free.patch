@@ -1,0 +1,25 @@
+From 807d56a8e07d553c6f41ff078877d3c0a1df3919 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Tue, 17 Apr 2012 15:44:07 +0200
+Subject: [PATCH 5/5] tsdemux: Set currentlist to NULL after free.
+
+This prevents double free of currentlist is some circumstances.
+---
+ gst/mpegtsdemux/tsdemux.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index 7f098f2..9f7bd45 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -1585,6 +1585,7 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+     gst_buffer_list_iterator_free (stream->currentit);
+     gst_buffer_list_unref (stream->current);
+     stream->currentit = NULL;
++    stream->currentlist = NULL;
+     goto beach;
+   }
+ 
+-- 
+1.7.10
+

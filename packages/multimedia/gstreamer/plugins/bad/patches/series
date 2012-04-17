@@ -1,2 +1,7 @@
 ltmain-sysroot.patch -p1
-rebase-to-git-branch-0.10_2012-04-10.patch
+rebase-to-git-branch-0.10_2012-04-16.patch
+0001-Fix-possible-double-free.patch
+0002-tsdemux-Add-language-code-to-taglist.patch
+0003-Fix-possible-crash-due-to-NULL-pointer-in-segment-up.patch
+0004-Revert-decklink-Add-decklink-dispatch-code-for-OS-X.patch
+0005-tsdemux-Set-currentlist-to-NULL-after-free.patch

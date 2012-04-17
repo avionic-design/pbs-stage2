@@ -14,7 +14,7 @@ index 8a56c7a..a7f26df 100755
  
  autogen_options $@
 diff --git a/configure.ac b/configure.ac
-index d56cd57..ec821e2 100644
+index d56cd57..a2a265b 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -3,7 +3,7 @@ AC_PREREQ(2.60)
@@ -172,7 +172,31 @@ index d56cd57..ec821e2 100644
  dnl *** Cog ***
  translit(dnm, m, l) AM_CONDITIONAL(USE_COG, true)
  AG_GST_CHECK_FEATURE(COG, [Cog plugin], cog, [
-@@ -813,6 +843,31 @@ AG_GST_CHECK_FEATURE(DIRECTFB, [directfb], dfbvideosink , [
+@@ -796,11 +826,23 @@ AG_GST_CHECK_FEATURE(DECKLINK, [decklink], decklink, [
+            ])
+        fi
+        ;;
++     *-*darwin*)
++       if test "x$HAVE_PTHREAD_H" = "xyes"; then
++         AC_CHECK_LIB(dl, dlopen,
++           [
++            HAVE_DECKLINK=yes
++            DECKLINK_CXXFLAGS=
++            DECKLINK_LIBS="-lpthread -ldl"
++	    HAVE_DECKLINK_OSX=yes
++           ])
++       fi
++       ;;
+      *)
+        HAVE_DECKLINK=no
+        ;;
+    esac
+ 
++   AM_CONDITIONAL(DECKLINK_OSX, test "x$HAVE_DECKLINK_OSX" = xyes)
+    AC_SUBST(DECKLINK_CXXFLAGS)
+    AC_SUBST(DECKLINK_LIBS)
+ ])
+@@ -813,6 +855,31 @@ AG_GST_CHECK_FEATURE(DIRECTFB, [directfb], dfbvideosink , [
    ])
  ])
  
@@ -204,7 +228,7 @@ index d56cd57..ec821e2 100644
  dnl **** Dirac ****
  translit(dnm, m, l) AM_CONDITIONAL(USE_DIRAC, true)
  AG_GST_CHECK_FEATURE(DIRAC, [dirac], dirac, [
-@@ -1377,22 +1432,22 @@ AG_GST_CHECK_FEATURE(OPENCV, [opencv plugins], opencv, [
+@@ -1377,22 +1444,22 @@ AG_GST_CHECK_FEATURE(OPENCV, [opencv plugins], opencv, [
      AC_LANG_CPLUSPLUS
      OLD_CPPFLAGS=$CPPFLAGS
      CPPFLAGS=$OPENCV_CFLAGS
@@ -236,7 +260,7 @@ index d56cd57..ec821e2 100644
    AC_SUBST(OPENCV_CFLAGS)
    AC_SUBST(OPENCV_LIBS)
  ])
-@@ -1695,7 +1750,7 @@ AG_GST_CHECK_FEATURE(VDPAU, [VDPAU], vdpau, [
+@@ -1695,7 +1762,7 @@ AG_GST_CHECK_FEATURE(VDPAU, [VDPAU], vdpau, [
  dnl *** schroedinger ***
  translit(dnm, m, l) AM_CONDITIONAL(USE_SCHRO, true)
  AG_GST_CHECK_FEATURE(SCHRO, [Schroedinger video codec], schro, [
@@ -245,7 +269,7 @@ index d56cd57..ec821e2 100644
  ])
  
  dnl *** zbar ***
-@@ -1783,11 +1838,13 @@ AM_CONDITIONAL(USE_APEXSINK, false)
+@@ -1783,11 +1850,13 @@ AM_CONDITIONAL(USE_APEXSINK, false)
  AM_CONDITIONAL(USE_BZ2, false)
  AM_CONDITIONAL(USE_CDAUDIO, false)
  AM_CONDITIONAL(USE_CELT, false)
@@ -259,7 +283,7 @@ index d56cd57..ec821e2 100644
  AM_CONDITIONAL(USE_DIRAC, false)
  AM_CONDITIONAL(USE_DTS, false)
  AM_CONDITIONAL(USE_DIVX, false)
-@@ -2040,11 +2097,13 @@ ext/apexsink/Makefile
+@@ -2040,11 +2109,13 @@ ext/apexsink/Makefile
  ext/bz2/Makefile
  ext/cdaudio/Makefile
  ext/celt/Makefile
@@ -8048,7 +8072,7 @@ index 4b0acb6..1166b87 100644
  
    if (off2 == -1) {
 diff --git a/gst-libs/gst/codecparsers/gstmpegvideoparser.c b/gst-libs/gst/codecparsers/gstmpegvideoparser.c
-index b725d9d..b45156a 100644
+index b725d9d..ec8c934 100644
 --- a/gst-libs/gst/codecparsers/gstmpegvideoparser.c
 +++ b/gst-libs/gst/codecparsers/gstmpegvideoparser.c
 @@ -97,9 +97,8 @@ find_start_code (GstBitReader * b)
@@ -8063,7 +8087,7 @@ index b725d9d..b45156a 100644
    }
  
    return FALSE;
-@@ -324,10 +323,13 @@ gst_mpeg_video_parse (const guint8 * data, gsize size, guint offset)
+@@ -324,21 +323,24 @@ gst_mpeg_video_parse (const guint8 * data, gsize size, guint offset)
    while (off >= 0 && off + 3 < size) {
      GstMpegVideoTypeOffsetSize *codoffsize;
  
@@ -8079,6 +8103,22 @@ index b725d9d..b45156a 100644
  
      codoffsize->offset = gst_byte_reader_get_pos (&br) + offset;
  
+     rsize = gst_byte_reader_get_remaining (&br);
+-    if (rsize <= 0) {
+-      g_free (codoffsize);
+-      break;
++    if (rsize == 0) {
++      /* if there are no more bytes after the start code set the size to -1 */
++      off = -1;
++    } else {
++      off = scan_for_start_codes (&br, 0, rsize);
+     }
+ 
+-    off = scan_for_start_codes (&br, 0, rsize);
+-
+     codoffsize->size = off;
+ 
+     ret = g_list_prepend (ret, codoffsize);
 @@ -346,6 +348,12 @@ gst_mpeg_video_parse (const guint8 * data, gsize size, guint offset)
    }
  
@@ -18994,17 +19034,10 @@ index 7f7a480..0000000
 -					MpegTSPacketizerPacket * packet,
 -					gboolean *need_more);
 diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
-index 166089b..7f098f2 100644
+index 166089b..96eb75c 100644
 --- a/gst/mpegtsdemux/tsdemux.c
 +++ b/gst/mpegtsdemux/tsdemux.c
-@@ -35,16 +35,16 @@
- #include <string.h>
- 
- #include <glib.h>
-+#include <gst/tag/tag.h>
- 
- #include "mpegtsbase.h"
- #include "tsdemux.h"
+@@ -41,10 +41,9 @@
  #include "gstmpegdesc.h"
  #include "gstmpegdefs.h"
  #include "mpegtspacketizer.h"
@@ -19016,7 +19049,7 @@ index 166089b..7f098f2 100644
   * tsdemux
   *
   * See TODO for explanations on improvements needed
-@@ -56,7 +56,7 @@
+@@ -56,7 +55,7 @@
  #define TABLE_ID_UNSET 0xFF
  
  /* Size of the pendingbuffers array. */
@@ -19025,7 +19058,7 @@ index 166089b..7f098f2 100644
  
  #define PCR_WRAP_SIZE_128KBPS (((gint64)1490)*(1024*1024))
  /* small PCR for wrap detection */
-@@ -65,10 +65,23 @@
+@@ -65,10 +64,23 @@
  #define PCR_MAX_VALUE (((((guint64)1)<<33) * 300) + 298)
  #define PTS_DTS_MAX_VALUE (((guint64)1) << 33)
  
@@ -19050,7 +19083,7 @@ index 166089b..7f098f2 100644
  
  GST_DEBUG_CATEGORY_STATIC (ts_demux_debug);
  #define GST_CAT_DEFAULT ts_demux_debug
-@@ -102,6 +115,8 @@ struct _TSDemuxStream
+@@ -102,6 +114,8 @@ struct _TSDemuxStream
    MpegTSBaseStream stream;
  
    GstPad *pad;
@@ -19059,7 +19092,7 @@ index 166089b..7f098f2 100644
  
    /* the return of the latest push */
    GstFlowReturn flow_return;
-@@ -114,6 +129,11 @@ struct _TSDemuxStream
+@@ -114,6 +128,11 @@ struct _TSDemuxStream
    GstBuffer *pendingbuffers[TS_MAX_PENDING_BUFFERS];
    guint8 nbpending;
  
@@ -19071,7 +19104,7 @@ index 166089b..7f098f2 100644
    /* Current data to be pushed out */
    GstBufferList *current;
    GstBufferListIterator *currentit;
-@@ -125,9 +145,17 @@ struct _TSDemuxStream
+@@ -125,9 +144,15 @@ struct _TSDemuxStream
    /* Raw value of current PTS/DTS */
    guint64 raw_pts;
    guint64 raw_dts;
@@ -19084,12 +19117,10 @@ index 166089b..7f098f2 100644
 +
 +  /* Whether this stream needs to send a newsegment */
 +  gboolean need_newsegment;
-+
-+  GstTagList *taglist;
  };
  
  #define VIDEO_CAPS \
-@@ -148,8 +176,11 @@ struct _TSDemuxStream
+@@ -148,8 +173,11 @@ struct _TSDemuxStream
      "audio/mpeg, " \
        "mpegversion = (int) 1;" \
      "audio/mpeg, " \
@@ -19102,7 +19133,7 @@ index 166089b..7f098f2 100644
      "audio/x-lpcm, " \
        "width = (int) { 16, 20, 24 }, " \
        "rate = (int) { 48000, 96000 }, " \
-@@ -198,8 +229,6 @@ enum
+@@ -198,8 +226,6 @@ enum
  };
  
  /* Pad functions */
@@ -19111,7 +19142,7 @@ index 166089b..7f098f2 100644
  
  
  /* mpegtsbase methods */
-@@ -215,23 +244,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * stream,
+@@ -215,23 +241,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * stream,
      MpegTSBaseProgram * program);
  static void
  gst_ts_demux_stream_removed (MpegTSBase * base, MpegTSBaseStream * stream);
@@ -19137,7 +19168,7 @@ index 166089b..7f098f2 100644
  
  static gboolean push_event (MpegTSBase * base, GstEvent * event);
  static void _extra_init (GType type);
-@@ -256,14 +277,11 @@ gst_ts_demux_base_init (gpointer klass)
+@@ -256,14 +274,11 @@ gst_ts_demux_base_init (gpointer klass)
  {
    GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
  
@@ -19155,7 +19186,7 @@ index 166089b..7f098f2 100644
  
    gst_element_class_set_details_simple (element_class,
        "MPEG transport stream demuxer",
-@@ -282,7 +300,6 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
+@@ -282,7 +297,6 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
    gobject_class = G_OBJECT_CLASS (klass);
    gobject_class->set_property = gst_ts_demux_set_property;
    gobject_class->get_property = gst_ts_demux_get_property;
@@ -19163,7 +19194,7 @@ index 166089b..7f098f2 100644
  
    g_object_class_install_property (gobject_class, PROP_PROGRAM_NUMBER,
        g_param_spec_int ("program-number", "Program number",
-@@ -302,56 +319,37 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
+@@ -302,56 +316,37 @@ gst_ts_demux_class_init (GstTSDemuxClass * klass)
    ts_class->program_started = GST_DEBUG_FUNCPTR (gst_ts_demux_program_started);
    ts_class->stream_added = gst_ts_demux_stream_added;
    ts_class->stream_removed = gst_ts_demux_stream_removed;
@@ -19235,7 +19266,7 @@ index 166089b..7f098f2 100644
  
  
  static void
-@@ -398,6 +396,7 @@ gst_ts_demux_srcpad_query_types (GstPad * pad)
+@@ -398,6 +393,7 @@ gst_ts_demux_srcpad_query_types (GstPad * pad)
    static const GstQueryType query_types[] = {
      GST_QUERY_DURATION,
      GST_QUERY_SEEKING,
@@ -19243,7 +19274,7 @@ index 166089b..7f098f2 100644
      0
    };
  
-@@ -417,18 +416,57 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -417,18 +413,57 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
  
    switch (GST_QUERY_TYPE (query)) {
      case GST_QUERY_DURATION:
@@ -19304,7 +19335,7 @@ index 166089b..7f098f2 100644
        GST_DEBUG ("query seeking");
        gst_query_parse_seeking (query, &format, NULL, NULL, NULL);
        if (format == GST_FORMAT_TIME) {
-@@ -448,6 +486,7 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -448,6 +483,7 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
          res = FALSE;
        }
        break;
@@ -19312,7 +19343,7 @@ index 166089b..7f098f2 100644
      default:
        res = gst_pad_query_default (pad, query);
    }
-@@ -457,374 +496,8 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
+@@ -457,374 +493,8 @@ gst_ts_demux_srcpad_query (GstPad * pad, GstQuery * query)
  
  }
  
@@ -19477,7 +19508,7 @@ index 166089b..7f098f2 100644
 -    return 0;
 -}
 -
--static GstFlowReturn
+ static GstFlowReturn
 -gst_ts_demux_perform_seek (MpegTSBase * base, GstSegment * segment, guint16 pid)
 -{
 -  GstTSDemux *demux = (GstTSDemux *) base;
@@ -19682,13 +19713,13 @@ index 166089b..7f098f2 100644
 -}
 -
 -
- static GstFlowReturn
+-static GstFlowReturn
 -gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
 +gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event)
  {
    GstTSDemux *demux = (GstTSDemux *) base;
    GstFlowReturn res = GST_FLOW_ERROR;
-@@ -835,6 +508,7 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
+@@ -835,6 +505,7 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
    gint64 start, stop;
    GstSegment seeksegment;
    gboolean update;
@@ -19696,7 +19727,7 @@ index 166089b..7f098f2 100644
  
    gst_event_parse_seek (event, &rate, &format, &flags, &start_type, &start,
        &stop_type, &stop);
-@@ -855,31 +529,35 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
+@@ -855,31 +526,35 @@ gst_ts_demux_do_seek (MpegTSBase * base, GstEvent * event, guint16 pid)
    /* copy segment, we need this because we still need the old
     * segment when we close the current segment. */
    memcpy (&seeksegment, &demux->segment, sizeof (GstSegment));
@@ -19750,59 +19781,7 @@ index 166089b..7f098f2 100644
    /* commit the new segment */
    memcpy (&demux->segment, &seeksegment, sizeof (GstSegment));
  
-@@ -968,6 +646,43 @@ done:
-   return ret;
- }
- 
-+static void
-+gst_ts_demux_create_tags (TSDemuxStream * stream)
-+{
-+  guint8 *desc = NULL;
-+  int i;
-+
-+  desc = mpegts_get_descriptor_from_stream ((MpegTSBaseStream *) stream,
-+      DESC_ISO_639_LANGUAGE);
-+  if (desc) {
-+    if (!stream->taglist)
-+      stream->taglist = gst_tag_list_new ();
-+
-+    for (i = 0; i < DESC_ISO_639_LANGUAGE_codes_n (desc); i++) {
-+      const gchar *lc;
-+      gchar lang_code[4];
-+      gchar *language_n;
-+
-+      language_n = (gchar *)
-+          DESC_ISO_639_LANGUAGE_language_code_nth (desc, i);
-+
-+      GST_LOG ("Add language code for stream: %s", language_n);
-+
-+      lang_code[0] = language_n[0];
-+      lang_code[1] = language_n[1];
-+      lang_code[2] = language_n[2];
-+      lang_code[3] = 0;
-+
-+      /* descriptor contains ISO 639-2 code, we want the ISO 639-1 code */
-+      lc = gst_tag_get_language_code (lang_code);
-+      gst_tag_list_add (stream->taglist, GST_TAG_MERGE_REPLACE,
-+          GST_TAG_LANGUAGE_CODE, (lc) ? lc : lang_code, NULL);
-+    }
-+
-+    g_free (desc);
-+  }
-+}
-+
- static GstPad *
- create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
-     MpegTSBaseProgram * program)
-@@ -979,6 +694,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
-   guint8 *desc = NULL;
-   GstPad *pad = NULL;
- 
-+  gst_ts_demux_create_tags (stream);
- 
-   GST_LOG ("Attempting to create pad for stream 0x%04x with stream_type %d",
-       bstream->pid, bstream->stream_type);
-@@ -1006,8 +722,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1006,8 +681,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
        break;
      case ST_PRIVATE_DATA:
        GST_LOG ("private data");
@@ -19812,7 +19791,7 @@ index 166089b..7f098f2 100644
            DESC_DVB_AC3);
        if (desc) {
          GST_LOG ("ac3 audio");
-@@ -1017,8 +732,8 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1017,8 +691,8 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -19823,7 +19802,7 @@ index 166089b..7f098f2 100644
            DESC_DVB_ENHANCED_AC3);
        if (desc) {
          GST_LOG ("ac3 audio");
-@@ -1028,8 +743,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1028,8 +702,7 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -19833,7 +19812,7 @@ index 166089b..7f098f2 100644
            DESC_DVB_TELETEXT);
        if (desc) {
          GST_LOG ("teletext");
-@@ -1050,6 +764,26 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1050,6 +723,26 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
          g_free (desc);
          break;
        }
@@ -19860,7 +19839,7 @@ index 166089b..7f098f2 100644
        /* hack for itv hd (sid 10510, video pid 3401 */
        if (program->program_number == 10510 && bstream->pid == 3401) {
          template = gst_static_pad_template_get (&video_template);
-@@ -1080,13 +814,20 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1080,13 +773,20 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
      case ST_DSMCC_D:
        MPEGTS_BIT_UNSET (base->is_pes, bstream->pid);
        break;
@@ -19883,7 +19862,7 @@ index 166089b..7f098f2 100644
      case ST_VIDEO_MPEG4:
        template = gst_static_pad_template_get (&video_template);
        name = g_strdup_printf ("video_%04x", bstream->pid);
-@@ -1146,18 +887,35 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1146,18 +846,35 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
        desc = mpegts_get_descriptor_from_program (program, DESC_REGISTRATION);
        if (desc) {
          if (DESC_REGISTRATION_format_identifier (desc) == DRF_ID_HDMV) {
@@ -19924,7 +19903,7 @@ index 166089b..7f098f2 100644
            DESC_DVB_ENHANCED_AC3);
        if (desc) {
          template = gst_static_pad_template_get (&audio_template);
-@@ -1226,10 +984,13 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1226,10 +943,13 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
      gst_pad_set_query_type_function (pad, gst_ts_demux_srcpad_query_types);
      gst_pad_set_query_function (pad, gst_ts_demux_srcpad_query);
      gst_pad_set_event_function (pad, gst_ts_demux_srcpad_event);
@@ -19940,7 +19919,7 @@ index 166089b..7f098f2 100644
  
    return pad;
  }
-@@ -1244,11 +1005,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1244,11 +964,15 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
      /* Create the pad */
      if (bstream->stream_type != 0xff)
        stream->pad = create_pad_for_stream (base, bstream, program);
@@ -19956,7 +19935,7 @@ index 166089b..7f098f2 100644
      stream->nb_pts_rollover = 0;
      stream->nb_dts_rollover = 0;
    }
-@@ -1258,32 +1023,24 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
+@@ -1258,32 +982,24 @@ gst_ts_demux_stream_added (MpegTSBase * base, MpegTSBaseStream * bstream,
  static void
  gst_ts_demux_stream_removed (MpegTSBase * base, MpegTSBaseStream * bstream)
  {
@@ -19992,7 +19971,7 @@ index 166089b..7f098f2 100644
    stream->flow_return = GST_FLOW_NOT_LINKED;
  }
  
-@@ -1295,6 +1052,7 @@ activate_pad_for_stream (GstTSDemux * tsdemux, TSDemuxStream * stream)
+@@ -1295,6 +1011,7 @@ activate_pad_for_stream (GstTSDemux * tsdemux, TSDemuxStream * stream)
          GST_DEBUG_PAD_NAME (stream->pad), stream);
      gst_pad_set_active (stream->pad, TRUE);
      gst_element_add_pad ((GstElement *) tsdemux, stream->pad);
@@ -20000,7 +19979,7 @@ index 166089b..7f098f2 100644
      GST_DEBUG_OBJECT (stream->pad, "done adding pad");
    } else
      GST_WARNING_OBJECT (tsdemux,
-@@ -1315,7 +1073,34 @@ gst_ts_demux_stream_flush (TSDemuxStream * stream)
+@@ -1315,7 +1032,34 @@ gst_ts_demux_stream_flush (TSDemuxStream * stream)
    memset (stream->pendingbuffers, 0, TS_MAX_PENDING_BUFFERS);
    stream->nbpending = 0;
  
@@ -20035,7 +20014,7 @@ index 166089b..7f098f2 100644
  }
  
  static void
-@@ -1335,493 +1120,32 @@ gst_ts_demux_program_started (MpegTSBase * base, MpegTSBaseProgram * program)
+@@ -1335,495 +1079,34 @@ gst_ts_demux_program_started (MpegTSBase * base, MpegTSBaseProgram * program)
  
    if (demux->program_number == -1 ||
        demux->program_number == program->program_number) {
@@ -20397,13 +20376,13 @@ index 166089b..7f098f2 100644
 -  if (base->pat) {
 -    gst_structure_free (base->pat);
 -    base->pat = NULL;
-   }
+-  }
 -  mpegts_base_remove_program (base, demux->current_program_number);
 -  demux->program = NULL;
 -
 -  return ret;
- }
- 
+-}
+-
 -static GstFlowReturn
 -process_pcr (MpegTSBase * base, guint64 initoff, TSPcrOffset * pcroffset,
 -    guint numpcr, gboolean isinitial)
@@ -20510,7 +20489,7 @@ index 166089b..7f098f2 100644
 -      size -= base->packetsize;
 -      offset += base->packetsize;
 -    }
--  }
+   }
 -
 -beach:
 -  GST_DEBUG ("Found %d PCR", nbpcr);
@@ -20537,13 +20516,15 @@ index 166089b..7f098f2 100644
 -  if (!isinitial)
 -    ret = GST_FLOW_OK;
 -  return ret;
--}
--
--
+ }
  
  
+ 
+-
  static inline void
-@@ -1834,17 +1158,7 @@ gst_ts_demux_record_pcr (GstTSDemux * demux, TSDemuxStream * stream,
+ gst_ts_demux_record_pcr (GstTSDemux * demux, TSDemuxStream * stream,
+     guint64 pcr, guint64 offset)
+@@ -1834,17 +1117,7 @@ gst_ts_demux_record_pcr (GstTSDemux * demux, TSDemuxStream * stream,
        G_GUINT64_FORMAT, bs->pid,
        GST_TIME_ARGS (PCRTIME_TO_GSTTIME (pcr)), offset);
  
@@ -20562,7 +20543,7 @@ index 166089b..7f098f2 100644
  
    if (G_UNLIKELY (demux->emit_statistics)) {
      GstStructure *st;
-@@ -1868,6 +1182,8 @@ gst_ts_demux_record_opcr (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1868,6 +1141,8 @@ gst_ts_demux_record_opcr (GstTSDemux * demux, TSDemuxStream * stream,
        G_GUINT64_FORMAT, bs->pid,
        GST_TIME_ARGS (PCRTIME_TO_GSTTIME (opcr)), offset);
  
@@ -20571,7 +20552,7 @@ index 166089b..7f098f2 100644
    if (G_UNLIKELY (demux->emit_statistics)) {
      GstStructure *st;
      st = gst_structure_id_empty_new (QUARK_TSDEMUX);
-@@ -1907,8 +1223,8 @@ gst_ts_demux_record_pts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1907,8 +1182,8 @@ gst_ts_demux_record_pts (GstTSDemux * demux, TSDemuxStream * stream,
  
    /* Compute PTS in GstClockTime */
    stream->raw_pts = pts;
@@ -20582,7 +20563,7 @@ index 166089b..7f098f2 100644
  
    GST_LOG ("pid 0x%04x Stored PTS %" G_GUINT64_FORMAT " (%" GST_TIME_FORMAT ")",
        bs->pid, stream->raw_pts, GST_TIME_ARGS (stream->pts));
-@@ -1953,8 +1269,8 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1953,8 +1228,8 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
  
    /* Compute DTS in GstClockTime */
    stream->raw_dts = dts;
@@ -20593,7 +20574,7 @@ index 166089b..7f098f2 100644
  
    GST_LOG ("pid 0x%04x Stored DTS %" G_GUINT64_FORMAT " (%" GST_TIME_FORMAT ")",
        bs->pid, stream->raw_dts, GST_TIME_ARGS (stream->dts));
-@@ -1971,32 +1287,6 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -1971,32 +1246,6 @@ gst_ts_demux_record_dts (GstTSDemux * demux, TSDemuxStream * stream,
    }
  }
  
@@ -20626,7 +20607,7 @@ index 166089b..7f098f2 100644
  static GstFlowReturn
  gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
  {
-@@ -2030,63 +1320,26 @@ gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2030,63 +1279,26 @@ gst_ts_demux_parse_pes_header (GstTSDemux * demux, TSDemuxStream * stream)
    if (header.PTS != -1) {
      gst_ts_demux_record_pts (demux, stream, header.PTS, bufferoffset);
  
@@ -20704,7 +20685,7 @@ index 166089b..7f098f2 100644
    GST_BUFFER_DATA (stream->pendingbuffers[0]) += header.header_size;
    GST_BUFFER_SIZE (stream->pendingbuffers[0]) -= header.header_size;
  
-@@ -2152,105 +1405,147 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2152,19 +1364,35 @@ gst_ts_demux_queue_data (GstTSDemux * demux, TSDemuxStream * stream,
      }
    }
  
@@ -20750,24 +20731,7 @@ index 166089b..7f098f2 100644
    return;
  }
  
- static void
-+gst_ts_demux_push_tags (GstTSDemux * demux, TSDemuxStream * stream)
-+{
-+  if (stream->taglist) {
-+    gchar *str;
-+    str = gst_structure_to_string ((GstStructure *) stream->taglist);
-+
-+    GST_DEBUG_OBJECT (demux, "Sending tags %s for pad %s:%s",
-+        str, GST_DEBUG_PAD_NAME (stream->pad));
-+    gst_element_found_tags_for_pad (GST_ELEMENT (demux), stream->pad,
-+        stream->taglist);
-+
-+    stream->taglist = NULL;
-+    g_free (str);
-+  }
-+}
-+
-+static void
+@@ -2172,85 +1400,92 @@ static void
  calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
  {
    MpegTSBase *base = (MpegTSBase *) demux;
@@ -20828,6 +20792,7 @@ index 166089b..7f098f2 100644
 +          gst_event_new_new_segment_full (TRUE, demux->segment.rate,
 +          demux->segment.applied_rate, GST_FORMAT_TIME, demux->segment.start,
 +          firstts, demux->segment.time);
++      GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
 +    }
 +    demux->calculate_update_segment = FALSE;
    }
@@ -20895,14 +20860,7 @@ index 166089b..7f098f2 100644
 +    demux->segment_event =
 +        gst_event_new_new_segment_full (FALSE, demux->segment.rate,
 +        demux->segment.applied_rate, GST_FORMAT_TIME, start, stop, time);
-+  }
-+
-+push_new_segment:
-+  if (demux->update_segment) {
-+    GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
-+    GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
-+    gst_event_ref (demux->update_segment);
-+    gst_pad_push_event (stream->pad, demux->update_segment);
++    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
    }
  
 -  GST_DEBUG ("new segment:   start: %" GST_TIME_FORMAT " stop: %"
@@ -20911,22 +20869,26 @@ index 166089b..7f098f2 100644
 -  newsegmentevent =
 -      gst_event_new_new_segment (FALSE, 1.0, GST_FORMAT_TIME, start, stop,
 -      position);
-+  if (demux->segment_event) {
-+    GST_DEBUG_OBJECT (stream->pad, "Pushing newsegment event");
-+    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
-+    gst_event_ref (demux->segment_event);
-+    gst_pad_push_event (stream->pad, demux->segment_event);
++push_new_segment:
++  if (demux->update_segment) {
++    GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
++    gst_event_ref (demux->update_segment);
++    gst_pad_push_event (stream->pad, demux->update_segment);
 +  }
  
 -  push_event ((MpegTSBase *) demux, newsegmentevent);
-+  gst_ts_demux_push_tags (demux, stream);
++  if (demux->segment_event) {
++    GST_DEBUG_OBJECT (stream->pad, "Pushing newsegment event");
++    gst_event_ref (demux->segment_event);
++    gst_pad_push_event (stream->pad, demux->segment_event);
++  }
  
 -  demux->need_newsegment = FALSE;
 +  stream->need_newsegment = FALSE;
  }
  
  static GstFlowReturn
-@@ -2258,10 +1553,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2258,10 +1493,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
  {
    GstFlowReturn res = GST_FLOW_OK;
    MpegTSBaseStream *bs = (MpegTSBaseStream *) stream;
@@ -20943,7 +20905,7 @@ index 166089b..7f098f2 100644
  
    if (G_UNLIKELY (stream->current == NULL)) {
      GST_LOG ("stream->current == NULL");
-@@ -2273,30 +1571,46 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2273,8 +1511,13 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
      goto beach;
    }
  
@@ -20958,10 +20920,7 @@ index 166089b..7f098f2 100644
  
    if (G_UNLIKELY (stream->pad == NULL)) {
      g_list_foreach (stream->currentlist, (GFunc) gst_buffer_unref, NULL);
-     g_list_free (stream->currentlist);
-     gst_buffer_list_iterator_free (stream->currentit);
-     gst_buffer_list_unref (stream->current);
-+    stream->currentit = NULL;
+@@ -2284,19 +1527,28 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
      goto beach;
    }
  
@@ -20976,8 +20935,7 @@ index 166089b..7f098f2 100644
    gst_buffer_list_iterator_add_list (stream->currentit, stream->currentlist);
 +  stream->currentlist = NULL;
    gst_buffer_list_iterator_free (stream->currentit);
-+  stream->currentit = NULL;
-+
+ 
 +  firstbuffer = gst_buffer_list_get (stream->current, 0, 0);
 +
 +  GST_DEBUG_OBJECT (stream->pad, "stream->pts %" GST_TIME_FORMAT,
@@ -20986,7 +20944,7 @@ index 166089b..7f098f2 100644
 +      && !GST_CLOCK_TIME_IS_VALID (GST_BUFFER_TIMESTAMP (firstbuffer)))
 +    GST_BUFFER_TIMESTAMP (firstbuffer) =
 +        mpegts_packetizer_pts_to_ts (packetizer, stream->pts);
- 
++
    GST_DEBUG_OBJECT (stream->pad,
        "Pushing buffer list with timestamp: %" GST_TIME_FORMAT,
 -      GST_TIME_ARGS (GST_BUFFER_TIMESTAMP (gst_buffer_list_get
@@ -20995,7 +20953,7 @@ index 166089b..7f098f2 100644
  
    res = gst_pad_push_list (stream->pad, stream->current);
    GST_DEBUG_OBJECT (stream->pad, "Returned %s", gst_flow_get_name (res));
-@@ -2305,11 +1619,14 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
+@@ -2305,11 +1557,14 @@ gst_ts_demux_push_pending_data (GstTSDemux * demux, TSDemuxStream * stream)
  
  beach:
    /* Reset everything */
@@ -21011,7 +20969,7 @@ index 166089b..7f098f2 100644
  
    return res;
  }
-@@ -2348,9 +1665,14 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
+@@ -2348,9 +1603,14 @@ gst_ts_demux_handle_packet (GstTSDemux * demux, TSDemuxStream * stream,
            GST_BUFFER_OFFSET (packet->buffer));
    }
  
@@ -21028,7 +20986,7 @@ index 166089b..7f098f2 100644
      gst_buffer_unref (packet->buffer);
  
    return res;
-@@ -2361,7 +1683,6 @@ gst_ts_demux_flush (MpegTSBase * base)
+@@ -2361,7 +1621,6 @@ gst_ts_demux_flush (MpegTSBase * base)
  {
    GstTSDemux *demux = GST_TS_DEMUX_CAST (base);
  
@@ -21036,7 +20994,7 @@ index 166089b..7f098f2 100644
    gst_ts_demux_flush_streams (demux);
  }
  
-@@ -2395,5 +1716,5 @@ gst_ts_demux_plugin_init (GstPlugin * plugin)
+@@ -2395,5 +1654,5 @@ gst_ts_demux_plugin_init (GstPlugin * plugin)
    init_pes_parser ();
  
    return gst_element_register (plugin, "tsdemux",
@@ -21092,7 +21050,7 @@ index 395cf3e..d23e9d2 100644
  
  struct _GstTSDemuxClass
 diff --git a/gst/mpegtsmux/mpegtsmux.c b/gst/mpegtsmux/mpegtsmux.c
-index a243e40..002d6d5 100644
+index a243e40..df7dd58 100644
 --- a/gst/mpegtsmux/mpegtsmux.c
 +++ b/gst/mpegtsmux/mpegtsmux.c
 @@ -88,6 +88,10 @@
@@ -21128,7 +21086,15 @@ index a243e40..002d6d5 100644
  
    mux->tsmux = tsmux_new ();
    tsmux_set_write_func (mux->tsmux, new_packet_cb, mux);
-@@ -518,7 +522,7 @@ mpegtsmux_create_streams (MpegTsMux * mux)
+@@ -288,6 +292,7 @@ mpegtsmux_dispose (GObject * object)
+     g_list_free (mux->streamheader);
+     mux->streamheader = NULL;
+   }
++  gst_event_replace (&mux->force_key_unit_event, NULL);
+   GST_CALL_PARENT (G_OBJECT_CLASS, dispose, (object));
+ }
+ 
+@@ -518,7 +523,7 @@ mpegtsmux_create_streams (MpegTsMux * mux)
  
    /* Create the streams */
    while (walk) {
@@ -21137,7 +21103,7 @@ index a243e40..002d6d5 100644
      MpegTsPadData *ts_data = (MpegTsPadData *) walk->data;
      gchar *name = NULL;
  
-@@ -578,11 +582,11 @@ static MpegTsPadData *
+@@ -578,11 +583,11 @@ static MpegTsPadData *
  mpegtsmux_choose_best_stream (MpegTsMux * mux)
  {
    MpegTsPadData *best = NULL;
@@ -21151,7 +21117,7 @@ index a243e40..002d6d5 100644
      MpegTsPadData *ts_data = (MpegTsPadData *) walk->data;
  
      if (ts_data->eos == FALSE) {
-@@ -590,7 +594,7 @@ mpegtsmux_choose_best_stream (MpegTsMux * mux)
+@@ -590,7 +595,7 @@ mpegtsmux_choose_best_stream (MpegTsMux * mux)
          GstBuffer *buf;
  
          ts_data->queued_buf = buf =
@@ -21160,7 +21126,7 @@ index a243e40..002d6d5 100644
  
          if (buf != NULL) {
            if (ts_data->prepare_func) {
-@@ -652,35 +656,14 @@ mpegtsmux_choose_best_stream (MpegTsMux * mux)
+@@ -652,35 +657,14 @@ mpegtsmux_choose_best_stream (MpegTsMux * mux)
    }
    if (c_best) {
      GstBuffer *buffer;
@@ -21198,7 +21164,7 @@ index a243e40..002d6d5 100644
  
  static gboolean
  mpegtsmux_sink_event (GstPad * pad, GstEvent * event)
-@@ -690,7 +673,7 @@ mpegtsmux_sink_event (GstPad * pad, GstEvent * event)
+@@ -690,7 +674,7 @@ mpegtsmux_sink_event (GstPad * pad, GstEvent * event)
    gboolean res = TRUE;
    gboolean forward = TRUE;
  
@@ -21207,7 +21173,56 @@ index a243e40..002d6d5 100644
  
    switch (GST_EVENT_TYPE (event)) {
      case GST_EVENT_CUSTOM_DOWNSTREAM:
-@@ -857,7 +840,7 @@ out:
+@@ -731,6 +715,8 @@ mpegtsmux_sink_event (GstPad * pad, GstEvent * event)
+ out:
+   if (forward)
+     res = ts_data->eventfunc (pad, event);
++  else
++    gst_event_unref (event);
+ 
+   gst_object_unref (mux);
+   return res;
+@@ -740,7 +726,7 @@ static gboolean
+ mpegtsmux_src_event (GstPad * pad, GstEvent * event)
+ {
+   MpegTsMux *mux = GST_MPEG_TSMUX (gst_pad_get_parent (pad));
+-  gboolean res = TRUE;
++  gboolean res = TRUE, forward = TRUE;
+ 
+   switch (GST_EVENT_TYPE (event)) {
+     case GST_EVENT_CUSTOM_UPSTREAM:
+@@ -755,6 +741,8 @@ mpegtsmux_src_event (GstPad * pad, GstEvent * event)
+       if (!gst_video_event_is_force_key_unit (event))
+         break;
+ 
++      forward = FALSE;
++
+       gst_video_event_parse_upstream_force_key_unit (event,
+           &running_time, &all_headers, &count);
+ 
+@@ -795,15 +783,18 @@ mpegtsmux_src_event (GstPad * pad, GstEvent * event)
+             break;
+         }
+       }
+-
+-      gst_event_unref (event);
++      gst_iterator_free (iter);
+       break;
+     }
+     default:
+-      res = gst_pad_event_default (pad, event);
+       break;
+   }
+ 
++  if (forward)
++    res = gst_pad_event_default (pad, event);
++  else
++    gst_event_unref (event);
++
+   gst_object_unref (mux);
+   return res;
+ }
+@@ -857,7 +848,7 @@ out:
  }
  
  static GstFlowReturn
@@ -21216,7 +21231,7 @@ index a243e40..002d6d5 100644
  {
    GstFlowReturn ret = GST_FLOW_OK;
    MpegTsPadData *best = NULL;
-@@ -1000,7 +983,7 @@ mpegtsmux_request_new_pad (GstElement * element,
+@@ -1000,7 +991,7 @@ mpegtsmux_request_new_pad (GstElement * element,
    pad = gst_pad_new_from_template (templ, pad_name);
    g_free (pad_name);
  
@@ -21225,7 +21240,7 @@ index a243e40..002d6d5 100644
        sizeof (MpegTsPadData));
    if (pad_data == NULL)
      goto pad_failure;
-@@ -1029,7 +1012,7 @@ stream_exists:
+@@ -1029,7 +1020,7 @@ stream_exists:
  could_not_add:
    GST_ELEMENT_ERROR (element, STREAM, FAILED,
        ("Internal data stream error."), ("Could not add pad to element"));
@@ -21234,7 +21249,7 @@ index a243e40..002d6d5 100644
    gst_object_unref (pad);
    return NULL;
  pad_failure:
-@@ -1047,7 +1030,7 @@ mpegtsmux_release_pad (GstElement * element, GstPad * pad)
+@@ -1047,7 +1038,7 @@ mpegtsmux_release_pad (GstElement * element, GstPad * pad)
    GST_DEBUG_OBJECT (mux, "Pad %" GST_PTR_FORMAT " being released", pad);
  
    if (mux->collect) {
@@ -21243,7 +21258,7 @@ index a243e40..002d6d5 100644
    }
  
    /* chain up */
-@@ -1309,12 +1292,12 @@ mpegtsmux_change_state (GstElement * element, GstStateChange transition)
+@@ -1309,12 +1300,12 @@ mpegtsmux_change_state (GstElement * element, GstStateChange transition)
      case GST_STATE_CHANGE_NULL_TO_READY:
        break;
      case GST_STATE_CHANGE_READY_TO_PAUSED:
@@ -23447,10 +23462,95 @@ index 3036853..75d7d6c 100644
  
  struct _GstMpeg4VParseClass {
 diff --git a/gst/videoparsers/gstmpegvideoparse.c b/gst/videoparsers/gstmpegvideoparse.c
-index 4486cf7..f00a795 100644
+index 4486cf7..352f5b5 100644
 --- a/gst/videoparsers/gstmpegvideoparse.c
 +++ b/gst/videoparsers/gstmpegvideoparse.c
-@@ -624,18 +624,19 @@ gst_mpegv_parse_update_src_caps (GstMpegvParse * mpvparse)
+@@ -86,8 +86,7 @@ gst_mpegv_parse_base_init (gpointer klass)
+   GstElementClass *element_class = GST_ELEMENT_CLASS (klass);
+ 
+   gst_element_class_add_static_pad_template (element_class, &src_template);
+-  gst_element_class_add_static_pad_template (element_class,
+-      &sink_template);
++  gst_element_class_add_static_pad_template (element_class, &sink_template);
+ 
+   gst_element_class_set_details_simple (element_class,
+       "MPEG video elementary stream parser",
+@@ -233,11 +232,26 @@ gst_mpegv_parse_process_config (GstMpegvParse * mpvparse, GstBuffer * buf,
+ {
+   GList *tmp;
+   guint8 *data = GST_BUFFER_DATA (buf);
++  guint8 *data_with_prefix;
++
+   data = data + mpvparse->seq_offset;
+ 
+-  /* only do stuff if something new */
++  if (mpvparse->seq_offset < 4) {
++    /* This shouldn't happen, but just in case... */
++    GST_WARNING_OBJECT (mpvparse, "Sequence header start code missing.");
++    return FALSE;
++  }
++
++  /* pointer to sequence header data including the start code prefix -
++     used for codec private data */
++  data_with_prefix = data - 4;
++
++  /* only do stuff if something new; only compare first 11 bytes, changes in
++     quantiser matrix doesn't matter here. Also changing the matrices in
++     codec_data seems to cause problem with decoders */
+   if (mpvparse->config && size == GST_BUFFER_SIZE (mpvparse->config) &&
+-      memcmp (GST_BUFFER_DATA (mpvparse->config), data, size) == 0)
++      memcmp (GST_BUFFER_DATA (mpvparse->config), data_with_prefix, MIN (size,
++              11)) == 0)
+     return TRUE;
+ 
+   if (gst_mpeg_video_parse_sequence_header (&mpvparse->sequencehdr, data,
+@@ -271,7 +285,7 @@ gst_mpegv_parse_process_config (GstMpegvParse * mpvparse, GstBuffer * buf,
+                 tpoffsz->offset)) {
+           mpvparse->fps_num =
+               mpvparse->sequencehdr.fps_n * (mpvparse->sequenceext.fps_n_ext +
+-              1) * 2;
++              1);
+           mpvparse->fps_den =
+               mpvparse->sequencehdr.fps_d * (mpvparse->sequenceext.fps_d_ext +
+               1);
+@@ -285,7 +299,7 @@ gst_mpegv_parse_process_config (GstMpegvParse * mpvparse, GstBuffer * buf,
+     gst_buffer_unref (mpvparse->config);
+ 
+   mpvparse->config = gst_buffer_new_and_alloc (size);
+-  memcpy (GST_BUFFER_DATA (mpvparse->config), data, size);
++  memcpy (GST_BUFFER_DATA (mpvparse->config), data_with_prefix, size);
+ 
+   /* trigger src caps update */
+   mpvparse->update_caps = TRUE;
+@@ -514,9 +528,6 @@ gst_mpegv_parse_check_valid_frame (GstBaseParse * parse,
+ 
+     GST_LOG_OBJECT (mpvparse, "next start code at %d", codoffsz->offset);
+ 
+-    if (codoffsz->size < 0)
+-      break;
+-
+     ret = gst_mpegv_parse_process_sc (mpvparse, buf, codoffsz->offset,
+         codoffsz->type);
+ 
+@@ -531,15 +542,14 @@ end:
+   if (fsize > 0) {
+     *framesize = fsize;
+     ret = TRUE;
++    mpvparse->last_sc = -1;
+   } else if (GST_BASE_PARSE_DRAINING (parse)) {
+     *framesize = GST_BUFFER_SIZE (buf);
+     ret = TRUE;
+ 
+   } else {
+     /* resume scan where we left it */
+-    if (!mpvparse->last_sc)
+-      *skipsize = mpvparse->last_sc = GST_BUFFER_SIZE (buf) - 3;
+-    else if (mpvparse->typeoffsize)
++    if (mpvparse->typeoffsize)
+       mpvparse->last_sc = GST_BUFFER_SIZE (buf) - 3;
+     else
+       *skipsize = 0;
+@@ -624,18 +634,19 @@ gst_mpegv_parse_update_src_caps (GstMpegvParse * mpvparse)
       *                      3 => SNR Scalable, 4 => Main, 5 => Simple
       * 4:2:2 and Multi-view have profile = 0, with the escape bit set to 1
       */
@@ -23473,7 +23573,7 @@ index 4486cf7..f00a795 100644
  
      if (profile_c == 8) {
        /* Non-hierarchical profile */
-@@ -663,6 +664,8 @@ gst_mpegv_parse_update_src_caps (GstMpegvParse * mpvparse)
+@@ -663,6 +674,8 @@ gst_mpegv_parse_update_src_caps (GstMpegvParse * mpvparse)
  
      /* FIXME does it make sense to expose profile/level in the caps ? */
  
@@ -23482,7 +23582,20 @@ index 4486cf7..f00a795 100644
      if (profile)
        gst_caps_set_simple (caps, "profile", G_TYPE_STRING, profile, NULL);
      else
-iff --git a/sys/Makefile.am b/sys/Makefile.am
+@@ -702,8 +715,10 @@ gst_mpegv_parse_parse_frame (GstBaseParse * parse, GstBaseParseFrame * frame)
+     GST_BUFFER_DURATION (buffer) = 0;
+   }
+ 
+-  GST_BUFFER_DURATION (buffer) =
+-      (1 + mpvparse->frame_repeat_count) * GST_BUFFER_DURATION (buffer);
++  if (GST_CLOCK_TIME_IS_VALID (GST_BUFFER_DURATION (buffer))) {
++    GST_BUFFER_DURATION (buffer) =
++        (1 + mpvparse->frame_repeat_count) * GST_BUFFER_DURATION (buffer) / 2;
++  }
+ 
+   if (G_UNLIKELY (mpvparse->drop && !mpvparse->config)) {
+     GST_DEBUG_OBJECT (mpvparse, "dropping frame as no config yet");
+diff --git a/sys/Makefile.am b/sys/Makefile.am
 index a48b0d2..879f5f0 100644
 --- a/sys/Makefile.am
 +++ b/sys/Makefile.am
@@ -25407,10 +25520,10 @@ index 60dd6d8..dcf7c05 100644
      api = &DIRECTX_ ## version ## _API;                                                                                                           \
      api->d3d->api      = api;                                                                                                                     \
 diff --git a/sys/decklink/Makefile.am b/sys/decklink/Makefile.am
-index 63fe397..23895d7 100644
+index 63fe397..9d12601 100644
 --- a/sys/decklink/Makefile.am
 +++ b/sys/decklink/Makefile.am
-@@ -10,6 +10,8 @@ libgstdecklink_la_LIBADD = \
+@@ -10,17 +10,33 @@ libgstdecklink_la_LIBADD = \
  	$(GST_PLUGINS_BASE_LIBS) \
  	$(GST_BASE_LIBS) \
  	$(GST_LIBS) \
@@ -25418,7 +25531,55 @@ index 63fe397..23895d7 100644
 +	-lgstinterfaces-@GST_MAJORMINOR@ \
  	$(DECKLINK_LIBS) \
  	$(LIBM)
- libgstdecklink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS) 
+-libgstdecklink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS) 
++libgstdecklink_la_LDFLAGS = $(GST_PLUGIN_LDFLAGS)
++
++if DECKLINK_OSX
++libgstdecklink_la_LDFLAGS += \
++	-Wl,-framework,CoreFoundation
++endif
++
+ libgstdecklink_la_LIBTOOLFLAGS = --tag=disable-static
+ 
+ libgstdecklink_la_SOURCES = \
+ 	gstdecklinksrc.cpp \
+ 	gstdecklinksink.cpp \
+ 	gstdecklink.cpp \
+-	capture.cpp \
++	capture.cpp
++
++if DECKLINK_OSX
++libgstdecklink_la_SOURCES += \
++	osx/DeckLinkAPIDispatch-osx.cpp
++else
++libgstdecklink_la_SOURCES += \
+ 	linux/DeckLinkAPIDispatch.cpp
++endif
++
+ 
+ noinst_HEADERS = \
+ 	gstdecklink.h \
+@@ -28,10 +44,19 @@ noinst_HEADERS = \
+ 	gstdecklinksink.h \
+ 	capture.h \
+ 	linux/DeckLinkAPI.h \
+-	linux/LinuxCOM.h
++	linux/LinuxCOM.h \
++	osx/DeckLinkAPI.h \
++	osx/DeckLinkAPIConfiguration.h \
++	osx/DeckLinkAPIDeckControl.h \
++	osx/DeckLinkAPIDiscovery.h \
++	osx/DeckLinkAPIModes.h \
++	osx/DeckLinkAPIStreaming.h \
++	osx/DeckLinkAPITypes.h \
++	osx/DeckLinkAPIVersion.h
+ 
+ EXTRA_DIST = \
+ 	win/DeckLinkAPI.h \
+ 	win/DeckLinkAPIDispatch.cpp \
+ 	win/DeckLinkAPI_i.c
+ 
++
 diff --git a/sys/decklink/capture.cpp b/sys/decklink/capture.cpp
 index bc3d9e0..8804eeb 100644
 --- a/sys/decklink/capture.cpp
@@ -26777,6 +26938,2015 @@ index 69dea49..c47279a 100644
  
  #ifdef _MSC_VER
    gboolean comInitialized;
+diff --git a/sys/decklink/osx/DeckLinkAPI.h b/sys/decklink/osx/DeckLinkAPI.h
+new file mode 100644
+index 0000000..b629369
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPI.h
+@@ -0,0 +1,695 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPI_H
++#define BMD_DECKLINKAPI_H
++
++/* DeckLink API */
++
++#include <CoreFoundation/CoreFoundation.h>
++#include <CoreFoundation/CFPlugInCOM.h>
++#include <stdint.h>
++
++#include "DeckLinkAPITypes.h"
++#include "DeckLinkAPIModes.h"
++#include "DeckLinkAPIDiscovery.h"
++#include "DeckLinkAPIConfiguration.h"
++#include "DeckLinkAPIDeckControl.h"
++
++#include "DeckLinkAPIStreaming.h"
++
++#define BLACKMAGIC_DECKLINK_API_MAGIC	1
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IDeckLinkVideoOutputCallback                 /* 20AA5225-1958-47CB-820B-80A8D521A6EE */ (REFIID){0x20,0xAA,0x52,0x25,0x19,0x58,0x47,0xCB,0x82,0x0B,0x80,0xA8,0xD5,0x21,0xA6,0xEE}
++#define IID_IDeckLinkInputCallback                       /* DD04E5EC-7415-42AB-AE4A-E80C4DFC044A */ (REFIID){0xDD,0x04,0xE5,0xEC,0x74,0x15,0x42,0xAB,0xAE,0x4A,0xE8,0x0C,0x4D,0xFC,0x04,0x4A}
++#define IID_IDeckLinkMemoryAllocator                     /* B36EB6E7-9D29-4AA8-92EF-843B87A289E8 */ (REFIID){0xB3,0x6E,0xB6,0xE7,0x9D,0x29,0x4A,0xA8,0x92,0xEF,0x84,0x3B,0x87,0xA2,0x89,0xE8}
++#define IID_IDeckLinkAudioOutputCallback                 /* 403C681B-7F46-4A12-B993-2BB127084EE6 */ (REFIID){0x40,0x3C,0x68,0x1B,0x7F,0x46,0x4A,0x12,0xB9,0x93,0x2B,0xB1,0x27,0x08,0x4E,0xE6}
++#define IID_IDeckLinkIterator                            /* 50FB36CD-3063-4B73-BDBB-958087F2D8BA */ (REFIID){0x50,0xFB,0x36,0xCD,0x30,0x63,0x4B,0x73,0xBD,0xBB,0x95,0x80,0x87,0xF2,0xD8,0xBA}
++#define IID_IDeckLinkAPIInformation                      /* 7BEA3C68-730D-4322-AF34-8A7152B532A4 */ (REFIID){0x7B,0xEA,0x3C,0x68,0x73,0x0D,0x43,0x22,0xAF,0x34,0x8A,0x71,0x52,0xB5,0x32,0xA4}
++#define IID_IDeckLinkOutput                              /* A3EF0963-0862-44ED-92A9-EE89ABF431C7 */ (REFIID){0xA3,0xEF,0x09,0x63,0x08,0x62,0x44,0xED,0x92,0xA9,0xEE,0x89,0xAB,0xF4,0x31,0xC7}
++#define IID_IDeckLinkInput                               /* 6D40EF78-28B9-4E21-990D-95BB7750A04F */ (REFIID){0x6D,0x40,0xEF,0x78,0x28,0xB9,0x4E,0x21,0x99,0x0D,0x95,0xBB,0x77,0x50,0xA0,0x4F}
++#define IID_IDeckLinkVideoFrame                          /* 3F716FE0-F023-4111-BE5D-EF4414C05B17 */ (REFIID){0x3F,0x71,0x6F,0xE0,0xF0,0x23,0x41,0x11,0xBE,0x5D,0xEF,0x44,0x14,0xC0,0x5B,0x17}
++#define IID_IDeckLinkMutableVideoFrame                   /* 69E2639F-40DA-4E19-B6F2-20ACE815C390 */ (REFIID){0x69,0xE2,0x63,0x9F,0x40,0xDA,0x4E,0x19,0xB6,0xF2,0x20,0xAC,0xE8,0x15,0xC3,0x90}
++#define IID_IDeckLinkVideoFrame3DExtensions              /* DA0F7E4A-EDC7-48A8-9CDD-2DB51C729CD7 */ (REFIID){0xDA,0x0F,0x7E,0x4A,0xED,0xC7,0x48,0xA8,0x9C,0xDD,0x2D,0xB5,0x1C,0x72,0x9C,0xD7}
++#define IID_IDeckLinkVideoInputFrame                     /* 05CFE374-537C-4094-9A57-680525118F44 */ (REFIID){0x05,0xCF,0xE3,0x74,0x53,0x7C,0x40,0x94,0x9A,0x57,0x68,0x05,0x25,0x11,0x8F,0x44}
++#define IID_IDeckLinkVideoFrameAncillary                 /* 732E723C-D1A4-4E29-9E8E-4A88797A0004 */ (REFIID){0x73,0x2E,0x72,0x3C,0xD1,0xA4,0x4E,0x29,0x9E,0x8E,0x4A,0x88,0x79,0x7A,0x00,0x04}
++#define IID_IDeckLinkAudioInputPacket                    /* E43D5870-2894-11DE-8C30-0800200C9A66 */ (REFIID){0xE4,0x3D,0x58,0x70,0x28,0x94,0x11,0xDE,0x8C,0x30,0x08,0x00,0x20,0x0C,0x9A,0x66}
++#define IID_IDeckLinkScreenPreviewCallback               /* B1D3F49A-85FE-4C5D-95C8-0B5D5DCCD438 */ (REFIID){0xB1,0xD3,0xF4,0x9A,0x85,0xFE,0x4C,0x5D,0x95,0xC8,0x0B,0x5D,0x5D,0xCC,0xD4,0x38}
++#define IID_IDeckLinkCocoaScreenPreviewCallback          /* D174152F-8F96-4C07-83A5-DD5F5AF0A2AA */ (REFIID){0xD1,0x74,0x15,0x2F,0x8F,0x96,0x4C,0x07,0x83,0xA5,0xDD,0x5F,0x5A,0xF0,0xA2,0xAA}
++#define IID_IDeckLinkGLScreenPreviewHelper               /* 504E2209-CAC7-4C1A-9FB4-C5BB6274D22F */ (REFIID){0x50,0x4E,0x22,0x09,0xCA,0xC7,0x4C,0x1A,0x9F,0xB4,0xC5,0xBB,0x62,0x74,0xD2,0x2F}
++#define IID_IDeckLinkAttributes                          /* ABC11843-D966-44CB-96E2-A1CB5D3135C4 */ (REFIID){0xAB,0xC1,0x18,0x43,0xD9,0x66,0x44,0xCB,0x96,0xE2,0xA1,0xCB,0x5D,0x31,0x35,0xC4}
++#define IID_IDeckLinkKeyer                               /* 89AFCAF5-65F8-421E-98F7-96FE5F5BFBA3 */ (REFIID){0x89,0xAF,0xCA,0xF5,0x65,0xF8,0x42,0x1E,0x98,0xF7,0x96,0xFE,0x5F,0x5B,0xFB,0xA3}
++#define IID_IDeckLinkVideoConversion                     /* 3BBCB8A2-DA2C-42D9-B5D8-88083644E99A */ (REFIID){0x3B,0xBC,0xB8,0xA2,0xDA,0x2C,0x42,0xD9,0xB5,0xD8,0x88,0x08,0x36,0x44,0xE9,0x9A}
++
++/* Enum BMDVideoOutputFlags - Flags to control the output of ancillary data along with video. */
++
++typedef uint32_t BMDVideoOutputFlags;
++enum _BMDVideoOutputFlags {
++    bmdVideoOutputFlagDefault                                    = 0,
++    bmdVideoOutputVANC                                           = 1 << 0,
++    bmdVideoOutputVITC                                           = 1 << 1,
++    bmdVideoOutputRP188                                          = 1 << 2,
++    bmdVideoOutputDualStream3D                                   = 1 << 4
++};
++
++/* Enum BMDFrameFlags - Frame flags */
++
++typedef uint32_t BMDFrameFlags;
++enum _BMDFrameFlags {
++    bmdFrameFlagDefault                                          = 0,
++    bmdFrameFlagFlipVertical                                     = 1 << 0,
++
++    /* Flags that are applicable only to instances of IDeckLinkVideoInputFrame */
++
++    bmdFrameHasNoInputSource                                     = 1 << 31
++};
++
++/* Enum BMDVideoInputFlags - Flags applicable to video input */
++
++typedef uint32_t BMDVideoInputFlags;
++enum _BMDVideoInputFlags {
++    bmdVideoInputFlagDefault                                     = 0,
++    bmdVideoInputEnableFormatDetection                           = 1 << 0,
++    bmdVideoInputDualStream3D                                    = 1 << 1
++};
++
++/* Enum BMDVideoInputFormatChangedEvents - Bitmask passed to the VideoInputFormatChanged notification to identify the properties of the input signal that have changed */
++
++typedef uint32_t BMDVideoInputFormatChangedEvents;
++enum _BMDVideoInputFormatChangedEvents {
++    bmdVideoInputDisplayModeChanged                              = 1 << 0,
++    bmdVideoInputFieldDominanceChanged                           = 1 << 1,
++    bmdVideoInputColorspaceChanged                               = 1 << 2
++};
++
++/* Enum BMDDetectedVideoInputFormatFlags - Flags passed to the VideoInputFormatChanged notification to describe the detected video input signal */
++
++typedef uint32_t BMDDetectedVideoInputFormatFlags;
++enum _BMDDetectedVideoInputFormatFlags {
++    bmdDetectedVideoInputYCbCr422                                = 1 << 0,
++    bmdDetectedVideoInputRGB444                                  = 1 << 1
++};
++
++/* Enum BMDOutputFrameCompletionResult - Frame Completion Callback */
++
++typedef uint32_t BMDOutputFrameCompletionResult;
++enum _BMDOutputFrameCompletionResult {
++    bmdOutputFrameCompleted,                                    
++    bmdOutputFrameDisplayedLate,                                
++    bmdOutputFrameDropped,                                      
++    bmdOutputFrameFlushed                                       
++};
++
++/* Enum BMDReferenceStatus - GenLock input status */
++
++typedef uint32_t BMDReferenceStatus;
++enum _BMDReferenceStatus {
++    bmdReferenceNotSupportedByHardware                           = 1 << 0,
++    bmdReferenceLocked                                           = 1 << 1
++};
++
++/* Enum BMDAudioSampleRate - Audio sample rates supported for output/input */
++
++typedef uint32_t BMDAudioSampleRate;
++enum _BMDAudioSampleRate {
++    bmdAudioSampleRate48kHz                                      = 48000
++};
++
++/* Enum BMDAudioSampleType - Audio sample sizes supported for output/input */
++
++typedef uint32_t BMDAudioSampleType;
++enum _BMDAudioSampleType {
++    bmdAudioSampleType16bitInteger                               = 16,
++    bmdAudioSampleType32bitInteger                               = 32
++};
++
++/* Enum BMDAudioOutputStreamType - Audio output stream type */
++
++typedef uint32_t BMDAudioOutputStreamType;
++enum _BMDAudioOutputStreamType {
++    bmdAudioOutputStreamContinuous,                             
++    bmdAudioOutputStreamContinuousDontResample,                 
++    bmdAudioOutputStreamTimestamped                             
++};
++
++/* Enum BMDDisplayModeSupport - Output mode supported flags */
++
++typedef uint32_t BMDDisplayModeSupport;
++enum _BMDDisplayModeSupport {
++    bmdDisplayModeNotSupported                                   = 0,
++    bmdDisplayModeSupported,                                    
++    bmdDisplayModeSupportedWithConversion                       
++};
++
++/* Enum BMDTimecodeFormat - Timecode formats for frame metadata */
++
++typedef uint32_t BMDTimecodeFormat;
++enum _BMDTimecodeFormat {
++    bmdTimecodeRP188VITC1                                        = 'rpv1',	// RP188 timecode where DBB1 equals VITC1 (line 9)
++    bmdTimecodeRP188VITC2                                        = 'rp12',	// RP188 timecode where DBB1 equals VITC2 (line 571)
++    bmdTimecodeRP188LTC                                          = 'rplt',	// RP188 timecode where DBB1 equals LTC (line 10)
++    bmdTimecodeRP188Any                                          = 'rp18',	// For capture: return the first valid timecode in {VITC1, LTC ,VITC2} - For playback: set the timecode as VITC1
++    bmdTimecodeVITC                                              = 'vitc',
++    bmdTimecodeVITCField2                                        = 'vit2',
++    bmdTimecodeSerial                                            = 'seri'
++};
++
++/* Enum BMDAnalogVideoFlags - Analog video display flags */
++
++typedef uint32_t BMDAnalogVideoFlags;
++enum _BMDAnalogVideoFlags {
++    bmdAnalogVideoFlagCompositeSetup75                           = 1 << 0,
++    bmdAnalogVideoFlagComponentBetacamLevels                     = 1 << 1
++};
++
++/* Enum BMDAudioConnection - Audio connection types */
++
++typedef uint32_t BMDAudioConnection;
++enum _BMDAudioConnection {
++    bmdAudioConnectionEmbedded                                   = 'embd',
++    bmdAudioConnectionAESEBU                                     = 'aes ',
++    bmdAudioConnectionAnalog                                     = 'anlg'
++};
++
++/* Enum BMDAudioOutputAnalogAESSwitch - Audio output Analog/AESEBU switch */
++
++typedef uint32_t BMDAudioOutputAnalogAESSwitch;
++enum _BMDAudioOutputAnalogAESSwitch {
++    bmdAudioOutputSwitchAESEBU                                   = 'aes ',
++    bmdAudioOutputSwitchAnalog                                   = 'anlg'
++};
++
++/* Enum BMDVideoOutputConversionMode - Video/audio conversion mode */
++
++typedef uint32_t BMDVideoOutputConversionMode;
++enum _BMDVideoOutputConversionMode {
++    bmdNoVideoOutputConversion                                   = 'none',
++    bmdVideoOutputLetterboxDownconversion                        = 'ltbx',
++    bmdVideoOutputAnamorphicDownconversion                       = 'amph',
++    bmdVideoOutputHD720toHD1080Conversion                        = '720c',
++    bmdVideoOutputHardwareLetterboxDownconversion                = 'HWlb',
++    bmdVideoOutputHardwareAnamorphicDownconversion               = 'HWam',
++    bmdVideoOutputHardwareCenterCutDownconversion                = 'HWcc',
++    bmdVideoOutputHardware720p1080pCrossconversion               = 'xcap',
++    bmdVideoOutputHardwareAnamorphic720pUpconversion             = 'ua7p',
++    bmdVideoOutputHardwareAnamorphic1080iUpconversion            = 'ua1i',
++    bmdVideoOutputHardwareAnamorphic149To720pUpconversion        = 'u47p',
++    bmdVideoOutputHardwareAnamorphic149To1080iUpconversion       = 'u41i',
++    bmdVideoOutputHardwarePillarbox720pUpconversion              = 'up7p',
++    bmdVideoOutputHardwarePillarbox1080iUpconversion             = 'up1i'
++};
++
++/* Enum BMDVideoInputConversionMode - Video input conversion mode */
++
++typedef uint32_t BMDVideoInputConversionMode;
++enum _BMDVideoInputConversionMode {
++    bmdNoVideoInputConversion                                    = 'none',
++    bmdVideoInputLetterboxDownconversionFromHD1080               = '10lb',
++    bmdVideoInputAnamorphicDownconversionFromHD1080              = '10am',
++    bmdVideoInputLetterboxDownconversionFromHD720                = '72lb',
++    bmdVideoInputAnamorphicDownconversionFromHD720               = '72am',
++    bmdVideoInputLetterboxUpconversion                           = 'lbup',
++    bmdVideoInputAnamorphicUpconversion                          = 'amup'
++};
++
++/* Enum BMDVideo3DPackingFormat - Video 3D packing format */
++
++typedef uint32_t BMDVideo3DPackingFormat;
++enum _BMDVideo3DPackingFormat {
++    bmdVideo3DPackingSidebySideHalf                              = 'sbsh',
++    bmdVideo3DPackingLinebyLine                                  = 'lbyl',
++    bmdVideo3DPackingTopAndBottom                                = 'tabo',
++    bmdVideo3DPackingFramePacking                                = 'frpk',
++    bmdVideo3DPackingLeftOnly                                    = 'left',
++    bmdVideo3DPackingRightOnly                                   = 'righ'
++};
++
++/* Enum BMDIdleVideoOutputOperation - Video output operation when not playing video */
++
++typedef uint32_t BMDIdleVideoOutputOperation;
++enum _BMDIdleVideoOutputOperation {
++    bmdIdleVideoOutputBlack                                      = 'blac',
++    bmdIdleVideoOutputLastFrame                                  = 'lafa',
++    bmdIdleVideoOutputDesktop                                    = 'desk'
++};
++
++/* Enum BMDDeckLinkAttributeID - DeckLink Attribute ID */
++
++typedef uint32_t BMDDeckLinkAttributeID;
++enum _BMDDeckLinkAttributeID {
++
++    /* Flags */
++
++    BMDDeckLinkSupportsInternalKeying                            = 'keyi',
++    BMDDeckLinkSupportsExternalKeying                            = 'keye',
++    BMDDeckLinkSupportsHDKeying                                  = 'keyh',
++    BMDDeckLinkSupportsInputFormatDetection                      = 'infd',
++    BMDDeckLinkHasReferenceInput                                 = 'hrin',
++    BMDDeckLinkHasSerialPort                                     = 'hspt',
++    BMDDeckLinkHasAnalogVideoOutputGain                          = 'avog',
++    BMDDeckLinkCanOnlyAdjustOverallVideoOutputGain               = 'ovog',
++    BMDDeckLinkHasVideoInputAntiAliasingFilter                   = 'aafl',
++    BMDDeckLinkHasBypass                                         = 'byps',
++    BMDDeckLinkSupportsDesktopDisplay                            = 'extd',
++
++    /* Integers */
++
++    BMDDeckLinkMaximumAudioChannels                              = 'mach',
++    BMDDeckLinkNumberOfSubDevices                                = 'nsbd',
++    BMDDeckLinkSubDeviceIndex                                    = 'subi',
++    BMDDeckLinkVideoOutputConnections                            = 'vocn',
++    BMDDeckLinkVideoInputConnections                             = 'vicn',
++    BMDDeckLinkDeviceBusyState                                   = 'dbst',
++
++    /* Floats */
++
++    BMDDeckLinkVideoInputGainMinimum                             = 'vigm',
++    BMDDeckLinkVideoInputGainMaximum                             = 'vigx',
++    BMDDeckLinkVideoOutputGainMinimum                            = 'vogm',
++    BMDDeckLinkVideoOutputGainMaximum                            = 'vogx',
++
++    /* Strings */
++
++    BMDDeckLinkSerialPortDeviceName                              = 'slpn'
++};
++
++/* Enum BMDDeckLinkAPIInformationID - DeckLinkAPI information ID */
++
++typedef uint32_t BMDDeckLinkAPIInformationID;
++enum _BMDDeckLinkAPIInformationID {
++    BMDDeckLinkAPIVersion                                        = 'vers'
++};
++
++/* Enum BMDDeviceBusyState - Current device busy state */
++
++typedef uint32_t BMDDeviceBusyState;
++enum _BMDDeviceBusyState {
++    bmdDeviceCaptureBusy                                         = 1 << 0,
++    bmdDevicePlaybackBusy                                        = 1 << 1,
++    bmdDeviceSerialPortBusy                                      = 1 << 2
++};
++
++/* Enum BMD3DPreviewFormat - Linked Frame preview format */
++
++typedef uint32_t BMD3DPreviewFormat;
++enum _BMD3DPreviewFormat {
++    bmd3DPreviewFormatDefault                                    = 'defa',
++    bmd3DPreviewFormatLeftOnly                                   = 'left',
++    bmd3DPreviewFormatRightOnly                                  = 'righ',
++    bmd3DPreviewFormatSideBySide                                 = 'side',
++    bmd3DPreviewFormatTopBottom                                  = 'topb'
++};
++
++#if defined(__cplusplus)
++
++// Forward Declarations
++
++class IDeckLinkVideoOutputCallback;
++class IDeckLinkInputCallback;
++class IDeckLinkMemoryAllocator;
++class IDeckLinkAudioOutputCallback;
++class IDeckLinkIterator;
++class IDeckLinkAPIInformation;
++class IDeckLinkOutput;
++class IDeckLinkInput;
++class IDeckLinkVideoFrame;
++class IDeckLinkMutableVideoFrame;
++class IDeckLinkVideoFrame3DExtensions;
++class IDeckLinkVideoInputFrame;
++class IDeckLinkVideoFrameAncillary;
++class IDeckLinkAudioInputPacket;
++class IDeckLinkScreenPreviewCallback;
++class IDeckLinkCocoaScreenPreviewCallback;
++class IDeckLinkGLScreenPreviewHelper;
++class IDeckLinkAttributes;
++class IDeckLinkKeyer;
++class IDeckLinkVideoConversion;
++
++/* Interface IDeckLinkVideoOutputCallback - Frame completion callback. */
++
++class IDeckLinkVideoOutputCallback : public IUnknown
++{
++public:
++    virtual HRESULT ScheduledFrameCompleted (/* in */ IDeckLinkVideoFrame *completedFrame, /* in */ BMDOutputFrameCompletionResult result) = 0;
++    virtual HRESULT ScheduledPlaybackHasStopped (void) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoOutputCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkInputCallback - Frame arrival callback. */
++
++class IDeckLinkInputCallback : public IUnknown
++{
++public:
++    virtual HRESULT VideoInputFormatChanged (/* in */ BMDVideoInputFormatChangedEvents notificationEvents, /* in */ IDeckLinkDisplayMode *newDisplayMode, /* in */ BMDDetectedVideoInputFormatFlags detectedSignalFlags) = 0;
++    virtual HRESULT VideoInputFrameArrived (/* in */ IDeckLinkVideoInputFrame* videoFrame, /* in */ IDeckLinkAudioInputPacket* audioPacket) = 0;
++
++protected:
++    virtual ~IDeckLinkInputCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkMemoryAllocator - Memory allocator for video frames. */
++
++class IDeckLinkMemoryAllocator : public IUnknown
++{
++public:
++    virtual HRESULT AllocateBuffer (/* in */ uint32_t bufferSize, /* out */ void **allocatedBuffer) = 0;
++    virtual HRESULT ReleaseBuffer (/* in */ void *buffer) = 0;
++
++    virtual HRESULT Commit (void) = 0;
++    virtual HRESULT Decommit (void) = 0;
++};
++
++/* Interface IDeckLinkAudioOutputCallback - Optional callback to allow audio samples to be pulled as required. */
++
++class IDeckLinkAudioOutputCallback : public IUnknown
++{
++public:
++    virtual HRESULT RenderAudioSamples (/* in */ bool preroll) = 0;
++};
++
++/* Interface IDeckLinkIterator - enumerates installed DeckLink hardware */
++
++class IDeckLinkIterator : public IUnknown
++{
++public:
++    virtual HRESULT Next (/* out */ IDeckLink **deckLinkInstance) = 0;
++};
++
++/* Interface IDeckLinkAPIInformation - DeckLinkAPI attribute interface */
++
++class IDeckLinkAPIInformation : public IUnknown
++{
++public:
++    virtual HRESULT GetFlag (/* in */ BMDDeckLinkAPIInformationID cfgID, /* out */ bool *value) = 0;
++    virtual HRESULT GetInt (/* in */ BMDDeckLinkAPIInformationID cfgID, /* out */ int64_t *value) = 0;
++    virtual HRESULT GetFloat (/* in */ BMDDeckLinkAPIInformationID cfgID, /* out */ double *value) = 0;
++    virtual HRESULT GetString (/* in */ BMDDeckLinkAPIInformationID cfgID, /* out */ CFStringRef *value) = 0;
++
++protected:
++    virtual ~IDeckLinkAPIInformation () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkOutput - Created by QueryInterface from IDeckLink. */
++
++class IDeckLinkOutput : public IUnknown
++{
++public:
++    virtual HRESULT DoesSupportVideoMode (/* in */ BMDDisplayMode displayMode, /* in */ BMDPixelFormat pixelFormat, /* in */ BMDVideoOutputFlags flags, /* out */ BMDDisplayModeSupport *result, /* out */ IDeckLinkDisplayMode **resultDisplayMode) = 0;
++    virtual HRESULT GetDisplayModeIterator (/* out */ IDeckLinkDisplayModeIterator **iterator) = 0;
++
++    virtual HRESULT SetScreenPreviewCallback (/* in */ IDeckLinkScreenPreviewCallback *previewCallback) = 0;
++
++    /* Video Output */
++
++    virtual HRESULT EnableVideoOutput (/* in */ BMDDisplayMode displayMode, /* in */ BMDVideoOutputFlags flags) = 0;
++    virtual HRESULT DisableVideoOutput (void) = 0;
++
++    virtual HRESULT SetVideoOutputFrameMemoryAllocator (/* in */ IDeckLinkMemoryAllocator *theAllocator) = 0;
++    virtual HRESULT CreateVideoFrame (/* in */ int32_t width, /* in */ int32_t height, /* in */ int32_t rowBytes, /* in */ BMDPixelFormat pixelFormat, /* in */ BMDFrameFlags flags, /* out */ IDeckLinkMutableVideoFrame **outFrame) = 0;
++    virtual HRESULT CreateAncillaryData (/* in */ BMDPixelFormat pixelFormat, /* out */ IDeckLinkVideoFrameAncillary **outBuffer) = 0;
++
++    virtual HRESULT DisplayVideoFrameSync (/* in */ IDeckLinkVideoFrame *theFrame) = 0;
++    virtual HRESULT ScheduleVideoFrame (/* in */ IDeckLinkVideoFrame *theFrame, /* in */ BMDTimeValue displayTime, /* in */ BMDTimeValue displayDuration, /* in */ BMDTimeScale timeScale) = 0;
++    virtual HRESULT SetScheduledFrameCompletionCallback (/* in */ IDeckLinkVideoOutputCallback *theCallback) = 0;
++    virtual HRESULT GetBufferedVideoFrameCount (/* out */ uint32_t *bufferedFrameCount) = 0;
++
++    /* Audio Output */
++
++    virtual HRESULT EnableAudioOutput (/* in */ BMDAudioSampleRate sampleRate, /* in */ BMDAudioSampleType sampleType, /* in */ uint32_t channelCount, /* in */ BMDAudioOutputStreamType streamType) = 0;
++    virtual HRESULT DisableAudioOutput (void) = 0;
++
++    virtual HRESULT WriteAudioSamplesSync (/* in */ void *buffer, /* in */ uint32_t sampleFrameCount, /* out */ uint32_t *sampleFramesWritten) = 0;
++
++    virtual HRESULT BeginAudioPreroll (void) = 0;
++    virtual HRESULT EndAudioPreroll (void) = 0;
++    virtual HRESULT ScheduleAudioSamples (/* in */ void *buffer, /* in */ uint32_t sampleFrameCount, /* in */ BMDTimeValue streamTime, /* in */ BMDTimeScale timeScale, /* out */ uint32_t *sampleFramesWritten) = 0;
++
++    virtual HRESULT GetBufferedAudioSampleFrameCount (/* out */ uint32_t *bufferedSampleFrameCount) = 0;
++    virtual HRESULT FlushBufferedAudioSamples (void) = 0;
++
++    virtual HRESULT SetAudioCallback (/* in */ IDeckLinkAudioOutputCallback *theCallback) = 0;
++
++    /* Output Control */
++
++    virtual HRESULT StartScheduledPlayback (/* in */ BMDTimeValue playbackStartTime, /* in */ BMDTimeScale timeScale, /* in */ double playbackSpeed) = 0;
++    virtual HRESULT StopScheduledPlayback (/* in */ BMDTimeValue stopPlaybackAtTime, /* out */ BMDTimeValue *actualStopTime, /* in */ BMDTimeScale timeScale) = 0;
++    virtual HRESULT IsScheduledPlaybackRunning (/* out */ bool *active) = 0;
++    virtual HRESULT GetScheduledStreamTime (/* in */ BMDTimeScale desiredTimeScale, /* out */ BMDTimeValue *streamTime, /* out */ double *playbackSpeed) = 0;
++    virtual HRESULT GetReferenceStatus (/* out */ BMDReferenceStatus *referenceStatus) = 0;
++
++    /* Hardware Timing */
++
++    virtual HRESULT GetHardwareReferenceClock (/* in */ BMDTimeScale desiredTimeScale, /* out */ BMDTimeValue *hardwareTime, /* out */ BMDTimeValue *timeInFrame, /* out */ BMDTimeValue *ticksPerFrame) = 0;
++
++protected:
++    virtual ~IDeckLinkOutput () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkInput - Created by QueryInterface from IDeckLink. */
++
++class IDeckLinkInput : public IUnknown
++{
++public:
++    virtual HRESULT DoesSupportVideoMode (/* in */ BMDDisplayMode displayMode, /* in */ BMDPixelFormat pixelFormat, /* in */ BMDVideoInputFlags flags, /* out */ BMDDisplayModeSupport *result, /* out */ IDeckLinkDisplayMode **resultDisplayMode) = 0;
++    virtual HRESULT GetDisplayModeIterator (/* out */ IDeckLinkDisplayModeIterator **iterator) = 0;
++
++    virtual HRESULT SetScreenPreviewCallback (/* in */ IDeckLinkScreenPreviewCallback *previewCallback) = 0;
++
++    /* Video Input */
++
++    virtual HRESULT EnableVideoInput (/* in */ BMDDisplayMode displayMode, /* in */ BMDPixelFormat pixelFormat, /* in */ BMDVideoInputFlags flags) = 0;
++    virtual HRESULT DisableVideoInput (void) = 0;
++    virtual HRESULT GetAvailableVideoFrameCount (/* out */ uint32_t *availableFrameCount) = 0;
++
++    /* Audio Input */
++
++    virtual HRESULT EnableAudioInput (/* in */ BMDAudioSampleRate sampleRate, /* in */ BMDAudioSampleType sampleType, /* in */ uint32_t channelCount) = 0;
++    virtual HRESULT DisableAudioInput (void) = 0;
++    virtual HRESULT GetAvailableAudioSampleFrameCount (/* out */ uint32_t *availableSampleFrameCount) = 0;
++
++    /* Input Control */
++
++    virtual HRESULT StartStreams (void) = 0;
++    virtual HRESULT StopStreams (void) = 0;
++    virtual HRESULT PauseStreams (void) = 0;
++    virtual HRESULT FlushStreams (void) = 0;
++    virtual HRESULT SetCallback (/* in */ IDeckLinkInputCallback *theCallback) = 0;
++
++    /* Hardware Timing */
++
++    virtual HRESULT GetHardwareReferenceClock (/* in */ BMDTimeScale desiredTimeScale, /* out */ BMDTimeValue *hardwareTime, /* out */ BMDTimeValue *timeInFrame, /* out */ BMDTimeValue *ticksPerFrame) = 0;
++
++protected:
++    virtual ~IDeckLinkInput () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkVideoFrame - Interface to encapsulate a video frame; can be caller-implemented. */
++
++class IDeckLinkVideoFrame : public IUnknown
++{
++public:
++    virtual long GetWidth (void) = 0;
++    virtual long GetHeight (void) = 0;
++    virtual long GetRowBytes (void) = 0;
++    virtual BMDPixelFormat GetPixelFormat (void) = 0;
++    virtual BMDFrameFlags GetFlags (void) = 0;
++    virtual HRESULT GetBytes (/* out */ void **buffer) = 0;
++
++    virtual HRESULT GetTimecode (/* in */ BMDTimecodeFormat format, /* out */ IDeckLinkTimecode **timecode) = 0;
++    virtual HRESULT GetAncillaryData (/* out */ IDeckLinkVideoFrameAncillary **ancillary) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoFrame () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkMutableVideoFrame - Created by IDeckLinkOutput::CreateVideoFrame. */
++
++class IDeckLinkMutableVideoFrame : public IDeckLinkVideoFrame
++{
++public:
++    virtual HRESULT SetFlags (/* in */ BMDFrameFlags newFlags) = 0;
++
++    virtual HRESULT SetTimecode (/* in */ BMDTimecodeFormat format, /* in */ IDeckLinkTimecode *timecode) = 0;
++    virtual HRESULT SetTimecodeFromComponents (/* in */ BMDTimecodeFormat format, /* in */ uint8_t hours, /* in */ uint8_t minutes, /* in */ uint8_t seconds, /* in */ uint8_t frames, /* in */ BMDTimecodeFlags flags) = 0;
++    virtual HRESULT SetAncillaryData (/* in */ IDeckLinkVideoFrameAncillary *ancillary) = 0;
++    virtual HRESULT SetTimecodeUserBits (/* in */ BMDTimecodeFormat format, /* in */ BMDTimecodeUserBits userBits) = 0;
++
++protected:
++    virtual ~IDeckLinkMutableVideoFrame () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkVideoFrame3DExtensions - Optional interface implemented on IDeckLinkVideoFrame to support 3D frames */
++
++class IDeckLinkVideoFrame3DExtensions : public IUnknown
++{
++public:
++    virtual BMDVideo3DPackingFormat Get3DPackingFormat (void) = 0;
++    virtual HRESULT GetFrameForRightEye (/* out */ IDeckLinkVideoFrame* *rightEyeFrame) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoFrame3DExtensions () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkVideoInputFrame - Provided by the IDeckLinkVideoInput frame arrival callback. */
++
++class IDeckLinkVideoInputFrame : public IDeckLinkVideoFrame
++{
++public:
++    virtual HRESULT GetStreamTime (/* out */ BMDTimeValue *frameTime, /* out */ BMDTimeValue *frameDuration, /* in */ BMDTimeScale timeScale) = 0;
++    virtual HRESULT GetHardwareReferenceTimestamp (/* in */ BMDTimeScale timeScale, /* out */ BMDTimeValue *frameTime, /* out */ BMDTimeValue *frameDuration) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoInputFrame () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkVideoFrameAncillary - Obtained through QueryInterface() on an IDeckLinkVideoFrame object. */
++
++class IDeckLinkVideoFrameAncillary : public IUnknown
++{
++public:
++
++    virtual HRESULT GetBufferForVerticalBlankingLine (/* in */ uint32_t lineNumber, /* out */ void **buffer) = 0;
++    virtual BMDPixelFormat GetPixelFormat (void) = 0;
++    virtual BMDDisplayMode GetDisplayMode (void) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoFrameAncillary () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkAudioInputPacket - Provided by the IDeckLinkInput callback. */
++
++class IDeckLinkAudioInputPacket : public IUnknown
++{
++public:
++    virtual long GetSampleFrameCount (void) = 0;
++    virtual HRESULT GetBytes (/* out */ void **buffer) = 0;
++    virtual HRESULT GetPacketTime (/* out */ BMDTimeValue *packetTime, /* in */ BMDTimeScale timeScale) = 0;
++
++protected:
++    virtual ~IDeckLinkAudioInputPacket () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkScreenPreviewCallback - Screen preview callback */
++
++class IDeckLinkScreenPreviewCallback : public IUnknown
++{
++public:
++    virtual HRESULT DrawFrame (/* in */ IDeckLinkVideoFrame *theFrame) = 0;
++
++protected:
++    virtual ~IDeckLinkScreenPreviewCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkCocoaScreenPreviewCallback - Screen preview callback for Cocoa-based applications */
++
++class IDeckLinkCocoaScreenPreviewCallback : public IDeckLinkScreenPreviewCallback
++{
++public:
++
++protected:
++    virtual ~IDeckLinkCocoaScreenPreviewCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkGLScreenPreviewHelper - Created with CoCreateInstance(). */
++
++class IDeckLinkGLScreenPreviewHelper : public IUnknown
++{
++public:
++
++    /* Methods must be called with OpenGL context set */
++
++    virtual HRESULT InitializeGL (void) = 0;
++    virtual HRESULT PaintGL (void) = 0;
++    virtual HRESULT SetFrame (/* in */ IDeckLinkVideoFrame *theFrame) = 0;
++    virtual HRESULT Set3DPreviewFormat (/* in */ BMD3DPreviewFormat previewFormat) = 0;
++
++protected:
++    virtual ~IDeckLinkGLScreenPreviewHelper () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkAttributes - DeckLink Attribute interface */
++
++class IDeckLinkAttributes : public IUnknown
++{
++public:
++    virtual HRESULT GetFlag (/* in */ BMDDeckLinkAttributeID cfgID, /* out */ bool *value) = 0;
++    virtual HRESULT GetInt (/* in */ BMDDeckLinkAttributeID cfgID, /* out */ int64_t *value) = 0;
++    virtual HRESULT GetFloat (/* in */ BMDDeckLinkAttributeID cfgID, /* out */ double *value) = 0;
++    virtual HRESULT GetString (/* in */ BMDDeckLinkAttributeID cfgID, /* out */ CFStringRef *value) = 0;
++
++protected:
++    virtual ~IDeckLinkAttributes () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkKeyer - DeckLink Keyer interface */
++
++class IDeckLinkKeyer : public IUnknown
++{
++public:
++    virtual HRESULT Enable (/* in */ bool isExternal) = 0;
++    virtual HRESULT SetLevel (/* in */ uint8_t level) = 0;
++    virtual HRESULT RampUp (/* in */ uint32_t numberOfFrames) = 0;
++    virtual HRESULT RampDown (/* in */ uint32_t numberOfFrames) = 0;
++    virtual HRESULT Disable (void) = 0;
++
++protected:
++    virtual ~IDeckLinkKeyer () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkVideoConversion - Created with CoCreateInstance(). */
++
++class IDeckLinkVideoConversion : public IUnknown
++{
++public:
++    virtual HRESULT ConvertFrame (/* in */ IDeckLinkVideoFrame* srcFrame, /* in */ IDeckLinkVideoFrame* dstFrame) = 0;
++
++protected:
++    virtual ~IDeckLinkVideoConversion () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++    IDeckLinkIterator* CreateDeckLinkIteratorInstance (void);
++    IDeckLinkAPIInformation* CreateDeckLinkAPIInformationInstance (void);
++    IDeckLinkGLScreenPreviewHelper* CreateOpenGLScreenPreviewHelper (void);
++    IDeckLinkCocoaScreenPreviewCallback* CreateCocoaScreenPreview (void* /* (NSView*) */ parentView);
++    IDeckLinkVideoConversion* CreateVideoConversionInstance (void);
++
++};
++
++
++#endif      // defined(__cplusplus)
++#endif /* defined(BMD_DECKLINKAPI_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIConfiguration.h b/sys/decklink/osx/DeckLinkAPIConfiguration.h
+new file mode 100644
+index 0000000..f026e73
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIConfiguration.h
+@@ -0,0 +1,167 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPICONFIGURATION_H
++#define BMD_DECKLINKAPICONFIGURATION_H
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IDeckLinkConfiguration                       /* C679A35B-610C-4D09-B748-1D0478100FC0 */ (REFIID){0xC6,0x79,0xA3,0x5B,0x61,0x0C,0x4D,0x09,0xB7,0x48,0x1D,0x04,0x78,0x10,0x0F,0xC0}
++
++/* Enum BMDDeckLinkConfigurationID - DeckLink Configuration ID */
++
++typedef uint32_t BMDDeckLinkConfigurationID;
++enum _BMDDeckLinkConfigurationID {
++
++    /* Serial port Flags */
++
++    bmdDeckLinkConfigSwapSerialRxTx                              = 'ssrt',
++
++    /* Video Input/Output Flags */
++
++    bmdDeckLinkConfigUse1080pNotPsF                              = 'fpro',
++
++    /* Video Input/Output Integers */
++
++    bmdDeckLinkConfigHDMI3DPackingFormat                         = '3dpf',
++    bmdDeckLinkConfigBypass                                      = 'byps',
++
++    /* Audio Input/Output Flags */
++
++    bmdDeckLinkConfigAnalogAudioConsumerLevels                   = 'aacl',
++
++    /* Video output flags */
++
++    bmdDeckLinkConfigFieldFlickerRemoval                         = 'fdfr',
++    bmdDeckLinkConfigHD1080p24ToHD1080i5994Conversion            = 'to59',
++    bmdDeckLinkConfig444SDIVideoOutput                           = '444o',
++    bmdDeckLinkConfig3GBpsVideoOutput                            = '3gbs',
++    bmdDeckLinkConfigBlackVideoOutputDuringCapture               = 'bvoc',
++    bmdDeckLinkConfigLowLatencyVideoOutput                       = 'llvo',
++
++    /* Video Output Integers */
++
++    bmdDeckLinkConfigVideoOutputConnection                       = 'vocn',
++    bmdDeckLinkConfigVideoOutputConversionMode                   = 'vocm',
++    bmdDeckLinkConfigAnalogVideoOutputFlags                      = 'avof',
++    bmdDeckLinkConfigReferenceInputTimingOffset                  = 'glot',
++    bmdDeckLinkConfigVideoOutputIdleOperation                    = 'voio',
++
++    /* Video Output Floats */
++
++    bmdDeckLinkConfigVideoOutputComponentLumaGain                = 'oclg',
++    bmdDeckLinkConfigVideoOutputComponentChromaBlueGain          = 'occb',
++    bmdDeckLinkConfigVideoOutputComponentChromaRedGain           = 'occr',
++    bmdDeckLinkConfigVideoOutputCompositeLumaGain                = 'oilg',
++    bmdDeckLinkConfigVideoOutputCompositeChromaGain              = 'oicg',
++    bmdDeckLinkConfigVideoOutputSVideoLumaGain                   = 'oslg',
++    bmdDeckLinkConfigVideoOutputSVideoChromaGain                 = 'oscg',
++
++    /* Video Input Flags */
++
++    bmdDeckLinkConfigVideoInputScanning                          = 'visc',	// Applicable to H264 Pro Recorder only
++
++    /* Video Input Integers */
++
++    bmdDeckLinkConfigVideoInputConnection                        = 'vicn',
++    bmdDeckLinkConfigAnalogVideoInputFlags                       = 'avif',
++    bmdDeckLinkConfigVideoInputConversionMode                    = 'vicm',
++    bmdDeckLinkConfig32PulldownSequenceInitialTimecodeFrame      = 'pdif',
++    bmdDeckLinkConfigVANCSourceLine1Mapping                      = 'vsl1',
++    bmdDeckLinkConfigVANCSourceLine2Mapping                      = 'vsl2',
++    bmdDeckLinkConfigVANCSourceLine3Mapping                      = 'vsl3',
++
++    /* Video Input Floats */
++
++    bmdDeckLinkConfigVideoInputComponentLumaGain                 = 'iclg',
++    bmdDeckLinkConfigVideoInputComponentChromaBlueGain           = 'iccb',
++    bmdDeckLinkConfigVideoInputComponentChromaRedGain            = 'iccr',
++    bmdDeckLinkConfigVideoInputCompositeLumaGain                 = 'iilg',
++    bmdDeckLinkConfigVideoInputCompositeChromaGain               = 'iicg',
++    bmdDeckLinkConfigVideoInputSVideoLumaGain                    = 'islg',
++    bmdDeckLinkConfigVideoInputSVideoChromaGain                  = 'iscg',
++
++    /* Audio Input Integers */
++
++    bmdDeckLinkConfigAudioInputConnection                        = 'aicn',
++
++    /* Audio Input Floats */
++
++    bmdDeckLinkConfigAnalogAudioInputScaleChannel1               = 'ais1',
++    bmdDeckLinkConfigAnalogAudioInputScaleChannel2               = 'ais2',
++    bmdDeckLinkConfigAnalogAudioInputScaleChannel3               = 'ais3',
++    bmdDeckLinkConfigAnalogAudioInputScaleChannel4               = 'ais4',
++    bmdDeckLinkConfigDigitalAudioInputScale                      = 'dais',
++
++    /* Audio Output Integers */
++
++    bmdDeckLinkConfigAudioOutputAESAnalogSwitch                  = 'aoaa',
++
++    /* Audio Output Floats */
++
++    bmdDeckLinkConfigAnalogAudioOutputScaleChannel1              = 'aos1',
++    bmdDeckLinkConfigAnalogAudioOutputScaleChannel2              = 'aos2',
++    bmdDeckLinkConfigAnalogAudioOutputScaleChannel3              = 'aos3',
++    bmdDeckLinkConfigAnalogAudioOutputScaleChannel4              = 'aos4',
++    bmdDeckLinkConfigDigitalAudioOutputScale                     = 'daos'
++};
++
++// Forward Declarations
++
++class IDeckLinkConfiguration;
++
++/* Interface IDeckLinkConfiguration - DeckLink Configuration interface */
++
++class IDeckLinkConfiguration : public IUnknown
++{
++public:
++    virtual HRESULT SetFlag (/* in */ BMDDeckLinkConfigurationID cfgID, /* in */ bool value) = 0;
++    virtual HRESULT GetFlag (/* in */ BMDDeckLinkConfigurationID cfgID, /* out */ bool *value) = 0;
++    virtual HRESULT SetInt (/* in */ BMDDeckLinkConfigurationID cfgID, /* in */ int64_t value) = 0;
++    virtual HRESULT GetInt (/* in */ BMDDeckLinkConfigurationID cfgID, /* out */ int64_t *value) = 0;
++    virtual HRESULT SetFloat (/* in */ BMDDeckLinkConfigurationID cfgID, /* in */ double value) = 0;
++    virtual HRESULT GetFloat (/* in */ BMDDeckLinkConfigurationID cfgID, /* out */ double *value) = 0;
++    virtual HRESULT SetString (/* in */ BMDDeckLinkConfigurationID cfgID, /* in */ CFStringRef value) = 0;
++    virtual HRESULT GetString (/* in */ BMDDeckLinkConfigurationID cfgID, /* out */ CFStringRef *value) = 0;
++    virtual HRESULT WriteConfigurationToPreferences (void) = 0;
++
++protected:
++    virtual ~IDeckLinkConfiguration () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPICONFIGURATION_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIDeckControl.h b/sys/decklink/osx/DeckLinkAPIDeckControl.h
+new file mode 100644
+index 0000000..ea32657
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIDeckControl.h
+@@ -0,0 +1,206 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPIDECKCONTROL_H
++#define BMD_DECKLINKAPIDECKCONTROL_H
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IDeckLinkDeckControlStatusCallback           /* 53436FFB-B434-4906-BADC-AE3060FFE8EF */ (REFIID){0x53,0x43,0x6F,0xFB,0xB4,0x34,0x49,0x06,0xBA,0xDC,0xAE,0x30,0x60,0xFF,0xE8,0xEF}
++#define IID_IDeckLinkDeckControl                         /* 8E1C3ACE-19C7-4E00-8B92-D80431D958BE */ (REFIID){0x8E,0x1C,0x3A,0xCE,0x19,0xC7,0x4E,0x00,0x8B,0x92,0xD8,0x04,0x31,0xD9,0x58,0xBE}
++
++/* Enum BMDDeckControlMode - DeckControl mode */
++
++typedef uint32_t BMDDeckControlMode;
++enum _BMDDeckControlMode {
++    bmdDeckControlNotOpened                                      = 'ntop',
++    bmdDeckControlVTRControlMode                                 = 'vtrc',
++    bmdDeckControlExportMode                                     = 'expm',
++    bmdDeckControlCaptureMode                                    = 'capm'
++};
++
++/* Enum BMDDeckControlEvent - DeckControl event */
++
++typedef uint32_t BMDDeckControlEvent;
++enum _BMDDeckControlEvent {
++    bmdDeckControlAbortedEvent                                   = 'abte',	// This event is triggered when a capture or edit-to-tape operation is aborted.
++
++    /* Export-To-Tape events */
++
++    bmdDeckControlPrepareForExportEvent                          = 'pfee',	// This event is triggered a few frames before reaching the in-point. IDeckLinkInput::StartScheduledPlayback() should be called at this point.
++    bmdDeckControlExportCompleteEvent                            = 'exce',	// This event is triggered a few frames after reaching the out-point. At this point, it is safe to stop playback.
++
++    /* Capture events */
++
++    bmdDeckControlPrepareForCaptureEvent                         = 'pfce',	// This event is triggered a few frames before reaching the in-point. The serial timecode attached to IDeckLinkVideoInputFrames is now valid.
++    bmdDeckControlCaptureCompleteEvent                           = 'ccev'	// This event is triggered a few frames after reaching the out-point.
++};
++
++/* Enum BMDDeckControlVTRControlState - VTR Control state */
++
++typedef uint32_t BMDDeckControlVTRControlState;
++enum _BMDDeckControlVTRControlState {
++    bmdDeckControlNotInVTRControlMode                            = 'nvcm',
++    bmdDeckControlVTRControlPlaying                              = 'vtrp',
++    bmdDeckControlVTRControlRecording                            = 'vtrr',
++    bmdDeckControlVTRControlStill                                = 'vtra',
++    bmdDeckControlVTRControlShuttleForward                       = 'vtsf',
++    bmdDeckControlVTRControlShuttleReverse                       = 'vtsr',
++    bmdDeckControlVTRControlJogForward                           = 'vtjf',
++    bmdDeckControlVTRControlJogReverse                           = 'vtjr',
++    bmdDeckControlVTRControlStopped                              = 'vtro'
++};
++
++/* Enum BMDDeckControlStatusFlags - Deck Control status flags */
++
++typedef uint32_t BMDDeckControlStatusFlags;
++enum _BMDDeckControlStatusFlags {
++    bmdDeckControlStatusDeckConnected                            = 1 << 0,
++    bmdDeckControlStatusRemoteMode                               = 1 << 1,
++    bmdDeckControlStatusRecordInhibited                          = 1 << 2,
++    bmdDeckControlStatusCassetteOut                              = 1 << 3
++};
++
++/* Enum BMDDeckControlExportModeOpsFlags - Export mode flags */
++
++typedef uint32_t BMDDeckControlExportModeOpsFlags;
++enum _BMDDeckControlExportModeOpsFlags {
++    bmdDeckControlExportModeInsertVideo                          = 1 << 0,
++    bmdDeckControlExportModeInsertAudio1                         = 1 << 1,
++    bmdDeckControlExportModeInsertAudio2                         = 1 << 2,
++    bmdDeckControlExportModeInsertAudio3                         = 1 << 3,
++    bmdDeckControlExportModeInsertAudio4                         = 1 << 4,
++    bmdDeckControlExportModeInsertAudio5                         = 1 << 5,
++    bmdDeckControlExportModeInsertAudio6                         = 1 << 6,
++    bmdDeckControlExportModeInsertAudio7                         = 1 << 7,
++    bmdDeckControlExportModeInsertAudio8                         = 1 << 8,
++    bmdDeckControlExportModeInsertAudio9                         = 1 << 9,
++    bmdDeckControlExportModeInsertAudio10                        = 1 << 10,
++    bmdDeckControlExportModeInsertAudio11                        = 1 << 11,
++    bmdDeckControlExportModeInsertAudio12                        = 1 << 12,
++    bmdDeckControlExportModeInsertTimeCode                       = 1 << 13,
++    bmdDeckControlExportModeInsertAssemble                       = 1 << 14,
++    bmdDeckControlExportModeInsertPreview                        = 1 << 15,
++    bmdDeckControlUseManualExport                                = 1 << 16
++};
++
++/* Enum BMDDeckControlError - Deck Control error */
++
++typedef uint32_t BMDDeckControlError;
++enum _BMDDeckControlError {
++    bmdDeckControlNoError                                        = 'noer',
++    bmdDeckControlModeError                                      = 'moer',
++    bmdDeckControlMissedInPointError                             = 'mier',
++    bmdDeckControlDeckTimeoutError                               = 'dter',
++    bmdDeckControlCommandFailedError                             = 'cfer',
++    bmdDeckControlDeviceAlreadyOpenedError                       = 'dalo',
++    bmdDeckControlFailedToOpenDeviceError                        = 'fder',
++    bmdDeckControlInLocalModeError                               = 'lmer',
++    bmdDeckControlEndOfTapeError                                 = 'eter',
++    bmdDeckControlUserAbortError                                 = 'uaer',
++    bmdDeckControlNoTapeInDeckError                              = 'nter',
++    bmdDeckControlNoVideoFromCardError                           = 'nvfc',
++    bmdDeckControlNoCommunicationError                           = 'ncom',
++    bmdDeckControlBufferTooSmallError                            = 'btsm',
++    bmdDeckControlBadChecksumError                               = 'chks',
++    bmdDeckControlUnknownError                                   = 'uner'
++};
++
++// Forward Declarations
++
++class IDeckLinkDeckControlStatusCallback;
++class IDeckLinkDeckControl;
++
++/* Interface IDeckLinkDeckControlStatusCallback - Deck control state change callback. */
++
++class IDeckLinkDeckControlStatusCallback : public IUnknown
++{
++public:
++    virtual HRESULT TimecodeUpdate (/* in */ BMDTimecodeBCD currentTimecode) = 0;
++    virtual HRESULT VTRControlStateChanged (/* in */ BMDDeckControlVTRControlState newState, /* in */ BMDDeckControlError error) = 0;
++    virtual HRESULT DeckControlEventReceived (/* in */ BMDDeckControlEvent event, /* in */ BMDDeckControlError error) = 0;
++    virtual HRESULT DeckControlStatusChanged (/* in */ BMDDeckControlStatusFlags flags, /* in */ uint32_t mask) = 0;
++
++protected:
++    virtual ~IDeckLinkDeckControlStatusCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkDeckControl - Deck Control main interface */
++
++class IDeckLinkDeckControl : public IUnknown
++{
++public:
++    virtual HRESULT Open (/* in */ BMDTimeScale timeScale, /* in */ BMDTimeValue timeValue, /* in */ bool timecodeIsDropFrame, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Close (/* in */ bool standbyOn) = 0;
++    virtual HRESULT GetCurrentState (/* out */ BMDDeckControlMode *mode, /* out */ BMDDeckControlVTRControlState *vtrControlState, /* out */ BMDDeckControlStatusFlags *flags) = 0;
++    virtual HRESULT SetStandby (/* in */ bool standbyOn) = 0;
++    virtual HRESULT SendCommand (/* in */ uint8_t *inBuffer, /* in */ uint32_t inBufferSize, /* out */ uint8_t *outBuffer, /* out */ uint32_t *outDataSize, /* in */ uint32_t outBufferSize, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Play (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Stop (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT TogglePlayStop (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Eject (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT GoToTimecode (/* in */ BMDTimecodeBCD timecode, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT FastForward (/* in */ bool viewTape, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Rewind (/* in */ bool viewTape, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT StepForward (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT StepBack (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Jog (/* in */ double rate, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Shuttle (/* in */ double rate, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT GetTimecodeString (/* out */ CFStringRef *currentTimeCode, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT GetTimecode (/* out */ IDeckLinkTimecode **currentTimecode, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT GetTimecodeBCD (/* out */ BMDTimecodeBCD *currentTimecode, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT SetPreroll (/* in */ uint32_t prerollSeconds) = 0;
++    virtual HRESULT GetPreroll (/* out */ uint32_t *prerollSeconds) = 0;
++    virtual HRESULT SetExportOffset (/* in */ int32_t exportOffsetFields) = 0;
++    virtual HRESULT GetExportOffset (/* out */ int32_t *exportOffsetFields) = 0;
++    virtual HRESULT GetManualExportOffset (/* out */ int32_t *deckManualExportOffsetFields) = 0;
++    virtual HRESULT SetCaptureOffset (/* in */ int32_t captureOffsetFields) = 0;
++    virtual HRESULT GetCaptureOffset (/* out */ int32_t *captureOffsetFields) = 0;
++    virtual HRESULT StartExport (/* in */ BMDTimecodeBCD inTimecode, /* in */ BMDTimecodeBCD outTimecode, /* in */ BMDDeckControlExportModeOpsFlags exportModeOps, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT StartCapture (/* in */ bool useVITC, /* in */ BMDTimecodeBCD inTimecode, /* in */ BMDTimecodeBCD outTimecode, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT GetDeviceID (/* out */ uint16_t *deviceId, /* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT Abort (void) = 0;
++    virtual HRESULT CrashRecordStart (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT CrashRecordStop (/* out */ BMDDeckControlError *error) = 0;
++    virtual HRESULT SetCallback (/* in */ IDeckLinkDeckControlStatusCallback *callback) = 0;
++
++protected:
++    virtual ~IDeckLinkDeckControl () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPIDECKCONTROL_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIDiscovery.h b/sys/decklink/osx/DeckLinkAPIDiscovery.h
+new file mode 100644
+index 0000000..99fc0fe
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIDiscovery.h
+@@ -0,0 +1,62 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPIDISCOVERY_H
++#define BMD_DECKLINKAPIDISCOVERY_H
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IDeckLink                                    /* C418FBDD-0587-48ED-8FE5-640F0A14AF91 */ (REFIID){0xC4,0x18,0xFB,0xDD,0x05,0x87,0x48,0xED,0x8F,0xE5,0x64,0x0F,0x0A,0x14,0xAF,0x91}
++
++// Forward Declarations
++
++class IDeckLink;
++
++/* Interface IDeckLink - represents a DeckLink device */
++
++class IDeckLink : public IUnknown
++{
++public:
++    virtual HRESULT GetModelName (/* out */ CFStringRef *modelName) = 0;
++    virtual HRESULT GetDisplayName (/* out */ CFStringRef *displayName) = 0;
++
++protected:
++    virtual ~IDeckLink () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPIDISCOVERY_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIDispatch-osx.cpp b/sys/decklink/osx/DeckLinkAPIDispatch-osx.cpp
+new file mode 100644
+index 0000000..18b0122
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIDispatch-osx.cpp
+@@ -0,0 +1,178 @@
++/* -LICENSE-START-
++** Copyright (c) 2009 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++/* DeckLinkAPIDispatch.cpp */
++
++#include "DeckLinkAPI.h"
++#include <pthread.h>
++
++#if BLACKMAGIC_DECKLINK_API_MAGIC != 1
++	#error The DeckLink API version of DeckLinkAPIDispatch.cpp is not the same version as DeckLinkAPI.h
++#endif
++
++#define kDeckLinkAPI_BundlePath "/Library/Application Support/Blackmagic Design/Blackmagic DeckLink/DeckLinkAPI.bundle"
++
++typedef IDeckLinkIterator* (*CreateIteratorFunc)(void);
++typedef IDeckLinkAPIInformation* (*CreateAPIInformationFunc)(void);
++typedef IDeckLinkGLScreenPreviewHelper* (*CreateOpenGLScreenPreviewHelperFunc)(void);
++typedef IDeckLinkCocoaScreenPreviewCallback* (*CreateCocoaScreenPreviewFunc)(void*);
++typedef IDeckLinkVideoConversion* (*CreateVideoConversionInstanceFunc)(void);
++
++static pthread_once_t						gDeckLinkOnceControl		= PTHREAD_ONCE_INIT;
++static CFBundleRef							gDeckLinkAPIBundleRef		= NULL;
++static CreateIteratorFunc					gCreateIteratorFunc			= NULL;
++static CreateAPIInformationFunc				gCreateAPIInformationFunc	= NULL;
++static CreateOpenGLScreenPreviewHelperFunc	gCreateOpenGLPreviewFunc	= NULL;
++static CreateCocoaScreenPreviewFunc			gCreateCocoaPreviewFunc		= NULL;
++static CreateVideoConversionInstanceFunc	gCreateVideoConversionFunc	= NULL;
++
++
++void	InitDeckLinkAPI (void)
++{
++	CFURLRef		bundleURL;
++
++	bundleURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR(kDeckLinkAPI_BundlePath), kCFURLPOSIXPathStyle, true);
++	if (bundleURL != NULL)
++	{
++		gDeckLinkAPIBundleRef = CFBundleCreate(kCFAllocatorDefault, bundleURL);
++		if (gDeckLinkAPIBundleRef != NULL)
++		{
++			gCreateIteratorFunc = (CreateIteratorFunc)CFBundleGetFunctionPointerForName(gDeckLinkAPIBundleRef, CFSTR("CreateDeckLinkIteratorInstance_0002"));
++			gCreateAPIInformationFunc = (CreateAPIInformationFunc)CFBundleGetFunctionPointerForName(gDeckLinkAPIBundleRef, CFSTR("CreateDeckLinkAPIInformationInstance_0001"));
++			gCreateOpenGLPreviewFunc = (CreateOpenGLScreenPreviewHelperFunc)CFBundleGetFunctionPointerForName(gDeckLinkAPIBundleRef, CFSTR("CreateOpenGLScreenPreviewHelper_0001"));
++			gCreateCocoaPreviewFunc = (CreateCocoaScreenPreviewFunc)CFBundleGetFunctionPointerForName(gDeckLinkAPIBundleRef, CFSTR("CreateCocoaScreenPreview_0001"));
++			gCreateVideoConversionFunc = (CreateVideoConversionInstanceFunc)CFBundleGetFunctionPointerForName(gDeckLinkAPIBundleRef, CFSTR("CreateVideoConversionInstance_0001"));
++		}
++		CFRelease(bundleURL);
++	}
++}
++
++bool		IsDeckLinkAPIPresent (void)
++{
++	// If the DeckLink API bundle was successfully loaded, return this knowledge to the caller
++	if (gDeckLinkAPIBundleRef != NULL)
++		return true;
++	
++	return false;
++}
++
++IDeckLinkIterator*		CreateDeckLinkIteratorInstance (void)
++{
++	pthread_once(&gDeckLinkOnceControl, InitDeckLinkAPI);
++	
++	if (gCreateIteratorFunc == NULL)
++		return NULL;
++	
++	return gCreateIteratorFunc();
++}
++
++IDeckLinkAPIInformation*	CreateDeckLinkAPIInformationInstance (void)
++{
++	pthread_once(&gDeckLinkOnceControl, InitDeckLinkAPI);
++	
++	if (gCreateAPIInformationFunc == NULL)
++		return NULL;
++	
++	return gCreateAPIInformationFunc();
++}
++
++IDeckLinkGLScreenPreviewHelper*		CreateOpenGLScreenPreviewHelper (void)
++{
++	pthread_once(&gDeckLinkOnceControl, InitDeckLinkAPI);
++	
++	if (gCreateOpenGLPreviewFunc == NULL)
++		return NULL;
++	
++	return gCreateOpenGLPreviewFunc();
++}
++
++IDeckLinkCocoaScreenPreviewCallback*	CreateCocoaScreenPreview (void* parentView)
++{
++	pthread_once(&gDeckLinkOnceControl, InitDeckLinkAPI);
++	
++	if (gCreateCocoaPreviewFunc == NULL)
++		return NULL;
++	
++	return gCreateCocoaPreviewFunc(parentView);
++}
++
++IDeckLinkVideoConversion* CreateVideoConversionInstance (void)
++{
++	pthread_once(&gDeckLinkOnceControl, InitDeckLinkAPI);
++	
++	if (gCreateVideoConversionFunc == NULL)
++		return NULL;
++	
++	return gCreateVideoConversionFunc();
++}
++
++#define kBMDStreamingAPI_BundlePath "/Library/Application Support/Blackmagic Design/Streaming/BMDStreamingAPI.bundle"
++
++typedef IBMDStreamingDiscovery* (*CreateDiscoveryFunc)(void);
++typedef IBMDStreamingH264NALParser* (*CreateNALParserFunc)(void);
++
++static pthread_once_t      gBMDStreamingOnceControl  = PTHREAD_ONCE_INIT;
++static CFBundleRef         gBMDStreamingAPIBundleRef = NULL;
++static CreateDiscoveryFunc gCreateDiscoveryFunc      = NULL;
++static CreateNALParserFunc gCreateNALParserFunc      = NULL;
++
++void InitBMDStreamingAPI(void)
++{
++	CFURLRef bundleURL;
++
++	bundleURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, CFSTR(kBMDStreamingAPI_BundlePath), kCFURLPOSIXPathStyle, true);
++	if (bundleURL != NULL)
++	{
++		gBMDStreamingAPIBundleRef = CFBundleCreate(kCFAllocatorDefault, bundleURL);
++		if (gBMDStreamingAPIBundleRef != NULL)
++		{
++			gCreateDiscoveryFunc = (CreateDiscoveryFunc)CFBundleGetFunctionPointerForName(gBMDStreamingAPIBundleRef, CFSTR("CreateBMDStreamingDiscoveryInstance_0001"));
++			gCreateNALParserFunc = (CreateNALParserFunc)CFBundleGetFunctionPointerForName(gBMDStreamingAPIBundleRef, CFSTR("CreateBMDStreamingH264NALParser_0001"));
++		}
++
++		CFRelease(bundleURL);
++	}
++}
++
++IBMDStreamingDiscovery* CreateBMDStreamingDiscoveryInstance()
++{
++	pthread_once(&gBMDStreamingOnceControl, InitBMDStreamingAPI);
++
++	if (gCreateDiscoveryFunc == NULL)
++		return NULL;
++
++	return gCreateDiscoveryFunc();
++}
++
++IBMDStreamingH264NALParser* CreateBMDStreamingH264NALParser()
++{
++	pthread_once(&gBMDStreamingOnceControl, InitBMDStreamingAPI);
++
++	if (gCreateNALParserFunc == NULL)
++		return NULL;
++
++	return gCreateNALParserFunc();
++}
+diff --git a/sys/decklink/osx/DeckLinkAPIModes.h b/sys/decklink/osx/DeckLinkAPIModes.h
+new file mode 100644
+index 0000000..8b07592
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIModes.h
+@@ -0,0 +1,155 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPIMODES_H
++#define BMD_DECKLINKAPIMODES_H
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IDeckLinkDisplayModeIterator                 /* 9C88499F-F601-4021-B80B-032E4EB41C35 */ (REFIID){0x9C,0x88,0x49,0x9F,0xF6,0x01,0x40,0x21,0xB8,0x0B,0x03,0x2E,0x4E,0xB4,0x1C,0x35}
++#define IID_IDeckLinkDisplayMode                         /* 3EB2C1AB-0A3D-4523-A3AD-F40D7FB14E78 */ (REFIID){0x3E,0xB2,0xC1,0xAB,0x0A,0x3D,0x45,0x23,0xA3,0xAD,0xF4,0x0D,0x7F,0xB1,0x4E,0x78}
++
++/* Enum BMDDisplayMode - Video display modes */
++
++typedef uint32_t BMDDisplayMode;
++enum _BMDDisplayMode {
++
++    /* SD Modes */
++
++    bmdModeNTSC                                                  = 'ntsc',
++    bmdModeNTSC2398                                              = 'nt23',	// 3:2 pulldown
++    bmdModePAL                                                   = 'pal ',
++    bmdModeNTSCp                                                 = 'ntsp',
++    bmdModePALp                                                  = 'palp',
++
++    /* HD 1080 Modes */
++
++    bmdModeHD1080p2398                                           = '23ps',
++    bmdModeHD1080p24                                             = '24ps',
++    bmdModeHD1080p25                                             = 'Hp25',
++    bmdModeHD1080p2997                                           = 'Hp29',
++    bmdModeHD1080p30                                             = 'Hp30',
++    bmdModeHD1080i50                                             = 'Hi50',
++    bmdModeHD1080i5994                                           = 'Hi59',
++    bmdModeHD1080i6000                                           = 'Hi60',	// N.B. This _really_ is 60.00 Hz.
++    bmdModeHD1080p50                                             = 'Hp50',
++    bmdModeHD1080p5994                                           = 'Hp59',
++    bmdModeHD1080p6000                                           = 'Hp60',	// N.B. This _really_ is 60.00 Hz.
++
++    /* HD 720 Modes */
++
++    bmdModeHD720p50                                              = 'hp50',
++    bmdModeHD720p5994                                            = 'hp59',
++    bmdModeHD720p60                                              = 'hp60',
++
++    /* 2k Modes */
++
++    bmdMode2k2398                                                = '2k23',
++    bmdMode2k24                                                  = '2k24',
++    bmdMode2k25                                                  = '2k25',
++
++    /* Special Modes */
++
++    bmdModeUnknown                                               = 'iunk'
++};
++
++/* Enum BMDFieldDominance - Video field dominance */
++
++typedef uint32_t BMDFieldDominance;
++enum _BMDFieldDominance {
++    bmdUnknownFieldDominance                                     = 0,
++    bmdLowerFieldFirst                                           = 'lowr',
++    bmdUpperFieldFirst                                           = 'uppr',
++    bmdProgressiveFrame                                          = 'prog',
++    bmdProgressiveSegmentedFrame                                 = 'psf '
++};
++
++/* Enum BMDPixelFormat - Video pixel formats supported for output/input */
++
++typedef uint32_t BMDPixelFormat;
++enum _BMDPixelFormat {
++    bmdFormat8BitYUV                                             = '2vuy',
++    bmdFormat10BitYUV                                            = 'v210',
++    bmdFormat8BitARGB                                            = 32,
++    bmdFormat8BitBGRA                                            = 'BGRA',
++    bmdFormat10BitRGB                                            = 'r210'	// Big-endian RGB 10-bit per component with SMPTE video levels (64-960). Packed as 2:10:10:10
++};
++
++/* Enum BMDDisplayModeFlags - Flags to describe the characteristics of an IDeckLinkDisplayMode. */
++
++typedef uint32_t BMDDisplayModeFlags;
++enum _BMDDisplayModeFlags {
++    bmdDisplayModeSupports3D                                     = 1 << 0,
++    bmdDisplayModeColorspaceRec601                               = 1 << 1,
++    bmdDisplayModeColorspaceRec709                               = 1 << 2
++};
++
++// Forward Declarations
++
++class IDeckLinkDisplayModeIterator;
++class IDeckLinkDisplayMode;
++
++/* Interface IDeckLinkDisplayModeIterator - enumerates over supported input/output display modes. */
++
++class IDeckLinkDisplayModeIterator : public IUnknown
++{
++public:
++    virtual HRESULT Next (/* out */ IDeckLinkDisplayMode **deckLinkDisplayMode) = 0;
++
++protected:
++    virtual ~IDeckLinkDisplayModeIterator () {}; // call Release method to drop reference count
++};
++
++/* Interface IDeckLinkDisplayMode - represents a display mode */
++
++class IDeckLinkDisplayMode : public IUnknown
++{
++public:
++    virtual HRESULT GetName (/* out */ CFStringRef *name) = 0;
++    virtual BMDDisplayMode GetDisplayMode (void) = 0;
++    virtual long GetWidth (void) = 0;
++    virtual long GetHeight (void) = 0;
++    virtual HRESULT GetFrameRate (/* out */ BMDTimeValue *frameDuration, /* out */ BMDTimeScale *timeScale) = 0;
++    virtual BMDFieldDominance GetFieldDominance (void) = 0;
++    virtual BMDDisplayModeFlags GetFlags (void) = 0;
++
++protected:
++    virtual ~IDeckLinkDisplayMode () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPIMODES_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIStreaming.h b/sys/decklink/osx/DeckLinkAPIStreaming.h
+new file mode 100644
+index 0000000..ecffb8d
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIStreaming.h
+@@ -0,0 +1,366 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPISTREAMING_H
++#define BMD_DECKLINKAPISTREAMING_H
++
++// Type Declarations
++
++
++// Interface ID Declarations
++
++#define IID_IBMDStreamingDeviceNotificationCallback      /* F9531D64-3305-4B29-A387-7F74BB0D0E84 */ (REFIID){0xF9,0x53,0x1D,0x64,0x33,0x05,0x4B,0x29,0xA3,0x87,0x7F,0x74,0xBB,0x0D,0x0E,0x84}
++#define IID_IBMDStreamingH264InputCallback               /* 823C475F-55AE-46F9-890C-537CC5CEDCCA */ (REFIID){0x82,0x3C,0x47,0x5F,0x55,0xAE,0x46,0xF9,0x89,0x0C,0x53,0x7C,0xC5,0xCE,0xDC,0xCA}
++#define IID_IBMDStreamingDiscovery                       /* 2C837444-F989-4D87-901A-47C8A36D096D */ (REFIID){0x2C,0x83,0x74,0x44,0xF9,0x89,0x4D,0x87,0x90,0x1A,0x47,0xC8,0xA3,0x6D,0x09,0x6D}
++#define IID_IBMDStreamingVideoEncodingMode               /* 1AB8035B-CD13-458D-B6DF-5E8F7C2141D9 */ (REFIID){0x1A,0xB8,0x03,0x5B,0xCD,0x13,0x45,0x8D,0xB6,0xDF,0x5E,0x8F,0x7C,0x21,0x41,0xD9}
++#define IID_IBMDStreamingMutableVideoEncodingMode        /* 19BF7D90-1E0A-400D-B2C6-FFC4E78AD49D */ (REFIID){0x19,0xBF,0x7D,0x90,0x1E,0x0A,0x40,0x0D,0xB2,0xC6,0xFF,0xC4,0xE7,0x8A,0xD4,0x9D}
++#define IID_IBMDStreamingVideoEncodingModePresetIterator /* 7AC731A3-C950-4AD0-804A-8377AA51C6C4 */ (REFIID){0x7A,0xC7,0x31,0xA3,0xC9,0x50,0x4A,0xD0,0x80,0x4A,0x83,0x77,0xAA,0x51,0xC6,0xC4}
++#define IID_IBMDStreamingDeviceInput                     /* 24B6B6EC-1727-44BB-9818-34FF086ACF98 */ (REFIID){0x24,0xB6,0xB6,0xEC,0x17,0x27,0x44,0xBB,0x98,0x18,0x34,0xFF,0x08,0x6A,0xCF,0x98}
++#define IID_IBMDStreamingH264NALPacket                   /* E260E955-14BE-4395-9775-9F02CC0A9D89 */ (REFIID){0xE2,0x60,0xE9,0x55,0x14,0xBE,0x43,0x95,0x97,0x75,0x9F,0x02,0xCC,0x0A,0x9D,0x89}
++#define IID_IBMDStreamingAudioPacket                     /* D9EB5902-1AD2-43F4-9E2C-3CFA50B5EE19 */ (REFIID){0xD9,0xEB,0x59,0x02,0x1A,0xD2,0x43,0xF4,0x9E,0x2C,0x3C,0xFA,0x50,0xB5,0xEE,0x19}
++#define IID_IBMDStreamingMPEG2TSPacket                   /* 91810D1C-4FB3-4AAA-AE56-FA301D3DFA4C */ (REFIID){0x91,0x81,0x0D,0x1C,0x4F,0xB3,0x4A,0xAA,0xAE,0x56,0xFA,0x30,0x1D,0x3D,0xFA,0x4C}
++#define IID_IBMDStreamingH264NALParser                   /* 5867F18C-5BFA-4CCC-B2A7-9DFD140417D2 */ (REFIID){0x58,0x67,0xF1,0x8C,0x5B,0xFA,0x4C,0xCC,0xB2,0xA7,0x9D,0xFD,0x14,0x04,0x17,0xD2}
++
++/* Enum BMDStreamingDeviceMode - Device modes */
++
++typedef uint32_t BMDStreamingDeviceMode;
++enum _BMDStreamingDeviceMode {
++    bmdStreamingDeviceIdle                                       = 'idle',
++    bmdStreamingDeviceEncoding                                   = 'enco',
++    bmdStreamingDeviceStopping                                   = 'stop',
++    bmdStreamingDeviceUnknown                                    = 'munk'
++};
++
++/* Enum BMDStreamingEncodingFrameRate - Encoded frame rates */
++
++typedef uint32_t BMDStreamingEncodingFrameRate;
++enum _BMDStreamingEncodingFrameRate {
++
++    /* Interlaced rates */
++
++    bmdStreamingEncodedFrameRate50i                              = 'e50i',
++    bmdStreamingEncodedFrameRate5994i                            = 'e59i',
++    bmdStreamingEncodedFrameRate60i                              = 'e60i',
++
++    /* Progressive rates */
++
++    bmdStreamingEncodedFrameRate2398p                            = 'e23p',
++    bmdStreamingEncodedFrameRate24p                              = 'e24p',
++    bmdStreamingEncodedFrameRate25p                              = 'e25p',
++    bmdStreamingEncodedFrameRate2997p                            = 'e29p',
++    bmdStreamingEncodedFrameRate30p                              = 'e30p',
++    bmdStreamingEncodedFrameRate50p                              = 'e50p',
++    bmdStreamingEncodedFrameRate5994p                            = 'e59p',
++    bmdStreamingEncodedFrameRate60p                              = 'e60p'
++};
++
++/* Enum BMDStreamingEncodingSupport - Output encoding mode supported flag */
++
++typedef uint32_t BMDStreamingEncodingSupport;
++enum _BMDStreamingEncodingSupport {
++    bmdStreamingEncodingModeNotSupported                         = 0,
++    bmdStreamingEncodingModeSupported,                          
++    bmdStreamingEncodingModeSupportedWithChanges                
++};
++
++/* Enum BMDStreamingVideoCodec - Video codecs */
++
++typedef uint32_t BMDStreamingVideoCodec;
++enum _BMDStreamingVideoCodec {
++    bmdStreamingVideoCodecH264                                   = 'H264'
++};
++
++/* Enum BMDStreamingH264Profile - H264 encoding profile */
++
++typedef uint32_t BMDStreamingH264Profile;
++enum _BMDStreamingH264Profile {
++    bmdStreamingH264ProfileHigh                                  = 'high',
++    bmdStreamingH264ProfileMain                                  = 'main',
++    bmdStreamingH264ProfileBaseline                              = 'base'
++};
++
++/* Enum BMDStreamingH264Level - H264 encoding level */
++
++typedef uint32_t BMDStreamingH264Level;
++enum _BMDStreamingH264Level {
++    bmdStreamingH264Level12                                      = 'lv12',
++    bmdStreamingH264Level13                                      = 'lv13',
++    bmdStreamingH264Level2                                       = 'lv2 ',
++    bmdStreamingH264Level21                                      = 'lv21',
++    bmdStreamingH264Level22                                      = 'lv22',
++    bmdStreamingH264Level3                                       = 'lv3 ',
++    bmdStreamingH264Level31                                      = 'lv31',
++    bmdStreamingH264Level32                                      = 'lv32',
++    bmdStreamingH264Level4                                       = 'lv4 ',
++    bmdStreamingH264Level41                                      = 'lv41',
++    bmdStreamingH264Level42                                      = 'lv42'
++};
++
++/* Enum BMDStreamingH264EntropyCoding - H264 entropy coding */
++
++typedef uint32_t BMDStreamingH264EntropyCoding;
++enum _BMDStreamingH264EntropyCoding {
++    bmdStreamingH264EntropyCodingCAVLC                           = 'EVLC',
++    bmdStreamingH264EntropyCodingCABAC                           = 'EBAC'
++};
++
++/* Enum BMDStreamingAudioCodec - Audio codecs */
++
++typedef uint32_t BMDStreamingAudioCodec;
++enum _BMDStreamingAudioCodec {
++    bmdStreamingAudioCodecAAC                                    = 'AAC '
++};
++
++/* Enum BMDStreamingEncodingModePropertyID - Encoding mode properties */
++
++typedef uint32_t BMDStreamingEncodingModePropertyID;
++enum _BMDStreamingEncodingModePropertyID {
++
++    /* Integers, Video Properties */
++
++    bmdStreamingEncodingPropertyVideoFrameRate                   = 'vfrt',	// Uses values of type BMDStreamingEncodingFrameRate
++    bmdStreamingEncodingPropertyVideoBitRateKbps                 = 'vbrt',
++
++    /* Integers, H264 Properties */
++
++    bmdStreamingEncodingPropertyH264Profile                      = 'hprf',
++    bmdStreamingEncodingPropertyH264Level                        = 'hlvl',
++    bmdStreamingEncodingPropertyH264EntropyCoding                = 'hent',
++
++    /* Flags, H264 Properties */
++
++    bmdStreamingEncodingPropertyH264HasBFrames                   = 'hBfr',
++
++    /* Integers, Audio Properties */
++
++    bmdStreamingEncodingPropertyAudioCodec                       = 'acdc',
++    bmdStreamingEncodingPropertyAudioSampleRate                  = 'asrt',
++    bmdStreamingEncodingPropertyAudioChannelCount                = 'achc',
++    bmdStreamingEncodingPropertyAudioBitRateKbps                 = 'abrt'
++};
++
++// Forward Declarations
++
++class IBMDStreamingDeviceNotificationCallback;
++class IBMDStreamingH264InputCallback;
++class IBMDStreamingDiscovery;
++class IBMDStreamingVideoEncodingMode;
++class IBMDStreamingMutableVideoEncodingMode;
++class IBMDStreamingVideoEncodingModePresetIterator;
++class IBMDStreamingDeviceInput;
++class IBMDStreamingH264NALPacket;
++class IBMDStreamingAudioPacket;
++class IBMDStreamingMPEG2TSPacket;
++class IBMDStreamingH264NALParser;
++
++/* Interface IBMDStreamingDeviceNotificationCallback - Device notification callbacks. */
++
++class IBMDStreamingDeviceNotificationCallback : public IUnknown
++{
++public:
++    virtual HRESULT StreamingDeviceArrived (/* in */ IDeckLink* device) = 0;
++    virtual HRESULT StreamingDeviceRemoved (/* in */ IDeckLink* device) = 0;
++    virtual HRESULT StreamingDeviceModeChanged (/* in */ IDeckLink* device, /* in */ BMDStreamingDeviceMode mode) = 0;
++
++protected:
++    virtual ~IBMDStreamingDeviceNotificationCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingH264InputCallback - H264 input callbacks. */
++
++class IBMDStreamingH264InputCallback : public IUnknown
++{
++public:
++    virtual HRESULT H264NALPacketArrived (/* in */ IBMDStreamingH264NALPacket* nalPacket) = 0;
++    virtual HRESULT H264AudioPacketArrived (/* in */ IBMDStreamingAudioPacket* audioPacket) = 0;
++    virtual HRESULT MPEG2TSPacketArrived (/* in */ IBMDStreamingMPEG2TSPacket* tsPacket) = 0;
++    virtual HRESULT H264VideoInputConnectorScanningChanged (void) = 0;
++    virtual HRESULT H264VideoInputConnectorChanged (void) = 0;
++    virtual HRESULT H264VideoInputModeChanged (void) = 0;
++
++protected:
++    virtual ~IBMDStreamingH264InputCallback () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingDiscovery - Installs device notifications */
++
++class IBMDStreamingDiscovery : public IUnknown
++{
++public:
++    virtual HRESULT InstallDeviceNotifications (/* in */ IBMDStreamingDeviceNotificationCallback* theCallback) = 0;
++    virtual HRESULT UninstallDeviceNotifications (void) = 0;
++
++protected:
++    virtual ~IBMDStreamingDiscovery () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingVideoEncodingMode - Represents an encoded video mode. */
++
++class IBMDStreamingVideoEncodingMode : public IUnknown
++{
++public:
++    virtual HRESULT GetName (/* out */ CFStringRef *name) = 0;
++    virtual unsigned int GetPresetID (void) = 0;
++    virtual unsigned int GetSourcePositionX (void) = 0;
++    virtual unsigned int GetSourcePositionY (void) = 0;
++    virtual unsigned int GetSourceWidth (void) = 0;
++    virtual unsigned int GetSourceHeight (void) = 0;
++    virtual unsigned int GetDestWidth (void) = 0;
++    virtual unsigned int GetDestHeight (void) = 0;
++    virtual HRESULT GetFlag (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* out */ bool* value) = 0;
++    virtual HRESULT GetInt (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* out */ int64_t* value) = 0;
++    virtual HRESULT GetFloat (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* out */ double* value) = 0;
++    virtual HRESULT GetString (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* out */ CFStringRef *value) = 0;
++    virtual HRESULT CreateMutableVideoEncodingMode (/* out */ IBMDStreamingMutableVideoEncodingMode** newEncodingMode) = 0; // Creates a mutable copy of the encoding mode
++
++protected:
++    virtual ~IBMDStreamingVideoEncodingMode () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingMutableVideoEncodingMode - Represents a mutable encoded video mode. */
++
++class IBMDStreamingMutableVideoEncodingMode : public IBMDStreamingVideoEncodingMode
++{
++public:
++    virtual HRESULT SetSourceRect (/* in */ uint32_t posX, /* in */ uint32_t posY, /* in */ uint32_t width, /* in */ uint32_t height) = 0;
++    virtual HRESULT SetDestSize (/* in */ uint32_t width, /* in */ uint32_t height) = 0;
++    virtual HRESULT SetFlag (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* in */ bool value) = 0;
++    virtual HRESULT SetInt (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* in */ int64_t value) = 0;
++    virtual HRESULT SetFloat (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* in */ double value) = 0;
++    virtual HRESULT SetString (/* in */ BMDStreamingEncodingModePropertyID cfgID, /* in */ CFStringRef value) = 0;
++
++protected:
++    virtual ~IBMDStreamingMutableVideoEncodingMode () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingVideoEncodingModePresetIterator - Enumerates encoding mode presets */
++
++class IBMDStreamingVideoEncodingModePresetIterator : public IUnknown
++{
++public:
++    virtual HRESULT Next (/* out */ IBMDStreamingVideoEncodingMode** videoEncodingMode) = 0;
++
++protected:
++    virtual ~IBMDStreamingVideoEncodingModePresetIterator () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingDeviceInput - Created by QueryInterface from IDeckLink */
++
++class IBMDStreamingDeviceInput : public IUnknown
++{
++public:
++
++    /* Input modes */
++
++    virtual HRESULT DoesSupportVideoInputMode (/* in */ BMDDisplayMode inputMode, /* out */ bool* result) = 0;
++    virtual HRESULT GetVideoInputModeIterator (/* out */ IDeckLinkDisplayModeIterator** iterator) = 0;
++    virtual HRESULT SetVideoInputMode (/* in */ BMDDisplayMode inputMode) = 0;
++    virtual HRESULT GetCurrentDetectedVideoInputMode (/* out */ BMDDisplayMode* detectedMode) = 0;
++
++    /* Capture modes */
++
++    virtual HRESULT GetVideoEncodingMode (/* out */ IBMDStreamingVideoEncodingMode** encodingMode) = 0;
++    virtual HRESULT GetVideoEncodingModePresetIterator (/* in */ BMDDisplayMode inputMode, /* out */ IBMDStreamingVideoEncodingModePresetIterator** iterator) = 0;
++    virtual HRESULT DoesSupportVideoEncodingMode (/* in */ BMDDisplayMode inputMode, /* in */ IBMDStreamingVideoEncodingMode* encodingMode, /* out */ BMDStreamingEncodingSupport* result, /* out */ IBMDStreamingVideoEncodingMode** changedEncodingMode) = 0;
++    virtual HRESULT SetVideoEncodingMode (/* in */ IBMDStreamingVideoEncodingMode* encodingMode) = 0;
++
++    /* Input control */
++
++    virtual HRESULT StartCapture (void) = 0;
++    virtual HRESULT StopCapture (void) = 0;
++    virtual HRESULT SetCallback (/* in */ IUnknown* theCallback) = 0;
++
++protected:
++    virtual ~IBMDStreamingDeviceInput () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingH264NALPacket - Represent an H.264 NAL packet */
++
++class IBMDStreamingH264NALPacket : public IUnknown
++{
++public:
++    virtual long GetPayloadSize (void) = 0;
++    virtual HRESULT GetBytes (/* out */ void** buffer) = 0;
++    virtual HRESULT GetBytesWithSizePrefix (/* out */ void** buffer) = 0; // Contains a 32-bit unsigned big endian size prefix
++    virtual HRESULT GetDisplayTime (/* in */ uint64_t requestedTimeScale, /* out */ uint64_t* displayTime) = 0;
++    virtual HRESULT GetPacketIndex (/* out */ uint32_t* packetIndex) = 0;
++
++protected:
++    virtual ~IBMDStreamingH264NALPacket () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingAudioPacket - Represents a chunk of audio data */
++
++class IBMDStreamingAudioPacket : public IUnknown
++{
++public:
++    virtual BMDStreamingAudioCodec GetCodec (void) = 0;
++    virtual long GetPayloadSize (void) = 0;
++    virtual HRESULT GetBytes (/* out */ void** buffer) = 0;
++    virtual HRESULT GetPlayTime (/* in */ uint64_t requestedTimeScale, /* out */ uint64_t* playTime) = 0;
++    virtual HRESULT GetPacketIndex (/* out */ uint32_t* packetIndex) = 0;
++
++protected:
++    virtual ~IBMDStreamingAudioPacket () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingMPEG2TSPacket - Represent an MPEG2 Transport Stream packet */
++
++class IBMDStreamingMPEG2TSPacket : public IUnknown
++{
++public:
++    virtual long GetPayloadSize (void) = 0;
++    virtual HRESULT GetBytes (/* out */ void** buffer) = 0;
++
++protected:
++    virtual ~IBMDStreamingMPEG2TSPacket () {}; // call Release method to drop reference count
++};
++
++/* Interface IBMDStreamingH264NALParser - For basic NAL parsing */
++
++class IBMDStreamingH264NALParser : public IUnknown
++{
++public:
++    virtual HRESULT IsNALSequenceParameterSet (/* in */ IBMDStreamingH264NALPacket* nal) = 0;
++    virtual HRESULT IsNALPictureParameterSet (/* in */ IBMDStreamingH264NALPacket* nal) = 0;
++    virtual HRESULT GetProfileAndLevelFromSPS (/* in */ IBMDStreamingH264NALPacket* nal, /* out */ uint32_t* profileIdc, /* out */ uint32_t* profileCompatability, /* out */ uint32_t* levelIdc) = 0;
++
++protected:
++    virtual ~IBMDStreamingH264NALParser () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++    IBMDStreamingDiscovery* CreateBMDStreamingDiscoveryInstance (void);
++    IBMDStreamingH264NALParser* CreateBMDStreamingH264NALParser (void);
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPISTREAMING_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPITypes.h b/sys/decklink/osx/DeckLinkAPITypes.h
+new file mode 100644
+index 0000000..ed54d8e
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPITypes.h
+@@ -0,0 +1,89 @@
++/* -LICENSE-START-
++** Copyright (c) 2011 Blackmagic Design
++**
++** Permission is hereby granted, free of charge, to any person or organization
++** obtaining a copy of the software and accompanying documentation covered by
++** this license (the "Software") to use, reproduce, display, distribute,
++** execute, and transmit the Software, and to prepare derivative works of the
++** Software, and to permit third-parties to whom the Software is furnished to
++** do so, all subject to the following:
++** 
++** The copyright notices in the Software and this entire statement, including
++** the above license grant, this restriction and the following disclaimer,
++** must be included in all copies of the Software, in whole or in part, and
++** all derivative works of the Software, unless such copies or derivative
++** works are solely in the form of machine-executable object code generated by
++** a source language processor.
++** 
++** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++** DEALINGS IN THE SOFTWARE.
++** -LICENSE-END-
++*/
++
++#ifndef BMD_DECKLINKAPITYPES_H
++#define BMD_DECKLINKAPITYPES_H
++
++// Type Declarations
++
++typedef int64_t BMDTimeValue;
++typedef int64_t BMDTimeScale;
++typedef uint32_t BMDTimecodeBCD;
++typedef uint32_t BMDTimecodeUserBits;
++
++// Interface ID Declarations
++
++#define IID_IDeckLinkTimecode                            /* BC6CFBD3-8317-4325-AC1C-1216391E9340 */ (REFIID){0xBC,0x6C,0xFB,0xD3,0x83,0x17,0x43,0x25,0xAC,0x1C,0x12,0x16,0x39,0x1E,0x93,0x40}
++
++/* Enum BMDTimecodeFlags - Timecode flags */
++
++typedef uint32_t BMDTimecodeFlags;
++enum _BMDTimecodeFlags {
++    bmdTimecodeFlagDefault                                       = 0,
++    bmdTimecodeIsDropFrame                                       = 1 << 0
++};
++
++/* Enum BMDVideoConnection - Video connection types */
++
++typedef uint32_t BMDVideoConnection;
++enum _BMDVideoConnection {
++    bmdVideoConnectionSDI                                        = 1 << 0,
++    bmdVideoConnectionHDMI                                       = 1 << 1,
++    bmdVideoConnectionOpticalSDI                                 = 1 << 2,
++    bmdVideoConnectionComponent                                  = 1 << 3,
++    bmdVideoConnectionComposite                                  = 1 << 4,
++    bmdVideoConnectionSVideo                                     = 1 << 5
++};
++
++// Forward Declarations
++
++class IDeckLinkTimecode;
++
++/* Interface IDeckLinkTimecode - Used for video frame timecode representation. */
++
++class IDeckLinkTimecode : public IUnknown
++{
++public:
++    virtual BMDTimecodeBCD GetBCD (void) = 0;
++    virtual HRESULT GetComponents (/* out */ uint8_t *hours, /* out */ uint8_t *minutes, /* out */ uint8_t *seconds, /* out */ uint8_t *frames) = 0;
++    virtual HRESULT GetString (/* out */ CFStringRef *timecode) = 0;
++    virtual BMDTimecodeFlags GetFlags (void) = 0;
++    virtual HRESULT GetTimecodeUserBits (/* out */ BMDTimecodeUserBits *userBits) = 0;
++
++protected:
++    virtual ~IDeckLinkTimecode () {}; // call Release method to drop reference count
++};
++
++/* Functions */
++
++extern "C" {
++
++
++};
++
++
++#endif /* defined(BMD_DECKLINKAPITYPES_H) */
+diff --git a/sys/decklink/osx/DeckLinkAPIVersion.h b/sys/decklink/osx/DeckLinkAPIVersion.h
+new file mode 100644
+index 0000000..2681ed0
+--- /dev/null
++++ b/sys/decklink/osx/DeckLinkAPIVersion.h
+@@ -0,0 +1,37 @@
++/* -LICENSE-START-
++ * ** Copyright (c) 2011 Blackmagic Design
++ * **
++ * ** Permission is hereby granted, free of charge, to any person or organization
++ * ** obtaining a copy of the software and accompanying documentation covered by
++ * ** this license (the "Software") to use, reproduce, display, distribute,
++ * ** execute, and transmit the Software, and to prepare derivative works of the
++ * ** Software, and to permit third-parties to whom the Software is furnished to
++ * ** do so, all subject to the following:
++ * ** 
++ * ** The copyright notices in the Software and this entire statement, including
++ * ** the above license grant, this restriction and the following disclaimer,
++ * ** must be included in all copies of the Software, in whole or in part, and
++ * ** all derivative works of the Software, unless such copies or derivative
++ * ** works are solely in the form of machine-executable object code generated by
++ * ** a source language processor.
++ * ** 
++ * ** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++ * ** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++ * ** FITNESS FOR A PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT
++ * ** SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
++ * ** FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
++ * ** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
++ * ** DEALINGS IN THE SOFTWARE.
++ * ** -LICENSE-END-
++ * */
++
++/* DeckLinkAPIVersion.h */
++
++#ifndef __DeckLink_API_Verison_h__
++#define __DeckLink_API_Version_h__
++
++#define BLACKMAGIC_DECKLINK_API_VERSION					0x09000000
++#define BLACKMAGIC_DECKLINK_API_VERSION_STRING			"9.0"
++
++#endif	// __DeckLink_API_Version_h__
++
 diff --git a/sys/directdraw/gstdirectdrawsink.c b/sys/directdraw/gstdirectdrawsink.c
 index bd9b79c..518ca7c 100644
 --- a/sys/directdraw/gstdirectdrawsink.c
@@ -27423,6 +29593,44 @@ index a10a2fc..3e0cd6f 100644
  
    res =
        gst_pad_alloc_buffer_and_set_caps (GST_BASE_SRC_PAD (src),
+diff --git a/tests/check/elements/mpegtsmux.c b/tests/check/elements/mpegtsmux.c
+index a93ac67..a7beee4 100644
+--- a/tests/check/elements/mpegtsmux.c
++++ b/tests/check/elements/mpegtsmux.c
+@@ -42,8 +42,6 @@ static GstStaticPadTemplate audio_src_template = GST_STATIC_PAD_TEMPLATE ("src",
+ typedef struct _TestData
+ {
+   GstEvent *sink_event;
+-  GstEvent *src_event1;
+-  GstEvent *src_event2;
+   gint src_events;
+ } TestData;
+ 
+@@ -60,14 +58,10 @@ src_event (GstPad * pad, GstEvent * event)
+ {
+   TestData *data = (TestData *) gst_pad_get_element_private (pad);
+ 
+-  if (event->type == GST_EVENT_CUSTOM_UPSTREAM) {
++  if (event->type == GST_EVENT_CUSTOM_UPSTREAM)
+     data->src_events += 1;
+-    if (data->src_event1 != NULL)
+-      data->src_event2 = event;
+-    else
+-      data->src_event1 = event;
+-  }
+ 
++  gst_event_unref (event);
+   return TRUE;
+ }
+ 
+@@ -79,6 +73,7 @@ sink_event (GstPad * pad, GstEvent * event)
+   if (event->type == GST_EVENT_CUSTOM_DOWNSTREAM)
+     data->sink_event = event;
+ 
++  gst_event_unref (event);
+   return TRUE;
+ }
+ 
 diff --git a/tests/examples/camerabin/gst-camera-perf.c b/tests/examples/camerabin/gst-camera-perf.c
 index c5554a0..0c56ee6 100644
 --- a/tests/examples/camerabin/gst-camera-perf.c

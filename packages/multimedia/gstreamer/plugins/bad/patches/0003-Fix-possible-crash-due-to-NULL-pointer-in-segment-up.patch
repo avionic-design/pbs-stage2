@@ -1,0 +1,49 @@
+From b1e0a09ee323b9e8271bb7244beca145ed37b19e Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Wed, 11 Apr 2012 12:47:56 +0200
+Subject: [PATCH 3/5] Fix possible crash, due to NULL pointer in segment
+ update.
+
+When creating a segment_event fails, the tsdemux would still try to set it's
+event-src, which leads to a NULL pointer access. Move event-src update
+downwards, so it's only set when the events itself are valid.
+---
+ gst/mpegtsdemux/tsdemux.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index 771579b..7f098f2 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -1501,7 +1501,6 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
+           gst_event_new_new_segment_full (TRUE, demux->segment.rate,
+           demux->segment.applied_rate, GST_FORMAT_TIME, demux->segment.start,
+           firstts, demux->segment.time);
+-      GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
+     }
+     demux->calculate_update_segment = FALSE;
+   }
+@@ -1527,18 +1526,19 @@ calculate_and_push_newsegment (GstTSDemux * demux, TSDemuxStream * stream)
+     demux->segment_event =
+         gst_event_new_new_segment_full (FALSE, demux->segment.rate,
+         demux->segment.applied_rate, GST_FORMAT_TIME, start, stop, time);
+-    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
+   }
+ 
+ push_new_segment:
+   if (demux->update_segment) {
+     GST_DEBUG_OBJECT (stream->pad, "Pushing update segment");
++    GST_EVENT_SRC (demux->update_segment) = gst_object_ref (demux);
+     gst_event_ref (demux->update_segment);
+     gst_pad_push_event (stream->pad, demux->update_segment);
+   }
+ 
+   if (demux->segment_event) {
+     GST_DEBUG_OBJECT (stream->pad, "Pushing newsegment event");
++    GST_EVENT_SRC (demux->segment_event) = gst_object_ref (demux);
+     gst_event_ref (demux->segment_event);
+     gst_pad_push_event (stream->pad, demux->segment_event);
+   }
+-- 
+1.7.10
+
