@@ -7,3 +7,4 @@ ec-preprocess.patch
 audiomixer-optimization.patch
 remove-config.h.patch
 ring-after-callback.patch
+lsd-player-in-use.patch

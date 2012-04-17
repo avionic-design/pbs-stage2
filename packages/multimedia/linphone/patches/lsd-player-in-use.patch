@@ -1,0 +1,44 @@
+commit ef124c6fd243993833a63779f21833fda400145f
+Author: Alban Bedel <alban.bedel@avionic-design.de>
+Date:   Tue Apr 17 15:08:14 2012 +0200
+
+    LSD: Make sure that players don't get re-used until they are released
+    
+    Mark players returned by linphone_sound_daemon_get_player() as "in use"
+    to make sure that no other code use it until
+    linphone_sound_daemon_release_player() is called.
+
+diff --git a/coreapi/lsd.c b/coreapi/lsd.c
+index e47023f..655d150 100644
+--- a/coreapi/lsd.c
++++ b/coreapi/lsd.c
+@@ -46,7 +46,8 @@ struct _LsdPlayer{
+ 	int mixer_pin;
+ 	void *user_data;
+ 	bool_t loop;
+-	bool_t pad[3];
++	bool_t in_use;
++	bool_t pad[2];
+ };
+ 
+ struct _LinphoneSoundDaemon {
+@@ -87,9 +88,10 @@ LsdPlayer *linphone_sound_daemon_get_player(LinphoneSoundDaemon *obj){
+ 		MSFilter *p=b->player;
+ 		int state;
+ 		ms_filter_call_method(p,MS_PLAYER_GET_STATE,&state);
+-		if (state==MSPlayerClosed){
++		if (state==MSPlayerClosed && !b->in_use){
+ 			lsd_player_set_gain(b,1);
+ 			lsd_player_enable_loop (b,FALSE);
++			b->in_use = TRUE;
+ 			return b;
+ 		}
+ 	}
+@@ -103,6 +105,7 @@ void linphone_sound_daemon_release_player(LinphoneSoundDaemon *obj, LsdPlayer *
+ 	if (state!=MSPlayerClosed){
+ 		ms_filter_call_method(player->player,MS_PLAYER_CLOSE,&state);
+ 	}
++	player->in_use = FALSE;
+ }
+ 
+ LinphoneSoundDaemon *lsd_player_get_daemon(const LsdPlayer *p){
