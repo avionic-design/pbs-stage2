@@ -1,12 +1,14 @@
 PACKAGE = cairo
-VERSION = 1.10.2
+VERSION = 1.12.2
+LICENSE = LGPL MPL
 
 LOCATION = http://cairographics.org/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--enable-xcb
 
 prunefiles = \
