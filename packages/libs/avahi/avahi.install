@@ -1,0 +1,6 @@
+/etc
+/usr/bin
+/usr/lib/*.so.*
+/usr/sbin
+/usr/share/avahi
+/usr/share/dbus-1
