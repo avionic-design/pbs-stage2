@@ -16,7 +16,7 @@ diff --git a/Modules/FindLua51.cmake b/Modules/FindLua51.cmake
 index 123fd5d..5de51da 100644
 --- a/Modules/FindLua51.cmake
 +++ b/Modules/FindLua51.cmake
-@@ -59,7 +59,8 @@ IF(LUA_LIBRARY)
+@@ -60,7 +60,8 @@ IF(LUA_LIBRARY)
    # include the math library for Unix
    IF(UNIX AND NOT APPLE)
      FIND_LIBRARY(LUA_MATH_LIBRARY m)
