@@ -1,0 +1,5 @@
+/usr/include
+/usr/lib/icu
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/icu

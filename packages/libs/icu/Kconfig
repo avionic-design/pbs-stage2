@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_ICU
+	bool "icu"
+	select PACKAGE_BUILD_TOOLS_ICU
+	select VIRTUAL_DEVEL_LIBC

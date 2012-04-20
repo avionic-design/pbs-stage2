@@ -1,0 +1,6 @@
+PACKAGE = icu4c
+VERSION = 4.8.1.1
+LICENSE = custom
+
+LOCATION = http://download.icu-project.org/files/$(PACKAGE)/$(VERSION)
+TARBALLS = $(PACKAGE)-$(subst .,_,$(VERSION))-src.tgz
