@@ -1,5 +1,6 @@
 PACKAGE = v4l-utils
-VERSION = 0.8.6
+VERSION = 0.8.8
+LICENSE = LGPL
 
 LOCATION = http://linuxtv.org/downloads/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
