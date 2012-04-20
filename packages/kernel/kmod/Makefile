@@ -1,7 +1,8 @@
 PACKAGE = kmod
-VERSION = 5
+VERSION = 9
+LICENSE = GPL
 
-LOCATION = http://packages.profusion.mobi/$(PACKAGE)
+LOCATION = http://kernel.org/pub/linux/utils/kernel/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
