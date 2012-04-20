@@ -1,5 +1,6 @@
 PACKAGE = vala
-VERSION = 0.15.2
+VERSION = 0.17.2
+LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
