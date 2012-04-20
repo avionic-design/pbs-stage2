@@ -1,5 +1,6 @@
 PACKAGE = coreutils
-VERSION = 8.15
+VERSION = 8.17
+LICENSE = GPL
 
 LOCATION = ftp://ftp.gnu.org/gnu/coreutils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -9,17 +10,16 @@ include packages/autotools.mk
 conf-vars += \
 	PERL=/do/not/run/perl/when/cross-compiling
 
-#ifneq ($(LIBC),gnu)
-#conf-vars += \
-#	fu_cv_sys_stat_statvfs=yes
-#endif
+conf-vars += \
+	ac_cv_func_canonicalize_file_name=yes \
+	gl_cv_func_realpath_works=yes
 
-prunefiles =
 stripfiles = \
 	$(prefix)/bin/[ \
 	$(prefix)/bin/base64 \
 	$(prefix)/bin/basename \
 	$(prefix)/bin/cat \
+	$(prefix)/bin/chcon \
 	$(prefix)/bin/chgrp \
 	$(prefix)/bin/chmod \
 	$(prefix)/bin/chown \
@@ -44,6 +44,7 @@ stripfiles = \
 	$(prefix)/bin/false \
 	$(prefix)/bin/fmt \
 	$(prefix)/bin/fold \
+	$(prefix)/bin/groups \
 	$(prefix)/bin/head \
 	$(prefix)/bin/hostid \
 	$(prefix)/bin/hostname \
@@ -59,10 +60,12 @@ stripfiles = \
 	$(prefix)/bin/mkdir \
 	$(prefix)/bin/mkfifo \
 	$(prefix)/bin/mknod \
+	$(prefix)/bin/mktemp \
 	$(prefix)/bin/mv \
 	$(prefix)/bin/nice \
 	$(prefix)/bin/nl \
 	$(prefix)/bin/nohup \
+	$(prefix)/bin/nproc \
 	$(prefix)/bin/od \
 	$(prefix)/bin/paste \
 	$(prefix)/bin/pathchk \
@@ -73,8 +76,10 @@ stripfiles = \
 	$(prefix)/bin/ptx \
 	$(prefix)/bin/pwd \
 	$(prefix)/bin/readlink \
+	$(prefix)/bin/realpath \
 	$(prefix)/bin/rm \
 	$(prefix)/bin/rmdir \
+	$(prefix)/bin/runcon \
 	$(prefix)/bin/seq \
 	$(prefix)/bin/sha1sum \
 	$(prefix)/bin/sha224sum \
@@ -87,6 +92,7 @@ stripfiles = \
 	$(prefix)/bin/sort \
 	$(prefix)/bin/split \
 	$(prefix)/bin/stat \
+	$(prefix)/bin/stdbuf \
 	$(prefix)/bin/stty \
 	$(prefix)/bin/su \
 	$(prefix)/bin/sum \
@@ -95,9 +101,11 @@ stripfiles = \
 	$(prefix)/bin/tail \
 	$(prefix)/bin/tee \
 	$(prefix)/bin/test \
+	$(prefix)/bin/timeout \
 	$(prefix)/bin/touch \
 	$(prefix)/bin/tr \
 	$(prefix)/bin/true \
+	$(prefix)/bin/truncate \
 	$(prefix)/bin/tsort \
 	$(prefix)/bin/tty \
 	$(prefix)/bin/uname \
@@ -110,4 +118,5 @@ stripfiles = \
 	$(prefix)/bin/wc \
 	$(prefix)/bin/who \
 	$(prefix)/bin/whoami \
-	$(prefix)/bin/yes
+	$(prefix)/bin/yes \
+	$(prefix)/libexec/$(PACKAGE)/libstdbuf.so
