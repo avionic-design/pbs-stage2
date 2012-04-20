@@ -1,14 +1,16 @@
 PACKAGE = libdrm
-VERSION = 2.4.31
+VERSION = 2.4.35
+LICENSE = custom
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
-	--enable-nouveau-experimental-api \
-	--with-sysroot=$(SYSROOT)
+	--with-sysroot=$(SYSROOT) \
+	--disable-nouveau \
+	--disable-radeon
 
 prunefiles = \
 	$(prefix)/lib/*.la
