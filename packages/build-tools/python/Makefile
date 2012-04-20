@@ -1,5 +1,5 @@
 PACKAGE = Python
-VERSION = 2.7.2
+VERSION = 2.7.3
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -18,6 +18,8 @@ $(pkgtree)/.generate-wrapper:
 	rm $(prefix)/bin/python && \
 		$(call edit) > $(prefix)/bin/python && \
 		chmod 0755 $(prefix)/bin/python
+	rm $(prefix)/bin/python$(MAJOR) && \
+		ln -s python $(prefix)/bin/python$(MAJOR)
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.generate-wrapper
