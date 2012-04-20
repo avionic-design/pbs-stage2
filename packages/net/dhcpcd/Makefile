@@ -1,5 +1,6 @@
 PACKAGE = dhcpcd
-VERSION = 5.5.4
+VERSION = 5.5.6
+LICENSE = BSD
 
 LOCATION = http://roy.marples.name/downloads/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
