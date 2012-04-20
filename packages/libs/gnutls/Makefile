@@ -1,5 +1,6 @@
 PACKAGE = gnutls
-VERSION = 3.0.17
+VERSION = 3.0.20
+LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
