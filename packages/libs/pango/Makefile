@@ -1,5 +1,6 @@
 PACKAGE = pango
-VERSION = 1.29.4
+VERSION = 1.30.1
+LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -11,10 +12,6 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
-
-# pango configure does not detect the C++ cross-compiler correctly
-conf-vars += \
-	CXX=$(TARGET)-g++
 
 plugin = $(prefix)/lib/pango/1.6.0/modules
 
