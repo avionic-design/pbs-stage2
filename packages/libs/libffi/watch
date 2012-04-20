@@ -1,2 +1,2 @@
 version=3
-ftp://sourceware.org/pub/libffi/libffi-(.*)\.tar\.gz
+ftp://sourceware.org/pub/libffi/libffi-([\d\.]+)\.tar\.gz
