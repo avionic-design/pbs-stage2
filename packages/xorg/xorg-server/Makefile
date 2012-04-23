@@ -1,5 +1,6 @@
 PACKAGE = xorg-server
-VERSION = 1.11.4
+VERSION = 1.12.2
+LICENSE = MIT X
 
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
