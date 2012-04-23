@@ -1,13 +1,21 @@
 PACKAGE = libXrender
-VERSION = 0.9.6
+VERSION = 0.9.7
 
 include packages/xorg/lib/common.mk
 
-conf-args += \
+ifeq ($(CONFIG_LIBC),uclibc)
+  conf-args += \
+	--enable-malloc0returnsnull
+else
+  conf-args += \
 	--disable-malloc0returnsnull
+endif
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
-	$(prefix)/lib/libXrender.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXrender.so.1.3.0
+	$(prefix)/lib/*.so.*
