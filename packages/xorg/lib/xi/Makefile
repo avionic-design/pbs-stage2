@@ -1,5 +1,6 @@
 PACKAGE = libXi
-VERSION = 1.4.3
+VERSION = 1.6.1
+LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
@@ -15,6 +16,9 @@ else
   conf-args += \
 	--disable-malloc0returnsnull
 endif
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
