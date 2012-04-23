@@ -1,16 +1,18 @@
 PACKAGE = librsvg
-VERSION = 2.35.0
+VERSION = 2.36.1
+LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT)
+	--with-sysroot=$(SYSROOT) \
+	--disable-introspection
 
 loader = $(prefix)/lib/gdk-pixbuf-2.0/2.10.0/loaders
 engine = $(prefix)/lib/gtk-2.0/2.10.0/engines

@@ -1,5 +1,4 @@
 config PACKAGE_LIBS_LIBRSVG
 	bool "librsvg"
-	select PACKAGE_LIBS_GDK_PIXBUF
+	select PACKAGE_LIBS_GTK
 	select PACKAGE_LIBS_LIBCROCO
-	default n
