@@ -1,7 +1,10 @@
 PACKAGE = libXpm
-VERSION = 3.5.9
+VERSION = 3.5.10
 
 include packages/xorg/lib/common.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
