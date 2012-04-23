@@ -1,5 +1,5 @@
 PACKAGE = inputproto
-VERSION = 2.0.2
+VERSION = 2.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 1.5.1
