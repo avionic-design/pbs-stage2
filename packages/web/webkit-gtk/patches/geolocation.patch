@@ -158,3 +158,4 @@ index 9761c15..2be2e8c 100644
      virtual void loadIconForFiles(const Vector<String>&, WebCore::FileIconLoader*) OVERRIDE;
 -- 
 1.7.9.4
+

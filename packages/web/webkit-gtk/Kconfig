@@ -1,47 +1,57 @@
 config PACKAGE_WEB_WEBKIT_GTK
 	bool "webkit-gtk"
 	select PACKAGE_DESKTOP_SHARED_MIME_INFO
-	select PACKAGE_LIBS_GTK
+	select VIRTUAL_LIBS_GTK
+	select PACKAGE_LIBS_ICU if PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_ICU
 	select PACKAGE_LIBS_LIBSOUP
 	select PACKAGE_LIBS_LIBXML2
 	select PACKAGE_LIBS_LIBXSLT
 	select PACKAGE_LIBS_SQLITE
 	select PACKAGE_XORG_LIB_XT
-	default n
+
+if PACKAGE_WEB_WEBKIT_GTK
+
+choice PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND
+	prompt "Unicode backend"
+
+config PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_GLIB
+	bool "GLib"
+
+config PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_ICU
+	bool "ICU"
+
+endchoice
 
 config PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO
-	bool "Enable html5 video support"
-	depends on PACKAGE_WEB_WEBKIT_GTK
-	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
-	default n
+	bool "HTML5 <video> tag support"
+	select PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_BASE
 	help
 	  Enables support for HTML5 video tag.
 
-config PACKAGE_WEB_WEBKIT_GTK_ENABLE_3D
-	bool "Enable 3D support"
-	depends on PACKAGE_WEB_WEBKIT_GTK
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_ACCELERATED_COMPOSITING
+	bool "Accelerated Compositing"
+	help
+	  Enables support for accelerated compositing.
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBGL
+	bool "WebGL support"
 	select VIRTUAL_OPENGL_ES
-	default n
 	help
 	  Enables support for WebGL and 3D rendering.
 
 config PACKAGE_WEB_WEBKIT_GTK_ENABLE_FS_API
 	bool "Enable FilesystemAPI support"
-	depends on PACKAGE_WEB_WEBKIT_GTK
-	default n
 	help
 	  Enables support for HTML5 Filesystem API.
 
 config PACKAGE_WEB_WEBKIT_GTK_ENABLE_ANIM_API
 	bool "Enable Webkit AnimationAPI support"
-	depends on PACKAGE_WEB_WEBKIT_GTK
-	default n
 	help
 	  Enables support for Webkit Animation API.
 
 config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2
 	bool "Enable Webkit2 support"
-	depends on PACKAGE_WEB_WEBKIT_GTK
-	default n
 	help
 	  Enables support for Webkit2.
+
+endif
