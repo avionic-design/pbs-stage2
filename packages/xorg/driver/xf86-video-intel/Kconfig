@@ -3,4 +3,14 @@ config PACKAGE_XORG_DRIVER_VIDEO_INTEL
 	select PACKAGE_XORG_LIB_XVMC
 	select PACKAGE_XORG_PROTO_XINERAMA
 	select PACKAGE_XORG_XORG_SERVER
-	default n
+
+if PACKAGE_XORG_DRIVER_VIDEO_INTEL
+
+config PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG
+	bool "enable debugging support"
+	select PACKAGE_DEVEL_VALGRIND
+
+config PACKAGE_XORG_DRIVER_VIDEO_INTEL_SNA
+	bool "enable SandyBridge New Acceleration (SNA)"
+
+endif
