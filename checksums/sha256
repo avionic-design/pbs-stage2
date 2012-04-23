@@ -310,7 +310,7 @@ d6ab8371f9d31e594eb6922823d5ccd03dcc4e9d84b0e23ea25ac1405432f91c  download/ntp-4
 8b2cf4ccc4e7d182d7f40790acc1d4ae822aa05ff560c0be6541ce07832b9b0a  download/opengles2-binary.tar.bz2
 93c536e6bc4e962050a00321e88e694fc4e0000e2ad887b8de22830bfda2649f  download/openjdk-195fcceefddc.tar.gz
 83dd7c1e8ec8b4567afe49af539271b5a73562fb7a3ca51df73eccba89ec8c49  download/openntpd-3.9p1.tar.gz
-8d3e8b6b6ff04b525a6dfa6fdeb6a99043ccf6c3310cc32eba84c939b07777d5  download/openssh-5.9p1.tar.gz
+589d48e952d6c017e667873486b5df63222f9133d417d0002bd6429d9bd882de  download/openssh-6.0p1.tar.gz
 4d9f0a594a9a89b28e1a04a9504c04104f6508ee27ad1e0efdd17a7a6dbbeeee  download/openssl-1.0.1.tar.gz
 700e4edba20a0ed42164b645da26ce515b883d4c4633b222302f1e541f2a58ab  download/orc-0.4.16.tar.gz
 f2a8263f8242756e2ce092c710ac068cd4b21051fc70c1937b275193a2bfb3d3  download/ortp-0.20.0.tar.gz
