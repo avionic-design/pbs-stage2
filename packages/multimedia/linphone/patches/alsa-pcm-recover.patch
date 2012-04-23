@@ -1,0 +1,59 @@
+From 87896373e9da0a8386f46fb75d3542b3f6288d77 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Tue, 17 Apr 2012 07:44:14 +0200
+Subject: [PATCH] Use snd_pcm_recover() instead of open coding it
+
+---
+ mediastreamer2src/alsa.c |   29 ++++++++---------------------
+ 1 file changed, 8 insertions(+), 21 deletions(-)
+
+diff --git a/mediastreamer2/src/alsa.c b/mediastreamer2/src/alsa.c
+index 25f39fe..0dd73bb 100644
+--- a/mediastreamer2/src/alsa.c
++++ b/mediastreamer2/src/alsa.c
+@@ -345,16 +345,10 @@ static int alsa_read(snd_pcm_t *handle,unsigned char *buf,int nsamples)
+ 	int err;
+ 	err=snd_pcm_readi(handle,buf,nsamples);
+ 	if (err<0) {
+-		if (err!=-EAGAIN)
+-			ms_warning("alsa_read: snd_pcm_readi() returned %i",err);
+-		if (err==-EPIPE){
+-			snd_pcm_prepare(handle);
+-			err=snd_pcm_readi(handle,buf,nsamples);
+-			if (err<0) ms_warning("alsa_read: snd_pcm_readi() failed:%s.",snd_strerror(err));
+-		}else if (err==-ESTRPIPE){
+-			alsa_resume(handle);
+-		}else if (err!=-EWOULDBLOCK){
+-			ms_warning("alsa_read: snd_pcm_readi() failed:%s.",snd_strerror(err));
++		if (err != -EAGAIN) {
++			err = snd_pcm_recover(handle, err, 0);
++			if (err < 0)
++				ms_warning("alsa_read: recovery failed: %s (%i)", snd_strerror(err), err);
+ 		}
+ 	}else if (err==0){
+ 		ms_warning("alsa_read: snd_pcm_readi() returned 0");
+@@ -367,17 +361,10 @@ static int alsa_write(snd_pcm_t *handle,unsigned char *buf,int nsamples)
+ {
+ 	int err;
+ 	if ((err=snd_pcm_writei(handle,buf,nsamples))<0){
+-		if (err==-EPIPE){
+-			snd_pcm_prepare(handle);
+-#ifdef EPIPE_BUGFIX
+-			alsa_fill_w (handle);
+-#endif
+-			err=snd_pcm_writei(handle,buf,nsamples);
+-			if (err<0) ms_warning("alsa_card_write: Error writing sound buffer (nsamples=%i):%s",nsamples,snd_strerror(err));
+-		}else if (err==-ESTRPIPE){
+-			alsa_resume(handle);
+-		}else if (err!=-EWOULDBLOCK){
+-			ms_warning("alsa_card_write: snd_pcm_writei() failed:%s.",snd_strerror(err));
++		if (err != -EAGAIN) {
++			err = snd_pcm_recover(handle, err, 0);
++			if (err < 0)
++				ms_warning("alsa_write: recovery failed: %s (%i)", snd_strerror(err), err);
+ 		}
+ 	}else if (err!=nsamples) {
+ 		ms_debug("Only %i samples written instead of %i",err,nsamples);
+-- 
+1.7.10
+

@@ -1,0 +1,166 @@
+From f97ce372e25ef9c9828303eb0b9d60edcb0deb29 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 29 Mar 2012 15:44:23 +0200
+Subject: [PATCH 1/2] alsa: Fix parameter setup
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ src/alsa.c |  123 ++++++++++++++++++++++++++++++++++--------------------------
+ 1 file changed, 70 insertions(+), 53 deletions(-)
+
+diff --git a/mediastreamer2/src/alsa.c b/mediastreamer2/src/alsa.c
+index d7f585c..ecf1f48 100644
+--- a/mediastreamer2/src/alsa.c
++++ b/mediastreamer2/src/alsa.c
+@@ -89,11 +89,12 @@ static int alsa_set_params(snd_pcm_t *pcm_handle, int rw, int bits, int stereo,
+ 	snd_pcm_sw_params_t *swparams=NULL;
+ 	int dir;
+ 	uint exact_uvalue;
+-	unsigned long exact_ulvalue;
+ 	int channels;
+-	int periods=ALSA_PERIODS;
+-	int periodsize=ALSA_PERIOD_SIZE;
+-	snd_pcm_uframes_t buffersize;
++	snd_pcm_uframes_t buffer_size = 0;
++	snd_pcm_uframes_t chunk_size = 0;
++	unsigned int buffer_time = 0;
++	unsigned int period_time = 0;
++	snd_pcm_uframes_t threshold;
+ 	int err;
+ 	int format;
+ 	
+@@ -135,66 +136,82 @@ static int alsa_set_params(snd_pcm_t *pcm_handle, int rw, int bits, int stereo,
+ 		ms_warning("alsa_set_params: The rate %d Hz is not supported by your hardware.\n "
+ 		"==> Using %d Hz instead.", rate, exact_uvalue);
+ 	}
+-	/* choose greater period size when rate is high */
+-	periodsize=periodsize*(rate/8000);	
+-	
+-	/* Set buffer size (in frames). The resulting latency is given by */
+-	/* latency = periodsize * periods / (rate * bytes_per_frame)     */
+-	/* set period size */
+-	exact_ulvalue=periodsize;
+-	dir=0;
+-	if (snd_pcm_hw_params_set_period_size_near(pcm_handle, hwparams, &exact_ulvalue, &dir) < 0) {
+-		ms_warning("alsa_set_params: Error setting period size.");
++
++	err = snd_pcm_hw_params_get_buffer_time_max(hwparams, &buffer_time, 0);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to get max. buffer time: %s",
++				snd_strerror(err));
+ 		return -1;
+ 	}
+-	if (dir != 0) {
+-		ms_warning("alsa_set_params: The period size %d is not supported by your hardware.\n "
+-		"==> Using %d instead.", periodsize, (int)exact_ulvalue);
++
++	if (buffer_time > 500000)
++		buffer_time = 500000;
++
++	period_time = buffer_time / 4;
++
++	err = snd_pcm_hw_params_set_period_time_near(pcm_handle, hwparams, &period_time, &dir);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to set period time: %s",
++				snd_strerror(err));
++		return -1;
+ 	}
+-	ms_warning("alsa_set_params: periodsize:%d Using %d", periodsize, (int)exact_ulvalue);
+-	periodsize=exact_ulvalue;
+-	/* Set number of periods. Periods used to be called fragments. */ 
+-	exact_uvalue=periods;
+-	dir=0;
+-	if (snd_pcm_hw_params_set_periods_near(pcm_handle, hwparams, &exact_uvalue, &dir) < 0) {
+-		ms_warning("alsa_set_params: Error setting periods.");
++
++	err = snd_pcm_hw_params_set_buffer_time_near(pcm_handle, hwparams, &buffer_time, &dir);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to set buffer time: %s",
++				snd_strerror(err));
+ 		return -1;
+ 	}
+-	ms_warning("alsa_set_params: period:%d Using %d", periods, exact_uvalue);
+-	if (dir != 0) {
+-		ms_warning("alsa_set_params: The number of periods %d is not supported by your hardware.\n "
+-		"==> Using %d instead.", periods, exact_uvalue);
++
++	err = snd_pcm_hw_params(pcm_handle, hwparams);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to apply HW parameters: %s",
++				snd_strerror(err));
++		return -1;
+ 	}
+-	periods=exact_ulvalue;
+ 
+-	if (snd_pcm_hw_params_get_buffer_size(hwparams, &buffersize)<0){
+-		buffersize=0;
+-		ms_warning("alsa_set_params: could not obtain hw buffer size.");
++	snd_pcm_hw_params_get_period_size(hwparams, &chunk_size, 0);
++	snd_pcm_hw_params_get_buffer_size(hwparams, &buffer_size);
++
++	snd_pcm_sw_params_alloca(&swparams);
++	snd_pcm_sw_params_current(pcm_handle, swparams);
++
++	err = snd_pcm_sw_params_set_avail_min(pcm_handle, swparams, chunk_size);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to set available minimum: %s",
++				snd_strerror(err));
++		return -1;
+ 	}
+-	
+-	/* Apply HW parameter settings to */
+-	/* PCM device and prepare device  */
+-	if ((err=snd_pcm_hw_params(pcm_handle, hwparams)) < 0) {
+-		ms_warning("alsa_set_params: Error setting HW params:%s",snd_strerror(err));
++
++	if (rw)
++		threshold = buffer_size + rate / 1000000;
++	else
++		threshold = 1;
++
++	err = snd_pcm_sw_params_set_start_threshold(pcm_handle, swparams, threshold);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to set start threshold: %s",
++				snd_strerror(err));
+ 		return -1;
+ 	}
+-	/*prepare sw params */
+-	if (rw){
+-		snd_pcm_sw_params_alloca(&swparams);
+-		snd_pcm_sw_params_current(pcm_handle, swparams);
+-		//ms_message("periodsize=%i, buffersize=%i",(int) periodsize, (int)buffersize);
+-		if ((err=snd_pcm_sw_params_set_start_threshold(pcm_handle, swparams,periodsize*2 ))<0){
+-			ms_warning("alsa_set_params: Error setting start threshold:%s",snd_strerror(err));
+-		}
+-		if ((err=snd_pcm_sw_params_set_stop_threshold(pcm_handle, swparams,periodsize*periods))<0){
+-			ms_warning("alsa_set_params: Error setting stop threshold:%s",snd_strerror(err));
+-		}
+-		if ((err=snd_pcm_sw_params(pcm_handle, swparams))<0){
+-			ms_warning("alsa_set_params: Error setting SW params:%s",snd_strerror(err));
+-			return -1;
+-		}
++
++	threshold = buffer_size;
++
++	err = snd_pcm_sw_params_set_stop_threshold(pcm_handle, swparams, threshold);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to set stop threshold: %s",
++				snd_strerror(err));
++		return -1;
+ 	}
+-	return 0;	
++
++	err = snd_pcm_sw_params(pcm_handle, swparams);
++	if (err < 0) {
++		ms_warning("alsa_set_params: failed to apply SW parameters: %s",
++				snd_strerror(err));
++		return -1;
++	}
++
++	return 0;
+ }
+ 
+ #ifdef EPIPE_BUGFIX
+-- 
+1.7.9.5
+

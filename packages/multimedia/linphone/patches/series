@@ -1,4 +1,5 @@
 autotools.patch
+autotools-macos.patch
 optional-speex.patch
 glib-2.31.patch
 multi-ms-init.patch
@@ -9,3 +10,6 @@ remove-config.h.patch
 ring-after-callback.patch
 lsd-player-in-use.patch
 fileplayer-mem-leak-fix.patch
+alsa-set-params.patch
+remove-alsa-can-read.patch
+alsa-pcm-recover.patch
