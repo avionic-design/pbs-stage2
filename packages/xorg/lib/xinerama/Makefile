@@ -1,6 +1,5 @@
 PACKAGE = libXinerama
-VERSION = 1.1
-SOVER = 1.0.0
+VERSION = 1.1.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
@@ -18,7 +17,7 @@ else
 endif
 
 prunefiles = \
-	$(prefix)/lib/libXinerama.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXinerama.so.$(SOVER)
+	$(prefix)/lib/*.so.*
