@@ -1,3 +1,2 @@
 ltmain-sysroot.patch
-busy-loop-fix.patch
 fix-self-reference.patch
