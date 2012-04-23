@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.19.4
+VERSION = 1.20.1
 LICENSE = GPL
 
 LOCATION = http://busybox.net/downloads
@@ -25,6 +25,18 @@ ifeq ($(CONFIG_PACKAGE_LIBS_XZ),y)
   CONFIGS += xz-n
 else
   CONFIGS += xz-y
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX),y)
+  CONFIGS += util-linux-n
+else
+  CONFIGS += util-linux-y
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_COREUTILS),y)
+  CONFIGS += coreutils-n
+else
+  CONFIGS += coreutils-y
 endif
 
 CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))
