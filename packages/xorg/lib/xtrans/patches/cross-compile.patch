@@ -15,7 +15,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 04324ad..bc4f294 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -269,7 +269,7 @@ Xtransinclude_HEADERS = \
+@@ -272,7 +272,7 @@ Xtransinclude_HEADERS = \
  
  aclocaldir = $(datadir)/aclocal
  aclocal_DATA = xtrans.m4
