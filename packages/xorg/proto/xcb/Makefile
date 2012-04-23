@@ -1,5 +1,5 @@
 PACKAGE = xcb-proto
-VERSION = 1.7
+VERSION = 1.7.1
 
 LOCATION = http://xcb.freedesktop.org/dist
 
