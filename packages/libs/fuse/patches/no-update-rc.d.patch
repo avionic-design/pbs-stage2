@@ -11,7 +11,7 @@ diff --git a/util/Makefile.am b/util/Makefile.am
 index 1b61266..b3ab035 100644
 --- a/util/Makefile.am
 +++ b/util/Makefile.am
-@@ -32,10 +32,6 @@ install-exec-local:
+@@ -39,10 +39,6 @@ install-exec-local:
  	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
  	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
@@ -22,7 +22,7 @@ index 1b61266..b3ab035 100644
  
  install-data-local:
  	$(mkdir_p) $(DESTDIR)$(UDEV_RULES_PATH)
-@@ -45,7 +41,3 @@ uninstall-local:
+@@ -52,7 +48,3 @@ uninstall-local:
  	rm -f $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	rm -f $(DESTDIR)$(UDEV_RULES_PATH)/99-fuse.rules
  	rm -f $(DESTDIR)$(INIT_D_PATH)/fuse

@@ -1,5 +1,5 @@
 PACKAGE = fuse
-VERSION = 2.8.7
+VERSION = 2.9.0
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

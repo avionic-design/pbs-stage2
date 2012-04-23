@@ -12,16 +12,7 @@ diff --git a/util/Makefile.am b/util/Makefile.am
 index b9bcdaa..1b61266 100644
 --- a/util/Makefile.am
 +++ b/util/Makefile.am
-@@ -6,7 +6,7 @@ noinst_PROGRAMS = mount.fuse
- 
- fusermount_SOURCES = fusermount.c
- fusermount_LDADD = ../lib/mount_util.lo
--fusermount_CPPFLAGS = -I../lib
-+fusermount_CPPFLAGS = -I$(top_srcdir)/lib
- mount_fuse_SOURCES = mount.fuse.c
- 
- ulockmgr_server_SOURCES = ulockmgr_server.c
-@@ -29,7 +29,7 @@ INIT_D_PATH = @INIT_D_PATH@
+@@ -36,7 +36,7 @@ INIT_D_PATH = @INIT_D_PATH@
  
  install-exec-local:
  	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
