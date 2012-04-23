@@ -386,7 +386,7 @@ adb8892f3b8e4b7163703ed4a545774721a3d55a1062de001f08c477c03d97ab  download/udev-
 7ab4014a808751327f0a4f9687844c4022fc12d5d8b21755775d4a4aac30c9b3  download/upstart-0.6.6.tar.gz
 7c37e6d07542c9fe5be85f47fa3bf3ef7bdeb504a53343c37ad3249ce0a9ca53  download/usbutils-004.tar.bz2
 39b25765a02385dc73580ab5edc3c5a2cecd03c92b42e41b03fd037b1c7cefe6  download/util-linux-2.21.2.tar.xz
-cd21cb32592644065b70a7d2ceeedad49ab231651599c74b3fd2c7343f6be933  download/util-macros-1.16.1.tar.bz2
+7d79edde72fc17dcdc56cfbe2f8ff384d1bffd1d8c58c0fd25970f5b2ccb75ed  download/util-macros-1.17.tar.bz2
 5fa4c6f4b6f5410de57271a03cc9a15f15195ef3fc05a8e42ecf507d6d70a87f  download/v4l-utils-0.8.8.tar.bz2
 03beff415c0de40ce1cd586a67ae13e11582b03dbd8966e32161e6ca1bd02226  download/vala-0.17.2.tar.xz
 5d62c0330f1481fe2c593249192fa68ff454c19c34343978cc9ce91aa324cbf6  download/valgrind-3.7.0.tar.bz2
