@@ -1,5 +1,5 @@
 PACKAGE = libusb
-VERSION = 1.0.8
+VERSION = 1.0.9
 
 LOCATION = http://prdownloads.sourceforge.net/libusb
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
