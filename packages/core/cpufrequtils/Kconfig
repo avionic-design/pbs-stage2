@@ -1,4 +1,4 @@
 config PACKAGE_CORE_CPUFREQUTILS
 	bool "cpufrequtils"
+	depends on ARCH_X86 || ARCH_X86_64
 	select VIRTUAL_DEVEL_LIBC
-	default n
