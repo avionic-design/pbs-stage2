@@ -1,7 +1,10 @@
 PACKAGE = libpciaccess
-VERSION = 0.12.1
+VERSION = 0.13.1
 
 include packages/xorg/lib/common.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
