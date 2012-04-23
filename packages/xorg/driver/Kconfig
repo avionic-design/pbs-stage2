@@ -12,6 +12,7 @@ comment "Video Drivers"
 source "packages/xorg/driver/xf86-video-fbdev/Kconfig"
 source "packages/xorg/driver/xf86-video-iegd/Kconfig"
 source "packages/xorg/driver/xf86-video-intel/Kconfig"
+source "packages/xorg/driver/xf86-video-modesetting/Kconfig"
 source "packages/xorg/driver/xf86-video-psb/Kconfig"
 source "packages/xorg/driver/xf86-video-vesa/Kconfig"
 
