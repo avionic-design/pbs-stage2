@@ -1,7 +1,10 @@
 PACKAGE = libfontenc
-VERSION = 1.1.0
+VERSION = 1.1.1
 
 include packages/xorg/lib/common.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
