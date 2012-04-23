@@ -14,7 +14,9 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	CC='$(CC)' \
-	CFLAGS='$(CFLAGS)'
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)' \
+	EXLDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
