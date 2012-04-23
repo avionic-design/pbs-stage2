@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-mouse
-VERSION = 1.7.1
+VERSION = 1.7.2
 
 include packages/xorg/driver/common.mk
 
