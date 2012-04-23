@@ -1,7 +1,7 @@
 PACKAGE = kbd
 VERSION = 1.15.3
 
-LOCATION = http://ftp.kernel.org/pub/linux/utils/$(PACKAGE)
+LOCATION = ftp://ftp.altlinux.org/pub/people/legion/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
