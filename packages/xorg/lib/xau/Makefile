@@ -1,7 +1,10 @@
 PACKAGE = libXau
-VERSION = 1.0.6
+VERSION = 1.0.7
 
 include packages/xorg/lib/common.mk
+
+conf-args += \
+	--with-sysroot=$(SYSROOT)
 
 prunefiles = \
 	$(prefix)/lib/*.la
