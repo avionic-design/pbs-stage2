@@ -11,7 +11,7 @@ diff --git a/pci.ids b/pci.ids
 index 078f3fb..3f69c95 100644
 --- a/pci.ids
 +++ b/pci.ids
-@@ -20069,6 +20069,15 @@ a200  NEC Corporation
+@@ -20069,6 +20069,17 @@ a200  NEC Corporation
  a259  Hewlett Packard
  a25b  Hewlett Packard GmbH PL24-MKT
  a304  Sony
@@ -24,6 +24,8 @@ index 078f3fb..3f69c95 100644
 +	0005  OpenCores SPI Controller
 +	0006  Part Number Core [1332-801-000]
 +	0007  OpenCores I2C Controller
++	0008  OpenCores 10/100 Mbps Ethernet Controller
++	0009  OpenCores CAN Protocol Controller
  a727  3Com Corporation
  	0013  3CRPAG175 Wireless PC Card
  	6803  3CRDAG675B Wireless 11a/b/g Adapter

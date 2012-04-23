@@ -1,5 +1,6 @@
 PACKAGE = pciutils
 VERSION = 3.1.9
+LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/software/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
