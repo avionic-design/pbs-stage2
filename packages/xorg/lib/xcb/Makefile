@@ -1,5 +1,5 @@
 PACKAGE = libxcb
-VERSION = 1.8
+VERSION = 1.8.1
 
 LOCATION = http://xcb.freedesktop.org/dist
 
