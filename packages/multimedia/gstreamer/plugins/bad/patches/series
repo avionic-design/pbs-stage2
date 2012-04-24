@@ -5,4 +5,4 @@ rebase-to-git-branch-0.10_2012-04-16.patch
 0003-Fix-possible-crash-due-to-NULL-pointer-in-segment-up.patch
 0004-Revert-decklink-Add-decklink-dispatch-code-for-OS-X.patch
 0005-tsdemux-Set-currentlist-to-NULL-after-free.patch
-0001-mpegtspacketizer-Disable-use-of-clock-skew.patch
+0006-mpegtspacketizer-Disable-reset-of-base_pcrtime.patch
