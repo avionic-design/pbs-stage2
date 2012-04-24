@@ -1,0 +1,22 @@
+menu "libav"
+
+config VIRTUAL_LIBAV
+	bool
+	select PACKAGE_MULTIMEDIA_FFMPEG if LIBAV_FFMPEG
+	select PACKAGE_MULTIMEDIA_LIBAV if LIBAV_LIBAV
+
+# choose the libav implementation
+choice LIBAV
+	prompt "libav implementation"
+	help
+	  Select the package which shall provide the libav.
+
+config LIBAV_FFMPEG
+	bool "ffmpeg"
+
+config LIBAV_LIBAV
+	bool "libav"
+
+endchoice
+
+endmenu
