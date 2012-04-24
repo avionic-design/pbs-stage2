@@ -1,0 +1,10 @@
+config PACKAGE_MULTIMEDIA_LIBAV
+	bool "libav"
+	select VIRTUAL_DEVEL_LIBC
+	default n
+
+config PACKAGE_MULTIMEDIA_LIBAV_FFPLAY
+	bool "ffplay"
+	depends on PACKAGE_MULTIMEDIA_LIBAV
+	select PACKAGE_LIBS_SDL_CORE
+	default n
