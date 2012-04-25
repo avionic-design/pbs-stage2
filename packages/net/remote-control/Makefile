@@ -1,5 +1,5 @@
 PACKAGE = remote-control
-VERSION = 0.8.0
+VERSION = 0.8.2
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
