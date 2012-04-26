@@ -1,5 +1,5 @@
 PACKAGE = gcc
-VERSION = 4.6.2
+VERSION = 4.6.3
 LICENSE = GPL with run-time exception
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)/$(PACKAGE)-$(VERSION)

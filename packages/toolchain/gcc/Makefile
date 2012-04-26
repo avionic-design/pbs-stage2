@@ -80,7 +80,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 CPP = $(prefix)/bin/$(TARGET)-cpp
 CC = $(prefix)/bin/$(TARGET)-gcc
-CXX = $(prefix)/bin/$(TARGET)-g++
+GXX = $(prefix)/bin/$(TARGET)-g++
+CXX = $(prefix)/bin/$(TARGET)-c++
 GCJ = $(prefix)/bin/$(TARGET)-gcj
 
 $(pkgtree)/.install: $(pkgtree)/.build
@@ -91,6 +92,7 @@ $(pkgtree)/.install: $(pkgtree)/.build
 		sed -e 's,@VERSION@,$(VERSION),' $(pkgsrctree)/gcc.wrapper \
 			> $(CC) && \
 		chmod a+x $(CC)
+	mv $(GXX) $(GXX)-$(VERSION) && ln -s $(TARGET)-gcc $(GXX)
 	mv $(CXX) $(CXX)-$(VERSION) && ln -s $(TARGET)-gcc $(CXX)
 	mv $(CPP) $(CPP)-$(VERSION) && ln -s $(TARGET)-gcc $(CPP)
 ifeq ($(CONFIG_TOOLCHAIN_LANG_JAVA),y)
