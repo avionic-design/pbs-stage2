@@ -1,5 +1,5 @@
 PACKAGE = linux
-VERSION = 3.2
+VERSION = 3.3
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
