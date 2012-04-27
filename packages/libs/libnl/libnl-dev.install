@@ -1,8 +1,4 @@
 /usr/include
-/usr/lib/libnl/qdisc/*.a
-/usr/lib/libnl/qdisc/*.so
-/usr/lib/libnl/cls/*.a
-/usr/lib/libnl/cls/*.so
 /usr/lib/*.a
 /usr/lib/*.so
 /usr/lib/pkgconfig

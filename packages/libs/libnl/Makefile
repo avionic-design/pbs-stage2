@@ -1,5 +1,6 @@
 PACKAGE = libnl
-VERSION = 3.2.7
+VERSION = 3.2.11
+LICENSE = LGPL
 
 LOCATION = http://www.infradead.org/~tgr/$(PACKAGE)/files
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -13,13 +14,16 @@ plugin = $(prefix)/lib/$(PACKAGE)
 
 prunefiles = \
 	$(plugin)/cli/cls/*.la \
+	$(plugin)/cli/cls/*.a \
 	$(plugin)/cli/qdisc/*.la \
+	$(plugin)/cli/qdisc/*.a \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(plugin)/cli/cls/*.so.* \
-	$(plugin)/cli/qdisc/*.so.* \
+	$(plugin)/cli/cls/*.so \
+	$(plugin)/cli/qdisc/*.so \
 	$(prefix)/lib/*.so.* \
+	$(prefix)/sbin/genl-ctrl-list \
 	$(prefix)/sbin/nl-class-add \
 	$(prefix)/sbin/nl-class-delete \
 	$(prefix)/sbin/nl-classid-lookup \

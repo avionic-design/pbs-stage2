@@ -1,3 +1,2 @@
 ltmain-sysroot.patch
 fix-includes.patch
-add-nl_cache_clone.patch
