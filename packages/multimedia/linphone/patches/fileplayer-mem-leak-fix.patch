@@ -1,0 +1,18 @@
+commit c44afc2f8ac34a8c8e818ca4845032b8b1fa445f
+Author: Alban Bedel <alban.bedel@avionic-design.de>
+Date:   Thu May 3 10:55:50 2012 +0200
+
+    file player: Fix a potential memory leak on read errors
+
+diff --git a/mediastreamer2/src/msfileplayer.c b/mediastreamer2/src/msfileplayer.c
+index af4f0de..931a66d 100644
+--- a/mediastreamer2/src/msfileplayer.c
++++ b/mediastreamer2/src/msfileplayer.c
+@@ -257,6 +257,7 @@ static void player_process(MSFilter *f){
+ 			}
+ 		}else{
+ 			ms_warning("Fail to read %i bytes: %s",bytes,strerror(errno));
++			freemsg(om);
+ 		}
+ 	}
+ 	ms_filter_unlock(f);
