@@ -7,3 +7,4 @@ rebase-to-git-branch-0.10_2012-04-16.patch
 0005-tsdemux-Set-currentlist-to-NULL-after-free.patch
 0006-mpegtspacketizer-Disable-reset-of-base_pcrtime.patch
 0007-tsdemux-Update-firstbuffer-timestamp-when-it-is-0.patch
+0008-tsdemux-flush-on-pusi-only-for-payload-packets.patch
