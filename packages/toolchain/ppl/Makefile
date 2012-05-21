@@ -5,3 +5,6 @@ LOCATION = http://bugseng.com/products/$(PACKAGE)/download/ftp/releases/$(VERSIO
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/toolchain/autotools.mk
+
+conf-args += \
+       --with-gmp=$(prefix)
