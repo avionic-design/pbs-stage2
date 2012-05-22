@@ -1,20 +1,19 @@
-From e6d28464878293576968c31ede23b5eed84bd5a3 Mon Sep 17 00:00:00 2001
+From df73a3638f733ca1b62b1e299ea29138a096f80f Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Thu, 12 Jan 2012 07:56:32 +0100
-Subject: [PATCH] Check for SDL via pkg-config.
+Date: Mon, 21 May 2012 14:10:17 +0200
+Subject: [PATCH] Check for SDL via pkg-config
 
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- configure.ac |   24 +-----------------------
- 1 files changed, 1 insertions(+), 23 deletions(-)
+ configure.ac |   25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 
 diff --git a/configure.ac b/configure.ac
-index e6bb573..91d5bba 100644
+index 1b73966..ee6e2a4 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -662,30 +662,8 @@ AM_CONDITIONAL(WITH_TIGHTVNC_FILETRANSFER, test "$with_tightvnc_filetransfer" =
- AM_CONDITIONAL(HAVE_LIBZ, test ! -z "$HAVE_ZLIB_H")
+@@ -770,31 +770,8 @@ AM_CONDITIONAL(HAVE_LIBZ, test ! -z "$HAVE_ZLIB_H")
  AM_CONDITIONAL(HAVE_LIBJPEG, test ! -z "$HAVE_JPEGLIB_H")
+ AM_CONDITIONAL(HAVE_LIBPNG, test ! -z "$HAVE_PNGLIB_H")
  
 -
 -SDLCONFIG="sdl-config"
@@ -41,9 +40,10 @@ index e6bb573..91d5bba 100644
  AM_CONDITIONAL(HAVE_LIBSDL, test "x$with_sdl" = "xyes")
 -AC_SUBST(SDL_CFLAGS)
 -AC_SUBST(SDL_LIBS)
+-
  
- MINGW=`echo $host_os | grep mingw32  2>/dev/null`
- AM_CONDITIONAL(MINGW, test ! -z "$MINGW" )
+ # Check for GTK+. if present, build the GTK+ vnc viewer example
+ PKG_CHECK_MODULES([GTK], [gtk+-2.0],,:)
 -- 
-1.7.8.3
+1.7.10.2
 
