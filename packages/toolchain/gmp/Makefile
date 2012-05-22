@@ -5,6 +5,7 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
+	--enable-cxx \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man
