@@ -56,7 +56,7 @@ diff --git a/gdb/config.in b/gdb/config.in
 index 4af4e69..4d34efa 100644
 --- a/gdb/config.in
 +++ b/gdb/config.in
-@@ -665,6 +665,9 @@
+@@ -668,6 +668,9 @@
  /* Define to 1 if you have the `ttrace' function. */
  #undef HAVE_TTRACE
  
@@ -66,7 +66,7 @@ index 4af4e69..4d34efa 100644
  /* Define to 1 if you have the <unistd.h> header file. */
  #undef HAVE_UNISTD_H
  
-@@ -967,6 +970,10 @@
+@@ -986,6 +989,10 @@
  # define __restrict__
  #endif
  
@@ -81,7 +81,7 @@ diff --git a/gdb/configure b/gdb/configure
 index 6408fc2..a60dfd1 100755
 --- a/gdb/configure
 +++ b/gdb/configure
-@@ -11967,6 +11967,42 @@ _ACEOF
+@@ -11922,6 +11922,42 @@ _ACEOF
  fi
  
  
@@ -128,7 +128,7 @@ diff --git a/gdb/configure.ac b/gdb/configure.ac
 index 6a7af7e..f664303 100644
 --- a/gdb/configure.ac
 +++ b/gdb/configure.ac
-@@ -1043,6 +1043,7 @@ AC_CHECK_TYPES(socklen_t, [], [],
+@@ -1031,6 +1031,7 @@ AC_CHECK_TYPES(socklen_t, [], [],
  [#include <sys/types.h>
  #include <sys/socket.h>
  ])
