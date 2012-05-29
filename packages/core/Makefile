@@ -1,7 +1,6 @@
 obj-$(CONFIG_PACKAGE_CORE_ACPITOOL) += acpitool
 obj-$(CONFIG_PACKAGE_CORE_BASE_FILES) += base-files
 obj-$(CONFIG_PACKAGE_CORE_BUSYBOX) += busybox
-obj-$(CONFIG_PACKAGE_CORE_BUSYBOX_GIT) += busybox.git
 obj-$(CONFIG_PACKAGE_CORE_COREUTILS) += coreutils
 obj-$(CONFIG_PACKAGE_CORE_CPUFREQUTILS) += cpufrequtils
 obj-$(CONFIG_PACKAGE_CORE_DIFFUTILS) += diffutils
