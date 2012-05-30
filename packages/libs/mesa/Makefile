@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 7.11.2
+VERSION = 8.0.3
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2

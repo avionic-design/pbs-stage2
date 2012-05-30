@@ -1,21 +1,45 @@
-From 69ee1911046b69066c9448a3311ae9ac80da2c75 Mon Sep 17 00:00:00 2001
+From 93246f03f7243665757b7b3235f4900c3ef93721 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
 Date: Fri, 13 Jan 2012 09:29:18 +0100
-Subject: [PATCH] Fix cross-compilation.
+Subject: [PATCH] Don't cross-compile src/glsl/builtin_compiler.
+
+The builtin_compiler binary is used during the build process to generate
+code for the builtin GLSL functions. Since this binary needs to be run
+on the build host, it must not be cross-compiled.
+
+This patch fixes the build system to compile a second version of the
+source files and the builtin_compiler binary itself for the build
+system. It does so by defining the CC_FOR_BUILD and CXX_FOR_BUILD
+variables, which are searched for by the configure script and point to
+the location of native C and C++ compilers.
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
+ autogen.sh                  |    2 +-
  configs/autoconf.in         |    5 ++
- configure.ac                |    6 ++-
+ configure.ac                |    9 ++-
  m4/ax_prog_cc_for_build.m4  |  140 +++++++++++++++++++++++++++++++++++++++++++
- m4/ax_prog_cxx_for_build.m4 |  125 ++++++++++++++++++++++++++++++++++++++
- src/glsl/Makefile           |   44 +++++++++++---
- 5 files changed, 311 insertions(+), 9 deletions(-)
+ m4/ax_prog_cxx_for_build.m4 |  123 +++++++++++++++++++++++++++++++++++++
+ src/glsl/Makefile           |   48 +++++++++++----
+ 6 files changed, 315 insertions(+), 12 deletions(-)
  create mode 100644 m4/ax_prog_cc_for_build.m4
  create mode 100644 m4/ax_prog_cxx_for_build.m4
 
+diff --git a/autogen.sh b/autogen.sh
+index b5f6ec4..7cd1a81 100755
+--- a/autogen.sh
++++ b/autogen.sh
+@@ -13,7 +13,7 @@ fi
+ 
+ MAKEFLAGS=""
+ 
+-autoreconf -v --install || exit 1
++autoreconf -v -I m4 --install || exit 1
+ 
+ if test -z "$NOCONFIGURE"; then
+     "$srcdir"/configure "$@"
 diff --git a/configs/autoconf.in b/configs/autoconf.in
-index cac4bef..277c18d 100644
+index 9ea7588..cd5b437 100644
 --- a/configs/autoconf.in
 +++ b/configs/autoconf.in
 @@ -8,7 +8,9 @@ CONFIG_NAME = autoconf
@@ -39,9 +63,9 @@ index cac4bef..277c18d 100644
 +LDFLAGS_FOR_BUILD = @LDFLAGS_FOR_BUILD@
  EXTRA_LIB_PATH = @EXTRA_LIB_PATH@
  RADEON_CFLAGS = @RADEON_CFLAGS@
- RADEON_LDFLAGS = @RADEON_LDFLAGS@
+ RADEON_LIBS = @RADEON_LIBS@
 diff --git a/configure.ac b/configure.ac
-index 817bf8b..4a4df25 100644
+index ac6007a..feb9041 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -14,8 +14,9 @@ See docs/autoconf.html for more details on the options for Mesa.])
@@ -52,15 +76,18 @@ index 817bf8b..4a4df25 100644
  AC_CONFIG_AUX_DIR([bin])
 -AC_CANONICAL_HOST
 +AC_CANONICAL_SYSTEM
+ AM_INIT_AUTOMAKE([foreign])
  
  dnl Save user CFLAGS and CXXFLAGS so one can override the default ones
- USER_CFLAGS="$CFLAGS"
-@@ -40,6 +41,9 @@ AC_CHECK_PROGS([PYTHON2], [python2 python])
+@@ -41,6 +42,12 @@ AC_CHECK_PROGS([PYTHON2], [python2 python])
+ AC_PROG_SED
  AC_PATH_PROG([MKDEP], [makedepend])
- AC_PATH_PROG([SED], [sed])
  
 +AX_PROG_CC_FOR_BUILD
 +AX_PROG_CXX_FOR_BUILD
++
++LT_PREREQ([2.2])
++LT_INIT([disable-static])
 +
  if test "x$MKDEP" = "x"; then
      AC_MSG_ERROR([makedepend is required to build Mesa])
@@ -213,10 +240,10 @@ index 0000000..08095a8
 +])
 diff --git a/m4/ax_prog_cxx_for_build.m4 b/m4/ax_prog_cxx_for_build.m4
 new file mode 100644
-index 0000000..6819b87
+index 0000000..4a099f9
 --- /dev/null
 +++ b/m4/ax_prog_cxx_for_build.m4
-@@ -0,0 +1,125 @@
+@@ -0,0 +1,123 @@
 +# ===========================================================================
 +#   http://www.gnu.org/software/autoconf-archive/ax_prog_cxx_for_build.html
 +# ===========================================================================
@@ -237,14 +264,12 @@ index 0000000..6819b87
 +#   The value of these variables can be overridden by the user by specifying
 +#   a compiler with an environment variable (like you do for standard CXX).
 +#
-+#   It also sets BUILD_EXEEXT and BUILD_OBJEXT to the executable and object
-+#   file extensions for the build platform, and GXX_FOR_BUILD to `yes' if
-+#   the compiler we found is GCC. All these variables but GXX_FOR_BUILD are
-+#   substituted in the Makefile.
-+#
 +# LICENSE
 +#
 +#   Copyright (c) 2008 Paolo Bonzini <bonzini@gnu.org>
++#   Copyright (c) 2012 Avionic Design GmbH
++#
++#   Based on the AX_PROG_CC_FOR_BUILD macro by Paolo Bonzini.
 +#
 +#   Copying and distribution of this file, with or without modification, are
 +#   permitted in any medium without royalty provided the copyright notice
@@ -343,12 +368,12 @@ index 0000000..6819b87
 +AC_SUBST([CXXCPPFLAGS_FOR_BUILD])dnl
 +])
 diff --git a/src/glsl/Makefile b/src/glsl/Makefile
-index d1422c2..dd37a43 100644
+index d9ecbc8..25a7278 100644
 --- a/src/glsl/Makefile
 +++ b/src/glsl/Makefile
-@@ -12,6 +12,12 @@ LIBGLCPP_SOURCES = \
- 	glcpp/glcpp-parse.c \
- 	glcpp/pp.c
+@@ -9,6 +9,12 @@ LIBNAME = glsl
+ 
+ include Makefile.sources
  
 +MESA_PROGRAM_SYMLINKS = \
 +	hash_table.c \
@@ -357,10 +382,10 @@ index d1422c2..dd37a43 100644
 +	symbol_table.h
 +
  GLCPP_SOURCES = \
+ 	$(LIBGLCPP_GENERATED_SOURCES) \
  	$(LIBGLCPP_SOURCES) \
- 	ralloc.c \
-@@ -92,8 +98,8 @@ LIBS = \
- APPS = glsl_compiler glcpp/glcpp
+@@ -31,8 +37,8 @@ LIBS = \
+ APPS = glsl_compiler glsl_test glcpp/glcpp
  
  GLSL2_C_SOURCES = \
 -	../mesa/program/hash_table.c \
@@ -368,9 +393,20 @@ index d1422c2..dd37a43 100644
 +	hash_table.c \
 +	symbol_table.c
  GLSL2_CXX_SOURCES = \
- 	main.cpp
+ 	$(GLSL_COMPILER_CXX_SOURCES)
  
-@@ -109,7 +115,7 @@ DEFINES += \
+@@ -41,8 +47,8 @@ GLSL2_OBJECTS = \
+ 	$(GLSL2_CXX_SOURCES:.cpp=.o)
+ 
+ TEST_C_SOURCES = \
+-	../mesa/program/hash_table.c \
+-	../mesa/program/symbol_table.c
++	hash_table.c \
++	symbol_table.c
+ 
+ TEST_CXX_SOURCES = \
+ 	standalone_scaffolding.cpp \
+@@ -61,7 +67,7 @@ DEFINES += \
  
  GLCPP_OBJECTS = \
  	$(GLCPP_SOURCES:.c=.o) \
@@ -379,7 +415,7 @@ index d1422c2..dd37a43 100644
  
  OBJECTS = \
  	$(C_SOURCES:.c=.o) \
-@@ -118,6 +124,12 @@ OBJECTS = \
+@@ -70,6 +76,12 @@ OBJECTS = \
  DRICORE_OBJ_DIR = obj-visible
  OBJECTS_DRICORE = $(addprefix $(DRICORE_OBJ_DIR)/,$(OBJECTS))
  
@@ -392,28 +428,28 @@ index d1422c2..dd37a43 100644
  INCLUDES = \
  	-I. \
  	-I../mesa \
-@@ -151,7 +163,9 @@ depend: $(ALL_SOURCES) Makefile
+@@ -106,7 +118,9 @@ depend: $(ALL_SOURCES) Makefile
  
  # Remove .o and backup files
  clean: clean-dricore
--	rm -f $(GLCPP_OBJECTS) $(GLSL2_OBJECTS) $(OBJECTS) lib$(LIBNAME).a depend depend.bak builtin_function.cpp builtin_function.o builtin_stubs.o builtin_compiler
-+	rm -f $(GLCPP_OBJECTS) $(GLSL2_OBJECTS) $(OBJECTS) lib$(LIBNAME).a depend depend.bak builtin_function.cpp builtin_function.o
+-	rm -f $(GLCPP_OBJECTS) $(GLSL2_OBJECTS) $(TEST_OBJECTS) $(OBJECTS) lib$(LIBNAME).a depend depend.bak builtin_function.cpp builtin_function.o builtin_stubs.o builtin_compiler
++	rm -f $(GLCPP_OBJECTS) $(GLSL2_OBJECTS) $(TEST_OBJECTS) $(OBJECTS) lib$(LIBNAME).a depend depend.bak builtin_function.cpp builtin_function.o
 +	rm -f $(OBJECTS_BUILD) $(BUILD_TOOLS_DIR)/builtin_compiler $(SYMLINKS)
 +	rmdir $(BUILD_TOOLS_DIR)/glcpp $(BUILD_TOOLS_DIR)
  	-rm -f $(APPS)
  
  clean-dricore:
-@@ -171,6 +185,9 @@ install-dricore: default
+@@ -126,6 +140,9 @@ install-dricore: default
  
  ##### RULES #####
  
 +$(MESA_PROGRAM_SYMLINKS): %: ../mesa/program/%
 +	ln -s $< $@
 +
- glsl_compiler: $(GLSL2_OBJECTS) libglsl.a builtin_stubs.o
- 	$(APP_CXX) $(INCLUDES) $(CFLAGS) $(LDFLAGS) $(GLSL2_OBJECTS) builtin_stubs.o $(LIBS) -o $@
+ glsl_compiler: $(GLSL2_OBJECTS) libglsl.a
+ 	$(APP_CXX) $(INCLUDES) $(CFLAGS) $(LDFLAGS) $(GLSL2_OBJECTS) $(LIBS) -o $@
  
-@@ -204,11 +221,22 @@ glcpp/glcpp-lex.c: glcpp/glcpp-lex.l
+@@ -162,11 +179,22 @@ glcpp/glcpp-lex.c: glcpp/glcpp-lex.l
  glcpp/glcpp-parse.c: glcpp/glcpp-parse.y
  	$(BISON) -v -o "$@" --defines=glcpp/glcpp-parse.h $<
  
@@ -441,5 +477,5 @@ index d1422c2..dd37a43 100644
  
  -include depend
 -- 
-1.7.8.3
+1.7.10
 
