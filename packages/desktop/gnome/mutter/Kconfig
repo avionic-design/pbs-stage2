@@ -1,5 +1,5 @@
 config PACKAGE_DESKTOP_GNOME_MUTTER
 	bool "mutter"
 	select PACKAGE_LIBS_CLUTTER
-	select PACKAGE_LIBS_GTK
+	select VIRTUAL_LIBS_GTK
 	default n

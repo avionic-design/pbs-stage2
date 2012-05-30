@@ -1,6 +1,5 @@
 config PACKAGE_LIBS_LIBCANBERRA
 	bool "libcanberra"
-	select PACKAGE_LIBS_GTK
+	select VIRTUAL_LIBS_GTK
 	select PACKAGE_LIBS_LIBTOOL
 	select PACKAGE_MULTIMEDIA_LIBVORBIS
-	default n
