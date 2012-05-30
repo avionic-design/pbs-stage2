@@ -323,7 +323,7 @@ e4ce5d56ae4a9611d51ba0cc2ea45806f9539a18aceb4aa70b8ded50f6923c4f  download/pciut
 c1113fd7db934e97ad8b3917d432e5b642e9eb9afd127eb797804937c965f4ac  download/pcre-8.30.tar.bz2
 7094e8aefbf62f46fbcc2da11865a9730675cdceb0b3663f03a65ce65eedc91c  download/pcsc-lite-1.6.1.tar.bz2
 02b1893743d41ed69e2d5fec89c551ffc565607fb70c5f91bdbdceb4890856ea  download/pcsc-tools-1.4.17.tar.gz
-5f4b384aa39e82a582bdc8835e2e81b28176db851dd1f7ff32d682d026a23bb5  download/pixman-0.24.4.tar.bz2
+ba07fb2f39264ac59ba020dfba4a3d00d436153a8991689760241a9a93a63325  download/pixman-0.26.0.tar.bz2
 94c1936a797c930fb3e4e5a154165b6268caba22b32d24083dd4c492a533c8af  download/pkg-config-0.26.tar.gz
 a9f2fe507c2ee0a2368ff563a42f92bedec553be7dfc9c0b8bb324d2b7fc650c  download/plymouth-0.8.3.tar.bz2
 f612c7c26ec822f67751420057a4ae113fc50ab51070758faacf2ad30bb3583f  download/polkit-0.99.tar.gz
