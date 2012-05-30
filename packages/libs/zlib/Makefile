@@ -1,5 +1,5 @@
 PACKAGE = zlib
-VERSION = 1.2.6
+VERSION = 1.2.7
 LICENSE = ZLIB
 
 LOCATION = http://prdownloads.sourceforge.net/libpng/$(PACKAGE)/$(VERSION)
