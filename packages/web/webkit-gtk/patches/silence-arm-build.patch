@@ -10,9 +10,8 @@ It also fixes the a warning caused by uninitialized class members.
 Signed-off-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
 ---
  GNUmakefile.am                                     |    2 +-
- GNUmakefile.in                                     |    2 +-
  .../properties/SVGAnimatedPropertyDescription.h    |    1 +
- 3 files changed, 3 insertions(+), 2 deletions(-)
+ 2 files changed, 2 insertions(+), 1 deletions(-)
 
 diff --git a/GNUmakefile.am b/GNUmakefile.am
 index bb21631..8355cda 100644
@@ -27,19 +26,6 @@ index bb21631..8355cda 100644
  	-Wformat -Wformat-security -Wno-format-y2k -Wundef \
  	-Wmissing-format-attribute -Wpointer-arith -Wwrite-strings \
  	-Wno-unused-parameter -Wno-parentheses \
-diff --git a/GNUmakefile.in b/GNUmakefile.in
-index da37e16..f811c4b 100644
---- a/GNUmakefile.in
-+++ b/GNUmakefile.in
-@@ -18658,7 +18658,7 @@ minibrowser_built_sources := DerivedSources/WebKit2/BrowserMarshal.h \
- 	DerivedSources/WebKit2/BrowserMarshal.c
- 
- # Extra checks and flags
--global_cppflags := -Wall -W -Wcast-align -Wchar-subscripts \
-+global_cppflags := -Wall -W -Wchar-subscripts \
- 	-Wreturn-type -Wformat -Wformat-security -Wno-format-y2k \
- 	-Wundef -Wmissing-format-attribute -Wpointer-arith \
- 	-Wwrite-strings -Wno-unused-parameter -Wno-parentheses \
 diff --git a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h b/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h
 index 610fb14..8a36740 100644
 --- a/Source/WebCore/svg/properties/SVGAnimatedPropertyDescription.h

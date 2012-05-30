@@ -2,7 +2,7 @@ diff --git a/Source/JavaScriptCore/bytecode/CodeBlock.cpp b/Source/JavaScriptCor
 index 94c62f87f62675116ea22c97361f19b2968eea9f..32a13e9f3e033412774e0109f457daeb7afa7713 100644
 --- a/Source/JavaScriptCore/bytecode/CodeBlock.cpp
 +++ b/Source/JavaScriptCore/bytecode/CodeBlock.cpp
-@@ -1581,13 +1581,15 @@ void CodeBlock::visitStructures(SlotVisitor& visitor, Instruction* vPC) const
+@@ -1580,13 +1580,15 @@ void CodeBlock::visitStructures(SlotVisitor& visitor, Instruction* vPC) const
      }
      if (vPC[0].u.opcode == interpreter->getOpcode(op_get_by_id_chain) || vPC[0].u.opcode == interpreter->getOpcode(op_get_by_id_getter_chain) || vPC[0].u.opcode == interpreter->getOpcode(op_get_by_id_custom_chain)) {
          visitor.append(&vPC[4].u.structure);

@@ -2,7 +2,7 @@ diff --git a/Source/WebCore/page/EventHandler.cpp b/Source/WebCore/page/EventHan
 index 6651e76..1e2f97a 100644
 --- a/Source/WebCore/page/EventHandler.cpp
 +++ b/Source/WebCore/page/EventHandler.cpp
-@@ -2816,6 +2816,7 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
+@@ -2824,6 +2824,7 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
  }
  
  #if ENABLE(DRAG_SUPPORT)
@@ -10,7 +10,7 @@ index 6651e76..1e2f97a 100644
  bool EventHandler::dragHysteresisExceeded(const IntPoint& floatDragViewportLocation) const
  {
      FloatPoint dragViewportLocation(floatDragViewportLocation.x(), floatDragViewportLocation.y());
-@@ -2850,6 +2851,7 @@ bool EventHandler::dragHysteresisExceeded(const FloatPoint& dragViewportLocation
+@@ -2858,6 +2859,7 @@ bool EventHandler::dragHysteresisExceeded(const FloatPoint& dragViewportLocation
      
      return abs(delta.width()) >= threshold || abs(delta.height()) >= threshold;
  }

@@ -88,7 +88,7 @@ diff --git a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp b/Source/WebKi
 index 591a092..26b498d 100644
 --- a/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp
 +++ b/Source/WebKit/gtk/WebCoreSupport/ChromeClientGtk.cpp
-@@ -858,6 +858,7 @@ void ChromeClient::setCursorHiddenUntilMouseMoves(bool)
+@@ -862,6 +862,7 @@ void ChromeClient::setCursorHiddenUntilMouseMoves(bool)
      notImplemented();
  }
  
@@ -96,7 +96,7 @@ index 591a092..26b498d 100644
  void ChromeClient::requestGeolocationPermissionForFrame(Frame* frame, Geolocation* geolocation)
  {
      WebKitWebFrame* webFrame = kit(frame);
-@@ -873,6 +874,7 @@ void ChromeClient::cancelGeolocationPermissionRequestForFrame(WebCore::Frame* fr
+@@ -877,6 +878,7 @@ void ChromeClient::cancelGeolocationPermissionRequestForFrame(WebCore::Frame* fr
  {
      g_signal_emit_by_name(m_webView, "geolocation-policy-decision-cancelled", kit(frame));
  }
