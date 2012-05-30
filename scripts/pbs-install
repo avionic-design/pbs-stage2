@@ -111,10 +111,10 @@ for package in $packages; do
 			[ "x${src#/}" = "x$src" ] && src="/$src"
 			[ "x${dst#/}" = "x$dst" ] && dst="/$dst"
 
-			# Skip shell paterns expanding to nothing
+			# Skip shell patterns expanding to nothing
 			if echo "${srcdir}${src}" | grep -qF -e '*' -e '?' && \
 			   [ "x$(echo ${srcdir}${src})" = "x${srcdir}${src}" ] ; then
-				echo "  skipping empty install patern: ${src}"
+				echo "  skipping empty install pattern: ${src}"
 				continue
 			fi
 
