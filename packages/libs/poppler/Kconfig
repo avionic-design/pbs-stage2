@@ -1,7 +1,7 @@
 config PACKAGE_LIBS_POPPLER
 	bool "poppler"
 	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_LIBS_CURL
 	select PACKAGE_LIBS_FONTCONFIG
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_LIBPNG
-	default n

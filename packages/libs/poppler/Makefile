@@ -1,5 +1,6 @@
 PACKAGE = poppler
-VERSION = 0.18.4
+VERSION = 0.20.1
+LICENSE = GPL
 
 LOCATION = http://poppler.freedesktop.org
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -8,12 +9,14 @@ include packages/autotools-reconf.mk
 
 conf-args += \
 	--disable-gtk-test \
-	--disable-libcurl
+	--enable-libcurl \
+	--enable-zlib
 
 prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
+	$(prefix)/bin/pdfdetach \
 	$(prefix)/bin/pdffonts \
 	$(prefix)/bin/pdfimages \
 	$(prefix)/bin/pdfinfo \
