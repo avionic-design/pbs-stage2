@@ -1,0 +1,44 @@
+From 6f943fa80b96f73d3b27fc359793d8f339611916 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Tue, 26 Jun 2012 10:43:33 +0200
+Subject: [PATCH xterm] Fix out-of-tree build
+
+If an icon cannot be found in the current directory, the suffix is no
+longer added twice before the icon is looked up again in the source
+directory.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ aclocal.m4 | 2 +-
+ configure  | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/aclocal.m4 b/aclocal.m4
+index cdf2992..537e2e4 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -3272,7 +3272,7 @@ do
+ 		then
+ 			if test "x$srcdir" != "x."
+ 			then
+-				cf_icon="${srcdir}/${cf_left}${cf_suffix}"
++				cf_icon="${srcdir}/${cf_left}"
+ 				cf_left=`echo "$cf_icon" | sed -e 's/:.*//'`
+ 				if test ! -f "${cf_left}"
+ 				then
+diff --git a/configure b/configure
+index 8c732b1..e02a255 100755
+--- a/configure
++++ b/configure
+@@ -6751,7 +6751,7 @@ do
+ 		then
+ 			if test "x$srcdir" != "x."
+ 			then
+-				cf_icon="${srcdir}/${cf_left}${cf_suffix}"
++				cf_icon="${srcdir}/${cf_left}"
+ 				cf_left=`echo "$cf_icon" | sed -e 's/:.*//'`
+ 				if test ! -f "${cf_left}"
+ 				then
+-- 
+1.7.11
+
