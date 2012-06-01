@@ -1,4 +1,3 @@
 config PACKAGE_WEB_X11VNC
 	bool "x11vnc"
 	select PACKAGE_WEB_LIBVNCSERVER
-	default n
