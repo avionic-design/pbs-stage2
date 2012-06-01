@@ -1,3 +1,20 @@
+From ed9163ec835d3e23edb9b54970cef360dd8427d9 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Mon, 2 Apr 2012 10:25:28 +0200
+Subject: [PATCH] Fix cross-compilation
+
+---
+ com32/tools/Makefile |    5 ++++-
+ diag/geodsp/Makefile |    2 +-
+ extlinux/Makefile    |    4 ++--
+ linux/Makefile       |    5 +++--
+ lzo/Makefile         |    5 ++++-
+ mk/build.mk          |    4 ++--
+ mk/com32.mk          |   10 ++++++----
+ mtools/Makefile      |    5 +++--
+ utils/Makefile       |    5 +++--
+ 9 files changed, 28 insertions(+), 17 deletions(-)
+
 diff --git a/com32/tools/Makefile b/com32/tools/Makefile
 index 7badabd..38b5d53 100644
 --- a/com32/tools/Makefile
@@ -14,6 +31,19 @@ index 7badabd..38b5d53 100644
  
  tidy dist clean spotless:
  	rm -f $(BINS)
+diff --git a/diag/geodsp/Makefile b/diag/geodsp/Makefile
+index 119ccbc..b6e8216 100644
+--- a/diag/geodsp/Makefile
++++ b/diag/geodsp/Makefile
+@@ -28,7 +28,7 @@ BTARGET = geodsp1s.bin geodspms.bin \
+ 
+ NASMOPT = -i $(coredir)/ -Ox -f bin
+ NASMOPT += -w+orphan-labels
+-CFLAGS = -g -O
++CFLAGS = -g -O $(EXTRA_CFLAGS)
+ 
+ all: $(BTARGET)
+ 
 diff --git a/extlinux/Makefile b/extlinux/Makefile
 index 12213d8..0675b90 100644
 --- a/extlinux/Makefile
@@ -139,3 +169,6 @@ index 44cb54f..26d572f 100644
  
  C_TARGETS	 = isohybrid gethostip memdiskfind
  SCRIPT_TARGETS	 = mkdiskimage
+-- 
+1.7.10
+

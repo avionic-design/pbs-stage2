@@ -1,5 +1,6 @@
 PACKAGE = syslinux
 VERSION = 4.05
+LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/boot/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
