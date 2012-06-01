@@ -27,7 +27,8 @@ conf-args += \
 	--sysconfdir=/etc
 
 conf-args += \
-	--with-tlib=ncurses
+	--with-tlib=ncurses \
+	--enable-gui=no
 
 conf-vars += \
 	CPPFLAGS='$(CPPFLAGS)' \
