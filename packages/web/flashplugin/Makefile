@@ -1,12 +1,20 @@
 PACKAGE = flashplugin
-VERSION = 10.2.152.27
 
+VERSION = 11.2.202.228
+
+# 11.2 beta 5
+#VERSION = 11.2.202.197
+#PATCH = p5
+#REV = 013112
+# VERSION = 10.2.152.27
 # The 11.1 and 11.2 beta releases don't work properly with YouTube videos.
 # Only the top-half of the video is displayed.
 #VERSION = 11.1.102.55
+#VERSION = 11.1.102.62
+# 11.2 beta 3
 #VERSION = 11.2.202.160
-#PATCH = p3
-#REV = 122011
+#  PATCH = p3
+#    REV = 122011
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
