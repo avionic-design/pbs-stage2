@@ -1,0 +1,17 @@
+--- a/Makefile	2011-08-19 15:35:54.000000000 +0200
++++ b/Makefile	2012-06-18 17:45:05.191382756 +0200
+@@ -12,9 +12,13 @@
+   LZOLDLIBS = -llzo2
+ endif
+ 
+-SUBDIRS = lib ubi-utils mkfs.ubifs
++SUBDIRS = lib
+ TESTS = tests
+ 
++ifneq ($(WITHOUT_UBI), 1)
++  SUBDIRS += ubi-utils mkfs.ubifs
++endif
++
+ TARGETS = ftl_format flash_erase nanddump doc_loadbios \
+ 	ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info \
+ 	flash_otp_info flash_otp_dump mtd_debug flashcp nandwrite nandtest \

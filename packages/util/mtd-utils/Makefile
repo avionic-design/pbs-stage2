@@ -22,6 +22,9 @@ build-args = \
 ifneq ($(PACKAGE_UTIL_MTD_UTILS_WITH_LZO),y)
 build-args += WITHOUT_LZO=1
 endif
+ifneq ($(PACKAGE_UTIL_MTD_UTILS_WITH_UBI),y)
+build-args += WITHOUT_UBI=1
+endif
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
