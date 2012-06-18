@@ -19,6 +19,10 @@ build-args = \
 	LDFLAGS="$(LDFLAGS)" \
 	WITHOUT_XATTR=1
 
+ifneq ($(PACKAGE_UTIL_MTD_UTILS_WITH_LZO),y)
+build-args += WITHOUT_LZO=1
+endif
+
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)

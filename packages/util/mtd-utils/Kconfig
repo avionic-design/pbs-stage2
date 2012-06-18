@@ -1,6 +1,10 @@
 config PACKAGE_UTIL_MTD_UTILS
 	bool "mtd-utils"
 	select PACKAGE_CORE_UTIL_LINUX
-	select PACKAGE_LIBS_LZO
+	select PACKAGE_LIBS_LZO if PACKAGE_UTIL_MTD_UTILS_WITH_LZO
 	select PACKAGE_LIBS_ZLIB
+	default n
+
+config PACKAGE_UTIL_MTD_UTILS_WITH_LZO
+	bool "mtd-utils with LZO support" if PACKAGE_UTIL_MTD_UTILS
 	default n
