@@ -5,10 +5,14 @@ config PACKAGE_UTIL_MTD_UTILS
 	select PACKAGE_LIBS_ZLIB
 	default n
 
+if PACKAGE_UTIL_MTD_UTILS
+
 config PACKAGE_UTIL_MTD_UTILS_WITH_LZO
-	bool "mtd-utils with LZO support" if PACKAGE_UTIL_MTD_UTILS
+	bool "mtd-utils with LZO support"
 	default n
 
 config PACKAGE_UTIL_MTD_UTILS_WITH_UBI
-	bool "mtd-utils with UBI support" if PACKAGE_UTIL_MTD_UTILS
+	bool "mtd-utils with UBI support"
 	default n
+
+endif
