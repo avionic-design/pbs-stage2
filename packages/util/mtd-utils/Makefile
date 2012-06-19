@@ -19,10 +19,10 @@ build-args = \
 	LDFLAGS="$(LDFLAGS)" \
 	WITHOUT_XATTR=1
 
-ifneq ($(PACKAGE_UTIL_MTD_UTILS_WITH_LZO),y)
+ifneq ($(CONFIG_PACKAGE_UTIL_MTD_UTILS_WITH_LZO),y)
 build-args += WITHOUT_LZO=1
 endif
-ifneq ($(PACKAGE_UTIL_MTD_UTILS_WITH_UBI),y)
+ifneq ($(CONFIG_PACKAGE_UTIL_MTD_UTILS_WITH_UBI),y)
 build-args += WITHOUT_UBI=1
 endif
 
