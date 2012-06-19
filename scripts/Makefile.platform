@@ -45,7 +45,6 @@ build/%/.install:
 ifeq ($(MAKECMDGOALS),touch)
 	$(call cmd,stamp)
 else
-	$(Q)$(MAKE) $(package)=$* clean
 	$(Q)$(MAKE) $(package)=$* install
 endif
 
