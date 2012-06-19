@@ -1,18 +1,18 @@
 config PACKAGE_UTIL_MTD_UTILS
 	bool "mtd-utils"
-	select PACKAGE_CORE_UTIL_LINUX if PACKAGE_UTIL_MTD_UTILS_WITH_UBI
-	select PACKAGE_LIBS_LZO if PACKAGE_UTIL_MTD_UTILS_WITH_LZO
+	select PACKAGE_CORE_UTIL_LINUX if !PACKAGE_UTIL_MTD_UTILS_WITHOUT_UBI
+	select PACKAGE_LIBS_LZO if !PACKAGE_UTIL_MTD_UTILS_WITHOUT_LZO
 	select PACKAGE_LIBS_ZLIB
 	default n
 
 if PACKAGE_UTIL_MTD_UTILS
 
-config PACKAGE_UTIL_MTD_UTILS_WITH_LZO
-	bool "mtd-utils with LZO support"
+config PACKAGE_UTIL_MTD_UTILS_WITHOUT_LZO
+	bool "mtd-utils without LZO support"
 	default n
 
-config PACKAGE_UTIL_MTD_UTILS_WITH_UBI
-	bool "mtd-utils with UBI support"
+config PACKAGE_UTIL_MTD_UTILS_WITHOUT_UBI
+	bool "mtd-utils without UBI support"
 	default n
 
 endif
