@@ -21,3 +21,7 @@ stripfiles = \
 	$(prefix)/bin/ntptime \
 	$(prefix)/bin/sntp \
 	$(prefix)/bin/tickadj
+
+prunefiles = \
+	$(prefix)/bin/ntptrace \
+	$(prefix)/bin/ntp-wait
