@@ -11,6 +11,7 @@ obj-$(CONFIG_PACKAGE_NET_HOSTAPD) += hostapd
 obj-$(CONFIG_PACKAGE_NET_IFLINKD) += iflinkd
 obj-$(CONFIG_PACKAGE_NET_IFPLUGD) += ifplugd
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
+obj-$(CONFIG_PACKAGE_NET_IPTABLES) += iptables
 obj-$(CONFIG_PACKAGE_NET_IPUTILS) += iputils
 obj-$(CONFIG_PACKAGE_NET_ISC_DHCP) += isc-dhcp
 obj-$(CONFIG_PACKAGE_NET_IW) += iw
