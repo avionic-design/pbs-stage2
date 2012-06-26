@@ -1,5 +1,6 @@
 PACKAGE = libX11
-VERSION = 1.4.4
+VERSION = 1.5.0
+LICENSE = MIT X
 
 include packages/xorg/lib/common.mk
 
