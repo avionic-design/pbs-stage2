@@ -1,0 +1,15 @@
+config VIRTUAL_LIBS_GTK
+	bool
+	select PACKAGE_LIBS_GTK if VIRTUAL_LIBS_GTK_GTK2
+	select PACKAGE_LIBS_GTK3 if VIRTUAL_LIBS_GTK_GTK3
+
+choice
+	prompt "Gtk+ Version"
+
+config VIRTUAL_LIBS_GTK_GTK2
+	bool "2.0"
+
+config VIRTUAL_LIBS_GTK_GTK3
+	bool "3.0"
+
+endchoice

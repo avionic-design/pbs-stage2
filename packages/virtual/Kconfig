@@ -1,5 +1,6 @@
 menu "Virtual Packages"
 
+source "packages/virtual/gtk/Kconfig"
 source "packages/virtual/multimedia/Kconfig"
 source "packages/virtual/opengl/Kconfig"
 
