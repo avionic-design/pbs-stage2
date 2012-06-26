@@ -1,5 +1,6 @@
 PACKAGE = xz
-VERSION = 5.0.3
+VERSION = 5.0.4
+LICENSE = GPL LGPL custom
 
 LOCATION = http://tukaani.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
