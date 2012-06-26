@@ -39,6 +39,18 @@ else
   CONFIGS += coreutils-y
 endif
 
+ifeq ($(CONFIG_PACKAGE_NET_BRIDGE_UTILS),y)
+  CONFIGS += bridge-utils-n
+else
+  CONFIGS += bridge-utils-y
+endif
+
+ifeq ($(CONFIG_PACKAGE_NET_NTPD),y)
+  CONFIGS += ntpd-n
+else
+  CONFIGS += ntpd-y
+endif
+
 CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))
 
 $(pkgtree)/.setup:
