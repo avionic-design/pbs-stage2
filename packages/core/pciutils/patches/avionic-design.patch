@@ -11,7 +11,7 @@ diff --git a/pci.ids b/pci.ids
 index 078f3fb..3f69c95 100644
 --- a/pci.ids
 +++ b/pci.ids
-@@ -20069,6 +20069,17 @@ a200  NEC Corporation
+@@ -20581,6 +20581,17 @@ a200  NEC Corporation
  a259  Hewlett Packard
  a25b  Hewlett Packard GmbH PL24-MKT
  a304  Sony

@@ -9,8 +9,8 @@ index f14732c..9f2ae5e 100644
 -CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes
 +CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes $(EXTRA_CFLAGS)
  
- VERSION=3.1.9
- DATE=2012-01-14
+ VERSION=3.1.10
+ DATE=2012-06-25
 @@ -37,7 +37,6 @@ PKGCFDIR=$(LIBDIR)/pkgconfig
  # Commands
  INSTALL=install
