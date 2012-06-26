@@ -33,15 +33,15 @@ index 912b7e3..b29af72 100644
  
  MAN1 = pcap-config.1
  
-@@ -290,6 +292,7 @@ EXTRA_DIST = \
- 	pcap-can-linux.c \
- 	pcap-can-linux.h \
+@@ -292,6 +294,7 @@ EXTRA_DIST = \
+ 	pcap-canusb-linux.c \
+ 	pcap-canusb-linux.h \
  	pcap-config.in \
 +	pcap.pc.in \
  	pcap-dag.c \
  	pcap-dag.h \
  	pcap-dlpi.c \
-@@ -343,7 +346,7 @@ EXTRA_DIST = \
+@@ -345,7 +348,7 @@ EXTRA_DIST = \
  	Win32/Src/inet_net.c \
  	Win32/Src/inet_pton.c
  
@@ -50,7 +50,7 @@ index 912b7e3..b29af72 100644
  
  libpcap.a: $(OBJ)
  	@rm -f $@
-@@ -508,6 +511,11 @@ pcap-config: $(srcdir)/pcap-config.in ./config.status
+@@ -510,6 +513,11 @@ pcap-config: $(srcdir)/pcap-config.in ./config.status
  	mv $@.tmp $@
  	chmod a+x $@
  
@@ -62,7 +62,7 @@ index 912b7e3..b29af72 100644
  #
  # Test programs - not built by default, and not installed.
  #
-@@ -528,7 +536,7 @@ opentest: tests/opentest.c libpcap.a
+@@ -530,7 +538,7 @@ opentest: tests/opentest.c libpcap.a
  selpolltest: tests/selpolltest.c libpcap.a
  	$(CC) $(FULL_CFLAGS) -I. -L. -o selpolltest $(srcdir)/tests/selpolltest.c libpcap.a $(LIBS)
  
@@ -71,7 +71,7 @@ index 912b7e3..b29af72 100644
  	[ -d $(DESTDIR)$(libdir) ] || \
  	    (mkdir -p $(DESTDIR)$(libdir); chmod 755 $(DESTDIR)$(libdir))
  	[ -d $(DESTDIR)$(includedir) ] || \
-@@ -549,6 +557,9 @@ install: install-shared install-archive pcap-config
+@@ -551,6 +559,9 @@ install: install-shared install-archive pcap-config
  	[ -d $(DESTDIR)$(bindir) ] || \
  	    (mkdir -p $(DESTDIR)$(bindir); chmod 755 $(DESTDIR)$(bindir))
  	$(INSTALL_PROGRAM) pcap-config $(DESTDIR)$(bindir)/pcap-config
@@ -81,7 +81,7 @@ index 912b7e3..b29af72 100644
  	for i in $(MAN1); do \
  		$(INSTALL_DATA) $(srcdir)/$$i \
  		    $(DESTDIR)$(mandir)/man1/$$i; done
-@@ -655,6 +666,7 @@ uninstall: uninstall-shared
+@@ -657,6 +668,7 @@ uninstall: uninstall-shared
  	for i in $(PUBHDR); do \
  		rm -f $(DESTDIR)$(includedir)/$$i; done
  	-rmdir $(DESTDIR)$(includedir)/pcap
@@ -93,7 +93,7 @@ diff --git a/configure.in b/configure.in
 index 6a146ca..d11f007 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -1428,7 +1428,7 @@ AC_PROG_INSTALL
+@@ -1458,7 +1458,7 @@ AC_PROG_INSTALL
  
  AC_CONFIG_HEADER(config.h)
  
