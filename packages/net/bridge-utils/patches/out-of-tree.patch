@@ -1,0 +1,55 @@
+diff --git a/brctl/Makefile.in b/brctl/Makefile.in
+index e1956d6..72b8672 100644
+--- a/brctl/Makefile.in
++++ b/brctl/Makefile.in
+@@ -1,10 +1,13 @@
++top_srcdir = @top_srcdir@
++top_builddir = @top_builddir@
++VPATH = @srcdir@
+ 
+ KERNEL_HEADERS=-I@KERNEL_HEADERS@
+ 
+ CC=@CC@
+ CFLAGS= -Wall @CFLAGS@
+ LDFLAGS=@LDFLAGS@
+-INCLUDE=-I../libbridge $(KERNEL_HEADERS) 
++INCLUDE=-I$(top_srcdir)/libbridge -I../libbridge $(KERNEL_HEADERS) 
+ LIBS= -L ../libbridge -lbridge @LIBS@
+ 
+ prefix=@prefix@
+diff --git a/doc/Makefile.in b/doc/Makefile.in
+index 23bfb06..0ca3bcb 100644
+--- a/doc/Makefile.in
++++ b/doc/Makefile.in
+@@ -9,6 +9,7 @@ exec_prefix=@exec_prefix@
+ bindir=@bindir@
+ sbindir=@sbindir@
+ mandir=@mandir@
++srcdir=@srcdir@
+ 
+ SUBDIRS=libbridge brctl
+ 
+@@ -18,4 +19,4 @@ clean:
+ 
+ install:
+ 	mkdir -p $(DESTDIR)$(mandir)/man8
+-	$(INSTALL) -m 644 brctl.8 $(DESTDIR)$(mandir)/man8
++	$(INSTALL) -m 644 $(srcdir)/brctl.8 $(DESTDIR)$(mandir)/man8
+diff --git a/libbridge/Makefile.in b/libbridge/Makefile.in
+index 20512c4..ee2f827 100644
+--- a/libbridge/Makefile.in
++++ b/libbridge/Makefile.in
+@@ -1,3 +1,4 @@
++VPATH = @srcdir@
+ 
+ KERNEL_HEADERS=-I@KERNEL_HEADERS@
+ 
+@@ -5,7 +6,7 @@ AR=ar
+ RANLIB=@RANLIB@
+ 
+ CC=@CC@
+-CFLAGS = -Wall -g $(KERNEL_HEADERS)
++CFLAGS = -Wall @CFLAGS@ -I. $(KERNEL_HEADERS)
+ 
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@

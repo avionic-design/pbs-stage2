@@ -1,0 +1,3 @@
+config PACKAGE_NET_BRIDGE_UTILS
+	bool "bridge-utils"
+	select VIRTUAL_DEVEL_LIBC
