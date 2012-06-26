@@ -1,0 +1,5 @@
+/usr/include
+/usr/lib/gtk-3.0/include
+/usr/lib/*.so
+/usr/lib/pkgconfig
+/usr/share/aclocal
