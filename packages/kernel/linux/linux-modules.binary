@@ -3,4 +3,10 @@
 rootfs="$1"
 version="$2"
 
-/sbin/depmod -b "$rootfs" "$version"
+if test -x /usr/bin/depmod; then
+	DEPMOD=/usr/bin/depmod
+else
+	DEPMOD=/sbin/depmod
+fi
+
+$DEPMOD -b "$rootfs" "$version"
