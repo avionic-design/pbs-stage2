@@ -7,35 +7,12 @@
 
 + Add support for building in a clean build chroot (f.e. debootstrap chroot).
 
-+ Add automatic inter-package dependency handling.
-
 + Enable building of static compiler libraries
   (toolchains/packages/gcc/Makefile, --enable-static)
 
   It looks like icedtea/OpenJDK may require this, but it can possibly be
   worked around by patching the OpenJDK sources. grep the OpenJDK sources for
   STATIC_LIBCXX or something like that.
-
-+ Remove VIRTUAL_PROVIDES and VIRTUAL_* hacks from Kconfig. Virtual packages
-  can be provided by selecting the providing packages from the virtual package
-  like this:
-
-	config PACKAGE_DEVEL_LIBC
-		bool "C runtime library"
-		select PACKAGE_DEVEL_GLIBC if GLIBC
-		select PACKAGE_DEVEL_KLIBC if KLIBC
-		select PACKAGE_DEVEL_UCLIBC if UCLIBC
-		default n
-
-  For VIRTUAL_KERNEL_LINUX_LIBC something like this should be possible:
-
-	config PACKAGE_KERNEL_LINUX_LIBC
-		bool "Linux kernel headers"
-		select PACKAGE_KERNEL_LINUX_KERNEL
-		default n
-
-  This is mostly implemented now, so t should be safe to remove the special
-  handling for VIRTUAL_PROVIDES from scripts/kconfig.
 
 + Add additional functionality to fetch tarballs from a local proxy. This
   prevents problems when an upstream mirror is down or (re)moves content.
@@ -82,8 +59,21 @@
 + Move the packages/ti directory into packages/vendor. Move the net/rum and
   net/remote-control packages into packages/vendor/avionic-design.
 
-+ Make packages/kernel/linux a normal package such that it can easily be
-  used to build releases (from tarball, git checkout, ...).
++ Add per-package log files. With the current build system it is possible to
+  run the top-level make invocation with the -j flag to build more than one
+  package in parallel. However, this will result in very messy output and
+  should be worked around by putting log files for each package in a "logs"
+  subdirectory below the build directory.
+
++ Fix watch script to cope with situations where a new version has release
+  candidates released but no tarballs that match the regex. Currently this
+  happens with core/util-linux. The subdirectory version match matches v2.21
+  as the newest version, but the directory doesn't contain any tarballs that
+  match the full regex. In such a case, the algorithm should probably
+  backtrack to the directory before last and check again.
+
++ Investigate why libs/glib needs libs/gettext unconditionally. Otherwise
+  libs/gettext could depend on ENABLE_LOCALIZATION.
 
 --
 vim: tw=78
