@@ -6,7 +6,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
-pronefiles = \
+prunefiles = \
 	$(prefix)/bin/xkeystone
 
 stripfiles = \
