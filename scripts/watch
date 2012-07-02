@@ -36,7 +36,7 @@ def process_recursive(url, pattern, options, final):
 			continue
 
 		for match in matches:
-			ref = re.search(pattern, match)
+			ref = re.match(pattern, match)
 			if not ref:
 				continue
 
