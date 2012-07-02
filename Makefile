@@ -305,6 +305,13 @@ distclean: clean $(distclean-dirs)
 %/configure:
 	$(Q)$(MAKE) $(package)=$* configure
 
+quiet_cmd_autoconf = GEN     $@
+      cmd_autoconf = $(srctree)/configure --output $@ > /dev/null
+
+$(srctree)/autoconf.mk: configure
+	$(call cmd,autoconf)
+
+-include $(srctree)/autoconf.mk
 endif # skip-makefile
 
 PHONY += FORCE

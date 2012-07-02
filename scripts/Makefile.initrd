@@ -3,6 +3,7 @@ src := $(obj)
 PHONY := all
 all:
 
+include autoconf.mk
 include include/config/auto.conf
 include include/config/depends-dirs.mk
 include scripts/Kbuild.include
@@ -28,7 +29,7 @@ mount-$(obj)/initrd: mount-%:
 	$(call cmd,mount_ramdisk)
 
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
-      cmd_depmod = /sbin/depmod -b $@ $(KERNEL_VERSION)
+      cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
 
 include $(objtree)/build/packages/kernel/linux/kernel-version
 

@@ -1,0 +1,118 @@
+#!/bin/sh
+
+make_var()
+{
+	echo "$1" | tr ' ./-' '_'
+}
+
+check_program()
+{
+	var=`make_var "$1"`
+
+	echo -n "checking for $1... "
+
+	path=`type -p "$1"`
+	eval prog_$var="$path"
+
+	echo "$path"
+}
+
+check_header()
+{
+	filename="$1"
+	shift
+
+	var=`make_var "$filename"`
+
+	echo -n "checking for $filename... "
+
+	echo "#include <$filename>" > check.c
+
+	if $prog_gcc -o /dev/null -c check.c > /dev/null 2>&1; then
+		eval have_$var=yes
+		echo "found"
+	else
+		eval have_$var=no
+		echo "not found"
+	fi
+
+	rm check.c
+}
+
+for arg in $@; do
+	if test -n "$prev"; then
+		if test "${arg#-}" = "$arg"; then
+			eval $prev=$arg
+			prev=
+			shift; continue
+		else
+			echo "WARNING: missing argument for parameter: $prev"
+		fi
+
+		eval
+	fi
+
+	case $arg in
+		-o | --output)
+			prev=output
+			shift;
+			;;
+
+		*)
+			break
+			;;
+	esac
+done
+
+test -z "$output" && output="`dirname $0`/autoconf.mk"
+
+#
+# check for programs
+#
+
+check_program make
+check_program quilt
+check_program gcc
+check_program flex
+check_program bison
+check_program depmod
+
+#
+# check for header files
+#
+
+check_header ncurses.h
+
+#
+# print summary
+#
+
+echo "
+Programs:
+  make:       $prog_make
+  quilt:      $prog_quilt
+  gcc:        $prog_gcc
+  flex:       $prog_flex
+  bison:      $prog_bison
+  depmod:     $prog_depmod
+
+Headers:
+  ncurses.h:  $have_ncurses_h
+"
+
+#
+# write configuration file
+#
+
+echo -n "Writing autoconf.mk... "
+exec 3> "$output"
+
+echo "MAKE = $prog_make" >&3
+echo "QUILT = $prog_quilt" >&3
+echo "GCC = $prog_gcc" >&3
+echo "FLEX = $prog_flex" >&3
+echo "BISON = $prog_bison" >&3
+echo "DEPMOD = $prog_depmod" >&3
+
+exec 3>&-
+echo "done"
