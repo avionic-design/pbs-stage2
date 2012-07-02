@@ -1,26 +1,26 @@
-From 31ecb16541b41f4b079c719b3b55c220489d8f76 Mon Sep 17 00:00:00 2001
+From 23810f0b84c35239c9df67cacc98962acbbcd9d9 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Thu, 26 Jan 2012 08:08:01 +0100
-Subject: [PATCH 1/2] Fix out-of-tree build.
+Date: Fri, 15 Jun 2012 09:05:42 +0200
+Subject: [PATCH] Fix out-of-tree build
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- util/Makefile.am |    4 ++--
- 1 files changed, 2 insertions(+), 2 deletions(-)
+ util/Makefile.am |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/util/Makefile.am b/util/Makefile.am
-index b9bcdaa..1b61266 100644
+index fa4474f..bd056b9 100644
 --- a/util/Makefile.am
 +++ b/util/Makefile.am
 @@ -36,7 +36,7 @@ INIT_D_PATH = @INIT_D_PATH@
  
  install-exec-local:
- 	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
+ 	$(MKDIR_P) $(DESTDIR)$(MOUNT_FUSE_PATH)
 -	$(INSTALL_PROGRAM) $(srcdir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
 +	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
- 	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
+ 	$(MKDIR_P) $(DESTDIR)$(INIT_D_PATH)
  	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
  	@if test -x /usr/sbin/update-rc.d; then \
 -- 
-1.7.8.4
+1.7.10.4
 

@@ -1,19 +1,20 @@
-From fb9cd9b910f57ee674bb78335320c477a57d0a61 Mon Sep 17 00:00:00 2001
-From: Alban Bedel <alban.bedel@avionic-design.de>
-Date: Thu, 26 Jan 2012 08:08:48 +0100
-Subject: [PATCH 2/2] Do not run update-rc.d on install.
+From 0303b0927a27a8072554c83da007e953af57061c Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Fri, 15 Jun 2012 09:06:51 +0200
+Subject: [PATCH] Do not run update-rc.d on install
 
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
  util/Makefile.am |    8 --------
- 1 files changed, 0 insertions(+), 8 deletions(-)
+ 1 file changed, 8 deletions(-)
 
 diff --git a/util/Makefile.am b/util/Makefile.am
-index 1b61266..b3ab035 100644
+index bd056b9..d0efd81 100644
 --- a/util/Makefile.am
 +++ b/util/Makefile.am
 @@ -39,10 +39,6 @@ install-exec-local:
  	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
- 	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
+ 	$(MKDIR_P) $(DESTDIR)$(INIT_D_PATH)
  	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
 -	@if test -x /usr/sbin/update-rc.d; then \
 -		echo "/usr/sbin/update-rc.d fuse start 34 S . start 41 0 6 . || true"; \
@@ -21,7 +22,7 @@ index 1b61266..b3ab035 100644
 -	fi
  
  install-data-local:
- 	$(mkdir_p) $(DESTDIR)$(UDEV_RULES_PATH)
+ 	$(MKDIR_P) $(DESTDIR)$(UDEV_RULES_PATH)
 @@ -52,7 +48,3 @@ uninstall-local:
  	rm -f $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	rm -f $(DESTDIR)$(UDEV_RULES_PATH)/99-fuse.rules
@@ -31,5 +32,5 @@ index 1b61266..b3ab035 100644
 -		/usr/sbin/update-rc.d fuse remove || true; \
 -	fi
 -- 
-1.7.8.4
+1.7.10.4
 

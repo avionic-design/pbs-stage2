@@ -1,2 +1,3 @@
+automake.patch
 out-of-tree.patch
 no-update-rc.d.patch

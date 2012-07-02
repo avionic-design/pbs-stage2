@@ -1,0 +1,65 @@
+From 73428284242755361e372542745b4e9263a563c9 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Fri, 15 Jun 2012 09:04:44 +0200
+Subject: [PATCH] Update for automake 1.12
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ configure.in     |    6 ------
+ util/Makefile.am |    8 ++++----
+ 2 files changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index f2e6c87..2449a7d 100644
+--- a/configure.in
++++ b/configure.in
+@@ -9,12 +9,6 @@ AC_PROG_LIBTOOL
+ AC_PROG_CC
+ AM_PROG_CC_C_O
+ 
+-# compatibility for automake < 1.8
+-if test -z "$mkdir_p"; then
+-	mkdir_p="../mkinstalldirs"
+-	AC_SUBST(mkdir_p)
+-fi
+-
+ case $target_os in
+      *linux*)	arch=linux;;
+      *netbsd*)  arch=netbsd;;
+diff --git a/util/Makefile.am b/util/Makefile.am
+index 927b98c..fa4474f 100644
+--- a/util/Makefile.am
++++ b/util/Makefile.am
+@@ -23,7 +23,7 @@ ulockmgr_server_LDFLAGS = -pthread
+ install-exec-hook:
+ 	-chmod u+s $(DESTDIR)$(bindir)/fusermount
+ 	@if test ! -e $(DESTDIR)/dev/fuse; then \
+-		$(mkdir_p) $(DESTDIR)/dev; \
++		$(MKDIR_P) $(DESTDIR)/dev; \
+ 		echo "mknod $(DESTDIR)/dev/fuse -m 0666 c 10 229 || true"; \
+ 		mknod $(DESTDIR)/dev/fuse -m 0666 c 10 229 || true; \
+ 	fi
+@@ -35,9 +35,9 @@ UDEV_RULES_PATH = @UDEV_RULES_PATH@
+ INIT_D_PATH = @INIT_D_PATH@
+ 
+ install-exec-local:
+-	$(mkdir_p) $(DESTDIR)$(MOUNT_FUSE_PATH)
++	$(MKDIR_P) $(DESTDIR)$(MOUNT_FUSE_PATH)
+ 	$(INSTALL_PROGRAM) $(srcdir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+-	$(mkdir_p) $(DESTDIR)$(INIT_D_PATH)
++	$(MKDIR_P) $(DESTDIR)$(INIT_D_PATH)
+ 	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
+ 	@if test -x /usr/sbin/update-rc.d; then \
+ 		echo "/usr/sbin/update-rc.d fuse start 34 S . start 41 0 6 . || true"; \
+@@ -45,7 +45,7 @@ install-exec-local:
+ 	fi
+ 
+ install-data-local:
+-	$(mkdir_p) $(DESTDIR)$(UDEV_RULES_PATH)
++	$(MKDIR_P) $(DESTDIR)$(UDEV_RULES_PATH)
+ 	$(INSTALL_DATA) $(srcdir)/udev.rules $(DESTDIR)$(UDEV_RULES_PATH)/99-fuse.rules
+ 
+ uninstall-local:
+-- 
+1.7.10.4
+
