@@ -20,7 +20,7 @@ $(packages): install-%:
 	$(call cmd,install_package)
 
 quiet_cmd_mount_ramdisk = MOUNT   $*
-      cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs none $*
+      cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs tmpfs $*
 
 mount-$(obj)/rootfs: mount-%:
 	$(call cmd,mount_ramdisk)
