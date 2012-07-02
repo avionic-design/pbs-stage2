@@ -1,4 +1,4 @@
 config PACKAGE_LIBS_IMLIB2
 	bool "imlib2"
-	select VIRTUAL_DEVEL_LIBC
-	default n
+	select PACKAGE_LIBS_FREETYPE
+	select PACKAGE_XORG_LIB_XEXT
