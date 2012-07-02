@@ -41,6 +41,10 @@ include packages/binary.mk
 stripfiles = \
 	$(prefix)/bin/cx18-ctl \
 	$(prefix)/bin/decode_tm6000 \
+	$(prefix)/bin/dvb-fe-tool \
+	$(prefix)/bin/dvb-format-convert \
+	$(prefix)/bin/dvbv5-scan \
+	$(prefix)/bin/dvbv5-zap \
 	$(prefix)/bin/ir-keytable \
 	$(prefix)/bin/ivtv-ctl \
 	$(prefix)/bin/v4l2-compliance \
