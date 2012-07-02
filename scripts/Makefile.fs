@@ -210,3 +210,5 @@ endef
 
 # Make sure the packages are installed in the correct order.
 $(eval $(call add-order-deps,$(call reverse,$(extract))))
+
+# vim: ft=make
