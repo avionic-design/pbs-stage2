@@ -1,5 +1,4 @@
 config PACKAGE_LIBS_FONTCONFIG
 	bool "fontconfig"
+	select PACKAGE_LIBS_EXPAT
 	select PACKAGE_LIBS_FREETYPE
-	select PACKAGE_LIBS_LIBXML2
-	default n
