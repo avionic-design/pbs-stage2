@@ -19,8 +19,13 @@ quiet_cmd_install_package =
 $(packages): install-%:
 	$(call cmd,install_package)
 
+ifeq ($(ROOTFS_MOUNT_TMPFS),y)
 quiet_cmd_mount_ramdisk = MOUNT   $*
       cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs tmpfs $*
+else
+quiet_cmd_mount_ramdisk = MOUNT   $*
+      cmd_mount_ramdisk = mkdir -p $*
+endif
 
 mount-$(obj)/rootfs: mount-%:
 	$(call cmd,mount_ramdisk)
@@ -43,8 +48,13 @@ $(obj)/rootfs: %: mount-% $(packages) FORCE
 quiet_cmd_mksquashfs = SQUASHFS $@
       cmd_mksquashfs = mksquashfs $< $@ -noappend
 
+ifeq ($(ROOTFS_MOUNT_TMPFS),y)
 quiet_cmd_umount_ramdisk = UMOUNT  $<
       cmd_umount_ramdisk = umount $< && rmdir $<
+else
+quiet_cmd_umount_ramdisk = UMOUNT  $<
+      cmd_umount_ramdisk = :
+endif
 
 $(obj)/rootfs.img: $(obj)/rootfs FORCE
 	$(call cmd,mksquashfs)

@@ -311,7 +311,13 @@ quiet_cmd_autoconf = GEN     $@
 $(srctree)/autoconf.mk: configure
 	$(call cmd,autoconf)
 
+config-files = \
+	/etc/pbs.mk \
+	$(HOME)/.pbs.mk \
+	$(srctree)/pbs.mk
+
 -include $(srctree)/autoconf.mk
+-include $(config-files)
 endif # skip-makefile
 
 PHONY += FORCE

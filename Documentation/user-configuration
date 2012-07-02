@@ -1,0 +1,21 @@
+Users can configure PBS behaviour in one of three files: /etc/pbs.mk,
+~/.pbs.mk and pbs.mk in the PBS source tree.
+
+Boolean options are enabled by setting them to the value "y" (without the
+double-quotes).
+
+The following is a list of supported variables:
+
+	CCACHE
+		Setting this to "ccache" enables ccache support. This can
+		significantly decrease build times if packages need to be
+		rebuilt.
+
+		A cache size of several GiB is recommended.
+
+	ROOTFS_MOUNT_TMPFS
+		Enabling this option causes the final root filesystem image
+		or initial ramdisk to be created in a temporary (RAM-based)
+		filesystem. This can speed up the process because of reduced
+		disk I/O but it also has the disadvantage of requiring super
+		user permissions for the mount operation.
