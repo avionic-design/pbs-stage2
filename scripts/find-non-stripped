@@ -8,5 +8,4 @@ fi
 rootfs="$1"
 
 find "$rootfs" -executable -exec file {} + | \
-	grep -Rn 'not stripped' | cut -d: -f2
-
+	grep -n 'not stripped' | cut -d: -f2
