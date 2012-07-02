@@ -31,7 +31,8 @@ mount-$(obj)/initrd: mount-%:
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
 
-include $(objtree)/build/packages/kernel/linux/kernel-version
+kernel-version = $(objtree)/build/packages/kernel/linux/kernel-version
+include $(kernel-version)
 
 $(obj)/initrd: KERNEL_VERSION = $(VERSION)
 $(obj)/initrd: %: mount-% $(packages) FORCE
@@ -62,7 +63,7 @@ endif
 quiet_cmd_gen_multi = GEN     $@
       cmd_gen_multi = m4 -P $(m4-defines) $< > $@
 
-$(obj)/multi.its: $(master-platform)/multi.its.m4 $(kernel-release)
+$(obj)/multi.its: $(master-platform)/multi.its.m4 $(kernel-version)
 	$(call cmd,gen_multi)
 
 MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
