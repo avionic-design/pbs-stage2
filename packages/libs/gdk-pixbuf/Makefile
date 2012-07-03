@@ -17,6 +17,7 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/gdk-pixbuf-csource \
+	$(prefix)/bin/gdk-pixbuf-pixdata \
 	$(prefix)/bin/gdk-pixbuf-query-loaders \
 	$(plugin)/loaders/*.so \
 	$(prefix)/lib/*.so.*
