@@ -26,6 +26,7 @@ config PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT
 config PACKAGE_CORE_SYSTEMD_ENABLE_GTK
 	bool "Enable GtkAdminTool"
 	depends on PACKAGE_CORE_SYSTEMD
+	select PACKAGE_LIBS_GTK
 	select PACKAGE_LIBS_LIBGEE
 	default y
 	help
