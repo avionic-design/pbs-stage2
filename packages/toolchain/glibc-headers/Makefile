@@ -26,6 +26,14 @@ conf-vars += \
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no
 
+ifeq ($(CONFIG_ARCH),powerpc)
+  conf-vars += \
+	libc_cv_mlong_double_128ibm=yes \
+	libc_cv_mlong_double_128=yes \
+	libc_cv_ppc_machine=yes \
+	libc_cv_ppc_rel16=yes
+endif
+
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \

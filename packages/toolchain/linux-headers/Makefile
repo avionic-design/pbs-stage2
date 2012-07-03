@@ -16,6 +16,7 @@ ARCH := $(patsubst i%86,x86,$(ARCH))
 common-args = --no-print-directory -j $(NUM_CPU)
 common-vars = \
 	KBUILD_OUTPUT='$(pkgtree)/build' \
+	CROSS_COMPILE='$(TARGET)-' \
 	ARCH='$(ARCH)'
 
 KERNEL_CONFIG := defconfig
