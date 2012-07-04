@@ -1,5 +1,6 @@
 PACKAGE = eventlog
-VERSION = 0.2.9
+VERSION = 0.2.12
+LICENSE = CUSTOM
 
 LOCATION = http://www.balabit.com/downloads/files/$(PACKAGE)/0.2
 TARBALLS = $(PACKAGE)_$(VERSION).tar.gz
