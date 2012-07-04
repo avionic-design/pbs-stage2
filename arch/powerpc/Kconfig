@@ -1,0 +1,7 @@
+if ARCH_POWERPC
+
+config ARCH
+	string
+	default "powerpc"
+
+endif
