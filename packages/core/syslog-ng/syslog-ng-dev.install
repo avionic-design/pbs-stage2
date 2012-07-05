@@ -1,4 +1,3 @@
 /usr/include/syslog-ng
 /usr/lib/pkgconfig
 /usr/lib/*.so
-/usr/share/syslog-ng

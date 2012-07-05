@@ -5,3 +5,4 @@
 /usr/lib/syslog-ng/*.so
 /usr/lib/syslog-ng/*.so.*
 /usr/lib/*.so
+/usr/share/syslog-ng
