@@ -1,0 +1,17 @@
+diff --git a/contrib/systemd/syslog-ng.service b/contrib/systemd/syslog-ng.service
+index 85c91e5..7debcb8 100644
+--- a/contrib/systemd/syslog-ng.service
++++ b/contrib/systemd/syslog-ng.service
+@@ -3,10 +3,10 @@ Description=System Logger Daemon
+ 
+ [Service]
+ Sockets=syslog.socket
+-ExecStartPre=/bin/systemctl stop systemd-kmsg-syslogd.service
+-ExecStart=/usr/sbin/syslog-ng -F
++ExecStart=/usr/sbin/syslog-ng -F --pidfile=/run/syslogd.pid --persist-file=/run/syslog-ng.persist
+ ExecReload=/bin/kill -HUP $MAINPID
+ StandardOutput=null
+ 
+ [Install]
+ WantedBy=multi-user.target
++Alias=syslog.service
