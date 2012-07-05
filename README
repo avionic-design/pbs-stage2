@@ -158,5 +158,37 @@ the following files are exist:
 	.binary               - Create binary packages
 	.install              - Install in sysroot dir
 
+
+Requirements:
+-------------
+
+General requirements:
+
+	- automake, autoconf, gcc, make
+	- ncurses-devel
+
+Programs used to generate documentation during package creation:
+
+	- texinfo
+	- docbook-dtds,docbook-style-xsl
+	- xmlto
+
+Libraries and tools required during platform setup:
+
+	- gettext-devel
+	- bison
+	- flex, flex-static   (libs/pam)
+	- expat-devel         (build-tools/dbus)
+	- zlib-devel          (build-tools/glib)
+	- libffi-devel        (build-tools/glib)
+	- libpng-devel        (build-tools/gdk-pixbuf)
+	- perl-XML-Simple     (build-tools/icon-naming-utils)
+
+	- gperf               (core/udev - uclibc toolchain)
+	- luadoc              (wm/awesome)
+	- ImageMagick         (wm/awesome)
+	- docbook-utils       (net/tunctl)
+	- libgpg-error-devel  (libs/libgcrypt)
+	- intltool            (libs/glib-networking)
 --
 vim: tw=78
