@@ -75,5 +75,14 @@
 + Investigate why libs/glib needs libs/gettext unconditionally. Otherwise
   libs/gettext could depend on ENABLE_LOCALIZATION.
 
++ Several packages require packages installed on the build-host which are
+  also build been build within pbs. Below a list of packages were this is
+  the case:
+	build-tools/dbus     - expat-devel (no sysroot during header check)
+	libs/libgcrypt       - libgpg-error-devel (see gpg-error-config script)
+	libs/glib-networking - intltool (uses IT_PROG_INTLTOOL macro)
+	web/libvncserver     - libgcrypt (uses AM_PATH_LIBGCRYPT macro)
+	xorg/lib/x11         - x11-proto (pkg-config not used correctly)
+	mkimage/dtc          - installed in build-tools/bin but not used.
 --
 vim: tw=78
