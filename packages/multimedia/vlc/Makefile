@@ -1,10 +1,11 @@
 PACKAGE = vlc
-VERSION = 1.1.13
+VERSION = 2.0.2
+LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--enable-run-as-root \
@@ -17,6 +18,7 @@ conf-args += \
 	--disable-qt4 \
 	--disable-remoteosd \
 	--disable-skins2 \
+	--disable-speex \
 	--disable-neon \
 	--disable-glx
 
@@ -42,11 +44,13 @@ prunefiles = \
 	$(plugin)/mmx/*.la \
 	$(plugin)/mmxext/*.la \
 	$(plugin)/mux/*.la \
+	$(plugin)/notify/*.la \
 	$(plugin)/packetizer/*.la \
 	$(plugin)/services_discovery/*.la \
 	$(plugin)/sse2/*.la \
 	$(plugin)/stream_filter/*.la \
 	$(plugin)/stream_out/*.la \
+	$(plugin)/text_renderer/*.la \
 	$(plugin)/video_chroma/*.la \
 	$(plugin)/video_filter/*.la \
 	$(plugin)/video_output/*.la \
@@ -70,11 +74,13 @@ stripfiles = \
 	$(plugin)/mmx/*.so \
 	$(plugin)/mmxext/*.so \
 	$(plugin)/mux/*.so \
+	$(plugin)/notify/*.so \
 	$(plugin)/packetizer/*.so \
 	$(plugin)/services_discovery/*.so \
 	$(plugin)/sse2/*.so \
 	$(plugin)/stream_filter/*.so \
 	$(plugin)/stream_out/*.so \
+	$(plugin)/text_renderer/*.so \
 	$(plugin)/video_chroma/*.so \
 	$(plugin)/video_filter/*.so \
 	$(plugin)/video_output/*.so \
