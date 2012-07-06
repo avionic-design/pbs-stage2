@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 0.10.3
+VERSION = 0.11.1
 LICENSE = GPL
 
 LOCATION = http://ffmpeg.org/releases
