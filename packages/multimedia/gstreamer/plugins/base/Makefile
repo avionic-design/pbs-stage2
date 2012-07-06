@@ -24,7 +24,9 @@ prunefiles = \
 	$(plugin)/*.la \
 	$(prefix)/lib/*.la
 
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DEBUG),y)
 stripfiles = \
 	$(plugin)/*.so \
 	$(prefix)/bin/gst-discoverer-0.10 \
 	$(prefix)/lib/*.so.*
+endif

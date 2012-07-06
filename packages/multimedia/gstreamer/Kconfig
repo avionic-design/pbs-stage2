@@ -3,4 +3,13 @@ menu "gstreamer"
 source "packages/multimedia/gstreamer/core/Kconfig"
 source "packages/multimedia/gstreamer/plugins/Kconfig"
 
+if PACKAGE_MULTIMEDIA_GSTREAMER_CORE
+
+config PACKAGE_MULTIMEDIA_GSTREAMER_DEBUG
+	bool "keep debugsymbols"
+	help
+	  Do not strip gstreamer files.
+
+endif
+
 endmenu

@@ -15,6 +15,8 @@ prunefiles = \
 	$(plugin)/*.la \
 	$(prefix)/lib/*.la
 
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DEBUG),y)
 stripfiles = \
 	$(plugin)/*.so \
 	$(prefix)/lib/*.so.*
+endif
