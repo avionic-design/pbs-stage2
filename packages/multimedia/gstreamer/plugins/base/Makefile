@@ -7,8 +7,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--disable-examples \
-	--disable-vorbis \
+	--disable-examples
+
+ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
+conf-args += \
+	--disable-vorbis
+endif
 	--disable-ogg
 
 plugin = $(prefix)/lib/gstreamer-0.10
