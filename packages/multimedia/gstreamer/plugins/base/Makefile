@@ -13,7 +13,10 @@ ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
 conf-args += \
 	--disable-vorbis
 endif
+ifneq ($(PACKAGE_MULTIMEDIA_LIBOGG),y)
+conf-args += \
 	--disable-ogg
+endif
 
 plugin = $(prefix)/lib/gstreamer-0.10
 
