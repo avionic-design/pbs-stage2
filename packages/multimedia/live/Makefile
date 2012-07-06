@@ -1,18 +1,19 @@
 PACKAGE = live
-VERSION = 2012.02.04
+VERSION = 2012.07.03
+LICENSE = LGPL
 
 LOCATION = http://live555.com/liveMedia/public
 TARBALLS = $(PACKAGE).$(VERSION).tar.gz
 
+pkgbuildtree := $(pkgtree)/$(PACKAGE)
 include packages/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(pkgsrctree)/config $(pkgtree)/$(PACKAGE)/config.pbs
-	cd $(pkgtree)/$(PACKAGE) && \
-		./genMakefiles pbs
+	cp $(pkgsrctree)/config $(pkgbuildtree)/config.pbs
+	cd $(pkgbuildtree) && ./genMakefiles pbs
 	$(call cmd,stamp)
 
 build-args = \
@@ -21,20 +22,21 @@ build-args = \
 	CFLAGS='$(CFLAGS)'
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgtree)/$(PACKAGE) && \
+	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
-dirs = BasicUsageEnvironment UsageEnvironment groupsock liveMedia
+dirs = BasicUsageEnvironment groupsock liveMedia UsageEnvironment
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgtree)/$(PACKAGE) && for dir in $(dirs); do \
-		install -m 0755 -d $(DESTDIR)$(prefix)/lib/$(PACKAGE)/$$dir; \
+	install -m 0755 -d $(DESTDIR)$(prefix)/lib
+	install -m 0755 -d $(DESTDIR)$(prefix)/include
+	cd $(pkgbuildtree) && for dir in $(dirs); do \
+		install -m 0755 -d $(DESTDIR)$(prefix)/include/$$dir; \
 		install -m 0644 $$dir/*.a \
-			$(DESTDIR)$(prefix)/lib/$(PACKAGE)/$$dir; \
-		install -m 0755 -d $(DESTDIR)$(prefix)/lib/$(PACKAGE)/$$dir/include; \
-		install -m 0644 `ls $$dir/include/{*.h,*.hh} 2> /dev/null` \
-			$(DESTDIR)$(prefix)/lib/$(PACKAGE)/$$dir/include; \
+			$(DESTDIR)$(prefix)/lib; \
+		install -m 0644 $$dir/include/*.hh \
+			$(DESTDIR)$(prefix)/include/$$dir; \
 	done
 	$(call cmd,stamp)
 
