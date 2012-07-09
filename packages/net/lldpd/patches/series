@@ -1,3 +1,4 @@
+autotools.patch
 systemd.patch
 net-snmp-pkgconfig.patch
 xml2-pkgconfig.patch

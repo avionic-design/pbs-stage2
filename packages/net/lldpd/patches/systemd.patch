@@ -13,7 +13,7 @@ diff --git a/configure.ac b/configure.ac
 index 59a5aa4..811a65e 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -212,6 +212,16 @@ if test x"$with_xml" = x"yes"; then
+@@ -209,6 +209,16 @@ if test x"$with_xml" = x"yes"; then
     lldp_CHECK_XML2
  fi
  
@@ -30,7 +30,7 @@ index 59a5aa4..811a65e 100644
  # Privsep settings
  lldp_ARG_WITH([privsep-user], [Which user to use for privilege separation], [_lldpd])
  lldp_ARG_WITH([privsep-group], [Which group to use for privilege separation], [_lldpd])
-@@ -252,6 +262,7 @@ cat <<EOF
+@@ -249,6 +259,7 @@ cat <<EOF
    DOT1...........: $enable_dot1
    DOT3...........: $enable_dot3
    XML output.....: ${with_xml-no}

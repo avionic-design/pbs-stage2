@@ -1,0 +1,23 @@
+diff --git a/configure.ac b/configure.ac
+index 2822ebc..312f430 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -17,10 +17,6 @@ AM_INIT_AUTOMAKE([foreign -Wall -Werror])
+ AM_MAINTAINER_MODE
+ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES(yes)])
+ 
+-# Configure libtool
+-#LT_PREREQ([2.2])
+-LT_INIT
+-
+ #######################
+ ### Checks
+ 
+@@ -33,6 +29,7 @@ AC_PROG_LN_S
+ AC_PROG_MAKE_SET
+ AC_PROG_CXX
+ AM_PROG_CC_C_O
++AM_PROG_AR
+ AC_PROG_LIBTOOL
+ 
+ # Check some compiler flags

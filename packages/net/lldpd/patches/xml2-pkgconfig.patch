@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index 2087160..8593f9b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -209,7 +209,7 @@ AC_ARG_WITH([xml],
+@@ -206,7 +206,7 @@ AC_ARG_WITH([xml],
      [Enable XML output via libxml2 @<:@default=no@:>@]
    ))
  if test x"$with_xml" = x"yes"; then
