@@ -1,5 +1,5 @@
 PACKAGE = grep
-VERSION = 2.12
+VERSION = 2.13
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
