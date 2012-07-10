@@ -1,0 +1,10 @@
+PACKAGE = ruby
+VERSION = 1.9.3-p194
+
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://ftp.ruby-lang.org/pub/$(PACKAGE)/$(MAJOR).$(MINOR)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+
+include packages/build-tools/autotools.mk
