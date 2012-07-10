@@ -11,7 +11,7 @@ check_program()
 
 	echo -n "checking for $1... "
 
-	path=`command -p -v "$1"`
+	path=`command -v "$1"`
 	eval prog_$var="$path"
 
 	echo "$path"
