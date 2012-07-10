@@ -3,5 +3,6 @@ menu "Virtual Packages"
 source "packages/virtual/gtk/Kconfig"
 source "packages/virtual/multimedia/Kconfig"
 source "packages/virtual/opengl/Kconfig"
+source "packages/virtual/udev/Kconfig"
 
 endmenu

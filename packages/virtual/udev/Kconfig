@@ -1,0 +1,15 @@
+config VIRTUAL_UDEV
+	bool
+	select PACKAGE_CORE_UDEV if UDEV_UDEV
+
+config VIRTUAL_UDEV_GLIB
+	bool
+	select PACKAGE_CORE_UDEV_GLIB if UDEV_UDEV
+
+choice UDEV
+	prompt "udev implementation"
+
+config UDEV_UDEV
+	bool "udev"
+
+endchoice
