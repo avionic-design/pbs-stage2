@@ -1,5 +1,6 @@
 PACKAGE = usbutils
-VERSION = 004
+VERSION = 006
+LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/usb/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
