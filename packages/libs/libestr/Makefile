@@ -1,5 +1,6 @@
 PACKAGE = libestr
-VERSION = 0.1.2
+VERSION = 0.1.3
+LICENSE = LGPL
 
 LOCATION = http://libestr.adiscon.com/files/download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
