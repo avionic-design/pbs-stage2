@@ -1,5 +1,5 @@
 PACKAGE = pixman
-VERSION = 0.26.0
+VERSION = 0.26.2
 LICENSE = MIT
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/lib
