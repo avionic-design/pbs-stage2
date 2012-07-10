@@ -53,7 +53,7 @@ quiet_cmd_umount_ramdisk = UMOUNT  $<
       cmd_umount_ramdisk = umount $< && rmdir $<
 else
 quiet_cmd_umount_ramdisk = UMOUNT  $<
-      cmd_umount_ramdisk = :
+      cmd_umount_ramdisk = rm -r $<
 endif
 
 $(obj)/rootfs.img: $(obj)/rootfs FORCE
