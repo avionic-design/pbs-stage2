@@ -1,5 +1,6 @@
 PACKAGE = systemd
-VERSION = 44
+VERSION = 186
+LICENSE = GPL LGPL MIT
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -78,54 +79,60 @@ prunefiles += \
 endif
 
 stripfiles = \
+	$(prefix)/bin/journalctl \
+	$(prefix)/bin/loginctl \
 	$(prefix)/bin/systemctl \
 	$(prefix)/bin/systemd-ask-password \
 	$(prefix)/bin/systemd-cat \
+	$(prefix)/bin/systemd-cgls \
 	$(prefix)/bin/systemd-cgtop \
-	$(prefix)/bin/systemd-journalctl \
-	$(prefix)/bin/systemd-loginctl \
+	$(prefix)/bin/systemd-delta \
+	$(prefix)/bin/systemd-detect-virt \
+	$(prefix)/bin/systemd-inhibit \
 	$(prefix)/bin/systemd-machine-id-setup \
 	$(prefix)/bin/systemd-notify \
+	$(prefix)/bin/systemd-nspawn \
+	$(prefix)/bin/systemd-stdio-bridge \
 	$(prefix)/bin/systemd-tmpfiles \
 	$(prefix)/bin/systemd-tty-ask-password-agent \
+	$(prefix)/bin/udevadm \
 	$(prefix)/lib/security/pam_systemd.so \
 	$(prefix)/lib/systemd/systemd \
 	$(prefix)/lib/systemd/systemd-ac-power \
-	$(prefix)/lib/systemd/systemd-binfmt \
 	$(prefix)/lib/systemd/systemd-cgroups-agent \
 	$(prefix)/lib/systemd/systemd-coredump \
-	$(prefix)/lib/systemd/systemd-detect-virt \
 	$(prefix)/lib/systemd/systemd-fsck \
 	$(prefix)/lib/systemd/systemd-hostnamed \
 	$(prefix)/lib/systemd/systemd-initctl \
 	$(prefix)/lib/systemd/systemd-journald \
-	$(prefix)/lib/systemd/systemd-kmsg-syslogd \
 	$(prefix)/lib/systemd/systemd-localed \
-	$(prefix)/lib/systemd/systemd-logger \
 	$(prefix)/lib/systemd/systemd-logind \
 	$(prefix)/lib/systemd/systemd-modules-load \
 	$(prefix)/lib/systemd/systemd-multi-seat-x \
 	$(prefix)/lib/systemd/systemd-quotacheck \
 	$(prefix)/lib/systemd/systemd-random-seed \
-	$(prefix)/lib/systemd/systemd-readahead-collect \
-	$(prefix)/lib/systemd/systemd-readahead-replay \
-	$(prefix)/lib/systemd/systemd-remount-api-vfs \
+	$(prefix)/lib/systemd/systemd-readahead \
+	$(prefix)/lib/systemd/systemd-remount-fs \
 	$(prefix)/lib/systemd/systemd-reply-password \
-	$(prefix)/lib/systemd/systemd-stdout-syslog-bridge \
 	$(prefix)/lib/systemd/systemd-shutdown \
 	$(prefix)/lib/systemd/systemd-shutdownd \
+	$(prefix)/lib/systemd/systemd-sleep \
 	$(prefix)/lib/systemd/systemd-sysctl \
 	$(prefix)/lib/systemd/systemd-timedated \
 	$(prefix)/lib/systemd/systemd-timestamp \
-	$(prefix)/lib/systemd/systemd-uaccess \
+	$(prefix)/lib/systemd/systemd-udevd \
 	$(prefix)/lib/systemd/systemd-update-utmp \
 	$(prefix)/lib/systemd/systemd-user-sessions \
 	$(prefix)/lib/systemd/systemd-vconsole-setup \
+	$(prefix)/lib/systemd/system-generators/systemd-fstab-generator \
 	$(prefix)/lib/systemd/system-generators/systemd-getty-generator \
-	$(prefix)/bin/systemadm \
-	$(prefix)/bin/systemd-ask-password-agent \
-	$(prefix)/bin/systemd-cgls \
-	$(prefix)/bin/systemd-gnome-ask-password-agent \
-	$(prefix)/bin/systemd-nspawn \
-	$(prefix)/bin/systemd-stdio-bridge \
+	$(prefix)/lib/systemd/system-generators/systemd-system-update-generator \
+	$(prefix)/lib/udev/accelerometer \
+	$(prefix)/lib/udev/ata_id \
+	$(prefix)/lib/udev/cdrom_id \
+	$(prefix)/lib/udev/collect \
+	$(prefix)/lib/udev/keymap \
+	$(prefix)/lib/udev/mtd_probe \
+	$(prefix)/lib/udev/scsi_id \
+	$(prefix)/lib/udev/v4l_id \
 	$(prefix)/lib/*.so.*

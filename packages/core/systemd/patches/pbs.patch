@@ -1,19 +1,19 @@
-From 8da3ea0db90c9f95d703dec0c9a24ad315f581f9 Mon Sep 17 00:00:00 2001
+From a5639b2b64bcf050617a60fd1793ba25bc6cc209 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Wed, 15 Feb 2012 08:05:13 +0100
-Subject: [PATCH] Add PBS distribution support.
+Date: Thu, 5 Jul 2012 10:06:00 +0200
+Subject: [PATCH] Add PBS distribution support
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- Makefile.am  |    7 +++++++
- configure.ac |    8 +++++++-
- 2 files changed, 14 insertions(+), 1 deletions(-)
+ Makefile.am  | 7 +++++++
+ configure.ac | 8 +++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/Makefile.am b/Makefile.am
-index 9762da1..ea97d19 100644
+index 3b7ec0b..d1c5335 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -148,6 +148,12 @@ AM_CPPFLAGS += \
+@@ -191,6 +191,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -26,30 +26,30 @@ index 9762da1..ea97d19 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -159,6 +165,7 @@ endif
+@@ -202,6 +208,7 @@ endif
  endif
  endif
  endif
 +endif
  
+ # ------------------------------------------------------------------------------
  rootbin_PROGRAMS = \
- 	systemctl \
 diff --git a/configure.ac b/configure.ac
-index 62e8cdf..3ca9efa 100644
+index dfa34c8..b2021fd 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -396,7 +396,7 @@ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
- 
- AC_PATH_PROG([M4], [m4])
+@@ -500,7 +500,7 @@ AM_CONDITIONAL(ENABLE_MANPAGES, [test "$have_manpages" = "yes"])
+ AC_PATH_PROG([XSLTPROC], [xsltproc])
+ AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
 -AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom or other]))
 +AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom, pbs or other]))
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -492,6 +492,11 @@ case $with_distro in
-                 M4_DISTRO_FLAG=-DTARGET_MAGEIA=1
-                 have_plymouth=yes
+@@ -589,6 +589,11 @@ case $with_distro in
+                 AC_DEFINE(TARGET_MAGEIA, [], [Target is Mageia])
+                 M4_DEFINES=-DTARGET_MAGEIA=1
                  ;;
 +        pbs)
 +                SYSTEM_SYSVRCND_PATH=/etc
@@ -59,14 +59,14 @@ index 62e8cdf..3ca9efa 100644
          other)
                  ;;
          *)
-@@ -550,6 +555,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+@@ -642,6 +647,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)
  AM_CONDITIONAL(TARGET_MAGEIA, test x"$with_distro" = xmageia)
 +AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
  
- AM_CONDITIONAL(HAVE_PLYMOUTH, test "$have_plymouth" = "yes")
  AM_CONDITIONAL(HAVE_SYSV_COMPAT, test "$SYSTEM_SYSV_COMPAT" = "yes")
+ 
 -- 
-1.7.9.1
+1.7.11.1
 

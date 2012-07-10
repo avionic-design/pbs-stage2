@@ -1,15 +1,20 @@
 config VIRTUAL_UDEV
 	bool
 	select PACKAGE_CORE_UDEV if UDEV_UDEV
+	select PACKAGE_CORE_SYSTEMD if UDEV_SYSTEMD
 
 config VIRTUAL_UDEV_GLIB
 	bool
 	select PACKAGE_CORE_UDEV_GLIB if UDEV_UDEV
+	select PACKAGE_CORE_SYSTEMD if UDEV_SYSTEMD
 
 choice UDEV
 	prompt "udev implementation"
 
 config UDEV_UDEV
 	bool "udev"
+
+config UDEV_SYSTEMD
+	bool "systemd"
 
 endchoice
