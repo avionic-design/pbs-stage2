@@ -12,3 +12,52 @@ index cbf5cb6..2e785df 100644
  
  AC_PATH_PROG(FLEX, flex)
  if test -z "$FLEX"; then
+diff --git a/GNUmakefile.am b/GNUmakefile.am
+index bb21631..c2ffc41 100644
+--- a/GNUmakefile.am
++++ b/GNUmakefile.am
+@@ -283,7 +283,7 @@ MAINTAINERCLEANFILES += \
+ # Older automake versions (1.7) place Plo files in a different place so we need
+ # to create the output directory manually.
+ all-local: stamp-po
+-	$(mkdir_p) $(top_builddir)/$(DEPDIR)/DerivedSources
++	$(MKDIR_P) $(top_builddir)/$(DEPDIR)/DerivedSources
+ 
+ # remove built sources and program directories
+ clean-local:
+diff --git a/Source/WebKit/gtk/po/GNUmakefile.am b/Source/WebKit/gtk/po/GNUmakefile.am
+index 1c5598d..942ae0c 100644
+--- a/Source/WebKit/gtk/po/GNUmakefile.am
++++ b/Source/WebKit/gtk/po/GNUmakefile.am
+@@ -132,13 +132,13 @@ DISTCLEANFILES += \
+ 	$(top_builddir)/Source/WebKit/gtk/po/$(DOMAIN).pot
+ 
+ po-install-data-local: all
+-	$(mkdir_p) $(DESTDIR)$(datadir)
++	$(MKDIR_P) $(DESTDIR)$(datadir)
+ 	@catalogs='$(MOFILES)'; \
+ 	for cat in $$catalogs; do \
+ 	  cat=`basename $$cat`; \
+ 	  lang=`echo $$cat | sed -e 's/\.mo$$//'`; \
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+-	  $(mkdir_p) $(DESTDIR)$$dir; \
++	  $(MKDIR_P) $(DESTDIR)$$dir; \
+ 	  if test -r Source/WebKit/gtk/po/$$cat; then realcat=Source/WebKit/gtk/po/$$cat; else realcat=$(srcdir)/$$cat; fi; \
+ 	  $(INSTALL_DATA) $$realcat $(DESTDIR)$$dir/$(DOMAIN).mo; \
+ 	  echo "installing $$realcat as $(DESTDIR)$$dir/$(DOMAIN).mo"; \
+@@ -173,13 +173,13 @@ po-install-data-local: all
+ 	done
+ 
+ po-installdirs-data-local:
+-	$(mkdir_p) $(DESTDIR)$(datadir)
++	$(MKDIR_P) $(DESTDIR)$(datadir)
+ 	@catalogs='$(MOFILES)'; \
+ 	for cat in $$catalogs; do \
+ 	  cat=`basename $$cat`; \
+ 	  lang=`echo $$cat | sed -e 's/\.gmo$$//'`; \
+ 	  dir=$(localedir)/$$lang/LC_MESSAGES; \
+-	  $(mkdir_p) $(DESTDIR)$$dir; \
++	  $(MKDIR_P) $(DESTDIR)$$dir; \
+ 	  for lc in '' $(EXTRA_LOCALE_CATEGORIES); do \
+ 	    if test -n "$$lc"; then \
+ 	      if (cd $(DESTDIR)$(localedir)/$$lang && LC_ALL=C ls -l -d $$lc 2>/dev/null) | grep ' -> ' >/dev/null; then \
