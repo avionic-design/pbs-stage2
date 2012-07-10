@@ -1,28 +1,30 @@
 PACKAGE = pulseaudio
-VERSION = 0.9.21
+VERSION = 2.0
+LICENSE = LGPL
 
-LOCATION = http://0pointer.de/lennart/projects/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+
+LOCATION = http://freedesktop.org/software/$(PACKAGE)/releases
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-libexecdir = $(prefix)/lib/pulse
-module = $(libexecdir)/modules
-
 conf-args += \
-	--libexecdir=$(libexecdir) \
-	--with-module-dir=$(module)
+	--with-udev-rules-dir=$(prefix)/lib/udev/rules.d
 
 prunefiles = \
+	$(prefix)/bin/esdcompat \
+	$(prefix)/bin/start-pulseaudio-kde \
 	$(prefix)/lib/*.la \
-	$(module)/*.la
+	$(prefix)/lib/pulseaudio/*.la
 
 stripfiles = \
 	$(prefix)/bin/pacat \
 	$(prefix)/bin/pacmd \
 	$(prefix)/bin/pactl \
 	$(prefix)/bin/pasuspender \
+	$(prefix)/bin/pax11publish \
 	$(prefix)/bin/pulseaudio \
-	$(prefix)/lib/*.so.* \
-	$(prefix)/lib/*.so \
-	$(module)/*.so
+	$(prefix)/lib/*.so* \
+	$(prefix)/lib/pulse-$(MAJOR).0/modules/*.so \
+	$(prefix)/lib/pulseaudio/*.so

@@ -1,2 +1,2 @@
 version=3
-http://0pointer.de/lennart/projects/pulseaudio/pulseaudio-(.*)\.tar\.gz
+http://freedesktop.org/software/pulseaudio/releases/pulseaudio-(.*)\.tar\.xz

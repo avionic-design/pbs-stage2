@@ -1,9 +1,8 @@
 /etc/dbus-1
 /etc/pulse
-/lib/udev/rules.d
-/usr/lib/libpulsecommon-*.so
-/usr/lib/libpulsecore-*.so
-/usr/lib/libpulsedsp.so
 /usr/lib/*.so.*
-/usr/lib/pulse
+/usr/lib/libpulsecore-2.0.so
+/usr/lib/pulse-2.0/modules
+/usr/lib/pulseaudio/*.so
+/usr/lib/udev/rules.d
 /usr/share/pulseaudio

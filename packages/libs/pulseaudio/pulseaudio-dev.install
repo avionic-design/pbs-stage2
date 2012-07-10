@@ -1,4 +1,7 @@
 /usr/include
-/usr/lib/*.so
+/usr/lib/libpulse.so
+/usr/lib/libpulse-simple.so
+/usr/lib/libpulse-mainloop-glib.so
+/usr/lib/cmake
 /usr/lib/pkgconfig
 /usr/share/vala
