@@ -1,5 +1,6 @@
 PACKAGE = nettle
-VERSION = 2.4
+VERSION = 2.5
+LICENSE = GPL
 
 LOCATION = http://www.lysator.liu.se/~nisse/archive
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

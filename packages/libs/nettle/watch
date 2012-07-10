@@ -1,2 +1,2 @@
 version=3
-http://www.lysator.liu.se/~nisse/archive/nettle-(.*)\.tar\.gz
+http://www.lysator.liu.se/~nisse/archive/nettle-([\d\.]+)\.tar\.gz
