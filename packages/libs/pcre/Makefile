@@ -1,5 +1,6 @@
 PACKAGE = pcre
-VERSION = 8.30
+VERSION = 8.31
+LICENSE = BSD
 
 LOCATION = ftp://ftp.csx.cam.ac.uk/pub/software/programming/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
