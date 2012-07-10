@@ -5,6 +5,11 @@ make_var()
 	echo "$1" | tr ' ./-' '_'
 }
 
+check_path()
+{
+	echo "$PATH" | grep -E -q "(^|:)$1(:|\$)" || PATH="$PATH:$1"
+}
+
 check_program()
 {
 	var=`make_var "$1"`
@@ -65,6 +70,13 @@ for arg in $@; do
 done
 
 test -z "$output" && output="`dirname $0`/autoconf.mk"
+
+#
+# make sure that sbin is in the path
+#
+
+check_path /sbin
+check_path /usr/sbin
 
 #
 # check for programs
