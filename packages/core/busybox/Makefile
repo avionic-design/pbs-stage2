@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.20.1
+VERSION = 1.20.2
 LICENSE = GPL
 
 LOCATION = http://busybox.net/downloads
