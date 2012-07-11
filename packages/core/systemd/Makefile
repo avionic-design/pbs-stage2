@@ -17,6 +17,13 @@ conf-args += \
 	--with-distro=pbs \
 	--disable-acl
 
+ifeq ($(CONFIG_UDEV_SYSTEMD),y)
+conf-args += \
+	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
+	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \
+	--with-firmware-path=/lib/firmware
+endif
+
 ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
 conf-args += --disable-binfmt
 endif
