@@ -14,3 +14,4 @@ alsa-set-params.patch
 remove-alsa-can-read.patch
 alsa-pcm-recover.patch
 config-no-locale.patch
+call-audio-settings.patch

@@ -1,0 +1,388 @@
+From a6bf88a3e956274a82d0991ec6bf3b1789c4513d Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Tue, 10 Jul 2012 14:53:44 +0200
+Subject: ms2: Add methods to set the echo limiter and noise gate parameters
+
+---
+ .../include/mediastreamer2/mediastream.h           |    4 +++
+ mediastreamer2/src/audiostream.c                   |   28 ++++++++++++++++++++
+ 2 files changed, 32 insertions(+), 0 deletions(-)
+
+diff --git a/mediastreamer2/include/mediastreamer2/mediastream.h b/mediastreamer2/include/mediastreamer2/mediastream.h
+index 0b5ac50..b242202 100644
+--- a/mediastreamer2/include/mediastreamer2/mediastream.h
++++ b/mediastreamer2/include/mediastreamer2/mediastream.h
+@@ -188,6 +188,8 @@ MS2_PUBLIC void audio_stream_iterate(AudioStream *stream);
+ /*enable echo-limiter dispositve: one MSVolume in input branch controls a MSVolume in the output branch*/
+ MS2_PUBLIC void audio_stream_enable_echo_limiter(AudioStream *stream, EchoLimiterType type);
+ 
++MS2_PUBLIC void audio_stream_set_echo_limiter_params(AudioStream *stream, float threshold, float speed, float force, int sustain, float tx_threshold);
++
+ /*enable gain control, to be done before start() */
+ MS2_PUBLIC void audio_stream_enable_gain_control(AudioStream *stream, bool_t val);
+ 
+@@ -209,6 +211,8 @@ MS2_PUBLIC void audio_stream_mute_rtp(AudioStream *stream, bool_t val);
+ /*enable noise gate, must be done before start()*/
+ MS2_PUBLIC void audio_stream_enable_noise_gate(AudioStream *stream, bool_t val);
+ 
++MS2_PUBLIC void audio_stream_set_noise_gate_params(AudioStream *stream, float threshold, float floorgain);
++
+ /*enable parametric equalizer in the stream that goes to the speaker*/
+ MS2_PUBLIC void audio_stream_enable_equalizer(AudioStream *stream, bool_t enabled);
+ 
+diff --git a/mediastreamer2/src/audiostream.c b/mediastreamer2/src/audiostream.c
+index 2274f0d..94c6e0c 100644
+--- a/mediastreamer2/src/audiostream.c
++++ b/mediastreamer2/src/audiostream.c
+@@ -612,6 +612,23 @@ void audio_stream_enable_echo_limiter(AudioStream *stream, EchoLimiterType type)
+ 	}
+ }
+ 
++void audio_stream_set_echo_limiter_params(AudioStream *stream, float threshold, float speed, float force, int sustain, float tx_threshold){
++	if (stream->volsend) {
++		if (threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_THRESHOLD,&threshold);
++		if (speed > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_SPEED,&speed);
++		if (force > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_FORCE,&force);
++		if (sustain > 0)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_SUSTAIN,&sustain);
++		if (tx_threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_TRANSMIT_THRESHOLD,&tx_threshold);
++	} else {
++		ms_warning("cannot set echo limiter parameters because no volume send");
++	}
++}
++
+ void audio_stream_enable_gain_control(AudioStream *stream, bool_t val){
+ 	stream->use_gc=val;
+ }
+@@ -631,6 +648,17 @@ void audio_stream_enable_noise_gate(AudioStream *stream, bool_t val){
+ 
+ }
+ 
++void audio_stream_set_noise_gate_params(AudioStream *stream, float threshold, float floorgain){
++	if (stream->volsend) {
++		if (threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_NOISE_GATE_THRESHOLD,&threshold);
++		if (floorgain > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_NOISE_GATE_FLOORGAIN,&floorgain);
++	} else {
++		ms_warning("cannot set noise gate parameters because no volume send");
++	}
++}
++
+ void audio_stream_set_mic_gain(AudioStream *stream, float gain){
+ 	if (stream->volsend){
+ 		ms_filter_call_method(stream->volsend,MS_VOLUME_SET_GAIN,&gain);
+-- 
+1.7.2.3
+
+From 63ca4011be2a021cc624b3a6f890cc7ba82223ef Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 11 Jul 2012 16:20:22 +0200
+Subject: ms2: Allow controlling the audiostream AGC while it is running
+
+---
+ mediastreamer2/src/audiostream.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/mediastreamer2/src/audiostream.c b/mediastreamer2/src/audiostream.c
+index 94c6e0c..4e6201a 100644
+--- a/mediastreamer2/src/audiostream.c
++++ b/mediastreamer2/src/audiostream.c
+@@ -635,6 +635,8 @@ void audio_stream_enable_gain_control(AudioStream *stream, bool_t val){
+ 
+ void audio_stream_enable_automatic_gain_control(AudioStream *stream, bool_t val){
+ 	stream->use_agc=val;
++	if (stream->volsend)
++		ms_filter_call_method(stream->volsend,MS_VOLUME_ENABLE_AGC,&val);
+ }
+ 
+ void audio_stream_enable_noise_gate(AudioStream *stream, bool_t val){
+-- 
+1.7.2.3
+
+
+From c7f3625c1706ef8ac13405fcf262434be71aa132 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 11 Jul 2012 16:25:31 +0200
+Subject: ms2: Allow changing the EC settings at run time
+
+---
+ mediastreamer2/src/speexec.c |   34 +++++++++++++++++++++++++---------
+ 1 files changed, 25 insertions(+), 9 deletions(-)
+
+diff --git a/mediastreamer2/src/speexec.c b/mediastreamer2/src/speexec.c
+index 921638c..f47a465 100644
+--- a/mediastreamer2/src/speexec.c
++++ b/mediastreamer2/src/speexec.c
+@@ -291,7 +291,7 @@ static void speex_ec_preprocess(MSFilter *f){
+ */
+ static void speex_ec_process(MSFilter *f){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	int nbytes=s->framesize*2;
++	int nbytes;
+ 	mblk_t *refm;
+ 	uint8_t *ref,*echo;
+ 	
+@@ -304,6 +304,8 @@ static void speex_ec_process(MSFilter *f){
+ 		}
+ 		return;
+ 	}
++
++	ms_filter_lock(f);
+ 	
+ 	if (f->inputs[0]!=NULL){
+ 		if (s->echostarted){
+@@ -320,6 +322,7 @@ static void speex_ec_process(MSFilter *f){
+ 
+ 	ms_bufferizer_put_from_queue(&s->echo,f->inputs[1]);
+ 	
++	nbytes=s->framesize*2;
+ 	ref=(uint8_t*)alloca(nbytes);
+ 	echo=(uint8_t*)alloca(nbytes);
+ 	while (ms_bufferizer_read(&s->echo,echo,nbytes)>=nbytes){
+@@ -390,6 +393,8 @@ static void speex_ec_process(MSFilter *f){
+ 		}
+ 		s->min_ref_samples=-1;
+ 	}
++
++	ms_filter_unlock(f);
+ }
+ 
+ static void speex_ec_postprocess(MSFilter *f){
+@@ -408,28 +413,39 @@ static void speex_ec_postprocess(MSFilter *f){
+ 	}
+ }
+ 
+-static int speex_ec_set_sr(MSFilter *f, void *arg){
++static int speex_ec_set_int_param(MSFilter *f, int* param, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->samplerate = *(int*)arg;
++	int val = *(int*)arg;
++	ms_filter_lock(f);
++	if (val != *param) {
++		*param = val;
++		if (s->ecstate || s->den) {
++			speex_ec_postprocess(f);
++			speex_ec_preprocess(f);
++		}
++	}
++	ms_filter_unlock(f);
+ 	return 0;
+ }
+ 
++static int speex_ec_set_sr(MSFilter *f, void *arg){
++	SpeexECState *s=(SpeexECState*)f->data;
++	return speex_ec_set_int_param(f, &s->samplerate, arg);
++}
++
+ static int speex_ec_set_framesize(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->framesize = *(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->framesize, arg);
+ }
+ 
+ static int speex_ec_set_delay(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->delay_ms = *(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->delay_ms, arg);
+ }
+ 
+ static int speex_ec_set_tail_length(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->tail_length_ms=*(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->tail_length_ms, arg);
+ }
+ static int speex_ec_set_bypass_mode(MSFilter *f, void *arg) {
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-- 
+1.7.2.3
+
+
+From 7bc961a266851fbc67a6726c6793b54309e3d975 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 11 Jul 2012 16:27:22 +0200
+Subject: Add methods to control the audio settings of each call
+
+---
+ coreapi/linphonecall.c |   53 ++++++++++++++++++++++++++++++++++++++
+ coreapi/linphonecore.h |   67 +++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 1 deletions(-)
+
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index cacd572..3290d4d 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -1366,6 +1366,13 @@ void linphone_call_enable_echo_cancellation(LinphoneCall *call, bool_t enable) {
+ 		ms_filter_call_method(call->audiostream->ec,MS_ECHO_CANCELLER_SET_BYPASS_MODE,&bypass_mode);
+ 	}
+ }
++
++void linphone_call_set_echo_cancellation_params(LinphoneCall *call, int tail_len_ms, int delay_ms, int framesize) {
++	if (call!=NULL && call->audiostream!=NULL){
++		audio_stream_set_echo_canceller_params(call->audiostream, tail_len_ms, delay_ms, framesize);
++	}
++}
++
+ bool_t linphone_call_echo_cancellation_enabled(LinphoneCall *call) {
+ 	if (call!=NULL && call->audiostream!=NULL && call->audiostream->ec){
+ 		bool_t val;
+@@ -1390,6 +1397,12 @@ void linphone_call_enable_echo_limiter(LinphoneCall *call, bool_t val){
+ 	}
+ }
+ 
++void linphone_call_set_echo_limiter_params(LinphoneCall *call, float threshold, float speed, float force, int sustain, float tx_threshold) {
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_echo_limiter_params(call->audiostream, threshold, speed, force, sustain, tx_threshold);
++	}
++}
++
+ bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call){
+ 	if (call!=NULL && call->audiostream!=NULL ){
+ 		return call->audiostream->el_type !=ELInactive ;
+@@ -1398,6 +1411,46 @@ bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call){
+ 	}
+ }
+ 
++void linphone_call_enable_noise_gate(LinphoneCall *call, bool_t val){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_enable_noise_gate(call->audiostream, val);
++	}
++}
++
++bool_t linphone_call_noise_gate_enabled(const LinphoneCall *call){
++	if (call!=NULL && call->audiostream!=NULL && call->audiostream->volsend){
++		return call->audiostream->use_ng;
++	} else {
++		return FALSE;
++	}
++}
++
++void linphone_call_set_noise_gate_params(LinphoneCall *call, float threshold, float floorgain){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_noise_gate_params(call->audiostream, threshold, floorgain);
++	}
++}
++
++void linphone_call_enable_agc(LinphoneCall *call, bool_t val){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_enable_automatic_gain_control(call->audiostream, val);
++	}
++}
++
++bool_t linphone_call_agc_enabled(LinphoneCall *call){
++	if (call!=NULL && call->audiostream!=NULL && call->audiostream->volsend){
++		return call->audiostream->use_agc;
++	} else {
++		return FALSE;
++	}
++}
++
++void linphone_call_set_mic_gain(LinphoneCall *call, float gain){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_mic_gain(call->audiostream, gain);
++	}
++}
++
+ /**
+  * @addtogroup call_misc
+  * @{
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index bac6e1a..46c2b4c 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -283,6 +283,15 @@ void linphone_call_set_user_pointer(LinphoneCall *call, void *user_pointer);
+ **/
+ void linphone_call_enable_echo_cancellation(LinphoneCall *call, bool_t val) ;
+ /**
++ * Set the echo cancellation parameters for this call
++ * @param call
++ * @param tail_len_ms
++ * @param delay_ms
++ * @param framesize
++ * @ingroup media_parameters
++**/
++void linphone_call_set_echo_cancellation_params(LinphoneCall *call, int tail_len_ms, int delay_ms, int framesize);
++/**
+  * Returns TRUE if echo cancellation is enabled.
+  *
+  * @ingroup media_parameters
+@@ -297,12 +306,68 @@ bool_t linphone_call_echo_cancellation_enabled(LinphoneCall *lc);
+ **/
+ void linphone_call_enable_echo_limiter(LinphoneCall *call, bool_t val);
+ /**
++ * Set the echo limiter parameters for this call
++ * @param call
++ * @param threshold
++ * @param speed
++ * @param force
++ * @param sustain
++ * @param tx_threshold
++ *
++ * @ingroup media_parameters
++**/
++void linphone_call_set_echo_limiter_params(LinphoneCall *call, float threshold, float speed, float force, int sustain, float tx_threshold);
++/**
+  * Returns TRUE if echo limiter is enabled.
+  *
+  * @ingroup media_parameters
+ **/
+ bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call);
+-
++/**
++ * Enables or disable the noise gate for this call
++ * @param call
++ * @param val
++ *
++ * @ingroup media_parameters
++**/
++void linphone_call_enable_noise_gate(LinphoneCall *call, bool_t val);
++/**
++ * Returns TRUE if the noise gate is enabled.
++ *
++ * @ingroup media_parameters
++**/
++bool_t linphone_call_noise_gate_enabled(const LinphoneCall *call);
++/**
++ * Set the noise gate paramters for this call
++ * @param call
++ * @param threshold
++ * @param floorgain
++ *
++ * @ingroup media_parameters
++**/
++void linphone_call_set_noise_gate_params(LinphoneCall *call, float threshold, float floorgain);
++/**
++ * Enables or disable the automatic gain control for this call
++ * @param call
++ * @param val
++ *
++ * @ingroup media_parameters
++**/
++void linphone_call_enable_agc(LinphoneCall *call, bool_t val);
++/**
++ * Returns TRUE if the automatic gain control is enabled.
++ *
++ * @ingroup media_parameters
++**/
++bool_t linphone_call_agc_enabled(LinphoneCall *call);
++/**
++ * Set the microphone gain for this call
++ * @param call
++ * @param gain
++ *
++ * @ingroup media_parameters
++**/
++void linphone_call_set_mic_gain(LinphoneCall *call, float gain);
+ /*keep this in sync with mediastreamer2/msvolume.h*/
+ #define LINPHONE_VOLUME_DB_LOWEST (-120) /**< Lowest measured that can be returned.*/
+ 
+-- 
+1.7.2.3
+
