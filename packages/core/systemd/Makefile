@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 186
+VERSION = 187
 LICENSE = GPL LGPL MIT
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
@@ -11,28 +11,17 @@ env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 
 conf-args += \
+	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
+	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \
+	--with-firmware-path=/lib/firmware \
 	--with-rootprefix=$(prefix) \
 	--libexecdir=$(prefix)/lib \
 	--enable-split-usr \
 	--with-distro=pbs \
 	--disable-acl
 
-ifeq ($(CONFIG_UDEV_SYSTEMD),y)
-conf-args += \
-	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
-	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \
-	--with-firmware-path=/lib/firmware
-endif
-
 ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
 conf-args += --disable-binfmt
-endif
-ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_GTK),y)
-conf-args += --disable-gtk
-endif
-
-ifneq ($(CONFIG_PACKAGE_DESKTOP_PLYMOUTH),y)
-conf-args += --enable-plymouth
 endif
 
 compat-links = \

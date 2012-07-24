@@ -1,13 +1,13 @@
 config PACKAGE_CORE_SYSTEMD
 	bool "systemd"
+	select PACKAGE_BUILD_TOOLS_GETTEXT
 	select PACKAGE_BUILD_TOOLS_VALA
 	select PACKAGE_KERNEL_KMOD
-	select PACKAGE_CORE_UTIL_LINUX if UDEV_SYSTEMD
 	select PACKAGE_CORE_USBUTILS
+	select PACKAGE_CORE_UTIL_LINUX
 	select PACKAGE_LIBS_LIBCAP
 	select PACKAGE_LIBS_LIBNOTIFY
 	select PACKAGE_LIBS_XZ
-	default n
 	help
 	  systemd is a system and service manager for Linux, compatible with SysV and
 	  LSB init scripts. systemd provides aggressive parallelization capabilities,
@@ -23,12 +23,3 @@ config PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT
 	default y
 	help
 	  Enables support for automounting binfmt format handlers.
-
-config PACKAGE_CORE_SYSTEMD_ENABLE_GTK
-	bool "Enable GtkAdminTool"
-	depends on PACKAGE_CORE_SYSTEMD
-	select PACKAGE_LIBS_GTK
-	select PACKAGE_LIBS_LIBGEE
-	default y
-	help
-	  Enables the grafical administration utility.

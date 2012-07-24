@@ -13,7 +13,7 @@ diff --git a/Makefile.am b/Makefile.am
 index 3b7ec0b..d1c5335 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -191,6 +191,12 @@ AM_CPPFLAGS += \
+@@ -189,6 +189,12 @@ AM_CPPFLAGS += \
  	-DKBD_SETFONT=\"/bin/setfont\" \
  	-DDEFAULT_FONT=\"LatArCyrHeb-16\"
  else
@@ -26,7 +26,7 @@ index 3b7ec0b..d1c5335 100644
  AM_CPPFLAGS += \
  	-DKBD_LOADKEYS=\"/bin/loadkeys\" \
  	-DKBD_SETFONT=\"/bin/setfont\" \
-@@ -202,6 +208,7 @@ endif
+@@ -199,6 +205,7 @@ endif
  endif
  endif
  endif
@@ -38,16 +38,16 @@ diff --git a/configure.ac b/configure.ac
 index dfa34c8..b2021fd 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -500,7 +500,7 @@ AM_CONDITIONAL(ENABLE_MANPAGES, [test "$have_manpages" = "yes"])
+@@ -504,7 +504,7 @@ AM_CONDITIONAL(ENABLE_MANPAGES, [test "$have_manpages" = "yes"])
  AC_PATH_PROG([XSLTPROC], [xsltproc])
  AM_CONDITIONAL(HAVE_XSLTPROC, test x"$XSLTPROC" != x)
  
--AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom or other]))
-+AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, meego, mageia, angstrom, pbs or other]))
+-AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, mageia, angstrom or other]))
++AC_ARG_WITH(distro, AS_HELP_STRING([--with-distro=DISTRO],[Specify the distribution to target: One of fedora, suse, debian, ubuntu, arch, gentoo, slackware, altlinux, mandriva, mageia, angstrom, pbs or other]))
  if test "z$with_distro" = "z"; then
          if test "$cross_compiling" = yes; then
                  AC_MSG_WARN([Target distribution cannot be reliably detected when cross-compiling. You should specify it with --with-distro (see $0 --help for recognized distros)])
-@@ -589,6 +589,11 @@ case $with_distro in
+@@ -587,6 +587,11 @@ case $with_distro in
                  AC_DEFINE(TARGET_MAGEIA, [], [Target is Mageia])
                  M4_DEFINES=-DTARGET_MAGEIA=1
                  ;;
@@ -59,8 +59,8 @@ index dfa34c8..b2021fd 100644
          other)
                  ;;
          *)
-@@ -642,6 +647,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
- AM_CONDITIONAL(TARGET_MEEGO, test x"$with_distro" = xmeego)
+@@ -639,6 +644,7 @@ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
+ AM_CONDITIONAL(TARGET_MANDRIVA, test x"$with_distro" = xmandriva)
  AM_CONDITIONAL(TARGET_ANGSTROM, test x"$with_distro" = xangstrom)
  AM_CONDITIONAL(TARGET_MAGEIA, test x"$with_distro" = xmageia)
 +AM_CONDITIONAL(TARGET_PBS, test x"$with_distro" = xpbs)
