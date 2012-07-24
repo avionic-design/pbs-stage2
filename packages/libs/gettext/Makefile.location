@@ -1,0 +1,6 @@
+PACKAGE = gettext
+VERSION = 0.18.1.1
+LICENSE = GPL
+
+LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

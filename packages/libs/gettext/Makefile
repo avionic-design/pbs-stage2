@@ -1,12 +1,5 @@
-PACKAGE = gettext
-VERSION = 0.18.1.1
-LICENSE = GPL
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/gettext/Makefile.location
 include packages/autotools.mk
-NUM_CPU := 1
 
 conf-args += \
 	--disable-openmp \
