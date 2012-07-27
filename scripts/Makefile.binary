@@ -74,10 +74,9 @@ quiet_cmd_install_files = INSTALL $*
 				$(pkgsrctree)/$*.install
 
 quiet_cmd_build_package = BUILD   $*_$(VERSION)_$(TARGET).tar.bz2
-      cmd_build_package = $(priv) $(srctree)/scripts/pbs-binary $(pbs_quiet) \
-				-t $(TARGET) -v $(VERSION) \
-				-b $(objtree)/binary/$(obj) \
-				$*
+      cmd_build_package = $(env) $(priv) $(srctree)/scripts/pbs-binary \
+				$(pbs_quiet) -t $(TARGET) -v $(VERSION) \
+				-b $(objtree)/binary/$(obj) $*
 
 PHONY += $(build-packages)
 $(build-packages): build-$(obj)/%:
