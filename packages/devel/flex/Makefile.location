@@ -1,0 +1,6 @@
+PACKAGE = flex
+VERSION = 2.5.36
+LICENSE = custom
+
+LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

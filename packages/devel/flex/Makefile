@@ -1,9 +1,4 @@
-PACKAGE = flex
-VERSION = 2.5.35
-
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/devel/flex/Makefile.location
 include packages/autotools.mk
 
 conf-vars += \
