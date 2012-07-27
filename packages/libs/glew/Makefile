@@ -1,5 +1,6 @@
 PACKAGE = glew
-VERSION = 1.7.0
+VERSION = 1.8.0
+LICENSE = BSD MIT GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tgz
@@ -18,7 +19,8 @@ build-args = \
 	CC='$(CC)' \
 	CFLAGS.EXTRA='$(CFLAGS)' \
 	LD='$(CC)' \
-	LDFLAGS.EXTRA='$(LDFLAGS)'
+	LDFLAGS.EXTRA='$(LDFLAGS)' \
+	STRIP=''
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
