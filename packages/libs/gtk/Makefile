@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.24.10
+VERSION = 2.24.11
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -13,6 +13,7 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-gdktarget=x11 \
+	--disable-xinerama \
 	--disable-glibtest \
 	--disable-cups
 
