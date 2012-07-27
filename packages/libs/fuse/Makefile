@@ -1,5 +1,6 @@
 PACKAGE = fuse
-VERSION = 2.9.0
+VERSION = 2.9.1
+LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

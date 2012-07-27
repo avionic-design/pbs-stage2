@@ -13,7 +13,7 @@ index bd056b9..d0efd81 100644
 --- a/util/Makefile.am
 +++ b/util/Makefile.am
 @@ -39,10 +39,6 @@ install-exec-local:
- 	$(INSTALL_PROGRAM) mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
+ 	$(INSTALL_PROGRAM) $(builddir)/mount.fuse $(DESTDIR)$(MOUNT_FUSE_PATH)/mount.fuse
  	$(MKDIR_P) $(DESTDIR)$(INIT_D_PATH)
  	$(INSTALL_SCRIPT) $(srcdir)/init_script $(DESTDIR)$(INIT_D_PATH)/fuse
 -	@if test -x /usr/sbin/update-rc.d; then \
