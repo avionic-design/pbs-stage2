@@ -1,5 +1,5 @@
 PACKAGE = glib
-VERSION = 2.32.3
+VERSION = 2.32.4
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
