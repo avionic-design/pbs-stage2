@@ -1,11 +1,11 @@
 PACKAGE = ethtool
-VERSION = 6
+VERSION = 3.4.2
+LICENSE = GPL
 
-LOCATION = http://prdownloads.sourceforge.net/gkernel
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = http://www.kernel.org/pub/software/network/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-prunefiles =
 stripfiles = \
 	$(prefix)/sbin/ethtool

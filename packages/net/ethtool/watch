@@ -1,2 +1,2 @@
 version=3
-http://sf.net/gkernel/ethtool-(.*)\.tar\.gz
+http://www.kernel.org/pub/software/network/ethtool/ethtool-(.*)\.tar\.xz
