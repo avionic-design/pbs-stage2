@@ -428,7 +428,7 @@ ac5ef65108e1f2146286e53080975683dae49fc94680042e04bd1e2010e99050  download/xf86d
 9c4b8d7221cb6dc4309269ccc008a22753698ae9245a398a59df35f1404d661f  download/xf86driproto-2.1.1.tar.bz2
 1c128bbd34bc17d08cc723c2429cdfe7efc426cb753e38189ffd290002a3b598  download/xf86-input-evdev-2.7.1.tar.bz2
 eafc4a09729a4b2b6120430c71e1954c5cac299ad6adf2f9a40aee8a7b51e476  download/xf86-input-evtouch-0.8.8.tar.bz2
-aa9ec96e7f7f87bc086cb86b871ee6f4b9a7809fb1e7d50d0abbd7c2e50a8cc3  download/xf86-input-keyboard-1.6.1.tar.bz2
+76651a84f5031f7c6ecf075d55989c04a00689642579df6d1a1bee6d5c2e5f8a  download/xf86-input-keyboard-1.6.2.tar.bz2
 332b7357c18e6b9daba51c8ed48ce118e9b51fb5990b6a2a68637be62da7413b  download/xf86-input-mouse-1.7.2.tar.bz2
 93b271b4b41d7e5ca108849a583b9523e96c51813d046282285355b7001f82d5  download/xf86-video-fbdev-0.4.2.tar.bz2
 32133d61b14ce3b45b83a60e4ed8eb75159259d708f056144250aaeabf16e4bc  download/xf86-video-intel-2.19.0.tar.bz2
