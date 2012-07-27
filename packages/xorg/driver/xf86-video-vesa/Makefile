@@ -1,5 +1,6 @@
 PACKAGE = xf86-video-vesa
-VERSION = 2.3.1
+VERSION = 2.3.2
+LICENSE = custom
 
 include packages/xorg/driver/common.mk
 
