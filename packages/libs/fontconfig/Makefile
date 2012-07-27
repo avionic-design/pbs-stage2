@@ -1,12 +1,14 @@
 PACKAGE = fontconfig
-VERSION = 2.9.0
+VERSION = 2.10.1
+LICENSE = custom
 
 LOCATION = http://fontconfig.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--with-arch=$(ARCH) \
 	--disable-libxml2
 
