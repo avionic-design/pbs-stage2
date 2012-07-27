@@ -10,7 +10,4 @@ config PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG
 	bool "enable debugging support"
 	select PACKAGE_DEVEL_VALGRIND
 
-config PACKAGE_XORG_DRIVER_VIDEO_INTEL_SNA
-	bool "enable SandyBridge New Acceleration (SNA)"
-
 endif
