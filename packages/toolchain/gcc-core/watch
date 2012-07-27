@@ -1,2 +1,1 @@
-version=3
-http://ftp.gnu.org/pub/gnu/gcc/gcc-([\d\.]+)/gcc-core-(.*)\.tar\.bz2
+../gcc/watch
