@@ -2,6 +2,7 @@ menu "Build tools"
 
 source "packages/build-tools/autoconf/Kconfig"
 source "packages/build-tools/automake/Kconfig"
+source "packages/build-tools/bison/Kconfig"
 source "packages/build-tools/cmake/Kconfig"
 source "packages/build-tools/dbus/Kconfig"
 source "packages/build-tools/dbus-glib/Kconfig"
