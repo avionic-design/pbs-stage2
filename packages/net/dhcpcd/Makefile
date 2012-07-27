@@ -1,5 +1,5 @@
 PACKAGE = dhcpcd
-VERSION = 5.6.0
+VERSION = 5.6.1
 LICENSE = BSD
 
 LOCATION = http://roy.marples.name/downloads/$(PACKAGE)
