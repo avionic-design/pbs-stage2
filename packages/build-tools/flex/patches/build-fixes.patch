@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index a354699..0b841c8 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -210,7 +210,7 @@ indent:
+ 	fi
+ 
+ install-exec-hook:
+-	cd $(DESTDIR)/$(bindir) && \
++	cd $(DESTDIR)/$(bindir) && rm -f flex++$(EXEEXT) && \
+ 		$(LN_S)  flex$(EXEEXT) flex++$(EXEEXT)
+ 
+ .PHONY: ChangeLog tags indent
