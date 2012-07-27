@@ -1,0 +1,32 @@
+From 3f8db48f82b592f5f1205a7e8a9350168b56e77c Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Wed, 14 Mar 2012 13:06:43 +0100
+Subject: [PATCH] Fix bug 30653.
+
+Originally posted by Jeremy Devenport.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ remake.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/remake.c b/remake.c
+index 27d2550..5485b03 100644
+--- a/remake.c
++++ b/remake.c
+@@ -614,6 +614,12 @@ update_file_1 (struct file *file, unsigned int depth)
+                 d->file->dontcare = file->dontcare;
+               }
+ 
++            /* We may have already encountered this file earlier in the same
++             * pass before we knew we'd be updating this target. In that
++             * case calling update_file now would result in the file being
++             * inappropriately pruned so we toggle the considered bit back
++             * off first. */
++            d->file->considered = !considered;
+ 
+ 	    dep_status |= update_file (d->file, depth);
+ 
+-- 
+1.7.9.4
+
