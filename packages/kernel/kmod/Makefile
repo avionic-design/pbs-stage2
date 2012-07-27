@@ -1,10 +1,4 @@
-PACKAGE = kmod
-VERSION = 9
-LICENSE = GPL
-
-LOCATION = http://kernel.org/pub/linux/utils/kernel/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/kernel/kmod/Makefile.location
 include packages/autotools.mk
 
 dirs = \
