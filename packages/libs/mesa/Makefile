@@ -1,5 +1,6 @@
 PACKAGE = mesa
-VERSION = 8.0.3
+VERSION = 8.0.4
+LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 VERSION = 7.5.2
