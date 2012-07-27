@@ -1,5 +1,6 @@
 PACKAGE = libtool
 VERSION = 2.4.2
+LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
