@@ -1,0 +1,6 @@
+PACKAGE = pkg-config
+VERSION = 0.26
+LICENSE = GPL
+
+LOCATION = http://pkgconfig.freedesktop.org/releases
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
