@@ -1,0 +1,52 @@
+diff --git a/Source/WebCore/xml/XPathGrammar.y b/Source/WebCore/xml/XPathGrammar.y
+index 2eba5b3..da23207 100644
+--- a/Source/WebCore/xml/XPathGrammar.y
++++ b/Source/WebCore/xml/XPathGrammar.y
+@@ -29,12 +29,6 @@
+ 
+ #include "config.h"
+ 
+-#include "XPathFunctions.h"
+-#include "XPathNSResolver.h"
+-#include "XPathParser.h"
+-#include "XPathPath.h"
+-#include "XPathPredicate.h"
+-#include "XPathVariableReference.h"
+ #include <wtf/FastMalloc.h>
+ 
+ #define YYMALLOC fastMalloc
+@@ -47,6 +41,13 @@
+ #define YYPARSE_PARAM parserParameter
+ #define PARSER static_cast<Parser*>(parserParameter)
+ 
++#include "XPathFunctions.h"
++#include "XPathNSResolver.h"
++#include "XPathParser.h"
++#include "XPathPath.h"
++#include "XPathPredicate.h"
++#include "XPathVariableReference.h"
++
+ using namespace WebCore;
+ using namespace XPath;
+ 
+diff --git a/Source/WebCore/xml/XPathParser.cpp b/Source/WebCore/xml/XPathParser.cpp
+index 62d8ee3..45cebcf 100644
+--- a/Source/WebCore/xml/XPathParser.cpp
++++ b/Source/WebCore/xml/XPathParser.cpp
+@@ -36,6 +36,7 @@
+ #include <wtf/StdLibExtras.h>
+ #include <wtf/text/StringHash.h>
+ 
++#define YYPARSE_PARAM parseParameter
+ int xpathyyparse(void*);
+ 
+ using namespace WTF;
+@@ -475,7 +476,7 @@ Expression* Parser::parseStatement(const String& statement, PassRefPtr<XPathNSRe
+     
+     Parser* oldParser = currentParser;
+     currentParser = this;
+-    int parseError = xpathyyparse(this);
++    int parseError = ::xpathyyparse(this);
+     currentParser = oldParser;
+ 
+     if (parseError) {

@@ -6,3 +6,4 @@ fix-79728.patch
 jsc-fix-nullptr.patch
 silence-arm-build.patch
 dnd-threshold.patch
+xpath-parser.patch
