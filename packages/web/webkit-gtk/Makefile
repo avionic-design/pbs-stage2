@@ -1,5 +1,5 @@
 PACKAGE = webkit
-VERSION = 1.8.1
+VERSION = 1.8.0
 LICENSE = LGPL BSD
 
 LOCATION = http://www.webkitgtk.org/releases
