@@ -1,9 +1,4 @@
-PACKAGE = libgcrypt
-VERSION = 1.5.0
-
-LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/libgcrypt/Makefile.location
 include packages/autotools.mk
 
 conf-args += \

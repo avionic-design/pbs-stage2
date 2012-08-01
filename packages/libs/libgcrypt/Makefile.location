@@ -1,0 +1,6 @@
+PACKAGE = libgcrypt
+VERSION = 1.5.0
+LICENCE = GPL
+
+LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
