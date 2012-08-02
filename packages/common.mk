@@ -16,10 +16,10 @@ CONFIG_LIBC := $(subst $(quote),,$(CONFIG_LIBC))
 CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
-ifndef CROSS_COMPILE
-  PATH := $(srctree)/toolchains/$(TARGET)/usr/bin:$(PATH)
-  CROSS_COMPILE = $(TARGET)-
-endif
+
+TOOLCHAIN_BASE_PATH ?= $(srctree)/toolchains
+PATH := $(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/bin:$(PATH)
+CROSS_COMPILE ?= $(TARGET)-
 
 export CROSS_COMPILE
 
