@@ -37,7 +37,7 @@ rm-$(obj)/rootfs.img: rm-%:
 	$(call cmd,delete)
 
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
-      cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
+      cmd_depmod = $(objtree)/build-tools/bin/depmod -b $@ $(KERNEL_VERSION)
 
 include $(objtree)/build/packages/kernel/linux/kernel-version
 

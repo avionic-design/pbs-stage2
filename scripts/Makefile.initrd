@@ -29,7 +29,7 @@ mount-$(obj)/initrd: mount-%:
 	$(call cmd,mount_ramdisk)
 
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
-      cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
+      cmd_depmod = $(objtree)/build-tools/bin/depmod -b $@ $(KERNEL_VERSION)
 
 kernel-version = $(objtree)/build/packages/kernel/linux/kernel-version
 include $(kernel-version)

@@ -165,6 +165,7 @@ $(INSTALL_PATH):
 
 install-args = $(common-args)
 install-vars = \
+	DEPMOD=$(objtree)/build-tools/bin/depmod \
 	INSTALL_HDR_PATH=$(DESTDIR)$(prefix) \
 	INSTALL_PATH=$(INSTALL_PATH) \
 	INSTALL_MOD_PATH=$(DESTDIR) \
