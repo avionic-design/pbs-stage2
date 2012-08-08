@@ -46,6 +46,7 @@ extract-bin     := $(filter %.bin,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
 remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS)) $(FILES)
+local-src	:= $(objtree)/source/$(obj)
 
 dlurl = $(call url-pathname,$(filter %$*,$(remote-files)))
 destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
@@ -157,10 +158,10 @@ ifneq ($(GIT_URL),)
   endif
 endif
 
-ifneq ($(wildcard $(pkgsrctree)/source),)
-quiet_cmd_symlink_source = LN      $(pkgsrctree)/source
+ifneq ($(wildcard $(local-src)),)
+quiet_cmd_symlink_source = LN      $(local-src)
       cmd_symlink_source = rm -rf $(pkgbuildtree) && \
-			ln -s $(pkgsrctree)/source $(pkgbuildtree)
+			ln -s $(local-src) $(pkgbuildtree)
 
 $(pkgtree)/.symlink-source: $(pkgtree)/.directory
 	$(call cmd,symlink_source)
