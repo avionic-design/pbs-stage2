@@ -1,0 +1,7 @@
+if ARCH_IA64
+
+config ARCH
+	string
+	default "ia64"
+
+endif
