@@ -1,0 +1,7 @@
+if ARCH_M68K
+
+config ARCH
+	string
+	default "m68k"
+
+endif

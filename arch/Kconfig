@@ -20,6 +20,9 @@ config ARCH_BLACKFIN
 config ARCH_IA64
 	bool "ia64"
 
+config ARCH_M68K
+	bool "m68k"
+
 config ARCH_MIPS
 	bool "mips"
 
@@ -44,6 +47,7 @@ source "arch/x86_64/Kconfig"
 source "arch/arm/Kconfig"
 source "arch/blackfin/Kconfig"
 source "arch/ia64/Kconfig"
+source "arch/m68k/Kconfig"
 source "arch/mips/Kconfig"
 source "arch/powerpc/Kconfig"
 source "arch/sparc/Kconfig"
