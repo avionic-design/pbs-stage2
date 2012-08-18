@@ -1,0 +1,7 @@
+if ARCH_SPARC
+
+config ARCH
+	string
+	default "sparc"
+
+endif

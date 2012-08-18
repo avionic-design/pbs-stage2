@@ -20,6 +20,9 @@ config ARCH_MIPS
 config ARCH_POWERPC
 	bool "powerpc"
 
+config ARCH_SPARC
+	bool "sparc"
+
 endchoice
 
 config MARCH
@@ -35,6 +38,7 @@ source "arch/arm/Kconfig"
 source "arch/blackfin/Kconfig"
 source "arch/mips/Kconfig"
 source "arch/powerpc/Kconfig"
+source "arch/sparc/Kconfig"
 
 choice
 	prompt "Operating System"

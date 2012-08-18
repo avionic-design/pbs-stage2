@@ -34,6 +34,11 @@ ifeq ($(CONFIG_ARCH),powerpc)
 	libc_cv_ppc_rel16=yes
 endif
 
+ifeq ($(CONFIG_ARCH),sparc)
+  conf-vars += \
+	libc_cv_mlong_double_128=yes
+endif
+
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
 		cd $(pkgbuildtree)/obj-$(TARGET) && \
