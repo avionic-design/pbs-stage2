@@ -1,9 +1,4 @@
-PACKAGE = pkg-config
-VERSION = 0.26
-
-LOCATION = http://pkgconfig.freedesktop.org/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/toolchain/pkgconfig/Makefile.location
 include packages/toolchain/common.mk
 
 $(pkgtree)/.setup:

@@ -1,1 +1,1 @@
-$(dep-hash-file): $(dep-obj)/Makefile.location
+$(dep-hash-file): packages/toolchain/pkgconfig/Makefile.location
