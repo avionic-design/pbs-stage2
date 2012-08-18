@@ -1,0 +1,7 @@
+if ARCH_ALPHA
+
+config ARCH
+	string
+	default "alpha"
+
+endif

@@ -26,6 +26,11 @@ conf-vars += \
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no
 
+ifeq ($(CONFIG_ARCH),alpha)
+  conf-vars += \
+	libc_cv_mlong_double_128=yes
+endif
+
 ifeq ($(CONFIG_ARCH),powerpc)
   conf-vars += \
 	libc_cv_mlong_double_128ibm=yes \

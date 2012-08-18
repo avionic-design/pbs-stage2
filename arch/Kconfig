@@ -1,6 +1,9 @@
 choice
 	prompt "Architecture"
 
+config ARCH_ALPHA
+	bool "alpha"
+
 config ARCH_X86
 	bool "x86"
 
@@ -32,6 +35,7 @@ config ARCH_HAS_UBOOT
 	bool
 	default n
 
+source "arch/alpha/Kconfig"
 source "arch/x86/Kconfig"
 source "arch/x86_64/Kconfig"
 source "arch/arm/Kconfig"
