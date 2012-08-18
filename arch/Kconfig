@@ -29,6 +29,9 @@ config ARCH_MIPS
 config ARCH_POWERPC
 	bool "powerpc"
 
+config ARCH_SH
+	bool "sh"
+
 config ARCH_SPARC
 	bool "sparc"
 
@@ -50,6 +53,7 @@ source "arch/ia64/Kconfig"
 source "arch/m68k/Kconfig"
 source "arch/mips/Kconfig"
 source "arch/powerpc/Kconfig"
+source "arch/sh/Kconfig"
 source "arch/sparc/Kconfig"
 
 choice

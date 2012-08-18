@@ -1,0 +1,7 @@
+if ARCH_SH
+
+config ARCH
+	string
+	default "sh"
+
+endif
