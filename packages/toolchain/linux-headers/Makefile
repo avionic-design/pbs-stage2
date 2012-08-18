@@ -19,7 +19,11 @@ common-vars = \
 	CROSS_COMPILE='$(TARGET)-' \
 	ARCH='$(ARCH)'
 
-KERNEL_CONFIG := defconfig
+ifeq ($(ARCH),tile)
+  KERNEL_CONFIG := tilegx_defconfig
+else
+  KERNEL_CONFIG := defconfig
+endif
 
 $(pkgtree)/build:
 	$(call cmd,mkdir_p)

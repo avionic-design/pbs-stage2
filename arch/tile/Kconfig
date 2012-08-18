@@ -1,0 +1,7 @@
+if ARCH_TILE
+
+config ARCH
+	string
+	default "tile"
+
+endif

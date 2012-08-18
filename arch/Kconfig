@@ -35,6 +35,9 @@ config ARCH_SH
 config ARCH_SPARC
 	bool "sparc"
 
+config ARCH_TILE
+	bool "tile"
+
 endchoice
 
 config MARCH
@@ -55,6 +58,7 @@ source "arch/mips/Kconfig"
 source "arch/powerpc/Kconfig"
 source "arch/sh/Kconfig"
 source "arch/sparc/Kconfig"
+source "arch/tile/Kconfig"
 
 choice
 	prompt "Operating System"
