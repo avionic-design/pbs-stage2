@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.0.21
+VERSION = 3.1.2
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
