@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.20.1
+VERSION = 2.20.9
 LICENSE = custom
 
 include packages/xorg/driver/common.mk
