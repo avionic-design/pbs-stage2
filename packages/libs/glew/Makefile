@@ -1,5 +1,5 @@
 PACKAGE = glew
-VERSION = 1.8.0
+VERSION = 1.9.0
 LICENSE = BSD MIT GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
