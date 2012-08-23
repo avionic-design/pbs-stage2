@@ -1,5 +1,5 @@
 PACKAGE = iptables
-VERSION = 1.4.14
+VERSION = 1.4.15
 LICENSE = GPL
 
 LOCATION = http://ftp.netfilter.org/pub/$(PACKAGE)
