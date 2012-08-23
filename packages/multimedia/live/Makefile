@@ -1,5 +1,5 @@
 PACKAGE = live
-VERSION = 2012.07.26
+VERSION = 2012.09.27
 LICENSE = LGPL
 
 LOCATION = http://live555.com/liveMedia/public
