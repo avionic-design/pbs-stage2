@@ -1,5 +1,5 @@
 PACKAGE = librsvg
-VERSION = 2.36.1
+VERSION = 2.36.3
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -27,6 +27,7 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/rsvg-convert \
 	$(prefix)/bin/rsvg-view \
+	$(prefix)/bin/rsvg-view-3 \
 	$(loader)/*.so \
 	$(engine)/*.so \
 	$(prefix)/lib/*.so.*
