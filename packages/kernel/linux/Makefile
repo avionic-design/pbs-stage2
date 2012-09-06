@@ -100,6 +100,11 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,configure)
 	$(call cmd,stamp)
 
+PHONY += configure
+configure:
+	$(Q)$(env) TERM=$(TERM) $(MAKE) -C $(KERNELSRC) \
+		$(conf-args) $(conf-vars) menuconfig
+
 #
 # extract version number from source
 #
