@@ -1,10 +1,4 @@
-PACKAGE = libffi
-VERSION = 3.0.11
-LICENSE = MIT
-
-LOCATION = ftp://sourceware.org/pub/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/libffi/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
