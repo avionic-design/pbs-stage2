@@ -1,8 +1,8 @@
 diff --git a/configure.in b/configure.in
-index 0fb4983..1e58205 100644
+index 3d5f48b..1b68c47 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -145,8 +145,6 @@ AC_ARG_WITH(pattern,
+@@ -146,8 +146,6 @@ AC_ARG_WITH(pattern,
  [  --with-pattern          add the xmlPattern selection interface (on)])
  AC_ARG_WITH(push,
  [  --with-push             add the PUSH parser interfaces (on)])
@@ -11,7 +11,7 @@ index 0fb4983..1e58205 100644
  AC_ARG_WITH(reader,
  [  --with-reader           add the xmlReader parsing interface (on)])
  AC_ARG_WITH(readline,
-@@ -300,10 +298,6 @@ then
+@@ -304,10 +302,6 @@ then
      then
        with_push=no
      fi
@@ -22,7 +22,7 @@ index 0fb4983..1e58205 100644
      if test "$with_reader" = ""
      then
        with_reader=no
-@@ -728,96 +722,39 @@ dnl
+@@ -743,96 +737,39 @@ dnl
  dnl check for python
  dnl
  
@@ -153,15 +153,15 @@ index 0fb4983..1e58205 100644
  dnl check for dso support
  WITH_MODULES=0
 diff --git a/python/Makefile.am b/python/Makefile.am
-index 68d2236..d2a2253 100644
+index 4a8b5d5..fdb00cd 100644
 --- a/python/Makefile.am
 +++ b/python/Makefile.am
-@@ -31,7 +31,7 @@ python_LTLIBRARIES = libxml2mod.la
+@@ -24,7 +24,7 @@ AM_CPPFLAGS = \
+ python_LTLIBRARIES = libxml2mod.la
  
- libxml2mod_la_SOURCES = $(srcdir)/libxml.c $(srcdir)/types.c
- nodist_libxml2mod_la_SOURCES = libxml2-py.c
--libxml2mod_la_LIBADD = $(mylibs) @CYGWIN_EXTRA_PYTHON_LIBADD@ @WIN32_EXTRA_PYTHON_LIBADD@ @PYTHON_LIBS@ -lpython$(PYTHON_VERSION)
-+libxml2mod_la_LIBADD = $(mylibs) @CYGWIN_EXTRA_PYTHON_LIBADD@ @WIN32_EXTRA_PYTHON_LIBADD@ @PYTHON_LIBS@
+ libxml2mod_la_SOURCES = libxml.c libxml_wrap.h libxml2-py.h libxml2-py.c types.c
+-libxml2mod_la_LIBADD  = $(top_builddir)/libxml2.la $(CYGWIN_EXTRA_PYTHON_LIBADD) $(WIN32_EXTRA_PYTHON_LIBADD) $(PYTHON_LIBS) -lpython$(PYTHON_VERSION)
++libxml2mod_la_LIBADD  = $(top_builddir)/libxml2.la $(CYGWIN_EXTRA_PYTHON_LIBADD) $(WIN32_EXTRA_PYTHON_LIBADD) $(PYTHON_LIBS)
+ libxml2mod_la_LDFLAGS = $(CYGWIN_EXTRA_LDFLAGS) $(WIN32_EXTRA_LDFLAGS) -module -avoid-version
  
- $(srcdir)/libxml.c: libxml2-py.h # to generate before to compile
- 
+ BUILT_SOURCES = libxml2-export.c libxml2-py.h libxml2-py.c
