@@ -1,0 +1,5 @@
+/etc/at-spi2
+/etc/xdg
+/usr/lib/at-spi2
+/usr/lib/*.so.*
+/usr/share/dbus-1

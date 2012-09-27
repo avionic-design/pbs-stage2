@@ -1,3 +1,4 @@
+obj-y += at-spi2/
 obj-y += pcsc/
 obj-y += sdl/
 
