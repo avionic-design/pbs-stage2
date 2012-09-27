@@ -1,2 +1,3 @@
-remove-exsltconfig.patch
-pkg-config.patch
+modernize-autotools.patch
+dont-distribute-exsltconfig.patch
+use-pkg-config.patch

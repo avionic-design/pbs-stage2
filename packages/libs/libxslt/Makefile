@@ -1,5 +1,6 @@
 PACKAGE = libxslt
-VERSION = 1.1.26
+VERSION = 1.1.27
+LICENSE = custom
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
