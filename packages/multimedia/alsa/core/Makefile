@@ -1,11 +1,11 @@
 PACKAGE = alsa-lib
-VERSION = 1.0.25
+VERSION = 1.0.26
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.alsa-project.org/pub/lib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--disable-old-symbols \
