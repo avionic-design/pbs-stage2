@@ -1,5 +1,6 @@
 PACKAGE = atk
-VERSION = 2.4.0
+VERSION = 2.6.0
+LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
