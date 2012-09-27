@@ -1,0 +1,4 @@
+config PACKAGE_LIBS_AT_SPI2_ATK
+	bool "atk"
+	select PACKAGE_LIBS_AT_SPI2_CORE
+	select PACKAGE_LIBS_ATK

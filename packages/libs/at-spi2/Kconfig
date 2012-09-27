@@ -1,5 +1,6 @@
 menu "at-spi2"
 
+source "packages/libs/at-spi2/atk/Kconfig"
 source "packages/libs/at-spi2/core/Kconfig"
 
 endmenu
