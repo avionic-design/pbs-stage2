@@ -1,2 +1,2 @@
 version=3
-http://www.libee.org/download http://www.libee.org/files/download/libee-(.*)\.tar\.gz
+http://www.libee.org/download .*/download/libee-(.*)\.tar\.gz

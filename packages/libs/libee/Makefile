@@ -1,5 +1,5 @@
 PACKAGE = libee
-VERSION = 0.3.2
+VERSION = 0.4.1
 
 LOCATION = http://www.libee.org/files/download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
