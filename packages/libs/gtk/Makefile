@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 2.24.11
+VERSION = 2.24.13
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
