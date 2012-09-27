@@ -1,5 +1,5 @@
 PACKAGE = alsa-utils
-VERSION = 1.0.25
+VERSION = 1.0.26
 LICENSE = GPL
 
 LOCATION = ftp://ftp.alsa-project.org/pub/utils
