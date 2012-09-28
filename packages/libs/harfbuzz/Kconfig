@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_HARFBUZZ
+	bool "harfbuzz"
+	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_LIBS_FREETYPE
+	select PACKAGE_LIBS_GLIB
