@@ -18,6 +18,9 @@ config PLATFORM_NVIDIA
 config PLATFORM_COMPULAB
 	bool "CompuLab"
 
+config PLATFORM_SKIDATA
+	bool "SKIDATA"
+
 endchoice
 
 source "platforms/generic/Kconfig"
@@ -25,5 +28,6 @@ source "platforms/soekris/Kconfig"
 source "platforms/avionic-design/Kconfig"
 source "platforms/nvidia/Kconfig"
 source "platforms/compulab/Kconfig"
+source "platforms/skidata/Kconfig"
 
 endmenu
