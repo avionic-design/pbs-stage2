@@ -1,5 +1,6 @@
 PACKAGE = xbacklight
-VERSION = 1.1.2
+VERSION = 1.2.0
+LICENSE = custom
 
 include packages/xorg/app/common.mk
 
