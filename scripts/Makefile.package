@@ -179,7 +179,7 @@ quiet_cmd_quilt_patch = PATCH   $(pkgsrctree)
 				quilt --quiltrc /dev/null push -a || \
 				test $$? = 2
 
-patch-series = $(if $(wildcard $(pkgsrctree)/source),,$(wildcard $(patchdir)/series))
+patch-series = $(if $(wildcard $(local-src)),,$(wildcard $(patchdir)/series))
 
 $(pkgtree)/.patch: $(pkgtree)/.setup
 	$(if $(patch-series),$(call cmd,quilt_patch))
