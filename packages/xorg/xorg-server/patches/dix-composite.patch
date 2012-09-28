@@ -22,7 +22,7 @@ diff --git a/Makefile.in b/Makefile.in
 index 5e84b3a..149a4c2 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -487,6 +487,7 @@ SUBDIRS = \
+@@ -505,6 +505,7 @@ SUBDIRS = \
  	doc \
  	man \
  	include \
@@ -30,7 +30,7 @@ index 5e84b3a..149a4c2 100644
  	dix  \
  	fb \
  	mi \
-@@ -501,7 +502,6 @@ SUBDIRS = \
+@@ -519,7 +520,6 @@ SUBDIRS = \
  	$(RECORD_DIR) \
  	xfixes \
  	damageext \
@@ -55,7 +55,7 @@ diff --git a/dix/Makefile.in b/dix/Makefile.in
 index 306da3e..f58fda2 100644
 --- a/dix/Makefile.in
 +++ b/dix/Makefile.in
-@@ -60,7 +60,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
+@@ -74,7 +74,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
  CONFIG_CLEAN_FILES =
  CONFIG_CLEAN_VPATH_FILES =
  LTLIBRARIES = $(noinst_LTLIBRARIES)
