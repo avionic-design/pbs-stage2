@@ -1,6 +1,6 @@
 PACKAGE = flashplugin
 
-VERSION = 11.2.202.228
+VERSION = 11.2.202.238
 
 # 11.2 beta 5
 #VERSION = 11.2.202.197
