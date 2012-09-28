@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.21.2
+VERSION = 2.22
 LICENSE = GPL/BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -11,11 +11,16 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--disable-libmount \
 	--disable-rpath
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
   conf-args += --without-ncurses
+endif
+
+ifneq ($(CONFIG_PACKAGE_LIBS_PAM),y)
+  conf-args += \
+	--disable-login \
+	--disable-su
 endif
 
 ifneq ($(CONFIG_LIBC),gnu)
@@ -26,7 +31,11 @@ endif
 ifeq ($(CONFIG_LIBC),gnu)
 conf-vars += scanf_cv_alloc_modifier=ms
 else
-conf-vars += scanf_cv_alloc_modifier=
+  ifeq ($(CONFIG_LIBC),uclibc)
+    conf-vars += scanf_cv_alloc_modifier=ms
+  else
+    conf-vars += scanf_cv_alloc_modifier=no
+  endif
 endif
 
 prunefiles = \
@@ -35,9 +44,14 @@ prunefiles = \
 stripfiles = \
 	/bin/dmesg \
 	/bin/findmnt \
+	/bin/kill \
+	/bin/login \
 	/bin/lsblk \
 	/bin/more \
 	/bin/mount \
+	/bin/mountpoint \
+	/bin/su \
+	/bin/wdctl \
 	/bin/umount \
 	/lib/*.so.* \
 	/sbin/agetty \
@@ -63,7 +77,9 @@ stripfiles = \
 	/sbin/pivot_root \
 	/sbin/raw \
 	/sbin/sfdisk \
+	/sbin/sulogin \
 	/sbin/swaplabel \
+	/sbin/swapoff \
 	/sbin/swapon \
 	/sbin/switch_root \
 	/sbin/wipefs \
@@ -75,6 +91,7 @@ stripfiles = \
 	$(prefix)/bin/column \
 	$(prefix)/bin/cytune \
 	$(prefix)/bin/ddate \
+	$(prefix)/bin/eject \
 	$(prefix)/bin/fallocate \
 	$(prefix)/bin/flock \
 	$(prefix)/bin/getopt \
@@ -88,6 +105,7 @@ stripfiles = \
 	$(prefix)/bin/logger \
 	$(prefix)/bin/look \
 	$(prefix)/bin/lscpu \
+	$(prefix)/bin/lslocks \
 	$(prefix)/bin/mcookie \
 	$(prefix)/bin/namei \
 	$(prefix)/bin/pg \
@@ -104,6 +122,7 @@ stripfiles = \
 	$(prefix)/bin/taskset \
 	$(prefix)/bin/ul \
 	$(prefix)/bin/unshare \
+	$(prefix)/bin/utmpdump \
 	$(prefix)/bin/uuidgen \
 	$(prefix)/bin/wall \
 	$(prefix)/bin/whereis \
@@ -113,6 +132,7 @@ stripfiles = \
 	$(prefix)/sbin/ldattach \
 	$(prefix)/sbin/partx \
 	$(prefix)/sbin/readprofile \
+	$(prefix)/sbin/resizepart \
 	$(prefix)/sbin/rtcwake \
 	$(prefix)/sbin/tunelp \
 	$(prefix)/sbin/uuidd

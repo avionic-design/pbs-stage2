@@ -1,13 +1,13 @@
 diff --git a/configure.ac b/configure.ac
-index d3b298c..d66086f 100644
+index 8727d34..1948df9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -330,7 +330,7 @@ esac
+@@ -377,7 +377,7 @@ esac
  
  
  AC_MSG_CHECKING(whether program_invocation_short_name is defined)
 -AC_TRY_COMPILE([#include <argp.h>],
 +AC_TRY_COMPILE([#include <errno.h>],
-                [program_invocation_short_name = "test";],
-                AC_DEFINE(HAVE_PROGRAM_INVOCATION_SHORT_NAME, 1,
-                          [Define if program_invocation_short_name is defined])
+ 	       [program_invocation_short_name = "test";],
+ 	       AC_DEFINE(HAVE_PROGRAM_INVOCATION_SHORT_NAME, 1,
+ 			 [Define if program_invocation_short_name is defined])
