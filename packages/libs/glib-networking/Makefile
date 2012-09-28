@@ -1,5 +1,5 @@
 PACKAGE = glib-networking
-VERSION = 2.32.3
+VERSION = 2.34.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
