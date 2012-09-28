@@ -1,9 +1,7 @@
-autotools.patch
 out-of-tree.patch
-geolocation.patch
-fix-no-js-debugger-build.patch
-fix-79728.patch
-jsc-fix-nullptr.patch
-silence-arm-build.patch
-dnd-threshold.patch
-xpath-parser.patch
+buildfix.patch
+opengl-fixes.patch
+webcore-user-agent.patch
+webkit2-user-agent.patch
+revert-102604.patch
+gtk-dnd-drag-threshold.patch

@@ -1,0 +1,153 @@
+From thierry.reding Fri Oct  5 14:56:50 2012
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on
+	avionic-0098.mockup.avionic-design.de
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.6 required=5.0 tests=BAYES_00,RCVD_IN_DNSWL_LOW
+	autolearn=ham version=3.3.2
+Received: from add-virt-zarafa.adnet.avionic-design.de [172.20.129.9]
+	by avionic-0098.mockup.avionic-design.de with POP3 (fetchmail-6.3.22)
+	for <thierry.reding@localhost> (single-drop); Fri, 05 Oct 2012 14:56:49 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+	by mailbox.adnet.avionic-design.de (Postfix) with ESMTP id 16FC82A2833C
+	for <thierry.reding@avionic-design.de>; Fri,  5 Oct 2012 14:56:04 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at avionic-design.de
+Received: from mailbox.adnet.avionic-design.de ([127.0.0.1])
+	by localhost (mailbox.avionic-design.de [127.0.0.1]) (amavisd-new, port 10024)
+	with ESMTP id XkJ21uYVdnnd for <thierry.reding@avionic-design.de>;
+	Fri,  5 Oct 2012 14:56:03 +0200 (CEST)
+Received: from virt-zarafa.adnet.avionic-design.de (localhost [127.0.0.1])
+	by mailbox.adnet.avionic-design.de (Postfix) with ESMTP id EABDA2A28302
+	for <thierry.reding@avionic-design.de>; Fri,  5 Oct 2012 14:56:02 +0200 (CEST)
+Delivery-Date: Fri, 05 Oct 2012 14:54:03 +0200
+Received: from pop.1und1.de
+	by virt-zarafa.adnet.avionic-design.de with POP3 (fetchmail-6.3.6)
+	for <thierry.reding@avionic-design.de> (single-drop); Fri, 05 Oct 2012 14:56:02 +0200 (CEST)
+Received: from smtp.work.de (smtp1.work.de [212.12.40.178])
+	by mx.kundenserver.de (node=mxbap4) with ESMTP (Nemesis)
+	id 0M1YqX-1TZZxq3Ei1-00tpVw for thierry.reding@avionic-design.de; Fri, 05 Oct 2012 14:54:03 +0200
+Received: from [91.60.20.147] (helo=avionic-0108.adnet.avionic-design.de)
+	by smtp.work.de with esmtpsa (TLS1.0:DHE_RSA_AES_256_CBC_SHA1:32)
+	(Exim 4.72)
+	(envelope-from <julian@jusst.de>)
+	id 1TK7Pn-0006qs-FI; Fri, 05 Oct 2012 14:54:03 +0200
+From: Julian Scheel <julian@jusst.de>
+To: thierry.reding@avionic-design.de
+Cc: Julian Scheel <julian@jusst.de>
+Subject: [PATCH] gtk: add support for gtk-dnd-drag-threshold property.
+Date: Fri,  5 Oct 2012 14:57:34 +0200
+Message-Id: <1349441854-27923-1-git-send-email-julian@jusst.de>
+X-Mailer: git-send-email 1.7.12.2
+X-UI-Loop: V01:33vPS5Bymtw=:lJhdzKG+WBxrs1OL8cvyiNOtT1j9W8z/D01AVhb/PtSX
+ o9ErcsDcpvHCPy5ZsS5K
+Envelope-To: thierry.reding@avionic-design.de
+Status: RO
+Content-Length: 3502
+Lines: 106
+
+The gtk-dnd-drag-threshold property is used to prevent unwanted dnd actions
+with non pixel perfect input devices as touchscreens.
+
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ Source/WebCore/page/EventHandler.cpp        |  2 ++
+ Source/WebCore/page/gtk/EventHandlerGtk.cpp | 47 +++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
+
+diff --git a/Source/WebCore/page/EventHandler.cpp b/Source/WebCore/page/EventHandler.cpp
+index 04f636e..7528e4c 100644
+--- a/Source/WebCore/page/EventHandler.cpp
++++ b/Source/WebCore/page/EventHandler.cpp
+@@ -3038,6 +3038,7 @@ void EventHandler::defaultKeyboardEventHandler(KeyboardEvent* event)
+ }
+ 
+ #if ENABLE(DRAG_SUPPORT)
++#if !PLATFORM(GTK)
+ bool EventHandler::dragHysteresisExceeded(const IntPoint& floatDragViewportLocation) const
+ {
+     FloatPoint dragViewportLocation(floatDragViewportLocation.x(), floatDragViewportLocation.y());
+@@ -3072,6 +3073,7 @@ bool EventHandler::dragHysteresisExceeded(const FloatPoint& dragViewportLocation
+     
+     return abs(delta.width()) >= threshold || abs(delta.height()) >= threshold;
+ }
++#endif
+     
+ void EventHandler::freeClipboard()
+ {
+diff --git a/Source/WebCore/page/gtk/EventHandlerGtk.cpp b/Source/WebCore/page/gtk/EventHandlerGtk.cpp
+index 368cfe0..42716ec 100644
+--- a/Source/WebCore/page/gtk/EventHandlerGtk.cpp
++++ b/Source/WebCore/page/gtk/EventHandlerGtk.cpp
+@@ -26,6 +26,7 @@
+ #include "config.h"
+ #include "EventHandler.h"
+ 
++#include "Chrome.h"
+ #include "ClipboardGtk.h"
+ #include "FloatPoint.h"
+ #include "FocusController.h"
+@@ -39,6 +40,7 @@
+ #include "PlatformWheelEvent.h"
+ #include "RenderWidget.h"
+ #include "Scrollbar.h"
++#include <gtk/gtk.h>
+ 
+ namespace WebCore {
+ 
+@@ -99,6 +101,51 @@ PassRefPtr<Clipboard> EventHandler::createDraggingClipboard() const
+     return ClipboardGtk::create(ClipboardWritable, DataObjectGtk::create(), Clipboard::DragAndDrop, m_frame);
+ }
+ 
++bool EventHandler::dragHysteresisExceeded(const IntPoint& dragViewportLocation) const
++{
++    FrameView* view = m_frame->view();
++    if (!view)
++        return false;
++
++    IntPoint dragLocation = view->windowToContents(dragViewportLocation);
++    IntSize delta = dragLocation - m_mouseDownPos;
++
++    int threshold = GeneralDragHysteresis;
++    switch (dragState().m_dragType) {
++    case DragSourceActionSelection:
++        threshold = TextDragHysteresis;
++        break;
++    case DragSourceActionImage:
++        threshold = ImageDragHysteresis;
++        break;
++    case DragSourceActionLink:
++        threshold = LinkDragHysteresis;
++        break;
++    case DragSourceActionDHTML:
++        break;
++    case DragSourceActionNone:
++    case DragSourceActionAny:
++        ASSERT_NOT_REACHED();
++    }
++
++    Page* page = m_frame->page();
++    if (page) {
++        Chrome* chrome = page->chrome();
++        if (chrome) {
++            GtkWidget* client = GTK_WIDGET(chrome->platformPageClient());
++            gint widgetDragHysteresis = 0;
++            if (client) {
++                g_object_get(gtk_widget_get_settings(client),
++                    "gtk-dnd-drag-threshold", &widgetDragHysteresis,
++                    0);
++                threshold = max(widgetDragHysteresis, threshold);
++            }
++        }
++    }
++
++    return abs(delta.width()) >= threshold || abs(delta.height()) >= threshold;
++}
++
+ bool EventHandler::passMousePressEventToSubframe(MouseEventWithHitTestResults& mev, Frame* subframe)
+ {
+     subframe->eventHandler()->handleMousePressEvent(mev.event());
+-- 
+1.7.12.2
+
+
+
+

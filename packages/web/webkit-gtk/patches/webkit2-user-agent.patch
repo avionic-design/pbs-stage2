@@ -1,0 +1,385 @@
+diff --git a/Source/WebKit2/ChangeLog b/Source/WebKit2/ChangeLog
+new file mode 100644
+index 0000000..445a317
+--- /dev/null
++++ b/Source/WebKit2/ChangeLog
+@@ -0,0 +1,35 @@
++2012-09-17  Martin Robinson  <mrobinson@igalia.com>
++
++        [WebKit2] [GTK] Add API for controlling the user agent
++        https://bugs.webkit.org/show_bug.cgi?id=95697
++
++        Reviewed by Carlos Garcia Campos.
++
++        Add API for changing the user agent in WebKit2. This adds two styles of
++        setting the user agent: complete override and a method that just inserts
++        the application name and version, but preserves the carefully crafted user agent
++        in the library.
++
++        * UIProcess/API/gtk/WebKitSettings.cpp:
++        (_WebKitSettingsPrivate): Added a new field to store the user agent.
++        This is stored in the private data structure, because we can only
++        set the user agent when attaching the settings to the page.
++        (webKitSettingsSetProperty): Add hooks for the new user agent property.
++        (webKitSettingsGetProperty): Ditto.
++        (webkit_settings_class_init): Ditto.
++        (webkitSettingsAttachSettingsToPage): Ditto.
++        (webkit_settings_get_user_agent): Added.
++        (webkit_settings_set_user_agent): Added.
++        (webkit_settings_set_user_agent_with_application_name): Added.
++        * UIProcess/API/gtk/WebKitSettings.h: Added new methods.
++        * UIProcess/API/gtk/WebKitWebView.cpp: Update the glue for the settings
++        when attaching and detaching from WebViews.
++        * UIProcess/API/gtk/docs/webkit2gtk-sections.txt: Added new methods to
++        the documentation.
++        * UIProcess/API/gtk/tests/TestWebKitSettings.cpp: Test the new user agent
++        property.
++        (testWebKitSettingsUserAgent): Ditto.
++        (beforeAll): Ditto.
++        * UIProcess/gtk/WebPageProxyGtk.cpp:
++        (WebKit::WebPageProxy::standardUserAgent): Now use the shared WebCore
++        code when setting the user agent.
+diff --git a/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.cpp b/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.cpp
+index 5e0be7d..c0a6416 100644
+--- a/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.cpp
++++ b/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.cpp
+@@ -34,6 +34,7 @@
+ #include "WebKitPrivate.h"
+ #include "WebKitSettingsPrivate.h"
+ #include "WebPageProxy.h"
++#include <WebCore/UserAgentGtk.h>
+ #include <glib/gi18n-lib.h>
+ #include <wtf/text/CString.h>
+ 
+@@ -47,6 +48,7 @@ struct _WebKitSettingsPrivate {
+     CString fantasyFontFamily;
+     CString pictographFontFamily;
+     CString defaultCharset;
++    CString userAgent;
+     bool allowModalDialogs;
+     bool zoomTextOnly;
+ };
+@@ -114,7 +116,8 @@ enum {
+     PROP_MEDIA_PLAYBACK_ALLOWS_INLINE,
+     PROP_DRAW_COMPOSITING_INDICATORS,
+     PROP_ENABLE_SITE_SPECIFIC_QUIRKS,
+-    PROP_ENABLE_PAGE_CACHE
++    PROP_ENABLE_PAGE_CACHE,
++    PROP_USER_AGENT
+ };
+ 
+ static void webKitSettingsSetProperty(GObject* object, guint propId, const GValue* value, GParamSpec* paramSpec)
+@@ -245,6 +248,9 @@ static void webKitSettingsSetProperty(GObject* object, guint propId, const GValu
+     case PROP_ENABLE_PAGE_CACHE:
+         webkit_settings_set_enable_page_cache(settings, g_value_get_boolean(value));
+         break;
++    case PROP_USER_AGENT:
++        webkit_settings_set_user_agent(settings, g_value_get_string(value));
++        break;
+     default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, propId, paramSpec);
+         break;
+@@ -379,6 +385,9 @@ static void webKitSettingsGetProperty(GObject* object, guint propId, GValue* val
+     case PROP_ENABLE_PAGE_CACHE:
+         g_value_set_boolean(value, webkit_settings_get_enable_page_cache(settings));
+         break;
++    case PROP_USER_AGENT:
++        g_value_set_string(value, webkit_settings_get_user_agent(settings));
++        break;
+     default:
+         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, propId, paramSpec);
+         break;
+@@ -1010,6 +1019,26 @@ static void webkit_settings_class_init(WebKitSettingsClass* klass)
+                                                          TRUE,
+                                                          readWriteConstructParamFlags));
+ 
++    /**
++     * WebKitSettings:user-agent:
++     *
++     * The user-agent string used by WebKit. Unusual user-agent strings may cause web
++     * content to render incorrectly or fail to run, as many web pages are written to
++     * parse the user-agent strings of only the most popular browsers. Therefore, it's
++     * typically better to not completely override the standard user-agent, but to use
++     * webkit_settings_set_user_agent_with_application_details() instead.
++     *
++     * If this property is set to the empty string or %NULL, it will revert to the standard
++     * user-agent.
++     */
++    g_object_class_install_property(gObjectClass,
++                                    PROP_USER_AGENT,
++                                    g_param_spec_string("user-agent",
++                                                        _("User agent string"),
++                                                        _("The user agent string"),
++                                                        0, // A null string forces the standard user agent.
++                                                        readWriteConstructParamFlags));
++
+     g_type_class_add_private(klass, sizeof(WebKitSettingsPrivate));
+ }
+ 
+@@ -1048,8 +1077,13 @@ static void webkit_settings_init(WebKitSettings* settings)
+ 
+ void webkitSettingsAttachSettingsToPage(WebKitSettings* settings, WKPageRef wkPage)
+ {
+-    WKPageGroupSetPreferences(WKPageGetPageGroup(wkPage), settings->priv->preferences.get());
+-    WebKit::toImpl(wkPage)->setCanRunModal(settings->priv->allowModalDialogs);
++    WebKitSettingsPrivate* priv = settings->priv;
++    WKPageGroupSetPreferences(WKPageGetPageGroup(wkPage), priv->preferences.get());
++    WebKit::toImpl(wkPage)->setCanRunModal(priv->allowModalDialogs);
++
++    ASSERT(!priv->userAgent.isNull());
++    WKRetainPtr<WKStringRef> userAgent = adoptWK(WKStringCreateWithUTF8CString(priv->userAgent.data()));
++    WKPageSetCustomUserAgent(wkPage, userAgent.get());
+ }
+ 
+ /**
+@@ -2555,3 +2589,58 @@ void webkit_settings_set_enable_page_cache(WebKitSettings* settings, gboolean en
+     WKPreferencesSetPageCacheEnabled(priv->preferences.get(), enabled);
+     g_object_notify(G_OBJECT(settings), "enable-page-cache");
+ }
++
++/**
++ * webkit_settings_get_user_agent:
++ * @settings: a #WebKitSettings
++ *
++ * Get the #WebKitSettings:user-agent property.
++ *
++ * Returns: The current value of the user-agent property.
++ */
++const char* webkit_settings_get_user_agent(WebKitSettings* settings)
++{
++    g_return_val_if_fail(WEBKIT_IS_SETTINGS(settings), 0);
++
++    WebKitSettingsPrivate* priv = settings->priv;
++    ASSERT(!priv->userAgent.isNull());
++    return priv->userAgent.data();
++}
++
++/**
++ * webkit_settings_set_user_agent:
++ * @settings: a #WebKitSettings
++ * @user_agent: (allow-none): The new custom user agent string or %NULL to use the default user agent
++ *
++ * Set the #WebKitSettings:user-agent property.
++ */
++void webkit_settings_set_user_agent(WebKitSettings* settings, const char* userAgent)
++{
++    g_return_if_fail(WEBKIT_IS_SETTINGS(settings));
++
++    WebKitSettingsPrivate* priv = settings->priv;
++    CString newUserAgent = (!userAgent || !strlen(userAgent)) ? WebCore::standardUserAgent("").utf8() : userAgent;
++    if (newUserAgent == priv->userAgent)
++        return;
++
++    priv->userAgent = newUserAgent;
++    g_object_notify(G_OBJECT(settings), "user-agent");
++}
++
++/**
++ * webkit_settings_set_user_agent_with_application_details:
++ * @settings: a #WebKitSettings
++ * @application_name: (allow-none): The application name used for the user agent or %NULL to use the default user agent.
++ * @application_version: (allow-none): The application version for the user agent or %NULL to user the default version.
++ *
++ * Set the #WebKitSettings:user-agent property by appending the application details to the default user
++ * agent. If no application name or version is given, the default user agent used will be used. If only
++ * the version is given, the default engine version is used with the given application name.
++ */
++void webkit_settings_set_user_agent_with_application_details(WebKitSettings* settings, const char* applicationName, const char* applicationVersion)
++{
++    g_return_if_fail(WEBKIT_IS_SETTINGS(settings));
++
++    CString newUserAgent = WebCore::standardUserAgent(String::fromUTF8(applicationName), String::fromUTF8(applicationVersion)).utf8();
++    webkit_settings_set_user_agent(settings, newUserAgent.data());
++}
+diff --git a/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.h b/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.h
+index 0c719cd..b35a23f 100644
+--- a/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.h
++++ b/Source/WebKit2/UIProcess/API/gtk/WebKitSettings.h
+@@ -362,6 +362,17 @@ WEBKIT_API void
+ webkit_settings_set_enable_page_cache                          (WebKitSettings *settings,
+                                                                 gboolean        enabled);
+ 
++WEBKIT_API const gchar *
++webkit_settings_get_user_agent                                 (WebKitSettings *settings);
++
++WEBKIT_API void
++webkit_settings_set_user_agent                                 (WebKitSettings *settings,
++                                                                const gchar    *user_agent);
++WEBKIT_API void
++webkit_settings_set_user_agent_with_application_details        (WebKitSettings *settings,
++                                                                const gchar    *application_name,
++                                                                const gchar    *application_version);
++
+ G_END_DECLS
+ 
+ #endif /* WebKitSettings_h */
+diff --git a/Source/WebKit2/UIProcess/API/gtk/WebKitWebView.cpp b/Source/WebKit2/UIProcess/API/gtk/WebKitWebView.cpp
+index 6fefb65..1ea78de 100644
+--- a/Source/WebKit2/UIProcess/API/gtk/WebKitWebView.cpp
++++ b/Source/WebKit2/UIProcess/API/gtk/WebKitWebView.cpp
+@@ -248,12 +248,19 @@ static void zoomTextOnlyChanged(WebKitSettings* settings, GParamSpec*, WebKitWeb
+     WKPageSetPageAndTextZoomFactors(wkPage, pageZoomLevel, textZoomLevel);
+ }
+ 
++static void userAgentChanged(WebKitSettings* settings, GParamSpec*, WebKitWebView* webView)
++{
++    WKRetainPtr<WKStringRef> userAgent = adoptWK(WKStringCreateWithUTF8CString(webkit_settings_get_user_agent(settings)));
++    WKPageSetCustomUserAgent(toAPI(webkitWebViewBaseGetPage(WEBKIT_WEB_VIEW_BASE(webView))), userAgent.get());
++}
++
+ static void webkitWebViewSetSettings(WebKitWebView* webView, WebKitSettings* settings, WKPageRef wkPage)
+ {
+     webView->priv->settings = settings;
+     webkitSettingsAttachSettingsToPage(webView->priv->settings.get(), wkPage);
+     g_signal_connect(settings, "notify::allow-modal-dialogs", G_CALLBACK(allowModalDialogsChanged), webView);
+     g_signal_connect(settings, "notify::zoom-text-only", G_CALLBACK(zoomTextOnlyChanged), webView);
++    g_signal_connect(settings, "notify::user-agent", G_CALLBACK(userAgentChanged), webView);
+ }
+ 
+ static void webkitWebViewDisconnectSettingsSignalHandlers(WebKitWebView* webView)
+@@ -261,7 +268,7 @@ static void webkitWebViewDisconnectSettingsSignalHandlers(WebKitWebView* webView
+     WebKitSettings* settings = webView->priv->settings.get();
+     g_signal_handlers_disconnect_by_func(settings, reinterpret_cast<gpointer>(allowModalDialogsChanged), webView);
+     g_signal_handlers_disconnect_by_func(settings, reinterpret_cast<gpointer>(zoomTextOnlyChanged), webView);
+-
++    g_signal_handlers_disconnect_by_func(settings, reinterpret_cast<gpointer>(userAgentChanged), webView);
+ }
+ 
+ static void webkitWebViewDisconnectMainResourceResponseChangedSignalHandler(WebKitWebView* webView)
+diff --git a/Source/WebKit2/UIProcess/API/gtk/docs/webkit2gtk-sections.txt b/Source/WebKit2/UIProcess/API/gtk/docs/webkit2gtk-sections.txt
+index 596498c..f30e84e 100644
+--- a/Source/WebKit2/UIProcess/API/gtk/docs/webkit2gtk-sections.txt
++++ b/Source/WebKit2/UIProcess/API/gtk/docs/webkit2gtk-sections.txt
+@@ -283,6 +283,9 @@ webkit_settings_get_enable_site_specific_quirks
+ webkit_settings_set_enable_site_specific_quirks
+ webkit_settings_get_enable_page_cache
+ webkit_settings_set_enable_page_cache
++webkit_settings_get_user_agent
++webkit_settings_set_user_agent
++webkit_settings_set_user_agent_with_application_details
+ 
+ <SUBSECTION Standard>
+ WebKitSettingsClass
+diff --git a/Source/WebKit2/UIProcess/API/gtk/tests/TestWebKitSettings.cpp b/Source/WebKit2/UIProcess/API/gtk/tests/TestWebKitSettings.cpp
+index 5e6e91b..d8e3554 100644
+--- a/Source/WebKit2/UIProcess/API/gtk/tests/TestWebKitSettings.cpp
++++ b/Source/WebKit2/UIProcess/API/gtk/tests/TestWebKitSettings.cpp
+@@ -31,10 +31,14 @@
+ #include "config.h"
+ 
+ #include "TestMain.h"
++#include "WebViewTest.h"
++#include "WebKitTestServer.h"
+ #include <gtk/gtk.h>
+ #include <webkit2/webkit2.h>
+ #include <wtf/gobject/GRefPtr.h>
+ 
++static WebKitTestServer* gServer;
++
+ static void testWebKitSettings(Test*, gconstpointer)
+ {
+     WebKitSettings* settings = webkit_settings_new();
+@@ -254,13 +258,81 @@ void testWebKitSettingsNewWithSettings(Test* test, gconstpointer)
+     g_assert(webkit_settings_get_load_icons_ignoring_image_load_setting(settings.get()));
+ }
+ 
++static CString convertWebViewMainResourceDataToCString(WebViewTest* test)
++{
++    size_t mainResourceDataSize = 0;
++    const char* mainResourceData = test->mainResourceData(mainResourceDataSize);
++    return CString(mainResourceData, mainResourceDataSize);
++}
++
++static void assertThatUserAgentIsSentInHeaders(WebViewTest* test, const CString& userAgent)
++{
++    test->loadURI(gServer->getURIForPath("/").data());
++    test->waitUntilLoadFinished();
++    g_assert_cmpstr(convertWebViewMainResourceDataToCString(test).data(), ==, userAgent.data());
++}
++
++static void testWebKitSettingsUserAgent(WebViewTest* test, gconstpointer)
++{
++    GRefPtr<WebKitSettings> settings = adoptGRef(webkit_settings_new());
++    CString defaultUserAgent = webkit_settings_get_user_agent(settings.get());
++    webkit_web_view_set_settings(test->m_webView, settings.get());
++
++    g_assert(g_strstr_len(defaultUserAgent.data(), -1, "Safari"));
++    g_assert(g_strstr_len(defaultUserAgent.data(), -1, "Chromium"));
++    g_assert(g_strstr_len(defaultUserAgent.data(), -1, "Chrome"));
++
++    webkit_settings_set_user_agent(settings.get(), 0);
++    g_assert_cmpstr(defaultUserAgent.data(), ==, webkit_settings_get_user_agent(settings.get()));
++    assertThatUserAgentIsSentInHeaders(test, defaultUserAgent.data());
++
++    webkit_settings_set_user_agent(settings.get(), "");
++    g_assert_cmpstr(defaultUserAgent.data(), ==, webkit_settings_get_user_agent(settings.get()));
++
++    const char* funkyUserAgent = "Funky!";
++    webkit_settings_set_user_agent(settings.get(), funkyUserAgent);
++    g_assert_cmpstr(funkyUserAgent, ==, webkit_settings_get_user_agent(settings.get()));
++    assertThatUserAgentIsSentInHeaders(test, funkyUserAgent);
++
++    webkit_settings_set_user_agent_with_application_details(settings.get(), "WebKitGTK+", 0);
++    CString userAgentWithNullVersion = webkit_settings_get_user_agent(settings.get());
++    g_assert_cmpstr(g_strstr_len(userAgentWithNullVersion.data(), -1, defaultUserAgent.data()), ==, userAgentWithNullVersion.data());
++    g_assert(g_strstr_len(userAgentWithNullVersion.data(), -1, "WebKitGTK+"));
++
++    webkit_settings_set_user_agent_with_application_details(settings.get(), "WebKitGTK+", "");
++    g_assert_cmpstr(webkit_settings_get_user_agent(settings.get()), ==, userAgentWithNullVersion.data());
++
++    webkit_settings_set_user_agent_with_application_details(settings.get(), "WebCatGTK+", "3.4.5");
++    const char* newUserAgent = webkit_settings_get_user_agent(settings.get());
++    g_assert(g_strstr_len(newUserAgent, -1, "3.4.5"));
++    g_assert(g_strstr_len(newUserAgent, -1, "WebCatGTK+"));
++}
++
++static void serverCallback(SoupServer* server, SoupMessage* message, const char* path, GHashTable*, SoupClientContext*, gpointer)
++{
++    if (message->method != SOUP_METHOD_GET) {
++        soup_message_set_status(message, SOUP_STATUS_NOT_IMPLEMENTED);
++        return;
++    }
++
++    soup_message_set_status(message, SOUP_STATUS_OK);
++    const char* userAgent = soup_message_headers_get_one(message->request_headers, "User-Agent");
++    soup_message_body_append(message->response_body, SOUP_MEMORY_COPY, userAgent, strlen(userAgent));
++    soup_message_body_complete(message->response_body);
++}
++
+ void beforeAll()
+ {
++    gServer = new WebKitTestServer();
++    gServer->run(serverCallback);
++
+     Test::add("WebKitSettings", "webkit-settings", testWebKitSettings);
+     Test::add("WebKitSettings", "new-with-settings", testWebKitSettingsNewWithSettings);
++    WebViewTest::add("WebKitSettings", "user-agent", testWebKitSettingsUserAgent);
+ }
+ 
+ void afterAll()
+ {
++    delete gServer;
+ }
+ 
+diff --git a/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp b/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
+index 1117a25..80881bf 100644
+--- a/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
++++ b/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
+@@ -33,6 +33,7 @@
+ #include "WebKitWebViewBasePrivate.h"
+ #include "WebPageMessages.h"
+ #include "WebProcessProxy.h"
++#include <WebCore/UserAgentGtk.h>
+ #include <gtk/gtkx.h>
+ 
+ namespace WebKit {
+@@ -44,8 +45,7 @@ GtkWidget* WebPageProxy::viewWidget()
+ 
+ String WebPageProxy::standardUserAgent(const String& applicationNameForUserAgent)
+ {
+-    // FIXME: This should not be hard coded.
+-    return "Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.7 (KHTML, like Gecko) Version/5.0 Safari/534.7";
++    return WebCore::standardUserAgent(applicationNameForUserAgent);
+ }
+ 
+ void WebPageProxy::getEditorCommandsForKeyEvent(const AtomicString& eventType, Vector<WTF::String>& commandsList)

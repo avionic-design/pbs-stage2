@@ -2,7 +2,7 @@ diff --git a/Source/WebKit2/GNUmakefile.am b/Source/WebKit2/GNUmakefile.am
 index 0e13715..cea8470 100644
 --- a/Source/WebKit2/GNUmakefile.am
 +++ b/Source/WebKit2/GNUmakefile.am
-@@ -1126,7 +1126,7 @@ BUILT_SOURCES += generate-webkit2-forwarding-headers
+@@ -209,7 +209,7 @@ BUILT_SOURCES += generate-webkit2-forwarding-headers
  
  $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2: $(libwebkit2gtkinclude_HEADERS)
  	$(AM_V_GEN)mkdir -p $(GENSOURCES_WEBKIT2)/webkit2gtk/include \

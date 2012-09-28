@@ -1,5 +1,5 @@
-PACKAGE = webkit
-VERSION = 1.8.0
+PACKAGE = webkitgtk
+VERSION = 1.10.0
 LICENSE = LGPL BSD
 
 LOCATION = http://www.webkitgtk.org/releases
@@ -8,15 +8,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 ACLOCAL_FLAGS += -I Source/autotools
-# A bug in GNU make seems to cause parallel builds of this package to
-# fail. See https://bugs.webkit.org/show_bug.cgi?id=79498
-NUM_CPU := 1
 
 conf-args += \
+	--libexecdir=$(prefix)/lib/webkit \
 	--enable-page-visibility-api \
+	--disable-silent-rules \
 	--disable-geolocation \
-	--disable-spellcheck \
-	--with-gtk=2.0
+	--disable-spellcheck
 
 ifeq ($(CONFIG_ARCH),arm)
 conf-args += \
@@ -35,10 +33,10 @@ else
   conf-args += --enable-video
 endif
 
-ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_ACCELERATED_COMPOSITING),y)
-  conf-args += --with-accelerated-compositing=cairo
-else
-  conf-args += --without-accelerated-compositing
+ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_ACCELERATED_COMPOSITING),y)
+  conf-args += \
+	--disable-accelerated-compositing \
+	--with-acceleration-backend=none
 endif
 
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBGL),y)
@@ -60,7 +58,9 @@ else
 endif
 
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2),y)
-  conf-args += --disable-webkit2
+  conf-args += \
+	--disable-webkit2 \
+	--with-gtk=2.0
 else
   # requires gtk3
   conf-args += \
@@ -73,4 +73,6 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/* \
+	$(prefix)/lib/$(PACKAGE)/WebKitPluginProcess \
+	$(prefix)/lib/$(PACKAGE)/WebKitWebProcess \
 	$(prefix)/lib/*.so.*

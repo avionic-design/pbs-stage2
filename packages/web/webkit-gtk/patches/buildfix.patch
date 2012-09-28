@@ -1,0 +1,31 @@
+diff --git a/Source/JavaScriptCore/GNUmakefile.am b/Source/JavaScriptCore/GNUmakefile.am
+index 96a23f2..b787f99 100644
+--- a/Source/JavaScriptCore/GNUmakefile.am
++++ b/Source/JavaScriptCore/GNUmakefile.am
+@@ -135,11 +135,10 @@ Programs_LLIntOffsetsExtractor_CPPFLAGS = \
+ 	$(global_cppflags) \
+ 	$(javascriptcore_cppflags)
+ 
+-Programs_LLIntOffsetsExtractor_CFLAGS = \
++Programs_LLIntOffsetsExtractor_CXXFLAGS = \
+ 	-ansi \
+ 	-fno-strict-aliasing \
+-	$(global_cflags) \
+-	$(GLOBALDEPS_CFLAGS)
++	$(javascriptcore_cflags)
+ 
+ Programs_LLIntOffsetsExtractor_LDADD = \
+ 	-lpthread \
+diff --git a/Source/WebCore/platform/text/gtk/TextBreakIteratorGtk.cpp b/Source/WebCore/platform/text/gtk/TextBreakIteratorGtk.cpp
+index 733d759..b33255d 100644
+--- a/Source/WebCore/platform/text/gtk/TextBreakIteratorGtk.cpp
++++ b/Source/WebCore/platform/text/gtk/TextBreakIteratorGtk.cpp
+@@ -233,7 +233,7 @@ NonSharedCharacterBreakIterator::NonSharedCharacterBreakIterator(const UChar* bu
+ NonSharedCharacterBreakIterator::~NonSharedCharacterBreakIterator()
+ {
+     if (!weakCompareAndSwap(reinterpret_cast<void**>(&nonSharedCharacterBreakIterator), 0, m_iterator))
+-        ubrk_close(m_iterator);
++        delete m_iterator;
+ }
+ 
+ TextBreakIterator* cursorMovementIterator(const UChar* string, int length)

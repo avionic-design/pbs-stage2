@@ -1,0 +1,180 @@
+diff --git a/Source/WebCore/ChangeLog b/Source/WebCore/ChangeLog
+index a5df6ee..a936aac 100644
+--- a/Source/WebCore/ChangeLog
++++ b/Source/WebCore/ChangeLog
+@@ -1,3 +1,20 @@
++2012-09-12  Siraj Razick  <siraj.razick@collabora.co.uk>
++
++        [GTK] Protect RedirectedXCompositeWindow with USE(GLX) when building the clutter AC backend
++        https://bugs.webkit.org/show_bug.cgi?id=96165
++
++        Reviewed by Martin Robinson.
++
++        RedirectedXCompositeWindow.cpp and RedirectedXCompositeWindow.h files requies openGL specific
++        headers to compile so when we build webkit clutter AC backend these files failed to compile,
++        This patch protects these two files with USE(GLX) when building webkit with Clutter AC backend.
++
++        No new tests since this is a build fix
++
++        * platform/gtk/RedirectedXCompositeWindow.cpp:
++        * platform/gtk/RedirectedXCompositeWindow.h:
++        protects both the files with USE(GLX)
++
+ 2012-09-19  Carlos Garcia Campos  <cgarcia@igalia.com>
+ 
+         [GTK] REGRESSION(r128907): it broke several WebKit2 API tests
+diff --git a/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.cpp b/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.cpp
+index 88ba6a8..0d7bdba 100644
+--- a/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.cpp
++++ b/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.cpp
+@@ -27,6 +27,7 @@
+ #include "config.h"
+ #include "RedirectedXCompositeWindow.h"
+ 
++#if USE(GLX)
+ #include "GLContextGLX.h"
+ #include <GL/glx.h>
+ #include <X11/extensions/Xcomposite.h>
+@@ -216,3 +217,5 @@ cairo_surface_t* RedirectedXCompositeWindow::cairoSurfaceForWidget(GtkWidget* wi
+ }
+ 
+ } // namespace WebCore
++
++#endif // USE(GLX)
+diff --git a/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.h b/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.h
+index 6b97642..e5db0fa 100644
+--- a/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.h
++++ b/Source/WebCore/platform/gtk/RedirectedXCompositeWindow.h
+@@ -27,6 +27,8 @@
+ #ifndef  RedirectedXCompositeWindow_h
+ #define  RedirectedXCompositeWindow_h
+ 
++#if USE(GLX)
++
+ #include "GLContextGLX.h"
+ #include "IntSize.h"
+ #include "RefPtrCairo.h"
+@@ -69,4 +71,6 @@ private:
+ 
+ } // namespace WebCore
+ 
++#endif // USE(GLX)
++
+ #endif // RedirectedXCompositeWindow_h
+diff --git a/Source/WebKit/gtk/ChangeLog b/Source/WebKit/gtk/ChangeLog
+index 6df403a..b72cd80 100644
+--- a/Source/WebKit/gtk/ChangeLog
++++ b/Source/WebKit/gtk/ChangeLog
+@@ -1,3 +1,25 @@
++2012-09-12  Siraj Razick  <siraj.razick@collabora.co.uk>
++
++        [GTK] Update AcceleratedCompositingContextClutter to match AcceleratedCompositingContext.h API update
++        https://bugs.webkit.org/show_bug.cgi?id=96165
++
++        Reviewed by Martin Robinson.
++
++        Due to the refactoring done in bug #90085 AcceleratedCompositingContext API changed, as a result
++        AcceleratedCompositingContextClutter doesn't compile anymore. This patch is to update the
++        AcceleratedCompositingContextClutter implementations to match the API update, and Make webkit
++        AC backend compile again.
++
++        * WebCoreSupport/AcceleratedCompositingContextClutter.cpp:
++        (WebKit::AcceleratedCompositingContext::AcceleratedCompositingContext):
++        (WebKit::AcceleratedCompositingContext::~AcceleratedCompositingContext):
++        (WebKit::AcceleratedCompositingContext::setRootCompositingLayer):
++        (WebKit::AcceleratedCompositingContext::setNonCompositedContentsNeedDisplay):
++        (WebKit::flushAndRenderLayersCallback):
++        (WebKit::AcceleratedCompositingContext::scheduleLayerFlush):
++        (WebKit::AcceleratedCompositingContext::flushPendingLayerChanges):
++        (WebKit::AcceleratedCompositingContext::flushAndRenderLayers):
++
+ 2012-09-17  Carlos Garcia Campos  <cgarcia@igalia.com>
+ 
+         Unreviewed. Update NEWS and configure.ac for 1.9.92 release
+diff --git a/Source/WebKit/gtk/WebCoreSupport/AcceleratedCompositingContextClutter.cpp b/Source/WebKit/gtk/WebCoreSupport/AcceleratedCompositingContextClutter.cpp
+index 6fe0c36..451117a 100644
+--- a/Source/WebKit/gtk/WebCoreSupport/AcceleratedCompositingContextClutter.cpp
++++ b/Source/WebKit/gtk/WebCoreSupport/AcceleratedCompositingContextClutter.cpp
+@@ -36,7 +36,7 @@ namespace WebKit {
+ 
+ AcceleratedCompositingContext::AcceleratedCompositingContext(WebKitWebView* webView)
+     : m_webView(webView)
+-    , m_syncTimerCallbackId(0)
++    , m_layerFlushTimerCallbackId(0)
+     , m_rootGraphicsLayer(0)
+     , m_rootLayerEmbedder(0)
+ {
+@@ -44,8 +44,8 @@ AcceleratedCompositingContext::AcceleratedCompositingContext(WebKitWebView* webV
+ 
+ AcceleratedCompositingContext::~AcceleratedCompositingContext()
+ {
+-    if (m_syncTimerCallbackId)
+-        g_source_remove(m_syncTimerCallbackId);
++    if (m_layerFlushTimerCallbackId)
++        g_source_remove(m_layerFlushTimerCallbackId);
+ }
+ 
+ bool AcceleratedCompositingContext::enabled()
+@@ -59,7 +59,7 @@ bool AcceleratedCompositingContext::renderLayersToWindow(cairo_t*, const IntRect
+     return false;
+ }
+ 
+-void AcceleratedCompositingContext::attachRootGraphicsLayer(GraphicsLayer* graphicsLayer)
++void AcceleratedCompositingContext::setRootCompositingLayer(GraphicsLayer* graphicsLayer)
+ {
+     if (!graphicsLayer) {
+         gtk_container_remove(GTK_CONTAINER(m_webView), m_rootLayerEmbedder);
+@@ -86,7 +86,7 @@ void AcceleratedCompositingContext::attachRootGraphicsLayer(GraphicsLayer* graph
+     }
+ }
+ 
+-void AcceleratedCompositingContext::scheduleRootLayerRepaint(const IntRect& rect)
++void AcceleratedCompositingContext::setNonCompositedContentsNeedDisplay(const IntRect& rect)
+ {
+     if (!m_rootGraphicsLayer)
+         return;
+@@ -112,34 +112,34 @@ void AcceleratedCompositingContext::resizeRootLayer(const IntSize& size)
+     gtk_widget_size_allocate(GTK_WIDGET(m_rootLayerEmbedder), &allocation);
+ }
+ 
+-static gboolean syncLayersTimeoutCallback(AcceleratedCompositingContext* context)
++static gboolean flushAndRenderLayersCallback(AcceleratedCompositingContext* context)
+ {
+-    context->syncLayersTimeout();
++    context->flushAndRenderLayers();
+     return FALSE;
+ }
+ 
+-void AcceleratedCompositingContext::markForSync()
++void AcceleratedCompositingContext::scheduleLayerFlush()
+ {
+-    if (m_syncTimerCallbackId)
++    if (m_layerFlushTimerCallbackId)
+         return;
+ 
+     // We use a GLib timer because otherwise GTK+ event handling during
+     // dragging can starve WebCore timers, which have a lower priority.
+-    m_syncTimerCallbackId = g_timeout_add_full(GDK_PRIORITY_EVENTS, 0, reinterpret_cast<GSourceFunc>(syncLayersTimeoutCallback), this, 0);
++    m_layerFlushTimerCallbackId = g_timeout_add_full(GDK_PRIORITY_EVENTS, 0, reinterpret_cast<GSourceFunc>(flushAndRenderLayersCallback), this, 0);
+ }
+ 
+-void AcceleratedCompositingContext::syncLayersNow()
++bool AcceleratedCompositingContext::flushPendingLayerChanges()
+ {
+     if (m_rootGraphicsLayer)
+         m_rootGraphicsLayer->syncCompositingStateForThisLayerOnly();
+ 
+-    core(m_webView)->mainFrame()->view()->syncCompositingStateIncludingSubframes();
++    return core(m_webView)->mainFrame()->view()->syncCompositingStateIncludingSubframes();
+ }
+ 
+-void AcceleratedCompositingContext::syncLayersTimeout()
++void AcceleratedCompositingContext::flushAndRenderLayers()
+ {
+-    m_syncTimerCallbackId = 0;
+-    syncLayersNow();
++    m_layerFlushTimerCallbackId = 0;
++    flushPendingLayerChanges();
+     if (!m_rootGraphicsLayer)
+         return;
+ 
