@@ -1,5 +1,5 @@
 PACKAGE = pango
-VERSION = 1.30.1
+VERSION = 1.32.1
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -13,7 +13,7 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT)
 
-plugin = $(prefix)/lib/pango/1.6.0/modules
+plugin = $(prefix)/lib/pango/1.8.0/modules
 
 prunefiles = \
 	$(prefix)/lib/*.la \

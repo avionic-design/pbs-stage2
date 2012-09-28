@@ -2,5 +2,5 @@ config PACKAGE_LIBS_PANGO
 	bool "pango"
 	select PACKAGE_BUILD_TOOLS_GLIB
 	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_LIBS_HARFBUZZ
 	select PACKAGE_XORG_LIB_XFT
-	default n
