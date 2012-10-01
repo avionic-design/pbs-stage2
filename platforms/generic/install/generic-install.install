@@ -3,6 +3,7 @@
 /init
 /lib/lsb
 /mnt
+/run
 /scripts
 /tmp
 /usr

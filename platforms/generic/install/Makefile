@@ -9,6 +9,8 @@ dirs = \
 	/mnt \
 	/mnt/install \
 	/mnt/target \
+	/run \
+	/scripts \
 	/tmp \
 	/usr \
 	/usr/share \
