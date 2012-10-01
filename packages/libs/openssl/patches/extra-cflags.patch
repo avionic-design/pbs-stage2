@@ -164,6 +164,19 @@ index f3f4859..d787e9e 100644
  ASFLAGS= $(INCLUDES) $(ASFLAG)
  AFLAGS= $(ASFLAGS)
  
+diff --git a/crypto/cmac/Makefile b/crypto/cmac/Makefile
+index 54e7cc3..835c981 100644
+--- a/crypto/cmac/Makefile
++++ b/crypto/cmac/Makefile
+@@ -10,7 +10,7 @@ CFLAG=-g
+ MAKEFILE=	Makefile
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(INCLUDES) $(EXTRA_CFLAGS) $(CFLAG)
+ 
+ GENERAL=Makefile
+ TEST=
 diff --git a/crypto/cms/Makefile b/crypto/cms/Makefile
 index 9820adb..29e56d0 100644
 --- a/crypto/cms/Makefile
@@ -647,6 +660,19 @@ index 6d191d3..1ff7582 100644
  ASFLAGS= $(INCLUDES) $(ASFLAG)
  AFLAGS= $(ASFLAGS)
  
+diff --git a/crypto/srp/Makefile b/crypto/srp/Makefile
+index 41859d4..55dbf96 100644
+--- a/crypto/srp/Makefile
++++ b/crypto/srp/Makefile
+@@ -12,7 +12,7 @@ MAKEDEPEND=	$(TOP)/util/domd $(TOP) -MD $(MAKEDEPPROG)
+ MAKEFILE=	Makefile.ssl
+ AR=		ar r
+ 
+-CFLAGS= $(INCLUDES) $(CFLAG)
++CFLAGS= $(INCLUDES) $(EXTRA_CFLAGS) $(CFLAG)
+ 
+ GENERAL=Makefile
+ TEST=srptest.c
 diff --git a/crypto/stack/Makefile b/crypto/stack/Makefile
 index 5327692..9a4d0f2 100644
 --- a/crypto/stack/Makefile
