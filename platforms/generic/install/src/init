@@ -13,12 +13,7 @@ mount -t sysfs none /sys
 log_action_end_msg $?
 
 log_action_begin_msg "Mounting /dev filesystem"
-mount -o size=256K,mode=0755 -t tmpfs udev /dev
-log_action_end_msg $?
-
-log_action_begin_msg "Creating devices"
-[ -e /dev/console ] || mknod -m 0600 /dev/console c 5 1
-[ -e /dev/null ] || mknod /dev/null c 1 3
+mount -o mode=0755 -t devtmpfs none /dev
 log_action_end_msg $?
 
 log_action_begin_msg "Mounting /run filesystem"
