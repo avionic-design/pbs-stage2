@@ -25,7 +25,6 @@ obj-$(CONFIG_PACKAGE_NET_OPENNTPD) += openntpd
 obj-$(CONFIG_PACKAGE_NET_OPENSSH) += openssh
 obj-$(CONFIG_PACKAGE_NET_PPP) += ppp
 obj-$(CONFIG_PACKAGE_NET_PROXYCONF) += proxyconf
-obj-$(CONFIG_PACKAGE_NET_RUM) += rum
 obj-$(CONFIG_PACKAGE_NET_FUSE_SSHFS) += sshfs-fuse
 obj-$(CONFIG_PACKAGE_NET_TCPDUMP) += tcpdump
 obk-$(CONFIG_PACKAGE_NET_TUNCTL) += tunctl

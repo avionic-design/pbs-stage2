@@ -4,5 +4,6 @@ source "packages/vendor/avionic-design/dbus-watchdog/Kconfig"
 source "packages/vendor/avionic-design/medcom-wide/Kconfig"
 source "packages/vendor/avionic-design/ptip/Kconfig"
 source "packages/vendor/avionic-design/remote-control/Kconfig"
+source "packages/vendor/avionic-design/rum/Kconfig"
 
 endmenu

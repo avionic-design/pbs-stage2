@@ -1,5 +1,4 @@
-config PACKAGE_NET_RUM
+config PACKAGE_VENDOR_AVIONIC_DESIGN_RUM
 	bool "rum"
 	select PACKAGE_LIBS_JSON_GLIB
 	select PACKAGE_LIBS_LIBSOUP
-	default n
