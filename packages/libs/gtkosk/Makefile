@@ -1,5 +1,6 @@
 PACKAGE = gtkosk
-VERSION = 0.1.8
+VERSION = 0.2.0
+LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
