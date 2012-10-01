@@ -6,6 +6,17 @@ config PACKAGE_XORG_DRIVER_VIDEO_INTEL
 
 if PACKAGE_XORG_DRIVER_VIDEO_INTEL
 
+choice
+	prompt "acceleration backend"
+
+config PACKAGE_XORG_DRIVER_VIDEO_INTEL_SNA
+	bool "SNA"
+
+config PACKAGE_XORG_DRIVER_VIDEO_INTEL_UXA
+	bool "UXA"
+
+endchoice
+
 config PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG
 	bool "enable debugging support"
 	select PACKAGE_DEVEL_VALGRIND

@@ -7,6 +7,14 @@ include packages/xorg/driver/common.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT)
 
+ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_SNA),y)
+  conf-args += --with-default-accel=sna
+endif
+
+ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_UXA),y)
+  conf-args += --with-default-accel=uxa
+endif
+
 ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG),y)
   conf-args += --enable-debug=full
 endif
