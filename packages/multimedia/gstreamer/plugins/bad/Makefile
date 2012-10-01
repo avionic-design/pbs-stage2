@@ -7,7 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
 	--disable-cdaudio \
 	--disable-examples \
 	--disable-gsettings \
