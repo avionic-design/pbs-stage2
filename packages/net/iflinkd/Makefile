@@ -6,11 +6,5 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-conf-args-$(CONFIG_PACKAGE_CORE_SYSTEMD) += \
-	--with-systemdsystemunitdir=/etc/systemd/system
-
-conf-args += \
-	$(conf-args-y)
-
 stripfiles = \
 	$(prefix)/sbin/iflinkd
