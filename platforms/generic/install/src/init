@@ -21,7 +21,7 @@ mount -o nosuid,nodev,mode=0755 -t tmpfs run /run && mkdir /run/lock
 log_action_end_msg $?
 
 log_action_begin_msg "Populating /dev filesystem"
-/sbin/udevd --daemon --resolve-names=never
+/usr/lib/udev/udevd --daemon --resolve-names=never
 /sbin/udevadm trigger
 /sbin/udevadm settle || true
 log_action_end_msg $?
