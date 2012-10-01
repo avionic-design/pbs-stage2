@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
+env += FATAL_WARNINGS=no
+
 conf-args += \
 	--libexecdir=$(prefix)/lib \
 	--with-sysroot=$(SYSROOT) \
