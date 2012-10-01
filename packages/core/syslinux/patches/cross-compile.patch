@@ -1,18 +1,19 @@
-From ed9163ec835d3e23edb9b54970cef360dd8427d9 Mon Sep 17 00:00:00 2001
+From a49cab3d2245fe3370c30fdd1c24d9f10a8388f3 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
 Date: Mon, 2 Apr 2012 10:25:28 +0200
 Subject: [PATCH] Fix cross-compilation
 
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 ---
- com32/tools/Makefile |    5 ++++-
- diag/geodsp/Makefile |    2 +-
- extlinux/Makefile    |    4 ++--
- linux/Makefile       |    5 +++--
- lzo/Makefile         |    5 ++++-
- mk/build.mk          |    4 ++--
- mk/com32.mk          |   10 ++++++----
- mtools/Makefile      |    5 +++--
- utils/Makefile       |    5 +++--
+ com32/tools/Makefile |  5 ++++-
+ diag/geodsp/Makefile |  2 +-
+ extlinux/Makefile    |  4 ++--
+ linux/Makefile       |  5 +++--
+ lzo/Makefile         |  5 ++++-
+ mk/build.mk          |  4 ++--
+ mk/com32.mk          | 10 ++++++----
+ mtools/Makefile      |  5 +++--
+ utils/Makefile       |  5 +++--
  9 files changed, 28 insertions(+), 17 deletions(-)
 
 diff --git a/com32/tools/Makefile b/com32/tools/Makefile
@@ -60,7 +61,7 @@ index 12213d8..0675b90 100644
  SRCS     = main.c \
  	   ../libinstaller/syslxmod.c \
 diff --git a/linux/Makefile b/linux/Makefile
-index 82bf111..f7c940f 100644
+index 82bf111..e2e916a 100644
 --- a/linux/Makefile
 +++ b/linux/Makefile
 @@ -20,8 +20,9 @@ include $(MAKEDIR)/syslinux.mk
@@ -70,7 +71,7 @@ index 82bf111..f7c940f 100644
 -CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES)
 -LDFLAGS	 = 
 +CFLAGS	 = $(GCCWARN) -D_FILE_OFFSET_BITS=64 $(OPTFLAGS) $(INCLUDES) \
-+	   $(EXRTA_CFLAGS)
++	   $(EXTRA_CFLAGS)
 +LDFLAGS	 = $(EXTRA_LDFLAGS)
  
  SRCS     = syslinux.c \
@@ -170,5 +171,5 @@ index 44cb54f..26d572f 100644
  C_TARGETS	 = isohybrid gethostip memdiskfind
  SCRIPT_TARGETS	 = mkdiskimage
 -- 
-1.7.10
+1.7.11.3
 
