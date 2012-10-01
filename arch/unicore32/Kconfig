@@ -1,0 +1,7 @@
+if ARCH_UNICORE32
+
+config ARCH
+	string
+	default "unicore32"
+
+endif

@@ -38,6 +38,9 @@ config ARCH_SPARC
 config ARCH_TILE
 	bool "tile"
 
+config ARCH_UNICORE32
+	bool "unicore32"
+
 endchoice
 
 config MARCH
@@ -59,6 +62,7 @@ source "arch/powerpc/Kconfig"
 source "arch/sh/Kconfig"
 source "arch/sparc/Kconfig"
 source "arch/tile/Kconfig"
+source "arch/unicore32/Kconfig"
 
 choice
 	prompt "Operating System"
