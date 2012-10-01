@@ -16,15 +16,10 @@ conf-args += \
 	--disable-lua \
 	--disable-notify \
 	--disable-qt4 \
-	--disable-remoteosd \
 	--disable-skins2 \
 	--disable-speex \
 	--disable-neon \
 	--disable-glx
-
-conf-args += \
-	--with-live555-tree=$(SYSROOT)$(prefix)/lib/live \
-	--enable-live555
 
 plugin = $(prefix)/lib/vlc/plugins
 
