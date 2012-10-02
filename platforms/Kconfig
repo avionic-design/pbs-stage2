@@ -15,11 +15,15 @@ config PLATFORM_AVIONIC_DESIGN
 config PLATFORM_NVIDIA
 	bool "NVIDIA"
 
+config PLATFORM_COMPULAB
+	bool "CompuLab"
+
 endchoice
 
 source "platforms/generic/Kconfig"
 source "platforms/soekris/Kconfig"
 source "platforms/avionic-design/Kconfig"
 source "platforms/nvidia/Kconfig"
+source "platforms/compulab/Kconfig"
 
 endmenu
