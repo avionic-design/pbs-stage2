@@ -116,11 +116,15 @@ quiet_cmd_gen_kernel_release = GEN     $@
 $(pkgtree)/build/include/config/kernel.release: $(pkgtree)/.configure
 	$(call cmd,gen_kernel_release)
 
+PHONY += $(pkgtree)/build/include/config/kernel.release
+
 quiet_cmd_gen_kernel_version = GEN     $@
       cmd_gen_kernel_version = echo "VERSION = `cat $<`" > $@
 
 $(pkgtree)/kernel-version: $(pkgtree)/build/include/config/kernel.release
 	$(call cmd,gen_kernel_version)
+
+PHONY += $(pkgtree)/kernel-version
 
 ifneq ($(MAKECMDGOALS),clean)
   -include $(pkgtree)/kernel-version
@@ -292,5 +296,8 @@ prunefiles = \
 
 include packages/cleanup.mk
 include packages/binary.mk
+
+PHONY += FORCE
+FORCE:
 
 .PHONY: $(PHONY)
