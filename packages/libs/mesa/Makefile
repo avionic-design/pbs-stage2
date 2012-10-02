@@ -21,7 +21,7 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 ACLOCAL_FLAGS = \
-	-I $(srctree)/toolchains/$(TARGET)/usr/share/aclocal -I m4
+	-I $(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/share/aclocal -I m4
 
 $(pkgtree)/.autoreconfigure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \

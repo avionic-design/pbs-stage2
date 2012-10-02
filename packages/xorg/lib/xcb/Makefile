@@ -5,7 +5,7 @@ LOCATION = http://xcb.freedesktop.org/dist
 
 include packages/xorg/lib/common.mk
 
-ACLOCAL_FLAGS = -I $(srctree)/toolchains/$(TARGET)/usr/share/aclocal
+ACLOCAL_FLAGS = -I $(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/share/aclocal
 
 $(pkgtree)/.autoreconfigure:
 	cd $(pkgbuildtree) && \
