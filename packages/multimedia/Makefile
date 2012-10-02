@@ -1,5 +1,6 @@
 obj-y += alsa/
 obj-y += gstreamer/
+obj-y += telepathy/
 obj-y += vaapi/
 
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_ADMP) += admp.git
