@@ -1,0 +1,260 @@
+From 2f2239459ea1ba8607ac75a98e9599075ba1ad2e Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Fri, 8 Jul 2011 12:03:00 +0200
+Subject: [PATCH] Add basic support for librpc pretty-printing.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Makefile.in    |   4 +-
+ interface.h    |   1 +
+ print-librpc.c | 185 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ print-tcp.c    |   2 +
+ tcp.h          |   3 +
+ 5 files changed, 193 insertions(+), 2 deletions(-)
+ create mode 100644 print-librpc.c
+
+diff --git a/Makefile.in b/Makefile.in
+index 3b589dc..feb2b6d 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -81,8 +81,8 @@ CSRC =	addrtoname.c af.c checksum.c cpack.c gmpls.c oui.c gmt2local.c ipproto.c
+ 	print-gre.c print-hsrp.c print-icmp.c print-igmp.c \
+ 	print-igrp.c print-ip.c print-ipcomp.c print-ipfc.c print-ipnet.c \
+ 	print-ipx.c print-isoclns.c print-juniper.c print-krb.c \
+-	print-l2tp.c print-lane.c print-ldp.c print-lldp.c print-llc.c \
+-        print-lmp.c print-lspping.c print-lwapp.c \
++	print-l2tp.c print-lane.c print-ldp.c print-librpc.c print-lldp.c \
++	print-llc.c print-lmp.c print-lspping.c print-lwapp.c \
+ 	print-lwres.c print-mobile.c print-mpcp.c print-mpls.c print-msdp.c \
+ 	print-nfs.c print-ntp.c print-null.c print-olsr.c print-ospf.c \
+ 	print-pgm.c print-pim.c \
+diff --git a/interface.h b/interface.h
+index 8602d47..866f1d2 100644
+--- a/interface.h
++++ b/interface.h
+@@ -315,6 +315,7 @@ extern void hsrp_print(const u_char *, u_int);
+ extern void bfd_print(const u_char *, u_int, u_int);
+ extern void sip_print(const u_char *, u_int);
+ extern void syslog_print(const u_char *, u_int);
++extern void librpc_print(const u_char *, u_int);
+ extern u_int bt_if_print(const struct pcap_pkthdr *, const u_char *);
+ extern u_int usb_linux_48_byte_print(const struct pcap_pkthdr *, const u_char *);
+ extern u_int usb_linux_64_byte_print(const struct pcap_pkthdr *, const u_char *);
+diff --git a/print-librpc.c b/print-librpc.c
+new file mode 100644
+index 0000000..bf4a68d
+--- /dev/null
++++ b/print-librpc.c
+@@ -0,0 +1,185 @@
++#ifdef HAVE_CONFIG_H
++#include "config.h"
++#endif
++
++#include <stdio.h>
++
++#include <tcpdump-stdinc.h>
++
++#include "interface.h"
++#include "extract.h"
++
++enum {
++	RPC_FLAGS_TYPE_UNKNOWN,
++	RPC_FLAGS_TYPE_REQUEST,
++	RPC_FLAGS_TYPE_RESPONSE,
++	RPC_FLAGS_TYPE_EVENT,
++};
++
++enum {
++	RPC_TYPE_UNKNOWN,
++	RPC_TYPE_S8,
++	RPC_TYPE_S16,
++	RPC_TYPE_S32,
++	RPC_TYPE_U8,
++	RPC_TYPE_U16,
++	RPC_TYPE_U32,
++	RPC_TYPE_STRING,
++	RPC_TYPE_BUFFER,
++};
++
++void librpc_print(const u_char *ptr, u_int len)
++{
++	const char *packet;
++	uint16_t version;
++	uint16_t payload;
++	int response = 0;
++	uint32_t flags;
++	uint32_t opcode;
++	int verbose = 1;
++	uint16_t length;
++	u_int pos;
++
++	version = EXTRACT_16BITS(ptr + 0);
++	payload = EXTRACT_16BITS(ptr + 2);
++	flags = EXTRACT_32BITS(ptr + 4);
++	opcode = EXTRACT_32BITS(ptr + 8);
++
++	switch (flags & 0x3) {
++	case RPC_FLAGS_TYPE_REQUEST:
++		packet = "request";
++		break;
++
++	case RPC_FLAGS_TYPE_RESPONSE:
++		packet = "response";
++		response = 1;
++		break;
++
++	case RPC_FLAGS_TYPE_EVENT:
++		packet = "event";
++		break;
++
++	case RPC_FLAGS_TYPE_UNKNOWN:
++	default:
++		packet = "unknown";
++		verbose = 0;
++		break;
++	}
++
++	printf("\n\tlibrpc v%u, (%s) %u bytes", version, packet, payload);
++
++	if (vflag && verbose) {
++		printf("\n\t  flags: %#x", flags);
++		printf("\n\t  opcode: %#x (%u)", opcode, opcode);
++		printf("\n\t  parameters:");
++
++		pos = 12;
++
++		while (pos < len) {
++			union {
++				int8_t s8;
++				int16_t s16;
++				int32_t s32;
++				uint8_t u8;
++				uint16_t u16;
++				uint32_t u32;
++			} data;
++			uint8_t byte;
++			uint16_t word;
++			uint32_t dword;
++			uint16_t type;
++
++			type = EXTRACT_16BITS(ptr + pos);
++			pos += 2;
++
++			switch (type) {
++			case RPC_TYPE_S8:
++				printf("\n\t    type: 8-bit signed");
++				data.s8 = ((int8_t *)ptr)[pos];
++				printf("\n\t      value: %d", data.s8);
++				pos += 1;
++				break;
++
++			case RPC_TYPE_S16:
++				printf("\n\t    type: 16-bit signed");
++				data.s16 = EXTRACT_16BITS(ptr + pos);
++				printf("\n\t      value: %d", data.s16);
++				pos += 2;
++				break;
++
++			case RPC_TYPE_S32:
++				printf("\n\t    type: 32-bit signed");
++				data.s32 = EXTRACT_32BITS(ptr + pos);
++				printf("\n\t      value: %d", data.s32);
++				pos += 4;
++				break;
++
++			case RPC_TYPE_U8:
++				printf("\n\t    type: 8-bit unsigned");
++				data.u8 = ((uint8_t *)ptr)[pos];
++				printf("\n\t      value: %u", data.u8);
++				pos += 1;
++				break;
++
++			case RPC_TYPE_U16:
++				printf("\n\t    type: 16-bit unsigned");
++				data.u16 = EXTRACT_16BITS(ptr + pos);
++				printf("\n\t      value: %u", data.u16);
++				pos += 2;
++				break;
++
++			case RPC_TYPE_U32:
++				printf("\n\t    type: 32-bit unsigned");
++				data.u32 = EXTRACT_32BITS(ptr + pos);
++				printf("\n\t      value: %u", data.u32);
++				pos += 4;
++				break;
++
++			case RPC_TYPE_STRING:
++				length = EXTRACT_16BITS(ptr + pos);
++				pos += 2;
++				printf("\n\t    type: string (%u characters)", length);
++				printf("\n\t      value: \"%s\"", ptr + pos);
++				pos += length;
++				break;
++
++			case RPC_TYPE_BUFFER:
++				length = EXTRACT_16BITS(ptr + pos);
++				pos += 2;
++
++				printf("\n\t    type: %s%s%s buffer",
++						(length & 0x1) ? "input" : "",
++						(length & 0x3) == 0x3 ? "/" : "",
++						(length & 0x2) ? "output" : "");
++
++				if (length & 0x1) {
++					length = EXTRACT_16BITS(ptr + pos);
++					pos += 2;
++
++					printf("\n\t      input: %u bytes", length);
++					if (!response)
++						print_unknown_data(ptr + pos, "\n\t        ", length);
++
++					pos += length;
++				}
++
++				if (length & 0x2) {
++					length = EXTRACT_16BITS(ptr + pos);
++					pos += 2;
++
++					printf("\n\t      output: %u bytes", length);
++					if (!response) {
++						print_unknown_data(ptr + pos, "\n\t        ", length);
++						pos += length;
++					}
++				}
++				break;
++
++			case RPC_TYPE_UNKNOWN:
++			default:
++				printf("\n\t    type: unknown (%#x)", type);
++				break;
++			}
++		}
++	}
++}
+diff --git a/print-tcp.c b/print-tcp.c
+index 88b4615..1335abd 100644
+--- a/print-tcp.c
++++ b/print-tcp.c
+@@ -669,6 +669,8 @@ tcp_print(register const u_char *bp, register u_int length,
+         }
+         else if (length > 0 && (sport == LDP_PORT || dport == LDP_PORT)) {
+                 ldp_print(bp, length);
++        } else if (sport == LIBRPC_PORT || dport == LIBRPC_PORT) {
++                librpc_print(bp, length);
+         }
+ 
+         return;
+diff --git a/tcp.h b/tcp.h
+index 45fc21c..8d846d2 100644
+--- a/tcp.h
++++ b/tcp.h
+@@ -110,3 +110,6 @@ struct tcphdr {
+ #ifndef SMB_PORT
+ #define SMB_PORT                445
+ #endif
++#ifndef LIBRPC_PORT
++#define LIBRPC_PORT             7482
++#endif
+-- 
+1.7.12
+
