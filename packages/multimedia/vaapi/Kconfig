@@ -1,0 +1,5 @@
+menu "Video Acceleration (VA) API"
+
+source "packages/multimedia/vaapi/libva/Kconfig"
+
+endmenu

@@ -1,5 +1,6 @@
 obj-y += alsa/
 obj-y += gstreamer/
+obj-y += vaapi/
 
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_ADMP) += admp.git
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_FFMPEG) += ffmpeg
