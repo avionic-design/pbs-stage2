@@ -1,4 +1,4 @@
 config PACKAGE_DESKTOP_EVDEV_CALIBRATE
 	bool "evdev-calibrate"
 	select PACKAGE_LIBS_CAIRO
-	default n
+	select PACKAGE_XORG_LIB_XI
