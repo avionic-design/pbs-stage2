@@ -1,0 +1,66 @@
+diff --git a/Makefile.am b/Makefile.am
+index cea140b..e3cbdc8 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -21,6 +21,7 @@ SUBDIRS = \
+ 	doc \
+ 	man \
+ 	include \
++	$(COMPOSITE_DIR) \
+ 	dix  \
+ 	fb \
+ 	mi \
+@@ -35,7 +36,6 @@ SUBDIRS = \
+ 	$(RECORD_DIR) \
+ 	xfixes \
+ 	damageext \
+-	$(COMPOSITE_DIR) \
+ 	$(GLX_DIR) \
+ 	exa \
+ 	config \
+diff --git a/Makefile.in b/Makefile.in
+index 5e84b3a..149a4c2 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -517,6 +517,7 @@ SUBDIRS = \
+ 	doc \
+ 	man \
+ 	include \
++	$(COMPOSITE_DIR) \
+ 	dix  \
+ 	fb \
+ 	mi \
+@@ -531,7 +532,6 @@ SUBDIRS = \
+ 	$(RECORD_DIR) \
+ 	xfixes \
+ 	damageext \
+-	$(COMPOSITE_DIR) \
+ 	$(GLX_DIR) \
+ 	exa \
+ 	config \
+diff --git a/dix/Makefile.am b/dix/Makefile.am
+index b7358aa..60a523f 100644
+--- a/dix/Makefile.am
++++ b/dix/Makefile.am
+@@ -42,6 +42,8 @@ libdix_la_SOURCES = 	\
+ 	touch.c		\
+ 	window.c
+ 
++libdix_la_LIBADD = ../composite/libcomposite.la
++
+ EXTRA_DIST = buildatoms BuiltInAtoms Xserver.d Xserver-dtrace.h.in
+ 
+ # Install list of protocol names
+diff --git a/dix/Makefile.in b/dix/Makefile.in
+index 306da3e..f58fda2 100644
+--- a/dix/Makefile.in
++++ b/dix/Makefile.in
+@@ -76,7 +76,7 @@ CONFIG_HEADER = $(top_builddir)/include/do-not-use-config.h \
+ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
+ LTLIBRARIES = $(noinst_LTLIBRARIES)
+-libdix_la_LIBADD =
++libdix_la_LIBADD = ../composite/libcomposite.la
+ am_libdix_la_OBJECTS = atom.lo colormap.lo cursor.lo devices.lo \
+ 	dispatch.lo dixfonts.lo dixutils.lo enterleave.lo events.lo \
+ 	eventconvert.lo extension.lo ffs.lo gc.lo getevents.lo \
