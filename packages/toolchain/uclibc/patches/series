@@ -3,3 +3,4 @@ epoll-buildfix.patch
 out-of-tree.patch
 arg-max.patch
 rpmatch.patch
+scanf-ms.patch
