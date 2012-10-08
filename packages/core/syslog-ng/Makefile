@@ -8,6 +8,7 @@ TARBALLS = $(PACKAGE)_$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--sysconfdir=/etc/syslog-ng \
 	--datadir=$(prefix)/share/syslog-ng \
 	--disable-glibtest \
