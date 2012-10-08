@@ -1,7 +1,7 @@
 PACKAGE = nvidia-tegra2-flashplayer
 VERSION = 10.2r157-nv3
 
-LOCATION = http://ftp.avionic-design.de/nvidia/source/vibrante
+LOCATION = http://ftp.avionic-design.de/pub/nvidia
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
