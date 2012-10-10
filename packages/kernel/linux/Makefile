@@ -179,6 +179,7 @@ install-vars = \
 	INSTALL_HDR_PATH=$(DESTDIR)$(prefix) \
 	INSTALL_PATH=$(INSTALL_PATH) \
 	INSTALL_MOD_PATH=$(DESTDIR) \
+	INSTALLKERNEL=do-not-install \
 	$(common-vars)
 
 install-targets = \
