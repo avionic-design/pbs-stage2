@@ -2,6 +2,7 @@ PACKAGE = linux
 LICENSE = GPL
 
 include packages/common.mk
+include include/config/depends-dirs.mk
 
 #
 # select images on a per-architecture basis
@@ -209,6 +210,16 @@ ifneq ($(CONFIG_PACKAGE_KERNEL_LINUX_DTB),"")
 
   quiet_cmd_install_fdt = SYMLINK $(objtree)/fdt.dtb
         cmd_install_fdt = ln -sf $(DTB) $(objtree)/fdt.dtb
+
+  ifneq ($(wildcard $(srctree)/$(master-platform)/kernel.its.in),)
+    quiet_cmd_gen_kernel_its = GEN     $(objtree)/kernel.its
+          cmd_gen_kernel_its = m4 -P -DVERSION="$(VERSION)" $(srctree)/$(master-platform)/kernel.its.in > $(objtree)/kernel.its
+
+    quiet_cmd_gen_uimage = MKIMAGE $(objtree)/uImage
+          cmd_gen_uimage = cd $(objtree) && $(env) mkimage -f kernel.its uImage
+
+  endif
+
 endif
 
 $(pkgtree)/.do-install: $(pkgtree)/.build | $(INSTALL_PATH)
@@ -216,6 +227,8 @@ $(pkgtree)/.do-install: $(pkgtree)/.build | $(INSTALL_PATH)
 	$(call cmd,install_modules)
 	$(call cmd,install_symlink)
 	$(call cmd,install_fdt)
+	$(call cmd,gen_kernel_its)
+	$(call cmd,gen_uimage)
 	$(call cmd,stamp)
 
 #
