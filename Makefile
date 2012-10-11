@@ -288,6 +288,10 @@ distclean: clean $(distclean-dirs)
 	@rm -f $(objtree)/build/$*/.build
 	$(Q)$(MAKE) $(package)=$* install
 
+%/install:
+	@rm -f $(objtree)/build/$*/.do-install
+	$(Q)$(MAKE) $(package)=$* install
+
 %/clean:
 	$(Q)$(MAKE) $(package)=$* clean
 
