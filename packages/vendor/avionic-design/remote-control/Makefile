@@ -33,6 +33,11 @@ endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VOIP_LINPHONE),y)
 	conf-args += --with-voip-backend=linphone
 endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_ALSA),y)
+	conf-args += --with-mixer-backend=alsa
+else
+	conf-args += --with-mixer-backend=none
+endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_LIBMODEM),y)
 	conf-args += --with-modem-backend=libmodem
 endif

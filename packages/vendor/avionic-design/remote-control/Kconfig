@@ -89,6 +89,17 @@ choice
 endchoice
 
 choice
+	prompt "Mixer Support"
+
+	config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_NONE
+		bool "Not supported"
+
+	config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_ALSA
+		bool "ALSA"
+
+endchoice
+
+choice
 	prompt "Modem Support"
 
 	config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_NONE
