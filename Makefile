@@ -225,11 +225,11 @@ watch: include/config/depends.mk
 
 PHONY += print
 print: include/config/depends.mk
-	$(Q)$(MAKE) $(platform)=$(obj) print
+	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ print
 
 PHONY += license
 license: include/config/depends.mk
-	$(Q)$(MAKE) $(platform)=$(obj) license
+	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ license
 
 PHONY += touch
 touch: include/config/depends.mk
