@@ -1,5 +1,7 @@
 config PACKAGE_NET_CIFS_UTILS
 	bool "cifs-utils"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n
 	help
 	  The in-kernel CIFS filesystem is generally the preferred method for mounting SMB/CIFS shares on Linux. More information on Linux CIFS is available at the Linux CIFS VFS site.

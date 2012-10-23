@@ -1,4 +1,6 @@
 config PACKAGE_LIBS_LIBGPG_ERROR
 	bool "libgpg-error"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n

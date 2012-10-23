@@ -1,3 +1,5 @@
 config PACKAGE_LIBS_SDL_IMAGE
 	bool "SDL_image"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n

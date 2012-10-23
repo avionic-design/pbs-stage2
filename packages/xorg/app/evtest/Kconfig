@@ -1,5 +1,7 @@
 config PACKAGE_XORG_APP_EVTEST
 	bool "evtest"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	select PACKAGE_XORG_LIB
 	default n
 	help

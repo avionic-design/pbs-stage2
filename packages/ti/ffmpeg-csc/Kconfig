@@ -1,5 +1,7 @@
 config PACKAGE_TI_FFMPEG_CSC
 	bool "ffmpeg for CSC"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n
 
 config FFMPEG_CSC_BRANCH

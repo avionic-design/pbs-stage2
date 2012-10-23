@@ -1,5 +1,7 @@
 config PACKAGE_DEVEL_VALGRIND
 	bool "valgrind"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	depends on ARCH_X86 || ARCH_X86_64
 	default n

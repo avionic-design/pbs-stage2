@@ -1,3 +1,5 @@
 config PACKAGE_LIBS_SDL_MIXER
 	bool "SDL_mixer"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n

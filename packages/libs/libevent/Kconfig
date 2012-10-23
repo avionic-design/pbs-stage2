@@ -1,6 +1,8 @@
 config PACKAGE_LIBS_LIBEVENT
 	bool "libevent"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n
 	help
 	  The libevent API provides a mechanism to execute a callback function

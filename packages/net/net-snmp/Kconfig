@@ -1,4 +1,6 @@
 config PACKAGE_NET_NET_SNMP
 	bool "net-snmp"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	select PACKAGE_LIBS_OPENSSL
 	default n

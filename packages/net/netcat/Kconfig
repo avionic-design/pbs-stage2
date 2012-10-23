@@ -1,4 +1,6 @@
 config PACKAGE_NET_NETCAT
 	bool "netcat"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n

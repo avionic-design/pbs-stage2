@@ -1,3 +1,5 @@
 config PACKAGE_NET_UPDATED
 	bool "updated"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n

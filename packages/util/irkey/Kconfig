@@ -1,6 +1,8 @@
 config PACKAGE_UTIL_IRKEY
 	bool "IRKey"
 	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	default n
 	help
 	  This is a service to generate input events from a ir-remote.
