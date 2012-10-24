@@ -1,9 +1,5 @@
 include packages/common.mk
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
-
 conf-cmd ?= $(pkgbuildtree)/configure
 
 conf-args += \

@@ -7,10 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).$(SNAPSHOT).tar.gz
 
 include packages/common.mk
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
-
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 

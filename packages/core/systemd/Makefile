@@ -7,9 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
-
 conf-args += \
 	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
 	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \

@@ -6,9 +6,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-env += \
-	PKG_CONFIG_LIBDIR=$(BUILD_TOOLS)/share/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=
+PKG_CONFIG_SYSROOT_DIR=''
 
 conf-args += \
 	--disable-icon-framing

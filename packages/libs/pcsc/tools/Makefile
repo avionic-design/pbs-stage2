@@ -9,10 +9,6 @@ include packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
-
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 

@@ -13,10 +13,6 @@ include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
-
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 

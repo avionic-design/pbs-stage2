@@ -37,10 +37,6 @@ JDK_LIBARCH = $(shell $(srctree)/support/openjdk-arch --install $(CONFIG_CPU))
 
 include packages/common.mk
 
-env += \
-	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
-	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)
-
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
