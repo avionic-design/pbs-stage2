@@ -44,10 +44,12 @@ export priv env
 # various environment that are generally needed but can still be disabled
 PKG_CONFIG_LIBDIR = $(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 PKG_CONFIG_SYSROOT_DIR = $(SYSROOT)
+ACLOCAL_PATH = $(SYSROOT)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/share/aclocal
 
 env += \
 	$(if $(PKG_CONFIG_LIBDIR),PKG_CONFIG_LIBDIR=$(PKG_CONFIG_LIBDIR)) \
 	$(if $(PKG_CONFIG_SYSROOT_DIR),PKG_CONFIG_SYSROOT_DIR=$(PKG_CONFIG_SYSROOT_DIR)) \
+	$(if $(ACLOCAL_PATH),ACLOCAL_PATH=$(ACLOCAL_PATH)) \
 
 ifdef CCACHE
 env += CCACHE=$(CCACHE) CCACHE_DIR=$(srctree)/ccache
