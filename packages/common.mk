@@ -4,6 +4,7 @@ INSTALL = install
 SED = sed
 
 SYSROOT ?= $(objtree)/sysroot
+BUILD_TOOLS ?= $(objtree)/build-tools
 DESTDIR ?= $(pkgtree)/install
 ROOTFS ?= $(objtree)/rootfs
 prefix ?= /usr

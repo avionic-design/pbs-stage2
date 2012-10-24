@@ -15,7 +15,7 @@ $(pkgtree)/.autoreconfigure:
 $(pkgtree)/.configure: $(pkgtree)/.autoreconfigure
 
 env += \
-	LD_LIBRARY_PATH=$(objtree)/build-tools/lib
+	LD_LIBRARY_PATH=$(BUILD_TOOLS)/lib
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
