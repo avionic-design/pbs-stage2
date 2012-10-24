@@ -135,9 +135,13 @@ ifneq ($(LOCATION_SVN),)
   dist-deps  := $(objtree)/dist/$(obj)/src.svn
 endif
 
+GIT_ARGS = \
+	$(if $(GIT_REFERENCE_DIR),--reference $(GIT_REFERENCE_DIR),--depth 1) \
+	-q
+
 quiet_cmd_git_clone = GIT     $(GIT_URL)
       cmd_git_clone = rm -rf $(pkgbuildtree) && \
-			git clone --depth 1 -q $(GIT_URL) $(pkgbuildtree)
+			git clone $(GIT_ARGS) $(GIT_URL) $(pkgbuildtree)
 
 $(pkgtree)/.git-clone: $(pkgtree)/.directory
 	$(call cmd,git_clone)
