@@ -34,7 +34,7 @@ RANLIB = $(CROSS_COMPILE)ranlib
 STRIP = $(CROSS_COMPILE)strip
 
 priv = fakeroot
-env = env -i PATH=$(objtree)/build-tools/bin:$(PATH)
+env = env -i PATH=$(objtree)/build-tools/bin:$(PATH) HOME=$(HOME)
 export priv env
 
 ifdef CCACHE
