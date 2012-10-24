@@ -41,6 +41,17 @@ ifdef CCACHE
 env += CCACHE=$(CCACHE) CCACHE_DIR=$(srctree)/ccache
 endif
 
+ifdef DISTCC
+ifdef CCACHE
+env += CCACHE_PREFIX=$(DISTCC)
+else
+env += CCACHE=$(DISTCC)
+endif
+ifeq ($(NUM_CPU),)
+NUM_CPU = $(shell $(DISTCC) -j 2> /dev/null)
+endif
+endif
+
 ifeq ($(NUM_CPU),)
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 ifeq ($(NUM_CPU),)
