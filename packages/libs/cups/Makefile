@@ -6,9 +6,6 @@ TARBALLS = $(PACKAGE)-$(VERSION)-source.tar.bz2
 
 include packages/common.mk
 
-HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
-BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
-
 env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)

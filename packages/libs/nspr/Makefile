@@ -7,9 +7,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
-HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
-BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
-
 env += \
 	CPPFLAGS="$(CPPFLAGS)" \
 	CFLAGS="$(CFLAGS)" \

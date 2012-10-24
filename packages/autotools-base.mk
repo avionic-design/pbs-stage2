@@ -1,8 +1,5 @@
 include packages/common.mk
 
-HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
-BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
-
 env += \
 	PKG_CONFIG_LIBDIR=$(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig \
 	PKG_CONFIG_SYSROOT_DIR=$(SYSROOT)

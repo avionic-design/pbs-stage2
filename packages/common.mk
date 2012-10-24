@@ -34,6 +34,9 @@ NM = $(CROSS_COMPILE)nm
 RANLIB = $(CROSS_COMPILE)ranlib
 STRIP = $(CROSS_COMPILE)strip
 
+HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
+BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
+
 priv = fakeroot
 env = env -i PATH=$(objtree)/build-tools/bin:$(PATH) HOME=$(HOME)
 export priv env
