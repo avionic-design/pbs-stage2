@@ -52,7 +52,12 @@ env += \
 	$(if $(ACLOCAL_PATH),ACLOCAL_PATH=$(ACLOCAL_PATH)) \
 
 ifdef CCACHE
-env += CCACHE=$(CCACHE) CCACHE_DIR=$(srctree)/ccache
+env += CCACHE=$(CCACHE)
+ifdef CCACHE_DIR
+env += CCACHE_DIR=$(CCACHE_DIR)
+else
+env += CCACHE_DIR=$(srctree)/ccache
+endif
 endif
 
 ifdef DISTCC
