@@ -41,9 +41,11 @@ ifdef CCACHE
 env += CCACHE=$(CCACHE) CCACHE_DIR=$(srctree)/ccache
 endif
 
+ifeq ($(NUM_CPU),)
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 ifeq ($(NUM_CPU),)
   NUM_CPU = 1
+endif
 endif
 export NUM_CPU
 
