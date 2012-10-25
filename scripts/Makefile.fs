@@ -111,10 +111,14 @@ PHONY += mkdir
 mkdir: check-packages
 	$(call cmd,mkdir_rootfs)
 
+PHONY += mount-ramdisk
+mount-ramdisk: mkdir
+	$(call cmd,mount_ramdisk)
+
 $(rootfs-dir): mkdir
 
 PHONY += begin-preprocess
-begin-preprocess: mkdir
+begin-preprocess: mount-ramdisk
 
 PHONY += preprocess
 preprocess: begin-preprocess
@@ -138,8 +142,12 @@ make-image: $(rootfs-img) postprocess
 $(rootfs-img): $(rootfs-dir) postprocess
 	$(call cmd,mkimg_$(rootfs-type))
 
+PHONY += umount-ramdisk
+umount-ramdisk: make-image
+	$(call cmd,umount_ramdisk)
+
 PHONY += finish
-finish: make-image
+finish: umount-ramdisk
 
 #
 # Preprocessing rules
@@ -184,6 +192,16 @@ quiet_cmd_mkimg_squashfs = SQUASHFS $@
 
 quiet_cmd_mkmachine_id = GEN     $@
       cmd_mkmachine_id = cat /proc/sys/kernel/random/uuid | md5sum | cut -d ' ' -f 1 > $@
+
+# Optional commands to build the image in a tmpfs
+ifeq ($(ROOTFS_MOUNT_TMPFS),y)
+quiet_cmd_mount_ramdisk = MOUNT   $(rootfs-root)
+      cmd_mount_ramdisk = mount -t tmpfs none $(rootfs-root)
+
+quiet_cmd_umount_ramdisk = UMOUNT  $(rootfs-root)
+      cmd_umount_ramdisk = umount $(rootfs-root)
+endif
+
 #
 # Check the configurable parameters
 #
