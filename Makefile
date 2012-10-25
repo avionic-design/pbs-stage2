@@ -239,6 +239,14 @@ PHONY += fs
 fs: include/config/depends.mk
 	$(Q)$(MAKE) $(fs)=$(obj)
 
+PHONY += release
+release: include/config/depends.mk
+	$(Q)$(MAKE) $(release)=$(obj)
+
+PHONY += print-release
+print-release: include/config/depends.mk
+	$(Q)$(MAKE) $(release)=$(obj) quiet=silent_ print
+
 _all: build
 	@:
 

@@ -1,0 +1,49 @@
+include include/config/depends-dirs.mk
+include $(srctree)/scripts/Kbuild.include
+include $(srctree)/scripts/Makefile.lib
+
+platform-make-release := $(if $(KBUILD_SRC),$(srctree)/)$(master-platform)/make-release.mk
+platform-version      := $(call package-version,$(master-platform))
+platform-name         := $(call package-name,$(master-platform))
+
+release-dir  := $(obj)/release
+release-file := $(obj)/$(platform-name)_$(platform-version).tar
+
+quiet_cmd_cp = CP      $@
+      cmd_cp = cp $< $@
+
+quiet_cmd_make_fs = MAKE    $@
+      cmd_make_fs = $(MAKE) $(fs)=$(obj) quiet=silent_ rootfs-img=$@
+
+quiet_cmd_tar = TAR [c] $@
+      cmd_tar = tar -C $(release-dir) -cf $@ $(notdir $^)
+
+quiet_cmd_mk_release_dir = MKDIR   $(release-dir)
+      cmd_mk_release_dir = rm -rf $(release-dir) && mkdir -p $(release-dir)
+
+PHONY += all
+all: cleanrelease
+
+ifneq ($(wildcard $(platform-make-release)),)
+include $(platform-make-release)
+else
+$(error The platform does not have a make-release.mk)
+endif
+
+PHONY += cleanrelease
+cleanrelease: __clean-dirs=$(release-dir)
+cleanrelease: release
+	$(call cmd,cleandir)
+
+PHONY += release
+release: $(release-file)
+
+PHONY += mkreleasedir
+mkreleasedir:
+	$(call cmd,mk_release_dir)
+
+PHONY += print
+print:
+	@echo "$(release-file:$(obj)/%=%)"
+
+.PHONY: $(PHONY)

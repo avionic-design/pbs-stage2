@@ -158,6 +158,7 @@ rootfs := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.rootfs obj
 host := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.host obj
 toolchain := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.toolchain obj
 fs := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.fs obj
+release := -f $(if $(KBUILD_SRC),$(srctree)/)scripts/Makefile.release obj
 
 # Prefix -I with $(srctree) if it is not an absolute path.
 # skip if -I has no parameter
