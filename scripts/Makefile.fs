@@ -18,8 +18,8 @@ include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 
 # Get the current version of the packages in dir $(1)
-get-version       = $(shell $(MAKE) $(package)=$(1) print 2> /dev/null | sed 's,^[^:]*: *,,')
-get-name          = $(shell $(MAKE) $(package)=$(1) print 2> /dev/null | sed 's,:.*,,')
+get-version       = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,^[^:]*: *,,')
+get-name          = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,:.*,,')
 
 #
 # Parameters
