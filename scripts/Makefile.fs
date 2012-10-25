@@ -26,7 +26,7 @@ get-name          = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/
 #
 
 # Platform name
-rootfs-platform  ?= $(filter platforms/%,$(depends-dirs))
+rootfs-platform  ?= $(master-platform)
 rootfs-name      ?= $(if $(rootfs-platform),$(call get-name,$(rootfs-platform)),rootfs)
 # Platform version
 rootfs-version   ?= $(if $(rootfs-platform),$(call get-version,$(rootfs-platform)))
