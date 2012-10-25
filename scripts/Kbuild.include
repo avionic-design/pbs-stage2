@@ -264,3 +264,7 @@ why =                                                                        \
 
 echo-why = $(call escsq, $(strip $(why)))
 endif
+
+# Get the version/name of a package
+package-version = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,^[^:]*: *,,')
+package-name    = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,:.*,,')

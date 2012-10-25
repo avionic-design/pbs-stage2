@@ -17,19 +17,15 @@ CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 
-# Get the current version of the packages in dir $(1)
-get-version       = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,^[^:]*: *,,')
-get-name          = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,:.*,,')
-
 #
 # Parameters
 #
 
 # Platform name
 rootfs-platform  ?= $(master-platform)
-rootfs-name      ?= $(if $(rootfs-platform),$(call get-name,$(rootfs-platform)),rootfs)
+rootfs-name      ?= $(if $(rootfs-platform),$(call package-name,$(rootfs-platform)),rootfs)
 # Platform version
-rootfs-version   ?= $(if $(rootfs-platform),$(call get-version,$(rootfs-platform)))
+rootfs-version   ?= $(if $(rootfs-platform),$(call package-version,$(rootfs-platform)))
 # Type of rootfs to create
 rootfs-type      ?= tar.gz
 # Where to create the rootfs
@@ -68,13 +64,13 @@ get-basenames     = $(patsubst $(srctree)/$(1)/%.install,%,$(wildcard $(srctree)
 # List the full name of the packages to extract from directory $(1)
 get-names         = $(addprefix $(1)/,$(filter-out $(packages-filter),$(call get-basenames,$(1))))
 # Get the filenames of the packages from directory $(1)
-get-filenames     = $(addsuffix _$(call get-version,$(1))_$(TARGET).$(packages-type),$(call get-names,$(1)))
+get-filenames     = $(addsuffix _$(call package-version,$(1))_$(TARGET).$(packages-type),$(call get-names,$(1)))
 
 packages         := $(foreach dir,$(packages-dirs),$(call get-names,$(dir)))
 filenames        := $(foreach dir,$(packages-dirs),$(call get-filenames,$(dir)))
 else
 # Get the filename of package $(1)
-get-filename      = $(addsuffix _$(call get-version,$(dir $(1)))_$(TARGET).$(packages-type),$(1))
+get-filename      = $(addsuffix _$(call package-version,$(dir $(1)))_$(TARGET).$(packages-type),$(1))
 
 filenames        := $(foreach pkg,$(packages),$(call get-filename,$(pkg)))
 endif
