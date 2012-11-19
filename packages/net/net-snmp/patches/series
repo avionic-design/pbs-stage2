@@ -1,5 +1,4 @@
 fix-deadlock.patch
-util-funcs.patch
 libnl-3.0.patch
 pkgconfig.patch
 libtool.patch

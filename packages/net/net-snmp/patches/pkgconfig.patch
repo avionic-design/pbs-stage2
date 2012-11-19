@@ -1,8 +1,8 @@
 diff --git a/Makefile.in b/Makefile.in
-index d1023e1..56da741 100644
+index 4d00168..b2916f3 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -31,6 +31,7 @@ INCLUDESUBDIRHEADERS2=generic.h
+@@ -32,6 +32,7 @@ INSTALLBUILTHEADERS=include/net-snmp/net-snmp-config.h
  INSTALLBUILTINCLUDEHEADERS=@FEATUREHEADERS@
  INSTALLBINSCRIPTS=net-snmp-config net-snmp-create-v3-user
  INSTALLUCDHEADERS=ucd-snmp-config.h version.h mib_module_config.h
@@ -11,7 +11,7 @@ index d1023e1..56da741 100644
  #
  # other install rules.
 diff --git a/Makefile.rules b/Makefile.rules
-index 65687ef..05ff810 100644
+index 9e9e900..560961d 100644
 --- a/Makefile.rules
 +++ b/Makefile.rules
 @@ -87,10 +87,11 @@ subdirs:
@@ -55,7 +55,7 @@ index 65687ef..05ff810 100644
  # cleaning targets
  #
 diff --git a/Makefile.top b/Makefile.top
-index d3580e9..41525b6 100644
+index 862fb94..9f4a083 100644
 --- a/Makefile.top
 +++ b/Makefile.top
 @@ -27,6 +27,7 @@ man8dir		= $(mandir)/man8
@@ -67,7 +67,7 @@ index d3580e9..41525b6 100644
  INSTALL_PREFIX  = $(DESTDIR)
  
 diff --git a/configure.ac b/configure.ac
-index 997c9e2..61e7376 100644
+index 5facb29..7c06106 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -95,6 +95,7 @@ AC_CONFIG_FILES([net-snmp-config:net-snmp-config.in],
@@ -80,7 +80,7 @@ index 997c9e2..61e7376 100644
  
 diff --git a/net-snmp-agent.pc.in b/net-snmp-agent.pc.in
 new file mode 100644
-index 0000000..e35a0d7
+index 0000000..dc3e889
 --- /dev/null
 +++ b/net-snmp-agent.pc.in
 @@ -0,0 +1,9 @@
@@ -93,3 +93,6 @@ index 0000000..e35a0d7
 +Description: SNMP libraries
 +Version: @VERSION@
 +Libs: -L${libdir} -lnetsnmpagent -lnetsnmp
+-- 
+1.7.12.2
+

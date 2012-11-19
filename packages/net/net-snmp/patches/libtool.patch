@@ -1,5 +1,5 @@
 diff --git a/configure.ac b/configure.ac
-index 61e7376..8e95c42 100644
+index 7c06106..50cd7e6 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -19,6 +19,7 @@ AC_CONFIG_MACRO_DIR([m4])
@@ -10,3 +10,6 @@ index 61e7376..8e95c42 100644
  
  #
  # save the configure arguments
+-- 
+1.7.12.2
+

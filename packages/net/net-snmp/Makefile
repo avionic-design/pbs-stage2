@@ -1,5 +1,6 @@
 PACKAGE = net-snmp
-VERSION = 5.7.1
+VERSION = 5.7.2
+LICENSE = BSD
 
 LOCATION = http://downloads.sourceforge.net/project/$(PACKAGE)/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
