@@ -1,5 +1,5 @@
 PACKAGE = libdrm
-VERSION = 2.4.39
+VERSION = 2.4.42
 LICENSE = custom
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
@@ -10,6 +10,7 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--disable-nouveau \
+	--disable-vmwgfx \
 	--disable-radeon
 
 prunefiles = \
