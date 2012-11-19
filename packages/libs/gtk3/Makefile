@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 3.6.0
+VERSION = 3.6.4
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -27,6 +27,7 @@ stripfiles = \
 	$(prefix)/bin/gtk3-demo \
 	$(prefix)/bin/gtk3-demo-application \
 	$(prefix)/bin/gtk3-widget-factory \
+	$(prefix)/bin/gtk-launch \
 	$(prefix)/bin/gtk-query-immodules-3.0 \
 	$(prefix)/bin/gtk-update-icon-cache \
 	$(plugin)/immodules/*.so \
