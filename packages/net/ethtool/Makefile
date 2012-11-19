@@ -1,5 +1,5 @@
 PACKAGE = ethtool
-VERSION = 3.5
+VERSION = 3.7
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/software/network/$(PACKAGE)
