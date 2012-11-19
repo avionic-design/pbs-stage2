@@ -4,25 +4,25 @@ index ee8b84e..a5e598c 100644
 +++ b/Modules/FindLua50.cmake
 @@ -72,7 +72,8 @@ ELSE(${LUA_LIBRARY_lua} MATCHES "framework")
      # include the math library for Unix
-     IF(UNIX AND NOT APPLE)
-       FIND_LIBRARY(MATH_LIBRARY_FOR_LUA m)
--      SET( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua};${MATH_LIBRARY_FOR_LUA}" CACHE STRING "This is the concatentation of lua and lualib libraries")
-+      FIND_LIBRARY(DL_LIBRARY_FOR_LUA dl)
-+      SET( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua};${MATH_LIBRARY_FOR_LUA};${DL_LIBRARY_FOR_LUA}" CACHE STRING "This is the concatentation of lua and lualib libraries")
+     if(UNIX AND NOT APPLE)
+       find_library(MATH_LIBRARY_FOR_LUA m)
+-      set( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua};${MATH_LIBRARY_FOR_LUA}" CACHE STRING "This is the concatentation of lua and lualib libraries")
++      find_library(DL_LIBRARY_FOR_LUA dl)
++      set( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua};${MATH_LIBRARY_FOR_LUA};${DL_LIBRARY_FOR_LUA}" CACHE STRING "This is the concatentation of lua and lualib libraries")
      # For Windows and Mac, don't need to explicitly include the math library
-     ELSE(UNIX AND NOT APPLE)
-       SET( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua}" CACHE STRING "This is the concatentation of lua and lualib libraries")
+     else()
+       set( LUA_LIBRARIES "${LUA_LIBRARY_lualib};${LUA_LIBRARY_lua}" CACHE STRING "This is the concatentation of lua and lualib libraries")
 diff --git a/Modules/FindLua51.cmake b/Modules/FindLua51.cmake
 index 123fd5d..5de51da 100644
 --- a/Modules/FindLua51.cmake
 +++ b/Modules/FindLua51.cmake
 @@ -56,7 +56,8 @@ IF(LUA_LIBRARY)
    # include the math library for Unix
-   IF(UNIX AND NOT APPLE)
-     FIND_LIBRARY(LUA_MATH_LIBRARY m)
--    SET( LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY}" CACHE STRING "Lua Libraries")
-+    FIND_LIBRARY(LUA_DL_LIBRARY dl)
-+    SET( LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY};${LUA_DL_LIBRARY}" CACHE STRING "Lua Libraries")
+   if(UNIX AND NOT APPLE)
+     find_library(LUA_MATH_LIBRARY m)
+-    set( LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY}" CACHE STRING "Lua Libraries")
++    find_library(LUA_DL_LIBRARY dl)
++    set( LUA_LIBRARIES "${LUA_LIBRARY};${LUA_MATH_LIBRARY};${LUA_DL_LIBRARY}" CACHE STRING "Lua Libraries")
    # For Windows and Mac, don't need to explicitly include the math library
-   ELSE(UNIX AND NOT APPLE)
-     SET( LUA_LIBRARIES "${LUA_LIBRARY}" CACHE STRING "Lua Libraries")
+   else()
+     set( LUA_LIBRARIES "${LUA_LIBRARY}" CACHE STRING "Lua Libraries")
