@@ -1,5 +1,5 @@
 PACKAGE = automake
-VERSION = 1.12.4
+VERSION = 1.12.6
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
