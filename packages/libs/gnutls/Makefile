@@ -1,8 +1,11 @@
 PACKAGE = gnutls
-VERSION = 3.1.2
+VERSION = 3.1.8
 LICENSE = GPL
 
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = ftp://ftp.gnutls.org/gcrypt/$(PACKAGE)/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
@@ -22,6 +25,7 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/certtool \
+	$(prefix)/bin/danetool \
 	$(prefix)/bin/gnutls-cli \
 	$(prefix)/bin/gnutls-cli-debug \
 	$(prefix)/bin/gnutls-serv \

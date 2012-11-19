@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnu.org/pub/gnu/gnutls/gnutls-(.*)\.tar\.xz
+ftp://ftp.gnutls.org/gcrypt/gnutls/v(.*)/gnutls-(.*)\.tar\.xz
