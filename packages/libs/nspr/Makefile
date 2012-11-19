@@ -1,5 +1,5 @@
 PACKAGE = nspr
-VERSION = 4.9.2
+VERSION = 4.9.5
 LICENSE = MPL
 
 LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
