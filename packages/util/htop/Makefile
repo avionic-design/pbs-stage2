@@ -1,5 +1,6 @@
 PACKAGE = htop
-VERSION = 1.0.1
+VERSION = 1.0.2
+LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
