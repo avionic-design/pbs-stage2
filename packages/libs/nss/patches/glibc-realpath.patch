@@ -1,0 +1,46 @@
+From ecbc414a1746bf7d9508bcac3828a24446e59bcd Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 09:25:46 +0100
+Subject: [PATCH] Use realpath() where available.
+
+Use realpath() for loader_GetOriginalPathname, so that symlinks are
+properly followed when determining where the current library lives.
+
+Originally-by: Mike Hommey <glandium@debian.org>
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ mozilla/security/nss/lib/freebl/genload.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/mozilla/security/nss/lib/freebl/genload.c b/mozilla/security/nss/lib/freebl/genload.c
+index 4a981a9..63b97db 100644
+--- a/mozilla/security/nss/lib/freebl/genload.c
++++ b/mozilla/security/nss/lib/freebl/genload.c
+@@ -27,6 +27,16 @@
+  */
+ static char* loader_GetOriginalPathname(const char* link)
+ {
++#ifdef __GLIBC__
++    char* tmp = realpath(link, NULL);
++    char* resolved;
++    if (! tmp)
++    	return NULL;
++    resolved = PR_Malloc(strlen(tmp) + 1);
++    strcpy(resolved, tmp); /* This is necessary because PR_Free might not be using free() */
++    free(tmp);
++    return resolved;
++#else
+     char* resolved = NULL;
+     char* input = NULL;
+     PRUint32 iterations = 0;
+@@ -61,6 +71,7 @@ static char* loader_GetOriginalPathname(const char* link)
+         input = NULL;
+     }
+     return input;
++#endif
+ }
+ #endif /* XP_UNIX */
+ 
+-- 
+1.8.0
+

@@ -1,0 +1,32 @@
+From 1cf14af03ac23e1bf8bdc14096a1929fe1d9d08e Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 09:38:49 +0100
+Subject: [PATCH] Enable transitional scheme for ssl renegotiation
+
+From mozilla/security/nss/lib/ssl/ssl.h: Disallow unsafe renegotiation
+in server sockets only, but allow clients to continue to renegotiate
+with vulnerable servers. This value should only be used during the
+transition period when few servers have been upgraded.
+
+Originally-by: Unknown
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ mozilla/security/nss/lib/ssl/sslsock.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mozilla/security/nss/lib/ssl/sslsock.c b/mozilla/security/nss/lib/ssl/sslsock.c
+index b9af589..bdb5922 100644
+--- a/mozilla/security/nss/lib/ssl/sslsock.c
++++ b/mozilla/security/nss/lib/ssl/sslsock.c
+@@ -150,7 +150,7 @@ static sslOptions ssl_defaults = {
+     PR_FALSE,   /* noLocks            */
+     PR_FALSE,   /* enableSessionTickets */
+     PR_FALSE,   /* enableDeflate      */
+-    2,          /* enableRenegotiation (default: requires extension) */
++    3,          /* enableRenegotiation (default: transitional) */
+     PR_FALSE,   /* requireSafeNegotiation */
+     PR_FALSE,   /* enableFalseStart   */
+     PR_TRUE     /* cbcRandomIV        */
+-- 
+1.8.0
+

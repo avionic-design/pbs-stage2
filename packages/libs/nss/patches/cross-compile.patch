@@ -1,8 +1,18 @@
+From a1c2b45cbbbe8c99d86d8c7fdb4c9d9d47d3a463 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 09:23:22 +0100
+Subject: [PATCH] Fix cross-compilation
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ mozilla/security/nss/cmd/shlibsign/Makefile | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
 diff --git a/mozilla/security/nss/cmd/shlibsign/Makefile b/mozilla/security/nss/cmd/shlibsign/Makefile
-index 892a2db..758a064 100644
+index 0dc52db..78e2b60 100644
 --- a/mozilla/security/nss/cmd/shlibsign/Makefile
 +++ b/mozilla/security/nss/cmd/shlibsign/Makefile
-@@ -78,6 +78,7 @@ endif
+@@ -46,6 +46,7 @@ endif
  
  # sign any and all shared libraries that contain the word freebl
  
@@ -10,7 +20,7 @@ index 892a2db..758a064 100644
  CHECKLIBS = $(DIST)/lib/$(DLL_PREFIX)softokn3.$(DLL_SUFFIX)
  CHECKLIBS += $(wildcard $(DIST)/lib/$(DLL_PREFIX)freebl*3.$(DLL_SUFFIX))
  ifndef NSS_DISABLE_DBM
-@@ -87,7 +88,7 @@ CHECKLOC = $(CHECKLIBS:.$(DLL_SUFFIX)=.chk)
+@@ -55,7 +56,7 @@ CHECKLOC = $(CHECKLIBS:.$(DLL_SUFFIX)=.chk)
  
  MD_LIB_RELEASE_FILES = $(CHECKLOC)
  ALL_TRASH += $(CHECKLOC)
@@ -19,3 +29,6 @@ index 892a2db..758a064 100644
  
  #######################################################################
  # (5) Execute "global" rules. (OPTIONAL)                              #
+-- 
+1.8.0
+

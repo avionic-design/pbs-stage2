@@ -1,9 +1,9 @@
 PACKAGE = nss
-VERSION = 3.13.1
-CKBI = 1.88
+VERSION = 3.14
+LICENSE = MPL
 
-LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_WITH_CKBI_$(subst .,_,$(CKBI))_RTM/src
-TARBALLS = $(PACKAGE)-$(VERSION).with.ckbi.$(CKBI).tar.gz
+LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_RTM/src
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
