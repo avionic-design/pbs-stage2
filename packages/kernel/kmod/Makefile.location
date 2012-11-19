@@ -1,5 +1,5 @@
 PACKAGE = kmod
-VERSION = 10
+VERSION = 12
 LICENSE = GPL
 
 LOCATION = http://kernel.org/pub/linux/utils/kernel/$(PACKAGE)
