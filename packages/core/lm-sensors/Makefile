@@ -1,5 +1,6 @@
 PACKAGE = lm_sensors
-VERSION = 3.3.2
+VERSION = 3.3.3
+LICENSE = GPL LGPL
 
 LOCATION = http://dl.lm-sensors.org/lm-sensors/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
