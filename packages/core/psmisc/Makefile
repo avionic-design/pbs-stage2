@@ -1,10 +1,14 @@
 PACKAGE = psmisc
-VERSION = 22.14
+VERSION = 22.20
+LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
+
+conf-args += \
+	--disable-harden-flags
 
 ifeq ($(CONFIG_LIBC),gnu)
   conf-vars += \
