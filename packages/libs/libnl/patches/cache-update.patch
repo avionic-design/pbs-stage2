@@ -19,7 +19,7 @@ diff --git a/include/netlink/cache.h b/include/netlink/cache.h
 index fd137e1..2eb66ec 100644
 --- a/include/netlink/cache.h
 +++ b/include/netlink/cache.h
-@@ -52,6 +52,8 @@ extern int			nl_cache_add(struct nl_cache *,
+@@ -60,6 +60,8 @@ extern int			nl_cache_add(struct nl_cache *,
  extern int			nl_cache_parse_and_add(struct nl_cache *,
  						       struct nl_msg *);
  extern void			nl_cache_remove(struct nl_object *);
@@ -32,7 +32,7 @@ diff --git a/lib/cache.c b/lib/cache.c
 index 45a1a27..dd794c5 100644
 --- a/lib/cache.c
 +++ b/lib/cache.c
-@@ -545,8 +545,7 @@ void nl_cache_set_arg2(struct nl_cache *cache, int arg)
+@@ -627,8 +627,7 @@ void nl_cache_set_arg2(struct nl_cache *cache, int arg)
   *
   * @return 0 on success or a negative error code.
   */

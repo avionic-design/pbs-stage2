@@ -1,14 +1,11 @@
 PACKAGE = libnl
-VERSION = 3.2.13
+VERSION = 3.2.21
 LICENSE = LGPL
 
 LOCATION = http://www.infradead.org/~tgr/$(PACKAGE)/files
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
-
-conf-args += \
-	--with-sysroot=$(SYSROOT)
+include packages/autotools-reconf.mk
 
 plugin = $(prefix)/lib/$(PACKAGE)
 
