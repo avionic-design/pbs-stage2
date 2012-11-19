@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.12.2
+VERSION = 1.12.14
 LICENSE = LGPL MPL
 
 LOCATION = http://cairographics.org/releases
