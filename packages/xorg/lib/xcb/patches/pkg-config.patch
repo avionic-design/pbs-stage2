@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index 04529bd..54e3cea 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -55,9 +55,10 @@ PKG_CHECK_MODULES(XDMCP, xdmcp,
+@@ -62,9 +62,10 @@ PKG_CHECK_MODULES(XDMCP, xdmcp,
  AC_SUBST(NEEDED)
  
  # Find the xcb-proto protocol descriptions
@@ -16,7 +16,7 @@ index 04529bd..54e3cea 100644
  AC_SUBST(XCBPROTO_XCBINCLUDEDIR)
  
  # Find the xcb-proto version
-@@ -65,9 +66,10 @@ XCBPROTO_VERSION=`$PKG_CONFIG --modversion xcb-proto`
+@@ -72,9 +73,10 @@ XCBPROTO_VERSION=`$PKG_CONFIG --modversion xcb-proto`
  AC_SUBST(XCBPROTO_VERSION)
  
  # Find the xcbgen Python package
