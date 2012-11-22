@@ -1,5 +1,5 @@
 PACKAGE = systemd
-VERSION = 187
+VERSION = 197
 LICENSE = GPL LGPL MIT
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
@@ -8,13 +8,15 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-pci-ids-path=$(prefix)/share/hwdata/pci.ids.gz \
-	--with-usb-ids-path=$(prefix)/share/hwdata/usb.ids.gz \
-	--with-firmware-path=/lib/firmware \
+	--with-firmware-path=$(prefix)/lib/firmware \
 	--with-rootprefix=$(prefix) \
 	--libexecdir=$(prefix)/lib \
 	--enable-split-usr \
-	--with-distro=pbs \
+	--disable-selinux \
+	--without-python \
+	--disable-gcrypt \
+	--disable-audit \
+	--disable-ssp \
 	--disable-acl
 
 ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
@@ -26,6 +28,9 @@ ifneq ($(CONFIG_UDEV_SYSTEMD),y)
 else
   conf-args += --enable-gudev
 endif
+
+conf-vars += \
+	ac_cv_func_malloc_0_nonnull=yes
 
 compat-links = \
 	/bin/systemctl \
@@ -78,13 +83,16 @@ prunefiles += \
 endif
 
 stripfiles = \
+	$(prefix)/bin/hostnamectl \
 	$(prefix)/bin/journalctl \
+	$(prefix)/bin/localectl \
 	$(prefix)/bin/loginctl \
 	$(prefix)/bin/systemctl \
 	$(prefix)/bin/systemd-ask-password \
 	$(prefix)/bin/systemd-cat \
 	$(prefix)/bin/systemd-cgls \
 	$(prefix)/bin/systemd-cgtop \
+	$(prefix)/bin/systemd-coredumpctl \
 	$(prefix)/bin/systemd-delta \
 	$(prefix)/bin/systemd-detect-virt \
 	$(prefix)/bin/systemd-inhibit \
@@ -94,6 +102,7 @@ stripfiles = \
 	$(prefix)/bin/systemd-stdio-bridge \
 	$(prefix)/bin/systemd-tmpfiles \
 	$(prefix)/bin/systemd-tty-ask-password-agent \
+	$(prefix)/bin/timedatectl \
 	$(prefix)/bin/udevadm \
 	$(prefix)/lib/security/pam_systemd.so \
 	$(prefix)/lib/systemd/systemd \
@@ -135,3 +144,8 @@ stripfiles = \
 	$(prefix)/lib/udev/scsi_id \
 	$(prefix)/lib/udev/v4l_id \
 	$(prefix)/lib/*.so.*
+
+ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
+stripfiles += \
+	$(prefix)/lib/systemd/systemd-binfmt
+endif

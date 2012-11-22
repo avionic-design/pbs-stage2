@@ -1,41 +1,12 @@
-diff --git a/Makefile.am b/Makefile.am
-index 6f88642..49cf59b 100644
---- a/Makefile.am
-+++ b/Makefile.am
-@@ -1033,7 +1033,7 @@ BUILT_SOURCES += \
- 	src/core/syscall-to-name.h
- 
- src/core/syscall-list.txt: Makefile
--	$(AM_V_GEN)cpp $(AM_CPPFLAGS) $(CPPFLAGS) -dM -include sys/syscall.h < /dev/null | $(AWK) '/^#define[ \t]+__NR_[^ ]+[ \t]+[0-9]/ { sub(/__NR_/, "", $$2); print $$2; }' > $@
-+	$(AM_V_GEN)$(CPP) $(AM_CPPFLAGS) $(CPPFLAGS) -dM -include sys/syscall.h - < /dev/null | $(AWK) '/^#define[ \t]+__NR_[^ ]+[ \t]+[0-9]/ { sub(/__NR_/, "", $$2); print $$2; }' > $@
- 
- src/core/syscall-from-name.gperf: src/core/syscall-list.txt Makefile
- 	$(AM_V_GEN)$(AWK) 'BEGIN{ print "struct syscall_name { const char* name; int id; };"; print "%null-strings"; print "%%";} { printf "%s, __NR_%s\n", $$1, $$1 }' < $< > $@
-diff --git a/src/core/selinux-setup.c b/src/core/selinux-setup.c
-index 22ca820..fa025b7 100644
---- a/src/core/selinux-setup.c
-+++ b/src/core/selinux-setup.c
-@@ -36,9 +36,11 @@
- #include "log.h"
- #include "label.h"
- 
-+#ifdef HAVE_SELINUX
- static int null_log(int type, const char *fmt, ...) {
-         return 0;
- }
-+#endif
- 
- int selinux_setup(bool *loaded_policy) {
- 
 diff --git a/src/readahead/readahead-analyze.c b/src/readahead/readahead-analyze.c
-index 53892b0..91a62bd 100644
+index 9a929c0..b9a0ac3 100644
 --- a/src/readahead/readahead-analyze.c
 +++ b/src/readahead/readahead-analyze.c
 @@ -135,7 +135,7 @@ int main_analyze(const char *pack_path) {
          printf("\nHOST:    %s"
                 "TYPE:    %c\n"
                 "MISSING: %d\n"
--               "TOTAL:   %ld\n",
+-               "TOTAL:   %llu\n",
 +               "TOTAL:   %" PRId64 "\n",
                 line,
                 a,
