@@ -18,8 +18,8 @@ CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-TOOLCHAIN_BASE_PATH ?= $(srctree)/toolchains
-PATH := $(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/bin:$(PATH)
+TOOLCHAIN_BASE_PATH ?= $(srctree)/toolchains/$(TARGET)/usr
+PATH := $(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
 CROSS_COMPILE ?= $(TARGET)-
 
 export CROSS_COMPILE
@@ -44,7 +44,7 @@ export priv env
 # various environment that are generally needed but can still be disabled
 PKG_CONFIG_LIBDIR = $(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
 PKG_CONFIG_SYSROOT_DIR = $(SYSROOT)
-ACLOCAL_PATH = $(SYSROOT)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/$(TARGET)/usr/share/aclocal
+ACLOCAL_PATH = $(SYSROOT)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/share/aclocal
 
 env += \
 	$(if $(PKG_CONFIG_LIBDIR),PKG_CONFIG_LIBDIR=$(PKG_CONFIG_LIBDIR)) \
