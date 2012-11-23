@@ -56,6 +56,8 @@ $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	$(call cmd,stamp)
 
 stripfiles = \
+	/lib/libthread-db*.so \
+	/lib/libpthread*.so \
 	$(prefix)/bin/ldd \
 	$(prefix)/bin/getconf \
 	/sbin/ldconfig
