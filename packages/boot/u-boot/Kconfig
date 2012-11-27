@@ -12,3 +12,11 @@ config U_BOOT_BRANCH
 	string "u-boot repository branch"
         default ""
         depends on PACKAGE_BOOT_U_BOOT
+
+config U_BOOT_NAND_SPL
+	bool "build a NAND SPL"
+	depends on PACKAGE_BOOT_U_BOOT
+
+config U_BOOT_MMC_SPL
+	bool "build a MMC SPL"
+	depends on PACKAGE_BOOT_U_BOOT

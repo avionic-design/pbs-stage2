@@ -28,9 +28,14 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 		$(env) $(MAKE) $(make-args) $(CONFIG_U_BOOT_BOARD)_config
 	$(call cmd,stamp)
 
-$(pkgtree)/.build: $(pkgtree)/.configure
+$(pkgtree)/.build-%: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(make-args)
+		$(env) $(MAKE) $(make-args) $*
+	$(call cmd,stamp)
+
+$(pkgtree)/.build: $(pkgtree)/.build-all \
+                   $(if $(CONFIG_U_BOOT_NAND_SPL),$(pkgtree)/.build-nand_spl) \
+                   $(if $(CONFIG_U_BOOT_MMC_SPL),$(pkgtree)/.build-mmc_spl)
 	$(call cmd,stamp)
 
 extrabin := \
@@ -46,10 +51,21 @@ built-extrabin  = $(wildcard $(addprefix $(pkgtree)/build/,$(extrabin)))
 built-extralink = $(wildcard $(addprefix $(pkgtree)/build/,$(extralink)))
 built-extra     = $(built-extrabin) $(built-extralink)
 
-$(pkgtree)/build/u-boot.bin: $(pkgtree)/.build
+$(pkgtree)/build/u-boot.bin: $(pkgtree)/.build-all
+$(pkgtree)/build/nand_spl/u-boot-spl.bin: $(pkgtree)/.build-nand_spl
+$(pkgtree)/build/mmc_spl/u-boot-spl.bin: $(pkgtree)/.build-mmc_spl
 
-$(pkgtree)/install/boot/u-boot-$(VERSION).bin: $(pkgtree)/build/u-boot.bin
+$(pkgtree)/.do-install-cleaned:
 	@rm -f $(pkgtree)/install/boot/u-boot-*.bin
+	$(call cmd,stamp)
+
+$(pkgtree)/install/boot/u-boot-$(VERSION).bin: $(pkgtree)/build/u-boot.bin \
+                                               $(pkgtree)/.do-install-cleaned
+	$(call cmd,install)
+
+
+$(pkgtree)/install/boot/u-boot-%-spl-$(VERSION).bin: $(pkgtree)/build/%_spl/u-boot-spl.bin \
+                                                     $(pkgtree)/.do-install-cleaned
 	$(call cmd,install)
 
 quiet_cmd_install_extra = INSTALL $(notdir $(built-extra))
@@ -62,7 +78,9 @@ quiet_cmd_install_extra = INSTALL $(notdir $(built-extra))
 	    $(priv) cp -d $$bin $(pkgtree)/install/$(prefix)/bin ; \
 	done
 
-$(pkgtree)/.do-install: $(pkgtree)/install/boot/u-boot-$(VERSION).bin
+$(pkgtree)/.do-install: $(pkgtree)/install/boot/u-boot-$(VERSION).bin \
+                        $(if $(CONFIG_U_BOOT_NAND_SPL),$(pkgtree)/install/boot/u-boot-nand-spl-$(VERSION).bin) \
+                        $(if $(CONFIG_U_BOOT_MMC_SPL),$(pkgtree)/install/boot/u-boot-mmc-spl-$(VERSION).bin)
 	$(if $(built-extra),$(call cmd,install_extra))
 	$(call cmd,stamp)
 
