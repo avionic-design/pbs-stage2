@@ -55,8 +55,12 @@ endif
 config PACKAGE_KERNEL_LINUX_CONFIG
 	string "configuration"
 
+config PACKAGE_KERNEL_LINUX_BUILD_DTBS
+	bool "Build the Flattened Device Tree blobs"
+
 config PACKAGE_KERNEL_LINUX_DTB
-	string "Flattened Device Tree blob"
+	string "Default Flattened Device Tree blob"
+	depends on PACKAGE_KERNEL_LINUX_BUILD_DTBS
 
 config PACKAGE_KERNEL_LINUX_IMAGE
 	string "Image type (zImage, bzImage, etc)"

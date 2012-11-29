@@ -139,7 +139,7 @@ build-args = $(common-args)
 build-vars = $(common-vars)
 build-targets = $(image) modules
 
-ifneq ($(CONFIG_PACKAGE_KERNEL_LINUX_DTB),"")
+ifeq ($(CONFIG_PACKAGE_KERNEL_LINUX_BUILD_DTBS),y)
   # FIXME: Not all kernels seem to support building the dtbs in one go with
   #        other targets because of a missing dependency on scripts (dtc).
   #        Uncomment the following line when they do, and remove the extra
