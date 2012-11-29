@@ -211,16 +211,14 @@ ifneq ($(CONFIG_PACKAGE_KERNEL_LINUX_DTB),"")
 
   quiet_cmd_install_fdt = SYMLINK $(objtree)/fdt.dtb
         cmd_install_fdt = ln -sf $(DTB) $(objtree)/fdt.dtb
+endif
 
-  ifneq ($(wildcard $(srctree)/$(master-platform)/kernel.its.in),)
-    quiet_cmd_gen_kernel_its = GEN     $(objtree)/kernel.its
-          cmd_gen_kernel_its = m4 -P -DVERSION="$(VERSION)" $(srctree)/$(master-platform)/kernel.its.in > $(objtree)/kernel.its
+ifneq ($(wildcard $(srctree)/$(master-platform)/kernel.its.in),)
+  quiet_cmd_gen_kernel_its = GEN     $(objtree)/kernel.its
+        cmd_gen_kernel_its = m4 -P -DVERSION="$(VERSION)" $(srctree)/$(master-platform)/kernel.its.in > $(objtree)/kernel.its
 
-    quiet_cmd_gen_uimage = MKIMAGE $(objtree)/uImage
-          cmd_gen_uimage = cd $(objtree) && $(env) mkimage -f kernel.its uImage
-
-  endif
-
+  quiet_cmd_gen_uimage = MKIMAGE $(objtree)/uImage
+        cmd_gen_uimage = cd $(objtree) && $(env) mkimage -f kernel.its uImage
 endif
 
 $(pkgtree)/.do-install: $(pkgtree)/.build | $(INSTALL_PATH)
