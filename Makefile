@@ -293,7 +293,7 @@ distclean: clean $(distclean-dirs)
 	@:
 
 %/build:
-	@rm -f $(objtree)/build/$*/.build
+	@rm -f $(objtree)/build/$*/.build*
 	$(Q)$(MAKE) $(package)=$* install
 
 %/install:
