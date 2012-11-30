@@ -1,9 +1,5 @@
 include packages/libs/zlib/Makefile.location
-include packages/common.mk
-
-env += \
-	CC='$(CC)' \
-	CFLAGS='$(CFLAGS)'
+include packages/build-tools/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -21,16 +17,9 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
-install-args = \
-	DESTDIR=$(DESTDIR)
-
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-stripfiles = \
-	$(prefix)/lib/*.so.*
-
 include packages/cleanup.mk
-include packages/binary.mk
