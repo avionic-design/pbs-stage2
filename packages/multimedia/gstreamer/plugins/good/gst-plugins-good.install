@@ -1,3 +1,3 @@
 /etc/gconf/schemas
-/usr/lib/gstreamer-0.10
-/usr/share/gstreamer-0.10
+/usr/lib/gstreamer-1.0
+/usr/share/gstreamer-1.0
