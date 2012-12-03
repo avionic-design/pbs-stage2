@@ -1,27 +1,47 @@
 diff --git a/configure.ac b/configure.ac
-index 1901bcf..e53eb27 100644
+index 0165d31..191e23b 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -22,6 +22,7 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
- 
+@@ -23,6 +23,9 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
  dnl can autoconf find the source ?
  AC_CONFIG_SRCDIR([gst/audiotestsrc/gstaudiotestsrc.c])
-+AC_CONFIG_MACRO_DIR([m4])
  
++dnl define the output directory for m4 files
++AC_CONFIG_MACRO_DIR([m4])
++
  dnl define the output header for config
  AM_CONFIG_HEADER([config.h])
-diff --git a/gst-libs/gst/audio/Makefile.am b/gst-libs/gst/audio/Makefile.am
-index 6e89c47..84b82b6 100644
---- a/gst-libs/gst/audio/Makefile.am
-+++ b/gst-libs/gst/audio/Makefile.am
-@@ -54,8 +54,8 @@ nodist_libgstaudio_@GST_MAJORMINOR@include_HEADERS = \
  
- libgstaudio_@GST_MAJORMINOR@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
- libgstaudio_@GST_MAJORMINOR@_la_LIBADD = \
--  $(top_builddir)/gst-libs/gst/pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
--  $(top_builddir)/gst-libs/gst/interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
-+  ../pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
-+  ../interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
-   $(GST_BASE_LIBS) $(GST_LIBS)
- libgstaudio_@GST_MAJORMINOR@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+@@ -488,30 +491,12 @@ dnl *** X11 ***
+ translit(dnm, m, l) AM_CONDITIONAL(USE_X, true)
+ AG_GST_CHECK_FEATURE(X, [X libraries and plugins],
+                   [ximagesink], [
+-  AC_PATH_XTRA
+-  ac_cflags_save="$CFLAGS"
+-  ac_cppflags_save="$CPPFLAGS"
+-  CFLAGS="$CFLAGS $X_CFLAGS"
+-  CPPFLAGS="$CPPFLAGS $X_CFLAGS"
+-
+-  dnl now try to find the HEADER
+-  AC_CHECK_HEADER([X11/Xlib.h], [HAVE_X="yes"], [HAVE_X="no"], [AC_INCLUDES_DEFAULT])
++  PKG_CHECK_MODULES(X, x11, [HAVE_X="yes"], [HAVE_X="no"])
  
+-  if test "x$HAVE_X" = "xno"
+-  then
++  if test "x$HAVE_X" = "xno"; then
+     AC_MSG_NOTICE([cannot find X11 development files])
+-  else
+-    dnl this is much more than we want
+-    X_LIBS="$X_LIBS $X_PRE_LIBS $X_EXTRA_LIBS"
+-    dnl AC_PATH_XTRA only defines the path needed to find the X libs,
+-    dnl it does not add the libs; therefore we add them here
+-    X_LIBS="$X_LIBS -lX11"
+-    AC_SUBST(X_CFLAGS)
+-    AC_SUBST(X_LIBS)
+   fi
+   AC_SUBST(HAVE_X)
+-  CFLAGS="$ac_cflags_save"
+-  CPPFLAGS="$ac_cppflags_save"
+ ])
+ 
+ dnl Check for Xv extension
