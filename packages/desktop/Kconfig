@@ -7,6 +7,7 @@ source "packages/desktop/icons/Kconfig"
 source "packages/desktop/nodm/Kconfig"
 source "packages/desktop/plymouth/Kconfig"
 source "packages/desktop/shared-mime-info/Kconfig"
+source "packages/desktop/wayland/Kconfig"
 source "packages/desktop/xfce/Kconfig"
 
 endmenu

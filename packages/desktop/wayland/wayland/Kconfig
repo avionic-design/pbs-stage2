@@ -1,0 +1,2 @@
+config PACKAGE_DESKTOP_WAYLAND_WAYLAND
+	bool "wayland"

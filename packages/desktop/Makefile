@@ -1,5 +1,6 @@
 obj-y += gnome/
 obj-y += icons/
+obj-y += wayland/
 obj-y += xfce/
 
 obj-$(CONFIG_PACKAGE_DESKTOP_EVDEV_CALIBRATE) += evdev-calibrate
