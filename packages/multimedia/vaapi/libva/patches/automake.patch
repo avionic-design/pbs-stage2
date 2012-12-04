@@ -1,0 +1,26 @@
+diff --git a/test/v4l_h264/decode/Makefile.am b/test/v4l_h264/decode/Makefile.am
+index 4e77dd5..0d608d5 100644
+--- a/test/v4l_h264/decode/Makefile.am
++++ b/test/v4l_h264/decode/Makefile.am
+@@ -23,7 +23,7 @@
+ noinst_PROGRAMS = decode
+ 
+ decode_SOURCES	= decode_x11.cpp TCPSocketServer.cpp
+-decode_CFLAGS	= -I$(top_srcdir) $(X11_CFLAGS)
++decode_CPPFLAGS	= -I$(top_srcdir) $(X11_CFLAGS)
+ decode_LDADD	= \
+ 	$(top_builddir)/va/libva.la \
+ 	$(top_builddir)/va/libva-x11.la \
+diff --git a/test/v4l_h264/encode/Makefile.am b/test/v4l_h264/encode/Makefile.am
+index 7d3a9d4..ad4ac97 100644
+--- a/test/v4l_h264/encode/Makefile.am
++++ b/test/v4l_h264/encode/Makefile.am
+@@ -23,7 +23,7 @@
+ noinst_PROGRAMS = encode
+ 
+ encode_SOURCES	= capture.cpp avcenc.cpp TCPSocketClient.cpp
+-encode_CFLAGS	= -I$(top_srcdir) $(X11_CFLAGS)
++encode_CPPFLAGS	= -I$(top_srcdir) $(X11_CFLAGS)
+ encode_LDADD	= \
+ 	$(top_builddir)/va/libva.la \
+ 	$(top_builddir)/va/libva-x11.la \
