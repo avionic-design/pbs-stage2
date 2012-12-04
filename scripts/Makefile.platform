@@ -51,7 +51,7 @@ endif
 
 PHONY += $(rebuild-sysroot-dirs)
 $(rebuild-sysroot-dirs): __clean-files = $(objtree)/build/$*/.install
-$(rebuild-sysroot-dirs): rebuild-sysroot-%:
+$(rebuild-sysroot-dirs): rebuild-sysroot-%: remove-sysroot
 	$(call cmd,cleanfile)
 	$(Q)$(MAKE) $(package)=$* install
 
@@ -61,7 +61,7 @@ remove-sysroot:
 	$(call cmd,cleandir)
 
 PHONY += rebuild-sysroot
-rebuild-sysroot: remove-sysroot $(rebuild-sysroot-dirs)
+rebuild-sysroot: $(rebuild-sysroot-dirs)
 	@:
 
 PHONY += $(dist-dirs)
