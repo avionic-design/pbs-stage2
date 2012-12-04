@@ -1,8 +1,12 @@
 PACKAGE = glibc
-VERSION = 2.14.1
+VERSION = 2.16.0
 LICENSE = LGPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = \
-	$(PACKAGE)-$(VERSION).tar.bz2 \
-	$(PACKAGE)-ports-$(VERSION).tar.bz2
+	$(PACKAGE)-$(VERSION).tar.xz \
+	$(PACKAGE)-ports-$(VERSION).tar.xz
+
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+MICRO = $(word 3,$(subst ., ,$(VERSION)))

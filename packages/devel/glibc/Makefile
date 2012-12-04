@@ -15,6 +15,7 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
 	--with-headers=$(SYSROOT)$(prefix)/include \
+	--enable-obsolete-rpc \
 	--enable-addons=ports
 
 ifeq ($(FLOAT),soft)
@@ -23,7 +24,8 @@ endif
 
 conf-vars += \
 	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes
+	libc_cv_c_cleanup=yes \
+	libc_cv_ssp=no
 
 ifeq ($(ARCH),arm)
   conf-vars += ac_cv_sizeof_long_double=8
@@ -69,30 +71,36 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(priv) $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
+ifneq ($(MICRO),0)
+  LIB_VERSION = $(MAJOR).$(MINOR).$(MICRO)
+else
+  LIB_VERSION = $(MAJOR).$(MINOR)
+endif
+
 stripfiles = \
-	/lib/ld-$(VERSION).so \
-	/lib/libanl-$(VERSION).so \
-	/lib/libBrokenLocale-$(VERSION).so \
-	/lib/libc-$(VERSION).so \
-	/lib/libcidn-$(VERSION).so \
-	/lib/libcrypt-$(VERSION).so \
-	/lib/libdl-$(VERSION).so \
-	/lib/libm-$(VERSION).so \
+	/lib/ld-$(LIB_VERSION).so \
+	/lib/libanl-$(LIB_VERSION).so \
+	/lib/libBrokenLocale-$(LIB_VERSION).so \
+	/lib/libc-$(LIB_VERSION).so \
+	/lib/libcidn-$(LIB_VERSION).so \
+	/lib/libcrypt-$(LIB_VERSION).so \
+	/lib/libdl-$(LIB_VERSION).so \
+	/lib/libm-$(LIB_VERSION).so \
 	/lib/libmemusage.so \
-	/lib/libnsl-$(VERSION).so \
-	/lib/libnss_compat-$(VERSION).so \
-	/lib/libnss_dns-$(VERSION).so \
-	/lib/libnss_files-$(VERSION).so \
-	/lib/libnss_hesiod-$(VERSION).so \
-	/lib/libnss_nis-$(VERSION).so \
-	/lib/libnss_nisplus-$(VERSION).so \
+	/lib/libnsl-$(LIB_VERSION).so \
+	/lib/libnss_compat-$(LIB_VERSION).so \
+	/lib/libnss_dns-$(LIB_VERSION).so \
+	/lib/libnss_files-$(LIB_VERSION).so \
+	/lib/libnss_hesiod-$(LIB_VERSION).so \
+	/lib/libnss_nis-$(LIB_VERSION).so \
+	/lib/libnss_nisplus-$(LIB_VERSION).so \
 	/lib/libpcprofile.so \
-	/lib/libpthread-$(VERSION).so \
-	/lib/libresolv-$(VERSION).so \
-	/lib/librt-$(VERSION).so \
+	/lib/libpthread-$(LIB_VERSION).so \
+	/lib/libresolv-$(LIB_VERSION).so \
+	/lib/librt-$(LIB_VERSION).so \
 	/lib/libSegFault.so \
 	/lib/libthread_db-1.0.so \
-	/lib/libutil-$(VERSION).so \
+	/lib/libutil-$(LIB_VERSION).so \
 	/sbin/ldconfig \
 	/sbin/sln \
 	$(prefix)/bin/gencat \

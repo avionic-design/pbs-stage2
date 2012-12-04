@@ -1,0 +1,16 @@
+diff --git a/Makeconfig b/Makeconfig
+index 417fa50..6f712d6 100644
+--- a/Makeconfig
++++ b/Makeconfig
+@@ -521,9 +521,9 @@ ifneq ($(have-cc-with-libunwind),yes)
+ else
+   libunwind = -lunwind
+ endif
+-libgcc_eh := -Wl,--as-needed -lgcc_s $(libunwind) -Wl,--no-as-needed
++libgcc_eh := -Wl,--as-needed $(libunwind) -Wl,--no-as-needed
+ gnulib := -lgcc $(libgcc_eh)
+-static-gnulib := -lgcc -lgcc_eh $(libunwind)
++static-gnulib := -lgcc $(libunwind)
+ libc.so-gnulib := -lgcc
+ endif
+ +preinit = $(addprefix $(csu-objpfx),crti.o)

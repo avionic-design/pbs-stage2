@@ -21,7 +21,8 @@ conf-args = \
 
 conf-vars += \
 	libc_cv_forced_unwind=yes \
-	libc_cv_c_cleanup=yes
+	libc_cv_c_cleanup=yes \
+	libc_cv_ssp=no
 
 conf-vars += \
 	ac_cv_lib_cap_cap_init=no

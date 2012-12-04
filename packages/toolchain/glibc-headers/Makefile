@@ -20,6 +20,7 @@ conf-args = \
 	--enable-addons=ports
 
 conf-vars += \
+	libc_cv_predef_stack_protector=no \
 	libc_cv_forced_unwind=yes \
 	libc_cv_c_cleanup=yes
 
@@ -29,6 +30,11 @@ conf-vars += \
 ifeq ($(CONFIG_ARCH),alpha)
   conf-vars += \
 	libc_cv_mlong_double_128=yes
+endif
+
+ifeq ($(CONFIG_ARCH),arm)
+  conf-vars += \
+	libc_cv_arm_tls=yes
 endif
 
 ifeq ($(CONFIG_ARCH),powerpc)
@@ -42,6 +48,11 @@ endif
 ifeq ($(CONFIG_ARCH),sparc)
   conf-vars += \
 	libc_cv_mlong_double_128=yes
+endif
+
+ifeq ($(CONFIG_ARCH),x86)
+  conf-vars += \
+	libc_cv_386_tls=yes
 endif
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
