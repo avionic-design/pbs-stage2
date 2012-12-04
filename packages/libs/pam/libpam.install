@@ -1,2 +1,2 @@
 /etc
-/lib/*.so.*
+/usr/lib/*.so.*

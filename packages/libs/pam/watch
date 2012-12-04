@@ -1,2 +1,2 @@
 version=3
-http://www.kernel.org/pub/linux/libs/pam/library/Linux-PAM-(.*)\.tar\.bz2
+https://fedorahosted.org/releases/l/i/linux-pam/Linux-PAM-([\d\.]+)\.tar\.bz2

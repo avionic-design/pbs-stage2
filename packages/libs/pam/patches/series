@@ -1,2 +1,2 @@
-ltmain-sysroot.patch
+autotools.patch
 cross-compile.patch

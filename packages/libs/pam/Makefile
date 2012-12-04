@@ -1,27 +1,29 @@
 PACKAGE = Linux-PAM
-VERSION = 1.1.4
+VERSION = 1.1.6
+LICENSE = GPL
 
-LOCATION = http://www.kernel.org/pub/linux/libs/pam/library
+LOCATION = https://fedorahosted.org/releases/l/i/linux-pam
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
-	--libdir=/lib \
+	--sbindir=$(prefix)/sbin \
+	--libdir=$(prefix)/lib \
 	--disable-regenerate-docu \
 	--disable-rpath
 
 prunefiles = \
-	/lib/security/*.la \
-	/lib/*.la
+	$(prefix)/lib/security/*.la \
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	/sbin/mkhomedir_helper \
-	/sbin/pam_tally \
-	/sbin/pam_tally2 \
-	/sbin/pam_timestamp_check \
-	/sbin/unix_chkpwd \
-	/sbin/unix_update \
-	/lib/security/pam_filter/upperLOWER \
-	/lib/security/*.so \
-	/lib/*.so.*
+	$(prefix)/sbin/mkhomedir_helper \
+	$(prefix)/sbin/pam_tally \
+	$(prefix)/sbin/pam_tally2 \
+	$(prefix)/sbin/pam_timestamp_check \
+	$(prefix)/sbin/unix_chkpwd \
+	$(prefix)/sbin/unix_update \
+	$(prefix)/lib/security/pam_filter/upperLOWER \
+	$(prefix)/lib/security/*.so \
+	$(prefix)/lib/*.so.*
