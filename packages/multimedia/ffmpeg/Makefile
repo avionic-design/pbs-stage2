@@ -1,5 +1,5 @@
 PACKAGE = ffmpeg
-VERSION = 1.0
+VERSION = 1.1.2
 LICENSE = GPL
 
 LOCATION = http://ffmpeg.org/releases
@@ -22,6 +22,12 @@ conf-args = \
 	--disable-encoders \
 	--disable-doc \
 	$(platform-conf-args)
+
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_FFMPEG_VAAPI),y)
+  conf-args += --disable-vaapi
+else
+  conf-args += --enable-vaapi
+endif
 
 conf-vars = \
 	$(platform-conf-vars)
