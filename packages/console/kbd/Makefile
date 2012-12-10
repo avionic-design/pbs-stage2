@@ -1,8 +1,9 @@
 PACKAGE = kbd
-VERSION = 1.15.3
+VERSION = 1.15.5
+LICENSE = GPL
 
 LOCATION = ftp://ftp.altlinux.org/pub/people/legion/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
@@ -27,4 +28,5 @@ stripfiles = \
 	$(prefix)/bin/setmetamode \
 	$(prefix)/bin/setvtrgb \
 	$(prefix)/bin/showconsolefont \
-	$(prefix)/bin/showkey
+	$(prefix)/bin/showkey \
+	$(prefix)/bin/vlock
