@@ -1,0 +1,7 @@
+config PACKAGE_MULTIMEDIA_ALSA_PLUGINS
+	bool "alsa-plugins"
+	select PACKAGE_MULTIMEDIA_ALSA_CORE
+	select PACKAGE_LIBS_PULSEAUDIO
+	help
+	  This package provides addidtional plugins and bindings such
+	  as pulseaudio and oss.

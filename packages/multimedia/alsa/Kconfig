@@ -2,5 +2,6 @@ menu "ALSA - Advanced Linux Sound Architecture"
 
 source "packages/multimedia/alsa/core/Kconfig"
 source "packages/multimedia/alsa/utils/Kconfig"
+source "packages/multimedia/alsa/plugins/Kconfig"
 
 endmenu
