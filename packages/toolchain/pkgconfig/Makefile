@@ -12,7 +12,7 @@ conf-args = \
 
 conf-args += \
 	--program-prefix=$(TARGET)- \
-	--with-installed-glib
+	--with-internal-glib
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
