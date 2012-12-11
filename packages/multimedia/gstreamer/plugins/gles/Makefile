@@ -1,15 +1,18 @@
 PACKAGE = gst-plugins-gles
 VERSION = 0.10.2
+LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-conf-vars += \
-	CFLAGS='-UG_DISABLE_DEPRECATED'
+CFLAGS += -UG_DISABLE_DEPRECATED
 
-plugin = $(prefix)/lib/gstreamer-0.10
+conf-args += \
+	--with-gstreamer=1.0
+
+plugin = $(prefix)/lib/gstreamer-1.0
 
 prunefiles = \
 	$(plugin)/*.la \
