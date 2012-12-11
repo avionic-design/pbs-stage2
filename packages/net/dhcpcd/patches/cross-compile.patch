@@ -10,7 +10,7 @@ index 8843435..41838b5 100755
  	--with-hook) HOOKSCRIPTS="$HOOKSCRIPTS${HOOKSCRIPTS:+ }$var";;
  	--with-hooks|HOOKSCRIPTS) HOOKSCRIPTS=$var; HOOKSET=true;;
  	--build) BUILD=$var;;
-@@ -262,8 +266,8 @@ if [ -e "$LDELF" ]; then
+@@ -263,8 +267,8 @@ if [ -e "$LDELF" ]; then
  fi
  
  # Add CPPFLAGS and CFLAGS to CC for testing features

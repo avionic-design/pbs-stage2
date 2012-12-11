@@ -1,0 +1,24 @@
+diff --git a/ipv6ns.c b/ipv6ns.c
+index c66770c..d91801c 100644
+--- a/ipv6ns.c
++++ b/ipv6ns.c
+@@ -42,6 +42,7 @@
+ 
+ #ifdef __linux__
+ #  define _LINUX_IN6_H
++#  define _UAPI_LINUX_IN6_H
+ #  include <linux/ipv6.h>
+ #endif
+ 
+diff --git a/ipv6rs.c b/ipv6rs.c
+index 3a8dd69..fd86033 100644
+--- a/ipv6rs.c
++++ b/ipv6rs.c
+@@ -41,6 +41,7 @@
+ 
+ #ifdef __linux__
+ #  define _LINUX_IN6_H
++#  define _UAPI_LINUX_IN6_H
+ #  include <linux/ipv6.h>
+ #endif
+ 
