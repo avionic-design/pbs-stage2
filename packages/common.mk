@@ -43,7 +43,7 @@ env = env -i PATH=$(objtree)/build-tools/bin:$(PATH) LD_LIBRARY_PATH=$(LD_LIBRAR
 export priv env
 
 # various environment that are generally needed but can still be disabled
-PKG_CONFIG_LIBDIR = $(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig
+PKG_CONFIG_LIBDIR = $(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig:$(BUILD_TOOLS)/share/pkgconfig
 PKG_CONFIG_SYSROOT_DIR = $(SYSROOT)
 ACLOCAL_PATH = $(SYSROOT)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/share/aclocal
 
