@@ -1,3 +1,14 @@
+From c370c876aa08e377d4621a780825289e9f8ea448 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 15:06:13 +0100
+Subject: [PATCH 2/6] Various build fixes
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Source/JavaScriptCore/GNUmakefile.am                      | 5 ++---
+ Source/WebCore/platform/text/gtk/TextBreakIteratorGtk.cpp | 2 +-
+ 2 files changed, 3 insertions(+), 4 deletions(-)
+
 diff --git a/Source/JavaScriptCore/GNUmakefile.am b/Source/JavaScriptCore/GNUmakefile.am
 index 96a23f2..b787f99 100644
 --- a/Source/JavaScriptCore/GNUmakefile.am
@@ -29,3 +40,6 @@ index 733d759..b33255d 100644
  }
  
  TextBreakIterator* cursorMovementIterator(const UChar* string, int length)
+-- 
+1.8.0
+

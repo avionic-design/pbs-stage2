@@ -3,5 +3,5 @@ buildfix.patch
 opengl-fixes.patch
 webcore-user-agent.patch
 webkit2-user-agent.patch
-revert-102604.patch
 gtk-dnd-drag-threshold.patch
+unicode.patch

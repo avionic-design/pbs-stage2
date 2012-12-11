@@ -1,5 +1,5 @@
 PACKAGE = webkitgtk
-VERSION = 1.10.0
+VERSION = 1.10.2
 LICENSE = LGPL BSD
 
 LOCATION = http://www.webkitgtk.org/releases
@@ -15,11 +15,6 @@ conf-args += \
 	--disable-silent-rules \
 	--disable-geolocation \
 	--disable-spellcheck
-
-ifeq ($(CONFIG_ARCH),arm)
-conf-args += \
-	--disable-jit
-endif
 
 ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_ICU),y)
   conf-args += --with-unicode-backend=icu

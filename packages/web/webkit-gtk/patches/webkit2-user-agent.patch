@@ -1,3 +1,21 @@
+From e3da82b5844ead09042a60ee1aa4a42b6ff9bdb6 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 15:32:31 +0100
+Subject: [PATCH 5/6] Add API for controlling the user agent
+
+Originally-by: Martin Robinson <mrobinson@igalia.com>
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Source/WebKit2/ChangeLog                           | 35 ++++++++
+ .../WebKit2/UIProcess/API/gtk/WebKitSettings.cpp   | 95 +++++++++++++++++++++-
+ Source/WebKit2/UIProcess/API/gtk/WebKitSettings.h  | 11 +++
+ Source/WebKit2/UIProcess/API/gtk/WebKitWebView.cpp |  9 +-
+ .../UIProcess/API/gtk/docs/webkit2gtk-sections.txt |  3 +
+ .../UIProcess/API/gtk/tests/TestWebKitSettings.cpp | 72 ++++++++++++++++
+ Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp   |  4 +-
+ 7 files changed, 223 insertions(+), 6 deletions(-)
+ create mode 100644 Source/WebKit2/ChangeLog
+
 diff --git a/Source/WebKit2/ChangeLog b/Source/WebKit2/ChangeLog
 new file mode 100644
 index 0000000..445a317
@@ -362,7 +380,7 @@ index 5e6e91b..d8e3554 100644
  }
  
 diff --git a/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp b/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
-index 1117a25..80881bf 100644
+index 915f38c..6b01bb0 100644
 --- a/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
 +++ b/Source/WebKit2/UIProcess/gtk/WebPageProxyGtk.cpp
 @@ -33,6 +33,7 @@
@@ -383,3 +401,6 @@ index 1117a25..80881bf 100644
  }
  
  void WebPageProxy::getEditorCommandsForKeyEvent(const AtomicString& eventType, Vector<WTF::String>& commandsList)
+-- 
+1.8.0
+

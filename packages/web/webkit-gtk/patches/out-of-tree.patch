@@ -1,8 +1,18 @@
+From 4b4fc7fbd7c6061ff42f9a35aa21be6ecc5feef9 Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 1 Nov 2012 15:04:54 +0100
+Subject: [PATCH 1/6] Fix out of tree build
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ Source/WebKit2/GNUmakefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
 diff --git a/Source/WebKit2/GNUmakefile.am b/Source/WebKit2/GNUmakefile.am
-index 0e13715..cea8470 100644
+index b1a9f6d..502a198 100644
 --- a/Source/WebKit2/GNUmakefile.am
 +++ b/Source/WebKit2/GNUmakefile.am
-@@ -209,7 +209,7 @@ BUILT_SOURCES += generate-webkit2-forwarding-headers
+@@ -268,7 +268,7 @@ BUILT_SOURCES += generate-webkit2-forwarding-headers
  
  $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2: $(libwebkit2gtkinclude_HEADERS)
  	$(AM_V_GEN)mkdir -p $(GENSOURCES_WEBKIT2)/webkit2gtk/include \
@@ -11,3 +21,6 @@ index 0e13715..cea8470 100644
  
  BUILT_SOURCES += $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2
  
+-- 
+1.8.0
+
