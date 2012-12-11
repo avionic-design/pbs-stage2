@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.22
+VERSION = 2.22.2
 LICENSE = GPL/BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))

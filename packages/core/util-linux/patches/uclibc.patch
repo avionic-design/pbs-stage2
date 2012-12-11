@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index 8727d34..1948df9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -377,7 +377,7 @@ esac
+@@ -372,7 +372,7 @@ esac
  
  
  AC_MSG_CHECKING(whether program_invocation_short_name is defined)
