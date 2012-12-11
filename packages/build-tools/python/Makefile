@@ -23,3 +23,6 @@ $(pkgtree)/.generate-wrapper:
 	$(call cmd,stamp)
 
 $(pkgtree)/.install: $(pkgtree)/.generate-wrapper
+
+prunefiles = \
+	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxml2mod.la

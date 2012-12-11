@@ -9,3 +9,6 @@ LOCATION = http://download.gnome.org/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/build-tools/autotools.mk
+
+prunefiles = \
+	$(prefix)/lib/libvala-$(MAJOR).$(MINOR).la

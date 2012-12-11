@@ -9,3 +9,7 @@ conf-args += \
 	--without-libjpeg \
 	--without-libtiff \
 	--disable-introspection
+
+prunefiles = \
+	$(prefix)/lib/gdk-pixbuf-2.0/2.10.0/loaders/*.la \
+	$(prefix)/lib/libgdk_pixbuf-2.0.la

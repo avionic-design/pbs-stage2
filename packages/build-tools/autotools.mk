@@ -27,3 +27,5 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(BUILD_GNU_TYPE) && \
 		$(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
+
+include packages/build-tools/cleanup.mk

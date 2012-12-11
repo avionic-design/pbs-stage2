@@ -1,5 +1,8 @@
 PACKAGE = orc
 VERSION = 0.4.16
 
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
 LOCATION = http://code.entropywave.com/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

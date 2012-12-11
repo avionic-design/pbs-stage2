@@ -4,3 +4,6 @@ include packages/build-tools/autotools.mk
 conf-args += \
 	--with-systemdsystemunitdir=no \
 	--disable-modular-tests
+
+prunefiles = \
+	$(prefix)/lib/libdbus-1.la

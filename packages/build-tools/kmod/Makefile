@@ -8,3 +8,6 @@ $(prefix)/bin/depmod: $(prefix)/bin/kmod
 	$(call cmd,symlink)
 
 $(pkgtree)/.binary: $(prefix)/bin/depmod
+
+prunefiles = \
+	$(prefix)/lib/libkmod.la
