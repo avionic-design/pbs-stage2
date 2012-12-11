@@ -1,18 +1,16 @@
 PACKAGE = coreutils
-VERSION = 8.19
+VERSION = 8.21
 LICENSE = GPL
 
 LOCATION = ftp://ftp.gnu.org/gnu/coreutils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
-
-conf-vars += \
-	PERL=/do/not/run/perl/when/cross-compiling
+include packages/autotools-reconf.mk
 
 conf-vars += \
 	ac_cv_func_canonicalize_file_name=yes \
-	gl_cv_func_realpath_works=yes
+	gl_cv_func_realpath_works=yes \
+	PERL=no
 
 stripfiles = \
 	$(prefix)/bin/[ \
