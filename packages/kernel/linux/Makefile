@@ -120,12 +120,12 @@ $(pkgtree)/build/include/config/kernel.release: $(pkgtree)/.configure
 PHONY += $(pkgtree)/build/include/config/kernel.release
 
 quiet_cmd_gen_kernel_version = GEN     $@
-      cmd_gen_kernel_version = echo "VERSION = `cat $<`" > $@
+      cmd_gen_kernel_version = \
+	( sha1sum $< | sha1sum --check --status $@.hash 2> /dev/null ) || \
+	( echo "VERSION = `cat $<`" > $@ && sha1sum $< > $@.hash )
 
 $(pkgtree)/kernel-version: $(pkgtree)/build/include/config/kernel.release
 	$(call cmd,gen_kernel_version)
-
-PHONY += $(pkgtree)/kernel-version
 
 ifneq ($(MAKECMDGOALS),clean)
   -include $(pkgtree)/kernel-version
