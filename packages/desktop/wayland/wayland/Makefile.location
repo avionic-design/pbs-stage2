@@ -1,0 +1,6 @@
+PACKAGE = wayland
+VERSION = 1.0.2
+LICENSE = custom
+
+LOCATION = http://wayland.freedesktop.org/releases
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz

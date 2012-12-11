@@ -34,5 +34,6 @@ source "packages/build-tools/ruby/Kconfig"
 source "packages/build-tools/shared-mime-info/Kconfig"
 source "packages/build-tools/u-boot/Kconfig"
 source "packages/build-tools/vala/Kconfig"
+source "packages/build-tools/wayland/Kconfig"
 
 endmenu

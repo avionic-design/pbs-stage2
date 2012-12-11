@@ -1,10 +1,4 @@
-PACKAGE = wayland
-VERSION = 1.0.2
-LICENSE = custom
-
-LOCATION = http://wayland.freedesktop.org/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/desktop/wayland/wayland/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
