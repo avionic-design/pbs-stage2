@@ -9,3 +9,6 @@ LOCATION = http://ftp.gnome.org/pub/GNOME/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/build-tools/autotools.mk
+
+conf-args += \
+	--disable-scrollkeeper
