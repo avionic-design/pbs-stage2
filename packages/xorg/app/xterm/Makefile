@@ -1,5 +1,5 @@
 PACKAGE = xterm
-VERSION = 282
+VERSION = 290
 LICENSE = custom
 
 LOCATION = ftp://invisible-island.net/$(PACKAGE)
