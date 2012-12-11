@@ -88,6 +88,7 @@ check_program gcc
 check_program flex
 check_program bison
 check_program depmod
+check_program gawk
 
 #
 # check for header files
@@ -107,6 +108,7 @@ Programs:
   flex:       $prog_flex
   bison:      $prog_bison
   depmod:     $prog_depmod
+  gawk:       $prog_gawk
 
 Headers:
   ncurses.h:  $have_ncurses_h
@@ -125,6 +127,7 @@ echo "GCC = $prog_gcc" >&3
 echo "FLEX = $prog_flex" >&3
 echo "BISON = $prog_bison" >&3
 echo "DEPMOD = $prog_depmod" >&3
+echo "AWK = $prog_gawk" >&3
 
 exec 3>&-
 echo "done"
