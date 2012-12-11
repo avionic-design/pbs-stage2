@@ -1,14 +1,25 @@
-include packages/toolchain/gcc/Makefile.location
-
 PACKAGE = gcc-libs
-LOCATION :=
-TARBALLS :=
+VERSION = $(shell $(env) $(CC) -dumpversion)
+LICENSE = GPL LGPL
 
+include $(srctree)/autoconf.mk
 include packages/common.mk
+
+soname = $(basename $(basename $(1)))
 
 CC = $(CROSS_COMPILE)gcc
 
-srcdir = $(abspath $(dir $(shell $(env) $(CC) -print-file-name=libgcc_s.so)))
+srcdir = $(dir $(realpath $(shell $(env) $(CC) -print-file-name=libgcc_s.so)))
+sysroot = $(shell $(env) $(CC) -print-sysroot)
+
+libgcc = $(realpath $(shell $(env) $(CC) -print-file-name=libgcc_s.so))
+libgcc-soname = $(shell $(AWK) '/GROUP/ { print $$3 }' $(libgcc))
+
+libssp = $(realpath $(shell $(env) $(CC) -print-file-name=libssp.so))
+libssp-soname = $(notdir $(call soname,$(libssp)))
+
+libstdcxx = $(realpath $(shell $(env) $(CC) -print-file-name=libstdc++.so))
+libstdcxx-soname = $(notdir $(call soname,$(libstdcxx)))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -19,23 +30,96 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	install -m 755 -d $(DESTDIR)$(prefix)/lib
-	# libgcc
-	cp -dp $(srcdir)/libgcc_s.so.1 $(DESTDIR)$(prefix)/lib
-	#ln -sf libgcc_s.so.1 $(DESTDIR)$(prefix)/lib/libgcc_s.so
-	cp -dp $(srcdir)/libgcc_s.so $(DESTDIR)$(prefix)/lib
-	cp -dp $(srcdir)/gcc/$(TARGET)/$(VERSION)/libgcc.a $(DESTDIR)$(prefix)/lib
-	# libssp (uncomment when GCC supports SSP properly)
-	#cp -dp $(srcdir)/libssp.so.0.0.0 $(DESTDIR)$(prefix)/lib
-	#ln -sf libssp.so.0.0.0 $(DESTDIR)$(prefix)/lib/libssp.so.0
-	#ln -sf libssp.so.0 $(DESTDIR)$(prefix)/lib/libssp.so
-	#cp -dp $(srcdir)/libssp.a $(DESTDIR)$(prefix)/lib
-	# libstdc++
-	cp -dp $(srcdir)/libstdc++.so.6.0.16 $(DESTDIR)$(prefix)/lib
-	ln -sf libstdc++.so.6.0.16 $(DESTDIR)$(prefix)/lib/libstdc++.so.6
-	ln -sf libstdc++.so.6 $(DESTDIR)$(prefix)/lib/libstdc++.so
-	cp -dp $(srcdir)/libstdc++.a $(DESTDIR)$(prefix)/lib
+#
+# commands
+#
+quiet_cmd_copydir = COPY    $@
+      cmd_copydir = cp -a $< $@
+
+quiet_cmd_copy = COPY    $@
+      cmd_copy = cp -dp $< $@
+
+quiet_cmd_symlink = SYMLINK $@
+      cmd_symlink = ln -sf $(<F) $@
+
+#
+# directories
+#
+$(DESTDIR)$(prefix)/include/c++:
+	$(call cmd,mkdir_p)
+
+$(DESTDIR)$(prefix)/include/c++/$(VERSION): $(sysroot)/usr/include/c++/$(VERSION) | $(DESTDIR)$(prefix)/include/c++
+	$(call cmd,copydir)
+
+$(DESTDIR)$(prefix)/lib:
+	$(call cmd,mkdir_p)
+
+dirs = \
+	$(DESTDIR)$(prefix)/include/c++/$(VERSION) \
+	$(DESTDIR)$(prefix)/lib
+
+#
+# libgcc
+#
+$(DESTDIR)$(prefix)/lib/$(libgcc-soname): $(srcdir)$(libgcc-soname)
+	$(call cmd,copy)
+
+$(DESTDIR)$(prefix)/lib/libgcc_s.so: $(srcdir)libgcc_s.so
+	$(call cmd,copy)
+
+$(DESTDIR)$(prefix)/lib/libgcc.a: $(srcdir)gcc/$(TARGET)/$(VERSION)/libgcc.a
+	$(call cmd,copy)
+
+files = \
+	$(DESTDIR)$(prefix)/lib/$(libgcc-soname) \
+	$(DESTDIR)$(prefix)/lib/libgcc_s.so \
+	$(DESTDIR)$(prefix)/lib/libgcc.a
+
+#
+# libssp
+#
+ifneq ($(wildcard $(libssp)),)
+$(DESTDIR)$(prefix)/lib/$(notdir $(libssp)): $(libssp)
+	$(call cmd,copy)
+
+$(DESTDIR)$(prefix)/lib/$(libssp-soname): $(DESTDIR)$(prefix)/lib/$(notdir $(libssp))
+	$(call cmd,symlink)
+
+$(DESTDIR)$(prefix)/lib/libssp.so: $(DESTDIR)$(prefix)/lib/$(libssp-soname)
+	$(call cmd,symlink)
+
+$(DESTDIR)$(prefix)/lib/libssp.a: $(srcdir)libssp.a
+	$(call cmd,copy)
+
+files += \
+	$(DESTDIR)$(prefix)/lib/$(notdir $(libssp)) \
+	$(DESTDIR)$(prefix)/lib/$(libssp-soname) \
+	$(DESTDIR)$(prefix)/lib/libssp.so \
+	$(DESTDIR)$(prefix)/lib/libssp.a
+endif
+
+#
+# libstdc++
+#
+$(DESTDIR)$(prefix)/lib/$(notdir $(libstdcxx)): $(libstdcxx)
+	$(call cmd,copy)
+
+$(DESTDIR)$(prefix)/lib/$(libstdcxx-soname): $(DESTDIR)$(prefix)/lib/$(notdir $(libstdcxx))
+	$(call cmd,symlink)
+
+$(DESTDIR)$(prefix)/lib/libstdc++.so: $(DESTDIR)$(prefix)/lib/$(libstdcxx-soname)
+	$(call cmd,symlink)
+
+$(DESTDIR)$(prefix)/lib/libstdc++.a: $(srcdir)libstdc++.a
+	$(call cmd,copy)
+
+files += \
+	$(DESTDIR)$(prefix)/lib/$(notdir $(libstdcxx)) \
+	$(DESTDIR)$(prefix)/lib/$(libstdcxx-soname) \
+	$(DESTDIR)$(prefix)/lib/libstdc++.so \
+	$(DESTDIR)$(prefix)/lib/libstdc++.a
+
+$(pkgtree)/.do-install: $(pkgtree)/.build $(dirs) $(files)
 	$(call cmd,stamp)
 
 stripfiles = \

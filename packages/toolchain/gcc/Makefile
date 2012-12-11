@@ -1,10 +1,4 @@
 include packages/toolchain/gcc/Makefile.location
-
-TARBALLS += \
-	$(PACKAGE)-g++-$(VERSION).tar.bz2 \
-	$(PACKAGE)-objc-$(VERSION).tar.bz2 \
-	$(PACKAGE)-java-$(VERSION).tar.bz2
-
 include packages/toolchain/common.mk
 
 $(pkgtree)/.setup:
