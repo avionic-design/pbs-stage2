@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 2.0.3
+VERSION = 2.0.5
 LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
@@ -20,6 +20,12 @@ conf-args += \
 	--disable-speex \
 	--disable-neon \
 	--disable-glx
+
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_VLC_VAAPI),y)
+  conf-args += --disable-libva
+else
+  conf-args += --enable-libva
+endif
 
 plugin = $(prefix)/lib/vlc/plugins
 
