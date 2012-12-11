@@ -1,19 +1,60 @@
-From 9cce8d06b09a945f7eeb512e0b397680a01051fe Mon Sep 17 00:00:00 2001
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Tue, 25 Sep 2012 15:21:30 +0200
-Subject: [PATCH] Allow multitouch support to be disabled
-
-Instead of always automatically including multitouch support if the
-mtdev library is installed, the new --disable-multitouch option can
-be used to forcefully disable multitouch support in the driver.
-
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
----
- configure.ac | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
-
+diff --git a/configure b/configure
+index f4029cf..06593e0 100755
+--- a/configure
++++ b/configure
+@@ -780,6 +780,7 @@ enable_libtool_lock
+ enable_selective_werror
+ enable_strict_compilation
+ enable_silent_rules
++enable_multitouch
+ with_xorg_module_dir
+ with_sdkdir
+ '
+@@ -1441,6 +1442,7 @@ Optional Features:
+                           errors (default: disabled)
+   --enable-silent-rules          less verbose build output (undo: `make V=1')
+   --disable-silent-rules         verbose build output (undo: `make V=0')
++  --disable-multitouch    Disable multitouch support (default: no)
+ 
+ Optional Packages:
+   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+@@ -17842,8 +17844,17 @@ $as_echo "yes" >&6; }
+ 	HAVE_XI22="yes"
+ fi
+ 
+-if test "x$HAVE_XI22" = xyes; then
+-        # Obtain compiler/linker options for mtdev
++# Check whether --enable-multitouch was given.
++if test "${enable_multitouch+set}" = set; then :
++  enableval=$enable_multitouch;
++else
++  enable_multitouch=yes
++fi
++
++
++if test "x$enable_multitouch" != "xno"; then
++        if test "x$HAVE_XI22" = xyes; then
++                # Obtain compiler/linker options for mtdev
+ 
+ pkg_failed=no
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for MTDEV" >&5
+@@ -17913,11 +17924,12 @@ else
+ $as_echo "yes" >&6; }
+ 	HAVE_MTDEV="yes"
+ fi
+-fi
+-if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
++        fi
++        if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
+ 
+ $as_echo "#define MULTITOUCH 1" >>confdefs.h
+ 
++        fi
+ fi
+ 
+ # Define a configure option for an alternate input module directory
 diff --git a/configure.ac b/configure.ac
-index dff2bcf..ed80ca1 100644
+index e0545e8..79ad618 100644
 --- a/configure.ac
 +++ b/configure.ac
 @@ -50,12 +50,19 @@ PKG_CHECK_MODULES(UDEV, libudev)
@@ -42,6 +83,3 @@ index dff2bcf..ed80ca1 100644
  fi
  
  # Define a configure option for an alternate input module directory
--- 
-1.7.12.1
-
