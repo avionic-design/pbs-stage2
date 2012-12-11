@@ -1,0 +1,4 @@
+config PACKAGE_XORG_APP_XSCOPE
+	bool "xscope"
+	select PACKAGE_XORG_LIB_XTRANS
+	select PACKAGE_XORG_PROTO_X
