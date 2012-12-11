@@ -2,7 +2,6 @@ menu "Development Tools"
 
 config VIRTUAL_DEVEL_LIBC
 	bool "C runtime library"
-	default n
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 

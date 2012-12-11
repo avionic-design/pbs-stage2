@@ -1,6 +1,5 @@
 config PACKAGE_VENDOR_NVIDIA_TEGRA2_COMMON
 	bool "Vibrante Common Files"
-	default n
 	help
 	  This package contains the common libraries and the resource manager required to
 	  use the hw accelleration.

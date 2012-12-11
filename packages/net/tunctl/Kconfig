@@ -1,6 +1,5 @@
 config PACKAGE_NET_TUNCTL
 	bool "tunctl"
-	default n
 	help
 	  tunctl is a tool to set up and maintain persistent TUN/TAP network
 	  interfaces, enabling user applications access to the wire side of a

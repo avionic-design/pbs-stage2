@@ -2,11 +2,9 @@ config PACKAGE_LIBS_DBUS
 	bool "dbus"
 	select PACKAGE_LIBS_EXPAT
 	select PACKAGE_XORG_LIB_X11 if PACKAGE_LIBS_DBUS_X11
-	default n
 	---help---
 	  Simple interprocess messaging system.
 
 config PACKAGE_LIBS_DBUS_X11
 	bool "X11 support"
 	depends on PACKAGE_LIBS_DBUS
-	default n

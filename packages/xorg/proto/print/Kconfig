@@ -1,3 +1,2 @@
 config PACKAGE_XORG_PROTO_PRINT
 	bool "print"
-	default n

@@ -2,4 +2,3 @@ config PACKAGE_LIBS_GLIBMM
 	bool "glibmm"
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_LIBSIGCPP
-	default n

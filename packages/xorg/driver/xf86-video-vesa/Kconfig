@@ -1,4 +1,3 @@
 config PACKAGE_XORG_DRIVER_VIDEO_VESA
 	bool "vesa"
 	select PACKAGE_XORG_XORG_SERVER
-	default n

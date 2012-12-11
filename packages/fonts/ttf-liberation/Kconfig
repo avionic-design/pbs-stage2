@@ -1,3 +1,2 @@
 config PACKAGE_FONTS_TTF_LIBERATION
 	bool "liberation-fonts"
-	default n

@@ -2,4 +2,3 @@ config PACKAGE_LIBS_ORBIT
 	bool "ORBit"
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_LIBIDL
-	default n

@@ -1,3 +1,2 @@
 config PACKAGE_BUILD_TOOLS_SHARED_MIME_INFO
 	bool "shared-mime-info"
-	default n

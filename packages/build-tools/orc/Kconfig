@@ -1,3 +1,2 @@
 config PACKAGE_BUILD_TOOLS_ORC
 	bool "ORC - OIL runtime compiler"
-	default n

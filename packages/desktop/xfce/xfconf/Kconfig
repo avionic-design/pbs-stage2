@@ -2,4 +2,3 @@ config PACKAGE_DESKTOP_XFCE_XFCONF
 	bool "xfconf"
 	select PACKAGE_LIBS_DBUS_GLIB
 	select PACKAGE_DESKTOP_XFCE_XFCE4UTIL
-	default n

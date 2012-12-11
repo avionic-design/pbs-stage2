@@ -3,4 +3,3 @@ config PACKAGE_UTIL_FLASHROM
 	select PACKAGE_CORE_PCIUTILS
 	select PACKAGE_LIBS_ZLIB
 	depends on ARCH_X86 || ARCH_X86_64
-	default n

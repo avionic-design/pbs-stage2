@@ -3,6 +3,5 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_GL
 	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
 	select PACKAGE_LIBS_GLEW if HAVE_OPENGL
 	select VIRTUAL_OPENGL_ES if HAVE_OPENGL_ES
-	default n
 	help
 	  This module contains integration libraries and plug-ins for using OpenGL within GStreamer pipelines.

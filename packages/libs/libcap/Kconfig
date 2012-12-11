@@ -2,4 +2,3 @@ config PACKAGE_LIBS_LIBCAP
 	bool "libcap"
 	select PACKAGE_LIBS_ATTR
 	select PACKAGE_LIBS_PAM
-	default n

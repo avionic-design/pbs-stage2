@@ -2,7 +2,6 @@ config PACKAGE_BOOT_UBL_SFT
 	bool "UBL and SFT"
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
-	default n
 
 config UBL_SFT_BRANCH
 	string "ubl-sft repository branch"

@@ -2,4 +2,3 @@ config PACKAGE_XORG_LIB_XMU
 	bool "xmu"
 	select PACKAGE_XORG_LIB_XEXT
 	select PACKAGE_XORG_LIB_XT
-	default n

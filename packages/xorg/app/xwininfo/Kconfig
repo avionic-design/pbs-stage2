@@ -1,4 +1,3 @@
 config PACKAGE_XORG_APP_XWININFO
 	bool "xwininfo"
 	select PACKAGE_XORG_LIB_X11
-	default n

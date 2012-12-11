@@ -3,4 +3,3 @@ config PACKAGE_XORG_LIB_XAW
 	select PACKAGE_XORG_LIB_XEXT
 	select PACKAGE_XORG_LIB_XMU
 	select PACKAGE_XORG_LIB_XPM
-	default n

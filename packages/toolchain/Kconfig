@@ -15,15 +15,12 @@ config TOOLCHAIN_LANG_CXX
 
 config TOOLCHAIN_LANG_OBJC
 	bool "Objective-C"
-	default n
 
 config TOOLCHAIN_LANG_OBJCXX
 	bool "Objective-C++"
-	default n
 
 config TOOLCHAIN_LANG_JAVA
 	bool "Java"
-	default n
 
 endmenu
 

@@ -2,6 +2,5 @@ config PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG
 	bool "Vibrante XOrg Server & Driver"
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_COMMON
 	select PACKAGE_XORG_XORG_SERVER
-	default n
 	help
 	  This package contains the xserver modified and build by nvidia.

@@ -5,7 +5,6 @@ config PACKAGE_DEVEL_UCLIBC
 	select VIRTUAL_KERNEL_LINUX_LIBC
 	select PACKAGE_DEVEL_GCC_LIBS
 	select STABLE_ABI
-	default n
 
 config LIBC
 	string

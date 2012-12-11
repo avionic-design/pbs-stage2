@@ -2,7 +2,6 @@ menu "X.Org - X11 Windowing System"
 
 config XORG_IEGD
 	bool
-	default n
 
 source "packages/xorg/proto/Kconfig"
 source "packages/xorg/lib/Kconfig"

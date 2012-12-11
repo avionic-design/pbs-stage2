@@ -1,6 +1,5 @@
 config PACKAGE_NET_ETHERDUMP
 	bool "etherdump"
-	default n
 	help
 	  etherdump is an extremely small packet sniffer. It can be used to dump raw
 	  ethernet frames for parsing (optimally with Ethereal's text2pcap), or for

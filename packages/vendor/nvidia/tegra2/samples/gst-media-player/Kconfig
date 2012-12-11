@@ -3,6 +3,5 @@ config PACKAGE_VENDOR_NVIDIA_TEGRA2_SAMPLES_GSTMEDIAPLAYER
 	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
 	select PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_BASE
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG
-	default n
 	help
 	  This is the sample application from nvidia using gstreamer.

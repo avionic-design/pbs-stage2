@@ -1,3 +1,2 @@
 config PACKAGE_BUILD_TOOLS_CMAKE
 	bool "cmake"
-	default n

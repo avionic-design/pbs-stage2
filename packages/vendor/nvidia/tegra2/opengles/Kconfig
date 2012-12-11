@@ -2,6 +2,5 @@ config PACKAGE_VENDOR_NVIDIA_TEGRA2_OPENGLES
 	bool "Vibrante OpenGLES"
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_EGL
 	select PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG
-	default n
 	help
 	  This package provides the libraries and header to use opengles v1 and v2.

@@ -1,7 +1,6 @@
 config PACKAGE_BOOT_U_BOOT
 	bool "u-boot"
 	select VIRTUAL_DEVEL_LIBC
-	default n
 
 config U_BOOT_BOARD
 	string "u-boot board"

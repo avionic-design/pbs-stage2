@@ -1,4 +1,3 @@
 config PACKAGE_LIBS_LIBXSLT
 	bool "libxslt"
 	select PACKAGE_LIBS_LIBXML2
-	default n

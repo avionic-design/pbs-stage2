@@ -2,4 +2,3 @@ config PACKAGE_CONSOLE_MINICOM
 	bool "minicom"
 	select PACKAGE_LIBS_NCURSES
 	select PACKAGE_LIBS_ICONV if !GLIBC
-	default n

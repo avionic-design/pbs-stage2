@@ -1,4 +1,3 @@
 config PACKAGE_MULTIMEDIA_LIBEXOSIP2
 	bool "libeXosip2"
 	select PACKAGE_MULTIMEDIA_LIBOSIP2
-	default n

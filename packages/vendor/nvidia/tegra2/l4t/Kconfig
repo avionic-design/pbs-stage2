@@ -1,3 +1,2 @@
 config PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T
 	bool "Linux4Tegra (L4T) binaries"
-	default n

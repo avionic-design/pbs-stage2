@@ -2,7 +2,6 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_GLES
 	bool "gles"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
 	select VIRTUAL_OPENGL_ES
-	default n
 	help
 	  This module contains integration libraries and plug-ins for using
 	  OpenGL ES within GStreamer pipelines.

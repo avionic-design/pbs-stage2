@@ -3,4 +3,3 @@ config PACKAGE_LIBS_BOOST
 	select PACKAGE_LIBS_BZIP2
 	select PACKAGE_LIBS_EXPAT
 	select PACKAGE_LIBS_ZLIB
-	default n

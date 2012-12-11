@@ -2,4 +2,3 @@ config PACKAGE_TOOLCHAIN_GLIBC_HEADERS
 	bool "GNU C library - headers"
 	depends on GLIBC
 	select PACKAGE_TOOLCHAIN_LINUX_HEADERS
-	default n

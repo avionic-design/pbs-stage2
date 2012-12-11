@@ -3,7 +3,6 @@ config PACKAGE_NET_FUSE_SSHFS
 	select PACKAGE_LIBS_FUSE
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_NET_OPENSSH
-	default n
 	help
 	  This is a filesystem client based on the SSH File Transfer Protocol.
 	  Since most SSH servers already support this protocol it is very easy to set

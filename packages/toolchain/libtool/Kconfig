@@ -1,3 +1,2 @@
 config PACKAGE_TOOLCHAIN_LIBTOOL
 	bool "libtool"
-	default n

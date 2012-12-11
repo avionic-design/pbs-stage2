@@ -2,4 +2,3 @@ config PACKAGE_XORG_LIB_XRENDER
 	bool "xrender"
 	select PACKAGE_XORG_PROTO_RENDER
 	select PACKAGE_XORG_LIB_X11
-	default n

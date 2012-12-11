@@ -4,14 +4,11 @@ config PACKAGE_CORE_UDEV
 	select PACKAGE_CORE_USBUTILS if !PACKAGE_CORE_UDEV_DISABLE_EXTRAS
 	select PACKAGE_LIBS_GLIB if PACKAGE_CORE_UDEV_GLIB
 	select PACKAGE_CORE_UTIL_LINUX
-	default n
 
 config PACKAGE_CORE_UDEV_GLIB
 	bool "GLib binding"
 	depends on PACKAGE_CORE_UDEV
-	default n
 
 config PACKAGE_CORE_UDEV_DISABLE_EXTRAS
 	bool "disable extras"
 	depends on PACKAGE_CORE_UDEV
-	default n

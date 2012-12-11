@@ -2,4 +2,3 @@ config PACKAGE_XORG_LIB_XKBFILE
 	bool "xkbfile"
 	select PACKAGE_XORG_PROTO_KB
 	select PACKAGE_XORG_LIB_X11
-	default n

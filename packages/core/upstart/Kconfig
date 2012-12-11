@@ -2,4 +2,3 @@ config PACKAGE_CORE_UPSTART
 	bool "upstart"
 	select PACKAGE_LIBS_DBUS
 	select PACKAGE_LIBS_LIBNIH
-	default n

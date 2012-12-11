@@ -16,59 +16,45 @@ comment "DRI drivers"
 
 config PACKAGE_LIBS_MESA_DRI_I810
 	bool "i810"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_I915
 	bool "i915"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_I965
 	bool "i965"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_MACH64
 	bool "mach64"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_R128
 	bool "r128"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_R200
 	bool "r200"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_R300
 	bool "r300"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_R600
 	bool "r600"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_RADEON
 	bool "radeon"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_SAVAGE
 	bool "savage"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_SIS
 	bool "sis"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_TDFX
 	bool "tdfx"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_UNICHROME
 	bool "unichrome"
-	default n
 
 config PACKAGE_LIBS_MESA_DRI_FFB
 	bool "ffb"
-	default n
 
 comment "Optional Features"
 

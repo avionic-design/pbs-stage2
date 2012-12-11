@@ -2,4 +2,3 @@ config PACKAGE_NET_LIGHTTPD
 	bool "lighttpd"
 	select PACKAGE_LIBS_ZLIB
 	select PACKAGE_LIBS_PCRE
-	default n

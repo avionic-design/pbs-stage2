@@ -2,4 +2,3 @@ config PACKAGE_WM_MATCHBOX_LIBFAKEKEY
 	bool "libfakekey"
 	select PACKAGE_XORG_LIB_XTST
 	select PACKAGE_WM_MATCHBOX_LIBMATCHBOX
-	default n

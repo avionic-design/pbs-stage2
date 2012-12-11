@@ -2,4 +2,3 @@ config PACKAGE_XORG_LIB_XXF86VM
 	bool "xxf86vm"
 	select PACKAGE_XORG_PROTO_VIDMODE
 	select PACKAGE_XORG_LIB_XEXT
-	default n

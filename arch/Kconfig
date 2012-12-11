@@ -48,7 +48,6 @@ config MARCH
 
 config ARCH_HAS_UBOOT
 	bool
-	default n
 
 source "arch/alpha/Kconfig"
 source "arch/x86/Kconfig"

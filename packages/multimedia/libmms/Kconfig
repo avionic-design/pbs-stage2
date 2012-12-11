@@ -1,7 +1,6 @@
 config PACKAGE_MULTIMEDIA_LIBMMS
 	bool "libmms"
 	select PACKAGE_LIBS_GLIB
-	default n
 	help
 	  libmms is a library for downloading (streaming) media files using the
 	  mmst and mmsh protocols.

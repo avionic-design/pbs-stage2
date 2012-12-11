@@ -1,4 +1,3 @@
 config PACKAGE_XORG_LIB_ICE
 	bool "ICE"
 	select PACKAGE_XORG_LIB_XTRANS
-	default n

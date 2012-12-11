@@ -1,3 +1,2 @@
 config PACKAGE_XORG_PROTO_INPUT
 	bool "input"
-	default n
