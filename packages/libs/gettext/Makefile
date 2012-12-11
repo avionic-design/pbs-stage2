@@ -2,6 +2,7 @@ include packages/libs/gettext/Makefile.location
 include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--disable-openmp \
 	--disable-rpath
 
@@ -19,7 +20,7 @@ prunefiles += \
 	$(prefix)/lib/libintl.la
 endif
 
-lib-version  = 0.18.1
+lib-version  = $(VERSION)
 po-version   = 0.5.1
 intl-version = 8.0.2
 plugin       = $(prefix)/lib/gettext
