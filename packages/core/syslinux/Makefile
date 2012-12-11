@@ -1,5 +1,5 @@
 PACKAGE = syslinux
-VERSION = 4.05
+VERSION = 4.06
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/boot/$(PACKAGE)

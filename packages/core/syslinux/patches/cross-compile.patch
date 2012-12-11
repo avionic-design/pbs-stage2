@@ -1,6 +1,6 @@
-From a49cab3d2245fe3370c30fdd1c24d9f10a8388f3 Mon Sep 17 00:00:00 2001
+From 2b07597e56f164853af3b51f1b6e0fc4973d5f42 Mon Sep 17 00:00:00 2001
 From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Mon, 2 Apr 2012 10:25:28 +0200
+Date: Wed, 24 Oct 2012 11:07:26 +0200
 Subject: [PATCH] Fix cross-compilation
 
 Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
@@ -17,10 +17,10 @@ Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
  9 files changed, 28 insertions(+), 17 deletions(-)
 
 diff --git a/com32/tools/Makefile b/com32/tools/Makefile
-index 7badabd..38b5d53 100644
+index 0161baf..edaa5e6 100644
 --- a/com32/tools/Makefile
 +++ b/com32/tools/Makefile
-@@ -18,7 +18,10 @@ BINS    = relocs
+@@ -20,7 +20,10 @@ INCLUDES += -I./include
  all : $(BINS)
  
  relocs : relocs.o
@@ -28,12 +28,12 @@ index 7badabd..38b5d53 100644
 +	$(HOST_CC) $(HOST_LDFLAGS) -o $@ $^ $(LIBS)
 +
 +relocs.o : relocs.c
-+	$(HOST_CC) $(HOST_CFLAGS) -o $@ -c $<
++	$(HOST_CC) $(HOST_CFLAGS) $(INCLUDES) -o $@ -c $<
  
  tidy dist clean spotless:
  	rm -f $(BINS)
 diff --git a/diag/geodsp/Makefile b/diag/geodsp/Makefile
-index 119ccbc..b6e8216 100644
+index 5516085..dc75192 100644
 --- a/diag/geodsp/Makefile
 +++ b/diag/geodsp/Makefile
 @@ -28,7 +28,7 @@ BTARGET = geodsp1s.bin geodspms.bin \
@@ -46,7 +46,7 @@ index 119ccbc..b6e8216 100644
  all: $(BTARGET)
  
 diff --git a/extlinux/Makefile b/extlinux/Makefile
-index 12213d8..0675b90 100644
+index 6cde574..47e8611 100644
 --- a/extlinux/Makefile
 +++ b/extlinux/Makefile
 @@ -21,8 +21,8 @@ include $(MAKEDIR)/syslinux.mk
@@ -59,9 +59,9 @@ index 12213d8..0675b90 100644
 +LDFLAGS	 = $(EXTRA_LDFLAGS)
  
  SRCS     = main.c \
- 	   ../libinstaller/syslxmod.c \
+ 	   mountinfo.c \
 diff --git a/linux/Makefile b/linux/Makefile
-index 82bf111..e2e916a 100644
+index 08a3ed4..348bbb4 100644
 --- a/linux/Makefile
 +++ b/linux/Makefile
 @@ -20,8 +20,9 @@ include $(MAKEDIR)/syslinux.mk
@@ -139,7 +139,7 @@ index 4a6caae..2d21639 100644
  C_LIBS	   = $(com32)/libutil/libutil_com.a $(GPLLIB) \
  	     $(com32)/lib/libcom32.a $(LIBGCC)
 diff --git a/mtools/Makefile b/mtools/Makefile
-index 3e172fd..bc17ade 100755
+index 78cea1e..9b03d82 100755
 --- a/mtools/Makefile
 +++ b/mtools/Makefile
 @@ -4,8 +4,9 @@ include $(MAKEDIR)/syslinux.mk
@@ -153,9 +153,9 @@ index 3e172fd..bc17ade 100755
 +LDFLAGS	 = $(EXTRA_LDFLAGS)
  
  SRCS     = syslinux.c \
- 	   ../libinstaller/fat.c \
+ 	   ../libinstaller/fs.c \
 diff --git a/utils/Makefile b/utils/Makefile
-index 44cb54f..26d572f 100644
+index be73993..f8d945e 100644
 --- a/utils/Makefile
 +++ b/utils/Makefile
 @@ -18,8 +18,9 @@ topdir = ..
@@ -171,5 +171,5 @@ index 44cb54f..26d572f 100644
  C_TARGETS	 = isohybrid gethostip memdiskfind
  SCRIPT_TARGETS	 = mkdiskimage
 -- 
-1.7.11.3
+1.7.12.4
 
