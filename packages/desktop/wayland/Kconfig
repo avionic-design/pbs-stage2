@@ -1,5 +1,6 @@
 menu "Wayland"
 
 source "packages/desktop/wayland/wayland/Kconfig"
+source "packages/desktop/wayland/weston/Kconfig"
 
 endmenu
