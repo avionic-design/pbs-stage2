@@ -1,20 +1,5 @@
-From 9f44de7f84cd8f8e0b10105d80f63e95ba73f015 Mon Sep 17 00:00:00 2001
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Wed, 12 Sep 2012 09:29:33 +0200
-Subject: [PATCH 2/3] Do not distribute exsltconfig.h
-
-This fixes a problem when building out of tree. If exsltconfig.h is
-shipped in the tarball, the shipped version will be used instead of
-the version generated in the build tree because the source tree
-appears earlier in the include path.
-
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
----
- libexslt/Makefile.am | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
 diff --git a/libexslt/Makefile.am b/libexslt/Makefile.am
-index d0a7f92..d2566be 100644
+index 0e92e51..6b1f8f5 100644
 --- a/libexslt/Makefile.am
 +++ b/libexslt/Makefile.am
 @@ -10,9 +10,11 @@ exsltincdir = $(includedir)/libexslt
@@ -32,7 +17,7 @@ index d0a7f92..d2566be 100644
  	common.c			\
 diff --git a/libexslt/exsltconfig.h b/libexslt/exsltconfig.h
 deleted file mode 100644
-index cfacbe3..0000000
+index 448fc9a..0000000
 --- a/libexslt/exsltconfig.h
 +++ /dev/null
 @@ -1,73 +0,0 @@
@@ -56,21 +41,21 @@ index cfacbe3..0000000
 - *
 - * the version string like "1.2.3"
 - */
--#define LIBEXSLT_DOTTED_VERSION "1.1.27"
+-#define LIBEXSLT_DOTTED_VERSION "1.1.28"
 -
 -/**
 - * LIBEXSLT_VERSION:
 - *
 - * the version number: 1.2.3 value is 10203
 - */
--#define LIBEXSLT_VERSION 816
+-#define LIBEXSLT_VERSION 817
 -
 -/**
 - * LIBEXSLT_VERSION_STRING:
 - *
 - * the version number string, 1.2.3 value is "10203"
 - */
--#define LIBEXSLT_VERSION_STRING "816"
+-#define LIBEXSLT_VERSION_STRING "817"
 -
 -/**
 - * LIBEXSLT_VERSION_EXTRA:
@@ -109,6 +94,3 @@ index cfacbe3..0000000
 -#endif
 -
 -#endif /* __XML_EXSLTCONFIG_H__ */
--- 
-1.7.12
-

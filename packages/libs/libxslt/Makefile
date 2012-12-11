@@ -1,5 +1,5 @@
 PACKAGE = libxslt
-VERSION = 1.1.27
+VERSION = 1.1.28
 LICENSE = custom
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)

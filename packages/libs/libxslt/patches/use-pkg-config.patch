@@ -1,21 +1,8 @@
-From 18dcd3b5b2165aaf80537a5130454a726a91b79f Mon Sep 17 00:00:00 2001
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Wed, 12 Sep 2012 09:54:19 +0200
-Subject: [PATCH 3/3] Use pkg-config to check for libxml-2.0
-
-pkg-config is much better suited when cross-compiling than the various
-package-specific *-config scripts.
-
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
----
- configure.ac | 113 ++---------------------------------------------------------
- 1 file changed, 2 insertions(+), 111 deletions(-)
-
-diff --git a/configure.ac b/configure.ac
-index 63e5a0a..96d1b0b 100644
---- a/configure.ac
-+++ b/configure.ac
-@@ -460,117 +460,8 @@ else
+diff --git a/configure.in b/configure.in
+index cf7909d..c0bcc4c 100644
+--- a/configure.in
++++ b/configure.in
+@@ -463,117 +463,8 @@ else
  fi
  AC_SUBST(WITH_DEBUGGER)
  
@@ -134,15 +121,3 @@ index 63e5a0a..96d1b0b 100644
  
  AC_SUBST(CFLAGS)
  AC_SUBST(CPPFLAGS)
-@@ -595,7 +486,7 @@ fi
- 
- if test "$with_plugins" = "yes" ; then
-   AC_MSG_CHECKING([libxml2 module support])
--  WITH_MODULES="`$XML_CONFIG --modules`"
-+  WITH_MODULES="`$PKG_CONFIG --variable=modules libxml-2.0`"
-   if test "${WITH_MODULES}" = "1"; then
-     AC_MSG_RESULT(yes)
-   else
--- 
-1.7.12
-
