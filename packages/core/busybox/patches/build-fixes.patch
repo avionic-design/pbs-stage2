@@ -1,0 +1,79 @@
+diff --git a/loginutils/passwd.c b/loginutils/passwd.c
+index b83db00..7c0de5a 100644
+--- a/loginutils/passwd.c
++++ b/loginutils/passwd.c
+@@ -15,6 +15,7 @@
+ 
+ #include "libbb.h"
+ #include <syslog.h>
++#include <sys/resource.h>
+ 
+ static void nuke_str(char *str)
+ {
+diff --git a/miscutils/time.c b/miscutils/time.c
+index 945f15f..8257d84 100644
+--- a/miscutils/time.c
++++ b/miscutils/time.c
+@@ -15,6 +15,8 @@
+ //usage:       "Run PROG, display resource usage when it exits\n"
+ //usage:     "\n	-v	Verbose"
+ 
++#include <sys/resource.h>
++
+ #include "libbb.h"
+ 
+ /* Information on the resources used by a child process.  */
+diff --git a/networking/inetd.c b/networking/inetd.c
+index 26b6699..eaeb782 100644
+--- a/networking/inetd.c
++++ b/networking/inetd.c
+@@ -165,6 +165,7 @@
+ //usage:     "\n		(default: 0 - disabled)"
+ 
+ #include <syslog.h>
++#include <sys/resource.h>
+ #include <sys/un.h>
+ 
+ #include "libbb.h"
+diff --git a/networking/ntpd.c b/networking/ntpd.c
+index 603801e..291a10f 100644
+--- a/networking/ntpd.c
++++ b/networking/ntpd.c
+@@ -46,6 +46,7 @@
+ #include "libbb.h"
+ #include <math.h>
+ #include <netinet/ip.h> /* For IPTOS_LOWDELAY definition */
++#include <sys/resource.h>
+ #include <sys/timex.h>
+ #ifndef IPTOS_LOWDELAY
+ # define IPTOS_LOWDELAY 0x10
+diff --git a/runit/chpst.c b/runit/chpst.c
+index ac296ba..bf1bce4 100644
+--- a/runit/chpst.c
++++ b/runit/chpst.c
+@@ -92,6 +92,8 @@ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ 
+ #include "libbb.h"
+ 
++#include <sys/resource.h>
++
+ /*
+ Five applets here: chpst, envdir, envuidgid, setuidgid, softlimit.
+ 
+diff --git a/shell/shell_common.c b/shell/shell_common.c
+index 51c92d6..8b9cf34 100644
+--- a/shell/shell_common.c
++++ b/shell/shell_common.c
+@@ -16,9 +16,12 @@
+  *
+  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
+  */
++
+ #include "libbb.h"
+ #include "shell_common.h"
+ 
++#include <sys/resource.h>
++
+ const char defifsvar[] ALIGN1 = "IFS= \t\n";
+ 
+ 
