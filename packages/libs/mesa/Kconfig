@@ -70,4 +70,14 @@ config PACKAGE_LIBS_MESA_DRI_FFB
 	bool "ffb"
 	default n
 
+comment "Optional Features"
+
+config PACKAGE_LIBS_MESA_WAYLAND
+	bool "wayland support"
+	select PACKAGE_BUILD_TOOLS_WAYLAND
+	select PACKAGE_DESKTOP_WAYLAND_WAYLAND
+
+config PACKAGE_LIBS_MESA_GBM
+	bool "gbm"
+
 endif

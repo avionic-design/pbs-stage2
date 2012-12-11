@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 8.0.4
+VERSION = 9.0.2
 LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
@@ -9,20 +9,21 @@ endif
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(VERSION)
 TARBALLS = MesaLib-$(VERSION).tar.bz2
 
-include packages/common.mk
+ifneq ($(wildcard $(objtree)/source/$(obj)),)
+VERSION = git
+endif
 
-pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
+include packages/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-ACLOCAL_FLAGS = \
-	-I m4
-
 $(pkgtree)/.autoreconfigure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
-		$(env) autoreconf --install --verbose $(ACLOCAL_FLAGS)
+		$(env) autoreconf --install --force $(ACLOCAL_FLAGS)
 	$(call cmd,stamp)
+
+pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
 
 conf-args += \
 	--host=$(TARGET) \
@@ -30,7 +31,8 @@ conf-args += \
 	--mandir=$(prefix)/share/man \
 	--infodir=$(prefix)/share/info \
 	--localstatedir=/var \
-	--sysconfdir=/etc
+	--sysconfdir=/etc \
+	--with-sysroot=$(SYSROOT)
 
 dri-drivers-y := swrast
 dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_I810) += i810
@@ -56,10 +58,28 @@ conf-args += \
 	--without-gallium-drivers \
 	--enable-shared-glapi
 
-ifeq ($(CONFIG_OPENGL_MESA_EGL),y)
-	conf-args += --enable-egl
+ifneq ($(CONFIG_PACKAGE_LIBS_MESA_GBM),y)
+  conf-args += --disable-gbm
 else
-	conf-args += --disable-egl
+  conf-args += --enable-gbm
+endif
+
+ifeq ($(CONFIG_OPENGL_MESA_EGL),y)
+  conf-args += --enable-egl
+
+  ifeq ($(CONFIG_PACKAGE_LIBS_MESA_WAYLAND),y)
+    conf-args += --with-egl-platforms=x11,wayland,drm
+  else
+    conf-args += --with-egl-platforms=x11,drm
+  endif
+
+  # the EGL drm platform needs gbm, so enable it if it hasn't already been
+  # explicitly selected
+  ifneq ($(CONFIG_PACKAGE_LIBS_MESA_GBM),y)
+    conf-args += --enable-gbm
+  endif
+else
+  conf-args += --disable-egl
 endif
 ifeq ($(CONFIG_OPENGL_MESA_OPENGL_ES1),y)
 	conf-args += --enable-gles1
@@ -99,6 +119,9 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
+
+prunefiles = \
+	$(prefix)/lib/*.la
 
 stripfiles = \
 	$(prefix)/lib/*.so.* \

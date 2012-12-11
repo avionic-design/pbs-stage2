@@ -1,2 +1,3 @@
+/usr/lib/libdricore*.so
 /usr/lib/libGL.so
 /usr/lib/pkgconfig/gl.pc
