@@ -1,5 +1,6 @@
 menu "X.Org - Applications"
 
+source "packages/xorg/app/evemu/Kconfig"
 source "packages/xorg/app/evtest/Kconfig"
 source "packages/xorg/app/iceauth/Kconfig"
 source "packages/xorg/app/setxkbmap/Kconfig"
