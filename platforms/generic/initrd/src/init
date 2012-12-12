@@ -175,7 +175,7 @@ if test -b /dev/disk/by-label/persist; then
 
 	if test -d /scripts/persist; then
 		log_action_begin_msg "Running scripts for persistent storage"
-		run-parts -a "$mp/persist" /scripts/persist
+		run-parts -a "$mp/persist" -a "$mp" /scripts/persist
 		log_action_end_msg $?
 	fi
 fi
