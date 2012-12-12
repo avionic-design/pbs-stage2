@@ -1,2 +1,4 @@
 dix-composite.patch
 ltmain-sysroot.patch
+modesetting-fix.patch
+buildfix.patch
