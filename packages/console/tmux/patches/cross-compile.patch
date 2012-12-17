@@ -1,0 +1,19 @@
+diff --git a/Makefile.am b/Makefile.am
+index 672208b..f76fe69 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -33,14 +33,6 @@ CFLAGS += -Wwrite-strings -Wshadow -Wpointer-arith -Wsign-compare
+ CFLAGS += -Wundef -Wbad-function-cast -Winline -Wcast-align
+ CPPFLAGS += -DDEBUG
+ endif
+-if IS_GCC4
+-CPPFLAGS += -iquote. -I/usr/local/include
+-if IS_DEBUG
+-CFLAGS += -Wno-pointer-sign
+-endif
+-else
+-CPPFLAGS += -I. -I- -I/usr/local/include
+-endif
+ endif
+ 
+ # Set flags for Solaris.
