@@ -1,10 +1,4 @@
-PACKAGE = libxslt
-VERSION = 1.1.28
-LICENSE = custom
-
-LOCATION = ftp://xmlsoft.org/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/libxslt/Makefile.location
 include packages/autotools-reconf.mk
 
 $(pkgbuildtree)/m4:
