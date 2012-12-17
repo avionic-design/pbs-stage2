@@ -1,9 +1,4 @@
-PACKAGE = libgpg-error
-VERSION = 1.10
-
-LOCATION = ftp://ftp.gnupg.org/GnuPG/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/libgpg-error/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \

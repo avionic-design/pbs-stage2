@@ -1,0 +1,6 @@
+PACKAGE = libgpg-error
+VERSION = 1.10
+LICENSE = LGPL
+
+LOCATION = ftp://ftp.gnupg.org/GnuPG/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

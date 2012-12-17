@@ -1,0 +1,2 @@
+config PACKAGE_BUILD_TOOLS_LIBGPG_ERROR
+	bool "libgpg-error"
