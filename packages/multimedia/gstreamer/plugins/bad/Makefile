@@ -1,25 +1,27 @@
 PACKAGE = gst-plugins-bad
-VERSION = 0.10.23
+VERSION = 1.0.5
+LICENSE = GPL LGPL
+
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
+	--with-sysroot=$(SYSROOT) \
 	--disable-cdaudio \
 	--disable-examples \
 	--disable-gsettings \
-	--disable-dvdnav \
 	--disable-dvdspu \
-	--disable-camerabin \
 	--disable-camerabin2 \
 	--disable-dvbsuboverlay \
 	--disable-dtmf \
 	--disable-fieldanalysis \
 	--disable-gaudieffects \
 	--disable-geometrictransform \
-	--disable-colorspace \
 	--disable-decklink \
 	--disable-rsvg \
 	--disable-hls
@@ -31,7 +33,7 @@ conf-args += \
 	--with-sdl-prefix=$(SYSROOT)$(prefix)
 endif
 
-plugin = $(prefix)/lib/gstreamer-0.10
+plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
 prunefiles = \
 	$(plugin)/*.la \
