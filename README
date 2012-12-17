@@ -171,6 +171,7 @@ Programs used to generate documentation during package creation:
 
 	- texinfo
 	- docbook-dtds,docbook-style-xsl
+	  * Ubuntu: docbook-xml, docbook-xsl
 	- xmlto
 
 Libraries and tools required during platform setup:
@@ -183,10 +184,12 @@ Libraries and tools required during platform setup:
 	- libffi-devel        (build-tools/glib)
 	- libpng-devel        (build-tools/gdk-pixbuf)
 	- perl-XML-Simple     (build-tools/icon-naming-utils)
+	  * Ubuntu: libxml-simple-perl
 
 	- gperf               (core/udev - uclibc toolchain)
 	- luadoc              (wm/awesome)
 	- ImageMagick         (wm/awesome)
+	  * Ubuntu: imagemagick
 	- docbook-utils       (net/tunctl)
 	- libgpg-error-devel  (libs/libgcrypt)
 	- intltool            (libs/glib-networking)
