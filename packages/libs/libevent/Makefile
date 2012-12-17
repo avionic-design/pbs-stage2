@@ -1,5 +1,6 @@
 PACKAGE = libevent
-VERSION = 2.0.15-stable
+VERSION = 2.0.21-stable
+LICENSE = BSD
 
 LOCATION = https://github.com/downloads/$(PACKAGE)/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

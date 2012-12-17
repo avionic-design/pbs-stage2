@@ -192,7 +192,7 @@ c0dac01938593deee06c3d161e4eda4ecc0fd7317e1321bd96e301aceb7fb027  download/libee
 b1bbf2df80f388ca1748a41068fafebc8efdfdee7612afb78a7a7cd31004d50f  download/liberation-fonts-ttf-1.07.2.tar.gz
 e30b05bc3091e2c35464d7ac736b2d4e5c054cc883e244c920b571e533de85e3  download/libestr-0.1.4.tar.gz
 9f55f16ff6e4d60a1b1fa7f4962af69768468f0d7c362aab6387f52020938cdf  download/libev-4.11.tar.gz
-ab535bae9af788c8711a8d138c4cae0722f22a1a4ac4d8084abc7b0e0468bc5c  download/libevent-2.0.15-stable.tar.gz
+22a530a8a5ba1cb9c080cba033206b17dacd21437762155c6d30ee6469f574f5  download/libevent-2.0.21-stable.tar.gz
 91da1a084c9ab663afe04b493342e075ad59ac54a1af011c7f2ba4543a923564  download/libeXosip2-3.6.0.tar.gz
 c41042a70524895b0edf8077ae3ae1206f1a313bea5811dcc23033ea16a00194  download/libfakekey-0.1.tar.bz2
 70bfb01356360089aa97d3e71e3edf05d195599fd822e922e50d46a0055a6283  download/libffi-3.0.11.tar.gz
