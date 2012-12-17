@@ -9,6 +9,10 @@ include packages/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
+# libtool requires bash to work properly. The configure script doesn't detect
+# that properly so force it.
+env += CONFIG_SHELL=/bin/bash
+
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
