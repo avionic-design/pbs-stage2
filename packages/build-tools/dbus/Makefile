@@ -1,5 +1,5 @@
 include packages/libs/dbus/Makefile.location
-include packages/build-tools/autotools.mk
+include packages/build-tools/autotools-reconf.mk
 
 conf-args += \
 	--with-systemdsystemunitdir=no \
