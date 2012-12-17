@@ -1,2 +1,2 @@
 version=3
-http://www.kernel.org/pub/linux/libs/security/linux-privs/libcap2/libcap-(.*)\.tar\.bz2
+ftp://ftp.archlinux.org/other/libcap/libcap-(.*)\.tar\.gz
