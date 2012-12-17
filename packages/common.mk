@@ -45,7 +45,7 @@ export priv env
 # various environment that are generally needed but can still be disabled
 PKG_CONFIG_LIBDIR = $(SYSROOT)$(prefix)/lib/pkgconfig:$(SYSROOT)$(prefix)/share/pkgconfig:$(BUILD_TOOLS)/share/pkgconfig
 PKG_CONFIG_SYSROOT_DIR = $(SYSROOT)
-ACLOCAL_PATH = $(SYSROOT)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/share/aclocal
+ACLOCAL_PATH = $(SYSROOT)$(prefix)/share/aclocal:$(BUILD_TOOLS)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/share/aclocal
 
 env += \
 	$(if $(PKG_CONFIG_LIBDIR),PKG_CONFIG_LIBDIR=$(PKG_CONFIG_LIBDIR)) \
