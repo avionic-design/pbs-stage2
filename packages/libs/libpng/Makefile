@@ -1,10 +1,4 @@
-PACKAGE = libpng
-VERSION = 1.5.13
-LICENSE = custom
-
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
-
+include packages/libs/libpng/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
