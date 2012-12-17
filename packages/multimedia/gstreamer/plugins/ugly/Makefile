@@ -1,10 +1,14 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 0.10.19
+VERSION = 1.0.5
+LICENSE = GPL LGPL
+
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
@@ -14,7 +18,7 @@ conf-args += \
 	--disable-mpeg2dec
 endif
 
-plugin = $(prefix)/lib/gstreamer-0.10
+plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
 prunefiles = \
 	$(plugin)/*.la
