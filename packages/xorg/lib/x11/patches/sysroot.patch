@@ -1,0 +1,15 @@
+diff --git a/configure.ac b/configure.ac
+index 48a0c8a..551f3fa 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -309,8 +309,8 @@ AC_MSG_CHECKING([keysym definitions])
+ KEYSYMDEFDIR=`$PKG_CONFIG --variable=includedir xproto`/X11
+ FILES="keysymdef.h XF86keysym.h Sunkeysym.h DECkeysym.h HPkeysym.h"
+ for i in $FILES; do
+-    if test -f "$KEYSYMDEFDIR/$i"; then
+-            KEYSYMDEFS="$KEYSYMDEFS $KEYSYMDEFDIR/$i"
++    if test -f "$PKG_CONFIG_SYSROOT_DIR$KEYSYMDEFDIR/$i"; then
++            KEYSYMDEFS="$KEYSYMDEFS $PKG_CONFIG_SYSROOT_DIR$KEYSYMDEFDIR/$i"
+     elif test "x$i" = "xkeysymdef.h"; then
+ 	    AC_MSG_ERROR([Cannot find keysymdef.h])
+     fi
