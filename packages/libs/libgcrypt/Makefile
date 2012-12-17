@@ -2,6 +2,7 @@ include packages/libs/libgcrypt/Makefile.location
 include packages/autotools.mk
 
 conf-args += \
+	--with-gpg-error-prefix=$(SYSROOT)$(prefix) \
 	--disable-asm
 
 prunefiles = \
