@@ -1,3 +1,1 @@
-#ltmain-sysroot.patch
-#cross-compile.patch
-libudev-deprecate.patch
+fix-segfault.patch

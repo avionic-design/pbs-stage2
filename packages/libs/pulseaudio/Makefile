@@ -1,5 +1,5 @@
 PACKAGE = pulseaudio
-VERSION = 2.0
+VERSION = 3.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -7,10 +7,19 @@ MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 LOCATION = http://freedesktop.org/software/$(PACKAGE)/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
-	--with-udev-rules-dir=$(prefix)/lib/udev/rules.d
+	--with-udev-rules-dir=$(prefix)/lib/udev/rules.d \
+	--disable-hal \
+	--disable-static \
+	--disable-rpath \
+	--disable-manpages
+
+ifeq ($(CONFIG_ARCH),arm)
+conf-args += \
+	--enable-atomic-arm-memory-barrier
+endif
 
 prunefiles = \
 	$(prefix)/bin/esdcompat \

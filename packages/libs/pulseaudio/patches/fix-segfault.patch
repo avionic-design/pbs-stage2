@@ -1,0 +1,20 @@
+diff --git a/src/modules/module-combine-sink.c b/src/modules/module-combine-sink.c
+index 488f69f..982de8a 100644
+--- a/src/modules/module-combine-sink.c
++++ b/src/modules/module-combine-sink.c
+@@ -216,7 +216,6 @@ static void adjust_rates(struct userdata *u) {
+ 
+     PA_IDXSET_FOREACH(o, u->outputs, idx) {
+         uint32_t new_rate = base_rate;
+-        uint32_t current_rate = o->sink_input->sample_spec.rate;
+ 
+         if (!o->sink_input || !PA_SINK_IS_OPENED(pa_sink_get_state(o->sink)))
+             continue;
+@@ -228,6 +227,7 @@ static void adjust_rates(struct userdata *u) {
+             pa_log_warn("[%s] sample rates too different, not adjusting (%u vs. %u).", o->sink_input->sink->name, base_rate, new_rate);
+             new_rate = base_rate;
+         } else {
++            uint32_t current_rate = o->sink_input->sample_spec.rate;
+             if (base_rate < new_rate + 20 && new_rate < base_rate + 20)
+               new_rate = base_rate;
+             /* Do the adjustment in small steps; 2‰ can be considered inaudible */
