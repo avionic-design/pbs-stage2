@@ -11,5 +11,6 @@ source "packages/util/medatom-utils/Kconfig"
 source "packages/util/mesa-demos/Kconfig"
 source "packages/util/mtd-utils/Kconfig"
 source "packages/util/superiotool/Kconfig"
+source "packages/util/xpath/Kconfig"
 
 endmenu
