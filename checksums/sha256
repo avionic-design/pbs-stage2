@@ -406,7 +406,7 @@ adb8892f3b8e4b7163703ed4a545774721a3d55a1062de001f08c477c03d97ab  download/udev-
 e56bd1c9d53a227c49e4c0e38ba963b35484e71cb643740b9b0a0dfd28335df0  download/usbutils-006.tar.bz2
 929b517fa39b16a61ec536514e08940a381b92befc629d0348e3097920dd2f12  download/util-linux-2.22.2.tar.xz
 7d79edde72fc17dcdc56cfbe2f8ff384d1bffd1d8c58c0fd25970f5b2ccb75ed  download/util-macros-1.17.tar.bz2
-5fa4c6f4b6f5410de57271a03cc9a15f15195ef3fc05a8e42ecf507d6d70a87f  download/v4l-utils-0.8.8.tar.bz2
+502db0d865a392d87bff22c4f3bcfb3d0755937b1c18496edd941fd2d1784a3d  download/v4l-utils-0.9.3.tar.bz2
 7f5e2e8ca03f9fa2cf13acaf93bfdc3a7ad0a10b000a337ba9c6bdc021bdca32  download/vala-0.18.1.tar.xz
 5d62c0330f1481fe2c593249192fa68ff454c19c34343978cc9ce91aa324cbf6  download/valgrind-3.7.0.tar.bz2
 3ec76d24931d1e08c6c8d0b89a25e32dc44bc8f87d1dcb3fe201e3c99f89635a  download/videoproto-2.3.1.tar.bz2

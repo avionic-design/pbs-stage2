@@ -1,3 +1,6 @@
 /etc
-/lib
-/usr
+/usr/bin
+/usr/lib/*.so.*
+/usr/lib/libv4l
+/usr/lib/udev
+/usr/sbin
