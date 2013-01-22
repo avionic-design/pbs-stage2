@@ -4,8 +4,6 @@ include packages/toolchain/common.mk
 prefix := /usr
 
 $(pkgtree)/.setup:
-	cd $(pkgbuildtree) && \
-		ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
 	$(call cmd,stamp)
 
 conf-args = \

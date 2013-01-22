@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnu.org/pub/gnu/glibc/glibc-ports-(.*)\.tar\.xz
+http://ftp.gnu.org/pub/gnu/glibc/glibc-([\d\.]+)\.tar\.xz

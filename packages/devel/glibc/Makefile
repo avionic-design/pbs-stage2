@@ -1,12 +1,11 @@
 include packages/toolchain/glibc/Makefile.location
-include packages/common.mk
+include packages/autotools.mk
 
 # always optimize glibc for speed (it won't even compile with -Os)
+CPPFLAGS := $(subst --sysroot $(SYSROOT),,$(CPPFLAGS))
+LDFLAGS := $(subst --sysroot $(SYSROOT),,$(LDFLAGS))
+CFLAGS := $(subst --sysroot $(SYSROOT),,$(CFLAGS))
 CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
-
-$(pkgtree)/.setup:
-	cd $(pkgbuildtree) && ln -sf ../$(PACKAGE)-ports-$(VERSION) ports
-	$(call cmd,stamp)
 
 conf-args = \
 	--host=$(TARGET) \
@@ -15,11 +14,11 @@ conf-args = \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
 	--with-headers=$(SYSROOT)$(prefix)/include \
-	--enable-obsolete-rpc \
-	--enable-addons=ports
+	--enable-addons=nptl,libidn \
+	--enable-obsolete-rpc
 
 ifeq ($(FLOAT),soft)
-	conf-args += --without-fp
+  conf-args += --without-fp
 endif
 
 conf-vars += \
@@ -47,34 +46,17 @@ ifeq ($(ARCH),x86_64)
   conf-vars += ac_cv_sizeof_long_double=16
 endif
 
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
-		cd $(pkgbuildtree)/obj-$(TARGET) && \
-			$(env) ../configure $(conf-args) $(conf-vars)
-	$(call cmd,stamp)
-
-build-args = \
+build-args += \
 	MAKEFLAGS=
 
-$(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(env) $(MAKE) -j $(NUM_CPU) $(build-args) all
-	$(call cmd,stamp)
-
-install-args = \
-	install_root=$(DESTDIR)
-
-plugin = $(prefix)/lib/gconv
-
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree)/obj-$(TARGET) && \
-		$(priv) $(env) $(MAKE) $(install-args) install
-	$(call cmd,stamp)
-
-ifneq ($(MICRO),0)
-  LIB_VERSION = $(MAJOR).$(MINOR).$(MICRO)
-else
+ifeq ($(MICRO),0)
   LIB_VERSION = $(MAJOR).$(MINOR)
+else
+  ifeq ($(MICRO),)
+    LIB_VERSION = $(MAJOR).$(MINOR)
+  else
+    LIB_VERSION = $(MAJOR).$(MINOR).$(MICRO)
+  endif
 endif
 
 stripfiles = \
@@ -110,17 +92,15 @@ stripfiles = \
 	$(prefix)/bin/lddlibc4 \
 	$(prefix)/bin/locale \
 	$(prefix)/bin/localedef \
+	$(prefix)/bin/makedb \
 	$(prefix)/bin/pcprofiledump \
 	$(prefix)/bin/rpcgen \
 	$(prefix)/bin/sprof \
 	$(prefix)/lib/audit/*.so \
+	$(prefix)/lib/gconv/*.so \
 	$(prefix)/libexec/pt_chown \
 	$(prefix)/sbin/iconvconfig \
 	$(prefix)/sbin/nscd \
 	$(prefix)/sbin/rpcinfo \
 	$(prefix)/sbin/zdump \
-	$(prefix)/sbin/zic \
-	$(plugin)/*.so
-
-include packages/cleanup.mk
-include packages/binary.mk
+	$(prefix)/sbin/zic
