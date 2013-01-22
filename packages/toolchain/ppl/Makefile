@@ -1,5 +1,6 @@
 PACKAGE = ppl
-VERSION = 0.12
+VERSION = 1.0
+LICENSE = GPL
 
 LOCATION = http://bugseng.com/products/$(PACKAGE)/download/ftp/releases/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -7,4 +8,5 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/toolchain/autotools.mk
 
 conf-args += \
-       --with-gmp=$(prefix)
+	--enable-interfaces='c,c++' \
+	--with-gmp=$(prefix)
