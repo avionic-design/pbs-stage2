@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.13.0
+VERSION = 1.13.1
 LICENSE = MIT X
 
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG),y)
@@ -24,9 +24,14 @@ conf-args += \
 	--disable-kdrive \
 	--disable-xfbdev \
 	--disable-xvfb \
-	--disable-dga \
 	--enable-dpms \
 	--enable-xorg
+
+ifeq ($(CONFIG_PACKAGE_XORG_XORG_SERVER_DGA),y)
+  conf-args += --enable-dga
+else
+  conf-args += --disable-dga
+endif
 
 ifeq ($(CONFIG_XORG_AIGLX),y)
   conf-args += --enable-aiglx

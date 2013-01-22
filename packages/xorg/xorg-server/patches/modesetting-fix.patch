@@ -28,7 +28,7 @@ diff --git a/hw/xfree86/common/xf86platformBus.c b/hw/xfree86/common/xf86platfor
 index 0525e39..599d84a 100644
 --- a/hw/xfree86/common/xf86platformBus.c
 +++ b/hw/xfree86/common/xf86platformBus.c
-@@ -373,6 +373,14 @@ xf86platformProbeDev(DriverPtr drvp)
+@@ -377,6 +377,14 @@ xf86platformProbeDev(DriverPtr drvp)
              continue;
      }
  

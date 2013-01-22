@@ -35,6 +35,9 @@ if PACKAGE_XORG_XORG_SERVER
 config XORG_AIGLX
 	bool "AIGLX support"
 
+config PACKAGE_XORG_XORG_SERVER_DGA
+	bool "DGA support"
+
 config XORG_DRI
 	bool "DRI support"
 
