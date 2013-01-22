@@ -1,0 +1,85 @@
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index 31c9cbf..2e50824 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -848,6 +848,15 @@ void linphone_call_init_media_streams(LinphoneCall *call){
+ 		audio_stream_enable_noise_gate(audiostream,enabled);
+ 	}
+ 
++	{
++		int qos_dscp=linphone_core_get_rtp_dscp(lc);
++		if (qos_dscp>=0 && audiostream->session){
++			ms_warning("setting dscp=0x%08x (0x%08x) on audio stream",
++				qos_dscp, ((qos_dscp << 2) & 0xFC));
++			rtp_session_set_dscp(audiostream->session,qos_dscp);
++		}
++	}
++
+ 	if (lc->rtptf){
+ 		RtpTransport *artp=lc->rtptf->audio_rtp_func(lc->rtptf->audio_rtp_func_data, call->audio_port);
+ 		RtpTransport *artcp=lc->rtptf->audio_rtcp_func(lc->rtptf->audio_rtcp_func_data, call->audio_port+1);
+diff --git a/coreapi/linphonecore.c b/coreapi/linphonecore.c
+index 3fddf65..27cb73a 100644
+--- a/coreapi/linphonecore.c
++++ b/coreapi/linphonecore.c
+@@ -598,6 +598,7 @@ static void rtp_config_read(LinphoneCore *lc)
+ 	linphone_core_set_nortp_timeout(lc,nortp_timeout);
+ 	rtp_no_xmit_on_audio_mute=lp_config_get_int(lc->config,"rtp","rtp_no_xmit_on_audio_mute",FALSE);
+ 	linphone_core_set_rtp_no_xmit_on_audio_mute(lc,rtp_no_xmit_on_audio_mute);
++	linphone_core_set_rtp_dscp(lc,lp_config_get_int(lc->config, "rtp", "dscp", -1));
+ }
+ 
+ static PayloadType * find_payload(RtpProfile *prof, const char *mime_type, int clock_rate, const char *recv_fmtp){
+@@ -4042,6 +4045,7 @@ void rtp_config_uninit(LinphoneCore *lc)
+ 	lp_config_set_int(lc->config,"rtp","audio_jitt_comp",config->audio_jitt_comp);
+ 	lp_config_set_int(lc->config,"rtp","video_jitt_comp",config->video_jitt_comp);
+ 	lp_config_set_int(lc->config,"rtp","nortp_timeout",config->nortp_timeout);
++	lp_config_set_int(lc->config,"rtp","dscp",config->audio_rtp_dscp);
+ }
+ 
+ void sound_config_uninit(LinphoneCore *lc)
+@@ -4594,3 +4598,11 @@ void linphone_core_init_default_params(LinphoneCore*lc, LinphoneCallParams *para
+ 	params->in_conference=FALSE;
+ }
+ 
++void linphone_core_set_rtp_dscp(LinphoneCore *lc, int dscp) {
++	lc->rtp_conf.audio_rtp_dscp = dscp;
++}
++
++int linphone_core_get_rtp_dscp(LinphoneCore *lc) {
++	return lc->rtp_conf.audio_rtp_dscp;
++}
++
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index 83edb49..a307af3 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -1164,6 +1164,16 @@ typedef struct LinphoneTunnel LinphoneTunnel;
+ */
+ LinphoneTunnel *linphone_core_get_tunnel(LinphoneCore *lc);
+ 
++/**
++ * Sets the dscp value for rtp packages.
++ */
++void linphone_core_set_rtp_dscp(LinphoneCore *lc, int dscp);
++/*
++ * Returns <code>-1</code> if no dscp value is specified, otherwise the
++ * currently set dscp value.
++ */
++int linphone_core_get_rtp_dscp(LinphoneCore *lc);
++
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/coreapi/private.h b/coreapi/private.h
+index 2baa40a..cce580d 100644
+--- a/coreapi/private.h
++++ b/coreapi/private.h
+@@ -327,6 +327,7 @@ typedef struct rtp_config
+ 	int nortp_timeout;
+ 	bool_t rtp_no_xmit_on_audio_mute;
+                               /* stop rtp xmit when audio muted */
++	int audio_rtp_dscp;
+ }rtp_config_t;
+ 
+ 

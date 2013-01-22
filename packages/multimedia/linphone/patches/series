@@ -16,3 +16,4 @@ alsa-pcm-recover.patch
 config-no-locale.patch
 call-audio-settings.patch
 file-player-clear-pause-timer-on-stop.patch
+add-dscp-support.patch
