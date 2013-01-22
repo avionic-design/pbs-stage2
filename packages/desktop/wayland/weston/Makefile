@@ -1,11 +1,11 @@
 PACKAGE = weston
-VERSION = 1.0.2
+VERSION = 1.0.5
 LICENSE = custom
 
 LOCATION = http://wayland.freedesktop.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib/$(PACKAGE)
