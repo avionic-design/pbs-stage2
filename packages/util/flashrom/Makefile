@@ -1,7 +1,8 @@
 PACKAGE = flashrom
-VERSION = 0.9.3
+VERSION = 0.9.6.1
+LICENSE = GPL
 
-LOCATION = http://qa.coreboot.org/releases
+LOCATION = http://download.flashrom.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
