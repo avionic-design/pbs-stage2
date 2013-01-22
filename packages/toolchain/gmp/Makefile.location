@@ -1,5 +1,6 @@
 PACKAGE = gmp
-VERSION = 5.0.5
+VERSION = 5.1.1
+LICENSE = LGPL
 
-LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = ftp://ftp.gmplib.org/pub/$(PACKAGE)-$(VERSION)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
