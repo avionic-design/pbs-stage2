@@ -1,5 +1,6 @@
 PACKAGE = ccache
-VERSION = 3.1.7
+VERSION = 3.1.8
+LICENSE = GPL
 
 LOCATION = http://www.samba.org/ftp/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
