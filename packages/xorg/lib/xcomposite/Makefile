@@ -1,5 +1,6 @@
 PACKAGE = libXcomposite
-VERSION = 0.4.3
+VERSION = 0.4.4
+LICENSE = custom
 
 include packages/xorg/lib/common.mk
 
