@@ -1,10 +1,11 @@
 PACKAGE = libXdamage
-VERSION = 1.1.3
+VERSION = 1.1.4
+LICENSE = custom
 
 include packages/xorg/lib/common.mk
 
 prunefiles = \
-	$(prefix)/lib/libXdamage.la
+	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/lib/libXdamage.so.1.1.0
+	$(prefix)/lib/*.so.*
