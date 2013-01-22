@@ -2,8 +2,6 @@ include packages/kernel/kmod/Makefile.location
 include packages/autotools.mk
 
 dirs = \
-	/bin \
-	/sbin \
 	$(prefix)/bin \
 	$(prefix)/sbin
 
@@ -13,13 +11,7 @@ links = \
 	$(prefix)/sbin/insmod \
 	$(prefix)/sbin/modinfo \
 	$(prefix)/sbin/modprobe \
-	$(prefix)/sbin/rmmod \
-	/bin/lsmod \
-	/sbin/depmod \
-	/sbin/insmod \
-	/sbin/modinfo \
-	/sbin/modprobe \
-	/sbin/rmmod
+	$(prefix)/sbin/rmmod
 
 dirs := $(addprefix $(DESTDIR),$(dirs))
 links := $(addprefix $(DESTDIR),$(links))
