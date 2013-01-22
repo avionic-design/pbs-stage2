@@ -12,8 +12,14 @@ CC = $(CROSS_COMPILE)gcc
 srcdir = $(dir $(realpath $(shell $(env) $(CC) -print-file-name=libgcc_s.so)))
 sysroot = $(shell $(env) $(CC) -print-sysroot)
 
-libgcc = $(realpath $(shell $(env) $(CC) -print-file-name=libgcc_s.so))
-libgcc-soname = $(shell $(AWK) '/GROUP/ { print $$3 }' $(libgcc))
+libgcc = $(abspath $(shell $(env) $(CC) -print-file-name=libgcc_s.so))
+libgcc-target = $(realpath $(libgcc))
+
+ifeq ($(libgcc),$(libgcc-target))
+  libgcc-soname = $(shell $(AWK) '/GROUP/ { print $$3 }' $(libgcc))
+else
+  libgcc-soname = $(notdir $(libgcc-target))
+endif
 
 libssp = $(realpath $(shell $(env) $(CC) -print-file-name=libssp.so))
 libssp-soname = $(notdir $(call soname,$(libssp)))
