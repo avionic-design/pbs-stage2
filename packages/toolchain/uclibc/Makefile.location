@@ -1,5 +1,5 @@
 PACKAGE = uClibc
-VERSION = 0.9.32.1
+VERSION = 0.9.33.2
 LICENSE = LGPL
 
 LOCATION = http://uclibc.org/downloads

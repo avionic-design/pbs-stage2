@@ -16,26 +16,21 @@ DOT_CONFIG = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-conf-args = \
+common-args = \
+	CROSS_COMPILE=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
 	PREFIX=$(sysroot) \
 	O=$(pkgtree)/build
 
 $(pkgtree)/.configure: $(pkgtree)/.patch $(pkgtree)/.dotconfig
-	cd $(pkgbuildtree) && $(env) $(MAKE) $(conf-args) oldconfig
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(common-args) oldconfig
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
-install-args = \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot) \
-	O=$(pkgtree)/build
-
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install_headers
+		$(env) $(MAKE) $(common-args) install_headers
 	$(call cmd,stamp)

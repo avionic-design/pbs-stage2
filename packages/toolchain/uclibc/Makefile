@@ -5,8 +5,8 @@ include packages/devel/uclibc/Makefile.dotconfig
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-conf-args = \
-	CROSS=$(TARGET)- \
+common-args = \
+	CROSS_COMPILE=$(TARGET)- \
 	RUNTIME_PREFIX=/usr/ \
 	DEVEL_PREFIX=/usr/ \
 	PREFIX=$(sysroot) \
@@ -14,15 +14,11 @@ conf-args = \
 
 $(pkgtree)/.configure: $(pkgtree)/.dotconfig
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(conf-args) oldconfig
+		$(env) $(MAKE) $(common-args) oldconfig
 	$(call cmd,stamp)
 
 build-args = \
-	CROSS=$(TARGET)- \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot) \
-	O=$(pkgtree)/build \
+	$(common-args) \
 	-j $(NUM_CPU)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
@@ -30,15 +26,8 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
-install-args = \
-	CROSS=$(TARGET)- \
-	RUNTIME_PREFIX=/usr/ \
-	DEVEL_PREFIX=/usr/ \
-	PREFIX=$(sysroot) \
-	O=$(pkgtree)/build
-
 $(pkgtree)/.install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(common-args) install
 	mv $(sysroot)/usr/lib/*crt*.o $(exec-prefix)/lib
 	$(call cmd,stamp)

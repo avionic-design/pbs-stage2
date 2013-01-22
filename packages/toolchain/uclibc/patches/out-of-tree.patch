@@ -17,7 +17,7 @@ diff --git a/utils/Makefile.in b/utils/Makefile.in
 index 65364d7..217f01d 100644
 --- a/utils/Makefile.in
 +++ b/utils/Makefile.in
-@@ -99,7 +99,11 @@ utils: $(utils_OBJ) $(utils_LOCALE_OBJ)
+@@ -100,7 +100,11 @@ utils: $(utils_OBJ) $(utils_LOCALE_OBJ)
  
  # NOTE: We build the utils AFTER we have a uClibc-targeted toolchain.
  

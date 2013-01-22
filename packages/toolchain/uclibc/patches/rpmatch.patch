@@ -16,7 +16,7 @@ diff --git a/include/stdlib.h b/include/stdlib.h
 index e9a8b84..23812d7 100644
 --- a/include/stdlib.h
 +++ b/include/stdlib.h
-@@ -820,7 +820,7 @@ __END_NAMESPACE_STD
+@@ -828,7 +828,7 @@ __END_NAMESPACE_STD
  #endif /* __UCLIBC_HAS_WCHAR__ */
  
  
@@ -29,12 +29,12 @@ diff --git a/libc/stdlib/Makefile.in b/libc/stdlib/Makefile.in
 index 760ccf7..d9850e5 100644
 --- a/libc/stdlib/Makefile.in
 +++ b/libc/stdlib/Makefile.in
-@@ -29,7 +29,7 @@ CSRC-$(UCLIBC_SUSV3_LEGACY) += mktemp.c
+@@ -33,7 +33,7 @@ CSRC-$(UCLIBC_SUSV3_LEGACY) += mktemp.c
  
  # multi source stdlib.c
  CSRC-y += abs.c labs.c atoi.c atol.c strtol.c strtoul.c _stdlib_strto_l.c \
--	qsort.c bsearch.c \
-+	qsort.c bsearch.c rpmatch.c \
+-	qsort.c qsort_r.c bsearch.c \
++	qsort.c qsort_r.c bsearch.c rpmatch.c \
  	llabs.c atoll.c strtoll.c strtoull.c _stdlib_strto_ll.c
  # (aliases) strtoq.o strtouq.o
  CSRC-$(UCLIBC_HAS_FLOATS) += atof.c
