@@ -1,5 +1,6 @@
 PACKAGE = mpc
-VERSION = 0.9
+VERSION = 1.0.1
+LICENSE = LGPL
 
 LOCATION = http://www.multiprecision.org/$(PACKAGE)/download
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
