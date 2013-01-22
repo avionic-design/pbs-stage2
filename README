@@ -166,6 +166,7 @@ General requirements:
 
 	- automake, autoconf, gcc, make
 	- ncurses-devel
+	- bash
 
 Programs used to generate documentation during package creation:
 
