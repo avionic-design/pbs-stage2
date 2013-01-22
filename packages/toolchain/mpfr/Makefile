@@ -1,5 +1,6 @@
 PACKAGE = mpfr
-VERSION = 3.1.0
+VERSION = 3.1.1
+LICENSE = LGPL
 
 LOCATION = http://www.mpfr.org/$(PACKAGE)-$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
