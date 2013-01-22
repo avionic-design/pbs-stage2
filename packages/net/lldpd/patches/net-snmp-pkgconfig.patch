@@ -2,7 +2,7 @@ diff --git a/configure.ac b/configure.ac
 index 9692b8b..aae12e9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -197,7 +197,7 @@ AC_ARG_WITH([snmp],
+@@ -199,7 +199,7 @@ AC_ARG_WITH([snmp],
      [Enable the use of SNMP @<:@default=no@:>@]
    ))
  if test x"$with_snmp" = x"yes"; then
