@@ -1,0 +1,86 @@
+diff --git a/Makefile b/Makefile
+index 09fb3ed..d2c972b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -33,21 +33,19 @@ install  := install -D --owner 0 --group 0
+ lib64    := lib$(shell [ -d /lib64 ] && echo 64)
+ 
+ usr/bin                  := $(DESTDIR)/usr/bin/
+-bin                      := $(DESTDIR)/bin/
+-sbin                     := $(DESTDIR)/sbin/
+ usr/proc/bin             := $(DESTDIR)/usr/bin/
++usr/sbin                 := $(DESTDIR)/usr/sbin/
+ man1                     := $(DESTDIR)/usr/share/man/man1/
+ man5                     := $(DESTDIR)/usr/share/man/man5/
+ man8                     := $(DESTDIR)/usr/share/man/man8/
+-lib                      := $(DESTDIR)/$(lib64)/
+ usr/lib                  := $(DESTDIR)/usr/$(lib64)/
+ usr/include              := $(DESTDIR)/usr/include/
+ 
+-#SKIP     := $(bin)kill $(man1)kill.1
++SKIP     := $(usr/bin)kill $(man1)kill.1
+ 
+ BINFILES := $(usr/bin)uptime $(usr/bin)tload $(usr/bin)free $(usr/bin)w \
+             $(usr/bin)top $(usr/bin)vmstat $(usr/bin)watch $(usr/bin)skill \
+-            $(usr/bin)snice $(bin)kill $(sbin)sysctl $(usr/bin)pmap \
++            $(usr/bin)snice $(usr/bin)kill $(usr/sbin)sysctl $(usr/bin)pmap \
+             $(usr/proc/bin)pgrep $(usr/proc/bin)pkill $(usr/bin)slabtop \
+             $(usr/proc/bin)pwdx
+ 
+diff --git a/proc/module.mk b/proc/module.mk
+index af20334..2ba6244 100644
+--- a/proc/module.mk
++++ b/proc/module.mk
+@@ -95,23 +95,23 @@ endif
+ 
+ #################### install rules ###########################
+ 
+-$(lib)$(SOFILE) : proc/$(SONAME)
++$(usr/lib)$(SOFILE) : proc/$(SONAME)
+ 	$(install) --mode a=rx $< $@
+ 
+ ifneq ($(SOLINK),$(SOFILE))
+-.PHONY: $(lib)$(SOLINK)
+-$(lib)$(SOLINK) : $(lib)$(SOFILE)
+-	cd $(lib) && $(ln_sf) $(SOFILE) $(SOLINK)
++.PHONY: $(usr/lib)$(SOLINK)
++$(usr/lib)$(SOLINK) : $(usr/lib)$(SOFILE)
++	cd $(usr/lib) && $(ln_sf) $(SOFILE) $(SOLINK)
+ endif
+ 
+ ifneq ($(SONAME),$(SOFILE))
+-.PHONY: $(lib)$(SONAME)
+-$(lib)$(SONAME) : $(lib)$(SOFILE)
+-	cd $(lib) && $(ln_sf) $(SOFILE) $(SONAME)
++.PHONY: $(usr/lib)$(SONAME)
++$(usr/lib)$(SONAME) : $(usr/lib)$(SOFILE)
++	cd $(usr/lib) && $(ln_sf) $(SOFILE) $(SONAME)
+ endif
+ 
+ .PHONY: ldconfig
+-ldconfig : $(lib)$(SONAME) $(lib)$(SOLINK)
++ldconfig : $(usr/lib)$(SONAME) $(usr/lib)$(SOLINK)
+ 	$(ldconfig)
+ 
+ $(usr/lib)$(ANAME) : proc/$(ANAME)
+diff --git a/ps/module.mk b/ps/module.mk
+index 2902a3a..d516a7e 100755
+--- a/ps/module.mk
++++ b/ps/module.mk
+@@ -1,6 +1,6 @@
+ # This file gets included into the main Makefile, in the top directory.
+ 
+-INSTALL += $(bin)ps $(man1)ps.1
++INSTALL += $(usr/bin)ps $(man1)ps.1
+ 
+ # files to remove
+ CLEAN += ps/ps ps/debug
+@@ -32,7 +32,7 @@ $(PSOBJ): %.o: %.c ps/common.h $(LIBPROC)
+ ps/stacktrace.o: ps/stacktrace.c
+ 
+ 
+-$(bin)ps: ps/ps
++$(usr/bin)ps: ps/ps
+ 	$(install) --mode a=rx $< $@
+ 
+ $(man1)ps.1 : ps/ps.1

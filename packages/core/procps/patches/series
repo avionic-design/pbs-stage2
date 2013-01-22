@@ -1,3 +1,4 @@
 linux-version-init.patch
 posix-legacy.patch
 build-fix.patch
+usr-merge.patch

@@ -1,4 +1,3 @@
-/bin
-/lib
-/sbin
 /usr/bin
+/usr/lib
+/usr/sbin

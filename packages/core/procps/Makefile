@@ -1,5 +1,6 @@
 PACKAGE = procps
 VERSION = 3.2.8
+LICENSE = GPL LGPL
 
 LOCATION = http://procps.sourceforge.net
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -33,14 +34,11 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(call cmd,stamp)
 
 stripfiles = \
-	/bin/kill \
-	/bin/ps \
-	/lib/libproc-$(VERSION).so \
-	/sbin/sysctl \
 	$(prefix)/bin/free \
 	$(prefix)/bin/pgrep \
 	$(prefix)/bin/pkill \
 	$(prefix)/bin/pmap \
+	$(prefix)/bin/ps \
 	$(prefix)/bin/pwdx \
 	$(prefix)/bin/skill \
 	$(prefix)/bin/slabtop \
@@ -50,7 +48,9 @@ stripfiles = \
 	$(prefix)/bin/uptime \
 	$(prefix)/bin/vmstat \
 	$(prefix)/bin/w \
-	$(prefix)/bin/watch
+	$(prefix)/bin/watch \
+	$(prefix)/lib/libproc-$(VERSION).so \
+	$(prefix)/sbin/sysctl
 
 include packages/cleanup.mk
 include packages/binary.mk
