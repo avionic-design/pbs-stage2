@@ -137,7 +137,7 @@ endif
 
 GIT_ARGS = \
 	$(if $(GIT_REFERENCE_DIR),--reference $(GIT_REFERENCE_DIR),--depth 1) \
-	-q
+	-q -b $(or $(call unquote,$(GIT_CHECKOUT)),master)
 
 quiet_cmd_git_clone = GIT     $(GIT_URL)
       cmd_git_clone = rm -rf $(pkgbuildtree) && \
@@ -147,19 +147,9 @@ $(pkgtree)/.git-clone: $(pkgtree)/.directory
 	$(call cmd,git_clone)
 	$(call cmd,stamp)
 
-quiet_cmd_git_checkout = GIT     $(GIT_CHECKOUT)
-      cmd_git_checkout = cd $(pkgbuildtree) && git checkout -q $(GIT_CHECKOUT)
-
-$(pkgtree)/.git-checkout: $(pkgtree)/.git-clone
-	$(call cmd,git_checkout)
-	$(call cmd,stamp)
-
 ifneq ($(GIT_URL),)
   setup-deps := $(pkgtree)/.git-clone
   dist-deps  := $(objtree)/dist/$(obj)/src.git
-  ifneq ($(call unquote,$(GIT_CHECKOUT)),)
-    setup-deps += $(pkgtree)/.git-checkout
-  endif
 endif
 
 ifneq ($(wildcard $(local-src)),)
