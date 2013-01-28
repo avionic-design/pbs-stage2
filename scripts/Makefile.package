@@ -188,10 +188,9 @@ quiet_cmd_tar_export = LN      $(patsubst $(srctree)/%,%,$<) $(patsubst $(objtre
 
 quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
       cmd_git_export = mkdir -p $@ && cd $(@D) && \
-			git clone -q $(GIT_URL) $(@F).clone && \
+			git clone $(GIT_ARGS) $(GIT_URL) $(@F).clone && \
 			cd $(@F).clone && \
-			git archive --format=tar $(or $(call unquote,$(GIT_CHECKOUT)),HEAD) | \
-				tar -x -C $@ && \
+			git archive --format=tar HEAD | tar -x -C $@ && \
 			cd .. && \
 			rm -rf $(@F).clone && \
 			ln -s $(@F) source
