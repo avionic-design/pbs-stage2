@@ -1,17 +1,23 @@
---- a/Makefile	2011-08-19 15:35:54.000000000 +0200
-+++ b/Makefile	2012-06-18 17:45:05.191382756 +0200
-@@ -12,9 +12,13 @@
-   LZOLDLIBS = -llzo2
- endif
+--- mtd-utils-1.5.0/Makefile	2012-05-07 09:19:39.000000000 +0200
++++ mtd-utils-1.5.0-dev/Makefile	2013-01-29 15:29:18.987935251 +0100
+@@ -30,13 +30,17 @@
+ 	ubidetach ubinize ubiformat ubirename mtdinfo ubirsvol
  
--SUBDIRS = lib ubi-utils mkfs.ubifs
-+SUBDIRS = lib
- TESTS = tests
- 
+ BINS = $(MTD_BINS)
+-BINS += mkfs.ubifs/mkfs.ubifs
+-BINS += $(addprefix ubi-utils/,$(UBI_BINS))
 +ifneq ($(WITHOUT_UBI), 1)
-+  SUBDIRS += ubi-utils mkfs.ubifs
++  BINS += mkfs.ubifs/mkfs.ubifs
++  BINS += $(addprefix ubi-utils/,$(UBI_BINS))
 +endif
-+
- TARGETS = ftl_format flash_erase nanddump doc_loadbios \
- 	ftl_check mkfs.jffs2 flash_lock flash_unlock flash_info \
- 	flash_otp_info flash_otp_dump mtd_debug flashcp nandwrite nandtest \
+ SCRIPTS = flash_eraseall
+ 
+ TARGETS = $(BINS)
+ TARGETS += lib/libmtd.a
+-TARGETS += ubi-utils/libubi.a
++ifneq ($(WITHOUT_UBI), 1)
++  TARGETS += ubi-utils/libubi.a
++endif
+ 
+ OBJDEPS = $(BUILDDIR)/include/version.h
+ 

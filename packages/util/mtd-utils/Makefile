@@ -1,5 +1,5 @@
 PACKAGE = mtd-utils
-VERSION = 1.4.6
+VERSION = 1.5.0
 LICENSE = GPL
 
 LOCATION = ftp://ftp.infradead.org/pub/$(PACKAGE)
@@ -53,6 +53,7 @@ stripfiles = \
 	$(prefix)/sbin/ftl_check \
 	$(prefix)/sbin/ftl_format \
 	$(prefix)/sbin/jffs2dump \
+	$(prefix)/sbin/jffs2reader \
 	$(prefix)/sbin/mkfs.jffs2 \
 	$(prefix)/sbin/mkfs.ubifs \
 	$(prefix)/sbin/mtd_debug \
