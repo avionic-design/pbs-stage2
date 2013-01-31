@@ -1,5 +1,5 @@
 PACKAGE = libav
-VERSION = 0.8.1
+VERSION = 0.8.4
 
 LOCATION = http://libav.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -26,10 +26,10 @@ conf-vars = \
 
 stripfiles = \
 	$(prefix)/bin/avconv \
-	$(prefix)/bin/ffmpeg \
-	$(prefix)/bin/ffplay \
-	$(prefix)/bin/ffprobe \
-	$(prefix)/bin/ffserver
+	$(prefix)/bin/avplay \
+	$(prefix)/bin/avprobe \
+	$(prefix)/bin/avserver \
+	$(prefix)/bin/ffmpeg
 
 stripfiles += \
 	$(prefix)/lib/*.so.* \
