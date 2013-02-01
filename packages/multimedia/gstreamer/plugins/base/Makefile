@@ -23,6 +23,20 @@ conf-args += \
 	--disable-ogg
 endif
 
+ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE),y)
+conf-args += \
+	--disable-adder \
+	--disable-encoding \
+	--disable-gio \
+	--disable-xshm \
+	--disable-cdparanoia \
+	--disable-ivorbis \
+	--disable-libvisual \
+	--disable-oggtest \
+	--disable-vorbistest \
+	--disable-freetypetest
+endif
+
 plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
 prunefiles = \

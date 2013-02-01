@@ -5,6 +5,11 @@ source "packages/multimedia/gstreamer/plugins/Kconfig"
 
 if PACKAGE_MULTIMEDIA_GSTREAMER_CORE
 
+config PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE
+	bool "disable rare plugins"
+	help
+	  Disable all plugins we normaly not use.
+
 config PACKAGE_MULTIMEDIA_GSTREAMER_DEBUG
 	bool "keep debugsymbols"
 	help

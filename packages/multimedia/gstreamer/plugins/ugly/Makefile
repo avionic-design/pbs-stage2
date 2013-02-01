@@ -18,6 +18,23 @@ conf-args += \
 	--disable-mpeg2dec
 endif
 
+ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE),y)
+conf-args += \
+	--disable-asfdemux \
+	--disable-dvdlpcmdec \
+	--disable-dvdsub \
+	--disable-xingmux \
+	--disable-realmedia \
+	--disable-a52dec \
+	--disable-amrnb \
+	--disable-amrwb \
+	--disable-cdio \
+	--disable-dvdread \
+	--disable-lame \
+	--disable-sidplay \
+	--disable-twolame
+endif
+
 plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
 prunefiles = \
