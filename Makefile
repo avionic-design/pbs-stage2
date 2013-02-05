@@ -297,7 +297,7 @@ distclean: clean $(distclean-dirs)
 	$(Q)$(MAKE) $(package)=$* install
 
 %/install:
-	@rm -f $(objtree)/build/$*/.do-install
+	@rm -f $(addprefix $(objtree)/build/$*/,.do-install .prune .strip)
 	$(Q)$(MAKE) $(package)=$* install
 
 %/clean:
