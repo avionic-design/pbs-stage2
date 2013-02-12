@@ -1,0 +1,14 @@
+config PACKAGE_LIBS_COGL
+	bool "cogl"
+	select PACKAGE_LIBS_ATK
+	select PACKAGE_LIBS_CAIRO
+	select PACKAGE_LIBS_PANGO
+	select PACKAGE_XORG_LIB_XCOMPOSITE
+	select PACKAGE_XORG_LIB_XDAMAGE
+	select PACKAGE_XORG_LIB_XEXT
+	select VIRTUAL_OPENGL_ES
+	help
+	  Cogl is a modern 3D graphics API with associated utility APIs designed to expose the
+	  features of 3D graphics hardware using a more object oriented design than OpenGL.
+	  The library has primarily been driven by the practical needs of Clutter but it is not
+	  tied to any one toolkit or even constrained to developing UI toolkits.
