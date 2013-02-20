@@ -1,5 +1,5 @@
 include packages/libs/libffi/Makefile.location
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la
