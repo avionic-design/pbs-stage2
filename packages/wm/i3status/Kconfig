@@ -1,0 +1,3 @@
+config PACKAGE_WM_I3STATUS
+	bool "i3status"
+	select VIRTUAL_DEVEL_LIBC
