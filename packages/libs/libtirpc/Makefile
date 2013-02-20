@@ -1,11 +1,11 @@
 PACKAGE = libtirpc
-VERSION = 0.2.2
+VERSION = 0.2.3
 LICENSE = BSD
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--disable-gss
