@@ -1,5 +1,6 @@
 PACKAGE = xrandr
-VERSION = 1.3.5
+VERSION = 1.4.0
+LICENSE = custom
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/app
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
