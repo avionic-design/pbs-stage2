@@ -1,0 +1,9 @@
+# CONFIG_BB_SYSCTL is not set
+# CONFIG_FREE is not set
+# CONFIG_PGREP is not set
+# CONFIG_PKILL is not set
+# CONFIG_PMAP is not set
+# CONFIG_PS is not set
+# CONFIG_PWDX is not set
+# CONFIG_TOP is not set
+# CONFIG_WATCH is not set

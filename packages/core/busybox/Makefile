@@ -39,6 +39,18 @@ else
   CONFIGS += coreutils-y
 endif
 
+ifeq ($(CONFIG_PACKAGE_CORE_PROCPS),y)
+  CONFIGS += procps-n
+else
+  CONFIGS += procps-y
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_PSMISC),y)
+  CONFIGS += psmisc-n
+else
+  CONFIGS += psmisc-y
+endif
+
 ifeq ($(CONFIG_PACKAGE_NET_BRIDGE_UTILS),y)
   CONFIGS += bridge-utils-n
 else
