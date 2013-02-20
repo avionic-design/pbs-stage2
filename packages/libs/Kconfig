@@ -131,6 +131,7 @@ source "packages/libs/talloc/Kconfig"
 source "packages/libs/upower/Kconfig"
 source "packages/libs/xdgmime/Kconfig"
 source "packages/libs/xz/Kconfig"
+source "packages/libs/yajl/Kconfig"
 source "packages/libs/zlib/Kconfig"
 
 endmenu

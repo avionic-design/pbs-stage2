@@ -1,0 +1,20 @@
+diff --git a/src/CMakeLists.txt b/src/CMakeLists.txt
+index e36b736..c443122 100644
+--- a/src/CMakeLists.txt
++++ b/src/CMakeLists.txt
+@@ -30,7 +30,7 @@ ADD_DEFINITIONS(-DYAJL_BUILD)
+ # set up some paths
+ SET (libDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/lib)
+ SET (incDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/include/yajl)
+-SET (shareDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/share/pkgconfig)
++SET (shareDir ${CMAKE_CURRENT_BINARY_DIR}/../${YAJL_DIST_NAME}/lib/pkgconfig)
+ 
+ # set the output path for libraries
+ SET(LIBRARY_OUTPUT_PATH ${libDir})
+@@ -82,5 +82,5 @@ IF(NOT WIN32)
+   INSTALL(TARGETS yajl_s ARCHIVE DESTINATION lib${LIB_SUFFIX})
+   INSTALL(FILES ${PUB_HDRS} DESTINATION include/yajl)
+   INSTALL(FILES ${incDir}/yajl_version.h DESTINATION include/yajl)
+-  INSTALL(FILES ${shareDir}/yajl.pc DESTINATION share/pkgconfig)
++  INSTALL(FILES ${shareDir}/yajl.pc DESTINATION lib/pkgconfig)
+ ENDIF()
