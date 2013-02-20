@@ -1,0 +1,4 @@
+config PACKAGE_WM_I3
+	bool "i3"
+	select PACKAGE_LIBS_YAJL
+	select PACKAGE_XORG_LIB_X11

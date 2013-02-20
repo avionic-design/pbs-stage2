@@ -1,6 +1,7 @@
 menu "Window Managers"
 
 source "packages/wm/awesome/Kconfig"
+source "packages/wm/i3/Kconfig"
 source "packages/wm/icewm/Kconfig"
 source "packages/wm/matchbox/Kconfig"
 source "packages/wm/metacity/Kconfig"
