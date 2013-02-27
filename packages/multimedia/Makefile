@@ -4,6 +4,7 @@ obj-y += telepathy/
 obj-y += vaapi/
 
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_ADMP) += admp.git
+obj-$(CONFIG_PACKAGE_MULTIMEDIA_BCG729) += bcg729
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_FFMPEG) += ffmpeg
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_FLAC) += flac
 obj-$(CONFIG_PACKAGE_MULTIMEDIA_LIBAV) += libav

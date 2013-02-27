@@ -1,0 +1,5 @@
+config PACKAGE_MULTIMEDIA_BCG729
+	bool "bcg729"
+	select PACKAGE_MULTIMEDIA_LINPHONE
+	help
+	  Bcg729 is a software G729A encoder and decoder library written in C.
