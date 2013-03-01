@@ -1,0 +1,6 @@
+config PACKAGE_MULTIMEDIA_VLC_PLUGIN_GLES2
+	bool "vlc-plugin-gles2"
+	select PACKAGE_MULTIMEDIA_VLC
+	select VIRTUAL_OPENGL_ES2
+	help
+	  OpenGL ES2 Video Output plugin with linear deinterlacing.

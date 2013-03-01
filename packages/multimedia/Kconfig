@@ -27,6 +27,7 @@ source "packages/multimedia/telepathy/Kconfig"
 source "packages/multimedia/vaapi/Kconfig"
 source "packages/multimedia/v4l-utils/Kconfig"
 source "packages/multimedia/vlc/Kconfig"
+source "packages/multimedia/vlc-plugin-gles2/Kconfig"
 source "packages/multimedia/zvbi/Kconfig"
 
 endmenu
