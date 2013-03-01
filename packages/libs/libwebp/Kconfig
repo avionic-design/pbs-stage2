@@ -1,0 +1,6 @@
+config PACKAGE_LIBS_LIBWEBP
+	bool "libwebp"
+	select PACKAGE_LIBS_LIBPNG
+	select PACKAGE_LIBS_LIBJPEG
+	help
+	  Full C-sources for building the WebP reference encoder and decoder.

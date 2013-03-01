@@ -94,6 +94,7 @@ obj-$(CONFIG_PACKAGE_LIBS_LIBTOOL) += libtool
 obj-$(CONFIG_PACKAGE_LIBS_LIBURI) += liburi
 obj-$(CONFIG_PACKAGE_LIBS_LIBUSB) += libusb
 obj-$(CONFIG_PACKAGE_LIBS_LIBUSB_COMPAT) += libusb-compat
+obj-$(CONFIG_PACKAGE_LIBS_LIBWEBP) += libwebp
 obj-$(CONFIG_PACKAGE_LIBS_LIBWNCK) += libwnck
 obj-$(CONFIG_PACKAGE_LIBS_LIBXDG_BASEDIR) += libxdg-basedir
 obj-$(CONFIG_PACKAGE_LIBS_LIBXKBCOMMON) += libxkbcommon

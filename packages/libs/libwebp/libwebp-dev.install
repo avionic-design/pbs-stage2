@@ -1,0 +1,4 @@
+/usr/include/webp/*.h
+/usr/lib/libwebp.a
+/usr/lib/libwebp.so
+/usr/lib/pkgconfig/*.pc
