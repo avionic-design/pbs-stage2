@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_LIBSECRET
+	bool "libsecret"
+	select PACKAGE_LIBS_LIBGCRYPT
+	help
+	  library for storing and retrieving passwords and other secrets.
