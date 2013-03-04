@@ -5,12 +5,13 @@ LICENSE = custom
 LOCATION = http://fontconfig.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-arch=$(ARCH) \
-	--disable-libxml2
+	--disable-libxml2 \
+	--disable-docs
 
 prunefiles = \
 	$(prefix)/lib/*.la

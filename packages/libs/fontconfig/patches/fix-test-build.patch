@@ -1,0 +1,12 @@
+diff --git a/test/Makefile.am b/test/Makefile.am
+index 3ba8e93..aa82d62 100644
+--- a/test/Makefile.am
++++ b/test/Makefile.am
+@@ -8,6 +8,7 @@ if HAVE_PTHREAD
+ check_PROGRAMS = test-pthread
+ noinst_PROGRAMS = $(check_PROGRAMS)
+ test_pthread_LDADD = $(top_builddir)/src/libfontconfig.la
++test_pthread_CFLAGS = -I$(top_srcdir) $(AM_CFLAGS)
+ # We don't enable this test by default because it will require config and fonts
+ # to meaningfully test anything, and we are not installed yet.
+ #TESTS += test-pthread
