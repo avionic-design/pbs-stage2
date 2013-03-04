@@ -10,7 +10,8 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	--prefix=$(prefix)
+	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(BUILD_GNU_TYPE) && \

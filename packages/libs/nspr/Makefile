@@ -20,6 +20,7 @@ $(pkgtree)/.setup:
 conf-args = \
 	--target=$(TARGET) \
 	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib \
 	--mandir=$(prefix)/share/man \
 	--infodir=$(prefix)/share/info \
 	--localstatedir=/var \

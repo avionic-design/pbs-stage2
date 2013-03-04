@@ -16,6 +16,7 @@ env += CONFIG_SHELL=/bin/bash
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib \
 	--libexecdir=$(prefix)/lib \
 	--disable-gettext
 

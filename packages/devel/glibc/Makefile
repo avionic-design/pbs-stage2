@@ -10,6 +10,7 @@ CFLAGS := $(patsubst -O%,-O2,$(CFLAGS))
 conf-args = \
 	--host=$(TARGET) \
 	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \

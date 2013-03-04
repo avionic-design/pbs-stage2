@@ -10,6 +10,7 @@ conf-args = \
 	--host=$(TARGET) \
 	--build=$(BUILD) \
 	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib \
 	--datadir=$(prefix)/share \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \

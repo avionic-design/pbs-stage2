@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 8f1362a..4ea9284 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -97,7 +97,7 @@ FLAGS_TO_PASS = $(AM_MAKEFLAGS)
+ 
+ MAKEOVERRIDES=
+ 
+-toolexeclib_LTLIBRARIES = libffi.la
++lib_LTLIBRARIES = libffi.la
+ noinst_LTLIBRARIES = libffi_convenience.la
+ 
+ libffi_la_SOURCES = src/prep_cif.c src/types.c \

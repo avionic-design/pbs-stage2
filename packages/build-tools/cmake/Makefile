@@ -9,3 +9,6 @@ LOCATION = http://www.cmake.org/files/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/build-tools/autotools.mk
+
+conf-args = \
+	--prefix=$(prefix)
