@@ -7,8 +7,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+conf-args-$(CONFIG_UCLIBC) = \
+	--without-cxx --without-cxx-bindings
+
 conf-args += \
-	--with-shared
+	--with-shared \
+	$(conf-args-y)
 
 prunefiles = \
 	$(prefix)/bin/ncurses5-config
