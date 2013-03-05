@@ -12,7 +12,8 @@ conf-args += \
 	--disable-oss \
 	--disable-pulseaudio \
 	--disable-rpath \
-	--disable-video-directfb
+	--disable-video-directfb \
+	--disable-video-fbcon
 
 prunefiles = \
 	$(prefix)/lib/*.la
