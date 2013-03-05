@@ -3,6 +3,7 @@ config PACKAGE_LIBS_FUSE
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_BUILD_TOOLS_GETTEXT
 	help
 	  With FUSE it is possible to implement a fully functional filesystem in a
 	  userspace program.
