@@ -6,6 +6,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+conf-vars += CFLAGS='-fPIC'
+
 conf-args += \
 	--enable-shared \
 	--disable-sdl
