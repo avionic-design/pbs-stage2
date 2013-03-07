@@ -17,3 +17,4 @@ config-no-locale.patch
 call-audio-settings.patch
 file-player-clear-pause-timer-on-stop.patch
 add-dscp-support.patch
+decline-calls-with-a-reason.patch

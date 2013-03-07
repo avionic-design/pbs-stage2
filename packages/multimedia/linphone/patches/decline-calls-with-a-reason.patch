@@ -1,0 +1,110 @@
+From 29785e4c87376750498b62647de8adaea8a61703 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 7 Mar 2013 11:33:51 +0100
+Subject: [PATCH] Add a function decline calls with a particular reason
+
+This allow declining calls with other reason than "Declined" (603),
+for example with "Busy here" (486). This is important to allow
+features such as redirect on busy because a 6XX response is a so called
+"Global Failure Response" that always terminate the call right away.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+Reviewed-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+---
+ coreapi/linphonecore.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
+ coreapi/linphonecore.h |   13 +++++++++++++
+ 2 files changed, 60 insertions(+), 0 deletions(-)
+
+diff --git a/coreapi/linphonecore.c b/coreapi/linphonecore.c
+index 7530ee1..3402ad5 100644
+--- a/coreapi/linphonecore.c
++++ b/coreapi/linphonecore.c
+@@ -2447,6 +2447,53 @@ int linphone_core_redirect_call(LinphoneCore *lc, LinphoneCall *call, const char
+ 	return 0;
+ }
+ 
++/**
++ * Decline a call with a reason
++ *
++ * @ingroup call_control
++ * @param lc the LinphoneCore
++ * @param the_call the LinphoneCall object representing the call to be terminated.
++ * @param reason the reason code for the decline
++**/
++int linphone_core_decline_call(LinphoneCore *lc, LinphoneCall *the_call, LinphoneCallDeclineReason reason)
++{
++	LinphoneCall *call;
++	SalReason sr;
++	if (the_call == NULL){
++		if (ms_list_size(lc->calls)==1){
++			call=(LinphoneCall*)lc->calls->data;
++		}else{
++			ms_warning("No unique call to terminate !");
++			return -1;
++		}
++	}
++	else
++	{
++		call = the_call;
++	}
++	switch(reason) {
++	case LinphoneDeclineReasonBusy:
++		sr = SalReasonBusy;
++		break;
++	case LinphoneDeclineReasonTemporarilyUnavailable:
++		sr = SalReasonTemporarilyUnavailable;
++		break;
++	case LinphoneDeclineReasonDoNotDisturb:
++		sr = SalReasonDoNotDisturb;
++		break;
++	case LinphoneDeclineReasonMedia:
++		sr = SalReasonMedia;
++		break;
++	default:
++		sr = SalReasonUnknown;
++		break;
++	}
++	sal_call_decline(call->op, sr, NULL);
++	terminate_call(lc,call);
++
++	linphone_call_set_state(call,LinphoneCallEnd,"Call declined");
++	return 0;
++}
+ 
+ /**
+  * Terminates a call.
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index eaf5304..0717291 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -244,6 +244,17 @@ typedef enum _LinphoneCallState{
+ 
+ const char *linphone_call_state_to_string(LinphoneCallState cs);
+ 
++/**
++ * Enum describing the reason for declining a call.
++**/
++typedef enum _LinphoneCallDeclineReason{
++	LinphoneDeclineReasonBusy,
++	LinphoneDeclineReasonTemporarilyUnavailable,
++	LinphoneDeclineReasonDoNotDisturb,
++	LinphoneDeclineReasonMedia,
++	LinphoneDeclineReasonUnknown
++} LinphoneCallDeclineReason;
++
+ LinphoneCore *linphone_call_get_core(const LinphoneCall *call);
+ LinphoneCallState linphone_call_get_state(const LinphoneCall *call);
+ bool_t linphone_call_asked_to_autoanswer(LinphoneCall *call);
+@@ -755,6 +766,8 @@ LinphoneCall *linphone_core_get_current_call(const LinphoneCore *lc);
+ 
+ int linphone_core_accept_call(LinphoneCore *lc, LinphoneCall *call);
+ 
++int linphone_core_decline_call(LinphoneCore *lc, LinphoneCall *the_call, LinphoneCallDeclineReason reason);
++
+ int linphone_core_terminate_call(LinphoneCore *lc, LinphoneCall *call);
+ 
+ int linphone_core_redirect_call(LinphoneCore *lc, LinphoneCall *call, const char *redirect_uri);
+-- 
+1.7.0.4
+
