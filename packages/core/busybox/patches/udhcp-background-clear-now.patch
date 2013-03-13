@@ -1,0 +1,11 @@
+--- a/networking/udhcp/dhcpc.c	2012-07-02 16:08:25.000000000 +0200
++++ b/networking/udhcp/dhcpc.c	2013-03-13 11:41:35.559719564 +0100
+@@ -1416,7 +1416,7 @@
+ 					bb_info_msg("No lease, forking to background");
+ 					client_background();
+ 					/* do not background again! */
+-					opt = ((opt & ~OPT_b) | OPT_f);
++					opt = ((opt & ~(OPT_b | OPT_n)) | OPT_f);
+ 				} else
+ #endif
+ 				if (opt & OPT_n) { /* abort if no lease */
