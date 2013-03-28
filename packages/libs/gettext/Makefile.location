@@ -1,5 +1,5 @@
 PACKAGE = gettext
-VERSION = 0.18.2
+VERSION = 0.18.2.1
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
