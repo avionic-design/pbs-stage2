@@ -1,5 +1,5 @@
 PACKAGE = pango
-VERSION = 1.33.7
+VERSION = 1.33.8
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
