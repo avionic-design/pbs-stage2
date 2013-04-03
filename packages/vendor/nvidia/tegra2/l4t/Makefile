@@ -1,5 +1,5 @@
 PACKAGE = l4t
-VERSION = 15.2.1-1
+VERSION = 15.2.1-2
 
 LOCATION = http://ftp.avionic-design.de/pub/nvidia
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
