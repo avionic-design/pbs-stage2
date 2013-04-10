@@ -1,0 +1,6 @@
+ltmain-sysroot.patch -p1
+proxy-support.patch
+rebase-to-git-branch-0.10_2012-03-25.patch
+disable-soup-deprecated-werror.patch
+update-m4.patch
+add-disable-fatal.patch

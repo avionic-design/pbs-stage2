@@ -1,0 +1,5 @@
+cross-compile.patch
+rebase-to-git-branch-0.10_2012-04-10.patch
+0001-uridecodebin-Never-treat-live-sources-as-streaming-s.patch
+update-m4.patch
+add-disable-fatal.patch

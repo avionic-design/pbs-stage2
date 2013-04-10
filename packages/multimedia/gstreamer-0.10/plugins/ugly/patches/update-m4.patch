@@ -1,0 +1,80 @@
+From d61b0d864de05b72d9d2b9d2b0eae05b29479b7f Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Wed, 10 Apr 2013 14:29:16 +0200
+Subject: [PATCH] Allow building without fatal warnings.
+
+cherry-picked:
+   79b7e47af - gst-args.m4: append gcov flags to CFLAGS instead of....
+   bf2fd835e - gst-args: add AG_GST_ARG_DISABLE_FATAL_WARNINGS to...
+   9fe393b09 - gst-args.m4: default to --disable-fatal-warnings for...
+   2585de990 - gst-glib.m4: drop -DGLIB_DISABLE_DEPRECATED
+
+Signed-off-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+---
+ common/m4/gst-args.m4  | 25 +++++++++++++++++++++----
+ common/m4/gst-glib2.m4 |  6 +++---
+ 2 files changed, 24 insertions(+), 7 deletions(-)
+
+diff --git a/common/m4/gst-args.m4 b/common/m4/gst-args.m4
+index 030e7ac..0e47f9f 100644
+--- a/common/m4/gst-args.m4
++++ b/common/m4/gst-args.m4
+@@ -110,13 +110,13 @@ AC_DEFUN([AG_GST_ARG_GCOV],
+     dnl if gcov is used, we do not want default -O2 CFLAGS
+     if test "x$GST_GCOV_ENABLED" = "xyes"
+     then
+-      CFLAGS="-O0"
++      CFLAGS="$CFLAGS -O0"
+       AC_SUBST(CFLAGS)
+-      CXXFLAGS="-O0"
++      CXXFLAGS="$CXXFLAGS -O0"
+       AC_SUBST(CXXFLAGS)
+-      FFLAGS="-O0"
++      FFLAGS="$FFLAGS -O0"
+       AC_SUBST(FFLAGS)
+-      CCASFLAGS="-O0"
++      CCASFLAGS="$CCASFLAGS -O0"
+       AC_SUBST(CCASFLAGS)
+       AC_MSG_NOTICE([gcov enabled, setting CFLAGS and friends to $CFLAGS])
+     fi
+@@ -325,3 +325,20 @@ AC_DEFUN([AG_GST_ARG_ENABLE_BROKEN],
+       AC_MSG_NOTICE([not building broken plug-ins])
+     ])
+ ])
++
++dnl allow people (or build tools) to override default behaviour
++dnl for fatal compiler warnings
++AC_DEFUN([AG_GST_ARG_DISABLE_FATAL_WARNINGS],
++[
++  AC_ARG_ENABLE(fatal-warnings,
++    AC_HELP_STRING([--disable-fatal-warnings],
++                   [Don't turn compiler warnings into fatal errors]),
++    [
++      case "${enableval}" in
++        yes) FATAL_WARNINGS=yes ;;
++        no)  FATAL_WARNINGS=no ;;
++        *)   AC_MSG_ERROR(bad value ${enableval} for --disable-fatal-warnings) ;;
++      esac
++    ],
++    [FATAL_WARNINGS=no]) dnl Default value
++])
+diff --git a/common/m4/gst-glib2.m4 b/common/m4/gst-glib2.m4
+index b01f02f..c58a1da 100644
+--- a/common/m4/gst-glib2.m4
++++ b/common/m4/gst-glib2.m4
+@@ -28,9 +28,9 @@ AC_DEFUN([AG_GST_GLIB_CHECK],
+   GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_THREADS_MANDATORY"
+ 
+   dnl Define G_DISABLE_DEPRECATED for GIT versions
+-  if test "x$PACKAGE_VERSION_NANO" = "x1"; then
+-    GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_DISABLE_DEPRECATED"
+-  fi
++dnl  if test "x$PACKAGE_VERSION_NANO" = "x1"; then
++dnl    GLIB_EXTRA_CFLAGS="$GLIB_EXTRA_CFLAGS -DG_DISABLE_DEPRECATED"
++dnl  fi
+ 
+   AC_ARG_ENABLE(gobject-cast-checks,
+     AS_HELP_STRING([--enable-gobject-cast-checks[=@<:@no/auto/yes@:>@]],
+-- 
+1.8.1.4
+

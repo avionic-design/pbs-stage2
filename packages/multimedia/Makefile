@@ -1,5 +1,6 @@
 obj-y += alsa/
 obj-y += gstreamer/
+obj-y += gstreamer-0.10/
 obj-y += telepathy/
 obj-y += vaapi/
 

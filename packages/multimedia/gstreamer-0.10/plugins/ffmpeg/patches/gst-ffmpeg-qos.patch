@@ -1,0 +1,13 @@
+diff --git a/ext/ffmpeg/gstffmpegdec.c b/ext/ffmpeg/gstffmpegdec.c
+index 918abf8..f48b984 100644
+--- a/ext/ffmpeg/gstffmpegdec.c
++++ b/ext/ffmpeg/gstffmpegdec.c
+@@ -1424,7 +1424,7 @@ gst_ffmpegdec_do_qos (GstFFMpegDec * ffmpegdec, GstClockTime timestamp,
+ 
+   /* if we using less than 40% of the available time, we can try to
+    * speed up again when we were slow. */
+-  if (proportion < 0.4 && diff < 0) {
++  if (proportion < 0.8 && diff < 0) {
+     goto normal_mode;
+   } else {
+     if (diff >= 0) {

@@ -1,0 +1,19 @@
+From c6ac9754683ccf2a9955b049c3e096f61edd829e Mon Sep 17 00:00:00 2001
+From: Tim-Philipp Müller <tim.muller@collabora.co.uk>
+Date: Thu, 19 Jan 2012 14:07:34 +0000
+Subject: Add --disable-fatal-warnings configure option
+
+---
+diff --git a/configure.ac b/configure.ac
+index 13647a4..859bb05 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -78,6 +78,8 @@ AG_GST_GETTEXT([gst-plugins-base-$GST_MAJORMINOR])
+ 
+ dnl *** check for arguments to configure ***
+ 
++AG_GST_ARG_DISABLE_FATAL_WARNINGS
++
+ AG_GST_ARG_DEBUG
+ AG_GST_ARG_PROFILING
+ AG_GST_ARG_VALGRIND

@@ -1,0 +1,23 @@
+From 8accd77659d6eb99b39b31c76eff9c569b9242b6 Mon Sep 17 00:00:00 2001
+From: Colin Walters <walters@verbum.org>
+Date: Tue, 17 Jan 2012 21:23:33 +0000
+Subject: build: add --disable-fatal-warnings configure option
+
+It's reasonable to build from git, but not want to turn all compiler
+warnings into fatal errors.  For example, GNOME's jhbuild helps people
+get newer versions of software than came from their distribution, but
+they may not necessarily want to hack on it.
+---
+diff --git a/configure.ac b/configure.ac
+index 7a4d052..90daf07 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -74,6 +74,8 @@ AG_GST_GETTEXT([gstreamer-$GST_MAJORMINOR])
+ 
+ dnl *** check for arguments to configure ***
+ 
++AG_GST_ARG_DISABLE_FATAL_WARNINGS
++
+ dnl subsystems - can influence other decisions so needs to be high up
+ dnl we need to AM_CONDITIONAL them here for automake 1.6.x compatibility
+ AG_GST_CHECK_SUBSYSTEM_DISABLE(GST_DEBUG,[debugging subsystem])

@@ -1,0 +1,15 @@
+menu "gstreamer-0.10"
+
+source "packages/multimedia/gstreamer-0.10/core/Kconfig"
+source "packages/multimedia/gstreamer-0.10/plugins/Kconfig"
+
+if PACKAGE_MULTIMEDIA_GSTREAMER_0_10_CORE
+
+config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_DEBUG
+	bool "keep debugsymbols"
+	help
+	  Do not strip gstreamer files.
+
+endif
+
+endmenu

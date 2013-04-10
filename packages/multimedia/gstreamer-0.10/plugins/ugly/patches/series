@@ -1,0 +1,4 @@
+ltmain-sysroot.patch -p1
+rebase-to-git-branch-0.10_2012-04-10.patch
+update-m4.patch
+add-disable-fatal.patch

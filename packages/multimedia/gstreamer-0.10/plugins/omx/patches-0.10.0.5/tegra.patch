@@ -1,0 +1,628 @@
+diff --git a/configure.ac b/configure.ac
+index 5a84725..b4c86b2 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -50,8 +50,21 @@ AC_ARG_ENABLE([tegra], AC_HELP_STRING([--enable-tegra]), [TEGRA=$enableval], [TE
+ AM_CONDITIONAL([TEGRA], [test x$TEGRA = xyes])
+ if test x$TEGRA = xyes; then
+         AC_DEFINE([TEGRA], , [Enable tegra elements])
++        TEGRA_X11_INCLUDES=-I=/usr/include
++        TEGRA_X11_LIBS=-lX11
++        TEGRA_EGL_INCLUDES=-I=/usr/include
++        TEGRA_EGL_LIBS=-lEGL
++        TEGRA_OPENGL_INCLUDES=-I=/usr/include
++        TEGRA_OPENGL_LIBS=-lGLESv2
+ fi
+ 
++AC_SUBST(TEGRA_X11_CFLAGS)
++AC_SUBST(TEGRA_X11_LIBS)
++AC_SUBST(TEGRA_EGL_CFLAGS)
++AC_SUBST(TEGRA_EGL_LIBS)
++AC_SUBST(TEGRA_OPENGL_CFLAGS)
++AC_SUBST(TEGRA_OPENGL_LIBS)
++
+ dnl ** checks **
+ 
+ dnl Check for GLib
+diff --git a/omx/Makefile.am b/omx/Makefile.am
+index 6f39632..974046e 100644
+--- a/omx/Makefile.am
++++ b/omx/Makefile.am
+@@ -63,7 +63,7 @@ libgstomx_la_CFLAGS = \
+ 	-I$(srcdir)/headers \
+ 	$(GST_CFLAGS) $(GST_BASE_CFLAGS) \
+ 	-I$(top_srcdir)/util \
+-	-I$(TEGRA_X11_INCLUDES) -I$(TEGRA_EGL_INCLUDES) -I$(TEGRA_OPENGL_INCLUDES)
++	$(TEGRA_X11_CFLAGS) $(TEGRA_EGL_CFLAGS) $(TEGRA_OPENGL_CFLAGS)
+ 
+ libgstomx_la_LIBADD = \
+ 	$(GST_LIBS) $(GST_BASE_LIBS) $(GST_INTERFACES_LIBS) \
+diff --git a/omx/gstgl_videosink.c b/omx/gstgl_videosink.c
+index 26df5fb..fe73b79 100644
+--- a/omx/gstgl_videosink.c
++++ b/omx/gstgl_videosink.c
+@@ -48,6 +48,11 @@ enum
+     ARG_VIDEODUMPFILE,
+     ARG_VIDEO_DISABLE,
+     PROP_HANDLE_EVENTS,
++    /* output pos and size */
++    ARG_OUTPUT_POS_X,
++    ARG_OUTPUT_POS_Y,
++    ARG_OUTPUT_SIZE_HEIGHT,
++    ARG_OUTPUT_SIZE_WIDTH
+ };
+ 
+ static GstCaps *
+@@ -107,9 +112,8 @@ render (GstBaseSink *gst_base,
+     memcpy(&eglbuf,GST_BUFFER_DATA(buf),sizeof(nvomx_eglbuffer));
+     if (self->bvideodisable)
+     {
+-        EGLBoolean eglStatus;
+ #ifdef EGL_NV_sync
+-        eglStatus = eglFenceNV(eglbuf.hReadEglSync);
++        (void)eglFenceNV(eglbuf.hReadEglSync);
+ #endif
+         return GST_FLOW_OK;
+     }
+@@ -183,6 +187,12 @@ setcaps (GstBaseSink *gst_sink,
+     return TRUE;
+ }
+ 
++static void update_output_window(GstGlVideoSink *self)
++{
++	nvomx_move_output(self->output.x, self->output.y, self->output.w,
++		self->output.h);
++}
++
+ static void
+ set_property (GObject *object,
+               guint prop_id,
+@@ -250,7 +260,25 @@ set_property (GObject *object,
+             break;
+         case PROP_DISPLAY:
+               self->display_name = g_strdup (g_value_get_string (value));
+-              break;    
++              break;
++
++	case ARG_OUTPUT_POS_X:
++		self->output.x = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_POS_Y:
++		self->output.y = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_SIZE_WIDTH:
++		self->output.w = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_SIZE_HEIGHT:
++		self->output.h = g_value_get_int(value);
++		update_output_window(self);
++		break;
++
+         default:
+             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+             break;
+@@ -317,6 +345,20 @@ get_property (GObject *object,
+         case PROP_DISPLAY:
+               g_value_set_string (value, self->display_name);
+               break;
++
++	case ARG_OUTPUT_POS_X:
++		g_value_set_int(value, self->output.x);
++		break;
++	case ARG_OUTPUT_POS_Y:
++		g_value_set_int(value, self->output.y);
++		break;
++	case ARG_OUTPUT_SIZE_HEIGHT:
++		g_value_set_int(value, self->output.h);
++		break;
++	case ARG_OUTPUT_SIZE_WIDTH:
++		g_value_set_int(value, self->output.w);
++		break;
++
+         default:
+             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+             break;
+@@ -545,6 +587,22 @@ type_class_init (gpointer g_class,
+                                        g_param_spec_boolean ("disablevideo", "disable video display", "Disables the Video Disiplay", FALSE,
+                                                           G_PARAM_READWRITE));
+ 
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_POS_X,
++                                     g_param_spec_int ("output-pos-x", "X Position",
++                                                        "The x position of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_POS_Y,
++                                     g_param_spec_int ("output-pos-y", "Y Position",
++                                                        "The y position of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_SIZE_HEIGHT,
++                                     g_param_spec_int ("output-size-height", "Output height",
++                                                        "The height of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_SIZE_WIDTH,
++                                     g_param_spec_int ("output-size-width", "Output width",
++                                                        "The width of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
+ }
+ 
+ static void
+diff --git a/omx/gstgl_videosink.h b/omx/gstgl_videosink.h
+index 10f9da0..47da05c 100644
+--- a/omx/gstgl_videosink.h
++++ b/omx/gstgl_videosink.h
+@@ -71,6 +71,8 @@ struct GstGlVideoSink
+ 
+     XID  xwindow_id;
+     gboolean using_external_xwindow;
++    /* used to store pos and size of the output window */
++    GstVideoRectangle output;
+ };
+ 
+ struct GstGlVideoSinkClass
+diff --git a/omx/gstomx_aacdec.c b/omx/gstomx_aacdec.c
+index fd9767b..5fb44df 100644
+--- a/omx/gstomx_aacdec.c
++++ b/omx/gstomx_aacdec.c
+@@ -209,8 +209,7 @@ static GstFlowReturn gst_omx_aacdec_pad_chain (GstPad *pad, GstBuffer *buf)
+     GstOmxBaseFilter *omx_base;
+     GstOmxAacDec *omx_aacdec;
+     GstFlowReturn result = GST_FLOW_ERROR;
+-    int ID, object_type, index, protection_absent;
+-    unsigned int frame_length;
++    int object_type, index, protection_absent;
+     int skip_bytes = 0;
+     GstBuffer *temp;
+     omx_base = GST_OMX_BASE_FILTER (GST_PAD_PARENT (pad));
+@@ -220,12 +219,9 @@ static GstFlowReturn gst_omx_aacdec_pad_chain (GstPad *pad, GstBuffer *buf)
+         //Parse and remove the ADTS header
+         if((buf->data[0]=0xff && (buf->data[1]&0xf6)==0xf0))
+         {
+-            ID = buf->data[1] & 0x08;
+-               protection_absent = buf->data[1]&1;
++            protection_absent = buf->data[1]&1;
+             object_type   = (buf->data[2] & 0xc0)>>6;    
+             index = (buf->data[2] & 0x3c)>>2;
+-            frame_length = ((buf->data[3]&3)<<11) | \
+-                           buf->data[4]<<3 | (buf->data[5]&0xe0 >> 5) ;
+             skip_bytes += 7;
+             if(protection_absent == 0)
+             {
+diff --git a/omx/gstomx_camera.c b/omx/gstomx_camera.c
+index ee814ef..00db53f 100644
+--- a/omx/gstomx_camera.c
++++ b/omx/gstomx_camera.c
+@@ -206,12 +206,6 @@ static gboolean
+ setcaps (GstBaseSrc *gst_src,
+          GstCaps *caps)
+ {
+-    GstOmxBaseSrc *self;
+-
+-    self = GST_OMX_BASE_SRC (gst_src);
+-
+-    //GST_INFO_OBJECT (self, "setcaps (src): %" GST_PTR_FORMAT, caps);
+-
+     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+ 
+     return TRUE;
+@@ -220,12 +214,6 @@ setcaps (GstBaseSrc *gst_src,
+ static void
+ settings_changed_cb (GOmxCore *core)
+ {
+-    GstOmxBaseSrc *omx_base;
+-
+-    omx_base = core->object;
+-
+-
+-    /** @todo properly set the capabilities */
+ }
+ 
+ static void
+@@ -235,7 +223,6 @@ setup_ports (GstOmxBaseSrc *base_src)
+     OMX_PARAM_PORTDEFINITIONTYPE param;
+     OMX_PARAM_U32TYPE  oSensorIdParam;
+     OMX_INDEXTYPE  eIndexSensorId;
+-    OMX_ERRORTYPE  err;
+     OMX_IMAGE_PARAM_FLASHCONTROLTYPE    oFlashControl;
+     OMX_PARAM_SENSORMODETYPE     oSensorMode;
+ 
+@@ -273,10 +260,10 @@ setup_ports (GstOmxBaseSrc *base_src)
+ 
+     oSensorIdParam.nU32 = g_cameraParam.SensorId;
+ 
+-    err = OMX_GetExtensionIndex(core->omx_handle, NVX_INDEX_PARAM_SENSORID,
++    (void)OMX_GetExtensionIndex(core->omx_handle, NVX_INDEX_PARAM_SENSORID,
+                                    &eIndexSensorId);
+ 
+-    err = OMX_SetParameter(core->omx_handle, eIndexSensorId, &oSensorIdParam);
++    (void)OMX_SetParameter(core->omx_handle, eIndexSensorId, &oSensorIdParam);
+ 
+     memset (&oSensorMode, 0xDE, sizeof (oSensorMode));
+     oSensorMode.nPortIndex = CAPTURE_PORT;
+@@ -461,11 +448,10 @@ create (GstBaseSrc *gst_base,
+     {
+         OMX_CONFIG_BOOLEANTYPE     cc;
+         OMX_INDEXTYPE eIndexPreviewEnable;
+-        OMX_ERRORTYPE err;
+   
+  
+         // start preview
+-        err = OMX_GetExtensionIndex(core->omx_handle, NVX_INDEX_CONFIG_PREVIEWENABLE,
++        (void)OMX_GetExtensionIndex(core->omx_handle, NVX_INDEX_CONFIG_PREVIEWENABLE,
+                                        &eIndexPreviewEnable);
+         cc.bEnabled = OMX_TRUE;
+         OMX_SetConfig(core->omx_handle, eIndexPreviewEnable, &cc);
+@@ -524,9 +510,6 @@ type_instance_init (GTypeInstance *instance,
+                     gpointer g_class)
+ {
+     GstOmxBaseSrc *omx_base;
+-    GstOmxCamera  *gstcamera;
+-
+-    gstcamera = GST_OMX_CAMERA(instance);
+ 
+     omx_base = GST_OMX_BASE_SRC (instance);
+ 
+diff --git a/omx/gstomx_filereadersrc.c b/omx/gstomx_filereadersrc.c
+index 744efa3..ec7b109 100644
+--- a/omx/gstomx_filereadersrc.c
++++ b/omx/gstomx_filereadersrc.c
+@@ -74,12 +74,6 @@ static gboolean
+ setcaps (GstBaseSrc *gst_src,
+          GstCaps *caps)
+ {
+-    GstOmxBaseSrc *self;
+-
+-    self = GST_OMX_BASE_SRC (gst_src);
+-
+-    //GST_INFO_OBJECT (self, "setcaps (src): %" GST_PTR_FORMAT, caps);
+-
+     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+ 
+     return TRUE;
+@@ -88,13 +82,6 @@ setcaps (GstBaseSrc *gst_src,
+ static void
+ settings_changed_cb (GOmxCore *core)
+ {
+-    GstOmxBaseSrc *omx_base;
+-
+-    omx_base = core->object;
+-
+-
+-printf("setting changed is done...\n");
+-    /** @todo properly set the capabilities */
+ }
+ 
+ static void
+diff --git a/omx/gstomx_mixer.c b/omx/gstomx_mixer.c
+index afcfd69..62d4ada 100644
+--- a/omx/gstomx_mixer.c
++++ b/omx/gstomx_mixer.c
+@@ -735,7 +735,7 @@ type_instance_init (GTypeInstance *instance,
+     GstOmxMixer *omx_mixer = GST_OMX_MIXER (instance);
+     GstOmxBaseFilter *omx_base_filter = GST_OMX_BASE_FILTER (instance);
+     omx_base_filter->setup_ports = setup_ports;
+-    omx_mixer->deinterlacetype = DEINTERLACE_TYPE_BOB_FRAME_RATE;
++    omx_mixer->deinterlacetype = DEINTERLACE_TYPE_NONE;
+ 
+     omx_mixer->brightness = omx_mixer->current_brightness = DEFAULT_PROP_BRIGHTNESS;
+     omx_mixer->saturation = omx_mixer->current_saturation = DEFAULT_PROP_SATURATION;
+@@ -783,6 +783,7 @@ gst_omx_mixer_deinterlace_get_type (void)
+     {
+         static GEnumValue vals[] =
+         {
++            {DEINTERLACE_TYPE_NONE,                  "no filter",              "Don't Deinterlace (weave)"},
+             {DEINTERLACE_TYPE_BOB_FIELD_RATE,        "Bob filter",             "Deinterlace with Bob Filter at field rate"},
+             {DEINTERLACE_TYPE_BOB_FRAME_RATE,        "Bob filter",             "Deinterlace with Bob Filter at frame rate"},
+             {DEINTERLACE_TYPE_TEMPORAL_FIELD_RATE,   "Temporal filter",        "Deinterlace with temporal filter at field rate"},
+diff --git a/omx/gstomx_overlaysink.c b/omx/gstomx_overlaysink.c
+index a019206..6d5e0ce 100644
+--- a/omx/gstomx_overlaysink.c
++++ b/omx/gstomx_overlaysink.c
+@@ -126,11 +126,9 @@ setcaps (GstBaseSink *gst_sink,
+          GstCaps *caps)
+ {
+     GstOmxBaseSink *omx_base;
+-    GstOmxOverlaySink *self;
+     GOmxCore *gomx;
+     GOmxPort *port;
+     omx_base = GST_OMX_BASE_SINK (gst_sink);
+-    self = GST_OMX_OVERLAYSINK (gst_sink);
+     gomx = (GOmxCore *) omx_base->gomx;
+     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+ 
+diff --git a/omx/gstomx_videosink.c b/omx/gstomx_videosink.c
+index 1b83da8..6d9f2ba 100644
+--- a/omx/gstomx_videosink.c
++++ b/omx/gstomx_videosink.c
+@@ -138,11 +138,9 @@ setcaps (GstBaseSink *gst_sink,
+          GstCaps *caps)
+ {
+     GstOmxBaseSink *omx_base;
+-    GstOmxVideoSink *self;
+     GOmxCore *gomx;
+     GOmxPort *port;
+     omx_base = GST_OMX_BASE_SINK (gst_sink);
+-    self = GST_OMX_VIDEOSINK (gst_sink);
+     gomx = (GOmxCore *) omx_base->gomx;
+     GST_INFO_OBJECT (omx_base, "setcaps (sink): %" GST_PTR_FORMAT, caps);
+ 
+diff --git a/omx/gstomx_vip.c b/omx/gstomx_vip.c
+index 815da60..b3ee108 100644
+--- a/omx/gstomx_vip.c
++++ b/omx/gstomx_vip.c
+@@ -120,11 +120,8 @@ static gboolean
+ setcaps (GstBaseSrc *gst_src,
+          GstCaps *caps)
+ {
+-    GstOmxBaseSrc *self;
+     guint32 format = 0;
+ 
+-    self = GST_OMX_BASE_SRC (gst_src);
+-
+     g_return_val_if_fail (gst_caps_get_size (caps) == 1, FALSE);
+ 
+     {
+@@ -175,12 +172,6 @@ setcaps (GstBaseSrc *gst_src,
+ static void
+ settings_changed_cb (GOmxCore *core)
+ {
+-    GstOmxBaseSrc *omx_base;
+-
+-    omx_base = core->object;
+-
+-
+-    /** @todo properly set the capabilities */
+ }
+ 
+ static void
+@@ -413,10 +404,6 @@ type_instance_init (GTypeInstance *instance,
+                     gpointer g_class)
+ {
+     GstOmxBaseSrc *omx_base;
+-    GstOmxVip  *gstvip;
+-
+-
+-    gstvip = GST_OMX_VIP(instance);
+ 
+     omx_base = GST_OMX_BASE_SRC (instance);
+ 
+diff --git a/omx/gstomx_walvideosink.c b/omx/gstomx_walvideosink.c
+index 213bc83..9d8fa4c 100644
+--- a/omx/gstomx_walvideosink.c
++++ b/omx/gstomx_walvideosink.c
+@@ -83,6 +83,11 @@ enum
+     ARG_RENDER_TARGET,
+     ARG_DISPLAY_TYPE,
+     PROP_HANDLE_EVENTS,
++    /* output pos and size */
++    ARG_OUTPUT_POS_X,
++    ARG_OUTPUT_POS_Y,
++    ARG_OUTPUT_SIZE_HEIGHT,
++    ARG_OUTPUT_SIZE_WIDTH
+ };
+ 
+ #define DEFAULT_PROP_CONTRAST   1.0
+@@ -105,6 +110,12 @@ type_base_init (gpointer g_class)
+ 
+ }
+ 
++static void update_output_window(GstOmxWalVideoSink *self)
++{
++	nvomx_move_output(self->output.x, self->output.y, self->output.w,
++		self->output.h);
++}
++
+ static void
+ set_property (GObject *object,
+               guint prop_id,
+@@ -295,6 +306,24 @@ set_property (GObject *object,
+             }
+         }
+         break;
++
++	case ARG_OUTPUT_POS_X:
++		self->output.x = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_POS_Y:
++		self->output.y = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_SIZE_WIDTH:
++		self->output.w = g_value_get_int(value);
++		//update_output_window(self);
++		break;
++	case ARG_OUTPUT_SIZE_HEIGHT:
++		self->output.h = g_value_get_int(value);
++		update_output_window(self);
++		break;
++
+         default:
+             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+             break;
+@@ -422,6 +451,20 @@ get_property (GObject *object,
+             g_value_set_boolean (value, sync);
+         }
+         break;
++
++	case ARG_OUTPUT_POS_X:
++		g_value_set_int(value, self->output.x);
++		break;
++	case ARG_OUTPUT_POS_Y:
++		g_value_set_int(value, self->output.y);
++		break;
++	case ARG_OUTPUT_SIZE_HEIGHT:
++		g_value_set_int(value, self->output.h);
++		break;
++	case ARG_OUTPUT_SIZE_WIDTH:
++		g_value_set_int(value, self->output.w);
++		break;
++
+         default:
+             G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+             break;
+@@ -433,10 +476,8 @@ type_class_init (gpointer g_class,
+                  gpointer class_data)
+ {
+     GObjectClass *gobject_class;
+-    GstElementClass *gstelement_class;
+ 
+     gobject_class = (GObjectClass *) g_class;
+-    gstelement_class = (GstElementClass *) g_class;
+    
+     parent_class = g_type_class_ref (GST_TYPE_BIN);
+  
+@@ -539,6 +580,22 @@ type_class_init (gpointer g_class,
+                                                         "displays to display type",
+                                                         GST_TYPE_OMX_WAL_DISPLAY_TYPE, DISPLAY_TYPE_DEFAULT, G_PARAM_READWRITE));
+ 
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_POS_X,
++                                     g_param_spec_int ("output-pos-x", "X Position",
++                                                        "The x position of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_POS_Y,
++                                     g_param_spec_int ("output-pos-y", "Y Position",
++                                                        "The y position of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_SIZE_HEIGHT,
++                                     g_param_spec_int ("output-size-height", "Output height",
++                                                        "The height of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
++    g_object_class_install_property (gobject_class, ARG_OUTPUT_SIZE_WIDTH,
++                                     g_param_spec_int ("output-size-width", "Output width",
++                                                        "The width of the output window.",
++                                                        0, G_MAXINT, 100, G_PARAM_READWRITE));
+ }
+ 
+ static void destroyvideosinkpipeline(GstOmxWalVideoSink *self)
+@@ -567,6 +624,14 @@ static void destroyvideosinkpipeline(GstOmxWalVideoSink *self)
+     colorcontrolelement = NULL;
+ }
+ 
++static void updatevideoelements(GstOmxWalVideoSink *self)
++{
++    if (mixerelement)
++    {
++        g_object_set(G_OBJECT(mixerelement),"deint", self->deinterlacetype, NULL);
++    }
++}
++
+ static void createvideosinkpipeline(GstOmxWalVideoSink *self)
+ {
+     GstPad *pad = NULL;
+@@ -644,6 +709,8 @@ static void createvideosinkpipeline(GstOmxWalVideoSink *self)
+         colorcontrolelement = glelement;
+     }
+ 
++    updatevideoelements(self);
++
+     return;
+ }
+ 
+@@ -652,9 +719,6 @@ type_instance_init (GTypeInstance *instance,
+                     gpointer g_class)
+ {
+     GstOmxWalVideoSink *self;
+-    GstElementClass *element_class;
+-
+-    element_class = GST_ELEMENT_CLASS (g_class);
+ 
+     self = GST_OMX_WALVIDEOSINK (instance);
+ 
+@@ -782,6 +846,7 @@ gst_omx_wal_filter_get_type (void)
+     {
+         static GEnumValue vals[] =
+         {
++            {DEINTERLACE_TYPE_NONE,                  "no filter",              "Don't Deinterlace (weave)"},
+             {DEINTERLACE_TYPE_BOB_FIELD_RATE,        "Bob filter",             "Deinterlace with Bob Filter at field rate"},
+             {DEINTERLACE_TYPE_BOB_FRAME_RATE,        "Bob filter",             "Deinterlace with Bob Filter at frame rate"},
+             {DEINTERLACE_TYPE_TEMPORAL_FIELD_RATE,   "Temporal filter",        "Deinterlace with temporal filter at field rate"},
+diff --git a/omx/gstomx_walvideosink.h b/omx/gstomx_walvideosink.h
+index c1de2cb..afe484d 100644
+--- a/omx/gstomx_walvideosink.h
++++ b/omx/gstomx_walvideosink.h
+@@ -81,6 +81,8 @@ struct GstOmxWalVideoSink
+     gint   rendertarget;
+     gboolean boutputyuv;
+     gint   displaytype;
++    /* used to store pos and size of the output window */
++    GstVideoRectangle output;
+ };
+ 
+ struct GstOmxWalVideoSinkClass
+diff --git a/omx/gstomx_x11eglutils.c b/omx/gstomx_x11eglutils.c
+index e676c3e..5b67c05 100644
+--- a/omx/gstomx_x11eglutils.c
++++ b/omx/gstomx_x11eglutils.c
+@@ -4,6 +4,9 @@
+ #include "gstomx_util.h"
+ 
+ /* forward declarations */
++#define DESTROY_ON_CLOSE 1
++
++/* forward declarations */
+ void clearScreen(void);
+ void nvomx_init_eglimagepointers(void);
+ 
+@@ -325,7 +328,7 @@ void nvomx_x11egl_destroy(void)
+         gfxState.nativeWindowOwner = TRUE;
+ 
+         /* XCloseDisplay will close the display supplied by Parent App */
+-#if defined(PREVIEW_MODE)
++#if defined(DESTROY_ON_CLOSE)
+         XCloseDisplay(gfxState.platformspecific->XDisplay);
+         free(gfxState.platformspecific);
+         gfxState.platformspecific = NULL;
+@@ -425,10 +428,6 @@ OMX_ERRORTYPE nvomx_eglx11_initialize(OMX_HANDLETYPE *pVideoRenderHandle, OMX_CA
+         XSetWindowBackgroundPixmap(gfxState.platformspecific->XDisplay,
+                                (Window) gfxState.nativeWindow,
+                                None);
+-#if defined(PREVIEW_MODE)
+-	    XMoveResizeWindow(gfxState.platformspecific->XDisplay,
+-	                      (Window)gfxState.nativeWindow, 34, 55, 765, 422);
+-#endif
+         wm_destroy_window = XInternAtom(gfxState.platformspecific->XDisplay,
+                                     "WM_DELETE_WINDOW", False);
+         XSetWMProtocols(gfxState.platformspecific->XDisplay,
+@@ -711,10 +710,6 @@ static    EGLint configAttrs[] = {
+         XSetWindowBackgroundPixmap(gfxState.platformspecific->XDisplay,
+                                (Window) gfxState.nativeWindow,
+                                None);
+-#if defined(PREVIEW_MODE)
+-	XMoveResizeWindow(gfxState.platformspecific->XDisplay,
+-	                      (Window)gfxState.nativeWindow, 34, 55, 765, 422);
+-#endif
+         wm_destroy_window = XInternAtom(gfxState.platformspecific->XDisplay,
+                                     "WM_DELETE_WINDOW", False);
+         XSetWMProtocols(gfxState.platformspecific->XDisplay,
+@@ -1160,3 +1155,18 @@ void nvomx_checkevents(void)
+     }
+ }
+ 
++void nvomx_move_output(int x, int y, int width, int height)
++{
++	if (gfxState.platformspecific == NULL ||
++	    !gfxState.platformspecific->XDisplay ||
++	    !gfxState.nativeWindow)
++	{
++		printf("WRN:%s:%s: output window not ready\n", __FILE__, __func__);
++		return;
++	}
++
++	ownThreadContext();
++	XMoveResizeWindow(gfxState.platformspecific->XDisplay,
++		(Window)gfxState.nativeWindow, x, y, width, height);
++	disownThreadContext();
++}
+diff --git a/omx/gstomx_x11eglutils.h b/omx/gstomx_x11eglutils.h
+index f5c7c7f..2927818 100644
+--- a/omx/gstomx_x11eglutils.h
++++ b/omx/gstomx_x11eglutils.h
+@@ -74,4 +74,5 @@ void getEglFence(void *eglsync);
+ void nvomx_render_eglimage(nvomx_eglbuffer *buf , int dumpEnabled, int start_frame, int end_frame, int step);
+ void clearScreen();
+ //void SetupFence(int index);
+-#endif 
++void nvomx_move_output(int x, int y, int width, int height);
++#endif
