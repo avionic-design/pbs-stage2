@@ -1,7 +1,7 @@
 PACKAGE = libXt
 VERSION = 1.1.3
 
-include packages/xorg/lib/common.mk
+include packages/xorg/lib/common-reconf.mk
 
 ifeq ($(CONFIG_LIBC),uclibc)
   conf-args += \
@@ -16,6 +16,7 @@ conf-args += \
 
 conf-vars += \
 	CFLAGS_FOR_BUILD="-O2 -g" \
+	CPPFLAGS_FOR_BUILD="" \
 	LDFLAGS_FOR_BUILD=""
 
 prunefiles = \

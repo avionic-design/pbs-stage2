@@ -1,0 +1,48 @@
+From 10aea2f7c1ba8e593025d5bced23db692e23dc9f Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 3 Jan 2013 09:25:35 +0100
+Subject: [PATCH] buildsys: Fix cross-compilation
+
+When cross-compiling against a sysroot for instance, a --sysroot option
+is typically passed via the CPPFLAGS variable. This can cause the build
+to break in the util subdirectory which requires the CPPFLAGS to be set
+for the build system.
+
+Solve this by using the value of CPPFLAGS_FOR_BUILD for CPPFLAGS in the
+util subdirectory. Cross-compile setups can override the variable when
+calling teh configure script.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+---
+ configure.ac     | 2 ++
+ util/Makefile.am | 1 +
+ 2 files changed, 3 insertions(+)
+
+diff --git a/configure.ac b/configure.ac
+index d15b326..2b3f7e4 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -65,6 +65,8 @@ if test x"$CC_FOR_BUILD" = x; then
+ 	fi
+ fi
+ AC_SUBST([CC_FOR_BUILD])
++CPPFLAGS_FOR_BUILD=${CPPFLAGS_FOR_BUILD-${CPPFLAGS}}
++AC_SUBST(CPPFLAGS_FOR_BUILD)
+ CFLAGS_FOR_BUILD=${CFLAGS_FOR_BUILD-${CFLAGS}}
+ AC_SUBST(CFLAGS_FOR_BUILD)
+ LDFLAGS_FOR_BUILD=${LDFLAGS_FOR_BUILD-${LDFLAGS}}
+diff --git a/util/Makefile.am b/util/Makefile.am
+index dedfa6b..800b35b 100644
+--- a/util/Makefile.am
++++ b/util/Makefile.am
+@@ -1,6 +1,7 @@
+ noinst_PROGRAMS = makestrs
+ 
+ CC = @CC_FOR_BUILD@
++CPPFLAGS = @CPPFLAGS_FOR_BUILD@
+ CFLAGS = @CFLAGS_FOR_BUILD@
+ LDFLAGS = @LDFLAGS_FOR_BUILD@
+ 
+-- 
+1.8.0.2
+
