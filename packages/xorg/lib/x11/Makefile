@@ -2,7 +2,7 @@ PACKAGE = libX11
 VERSION = 1.5.0
 LICENSE = MIT X
 
-include packages/xorg/lib/common-reconf.mk
+include packages/xorg/lib/common.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
@@ -16,7 +16,7 @@ else
 endif
 
 conf-vars += \
-	CPPFLAGS_FOR_BUILD='-I$(SYSROOT)$(prefix)/include'
+	CPPFLAGS_FOR_BUILD='-idirafter $(SYSROOT)$(prefix)/include'
 
 prunefiles = \
 	$(prefix)/lib/*.la
