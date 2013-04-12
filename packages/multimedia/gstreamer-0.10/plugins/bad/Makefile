@@ -4,13 +4,14 @@ VERSION = 0.10.23
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--disable-fatal-warnings \
 	--disable-cdaudio \
 	--disable-examples \
+	--disable-tests \
 	--disable-gsettings \
 	--disable-dvdnav \
 	--disable-dvdspu \
@@ -24,14 +25,9 @@ conf-args += \
 	--disable-colorspace \
 	--disable-decklink \
 	--disable-rsvg \
-	--disable-hls
-
-ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
-conf-args += --disable-sdl
-else
-conf-args += \
-	--with-sdl-prefix=$(SYSROOT)$(prefix)
-endif
+	--disable-hls \
+	--disable-uvch264 \
+	--disable-sdl
 
 plugin = $(prefix)/lib/gstreamer-0.10
 

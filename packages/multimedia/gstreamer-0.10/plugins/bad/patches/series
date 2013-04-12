@@ -1,14 +1,4 @@
-ltmain-sysroot.patch -p1
-rebase-to-git-branch-0.10_2012-04-16.patch
-0001-Fix-possible-double-free.patch
-0002-tsdemux-Add-language-code-to-taglist.patch
-0003-Fix-possible-crash-due-to-NULL-pointer-in-segment-up.patch
-0004-Revert-decklink-Add-decklink-dispatch-code-for-OS-X.patch
-0005-tsdemux-Set-currentlist-to-NULL-after-free.patch
-0006-mpegtspacketizer-Disable-reset-of-base_pcrtime.patch
-0007-tsdemux-Update-firstbuffer-timestamp-when-it-is-0.patch
-0008-tsdemux-flush-on-pusi-only-for-payload-packets.patch
-fix_sdl-config_usage.patch
-disable-soup-error-deprecated.patch
-update-m4.patch
-add-disable-fatal.patch
+0001-Rebase-common-to-2013-03-10.patch
+0002-Rebase-to-2013-04-08.patch
+0003-Rebase-tests-to-2013-04-08.patch
+0005-Fix-possible-crash-due-to-NULL-pointer-in-segment-up.patch

@@ -4,11 +4,13 @@ VERSION = 0.10.19
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
-	--disable-fatal-warnings
+	--disable-fatal-warnings \
+	--disable-examples \
+	--disable-tests
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_FFMPEG),y)
 conf-args += \

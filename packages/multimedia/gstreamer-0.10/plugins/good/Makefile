@@ -4,13 +4,13 @@ VERSION = 0.10.31
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
-
-conf-vars += \
-	CFLAGS='-UG_DISABLE_DEPRECATED'
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
+	--disable-fatal-warnings \
+	--disable-examples \
+	--disable-tests \
 	--disable-aalib \
 	--disable-annodex \
 	--disable-esd \

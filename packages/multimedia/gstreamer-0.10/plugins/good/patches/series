@@ -1,6 +1,4 @@
-ltmain-sysroot.patch -p1
+0001-Rebase-common-to-2013-03-10.patch
+0002-Rebase-to-2013-04-09.patch
+0003-Rebase-test-to-2013-04-09.patch
 proxy-support.patch
-rebase-to-git-branch-0.10_2012-03-25.patch
-disable-soup-deprecated-werror.patch
-update-m4.patch
-add-disable-fatal.patch

@@ -4,7 +4,7 @@ VERSION = 0.10.36
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-vars += \
 	ac_cv_func_register_printf_specifier=no \
@@ -13,11 +13,11 @@ conf-vars += \
 conf-args += \
 	--libexecdir=$(prefix)/lib \
 	--with-sysroot=$(SYSROOT) \
-	--disable-rpath \
+	--disable-fatal-warnings \
 	--disable-examples \
 	--disable-tests \
-	--disable-check \
-	--disable-fatal-warnings
+	--disable-rpath \
+	--disable-check
 
 versuf = 0.10
 plugin = $(prefix)/lib/gstreamer-$(versuf)

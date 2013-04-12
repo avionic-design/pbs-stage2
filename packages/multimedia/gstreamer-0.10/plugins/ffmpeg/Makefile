@@ -9,6 +9,7 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--disable-fatal-warnings \
+	--disable-tests \
 	--with-system-ffmpeg
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_FFMPEG_ORC),y)

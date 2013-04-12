@@ -4,12 +4,14 @@ VERSION = 0.10.36
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
+	--disable-fatal-warnings \
 	--disable-examples \
-	--disable-gnome_vfs \
-	--disable-fatal-warnings
+	--disable-test \
+	--disable-docs \
+	--disable-gnome_vfs
 
 ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
 conf-args += \
