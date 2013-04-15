@@ -1,0 +1,13 @@
+diff --git a/coreapi/sal_eXosip2_sdp.c b/coreapi/sal_eXosip2_sdp.c
+index f67fb9c..8acbf67 100644
+--- a/coreapi/sal_eXosip2_sdp.c
++++ b/coreapi/sal_eXosip2_sdp.c
+@@ -23,7 +23,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ #include "sal.h"
+ #include <eXosip2/eXosip.h>
+ 
+-#define keywordcmp(key,b) strncmp(key,b,sizeof(key))
++#define keywordcmp(key,b) strncmp(key,b,strlen(key))
+ 
+ #ifdef FOR_LATER
+ 
