@@ -18,6 +18,7 @@ config ARCH_ARM_CPU_XSCALE
 
 config ARCH_ARM_CPU_CORTEX_A9
 	bool "Cortex-A9"
+	select ARCH_ARM_ARCH_V7
 
 endchoice
 
@@ -38,6 +39,21 @@ config ARCH_ARM_ENDIAN_BIG
 	bool "big endian"
 
 endchoice
+
+#
+# Floating point configuration
+#
+choice
+	prompt "Floating point ABI"
+
+config ARCH_ARM_HARD_FP
+	bool "hardfp"
+
+config ARCH_ARM_SOFT_FP
+	bool "softfp"
+
+endchoice
+
 
 #
 # ABI configuration

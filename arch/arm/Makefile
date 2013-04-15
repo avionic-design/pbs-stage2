@@ -16,6 +16,22 @@ else
   endif
 endif
 
+ifeq ($(CONFIG_ARCH_ARM_ARCH_V7),y)
+  ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+    ARCH := $(ARCH)v7
+
+    ifeq ($(CONFIG_ARCH_ARM_ENDIAN_LITTLE),y)
+      ARCH := $(ARCH)l
+    else
+      ARCH := $(ARCH)b
+    endif
+  endif
+endif
+
+ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+  ABI := $(ABI)hf
+endif
+
 TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)
 export TARGET
 
@@ -28,6 +44,9 @@ export CPPFLAGS
 
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_BIG) += -mbig-endian
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_LITTLE) += -mlittle-endian
+
+abiflags-$(CONFIG_ARCH_ARM_HARD_FP) += -mfloat-abi=hard -D__ARM_PCS_VFP
+abiflags-$(CONFIG_ARCH_ARM_SOFT_FP) += -mfloat-abi=softfp
 
 abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mapcs -mabi=aapcs-linux -mno-thumb-interwork
 
