@@ -10,6 +10,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <limits.h>
+#include <glob.h>
 
 #define LKC_DIRECT_LINK
 #include "lkc.h"
@@ -52,6 +54,7 @@ static struct menu *current_menu, *current_entry;
 %token <id>T_MENU
 %token <id>T_ENDMENU
 %token <id>T_SOURCE
+%token <id>T_GLOB_SOURCE
 %token <id>T_CHOICE
 %token <id>T_ENDCHOICE
 %token <id>T_COMMENT
@@ -134,6 +137,7 @@ common_stmt:
 	| config_stmt
 	| menuconfig_stmt
 	| source_stmt
+	| glob_source_stmt
 ;
 
 option_error:
@@ -387,6 +391,34 @@ source_stmt: T_SOURCE prompt T_EOL
 {
 	printd(DEBUG_PARSE, "%s:%d:source %s\n", zconf_curname(), zconf_lineno(), $2);
 	zconf_nextfile($2);
+};
+
+glob_source_stmt: T_GLOB_SOURCE prompt T_EOL
+{
+	glob_t results;
+	int i, err;
+	printd(DEBUG_PARSE, "%s:%d:glob_source %s\n",
+	       zconf_curname(), zconf_lineno(), $2);
+	err = glob($2, 0, NULL, &results);
+	/* if there was no match retry with the source tree prefix */
+	if (err == GLOB_NOMATCH) {
+		char path[PATH_MAX+1];
+		char* srctree = getenv(SRCTREE);
+		if (srctree) {
+			snprintf(path, sizeof(path), "%s/%s", srctree, $2);
+			err = glob(path, 0, NULL, &results);
+		}
+	}
+	if (err == GLOB_NOMATCH)
+		YYACCEPT;
+	/* we might have some results, even in case of error */
+	for (i = 0 ; i < results.gl_pathc ; i += 1) {
+		printd(DEBUG_PARSE, "%s:%d:source %s\n",
+		       zconf_curname(), zconf_lineno(), results.gl_pathv[i]);
+		zconf_nextfile(results.gl_pathv[i]);
+	}
+	if (results.gl_pathc > 0)
+		globfree(&results);
 };
 
 /* comment entry */
