@@ -56,7 +56,7 @@ kconf_id_hash (register const char *str, register unsigned int len)
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 40,  5,
-       0,  0,  5, 52,  0, 20, 52, 52, 10, 20,
+       0,  0,  5, 10,  0, 20, 52, 52, 10, 20,
        5,  0, 35, 52,  0, 30,  0, 15,  0, 52,
       15, 52, 52, 52, 52, 52, 52, 52, 52, 52,
       52, 52, 52, 52, 52, 52, 52, 52, 52, 52,
@@ -106,6 +106,7 @@ struct kconf_id_strings_t
     char kconf_id_strings_str17[sizeof("def_tristate")];
     char kconf_id_strings_str18[sizeof("hex")];
     char kconf_id_strings_str19[sizeof("defconfig_list")];
+    char kconf_id_strings_str21[sizeof("glob_source")];
     char kconf_id_strings_str22[sizeof("if")];
     char kconf_id_strings_str23[sizeof("int")];
     char kconf_id_strings_str27[sizeof("modules")];
@@ -141,6 +142,7 @@ static struct kconf_id_strings_t kconf_id_strings_contents =
     "def_tristate",
     "hex",
     "defconfig_list",
+    "glob_source",
     "if",
     "int",
     "modules",
@@ -170,7 +172,7 @@ kconf_id_lookup (register const char *str, register unsigned int len)
 {
   enum
     {
-      TOTAL_KEYWORDS = 32,
+      TOTAL_KEYWORDS = 33,
       MIN_WORD_LENGTH = 2,
       MAX_WORD_LENGTH = 14,
       MIN_HASH_VALUE = 2,
@@ -198,7 +200,8 @@ kconf_id_lookup (register const char *str, register unsigned int len)
       {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str17,	T_DEFAULT,	TF_COMMAND, S_TRISTATE},
       {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str18,		T_TYPE,		TF_COMMAND, S_HEX},
       {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str19,	T_OPT_DEFCONFIG_LIST,TF_OPTION},
-      {-1}, {-1},
+      {-1},
+      {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str21,	T_GLOB_SOURCE,	TF_COMMAND},
       {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str22,		T_IF,		TF_COMMAND|TF_PARAM},
       {(int)(long)&((struct kconf_id_strings_t *)0)->kconf_id_strings_str23,		T_TYPE,		TF_COMMAND, S_INT},
       {-1}, {-1}, {-1},
