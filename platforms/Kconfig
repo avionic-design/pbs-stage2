@@ -3,31 +3,10 @@ menu "Platform"
 choice PLATFORM
 	prompt "Platform Selection"
 
-config PLATFORM_GENERIC
-	bool "Generic"
-
-config PLATFORM_SOEKRIS
-	bool "Soekris Engineering"
-
-config PLATFORM_AVIONIC_DESIGN
-	bool "Avionic Design"
-
-config PLATFORM_NVIDIA
-	bool "NVIDIA"
-
-config PLATFORM_COMPULAB
-	bool "CompuLab"
-
-config PLATFORM_SKIDATA
-	bool "SKIDATA"
+	glob_source "platforms/*/Kconfig.choice"
 
 endchoice
 
-source "platforms/generic/Kconfig"
-source "platforms/soekris/Kconfig"
-source "platforms/avionic-design/Kconfig"
-source "platforms/nvidia/Kconfig"
-source "platforms/compulab/Kconfig"
-source "platforms/skidata/Kconfig"
+glob_source "platforms/*/Kconfig"
 
 endmenu

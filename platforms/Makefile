@@ -1,6 +1,2 @@
-obj-y += generic/
-obj-y += soekris/
-obj-y += avionic-design/
-obj-y += nvidia/
-obj-y += compulab/
-obj-y += skidata/
+# Add all directories containing a Makefile
+obj-y += $(dir $(subst $(srctree)/platforms/,,$(wildcard $(srctree)/platforms/*/Makefile)))
