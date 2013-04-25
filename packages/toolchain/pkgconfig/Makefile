@@ -12,7 +12,8 @@ conf-args = \
 
 conf-args += \
 	--program-prefix=$(TARGET)- \
-	--with-internal-glib
+	--with-internal-glib \
+	--disable-host-tool
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
