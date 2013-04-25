@@ -1,0 +1,15 @@
+[submodule "platforms/avionic-design"]
+	path = platforms/avionic-design
+	url = ../pbs-platform-avionic-design.git
+[submodule "platforms/honeywell"]
+	path = platforms/honeywell
+	url = ../pbs-platform-honeywell.git
+[submodule "platforms/lufthansa"]
+	path = platforms/lufthansa
+	url = ../pbs-platform-lufthansa.git
+[submodule "platforms/others"]
+	path = platforms/others
+	url = ../pbs-platform-others.git
+[submodule "platforms/skidata"]
+	path = platforms/skidata
+	url = ../pbs-platform-skidata.git
