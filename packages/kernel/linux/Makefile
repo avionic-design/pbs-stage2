@@ -206,8 +206,11 @@ quiet_cmd_install_symlink = SYMLINK $(objtree)/$(IMAGE_NAME)
       cmd_install_symlink = ln -sf $(INSTALL_PATH)/$(IMAGE_NAME) $(objtree)
 
 ifneq ($(CONFIG_PACKAGE_KERNEL_LINUX_DTB),"")
-  DTB := $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
-  DTB := $(pkgtree)/build/arch/$(ARCH)/boot/$(DTB).dtb
+  OLD_DTB_DIR := $(pkgtree)/build/arch/$(ARCH)/boot/
+  NEW_DTB_DIR := $(pkgtree)/build/arch/$(ARCH)/boot/dts
+
+  DTB_NAME := $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
+  DTB = $(or $(wildcard $(NEW_DTB_DIR)),$(OLD_DTB_DIR))/$(DTB_NAME).dtb
 
   quiet_cmd_install_fdt = SYMLINK $(objtree)/fdt.dtb
         cmd_install_fdt = ln -sf $(DTB) $(objtree)/fdt.dtb
