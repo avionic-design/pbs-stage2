@@ -266,6 +266,12 @@ why =                                                                        \
 echo-why = $(call escsq, $(strip $(why)))
 endif
 
+# Flags set to pass to a sub makefile that shouldn't take any of our flags
+# In particular when running with -n or --print-data-base those flags should
+# never be passed to the make bases tools as this change their output.
+MAKE_TOOL_FLAGS = --no-print-directory -Rr -I $(srctree) -- KBUILD_SRC=$(KBUILD_SRC) O=$(O)
+MAKE_TOOL = env MAKEFLAGS='$(MAKE_TOOL_FLAGS)' $(MAKE)
+
 # Get the version/name of a package
-package-version = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,^[^:]*: *,,')
-package-name    = $(shell $(MAKE) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,:.*,,')
+package-version = $(shell $(MAKE_TOOL) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,^[^:]*: *,,')
+package-name    = $(shell $(MAKE_TOOL) $(package)=$(1) quiet=silent_ print 2> /dev/null | sed 's,:.*,,')
