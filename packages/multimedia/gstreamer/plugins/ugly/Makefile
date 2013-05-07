@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 1.0.5
+VERSION = 1.0.7
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -13,7 +13,7 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT)
 
-ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_FFMPEG),y)
+ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_LIBAV),y)
 conf-args += \
 	--disable-mpeg2dec
 endif
