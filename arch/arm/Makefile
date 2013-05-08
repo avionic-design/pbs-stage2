@@ -46,9 +46,9 @@ abiflags-$(CONFIG_ARCH_ARM_ENDIAN_BIG) += -mbig-endian
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_LITTLE) += -mlittle-endian
 
 abiflags-$(CONFIG_ARCH_ARM_HARD_FP) += -mfloat-abi=hard -D__ARM_PCS_VFP
-abiflags-$(CONFIG_ARCH_ARM_SOFT_FP) += -mfloat-abi=softfp
+abiflags-$(CONFIG_ARCH_ARM_SOFT_FP) += -mfloat-abi=softfp -mapcs
 
-abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mapcs -mabi=aapcs-linux -mno-thumb-interwork
+abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mabi=aapcs-linux -mno-thumb-interwork
 
 ABIFLAGS = $(abiflags-y)
 
