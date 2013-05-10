@@ -1,0 +1,40 @@
+From 7b86b5c08e1b92a34f459a63a88240225369fb49 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Tue, 6 Nov 2012 17:11:10 +0100
+Subject: [PATCH 2/2] tsdemux: Fix pts calculation.
+
+For more details ask julian.scheel@jusst.de
+
+Signed-off-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+---
+ gst/mpegtsdemux/mpegtspacketizer.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
+
+diff --git a/gst/mpegtsdemux/mpegtspacketizer.c b/gst/mpegtsdemux/mpegtspacketizer.c
+index 5827a86..f3ba7e3 100644
+--- a/gst/mpegtsdemux/mpegtspacketizer.c
++++ b/gst/mpegtsdemux/mpegtspacketizer.c
+@@ -3423,7 +3423,7 @@ calculate_skew (MpegTSPCR * pcr, guint64 pcrtime, GstClockTime time)
+        * And therefore:
+        *   pcroffset = time - pcr->base_time + pcr->base_pcrtime - (received) gstpcrtime
+        **/
+-      pcr->pcroffset += time - pcr->base_time + pcr->base_pcrtime - gstpcrtime;
++      pcr->pcroffset = time - pcr->base_time + pcr->base_pcrtime - gstpcrtime;
+       gstpcrtime = PCRTIME_TO_GSTTIME (pcrtime) + pcr->pcroffset;
+       send_diff = gstpcrtime - pcr->base_pcrtime;
+       GST_DEBUG ("Introduced offset is now %" GST_TIME_FORMAT
+@@ -3681,9 +3681,8 @@ mpegts_packetizer_pts_to_ts (MpegTSPacketizer2 * packetizer, GstClockTime pts,
+     GST_DEBUG ("pts %" G_GUINT64_FORMAT " base_pcrtime:%" G_GUINT64_FORMAT
+         " base_time:%" GST_TIME_FORMAT, pts, pcrtable->base_pcrtime,
+         GST_TIME_ARGS (pcrtable->base_time));
+-    res =
+-        pts + pcrtable->pcroffset - pcrtable->base_pcrtime +
+-        pcrtable->base_time + pcrtable->skew;
++
++    res = pts - pcrtable->base_pcrtime + pcrtable->base_time + pcrtable->skew;
+   } else
+     /* If not, use pcr observations */
+   if (packetizer->calculate_offset && pcrtable->first_pcr != -1) {
+-- 
+1.8.1.4
+

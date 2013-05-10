@@ -1,0 +1,26 @@
+From 9fcc9df5c2ba6ef6c2aa87a03088ed483c6c87e0 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Wed, 31 Oct 2012 11:35:03 +0100
+Subject: [PATCH 1/2] dvb: Fix build warning due missing argument.
+
+Signed-off-by: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+---
+ sys/dvb/parsechannels.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sys/dvb/parsechannels.c b/sys/dvb/parsechannels.c
+index d6e94eb..5536946 100644
+--- a/sys/dvb/parsechannels.c
++++ b/sys/dvb/parsechannels.c
+@@ -141,7 +141,7 @@ parse_channels_conf_from_file (GstElement * dvbbasebin, const gchar * filename)
+ open_fail:
+   {
+     GST_ELEMENT_ERROR (dvbbasebin, RESOURCE, READ, (NULL),
+-        ("Opening channels configuration file failed : %s", filename,
++        ("Opening channels configuration file %s failed : %s", filename,
+             err->message));
+     g_clear_error (&err);
+     return NULL;
+-- 
+1.8.1.4
+

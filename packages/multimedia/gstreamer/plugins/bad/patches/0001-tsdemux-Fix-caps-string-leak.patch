@@ -1,0 +1,27 @@
+From c0674dd937c30630e26bfe250d4e163a833eede8 Mon Sep 17 00:00:00 2001
+From: Thiago Santos <thiago.sousa.santos@collabora.com>
+Date: Tue, 23 Apr 2013 15:19:14 -0300
+Subject: [PATCH 1/8] tsdemux: Fix caps string leak
+
+---
+ gst/mpegtsdemux/tsdemux.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/gst/mpegtsdemux/tsdemux.c b/gst/mpegtsdemux/tsdemux.c
+index b696d76..8939f7d 100644
+--- a/gst/mpegtsdemux/tsdemux.c
++++ b/gst/mpegtsdemux/tsdemux.c
+@@ -976,8 +976,8 @@ create_pad_for_stream (MpegTSBase * base, MpegTSBaseStream * bstream,
+   if (template && name && caps) {
+     gchar *stream_id;
+ 
+-    GST_LOG ("stream:%p creating pad with name %s and caps %s", stream, name,
+-        gst_caps_to_string (caps));
++    GST_LOG ("stream:%p creating pad with name %s and caps %" GST_PTR_FORMAT,
++        stream, name, caps);
+     pad = gst_pad_new_from_template (template, name);
+     gst_pad_set_active (pad, TRUE);
+     gst_pad_use_fixed_caps (pad);
+-- 
+1.8.1.4
+
