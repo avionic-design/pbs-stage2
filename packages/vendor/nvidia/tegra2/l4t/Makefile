@@ -1,5 +1,10 @@
 PACKAGE = l4t
+
+ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+VERSION = 16-hfp-3
+else
 VERSION = 15.2.1-2
+endif
 
 LOCATION = http://ftp.avionic-design.de/pub/nvidia
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
