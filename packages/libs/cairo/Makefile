@@ -11,6 +11,12 @@ conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--enable-xcb
 
+ifeq ($(CONFIG_HAVE_OPENGL_ES),y)
+conf-args += \
+	--enable-glesv2=auto \
+	--enable-cogl=auto
+endif
+
 prunefiles = \
 	$(prefix)/lib/cairo/*.la \
 	$(prefix)/lib/*.la
