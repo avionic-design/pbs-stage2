@@ -18,7 +18,8 @@ conf-args += \
 
 ifeq ($(CONFIG_ARCH),arm)
 conf-args += \
-	--enable-atomic-arm-memory-barrier
+	--enable-atomic-arm-memory-barrier \
+	--disable-neon-opt
 endif
 
 prunefiles = \
