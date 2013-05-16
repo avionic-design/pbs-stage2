@@ -1,11 +1,14 @@
 PACKAGE = vlc
-VERSION = 2.0.5
+VERSION = 2.0.6
 LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
+
+conf-vars += \
+	CXXFLAGS='$(CPPFLAGS)'
 
 conf-args += \
 	--enable-run-as-root \
