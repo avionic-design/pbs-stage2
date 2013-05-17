@@ -9,6 +9,9 @@ include packages/autotools.mk
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_AUDIO_ALSA),y)
 	conf-args += --with-audio-backend=alsa
 endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_AUDIO_PULSE),y)
+	conf-args += --with-audio-backend=pulse
+endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_BACKLIGHT_DPMS),y)
 	conf-args += --with-backlight-backend=dpms
 endif
