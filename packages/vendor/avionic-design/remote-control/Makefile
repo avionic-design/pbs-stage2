@@ -55,18 +55,23 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_GPIO_SYSFS),y)
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT),y)
 	conf-args += --enable-javascript
-else
-	conf-args += --disable-javascript
-endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_IR),y)
 	conf-args += --enable-javascript-ir
 else
 	conf-args += --disable-javascript-ir
 endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_LCD),y)
+	conf-args += --enable-javascript-lcd
+else
+	conf-args += --disable-javascript-lcd
+endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_APP_WATCHDOG),y)
 	conf-args += --enable-javascript-app-watchdog
 else
 	conf-args += --disable-javascript-app-watchdog
+endif
+else
+	conf-args += --disable-javascript
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_WATCHDOG),y)
 	conf-args += --enable-watchdog
