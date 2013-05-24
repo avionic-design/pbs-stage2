@@ -1,0 +1,5 @@
+config PACKAGE_XORG_FONTS_UTIL
+	bool "util"
+	help
+	  X.Org X11 font utilities required for font installation,
+	  conversion and generation.

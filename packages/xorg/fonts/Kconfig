@@ -1,0 +1,5 @@
+menu "X.Org - Fonts"
+
+source "packages/xorg/fonts/util/Kconfig"
+
+endmenu

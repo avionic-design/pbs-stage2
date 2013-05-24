@@ -1,0 +1,1 @@
+obj-$(CONFIG_PACKAGE_XORG_FONTS_UTIL) += util
