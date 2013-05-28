@@ -1,5 +1,5 @@
 PACKAGE = ORBit2
-VERSION = 2.14.18
+VERSION = 2.14.19
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
