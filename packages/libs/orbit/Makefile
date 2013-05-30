@@ -16,6 +16,9 @@ conf-vars += \
 	ac_cv_alignof_CORBA_struct=1 \
 	ac_cv_alignof_CORBA_pointer=4
 
+conf-args += \
+	--with-idl-compiler=$(objtree)/build-tools/bin/orbit-idl-2
+
 plugin = $(prefix)/lib/orbit-2.0
 
 prunefiles = \
