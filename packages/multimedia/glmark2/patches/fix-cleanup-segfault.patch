@@ -1,0 +1,36 @@
+diff --git a/src/scene-refract.cpp b/src/scene-refract.cpp
+index db0aec8..c598509 100644
+--- a/src/scene-refract.cpp
++++ b/src/scene-refract.cpp
+@@ -144,8 +144,11 @@ void
+ SceneRefract::teardown()
+ {
+     // Add scene-specific teardown here
+-    priv_->teardown();
+-    delete priv_;
++    if (priv_) {
++        priv_->teardown();
++        delete priv_;
++        priv_ = 0;
++    }
+     Scene::teardown();
+ }
+ 
+diff --git a/src/scene-shadow.cpp b/src/scene-shadow.cpp
+index dbad8a4..5619e26 100644
+--- a/src/scene-shadow.cpp
++++ b/src/scene-shadow.cpp
+@@ -520,8 +520,11 @@ void
+ SceneShadow::teardown()
+ {
+     // Add scene-specific teardown here
+-    priv_->teardown();
+-    delete priv_;
++    if (priv_) {
++        priv_->teardown();
++        delete priv_;
++        priv_ = 0;
++    }
+     Scene::teardown();
+ }
+ 

@@ -1,0 +1,2 @@
+libpng15-support.patch
+fix-cleanup-segfault.patch

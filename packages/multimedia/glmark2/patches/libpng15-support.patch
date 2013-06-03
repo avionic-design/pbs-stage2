@@ -1,0 +1,132 @@
+diff --git a/src/image-reader.cpp b/src/image-reader.cpp
+index 58407bc..2a58bfc 100644
+--- a/src/image-reader.cpp
++++ b/src/image-reader.cpp
+@@ -89,13 +89,13 @@ PNGReader::nextRow(unsigned char *dst)
+ 
+ unsigned int
+ PNGReader::width() const
+-{ 
++{
+     return png_get_image_width(priv_->png, priv_->info);
+ }
+ 
+ unsigned int
+ PNGReader::height() const
+-{ 
++{
+     return png_get_image_height(priv_->png, priv_->info);
+ }
+ 
+@@ -146,7 +146,7 @@ PNGReader::init(const std::string& filename)
+     }
+ 
+     /* Read the image information and data */
+-    png_set_read_fn(priv_->png, reinterpret_cast<voidp>(is_ptr.get()),
++    png_set_read_fn(priv_->png, reinterpret_cast<void*>(is_ptr.get()),
+                     PNGReaderPrivate::png_read_fn);
+ 
+     png_read_png(priv_->png, priv_->info, png_transforms, 0);
+@@ -246,7 +246,7 @@ struct JPEGIStreamSourceMgr
+         src->pub.next_input_byte = src->buffer;
+         src->pub.bytes_in_buffer = src->is->gcount();
+ 
+-        /* 
++        /*
+          * If the decoder needs more data, but we have no more bytes left to
+          * read mark the end of input.
+          */
+@@ -337,19 +337,19 @@ JPEGReader::nextRow(unsigned char *dst)
+ 
+ unsigned int
+ JPEGReader::width() const
+-{ 
++{
+     return priv_->cinfo.output_width;
+ }
+ 
+ unsigned int
+ JPEGReader::height() const
+-{ 
++{
+     return priv_->cinfo.output_height;
+ }
+ 
+ unsigned int
+ JPEGReader::pixelBytes() const
+-{ 
++{
+     return priv_->cinfo.output_components;
+ }
+ 
+diff --git a/src/wscript_build b/src/wscript_build
+index b742b48..1d96a12 100644
+--- a/src/wscript_build
++++ b/src/wscript_build
+@@ -24,7 +24,7 @@ if bld.env.USE_GL:
+         features     = ['cxx', 'cprogram'],
+         source       = common_sources + gl_sources,
+         target       = 'glmark2',
+-        use          = ['x11', 'gl', 'matrix', 'libpng12'],
++        use          = ['x11', 'gl', 'matrix', 'libpng'],
+         lib          = ['m', 'jpeg'],
+         includes     = includes,
+         defines      = ['USE_GL', 'USE_EXCEPTIONS']
+@@ -44,7 +44,7 @@ if bld.env.USE_GLESv2:
+         features     = ['cxx', 'cprogram'],
+         source       = common_sources + glesv2_sources,
+         target       = 'glmark2-es2',
+-        use          = ['x11', 'egl', 'glesv2', 'matrix-es2', 'libpng12'],
++        use          = ['x11', 'egl', 'glesv2', 'matrix-es2', 'libpng'],
+         lib          = ['m', 'dl', 'jpeg'],
+         includes     = includes,
+         defines      = ['USE_GLESv2', 'USE_EXCEPTIONS']
+@@ -64,7 +64,7 @@ if bld.env.USE_GL_DRM:
+         features     = ['cxx', 'cprogram'],
+         source       = common_sources + gl_drm_sources,
+         target       = 'glmark2-drm',
+-        use          = ['egl', 'gl', 'matrix-drm', 'libpng12', 'drm', 'gbm'],
++        use          = ['egl', 'gl', 'matrix-drm', 'libpng', 'drm', 'gbm'],
+         lib          = ['m', 'jpeg', 'dl'],
+         includes     = includes,
+         defines      = ['USE_DRM', '__GBM__', 'USE_GL']
+@@ -84,7 +84,7 @@ if bld.env.USE_GLESv2_DRM:
+         features     = ['cxx', 'cprogram'],
+         source       = common_sources + glesv2_drm_sources,
+         target       = 'glmark2-es2-drm',
+-        use          = ['egl', 'glesv2', 'matrix-es2-drm', 'libpng12', 'drm',
++        use          = ['egl', 'glesv2', 'matrix-es2-drm', 'libpng', 'drm',
+                         'gbm'],
+         lib          = ['m', 'jpeg', 'dl'],
+         includes     = includes,
+diff --git a/wscript b/wscript
+index 11e7d51..87ae330 100644
+--- a/wscript
++++ b/wscript
+@@ -60,11 +60,21 @@ def configure(ctx):
+         ctx.check_cxx(function_name = func, header_name = header,
+                       uselib = uselib, mandatory = True)
+ 
+-    # Check required packages
+-    req_pkgs = [('libpng12', 'libpng12')]
+-    for (pkg, uselib) in req_pkgs:
+-        ctx.check_cfg(package = pkg, uselib_store = uselib,
+-                      args = '--cflags --libs', mandatory = True)
++    # Check for a supported version of libpng
++    supp_png_pkgs = (('libpng12', '1.2'), ('libpng15', '1.5'),)
++    have_png = False
++    for (pkg, atleast) in supp_png_pkgs:
++        try:
++            pkg_ver = ctx.check_cfg(package=pkg, uselib_store='libpng', atleast_version=atleast,
++                                    args = ['--cflags', '--libs'])
++        except:
++            continue
++        else:
++            have_png = True
++            break
++
++    if not have_png:
++        ctx.fatal('You need to install a supported version of libpng: ' + str(supp_png_pkgs))
+ 
+     # Check optional packages
+     opt_pkgs = [('x11', 'x11', Options.options.gl or Options.options.glesv2),
