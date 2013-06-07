@@ -1,0 +1,4 @@
+config PACKAGE_NET_EBTABLES
+	bool "ebtables"
+	help
+	  The ebtables program is a filtering tool for a Linux-based bridging firewall.

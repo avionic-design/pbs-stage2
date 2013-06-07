@@ -1,0 +1,28 @@
+diff --git a/Makefile b/Makefile
+index c1106a4..5003980 100644
+--- a/Makefile
++++ b/Makefile
+@@ -8,16 +8,17 @@ PROGDATE:=December\ 2011
+ LOCKFILE?=/var/lib/ebtables/lock
+ LOCKDIR:=$(shell echo $(LOCKFILE) | sed 's/\(.*\)\/.*/\1/')/
+ 
++prefix?=/usr
+ # default paths
+-LIBDIR:=/usr/lib
+-MANDIR:=/usr/local/man
+-BINDIR:=/usr/local/sbin
++LIBDIR:=$(prefix)/lib
++MANDIR:=$(prefix)/share/man
++BINDIR:=$(prefix)/bin
+ ETCDIR:=/etc
+-INITDIR:=/etc/rc.d/init.d
+-SYSCONFIGDIR:=/etc/sysconfig
++INITDIR:=$(ETCDIR)/rc.d/init.d
++SYSCONFIGDIR:=$(ETCDIR)/sysconfig
+ DESTDIR:=
+ 
+-CFLAGS:=-Wall -Wunused -Werror
++CFLAGS:=-Wall -Wunused
+ CFLAGS_SH_LIB:=-fPIC -O3
+ CC:=gcc
+ 
