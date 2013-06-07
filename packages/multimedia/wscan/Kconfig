@@ -1,0 +1,4 @@
+config PACKAGE_MULTIMEDIA_WSCAN
+	bool "wscan"
+	help
+	  Universal ATSC and DVB blind scanner
