@@ -1,0 +1,7 @@
+config PACKAGE_VENDOR_AVIONIC_DESIGN_LIBALSALOOP
+	bool "libalsaloop"
+	select PACKAGE_MULTIMEDIA_ALSA_CORE
+	select PACKAGE_MULTIMEDIA_LIBSAMPLERATE
+	help
+	  This package provides a library which wraps ALSA's loop API to
+	  simplify it's usage.
