@@ -1,7 +1,7 @@
 PACKAGE = iw
 VERSION = 3.3
 
-LOCATION = http://wireless.kernel.org/download/$(PACKAGE)
+LOCATION = https://www.kernel.org/pub/software/network/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
