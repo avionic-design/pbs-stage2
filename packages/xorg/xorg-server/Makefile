@@ -20,6 +20,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
+	--with-fontrootdir=/usr/share/fonts/X11 \
 	--with-xkb-output=/var/lib/xkb \
 	--disable-kdrive \
 	--disable-xfbdev \
