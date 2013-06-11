@@ -20,9 +20,12 @@ conf-args += \
 	--disable-notify \
 	--disable-qt4 \
 	--disable-skins2 \
-	--disable-speex \
 	--disable-neon \
 	--disable-glx
+
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
+  conf-args += --disable-speex
+endif
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_VLC_VAAPI),y)
   conf-args += --disable-libva
