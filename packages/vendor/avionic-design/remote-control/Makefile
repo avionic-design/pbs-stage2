@@ -43,6 +43,9 @@ else
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_LIBMODEM),y)
 	conf-args += --with-modem-backend=libmodem
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_LIBMODEM_ALSALOOP),y)
+	conf-args += --enable-alsaloop
+endif
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_HANDSET_PTIP),y)
 	conf-args += --with-handset-backend=ptip
