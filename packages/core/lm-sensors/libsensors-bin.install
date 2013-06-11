@@ -1,2 +1,5 @@
-/usr/bin
-/usr/sbin
+/usr/bin/sensors
+/usr/sbin/fancontrol
+/usr/sbin/isadump
+/usr/sbin/isaset
+/usr/sbin/pwmconfig
