@@ -64,6 +64,10 @@ ifeq ($(CONFIG_PACKAGE_KERNEL_LINUX_SOURCE_LOCAL),y)
   KERNELSRC := $(srctree)/$(call unquote,$(KERNELSRC))
 endif
 
+ifneq ($(wildcard $(local-src)),)
+  KERNELSRC := $(local-src)
+endif
+
 KERNEL_CONFIG := $(CONFIG_PACKAGE_KERNEL_LINUX_CONFIG)
 KERNEL_CONFIG := $(call unquote,$(KERNEL_CONFIG))
 

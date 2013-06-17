@@ -17,6 +17,9 @@ if PACKAGE_KERNEL_LINUX
 
 choice PACKAGE_KERNEL_LINUX_SOURCE
 	prompt "source"
+	help
+	  WARNING: If a source link exists in the build directory it will
+	  override the source selected here!
 
 config PACKAGE_KERNEL_LINUX_SOURCE_TARBALL
 	bool "tarball"
