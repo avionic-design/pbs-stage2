@@ -198,11 +198,10 @@ quiet_cmd_svn_export = SVN     $(SVN_LOCATION) $(patsubst $(objtree)/%,%,$@)
       cmd_svn_export = mkdir -p $(@D) && cd $(@D) && \
 			svn export $(LOCATION_SVN) $(@F) > /dev/null
 
-SRC_DIR=$(pkgsrctree)/source/
 SRC_EXPORT_EXCLUDE=*~ .svn .git
-quiet_cmd_src_export = CP      $(patsubst $(srctree)/%,%,$(pkgsrctree)/source) $(patsubst $(objtree)/%,%,$@)
+quiet_cmd_src_export = CP      $(patsubst $(srctree)/%,%,$(local-src)) $(patsubst $(objtree)/%,%,$@)
       cmd_src_export = mkdir -p $@ && \
-				tar -c -C $(SRC_DIR) $(addprefix --exclude=,$(SRC_EXPORT_EXCLUDE)) . | \
+				tar -c -C $(local-src) $(addprefix --exclude=,$(SRC_EXPORT_EXCLUDE)) . | \
 					tar -x -C $@
 
 source-link := build/source/$(obj)
