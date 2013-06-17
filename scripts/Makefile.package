@@ -192,35 +192,42 @@ quiet_cmd_git_export = GIT     $(GIT_URL) $(patsubst $(objtree)/%,%,$@)
 			cd $(@F).clone && \
 			git archive --format=tar HEAD | tar -x -C $@ && \
 			cd .. && \
-			rm -rf $(@F).clone && \
-			ln -s $(@F) source
+			rm -rf $(@F).clone
 
 quiet_cmd_svn_export = SVN     $(SVN_LOCATION) $(patsubst $(objtree)/%,%,$@)
       cmd_svn_export = mkdir -p $(@D) && cd $(@D) && \
-			svn export $(LOCATION_SVN) $(@F) > /dev/null && \
-			ln -s $(@F) source
+			svn export $(LOCATION_SVN) $(@F) > /dev/null
 
 SRC_DIR=$(pkgsrctree)/source/
 SRC_EXPORT_EXCLUDE=*~ .svn .git
 quiet_cmd_src_export = CP      $(patsubst $(srctree)/%,%,$(pkgsrctree)/source) $(patsubst $(objtree)/%,%,$@)
       cmd_src_export = mkdir -p $@ && \
 				tar -c -C $(SRC_DIR) $(addprefix --exclude=,$(SRC_EXPORT_EXCLUDE)) . | \
-					tar -x -C $@ && \
-				cd $(@D) && ln -s $(@F) source
+					tar -x -C $@
 
+source-link := build/source/$(obj)
+rel-dist-dir := $(subst $(space),/,$(patsubst %,..,$(subst /,$(space),$(dir $(source-link)))))
+rel-source = $(rel-dist-dir)/$(patsubst $(objtree)/dist/%,%,$@)
 
+quiet_cmd_ln_src = LN      $(patsubst $(objtree)/%,%,$@)
+      cmd_ln_src = cd $(objtree)/dist && \
+			mkdir -p $(dir $(source-link)) && \
+			ln -s $(rel-source) $(source-link)
 
 $(objtree)/dist/download/%: $(srctree)/download/%
 	$(call cmd,tar_export)
 
 $(objtree)/dist/$(obj)/src.git:
 	$(call cmd,git_export)
+	$(call cmd,ln_src)
 
 $(objtree)/dist/$(obj)/src.svn:
 	$(call cmd,svn_export)
+	$(call cmd,ln_src)
 
 $(objtree)/dist/$(obj)/src.local:
 	$(call cmd,src_export)
+	$(call cmd,ln_src)
 
 quiet_cmd_clean_pkgtree = RM      $(pkgtree)
       cmd_clean_pkgtree = rm -rf $(pkgtree)
