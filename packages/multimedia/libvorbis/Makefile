@@ -1,8 +1,8 @@
 PACKAGE = libvorbis
-VERSION = 1.3.2
+VERSION = 1.3.3
 
 LOCATION = http://downloads.xiph.org/releases/vorbis
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
