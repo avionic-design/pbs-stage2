@@ -19,3 +19,4 @@ file-player-clear-pause-timer-on-stop.patch
 add-dscp-support.patch
 decline-calls-with-a-reason.patch
 fix-gcc-48-build.patch
+optimized-fixed-point-dtmfgen.patch
