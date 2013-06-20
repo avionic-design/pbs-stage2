@@ -2,6 +2,8 @@ KVER = $(shell cat $(obj)/kernel-version)
 KREL = $(shell cat $(obj)/kernel-release)
 priv = sudo
 
+export PATH:=$(objtree)/build-tools/bin:$(PATH)
+
 INITRD_FILTER = \
 	-not -path '*/include*' \
 	-not -path '*$(prefix)/share/man*' \
@@ -25,7 +27,7 @@ PHONY += u-boot.fit
 u-boot.fit: $(obj)/u-boot.fit
 
 # TODO: move this somewhere else
-MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
+MKIMAGE ?= mkimage
 
 LOAD_ADDR = 0xA0008000
 EXEC_ADDR = 0xA0008000

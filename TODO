@@ -83,6 +83,5 @@
 	libs/glib-networking - intltool (uses IT_PROG_INTLTOOL macro)
 	web/libvncserver     - libgcrypt (uses AM_PATH_LIBGCRYPT macro)
 	xorg/lib/x11         - x11-proto (pkg-config not used correctly)
-	mkimage/dtc          - installed in build-tools/bin but not used.
 --
 vim: tw=78

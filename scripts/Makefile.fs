@@ -13,6 +13,8 @@ include include/config/depends-dirs.mk
 include $(srctree)/scripts/Kbuild.include
 include $(srctree)/scripts/Makefile.lib
 
+export PATH:=$(objtree)/build-tools/bin:$(PATH)
+
 CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
@@ -171,8 +173,10 @@ quiet_cmd_mkdir_rootfs = MKDIR   $(rootfs-root)
 quiet_cmd_extract_tar.bz2 = TAR [x] $*
       cmd_extract_tar.bz2 = tar --bzip2 -x -f $< -C $(rootfs-root) --exclude ./DEBIAN
 
+DEPMOD ?= depmod
+
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
-      cmd_depmod = /sbin/depmod -b $(rootfs-root) $(KERNEL_VERSION)
+      cmd_depmod = $(DEPMOD) -b $(rootfs-root) $(KERNEL_VERSION)
 
 quiet_cmd_mkimg_tar.gz = TAR [c] $@
       cmd_mkimg_tar.gz = tar -c -C $< --gzip -f $@ .
@@ -183,8 +187,10 @@ quiet_cmd_mkimg_tar.bz2 = TAR [c] $@
 quiet_cmd_mkimg_initrd.gz = CPIO $@
       cmd_mkimg_initrd.gz = cd $< && find | cpio -H newc --quiet -o | gzip -c > $@
 
+MKSQUASHFS ?= mksquashfs
+
 quiet_cmd_mkimg_squashfs = SQUASHFS $@
-      cmd_mkimg_squashfs = mksquashfs $< $@ -noappend
+      cmd_mkimg_squashfs = $(MKSQUASHFS) $< $@ -noappend
 
 quiet_cmd_mkmachine_id = GEN     $@
       cmd_mkmachine_id = cat /proc/sys/kernel/random/uuid | md5sum | cut -d ' ' -f 1 > $@

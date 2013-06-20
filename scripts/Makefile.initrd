@@ -9,6 +9,8 @@ include include/config/depends-dirs.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
+export PATH:=$(objtree)/build-tools/bin:$(PATH)
+
 KERNEL_DTB = $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
 
 targets-y := $(obj)/initrd.gz
@@ -28,7 +30,7 @@ quiet_cmd_mount_ramdisk = MOUNT   $*
 mount-$(obj)/initrd: mount-%:
 	$(call cmd,mount_ramdisk)
 
-DEPMOD ?= $(objtree)/build-tools/bin/depmod
+DEPMOD ?= depmod
 
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
@@ -68,7 +70,7 @@ quiet_cmd_gen_multi = GEN     $@
 $(obj)/multi.its: $(master-platform)/multi.its.m4 $(kernel-version)
 	$(call cmd,gen_multi)
 
-MKIMAGE ?= $(objtree)/build-tools/bin/mkimage
+MKIMAGE ?= mkimage
 
 quiet_cmd_uimage = UIMAGE  $@
       cmd_uimage = $(MKIMAGE) -f $< $@ $(if $(Q),> /dev/null 2>&1,)
