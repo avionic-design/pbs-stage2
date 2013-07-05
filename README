@@ -35,6 +35,13 @@ A package is any software component that can be built in an automated way.
 A platform is a collection of packages and some additional files and scripts
 to complete the root filesystem.
 
+
+Building a toolchain:
+---------------------
+
+See Documentation/toolchains for details.
+
+
 Configuring a platform:
 -----------------------
 
@@ -50,6 +57,7 @@ PBS uses Kconfig to allow easy selection of software packages that are to be
 built. Based on this configuration it generates a dependency list to make sure
 that packets are built in the correct order.
 
+
 Building a platform:
 --------------------
 
@@ -59,62 +67,6 @@ Build a platform is done with the following command:
 
 Where <build directory> is the directory where you already ran the menuconfig
 command.
-
-A subdirectory (rootfs) will be created where all the software for the
-selected platform will be installed. Binary packages will also be created and
-later installed to a root filesystem with more fine-grained control.
-
-Building a toolchain:
----------------------
-
-Toolchains are sort of "special" platforms. They are located in the toolchains
-subdirectory and are already pre-configured.
-
-To build a toolchain for the ARM architecture and uClibc support with the
-EABI, use the following command:
-
-	$ make O=toolchains/arm-unknown-linux-uclibceabi
-
-A utility script exists which can be used for toolchain batch builds and also
-archives the toolchain binaries for later use, or for deployment on other
-systems. The script is "toolchains/build-toolchains". It reads lines of
-toolchain names from standard input and builds the corresponding toolchain.
-It keeps a log of all activities in "logs/<toolchain>.log". After the build is
-finished, an tarball with the tools built can be found in "toolchains/archive"
-(named after the toolchain and the binutils, gcc, Linux kernel and libc
-versions). The script will automatically clean up after the build, so that
-only the finished cross-compile tools remain in the "usr" subdirectory of the
-toolchain base "toolchains/<toolchain>".
-
-	$ echo arm-unknown-linux-uclibceabi | sh toolchains/build-toolchains
-
-To completely remove a built toolchain, the "clean" command line argument can
-be passed to the script:
-
-	$ echo bfin-linux-uclibc | sh toolchains/build-toolchains clean
-
-This will completely remove any temporary files and also the finished
-binaries.
-
-A list of all available toolchains can be obtained by running the
-"toolchains/list-toolchains" script, which doesn't do much more than just list
-the subdirectories in "toolchains" that contain toolchain configuration files.
-The output of this script can be piped to the "build-toolchains" script to
-build all available toolchains:
-
-	$ sh toolchains/list-toolchains | sh toolchains/build-toolchains
-
-Note that this may take a very long time to complete. A single toolchain needs
-about 2 hours to build on a 2 GHz Intel Dual-Core machine.
-
-Of course, all toolchains can also be remove like this:
-
-	$ sh toolchains/list-toolchains | sh toolchains/build-toolchains clean
-
-If you only want to build i686 toolchains, you could do something like this:
-
-	$ sh toolchains/list-toolchains | grep '^i686' | \
-		toolchains/build-toolchains
 
 
 Packages:
