@@ -1,5 +1,5 @@
 Users can configure PBS behaviour in one of three files: /etc/pbs.mk,
-~/.pbs.mk and pbs.mk in the PBS source tree.
+~/.pbs.mk and pbs.mk in the PBS source tree (checkout directory).
 
 In order for options to become globally available, you need to export them
 using make's "export" keyword. Boolean options are enabled by setting them
