@@ -4,3 +4,5 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_UGLY
 	select PACKAGE_MULTIMEDIA_LIBID3TAG
 	select PACKAGE_MULTIMEDIA_LIBMAD
 	select PACKAGE_MULTIMEDIA_MPEG2DEC
+	help
+	  A set of good-quality plug-ins that might pose distribution problems.

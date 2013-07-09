@@ -2,3 +2,5 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_CORE
 	bool "core"
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_LIBXML2
+	help
+	  core library and elements.

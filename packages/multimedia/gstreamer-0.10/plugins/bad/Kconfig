@@ -2,3 +2,5 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_BAD
 	bool "bad"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_0_10_CORE
 	select PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_FFMPEG
+	help
+	  A set of plug-ins that need more quality, testing or documentation.

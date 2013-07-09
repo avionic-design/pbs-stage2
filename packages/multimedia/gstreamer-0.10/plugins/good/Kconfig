@@ -1,3 +1,5 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_GOOD
 	bool "good"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_0_10_CORE
+	help
+	  A set of good-quality plug-ins under our preferred license, LGPL.
