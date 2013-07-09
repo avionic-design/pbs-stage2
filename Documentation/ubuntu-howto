@@ -1,0 +1,176 @@
+		 Ubuntu - 12.04 LTS - PBS HowTo
+		================================
+
+PBS builds everything from scratch. We try to keep the dependencies to the
+host system as little as possible. But not all packages have complete
+cross-compiling support, so it can happen that we miss something and the
+build step uses files provided by the host-system (e.g header files or
+documentation tools), or a host tool is missed.
+
+In this case you can help yourself and install the package. Finally please
+fill a bug (on github) or write a mail to inform us.
+
+NOTE: We have splitted PBS lately, because some customers don't want to be
+      made public. We are still working on this and it can happen that we
+      have missed something, we have not tested all combinations.
+
+
+Install required packages:
+--------------------------
+
+We assume you have made a default installation without selecting or
+deselecting any packages.
+
+   $ sudo apt-get install build-essential git quilt flex bison gawk
+   $ sudo apt-get install libncurses5-dev autoconf
+
+These packages may not be required, but to avoid problems we recommend to
+install them as well.
+
+   $ sudo apt-get install texi2html texinfo help2man xsltproc
+   $ sudo apt-get install docbook docbook-to-man docbook-xml docbook-xsl docbook-utils sgmls-doc sgml-base
+   $ sudo apt-get install gperf device-tree-compiler intltool
+   $ sudo apt-get install luadoc imagemagick libxml-simple-perl
+
+
+Prepare your self:
+------------------
+
+Enter some directory where you want to place the build system in (like ~/devel)
+
+   $ mkdir ~/devel
+   $ cd ~/devel
+
+
+Checkout the kernel:
+--------------------
+
+The kernel is normally located on github, but you can use you own repository
+if you like.
+
+   $ git clone https://github.com/avionic-design/linux-l4t.git kernel/linux.git
+
+
+Checkout PBS:
+-------------
+
+The latest version of PBS splits the base and the platform specific stuff
+into seperate repositories. Due to some limitations on github you can not use
+a regular recursive clone here. So you will need to clone the subprojects
+manually.
+
+   $ git clone https://github.com/avionic-design/pbs-splitted-pbs.git pbs
+   $ git clone https://github.com/avionic-design/pbs-splitted-platforms-avionic-design.git pbs/platforms/avionic-design
+
+Now prepare the build enviroment.
+
+   $ cd pbs
+   $ mkdir build download logs
+
+To keep the repository nice and clean we add some directories to the ignore
+list.
+
+   $ cat >> .git/info/exclude << EOF
+   build
+   download
+   logs
+   EOF
+
+To avoid the need of root permissions, we update our user-configuration file
+to avoid the usage of mount. This will slow down the final buildstep a bit.
+
+    $ cat >> .pbs.mk << EOF
+    export INITRD_MOUNT_TMPFS=n
+    export ROOTFS_MOUNT_TMPFS=n
+    EOF
+
+
+Build Toolchains for ARM:
+-------------------------
+
+These steps can take a long time depending on your system speed. Be patient
+and get a coffee.
+
+   $ nice make O=toolchains/arm-unknown-linux-uclibceabi
+   $ nice make O=toolchains/arm-unknown-linux-gnueabi
+
+If you already have a toolchain (e.g from linaro) you can update your pbs.mk
+file to use it and skip this part. See Documenation/user-configuration for
+details.
+
+Please note: The toolchain you create here is only softfp. For a hardfp
+toolchain please use pbs-stage1.
+
+
+Build Platform:
+---------------
+
+The build steps can take a very long time depending on your system speed. Get
+more coffee. For this howto we use the TEC platform as example. All other
+platforms work more or less the same way. Some platform are splitted into
+initrd and rootfs. Other platform don't use a initrd, so its just one step
+instead of two.
+
+Lets start and create the platform build output directories:
+
+   $ mkdir -p build/initrd build/rootfs
+
+The platform configuration files are located under <pbs-dir>/configs. So if
+you want to use a different platform, you can look here for all available
+configurations.
+
+For now we load the default configuration for the TEC initrd:
+
+   $ make O=build/initrd tec-initrd_defconfig
+
+Optional: Change package selection or adjust kernel path.
+
+   $ nice make O=build/rootfs menuconfig
+        Packages -->
+            Operating System Kernel -->
+                (...) path to local directory
+    Save and Exit
+
+Now build the platform as mentioned, this step can take some time depending
+on the selected packages and the speed of your computer.
+
+   $ nice make O=build/initrd
+
+Once all the packages have been built, create the initrd filesystem:
+
+   $ nice make O=build/initrd initrd
+
+For the rootfs the procedure is similar, but the build will take a lot more
+time because we have a lot more packages to build. So lets start and load the
+default package selection for the root filesystem.
+
+   $ make O=build/rootfs tec-rootfs_defconfig
+
+Optional: Same as above.
+
+   $ nice make O=build/rootfs menuconfig
+
+And build the root filesystem
+
+   $ nice make O=build/rootfs
+   $ nice make O=build/rootfs rootfs
+
+
+Prepare an SD-Card:
+-------------------
+
+Put an sd-card in you cardreader, partionize it and create the filesystems.
+This must be done only once.
+
+   $ pushd platforms/avionic-design/plutux
+   $ sudo ./make-sdcard /dev/sdX
+   $ popd
+
+Now copy the kernel-initrd and rootfs to the sd-card.
+
+   $ sudo mount /dev/sdX1 /mnt
+   $ sudo cp build/rootfs/rootfs.img /mnt
+   $ sudo cp build/initrd/uImage /mnt/boot
+   $ sudo umount /dev/sdX1
+
+Now you can put the sd-card into the device and powerup.
