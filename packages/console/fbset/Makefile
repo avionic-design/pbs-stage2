@@ -26,7 +26,10 @@ install-args = \
 	DESTDIR=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && \
+	mkdir -p $(DESTDIR)/usr/sbin \
+		 $(DESTDIR)/usr/share/man/man5 \
+		 $(DESTDIR)/usr/share/man/man8 && \
+		cd $(pkgbuildtree) &&  \
 		$(priv) $(env) $(MAKE) $(install-args) install
 
 stripfiles = \
