@@ -1,7 +1,7 @@
 PACKAGE = libxdg-basedir
 VERSION = 1.2.0
 
-LOCATION = http://n.ethz.ch/~nevillm/download/$(PACKAGE)
+LOCATION = http://nevill.ch/libxdg-basedir/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
