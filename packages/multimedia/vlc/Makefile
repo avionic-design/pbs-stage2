@@ -21,7 +21,8 @@ conf-args += \
 	--disable-qt4 \
 	--disable-skins2 \
 	--disable-neon \
-	--disable-glx
+	--disable-glx \
+	--disable-dbus
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
   conf-args += --disable-speex
