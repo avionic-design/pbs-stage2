@@ -5,3 +5,4 @@ obj-$(CONFIG_PACKAGE_WM_I3) += i3
 obj-$(CONFIG_PACKAGE_WM_I3STATUS) += i3status
 obj-$(CONFIG_PACKAGE_WM_ICEWM) += icewm
 obj-$(CONFIG_PACKAGE_WM_METACITY) += metacity
+obj-$(CONFIG_PACKAGE_WM_OPENBOX) += openbox

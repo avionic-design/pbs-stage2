@@ -1,0 +1,4 @@
+/usr/bin/obxprop
+/usr/bin/openbox
+/usr/bin/openbox-session
+/usr/lib/*.so.*

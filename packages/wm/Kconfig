@@ -6,5 +6,6 @@ source "packages/wm/i3status/Kconfig"
 source "packages/wm/icewm/Kconfig"
 source "packages/wm/matchbox/Kconfig"
 source "packages/wm/metacity/Kconfig"
+source "packages/wm/openbox/Kconfig"
 
 endmenu
