@@ -1,0 +1,6 @@
+config PACKAGE_MULTIMEDIA_LIBTREMOR
+	bool "libtremor"
+	select PACKAGES_MULTIMEDIA_LIBOGG
+	help
+	  The Tremor reference decoder provides an integer-only implementation
+	  of the decoder for embedded devices.
