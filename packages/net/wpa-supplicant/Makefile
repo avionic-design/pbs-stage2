@@ -1,9 +1,8 @@
 PACKAGE = wpa_supplicant
-VERSION = 1.0-rc2
-SNAPSHOT = git20120302
+VERSION = 1.1
 
 LOCATION = http://hostap.epitest.fi/releases
-TARBALLS = $(PACKAGE)-$(VERSION).$(SNAPSHOT).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
