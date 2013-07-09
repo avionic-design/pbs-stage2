@@ -1,5 +1,10 @@
 config PACKAGE_LIBS_GLIB_NETWORKING
 	bool "glib-networking"
+	select PACKAGE_BUILD_TOOLS_INTLTOOL
 	select PACKAGE_LIBS_GLIB
 	select PACKAGE_LIBS_GNUTLS
 	select PACKAGE_LIBS_LIBGCRYPT
+	help
+	  This package contains modules that extend the networking support in GIO.
+	  In particular, it contains libproxy- and GSettings-based GProxyResolver
+	  implementations and a gnutls-based GTlsConnection implementation.
