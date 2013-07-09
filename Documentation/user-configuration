@@ -20,3 +20,7 @@ The following is a list of supported variables:
 		filesystem. This can speed up the process because of reduced
 		disk I/O but it also has the disadvantage of requiring super
 		user permissions for the mount operation.
+
+	TOOLCHAIN_BASE_PATH
+		The default is set to <pbsdir>/toolchains. But you can also
+		use a different toolchain.
