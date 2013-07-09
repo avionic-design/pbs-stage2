@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 2.0.6
+VERSION = 2.0.7
 LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
