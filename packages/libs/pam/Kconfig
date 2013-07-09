@@ -1,4 +1,9 @@
 config PACKAGE_LIBS_PAM
 	bool "pam"
+	select PACKAGE_BUILD_TOOLS_FLEX
 	select PACKAGE_DEVEL_FLEX
 	select PACKAGE_LIBS_LIBTIRPC
+	help
+	  PAM (Pluggable Authentication Modules) is a system security tool
+	  that allows system administrators to set authentication policy
+	  without having to recompile programs that handle authentication.
