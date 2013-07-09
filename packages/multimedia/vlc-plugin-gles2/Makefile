@@ -3,7 +3,7 @@ VERSION = 0.1.2
 LICENSE = GPL
 
 LOCATION = ftp.avionic-design.de/pub/vlc-plugin-gles2
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
