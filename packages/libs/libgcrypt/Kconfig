@@ -1,3 +1,7 @@
 config PACKAGE_LIBS_LIBGCRYPT
 	bool "libgcrypt"
+	select PACKAGE_BUILD_TOOLS_LIBGPG_ERROR
 	select PACKAGE_LIBS_LIBGPG_ERROR
+	help
+	  Libgcrypt is a general purpose crypto library based on the code
+	  used in GNU Privacy Guard.
