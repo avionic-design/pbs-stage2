@@ -1,6 +1,7 @@
 menu "XFCE"
 
 source "packages/desktop/xfce/exo/Kconfig"
+source "packages/desktop/xfce/garcon/Kconfig"
 source "packages/desktop/xfce/libxfce4ui/Kconfig"
 source "packages/desktop/xfce/libxfce4util/Kconfig"
 source "packages/desktop/xfce/thunar/Kconfig"
