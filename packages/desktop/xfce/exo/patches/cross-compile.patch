@@ -1,45 +1,48 @@
+From bd0d6d6de1a44daa42e258cf82a5f02445c1f071 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Thu, 11 Jul 2013 15:25:01 +0200
+Subject: [PATCH 2/2] crosscompile
+
+---
+ Makefile.am  |  3 +--
+ Makefile.in  |  3 +--
+ configure    | 49 ++++++++++++++++++++++++++++++-------------------
+ configure.in | 35 ++++++++++++++++++++---------------
+ 4 files changed, 52 insertions(+), 38 deletions(-)
+
 diff --git a/Makefile.am b/Makefile.am
-index 7517cfa..1ff43c8 100644
+index 0ab3853..3e72391 100644
 --- a/Makefile.am
 +++ b/Makefile.am
-@@ -15,8 +15,7 @@ SUBDIRS =								\
+@@ -8,8 +8,7 @@ SUBDIRS =								\
+ 	docs								\
  	icons								\
  	pixmaps								\
- 	po								\
--	$(PYTHON_SUBDIR)						\
+-	po								\
 -	tests
-+	$(PYTHON_SUBDIR)
++	po
  
  AUTOMAKE_OPTIONS =							\
- 	1.8								\
+ 	1.9								\
 diff --git a/Makefile.in b/Makefile.in
-index 0c763c6..74b9f9a 100644
+index 1cefc64..5dac797 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -76,7 +76,7 @@ ETAGS = etags
- CTAGS = ctags
- DIST_SUBDIRS = exo exo-csource exo-support exo-desktop-item-edit \
- 	exo-gio-module exo-helper exo-open docs icons pixmaps po \
--	python tests
-+	python
- DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
- distdir = $(PACKAGE)-$(VERSION)
- top_distdir = $(distdir)
-@@ -335,8 +335,7 @@ SUBDIRS = \
+@@ -351,8 +351,7 @@ SUBDIRS = \
+ 	docs								\
  	icons								\
  	pixmaps								\
- 	po								\
--	$(PYTHON_SUBDIR)						\
+-	po								\
 -	tests
-+	$(PYTHON_SUBDIR)
++	po
  
  AUTOMAKE_OPTIONS = \
- 	1.8								\
+ 	1.9								\
 diff --git a/configure b/configure
-index d1f8320..d80edc2 100755
+index 279a19f..a837ccd 100755
 --- a/configure
 +++ b/configure
-@@ -12913,7 +12913,13 @@ fi
+@@ -13701,7 +13701,13 @@ fi
  rm -f conftest.mmap conftest.txt
  
  
@@ -54,7 +57,7 @@ index d1f8320..d80edc2 100755
    { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
  $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
  as_fn_error $? "cannot run test program while cross compiling
-@@ -12922,31 +12928,36 @@ else
+@@ -13710,31 +13716,36 @@ else
    cat confdefs.h - <<_ACEOF >conftest.$ac_ext
  /* end confdefs.h.  */
  
@@ -110,10 +113,10 @@ index d1f8320..d80edc2 100755
  
      GETTEXT_PACKAGE=exo-1
 diff --git a/configure.in b/configure.in
-index 97034fa..5e7241d 100644
+index 39867b5..86a337b 100644
 --- a/configure.in
 +++ b/configure.in
-@@ -124,22 +124,27 @@ AC_FUNC_MMAP()
+@@ -137,22 +137,27 @@ AC_FUNC_MMAP()
  dnl ***************************************
  dnl *** Check for strftime() extensions ***
  dnl ***************************************
@@ -156,3 +159,6 @@ index 97034fa..5e7241d 100644
  
  dnl ******************************
  dnl *** Check for i18n support ***
+-- 
+1.8.3.1
+
