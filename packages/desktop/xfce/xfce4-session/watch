@@ -1,2 +1,2 @@
 version=3
-http://mocha.xfce.org/archive/src/xfce/xfce4-session/([\d\.]+)/xfce4-session-(.*)\.tar\.bz2
+http://archive.xfce.org/xfce/4.10/src/xfce4-session-(.*)\.tar\.bz2
