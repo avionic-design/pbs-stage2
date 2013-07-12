@@ -1,2 +1,2 @@
 version=3
-http://mocha.xfce.org/archive/src/xfce/xfwm4/([\d\.]+)/xfwm4-(.*)\.tar\.bz2
+http://archive.xfce.org/xfce/4.10/src/xfwm4-(.*)\.tar\.bz2
