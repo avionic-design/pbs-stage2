@@ -24,8 +24,13 @@ quiet_cmd_install_package =
 $(packages): install-%:
 	$(call cmd,install_package)
 
+ifeq ($(INITRD_MOUNT_TMPFS),y)
 quiet_cmd_mount_ramdisk = MOUNT   $*
       cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs tmpfs $*
+else
+quiet_cmd_mount_ramdisk = MOUNT   $*
+      cmd_mount_ramdisk = mkdir -p $*
+endif
 
 mount-$(obj)/initrd: mount-%:
 	$(call cmd,mount_ramdisk)
@@ -45,8 +50,13 @@ $(obj)/initrd: %: mount-% $(packages) FORCE
 quiet_cmd_initrd = CPIO    $@
       cmd_initrd = cd $< && find | cpio -H newc --quiet -o > $@
 
+ifeq ($(INITRD_MOUNT_TMPFS),y)
 quiet_cmd_umount_ramdisk = UMOUNT  $<
       cmd_umount_ramdisk = umount $< && rmdir $<
+else
+quiet_cmd_umount_ramdisk = UMOUNT  $<
+      cmd_umount_ramdisk = rm -r $<
+endif
 
 $(obj)/initrd.img: $(obj)/initrd FORCE
 	$(call cmd,initrd)

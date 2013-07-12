@@ -14,12 +14,19 @@ The following is a list of supported variables:
 
 		A cache size of several GiB is recommended.
 
+	INITRD_MOUNT_TMPFS
+		Enabling this option causes the initial ramdisk to be created
+		in a temporary (RAM-based) filesystem. This can speed up the
+		process because of reduced disk I/O but it also has the
+		disadvantage of requiring super user permissions for the
+		mount operation.
+
 	ROOTFS_MOUNT_TMPFS
 		Enabling this option causes the final root filesystem image
-		or initial ramdisk to be created in a temporary (RAM-based)
-		filesystem. This can speed up the process because of reduced
-		disk I/O but it also has the disadvantage of requiring super
-		user permissions for the mount operation.
+		to be created in a temporary (RAM-based) filesystem. This can
+		speed up the process because of reduced disk I/O but it also
+		has the disadvantage of requiring super user permissions for
+		the mount operation.
 
 	TOOLCHAIN_BASE_PATH
 		The default is set to <pbsdir>/toolchains. But you can also
