@@ -1,10 +1,10 @@
 PACKAGE = Thunar
-VERSION = 1.1.4
+VERSION = 1.4.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = http://mocha.xfce.org/archive/src/xfce/thunar/$(MAJOR).$(MINOR)
+LOCATION = http://archive.xfce.org/xfce/4.10/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
