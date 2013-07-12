@@ -1,2 +1,2 @@
 version=3
-http://mocha.xfce.org/archive/src/xfce/libxfce4util/([\d\.]+)/libxfce4util-(.*)\.tar\.bz2
+http://archive.xfce.org/xfce/4.10/src/libxfce4util-(.*)\.tar\.bz2
