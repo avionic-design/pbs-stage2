@@ -317,6 +317,9 @@ distclean: clean $(distclean-dirs)
 %/configure:
 	$(Q)$(MAKE) $(package)=$* configure
 
+%/watch: FORCE
+	$(Q)$(MAKE) $(watch)=$* watch
+
 quiet_cmd_autoconf = GEN     $@
       cmd_autoconf = $(srctree)/configure --output $@ > /dev/null
 
