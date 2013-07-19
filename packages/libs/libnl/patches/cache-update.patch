@@ -1,25 +1,8 @@
-From 42af91b5ee62732a030cf014336790273c087a19 Mon Sep 17 00:00:00 2001
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Date: Tue, 17 Jul 2012 10:32:27 +0200
-Subject: [PATCH] Export nl_cache_request_full_dump()
-
-This is required under some circumstances to force a cache update. One
-case where this is necessary is when bringing up a SLIP interface. For
-some reason the flags change to IFF_RUNNING | IFF_LOWER_UP does not
-update the cache. Currently this is worked around by manually forcing
-a cache update using the nl_cache_request_full_dump() function.
-
-Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
----
- include/netlink/cache.h | 2 ++
- lib/cache.c             | 3 +--
- 2 files changed, 3 insertions(+), 2 deletions(-)
-
 diff --git a/include/netlink/cache.h b/include/netlink/cache.h
-index fd137e1..2eb66ec 100644
+index 415bb00..7101a3d 100644
 --- a/include/netlink/cache.h
 +++ b/include/netlink/cache.h
-@@ -60,6 +60,8 @@ extern int			nl_cache_add(struct nl_cache *,
+@@ -72,6 +72,8 @@ extern int			nl_cache_add(struct nl_cache *,
  extern int			nl_cache_parse_and_add(struct nl_cache *,
  						       struct nl_msg *);
  extern void			nl_cache_remove(struct nl_object *);
@@ -29,10 +12,10 @@ index fd137e1..2eb66ec 100644
  						struct nl_cache *);
  extern int			nl_cache_pickup(struct nl_sock *,
 diff --git a/lib/cache.c b/lib/cache.c
-index 45a1a27..dd794c5 100644
+index e99e9d2..8527f71 100644
 --- a/lib/cache.c
 +++ b/lib/cache.c
-@@ -627,8 +627,7 @@ void nl_cache_set_arg2(struct nl_cache *cache, int arg)
+@@ -639,8 +639,7 @@ void nl_cache_set_flags(struct nl_cache *cache, unsigned int flags)
   *
   * @return 0 on success or a negative error code.
   */
@@ -40,8 +23,8 @@ index 45a1a27..dd794c5 100644
 -				      struct nl_cache *cache)
 +int nl_cache_request_full_dump(struct nl_sock *sk, struct nl_cache *cache)
  {
- 	NL_DBG(2, "Requesting dump from kernel for cache %p <%s>...\n",
- 	          cache, nl_cache_name(cache));
+ 	if (cache->c_ops->co_request_update == NULL)
+ 		return -NLE_OPNOTSUPP;
 -- 
-1.7.11.1
+1.8.3.1
 

@@ -1,5 +1,5 @@
 PACKAGE = libnl
-VERSION = 3.2.21
+VERSION = 3.2.22
 LICENSE = LGPL
 
 LOCATION = http://www.infradead.org/~tgr/$(PACKAGE)/files
