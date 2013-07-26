@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-gles
-VERSION = 0.10.2
+VERSION = 0.10.4
 LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
