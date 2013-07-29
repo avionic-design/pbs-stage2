@@ -7,7 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools.mk
 
 conf-args += \
-	--libexecdir=$(prefix)/lib/$(PACKAGE)
+	--libexecdir=$(prefix)/lib/$(PACKAGE) \
+	--with-libsensors=$(SYSROOT)/$(prefix)
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
