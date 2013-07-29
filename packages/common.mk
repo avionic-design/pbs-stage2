@@ -19,7 +19,7 @@ CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 TOOLCHAIN_BASE_PATH ?= $(srctree)/toolchains/$(TARGET)/usr
-PATH := $(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
+PATH := $(BUILD_TOOLS)/bin:$(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
 LD_LIBRARY_PATH := $(BUILD_TOOLS)/lib
 CROSS_COMPILE ?= $(TARGET)-
 
@@ -39,7 +39,7 @@ HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
 BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
 
 priv = fakeroot
-env = env -i PATH=$(objtree)/build-tools/bin:$(PATH) LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) HOME=$(HOME)
+env = env -i PATH=$(PATH) LD_LIBRARY_PATH=$(LD_LIBRARY_PATH) HOME=$(HOME)
 export priv env
 
 # various environment that are generally needed but can still be disabled
