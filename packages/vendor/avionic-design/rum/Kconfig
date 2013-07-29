@@ -3,3 +3,7 @@ config PACKAGE_VENDOR_AVIONIC_DESIGN_RUM
 	select PACKAGE_CORE_LM_SENSORS
 	select PACKAGE_LIBS_JSON_GLIB
 	select PACKAGE_LIBS_LIBSOUP
+	help
+	  The Remote-Unit-Manager is a simple HTTP server providing
+	  information about discovered devices and allowing these
+	  devices to be controlled remotely via a JSON-based interface.
