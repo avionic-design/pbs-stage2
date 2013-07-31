@@ -1,0 +1,4428 @@
+From e1758f2729f306ff9edc21aa2b77d6f284c497d7 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Fri, 12 Apr 2013 11:15:14 +0200
+Subject: [PATCH 4/5] Rebase docs to 2013-04-08
+
+Commit id is fbb5ded64350b3364c4b917130ae3d8c37a3c689
+---
+ docs/Makefile.in                                   | 182 ++++---
+ docs/libs/Makefile.in                              |  79 +++-
+ docs/libs/gst-plugins-bad-libs-sections.txt        |  20 +-
+ docs/plugins/Makefile.am                           |   1 +
+ docs/plugins/Makefile.in                           | 191 +++++---
+ docs/plugins/gst-plugins-bad-plugins-docs.sgml     |   4 +-
+ docs/plugins/gst-plugins-bad-plugins-overrides.txt |   0
+ docs/plugins/gst-plugins-bad-plugins-sections.txt  |  14 +
+ docs/plugins/gst-plugins-bad-plugins.args          | 140 ++++--
+ docs/plugins/gst-plugins-bad-plugins.hierarchy     | 526 ---------------------
+ docs/plugins/gst-plugins-bad-plugins.interfaces    |   2 +
+ docs/plugins/inspect/plugin-adpcmdec.xml           |   4 +-
+ docs/plugins/inspect/plugin-adpcmenc.xml           |   4 +-
+ docs/plugins/inspect/plugin-aiff.xml               |   4 +-
+ docs/plugins/inspect/plugin-apexsink.xml           |   4 +-
+ docs/plugins/inspect/plugin-asfmux.xml             |   4 +-
+ docs/plugins/inspect/plugin-assrender.xml          |   4 +-
+ docs/plugins/inspect/plugin-audiovisualizers.xml   |   4 +-
+ docs/plugins/inspect/plugin-autoconvert.xml        |   4 +-
+ docs/plugins/inspect/plugin-bayer.xml              |   4 +-
+ docs/plugins/inspect/plugin-bz2.xml                |   4 +-
+ docs/plugins/inspect/plugin-camerabin.xml          |   4 +-
+ docs/plugins/inspect/plugin-camerabin2.xml         |   4 +-
+ docs/plugins/inspect/plugin-cdaudio.xml            |   4 +-
+ docs/plugins/inspect/plugin-cdxaparse.xml          |   4 +-
+ docs/plugins/inspect/plugin-celt.xml               |   4 +-
+ docs/plugins/inspect/plugin-chromaprint.xml        |  34 ++
+ docs/plugins/inspect/plugin-cog.xml                |   4 +-
+ docs/plugins/inspect/plugin-coloreffects.xml       |   4 +-
+ docs/plugins/inspect/plugin-colorspace.xml         |   2 +-
+ docs/plugins/inspect/plugin-curl.xml               |   4 +-
+ docs/plugins/inspect/plugin-dataurisrc.xml         |   4 +-
+ docs/plugins/inspect/plugin-dc1394.xml             |   4 +-
+ docs/plugins/inspect/plugin-dccp.xml               |   2 +-
+ docs/plugins/inspect/plugin-debugutilsbad.xml      |   4 +-
+ docs/plugins/inspect/plugin-decklink.xml           |   4 +-
+ docs/plugins/inspect/plugin-dfbvideosink.xml       |   4 +-
+ docs/plugins/inspect/plugin-dirac.xml              |   4 +-
+ docs/plugins/inspect/plugin-dtmf.xml               |   4 +-
+ docs/plugins/inspect/plugin-dtsdec.xml             |   4 +-
+ docs/plugins/inspect/plugin-dvb.xml                |   4 +-
+ docs/plugins/inspect/plugin-dvbsuboverlay.xml      |   4 +-
+ docs/plugins/inspect/plugin-dvdspu.xml             |   4 +-
+ docs/plugins/inspect/plugin-faac.xml               |   4 +-
+ docs/plugins/inspect/plugin-faad.xml               |   4 +-
+ docs/plugins/inspect/plugin-faceoverlay.xml        |   2 +-
+ docs/plugins/inspect/plugin-fbdevsink.xml          |   4 +-
+ docs/plugins/inspect/plugin-festival.xml           |   4 +-
+ docs/plugins/inspect/plugin-fieldanalysis.xml      |   2 +-
+ docs/plugins/inspect/plugin-fragmented.xml         |   2 +-
+ docs/plugins/inspect/plugin-freeverb.xml           |   4 +-
+ docs/plugins/inspect/plugin-freeze.xml             |   4 +-
+ docs/plugins/inspect/plugin-frei0r.xml             |   4 +-
+ docs/plugins/inspect/plugin-gaudieffects.xml       |   2 +-
+ docs/plugins/inspect/plugin-geometrictransform.xml |   4 +-
+ docs/plugins/inspect/plugin-gsettings.xml          |   4 +-
+ docs/plugins/inspect/plugin-gsm.xml                |   4 +-
+ docs/plugins/inspect/plugin-gstsiren.xml           |   4 +-
+ docs/plugins/inspect/plugin-h264parse.xml          |   4 +-
+ docs/plugins/inspect/plugin-hdvparse.xml           |   2 +-
+ docs/plugins/inspect/plugin-id3tag.xml             |   4 +-
+ docs/plugins/inspect/plugin-inter.xml              |  32 +-
+ docs/plugins/inspect/plugin-interlace.xml          |   4 +-
+ docs/plugins/inspect/plugin-ivfparse.xml           |   4 +-
+ docs/plugins/inspect/plugin-jp2kdecimator.xml      |   4 +-
+ docs/plugins/inspect/plugin-jpegformat.xml         |   4 +-
+ docs/plugins/inspect/plugin-kate.xml               |   8 +-
+ docs/plugins/inspect/plugin-ladspa.xml             |   4 +-
+ docs/plugins/inspect/plugin-legacyresample.xml     |   4 +-
+ docs/plugins/inspect/plugin-linsys.xml             |   2 +-
+ docs/plugins/inspect/plugin-liveadder.xml          |   4 +-
+ docs/plugins/inspect/plugin-mimic.xml              |   4 +-
+ docs/plugins/inspect/plugin-mms.xml                |   4 +-
+ docs/plugins/inspect/plugin-modplug.xml            |   4 +-
+ docs/plugins/inspect/plugin-mpeg2enc.xml           |   4 +-
+ docs/plugins/inspect/plugin-mpegdemux2.xml         |   4 +-
+ docs/plugins/inspect/plugin-mpegpsmux.xml          |   4 +-
+ docs/plugins/inspect/plugin-mpegtsdemux.xml        |   6 +-
+ docs/plugins/inspect/plugin-mpegtsmux.xml          |   4 +-
+ docs/plugins/inspect/plugin-mpegvideoparse.xml     |   4 +-
+ docs/plugins/inspect/plugin-mplex.xml              |   4 +-
+ docs/plugins/inspect/plugin-musepack.xml           |   4 +-
+ docs/plugins/inspect/plugin-musicbrainz.xml        |   4 +-
+ docs/plugins/inspect/plugin-mve.xml                |   4 +-
+ docs/plugins/inspect/plugin-mxf.xml                |   4 +-
+ docs/plugins/inspect/plugin-mythtv.xml             |   4 +-
+ docs/plugins/inspect/plugin-neon.xml               |   4 +-
+ docs/plugins/inspect/plugin-nsf.xml                |   4 +-
+ docs/plugins/inspect/plugin-nuvdemux.xml           |   4 +-
+ docs/plugins/inspect/plugin-ofa.xml                |   4 +-
+ docs/plugins/inspect/plugin-patchdetect.xml        |   2 +-
+ docs/plugins/inspect/plugin-pcapparse.xml          |   2 +-
+ docs/plugins/inspect/plugin-pnm.xml                |   4 +-
+ docs/plugins/inspect/plugin-rawparse.xml           |   4 +-
+ docs/plugins/inspect/plugin-real.xml               |   4 +-
+ docs/plugins/inspect/plugin-removesilence.xml      |   4 +-
+ docs/plugins/inspect/plugin-resindvd.xml           |   2 +-
+ docs/plugins/inspect/plugin-rfbsrc.xml             |   4 +-
+ docs/plugins/inspect/plugin-rsvg.xml               |   4 +-
+ docs/plugins/inspect/plugin-rtmp.xml               |   4 +-
+ docs/plugins/inspect/plugin-rtpmux.xml             |   4 +-
+ docs/plugins/inspect/plugin-rtpvp8.xml             |   4 +-
+ docs/plugins/inspect/plugin-scaletempo.xml         |   2 +-
+ docs/plugins/inspect/plugin-schro.xml              |   8 +-
+ docs/plugins/inspect/plugin-sdi.xml                |   2 +-
+ docs/plugins/inspect/plugin-sdp.xml                |   4 +-
+ docs/plugins/inspect/plugin-segmentclip.xml        |   4 +-
+ docs/plugins/inspect/plugin-shm.xml                |   4 +-
+ docs/plugins/inspect/plugin-smooth.xml             |   4 +-
+ docs/plugins/inspect/plugin-sndfile.xml            |   4 +-
+ docs/plugins/inspect/plugin-soundtouch.xml         |   4 +-
+ docs/plugins/inspect/plugin-speed.xml              |   4 +-
+ docs/plugins/inspect/plugin-stereo.xml             |   4 +-
+ docs/plugins/inspect/plugin-subenc.xml             |   4 +-
+ docs/plugins/inspect/plugin-tta.xml                |   4 +-
+ docs/plugins/inspect/plugin-vcdsrc.xml             |   4 +-
+ docs/plugins/inspect/plugin-vdpau.xml              |   2 +-
+ docs/plugins/inspect/plugin-videofiltersbad.xml    |   2 +-
+ docs/plugins/inspect/plugin-videomaxrate.xml       |   4 +-
+ docs/plugins/inspect/plugin-videomeasure.xml       |   4 +-
+ docs/plugins/inspect/plugin-videoparsersbad.xml    |   4 +-
+ docs/plugins/inspect/plugin-videosignal.xml        |   4 +-
+ docs/plugins/inspect/plugin-vmnc.xml               |   4 +-
+ docs/plugins/inspect/plugin-vp8.xml                |   4 +-
+ docs/plugins/inspect/plugin-wildmidi.xml           |   4 +-
+ docs/plugins/inspect/plugin-xvid.xml               |   4 +-
+ docs/plugins/inspect/plugin-y4mdec.xml             |   2 +-
+ docs/plugins/scanobj-build.stamp                   |   0
+ docs/random/LICENSE                                |  18 +
+ docs/random/PORTED_09                              |  27 ++
+ 130 files changed, 763 insertions(+), 941 deletions(-)
+ create mode 100644 docs/plugins/gst-plugins-bad-plugins-overrides.txt
+ delete mode 100644 docs/plugins/gst-plugins-bad-plugins.hierarchy
+ create mode 100644 docs/plugins/inspect/plugin-chromaprint.xml
+ delete mode 100644 docs/plugins/scanobj-build.stamp
+ create mode 100644 docs/random/LICENSE
+ create mode 100644 docs/random/PORTED_09
+
+diff --git a/docs/Makefile.in b/docs/Makefile.in
+index f119da1..2e776fb 100644
+--- a/docs/Makefile.in
++++ b/docs/Makefile.in
+@@ -1,9 +1,8 @@
+-# Makefile.in generated by automake 1.11.3 from Makefile.am.
++# Makefile.in generated by automake 1.12.6 from Makefile.am.
+ # @configure_input@
+ 
+-# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+-# 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software
+-# Foundation, Inc.
++# Copyright (C) 1994-2012 Free Software Foundation, Inc.
++
+ # This Makefile.in is free software; the Free Software Foundation
+ # gives unlimited permission to copy and/or distribute it,
+ # with or without modifications, as long as this notice is preserved.
+@@ -15,6 +14,23 @@
+ 
+ @SET_MAKE@
+ VPATH = @srcdir@
++am__make_dryrun = \
++  { \
++    am__dry=no; \
++    case $$MAKEFLAGS in \
++      *\\[\ \	]*) \
++        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
++          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
++      *) \
++        for am__flg in $$MAKEFLAGS; do \
++          case $$am__flg in \
++            *=*|--*) ;; \
++            *n*) am__dry=yes; break;; \
++          esac; \
++        done;; \
++    esac; \
++    test $$am__dry = yes; \
++  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -33,6 +49,7 @@ PRE_UNINSTALL = :
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
++target_triplet = @target@
+ subdir = docs
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+ 	$(srcdir)/version.entities.in
+@@ -41,7 +58,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
+ 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
+ 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
+ 	$(top_srcdir)/common/m4/as-libtool.m4 \
+-	$(top_srcdir)/common/m4/as-objc.m4 \
+ 	$(top_srcdir)/common/m4/as-python.m4 \
+ 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
+ 	$(top_srcdir)/common/m4/as-version.m4 \
+@@ -78,12 +94,18 @@ mkinstalldirs = $(install_sh) -d
+ CONFIG_HEADER = $(top_builddir)/config.h
+ CONFIG_CLEAN_FILES = version.entities
+ CONFIG_CLEAN_VPATH_FILES =
++AM_V_P = $(am__v_P_@AM_V@)
++am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
++am__v_P_0 = false
++am__v_P_1 = :
+ AM_V_GEN = $(am__v_GEN_@AM_V@)
+ am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+-am__v_GEN_0 = @echo "  GEN   " $@;
++am__v_GEN_0 = @echo "  GEN     " $@;
++am__v_GEN_1 = 
+ AM_V_at = $(am__v_at_@AM_V@)
+ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
++am__v_at_1 = 
+ SOURCES =
+ DIST_SOURCES =
+ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+@@ -93,6 +115,11 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+ 	install-pdf-recursive install-ps-recursive install-recursive \
+ 	installcheck-recursive installdirs-recursive pdf-recursive \
+ 	ps-recursive uninstall-recursive
++am__can_run_installinfo = \
++  case $$AM_UPDATE_INFO_DIR in \
++    n|no|NO) false;; \
++    *) (install-info --version) >/dev/null 2>&1;; \
++  esac
+ RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+   distclean-recursive maintainer-clean-recursive
+ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+@@ -157,6 +184,8 @@ CELT_0_8_LIBS = @CELT_0_8_LIBS@
+ CELT_CFLAGS = @CELT_CFLAGS@
+ CELT_LIBS = @CELT_LIBS@
+ CFLAGS = @CFLAGS@
++CHROMAPRINT_CFLAGS = @CHROMAPRINT_CFLAGS@
++CHROMAPRINT_LIBS = @CHROMAPRINT_LIBS@
+ COG_CFLAGS = @COG_CFLAGS@
+ COG_LIBS = @COG_LIBS@
+ CPP = @CPP@
+@@ -181,10 +210,12 @@ DEPDIR = @DEPDIR@
+ DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
+ DIRAC_CFLAGS = @DIRAC_CFLAGS@
+ DIRAC_LIBS = @DIRAC_LIBS@
++DIRECT3D9_LIBS = @DIRECT3D9_LIBS@
+ DIRECT3D_LIBS = @DIRECT3D_LIBS@
+ DIRECTDRAW_LIBS = @DIRECTDRAW_LIBS@
+ DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+ DIRECTFB_LIBS = @DIRECTFB_LIBS@
++DIRECTSHOW_LIBS = @DIRECTSHOW_LIBS@
+ DIRECTSOUND_LIBS = @DIRECTSOUND_LIBS@
+ DIRECTX_CFLAGS = @DIRECTX_CFLAGS@
+ DIRECTX_LDFLAGS = @DIRECTX_LDFLAGS@
+@@ -199,9 +230,12 @@ DVDNAV_LIBS = @DVDNAV_LIBS@
+ ECHO_C = @ECHO_C@
+ ECHO_N = @ECHO_N@
+ ECHO_T = @ECHO_T@
++EGLGLES_CFLAGS = @EGLGLES_CFLAGS@
++EGLGLES_LIBS = @EGLGLES_LIBS@
+ EGREP = @EGREP@
+ ERROR_CFLAGS = @ERROR_CFLAGS@
+ ERROR_CXXFLAGS = @ERROR_CXXFLAGS@
++ERROR_OBJCFLAGS = @ERROR_OBJCFLAGS@
+ EXEEXT = @EXEEXT@
+ EXIF_CFLAGS = @EXIF_CFLAGS@
+ EXIF_LIBS = @EXIF_LIBS@
+@@ -259,13 +293,16 @@ GST_LIB_LDFLAGS = @GST_LIB_LDFLAGS@
+ GST_LICENSE = @GST_LICENSE@
+ GST_LT_LDFLAGS = @GST_LT_LDFLAGS@
+ GST_MAJORMINOR = @GST_MAJORMINOR@
++GST_OBJCFLAGS = @GST_OBJCFLAGS@
+ GST_OPTION_CFLAGS = @GST_OPTION_CFLAGS@
+ GST_OPTION_CXXFLAGS = @GST_OPTION_CXXFLAGS@
++GST_OPTION_OBJCFLAGS = @GST_OPTION_OBJCFLAGS@
+ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
+ GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
+ GST_PLUGINS_ALL = @GST_PLUGINS_ALL@
+ GST_PLUGINS_BAD_CFLAGS = @GST_PLUGINS_BAD_CFLAGS@
+ GST_PLUGINS_BAD_CXXFLAGS = @GST_PLUGINS_BAD_CXXFLAGS@
++GST_PLUGINS_BAD_OBJCFLAGS = @GST_PLUGINS_BAD_OBJCFLAGS@
+ GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+ GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
+ GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
+@@ -284,13 +321,19 @@ GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
+ GST_PREFIX = @GST_PREFIX@
+ GST_REVISION = @GST_REVISION@
+ GST_TOOLS_DIR = @GST_TOOLS_DIR@
++GST_VIDEO_CFLAGS = @GST_VIDEO_CFLAGS@
++GST_VIDEO_LIBS = @GST_VIDEO_LIBS@
+ GTKDOC_CHECK = @GTKDOC_CHECK@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_LIBS = @GTK_LIBS@
++G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
++G_UDEV_LIBS = @G_UDEV_LIBS@
+ HAVE_BZ2 = @HAVE_BZ2@
+ HAVE_CXX = @HAVE_CXX@
+ HAVE_DIRECT3D = @HAVE_DIRECT3D@
++HAVE_DIRECT3D9 = @HAVE_DIRECT3D9@
+ HAVE_DIRECTDRAW = @HAVE_DIRECTDRAW@
++HAVE_DIRECTSHOW = @HAVE_DIRECTSHOW@
+ HAVE_DIRECTSOUND = @HAVE_DIRECTSOUND@
+ HAVE_DTS = @HAVE_DTS@
+ HAVE_FAAC = @HAVE_FAAC@
+@@ -300,6 +343,7 @@ HAVE_GSM = @HAVE_GSM@
+ HAVE_JP2K = @HAVE_JP2K@
+ HAVE_NAS = @HAVE_NAS@
+ HAVE_VPX = @HAVE_VPX@
++HAVE_WASAPI = @HAVE_WASAPI@
+ HAVE_WILDMIDI = @HAVE_WILDMIDI@
+ HAVE_X = @HAVE_X@
+ HAVE_X11 = @HAVE_X11@
+@@ -327,6 +371,10 @@ LIBMMS_LIBS = @LIBMMS_LIBS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
++LIBUDEV_CFLAGS = @LIBUDEV_CFLAGS@
++LIBUDEV_LIBS = @LIBUDEV_LIBS@
++LIBUSB_CFLAGS = @LIBUSB_CFLAGS@
++LIBUSB_LIBS = @LIBUSB_LIBS@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+ LOCALEDIR = @LOCALEDIR@
+@@ -364,7 +412,7 @@ NM = @NM@
+ NMEDIT = @NMEDIT@
+ OBJC = @OBJC@
+ OBJCDEPMODE = @OBJCDEPMODE@
+-OBJC_LDFLAGS = @OBJC_LDFLAGS@
++OBJCFLAGS = @OBJCFLAGS@
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = @OBJEXT@
+ OFA_CFLAGS = @OFA_CFLAGS@
+@@ -373,6 +421,7 @@ OPENAL_CFLAGS = @OPENAL_CFLAGS@
+ OPENAL_LIBS = @OPENAL_LIBS@
+ OPENCV_CFLAGS = @OPENCV_CFLAGS@
+ OPENCV_LIBS = @OPENCV_LIBS@
++OPENCV_PREFIX = @OPENCV_PREFIX@
+ OPUS_CFLAGS = @OPUS_CFLAGS@
+ OPUS_LIBS = @OPUS_LIBS@
+ ORCC = @ORCC@
+@@ -406,6 +455,8 @@ PYTHON_PLATFORM = @PYTHON_PLATFORM@
+ PYTHON_PREFIX = @PYTHON_PREFIX@
+ PYTHON_VERSION = @PYTHON_VERSION@
+ RANLIB = @RANLIB@
++RSVG_2_35_0_CFLAGS = @RSVG_2_35_0_CFLAGS@
++RSVG_2_35_0_LIBS = @RSVG_2_35_0_LIBS@
+ RSVG_CFLAGS = @RSVG_CFLAGS@
+ RSVG_LIBS = @RSVG_LIBS@
+ RTMP_CFLAGS = @RTMP_CFLAGS@
+@@ -422,6 +473,7 @@ SLV2_CFLAGS = @SLV2_CFLAGS@
+ SLV2_LIBS = @SLV2_LIBS@
+ SNDFILE_CFLAGS = @SNDFILE_CFLAGS@
+ SNDFILE_LIBS = @SNDFILE_LIBS@
++SNDIO_LIBS = @SNDIO_LIBS@
+ SOUNDTOUCH_CFLAGS = @SOUNDTOUCH_CFLAGS@
+ SOUNDTOUCH_LIBS = @SOUNDTOUCH_LIBS@
+ SPANDSP_CFLAGS = @SPANDSP_CFLAGS@
+@@ -450,12 +502,15 @@ VOAMRWBENC_LIBS = @VOAMRWBENC_LIBS@
+ VPX_LIBS = @VPX_LIBS@
+ WARNING_CFLAGS = @WARNING_CFLAGS@
+ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
++WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
++WASAPI_LIBS = @WASAPI_LIBS@
++WAYLAND_CFLAGS = @WAYLAND_CFLAGS@
++WAYLAND_LIBS = @WAYLAND_LIBS@
+ WILDMIDI_CFLAGS = @WILDMIDI_CFLAGS@
+ WILDMIDI_LIBS = @WILDMIDI_LIBS@
+-WIN32_LIBS = @WIN32_LIBS@
++WINSOCK2_LIBS = @WINSOCK2_LIBS@
+ X11_CFLAGS = @X11_CFLAGS@
+ X11_LIBS = @X11_LIBS@
+-XDG_LIBS = @XDG_LIBS@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
+@@ -523,7 +578,11 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++target = @target@
+ target_alias = @target_alias@
++target_cpu = @target_cpu@
++target_os = @target_os@
++target_vendor = @target_vendor@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+@@ -580,12 +639,12 @@ clean-libtool:
+ 	-rm -rf .libs _libs
+ 
+ # This directory's subdirectories are mostly independent; you can cd
+-# into them and run `make' without going through this Makefile.
+-# To change the values of `make' variables: instead of editing Makefiles,
+-# (1) if the variable is set in `config.status', edit `config.status'
+-#     (which will cause the Makefiles to be regenerated when you run `make');
+-# (2) otherwise, pass the desired values on the `make' command line.
+-$(RECURSIVE_TARGETS):
++# into them and run 'make' without going through this Makefile.
++# To change the values of 'make' variables: instead of editing Makefiles,
++# (1) if the variable is set in 'config.status', edit 'config.status'
++#     (which will cause the Makefiles to be regenerated when you run 'make');
++# (2) otherwise, pass the desired values on the 'make' command line.
++$(RECURSIVE_TARGETS) $(RECURSIVE_CLEAN_TARGETS):
+ 	@fail= failcom='exit 1'; \
+ 	for f in x $$MAKEFLAGS; do \
+ 	  case $$f in \
+@@ -595,7 +654,11 @@ $(RECURSIVE_TARGETS):
+ 	done; \
+ 	dot_seen=no; \
+ 	target=`echo $@ | sed s/-recursive//`; \
+-	list='$(SUBDIRS)'; for subdir in $$list; do \
++	case "$@" in \
++	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
++	  *) list='$(SUBDIRS)' ;; \
++	esac; \
++	for subdir in $$list; do \
+ 	  echo "Making $$target in $$subdir"; \
+ 	  if test "$$subdir" = "."; then \
+ 	    dot_seen=yes; \
+@@ -609,37 +672,6 @@ $(RECURSIVE_TARGETS):
+ 	if test "$$dot_seen" = "no"; then \
+ 	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+ 	fi; test -z "$$fail"
+-
+-$(RECURSIVE_CLEAN_TARGETS):
+-	@fail= failcom='exit 1'; \
+-	for f in x $$MAKEFLAGS; do \
+-	  case $$f in \
+-	    *=* | --[!k]*);; \
+-	    *k*) failcom='fail=yes';; \
+-	  esac; \
+-	done; \
+-	dot_seen=no; \
+-	case "$@" in \
+-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+-	  *) list='$(SUBDIRS)' ;; \
+-	esac; \
+-	rev=''; for subdir in $$list; do \
+-	  if test "$$subdir" = "."; then :; else \
+-	    rev="$$subdir $$rev"; \
+-	  fi; \
+-	done; \
+-	rev="$$rev ."; \
+-	target=`echo $@ | sed s/-recursive//`; \
+-	for subdir in $$rev; do \
+-	  echo "Making $$target in $$subdir"; \
+-	  if test "$$subdir" = "."; then \
+-	    local_target="$$target-am"; \
+-	  else \
+-	    local_target="$$target"; \
+-	  fi; \
+-	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+-	  || eval $$failcom; \
+-	done && test -z "$$fail"
+ tags-recursive:
+ 	list='$(SUBDIRS)'; for subdir in $$list; do \
+ 	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+@@ -648,6 +680,10 @@ ctags-recursive:
+ 	list='$(SUBDIRS)'; for subdir in $$list; do \
+ 	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+ 	done
++cscopelist-recursive:
++	list='$(SUBDIRS)'; for subdir in $$list; do \
++	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) cscopelist); \
++	done
+ 
+ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+ 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+@@ -711,6 +747,20 @@ GTAGS:
+ 	  && $(am__cd) $(top_srcdir) \
+ 	  && gtags -i $(GTAGS_ARGS) "$$here"
+ 
++cscopelist: cscopelist-recursive $(HEADERS) $(SOURCES) $(LISP)
++	list='$(SOURCES) $(HEADERS) $(LISP)'; \
++	case "$(srcdir)" in \
++	  [\\/]* | ?:[\\/]*) sdir="$(srcdir)" ;; \
++	  *) sdir=$(subdir)/$(srcdir) ;; \
++	esac; \
++	for i in $$list; do \
++	  if test -f "$$i"; then \
++	    echo "$(subdir)/$$i"; \
++	  else \
++	    echo "$$sdir/$$i"; \
++	  fi; \
++	done >> $(top_builddir)/cscope.files
++
+ distclean-tags:
+ 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
+ 
+@@ -746,13 +796,10 @@ distdir: $(DISTFILES)
+ 	done
+ 	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+ 	  if test "$$subdir" = .; then :; else \
+-	    test -d "$(distdir)/$$subdir" \
+-	    || $(MKDIR_P) "$(distdir)/$$subdir" \
+-	    || exit 1; \
+-	  fi; \
+-	done
+-	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+-	  if test "$$subdir" = .; then :; else \
++	    $(am__make_dryrun) \
++	      || test -d "$(distdir)/$$subdir" \
++	      || $(MKDIR_P) "$(distdir)/$$subdir" \
++	      || exit 1; \
+ 	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+ 	    $(am__relativize); \
+ 	    new_distdir=$$reldir; \
+@@ -873,22 +920,23 @@ ps-am:
+ 
+ uninstall-am:
+ 
+-.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
+-	install-am install-strip tags-recursive
++.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) \
++	cscopelist-recursive ctags-recursive install-am install-strip \
++	tags-recursive
+ 
+ .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
+ 	all all-am check check-am clean clean-generic clean-libtool \
+-	ctags ctags-recursive distclean distclean-generic \
+-	distclean-libtool distclean-tags distdir dvi dvi-am html \
+-	html-am info info-am install install-am install-data \
+-	install-data-am install-dvi install-dvi-am install-exec \
+-	install-exec-am install-html install-html-am install-info \
+-	install-info-am install-man install-pdf install-pdf-am \
+-	install-ps install-ps-am install-strip installcheck \
+-	installcheck-am installdirs installdirs-am maintainer-clean \
+-	maintainer-clean-generic mostlyclean mostlyclean-generic \
+-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
+-	uninstall uninstall-am
++	cscopelist cscopelist-recursive ctags ctags-recursive \
++	distclean distclean-generic distclean-libtool distclean-tags \
++	distdir dvi dvi-am html html-am info info-am install \
++	install-am install-data install-data-am install-dvi \
++	install-dvi-am install-exec install-exec-am install-html \
++	install-html-am install-info install-info-am install-man \
++	install-pdf install-pdf-am install-ps install-ps-am \
++	install-strip installcheck installcheck-am installdirs \
++	installdirs-am maintainer-clean maintainer-clean-generic \
++	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
++	ps ps-am tags tags-recursive uninstall uninstall-am
+ 
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+diff --git a/docs/libs/Makefile.in b/docs/libs/Makefile.in
+index c4e180b..5bff4bc 100644
+--- a/docs/libs/Makefile.in
++++ b/docs/libs/Makefile.in
+@@ -1,9 +1,8 @@
+-# Makefile.in generated by automake 1.11.3 from Makefile.am.
++# Makefile.in generated by automake 1.12.6 from Makefile.am.
+ # @configure_input@
+ 
+-# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+-# 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software
+-# Foundation, Inc.
++# Copyright (C) 1994-2012 Free Software Foundation, Inc.
++
+ # This Makefile.in is free software; the Free Software Foundation
+ # gives unlimited permission to copy and/or distribute it,
+ # with or without modifications, as long as this notice is preserved.
+@@ -34,6 +33,23 @@
+ ###########################################################################
+ # thomas: except of course that we did
+ VPATH = @srcdir@
++am__make_dryrun = \
++  { \
++    am__dry=no; \
++    case $$MAKEFLAGS in \
++      *\\[\ \	]*) \
++        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
++          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
++      *) \
++        for am__flg in $$MAKEFLAGS; do \
++          case $$am__flg in \
++            *=*|--*) ;; \
++            *n*) am__dry=yes; break;; \
++          esac; \
++        done;; \
++    esac; \
++    test $$am__dry = yes; \
++  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -52,6 +68,7 @@ PRE_UNINSTALL = :
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
++target_triplet = @target@
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+ 	$(top_srcdir)/common/gtk-doc.mak \
+ 	$(top_srcdir)/common/upload-doc.mak
+@@ -61,7 +78,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
+ 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
+ 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
+ 	$(top_srcdir)/common/m4/as-libtool.m4 \
+-	$(top_srcdir)/common/m4/as-objc.m4 \
+ 	$(top_srcdir)/common/m4/as-python.m4 \
+ 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
+ 	$(top_srcdir)/common/m4/as-version.m4 \
+@@ -98,14 +114,25 @@ mkinstalldirs = $(install_sh) -d
+ CONFIG_HEADER = $(top_builddir)/config.h
+ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
++AM_V_P = $(am__v_P_@AM_V@)
++am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
++am__v_P_0 = false
++am__v_P_1 = :
+ AM_V_GEN = $(am__v_GEN_@AM_V@)
+ am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+-am__v_GEN_0 = @echo "  GEN   " $@;
++am__v_GEN_0 = @echo "  GEN     " $@;
++am__v_GEN_1 = 
+ AM_V_at = $(am__v_at_@AM_V@)
+ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
++am__v_at_1 = 
+ SOURCES =
+ DIST_SOURCES =
++am__can_run_installinfo = \
++  case $$AM_UPDATE_INFO_DIR in \
++    n|no|NO) false;; \
++    *) (install-info --version) >/dev/null 2>&1;; \
++  esac
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ ACLOCAL = @ACLOCAL@
+ ACLOCAL_AMFLAGS = @ACLOCAL_AMFLAGS@
+@@ -138,6 +165,8 @@ CELT_0_8_LIBS = @CELT_0_8_LIBS@
+ CELT_CFLAGS = @CELT_CFLAGS@
+ CELT_LIBS = @CELT_LIBS@
+ CFLAGS = @CFLAGS@
++CHROMAPRINT_CFLAGS = @CHROMAPRINT_CFLAGS@
++CHROMAPRINT_LIBS = @CHROMAPRINT_LIBS@
+ COG_CFLAGS = @COG_CFLAGS@
+ COG_LIBS = @COG_LIBS@
+ CPP = @CPP@
+@@ -162,10 +191,12 @@ DEPDIR = @DEPDIR@
+ DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
+ DIRAC_CFLAGS = @DIRAC_CFLAGS@
+ DIRAC_LIBS = @DIRAC_LIBS@
++DIRECT3D9_LIBS = @DIRECT3D9_LIBS@
+ DIRECT3D_LIBS = @DIRECT3D_LIBS@
+ DIRECTDRAW_LIBS = @DIRECTDRAW_LIBS@
+ DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+ DIRECTFB_LIBS = @DIRECTFB_LIBS@
++DIRECTSHOW_LIBS = @DIRECTSHOW_LIBS@
+ DIRECTSOUND_LIBS = @DIRECTSOUND_LIBS@
+ DIRECTX_CFLAGS = @DIRECTX_CFLAGS@
+ DIRECTX_LDFLAGS = @DIRECTX_LDFLAGS@
+@@ -180,9 +211,12 @@ DVDNAV_LIBS = @DVDNAV_LIBS@
+ ECHO_C = @ECHO_C@
+ ECHO_N = @ECHO_N@
+ ECHO_T = @ECHO_T@
++EGLGLES_CFLAGS = @EGLGLES_CFLAGS@
++EGLGLES_LIBS = @EGLGLES_LIBS@
+ EGREP = @EGREP@
+ ERROR_CFLAGS = @ERROR_CFLAGS@
+ ERROR_CXXFLAGS = @ERROR_CXXFLAGS@
++ERROR_OBJCFLAGS = @ERROR_OBJCFLAGS@
+ EXEEXT = @EXEEXT@
+ EXIF_CFLAGS = @EXIF_CFLAGS@
+ EXIF_LIBS = @EXIF_LIBS@
+@@ -240,13 +274,16 @@ GST_LIB_LDFLAGS = @GST_LIB_LDFLAGS@
+ GST_LICENSE = @GST_LICENSE@
+ GST_LT_LDFLAGS = @GST_LT_LDFLAGS@
+ GST_MAJORMINOR = @GST_MAJORMINOR@
++GST_OBJCFLAGS = @GST_OBJCFLAGS@
+ GST_OPTION_CFLAGS = @GST_OPTION_CFLAGS@
+ GST_OPTION_CXXFLAGS = @GST_OPTION_CXXFLAGS@
++GST_OPTION_OBJCFLAGS = @GST_OPTION_OBJCFLAGS@
+ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
+ GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
+ GST_PLUGINS_ALL = @GST_PLUGINS_ALL@
+ GST_PLUGINS_BAD_CFLAGS = @GST_PLUGINS_BAD_CFLAGS@
+ GST_PLUGINS_BAD_CXXFLAGS = @GST_PLUGINS_BAD_CXXFLAGS@
++GST_PLUGINS_BAD_OBJCFLAGS = @GST_PLUGINS_BAD_OBJCFLAGS@
+ GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+ GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
+ GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
+@@ -265,13 +302,19 @@ GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
+ GST_PREFIX = @GST_PREFIX@
+ GST_REVISION = @GST_REVISION@
+ GST_TOOLS_DIR = @GST_TOOLS_DIR@
++GST_VIDEO_CFLAGS = @GST_VIDEO_CFLAGS@
++GST_VIDEO_LIBS = @GST_VIDEO_LIBS@
+ GTKDOC_CHECK = @GTKDOC_CHECK@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_LIBS = @GTK_LIBS@
++G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
++G_UDEV_LIBS = @G_UDEV_LIBS@
+ HAVE_BZ2 = @HAVE_BZ2@
+ HAVE_CXX = @HAVE_CXX@
+ HAVE_DIRECT3D = @HAVE_DIRECT3D@
++HAVE_DIRECT3D9 = @HAVE_DIRECT3D9@
+ HAVE_DIRECTDRAW = @HAVE_DIRECTDRAW@
++HAVE_DIRECTSHOW = @HAVE_DIRECTSHOW@
+ HAVE_DIRECTSOUND = @HAVE_DIRECTSOUND@
+ HAVE_DTS = @HAVE_DTS@
+ HAVE_FAAC = @HAVE_FAAC@
+@@ -281,6 +324,7 @@ HAVE_GSM = @HAVE_GSM@
+ HAVE_JP2K = @HAVE_JP2K@
+ HAVE_NAS = @HAVE_NAS@
+ HAVE_VPX = @HAVE_VPX@
++HAVE_WASAPI = @HAVE_WASAPI@
+ HAVE_WILDMIDI = @HAVE_WILDMIDI@
+ HAVE_X = @HAVE_X@
+ HAVE_X11 = @HAVE_X11@
+@@ -308,6 +352,10 @@ LIBMMS_LIBS = @LIBMMS_LIBS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
++LIBUDEV_CFLAGS = @LIBUDEV_CFLAGS@
++LIBUDEV_LIBS = @LIBUDEV_LIBS@
++LIBUSB_CFLAGS = @LIBUSB_CFLAGS@
++LIBUSB_LIBS = @LIBUSB_LIBS@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+ LOCALEDIR = @LOCALEDIR@
+@@ -345,7 +393,7 @@ NM = @NM@
+ NMEDIT = @NMEDIT@
+ OBJC = @OBJC@
+ OBJCDEPMODE = @OBJCDEPMODE@
+-OBJC_LDFLAGS = @OBJC_LDFLAGS@
++OBJCFLAGS = @OBJCFLAGS@
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = @OBJEXT@
+ OFA_CFLAGS = @OFA_CFLAGS@
+@@ -354,6 +402,7 @@ OPENAL_CFLAGS = @OPENAL_CFLAGS@
+ OPENAL_LIBS = @OPENAL_LIBS@
+ OPENCV_CFLAGS = @OPENCV_CFLAGS@
+ OPENCV_LIBS = @OPENCV_LIBS@
++OPENCV_PREFIX = @OPENCV_PREFIX@
+ OPUS_CFLAGS = @OPUS_CFLAGS@
+ OPUS_LIBS = @OPUS_LIBS@
+ ORCC = @ORCC@
+@@ -387,6 +436,8 @@ PYTHON_PLATFORM = @PYTHON_PLATFORM@
+ PYTHON_PREFIX = @PYTHON_PREFIX@
+ PYTHON_VERSION = @PYTHON_VERSION@
+ RANLIB = @RANLIB@
++RSVG_2_35_0_CFLAGS = @RSVG_2_35_0_CFLAGS@
++RSVG_2_35_0_LIBS = @RSVG_2_35_0_LIBS@
+ RSVG_CFLAGS = @RSVG_CFLAGS@
+ RSVG_LIBS = @RSVG_LIBS@
+ RTMP_CFLAGS = @RTMP_CFLAGS@
+@@ -403,6 +454,7 @@ SLV2_CFLAGS = @SLV2_CFLAGS@
+ SLV2_LIBS = @SLV2_LIBS@
+ SNDFILE_CFLAGS = @SNDFILE_CFLAGS@
+ SNDFILE_LIBS = @SNDFILE_LIBS@
++SNDIO_LIBS = @SNDIO_LIBS@
+ SOUNDTOUCH_CFLAGS = @SOUNDTOUCH_CFLAGS@
+ SOUNDTOUCH_LIBS = @SOUNDTOUCH_LIBS@
+ SPANDSP_CFLAGS = @SPANDSP_CFLAGS@
+@@ -431,12 +483,15 @@ VOAMRWBENC_LIBS = @VOAMRWBENC_LIBS@
+ VPX_LIBS = @VPX_LIBS@
+ WARNING_CFLAGS = @WARNING_CFLAGS@
+ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
++WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
++WASAPI_LIBS = @WASAPI_LIBS@
++WAYLAND_CFLAGS = @WAYLAND_CFLAGS@
++WAYLAND_LIBS = @WAYLAND_LIBS@
+ WILDMIDI_CFLAGS = @WILDMIDI_CFLAGS@
+ WILDMIDI_LIBS = @WILDMIDI_LIBS@
+-WIN32_LIBS = @WIN32_LIBS@
++WINSOCK2_LIBS = @WINSOCK2_LIBS@
+ X11_CFLAGS = @X11_CFLAGS@
+ X11_LIBS = @X11_LIBS@
+-XDG_LIBS = @XDG_LIBS@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
+@@ -504,7 +559,11 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++target = @target@
+ target_alias = @target_alias@
++target_cpu = @target_cpu@
++target_os = @target_os@
++target_vendor = @target_vendor@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+@@ -665,6 +724,8 @@ TAGS:
+ ctags: CTAGS
+ CTAGS:
+ 
++cscope cscopelist:
++
+ 
+ distdir: $(DISTFILES)
+ 	@srcdirstrip=`echo "$(srcdir)" | sed 's/[].[^$$\\*]/\\\\&/g'`; \
+diff --git a/docs/libs/gst-plugins-bad-libs-sections.txt b/docs/libs/gst-plugins-bad-libs-sections.txt
+index b949137..3cdf1a4 100644
+--- a/docs/libs/gst-plugins-bad-libs-sections.txt
++++ b/docs/libs/gst-plugins-bad-libs-sections.txt
+@@ -294,6 +294,7 @@ gst_base_video_encoder_get_oldest_frame
+ gst_base_video_encoder_finish_frame
+ gst_base_video_encoder_set_latency
+ gst_base_video_encoder_set_latency_fields
++gst_base_video_encoder_set_headers
+ <SUBSECTION Standard>
+ GST_BASE_VIDEO_ENCODER
+ GST_IS_BASE_VIDEO_ENCODER
+@@ -326,6 +327,7 @@ gst_base_video_decoder_alloc_src_buffer
+ gst_base_video_decoder_alloc_src_frame
+ gst_base_video_decoder_get_state
+ gst_base_video_decoder_get_max_decode_time
++gst_base_video_decoder_drop_frame
+ gst_base_video_decoder_finish_frame
+ <SUBSECTION Standard>
+ GST_BASE_VIDEO_DECODER
+@@ -336,10 +338,17 @@ GST_BASE_VIDEO_DECODER_CLASS
+ GST_IS_BASE_VIDEO_DECODER_CLASS
+ GST_BASE_VIDEO_DECODER_GET_CLASS
+ </SECTION>
+-
++yes
+ <SECTION>
+ <FILE>gstbasevideocodec</FILE>
+ <TITLE>GstBaseVideoCodec</TITLE>
++GstBaseVideoCodec
++GstVideoFrame
++gst_video_frame_ref
++gst_video_frame_unref
++gst_base_video_codec_new_frame
++GstVideoState
++gst_video_state_get_timestamp
+ GST_BASE_VIDEO_CODEC_SINK_NAME
+ GST_BASE_VIDEO_CODEC_SRC_NAME
+ GST_BASE_VIDEO_CODEC_SRC_PAD
+@@ -347,13 +356,8 @@ GST_BASE_VIDEO_CODEC_SINK_PAD
+ GST_BASE_VIDEO_CODEC_FLOW_NEED_DATA
+ GST_BASE_VIDEO_CODEC_STREAM_LOCK
+ GST_BASE_VIDEO_CODEC_STREAM_UNLOCK
+-GstVideoState
+-GstVideoFrame
+-GstBaseVideoCodec
+-GstBaseVideoCodecClass
+-gst_base_video_codec_new_frame
+-gst_base_video_codec_free_frame
+ <SUBSECTION Standard>
++GstBaseVideoCodecClass
+ GST_BASE_VIDEO_CODEC
+ GST_IS_BASE_VIDEO_CODEC
+ GST_TYPE_BASE_VIDEO_CODEC
+@@ -361,6 +365,7 @@ gst_base_video_codec_get_type
+ GST_BASE_VIDEO_CODEC_CLASS
+ GST_IS_BASE_VIDEO_CODEC_CLASS
+ GST_BASE_VIDEO_CODEC_GET_CLASS
++gst_video_frame_get_type
+ </SECTION>
+ 
+ <SECTION>
+@@ -437,7 +442,6 @@ gst_camerabin_preview_set_caps
+ <FILE>gstbasevideoutils</FILE>
+ gst_base_video_rawvideo_convert
+ gst_base_video_encoded_video_convert
+-gst_video_state_get_timestamp
+ </SECTION>
+ 
+ <SECTION>
+diff --git a/docs/plugins/Makefile.am b/docs/plugins/Makefile.am
+index a948927..4bc80c0 100644
+--- a/docs/plugins/Makefile.am
++++ b/docs/plugins/Makefile.am
+@@ -69,6 +69,7 @@ EXTRA_HFILES = \
+ 	$(top_srcdir)/ext/dc1394/gstdc1394.h \
+ 	$(top_srcdir)/ext/directfb/dfbvideosink.h \
+ 	$(top_srcdir)/ext/dts/gstdtsdec.h \
++	$(top_srcdir)/ext/eglgles/gsteglglessink.h \
+ 	$(top_srcdir)/ext/faac/gstfaac.h \
+ 	$(top_srcdir)/ext/faad/gstfaad.h \
+ 	$(top_srcdir)/ext/kate/gstkateenc.h \
+diff --git a/docs/plugins/Makefile.in b/docs/plugins/Makefile.in
+index 41d4c5d..4af5049 100644
+--- a/docs/plugins/Makefile.in
++++ b/docs/plugins/Makefile.in
+@@ -1,9 +1,8 @@
+-# Makefile.in generated by automake 1.11.3 from Makefile.am.
++# Makefile.in generated by automake 1.12.6 from Makefile.am.
+ # @configure_input@
+ 
+-# Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002,
+-# 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011 Free Software
+-# Foundation, Inc.
++# Copyright (C) 1994-2012 Free Software Foundation, Inc.
++
+ # This Makefile.in is free software; the Free Software Foundation
+ # gives unlimited permission to copy and/or distribute it,
+ # with or without modifications, as long as this notice is preserved.
+@@ -32,6 +31,23 @@
+ # This is an include file specifically tuned for building documentation
+ # for GStreamer plug-ins
+ VPATH = @srcdir@
++am__make_dryrun = \
++  { \
++    am__dry=no; \
++    case $$MAKEFLAGS in \
++      *\\[\ \	]*) \
++        echo 'am--echo: ; @echo "AM"  OK' | $(MAKE) -f - 2>/dev/null \
++          | grep '^AM OK$$' >/dev/null || am__dry=yes;; \
++      *) \
++        for am__flg in $$MAKEFLAGS; do \
++          case $$am__flg in \
++            *=*|--*) ;; \
++            *n*) am__dry=yes; break;; \
++          esac; \
++        done;; \
++    esac; \
++    test $$am__dry = yes; \
++  }
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+@@ -50,6 +66,7 @@ PRE_UNINSTALL = :
+ POST_UNINSTALL = :
+ build_triplet = @build@
+ host_triplet = @host@
++target_triplet = @target@
+ DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
+ 	$(top_srcdir)/common/gtk-doc-plugins.mak \
+ 	$(top_srcdir)/common/upload-doc.mak
+@@ -59,7 +76,6 @@ am__aclocal_m4_deps = $(top_srcdir)/common/m4/as-ac-expand.m4 \
+ 	$(top_srcdir)/common/m4/as-auto-alt.m4 \
+ 	$(top_srcdir)/common/m4/as-compiler-flag.m4 \
+ 	$(top_srcdir)/common/m4/as-libtool.m4 \
+-	$(top_srcdir)/common/m4/as-objc.m4 \
+ 	$(top_srcdir)/common/m4/as-python.m4 \
+ 	$(top_srcdir)/common/m4/as-scrub-include.m4 \
+ 	$(top_srcdir)/common/m4/as-version.m4 \
+@@ -96,12 +112,18 @@ mkinstalldirs = $(install_sh) -d
+ CONFIG_HEADER = $(top_builddir)/config.h
+ CONFIG_CLEAN_FILES =
+ CONFIG_CLEAN_VPATH_FILES =
++AM_V_P = $(am__v_P_@AM_V@)
++am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
++am__v_P_0 = false
++am__v_P_1 = :
+ AM_V_GEN = $(am__v_GEN_@AM_V@)
+ am__v_GEN_ = $(am__v_GEN_@AM_DEFAULT_V@)
+-am__v_GEN_0 = @echo "  GEN   " $@;
++am__v_GEN_0 = @echo "  GEN     " $@;
++am__v_GEN_1 = 
+ AM_V_at = $(am__v_at_@AM_V@)
+ am__v_at_ = $(am__v_at_@AM_DEFAULT_V@)
+ am__v_at_0 = @
++am__v_at_1 = 
+ SOURCES =
+ DIST_SOURCES =
+ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+@@ -111,6 +133,11 @@ RECURSIVE_TARGETS = all-recursive check-recursive dvi-recursive \
+ 	install-pdf-recursive install-ps-recursive install-recursive \
+ 	installcheck-recursive installdirs-recursive pdf-recursive \
+ 	ps-recursive uninstall-recursive
++am__can_run_installinfo = \
++  case $$AM_UPDATE_INFO_DIR in \
++    n|no|NO) false;; \
++    *) (install-info --version) >/dev/null 2>&1;; \
++  esac
+ RECURSIVE_CLEAN_TARGETS = mostlyclean-recursive clean-recursive	\
+   distclean-recursive maintainer-clean-recursive
+ AM_RECURSIVE_TARGETS = $(RECURSIVE_TARGETS:-recursive=) \
+@@ -176,6 +203,8 @@ CELT_0_8_LIBS = @CELT_0_8_LIBS@
+ CELT_CFLAGS = @CELT_CFLAGS@
+ CELT_LIBS = @CELT_LIBS@
+ CFLAGS = @CFLAGS@
++CHROMAPRINT_CFLAGS = @CHROMAPRINT_CFLAGS@
++CHROMAPRINT_LIBS = @CHROMAPRINT_LIBS@
+ COG_CFLAGS = @COG_CFLAGS@
+ COG_LIBS = @COG_LIBS@
+ CPP = @CPP@
+@@ -200,10 +229,12 @@ DEPDIR = @DEPDIR@
+ DEPRECATED_CFLAGS = @DEPRECATED_CFLAGS@
+ DIRAC_CFLAGS = @DIRAC_CFLAGS@
+ DIRAC_LIBS = @DIRAC_LIBS@
++DIRECT3D9_LIBS = @DIRECT3D9_LIBS@
+ DIRECT3D_LIBS = @DIRECT3D_LIBS@
+ DIRECTDRAW_LIBS = @DIRECTDRAW_LIBS@
+ DIRECTFB_CFLAGS = @DIRECTFB_CFLAGS@
+ DIRECTFB_LIBS = @DIRECTFB_LIBS@
++DIRECTSHOW_LIBS = @DIRECTSHOW_LIBS@
+ DIRECTSOUND_LIBS = @DIRECTSOUND_LIBS@
+ DIRECTX_CFLAGS = @DIRECTX_CFLAGS@
+ DIRECTX_LDFLAGS = @DIRECTX_LDFLAGS@
+@@ -218,9 +249,12 @@ DVDNAV_LIBS = @DVDNAV_LIBS@
+ ECHO_C = @ECHO_C@
+ ECHO_N = @ECHO_N@
+ ECHO_T = @ECHO_T@
++EGLGLES_CFLAGS = @EGLGLES_CFLAGS@
++EGLGLES_LIBS = @EGLGLES_LIBS@
+ EGREP = @EGREP@
+ ERROR_CFLAGS = @ERROR_CFLAGS@
+ ERROR_CXXFLAGS = @ERROR_CXXFLAGS@
++ERROR_OBJCFLAGS = @ERROR_OBJCFLAGS@
+ EXEEXT = @EXEEXT@
+ EXIF_CFLAGS = @EXIF_CFLAGS@
+ EXIF_LIBS = @EXIF_LIBS@
+@@ -278,13 +312,16 @@ GST_LIB_LDFLAGS = @GST_LIB_LDFLAGS@
+ GST_LICENSE = @GST_LICENSE@
+ GST_LT_LDFLAGS = @GST_LT_LDFLAGS@
+ GST_MAJORMINOR = @GST_MAJORMINOR@
++GST_OBJCFLAGS = @GST_OBJCFLAGS@
+ GST_OPTION_CFLAGS = @GST_OPTION_CFLAGS@
+ GST_OPTION_CXXFLAGS = @GST_OPTION_CXXFLAGS@
++GST_OPTION_OBJCFLAGS = @GST_OPTION_OBJCFLAGS@
+ GST_PACKAGE_NAME = @GST_PACKAGE_NAME@
+ GST_PACKAGE_ORIGIN = @GST_PACKAGE_ORIGIN@
+ GST_PLUGINS_ALL = @GST_PLUGINS_ALL@
+ GST_PLUGINS_BAD_CFLAGS = @GST_PLUGINS_BAD_CFLAGS@
+ GST_PLUGINS_BAD_CXXFLAGS = @GST_PLUGINS_BAD_CXXFLAGS@
++GST_PLUGINS_BAD_OBJCFLAGS = @GST_PLUGINS_BAD_OBJCFLAGS@
+ GST_PLUGINS_BASE_CFLAGS = @GST_PLUGINS_BASE_CFLAGS@
+ GST_PLUGINS_BASE_DIR = @GST_PLUGINS_BASE_DIR@
+ GST_PLUGINS_BASE_LIBS = @GST_PLUGINS_BASE_LIBS@
+@@ -303,13 +340,19 @@ GST_PLUGIN_LDFLAGS = @GST_PLUGIN_LDFLAGS@
+ GST_PREFIX = @GST_PREFIX@
+ GST_REVISION = @GST_REVISION@
+ GST_TOOLS_DIR = @GST_TOOLS_DIR@
++GST_VIDEO_CFLAGS = @GST_VIDEO_CFLAGS@
++GST_VIDEO_LIBS = @GST_VIDEO_LIBS@
+ GTKDOC_CHECK = @GTKDOC_CHECK@
+ GTK_CFLAGS = @GTK_CFLAGS@
+ GTK_LIBS = @GTK_LIBS@
++G_UDEV_CFLAGS = @G_UDEV_CFLAGS@
++G_UDEV_LIBS = @G_UDEV_LIBS@
+ HAVE_BZ2 = @HAVE_BZ2@
+ HAVE_CXX = @HAVE_CXX@
+ HAVE_DIRECT3D = @HAVE_DIRECT3D@
++HAVE_DIRECT3D9 = @HAVE_DIRECT3D9@
+ HAVE_DIRECTDRAW = @HAVE_DIRECTDRAW@
++HAVE_DIRECTSHOW = @HAVE_DIRECTSHOW@
+ HAVE_DIRECTSOUND = @HAVE_DIRECTSOUND@
+ HAVE_DTS = @HAVE_DTS@
+ HAVE_FAAC = @HAVE_FAAC@
+@@ -319,6 +362,7 @@ HAVE_GSM = @HAVE_GSM@
+ HAVE_JP2K = @HAVE_JP2K@
+ HAVE_NAS = @HAVE_NAS@
+ HAVE_VPX = @HAVE_VPX@
++HAVE_WASAPI = @HAVE_WASAPI@
+ HAVE_WILDMIDI = @HAVE_WILDMIDI@
+ HAVE_X = @HAVE_X@
+ HAVE_X11 = @HAVE_X11@
+@@ -346,6 +390,10 @@ LIBMMS_LIBS = @LIBMMS_LIBS@
+ LIBOBJS = @LIBOBJS@
+ LIBS = @LIBS@
+ LIBTOOL = @LIBTOOL@
++LIBUDEV_CFLAGS = @LIBUDEV_CFLAGS@
++LIBUDEV_LIBS = @LIBUDEV_LIBS@
++LIBUSB_CFLAGS = @LIBUSB_CFLAGS@
++LIBUSB_LIBS = @LIBUSB_LIBS@
+ LIPO = @LIPO@
+ LN_S = @LN_S@
+ LOCALEDIR = @LOCALEDIR@
+@@ -383,7 +431,7 @@ NM = @NM@
+ NMEDIT = @NMEDIT@
+ OBJC = @OBJC@
+ OBJCDEPMODE = @OBJCDEPMODE@
+-OBJC_LDFLAGS = @OBJC_LDFLAGS@
++OBJCFLAGS = @OBJCFLAGS@
+ OBJDUMP = @OBJDUMP@
+ OBJEXT = @OBJEXT@
+ OFA_CFLAGS = @OFA_CFLAGS@
+@@ -392,6 +440,7 @@ OPENAL_CFLAGS = @OPENAL_CFLAGS@
+ OPENAL_LIBS = @OPENAL_LIBS@
+ OPENCV_CFLAGS = @OPENCV_CFLAGS@
+ OPENCV_LIBS = @OPENCV_LIBS@
++OPENCV_PREFIX = @OPENCV_PREFIX@
+ OPUS_CFLAGS = @OPUS_CFLAGS@
+ OPUS_LIBS = @OPUS_LIBS@
+ ORCC = @ORCC@
+@@ -425,6 +474,8 @@ PYTHON_PLATFORM = @PYTHON_PLATFORM@
+ PYTHON_PREFIX = @PYTHON_PREFIX@
+ PYTHON_VERSION = @PYTHON_VERSION@
+ RANLIB = @RANLIB@
++RSVG_2_35_0_CFLAGS = @RSVG_2_35_0_CFLAGS@
++RSVG_2_35_0_LIBS = @RSVG_2_35_0_LIBS@
+ RSVG_CFLAGS = @RSVG_CFLAGS@
+ RSVG_LIBS = @RSVG_LIBS@
+ RTMP_CFLAGS = @RTMP_CFLAGS@
+@@ -441,6 +492,7 @@ SLV2_CFLAGS = @SLV2_CFLAGS@
+ SLV2_LIBS = @SLV2_LIBS@
+ SNDFILE_CFLAGS = @SNDFILE_CFLAGS@
+ SNDFILE_LIBS = @SNDFILE_LIBS@
++SNDIO_LIBS = @SNDIO_LIBS@
+ SOUNDTOUCH_CFLAGS = @SOUNDTOUCH_CFLAGS@
+ SOUNDTOUCH_LIBS = @SOUNDTOUCH_LIBS@
+ SPANDSP_CFLAGS = @SPANDSP_CFLAGS@
+@@ -469,12 +521,15 @@ VOAMRWBENC_LIBS = @VOAMRWBENC_LIBS@
+ VPX_LIBS = @VPX_LIBS@
+ WARNING_CFLAGS = @WARNING_CFLAGS@
+ WARNING_CXXFLAGS = @WARNING_CXXFLAGS@
++WARNING_OBJCFLAGS = @WARNING_OBJCFLAGS@
++WASAPI_LIBS = @WASAPI_LIBS@
++WAYLAND_CFLAGS = @WAYLAND_CFLAGS@
++WAYLAND_LIBS = @WAYLAND_LIBS@
+ WILDMIDI_CFLAGS = @WILDMIDI_CFLAGS@
+ WILDMIDI_LIBS = @WILDMIDI_LIBS@
+-WIN32_LIBS = @WIN32_LIBS@
++WINSOCK2_LIBS = @WINSOCK2_LIBS@
+ X11_CFLAGS = @X11_CFLAGS@
+ X11_LIBS = @X11_LIBS@
+-XDG_LIBS = @XDG_LIBS@
+ XGETTEXT = @XGETTEXT@
+ XGETTEXT_015 = @XGETTEXT_015@
+ XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
+@@ -542,7 +597,11 @@ sbindir = @sbindir@
+ sharedstatedir = @sharedstatedir@
+ srcdir = @srcdir@
+ sysconfdir = @sysconfdir@
++target = @target@
+ target_alias = @target_alias@
++target_cpu = @target_cpu@
++target_os = @target_os@
++target_vendor = @target_vendor@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+@@ -621,6 +680,7 @@ EXTRA_HFILES = \
+ 	$(top_srcdir)/ext/dc1394/gstdc1394.h \
+ 	$(top_srcdir)/ext/directfb/dfbvideosink.h \
+ 	$(top_srcdir)/ext/dts/gstdtsdec.h \
++	$(top_srcdir)/ext/eglgles/gsteglglessink.h \
+ 	$(top_srcdir)/ext/faac/gstfaac.h \
+ 	$(top_srcdir)/ext/faad/gstfaad.h \
+ 	$(top_srcdir)/ext/kate/gstkateenc.h \
+@@ -881,12 +941,12 @@ clean-libtool:
+ 	-rm -rf .libs _libs
+ 
+ # This directory's subdirectories are mostly independent; you can cd
+-# into them and run `make' without going through this Makefile.
+-# To change the values of `make' variables: instead of editing Makefiles,
+-# (1) if the variable is set in `config.status', edit `config.status'
+-#     (which will cause the Makefiles to be regenerated when you run `make');
+-# (2) otherwise, pass the desired values on the `make' command line.
+-$(RECURSIVE_TARGETS):
++# into them and run 'make' without going through this Makefile.
++# To change the values of 'make' variables: instead of editing Makefiles,
++# (1) if the variable is set in 'config.status', edit 'config.status'
++#     (which will cause the Makefiles to be regenerated when you run 'make');
++# (2) otherwise, pass the desired values on the 'make' command line.
++$(RECURSIVE_TARGETS) $(RECURSIVE_CLEAN_TARGETS):
+ 	@fail= failcom='exit 1'; \
+ 	for f in x $$MAKEFLAGS; do \
+ 	  case $$f in \
+@@ -896,7 +956,11 @@ $(RECURSIVE_TARGETS):
+ 	done; \
+ 	dot_seen=no; \
+ 	target=`echo $@ | sed s/-recursive//`; \
+-	list='$(SUBDIRS)'; for subdir in $$list; do \
++	case "$@" in \
++	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
++	  *) list='$(SUBDIRS)' ;; \
++	esac; \
++	for subdir in $$list; do \
+ 	  echo "Making $$target in $$subdir"; \
+ 	  if test "$$subdir" = "."; then \
+ 	    dot_seen=yes; \
+@@ -910,37 +974,6 @@ $(RECURSIVE_TARGETS):
+ 	if test "$$dot_seen" = "no"; then \
+ 	  $(MAKE) $(AM_MAKEFLAGS) "$$target-am" || exit 1; \
+ 	fi; test -z "$$fail"
+-
+-$(RECURSIVE_CLEAN_TARGETS):
+-	@fail= failcom='exit 1'; \
+-	for f in x $$MAKEFLAGS; do \
+-	  case $$f in \
+-	    *=* | --[!k]*);; \
+-	    *k*) failcom='fail=yes';; \
+-	  esac; \
+-	done; \
+-	dot_seen=no; \
+-	case "$@" in \
+-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+-	  *) list='$(SUBDIRS)' ;; \
+-	esac; \
+-	rev=''; for subdir in $$list; do \
+-	  if test "$$subdir" = "."; then :; else \
+-	    rev="$$subdir $$rev"; \
+-	  fi; \
+-	done; \
+-	rev="$$rev ."; \
+-	target=`echo $@ | sed s/-recursive//`; \
+-	for subdir in $$rev; do \
+-	  echo "Making $$target in $$subdir"; \
+-	  if test "$$subdir" = "."; then \
+-	    local_target="$$target-am"; \
+-	  else \
+-	    local_target="$$target"; \
+-	  fi; \
+-	  ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) $$local_target) \
+-	  || eval $$failcom; \
+-	done && test -z "$$fail"
+ tags-recursive:
+ 	list='$(SUBDIRS)'; for subdir in $$list; do \
+ 	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+@@ -949,6 +982,10 @@ ctags-recursive:
+ 	list='$(SUBDIRS)'; for subdir in $$list; do \
+ 	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) ctags); \
+ 	done
++cscopelist-recursive:
++	list='$(SUBDIRS)'; for subdir in $$list; do \
++	  test "$$subdir" = . || ($(am__cd) $$subdir && $(MAKE) $(AM_MAKEFLAGS) cscopelist); \
++	done
+ 
+ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+ 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+@@ -1012,6 +1049,20 @@ GTAGS:
+ 	  && $(am__cd) $(top_srcdir) \
+ 	  && gtags -i $(GTAGS_ARGS) "$$here"
+ 
++cscopelist: cscopelist-recursive $(HEADERS) $(SOURCES) $(LISP)
++	list='$(SOURCES) $(HEADERS) $(LISP)'; \
++	case "$(srcdir)" in \
++	  [\\/]* | ?:[\\/]*) sdir="$(srcdir)" ;; \
++	  *) sdir=$(subdir)/$(srcdir) ;; \
++	esac; \
++	for i in $$list; do \
++	  if test -f "$$i"; then \
++	    echo "$(subdir)/$$i"; \
++	  else \
++	    echo "$$sdir/$$i"; \
++	  fi; \
++	done >> $(top_builddir)/cscope.files
++
+ distclean-tags:
+ 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
+ 
+@@ -1047,13 +1098,10 @@ distdir: $(DISTFILES)
+ 	done
+ 	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+ 	  if test "$$subdir" = .; then :; else \
+-	    test -d "$(distdir)/$$subdir" \
+-	    || $(MKDIR_P) "$(distdir)/$$subdir" \
+-	    || exit 1; \
+-	  fi; \
+-	done
+-	@list='$(DIST_SUBDIRS)'; for subdir in $$list; do \
+-	  if test "$$subdir" = .; then :; else \
++	    $(am__make_dryrun) \
++	      || test -d "$(distdir)/$$subdir" \
++	      || $(MKDIR_P) "$(distdir)/$$subdir" \
++	      || exit 1; \
+ 	    dir1=$$subdir; dir2="$(distdir)/$$subdir"; \
+ 	    $(am__relativize); \
+ 	    new_distdir=$$reldir; \
+@@ -1178,23 +1226,25 @@ ps-am:
+ 
+ uninstall-am: uninstall-local
+ 
+-.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) ctags-recursive \
+-	install-am install-strip tags-recursive
++.MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) \
++	cscopelist-recursive ctags-recursive install-am install-strip \
++	tags-recursive
+ 
+ .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
+ 	all all-am all-local check check-am clean clean-generic \
+-	clean-libtool clean-local ctags ctags-recursive dist-hook \
+-	distclean distclean-generic distclean-libtool distclean-local \
+-	distclean-tags distdir dvi dvi-am html html-am info info-am \
+-	install install-am install-data install-data-am \
+-	install-data-local install-dvi install-dvi-am install-exec \
+-	install-exec-am install-html install-html-am install-info \
+-	install-info-am install-man install-pdf install-pdf-am \
+-	install-ps install-ps-am install-strip installcheck \
+-	installcheck-am installdirs installdirs-am maintainer-clean \
+-	maintainer-clean-generic mostlyclean mostlyclean-generic \
+-	mostlyclean-libtool pdf pdf-am ps ps-am tags tags-recursive \
+-	uninstall uninstall-am uninstall-local
++	clean-libtool clean-local cscopelist cscopelist-recursive \
++	ctags ctags-recursive dist-hook distclean distclean-generic \
++	distclean-libtool distclean-local distclean-tags distdir dvi \
++	dvi-am html html-am info info-am install install-am \
++	install-data install-data-am install-data-local install-dvi \
++	install-dvi-am install-exec install-exec-am install-html \
++	install-html-am install-info install-info-am install-man \
++	install-pdf install-pdf-am install-ps install-ps-am \
++	install-strip installcheck installcheck-am installdirs \
++	installdirs-am maintainer-clean maintainer-clean-generic \
++	mostlyclean mostlyclean-generic mostlyclean-libtool pdf pdf-am \
++	ps ps-am tags tags-recursive uninstall uninstall-am \
++	uninstall-local
+ 
+ html: html-build.stamp
+ 
+@@ -1258,8 +1308,7 @@ help:
+ 	@echo
+ 
+ # update the stuff maintained by doc maintainers
+-update:
+-	$(MAKE) scanobj-update
++update: scanobj-update
+ 	$(MAKE) check-outdated-docs
+ 
+ @ENABLE_GTK_DOC_TRUE@all-local: html-build.stamp
+@@ -1293,7 +1342,7 @@ update:
+ @ENABLE_GTK_DOC_TRUE@	    --module=$(DOC_MODULE) --source=$(PACKAGE) --inspect-dir=$(INSPECT_DIR) &&		\
+ @ENABLE_GTK_DOC_TRUE@	    echo "  DOC   Merging introspection data" && \
+ @ENABLE_GTK_DOC_TRUE@	    $(PYTHON)						\
+-@ENABLE_GTK_DOC_TRUE@	    $(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE);	\
++@ENABLE_GTK_DOC_TRUE@	    $(top_srcdir)/common/scangobj-merge.py $(DOC_MODULE) || exit 1;	\
+ @ENABLE_GTK_DOC_TRUE@	if test x"$(srcdir)" != x. ; then				\
+ @ENABLE_GTK_DOC_TRUE@	    for f in $(SCANOBJ_FILES);					\
+ @ENABLE_GTK_DOC_TRUE@	    do								\
+diff --git a/docs/plugins/gst-plugins-bad-plugins-docs.sgml b/docs/plugins/gst-plugins-bad-plugins-docs.sgml
+index 07fcdaa..0231157 100644
+--- a/docs/plugins/gst-plugins-bad-plugins-docs.sgml
++++ b/docs/plugins/gst-plugins-bad-plugins-docs.sgml
+@@ -55,6 +55,7 @@
+     <xi:include href="xml/element-dvdspu.xml" />
+     <xi:include href="xml/element-exclusion.xml" />
+     <xi:include href="xml/element-edgedetect.xml" />
++    <xi:include href="xml/element-eglglessink.xml" />
+     <xi:include href="xml/element-faac.xml" />
+     <xi:include href="xml/element-faad.xml" />
+     <xi:include href="xml/element-faceblur.xml" />
+@@ -159,11 +160,11 @@
+     <xi:include href="xml/plugin-dtsdec.xml" />
+     <xi:include href="xml/plugin-dvb.xml" />
+     <xi:include href="xml/plugin-dvdspu.xml" />
++    <xi:include href="xml/plugin-eglglessink.xml" />
+     <xi:include href="xml/plugin-faac.xml" />
+     <xi:include href="xml/plugin-faad.xml" />
+     <xi:include href="xml/plugin-fbdevsink.xml" />
+     <xi:include href="xml/plugin-festival.xml" />
+-    <xi:include href="xml/plugin-filter.xml" />
+     <xi:include href="xml/plugin-freeze.xml" />
+     <xi:include href="xml/plugin-frei0r.xml" />
+     <xi:include href="xml/plugin-gaudieffects.xml" />
+@@ -180,7 +181,6 @@
+     <xi:include href="xml/plugin-mms.xml" />
+     <xi:include href="xml/plugin-modplug.xml" />
+     <xi:include href="xml/plugin-mpeg2enc.xml" />
+-    <xi:include href="xml/plugin-mpeg4videoparse.xml" />
+     <xi:include href="xml/plugin-mpegdemux2.xml" />
+     <xi:include href="xml/plugin-mpegpsmux.xml" />
+     <xi:include href="xml/plugin-mpegtsmux.xml" />
+diff --git a/docs/plugins/gst-plugins-bad-plugins-overrides.txt b/docs/plugins/gst-plugins-bad-plugins-overrides.txt
+new file mode 100644
+index 0000000..e69de29
+diff --git a/docs/plugins/gst-plugins-bad-plugins-sections.txt b/docs/plugins/gst-plugins-bad-plugins-sections.txt
+index d7fc96e..6a65a0d 100644
+--- a/docs/plugins/gst-plugins-bad-plugins-sections.txt
++++ b/docs/plugins/gst-plugins-bad-plugins-sections.txt
+@@ -590,6 +590,20 @@ gst_edgedetect_plugin_init
+ </SECTION>
+ 
+ <SECTION>
++<FILE>element-eglglessink</FILE>
++<TITLE>eglglessink</TITLE>
++GstEglGlesSink
++<SUBSECTION Standard>
++GstEglGlesSinkClass
++GST_TYPE_EGLGLESSINK
++GST_EGLGLESSINK
++GST_IS_EGLGLESSINK
++GST_EGLGLESSINK_CLASS
++GST_IS_EGLGLESSINK_CLASS
++gst_eglglessink_get_type
++</SECTION>
++
++<SECTION>
+ <FILE>element-exclusion</FILE>
+ <TITLE>exclusion</TITLE>
+ GstExclusion
+diff --git a/docs/plugins/gst-plugins-bad-plugins.args b/docs/plugins/gst-plugins-bad-plugins.args
+index 31bb1b5..a52f378 100644
+--- a/docs/plugins/gst-plugins-bad-plugins.args
++++ b/docs/plugins/gst-plugins-bad-plugins.args
+@@ -51,7 +51,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::averaging-period</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Averaging Period</NICK>
+ <BLURB>[CBR] Number of frames for which XviD averages bitrate.</BLURB>
+@@ -101,7 +101,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::buffer</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Buffer Size</NICK>
+ <BLURB>[CBR] Size of the video buffers.</BLURB>
+@@ -131,7 +131,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::container-frame-overhead</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Container Frame Overhead</NICK>
+ <BLURB>[PASS2] Average container overhead per frame.</BLURB>
+@@ -161,7 +161,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::flow-control-strength</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Flow Control Strength</NICK>
+ <BLURB>[PASS2] Overflow control strength per frame.</BLURB>
+@@ -221,7 +221,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::keyframe-reduction</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Keyframe Reduction</NICK>
+ <BLURB>[PASS2] Keyframe size reduction in % of those within threshold.</BLURB>
+@@ -231,7 +231,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::keyframe-threshold</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Keyframe Threshold</NICK>
+ <BLURB>[PASS2] Distance between keyframes not to be subject to reduction.</BLURB>
+@@ -291,7 +291,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::max-overflow-degradation</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Max Overflow Degradation</NICK>
+ <BLURB>[PASS2] Amount in % that flow control can decrease frame size compared to ideal curve.</BLURB>
+@@ -301,7 +301,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::max-overflow-improvement</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Max Overflow Improvement</NICK>
+ <BLURB>[PASS2] Amount in % that flow control can increase frame size compared to ideal curve.</BLURB>
+@@ -431,7 +431,7 @@
+ <ARG>
+ <NAME>GstXvidEnc::reaction-delay-factor</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,100]</RANGE>
++<RANGE>[G_MAXULONG,100]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Reaction Delay Factor</NICK>
+ <BLURB>[CBR] Reaction delay factor.</BLURB>
+@@ -861,7 +861,7 @@
+ <ARG>
+ <NAME>GstMpeg2enc::max-gop-size</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,250]</RANGE>
++<RANGE>[G_MAXULONG,250]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Max. GOP size</NICK>
+ <BLURB>Maximal size per Group-of-Pictures (-1=default).</BLURB>
+@@ -871,7 +871,7 @@
+ <ARG>
+ <NAME>GstMpeg2enc::min-gop-size</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,250]</RANGE>
++<RANGE>[G_MAXULONG,250]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Min. GOP size</NICK>
+ <BLURB>Minimal size per Group-of-Pictures (-1=default).</BLURB>
+@@ -951,7 +951,7 @@
+ <ARG>
+ <NAME>GstMpeg2enc::quantisation</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,31]</RANGE>
++<RANGE>[G_MAXULONG,31]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Quantisation</NICK>
+ <BLURB>Quantisation factor (-1=cbr, 0=default, 1=best, 31=worst).</BLURB>
+@@ -1731,7 +1731,7 @@
+ <ARG>
+ <NAME>GstDvbSrc::diseqc-source</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,7]</RANGE>
++<RANGE>[G_MAXULONG,7]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>diseqc source</NICK>
+ <BLURB>DISEqC selected source (-1 disabled) (DVB-S).</BLURB>
+@@ -12121,7 +12121,7 @@
+ <ARG>
+ <NAME>ladspa-gate::Output-select</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,1]</RANGE>
++<RANGE>[G_MAXULONG,1]</RANGE>
+ <FLAGS>rwx</FLAGS>
+ <NICK>Output-select</NICK>
+ <BLURB>Output-select.</BLURB>
+@@ -17881,7 +17881,7 @@
+ <ARG>
+ <NAME>DvbBaseBin::diseqc-source</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,7]</RANGE>
++<RANGE>[G_MAXULONG,7]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>diseqc source</NICK>
+ <BLURB>DISEqC selected source (-1 disabled) (DVB-S).</BLURB>
+@@ -18826,7 +18826,7 @@
+ <ARG>
+ <NAME>GstAppSrc::size</NAME>
+ <TYPE>gint64</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Size</NICK>
+ <BLURB>The size of the data stream (-1 if unknown).</BLURB>
+@@ -22056,7 +22056,7 @@
+ <ARG>
+ <NAME>GstDCCPClientSrc::sockfd</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Socket fd</NICK>
+ <BLURB>The socket file descriptor.</BLURB>
+@@ -22096,7 +22096,7 @@
+ <ARG>
+ <NAME>GstDCCPServerSink::sockfd</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Socket fd</NICK>
+ <BLURB>The client socket file descriptor.</BLURB>
+@@ -22156,7 +22156,7 @@
+ <ARG>
+ <NAME>GstDCCPClientSink::sockfd</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Socket fd</NICK>
+ <BLURB>The socket file descriptor.</BLURB>
+@@ -22216,7 +22216,7 @@
+ <ARG>
+ <NAME>GstDCCPServerSrc::sockfd</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Socket fd</NICK>
+ <BLURB>The client socket file descriptor.</BLURB>
+@@ -22276,7 +22276,7 @@
+ <ARG>
+ <NAME>GstMpegTSDemux::program-number</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Program Number</NICK>
+ <BLURB>Program number to demux for (-1 to ignore).</BLURB>
+@@ -22336,7 +22336,7 @@
+ <ARG>
+ <NAME>GstPcapParse::dst-port</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,65535]</RANGE>
++<RANGE>[G_MAXULONG,65535]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Destination port</NICK>
+ <BLURB>Destination port to restrict to.</BLURB>
+@@ -22356,7 +22356,7 @@
+ <ARG>
+ <NAME>GstPcapParse::src-port</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,65535]</RANGE>
++<RANGE>[G_MAXULONG,65535]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Source port</NICK>
+ <BLURB>Source port to restrict to.</BLURB>
+@@ -22376,7 +22376,7 @@
+ <ARG>
+ <NAME>GstPcapParse::ts-offset</NAME>
+ <TYPE>gint64</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Timestamp Offset</NICK>
+ <BLURB>Relative timestamp offset (ns) to apply (-1 = use absolute packet time).</BLURB>
+@@ -23396,7 +23396,7 @@
+ <ARG>
+ <NAME>GstRTPDTMFSrc::seqnum-offset</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Sequence number Offset</NICK>
+ <BLURB>Offset to add to all outgoing seqnum (-1 = random).</BLURB>
+@@ -23426,7 +23426,7 @@
+ <ARG>
+ <NAME>GstRTPDTMFSrc::timestamp-offset</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Timestamp Offset</NICK>
+ <BLURB>Offset to add to all outgoing timestamps (-1 = random).</BLURB>
+@@ -23476,7 +23476,7 @@
+ <ARG>
+ <NAME>GstRTPMux::seqnum-offset</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Sequence number Offset</NICK>
+ <BLURB>Offset to add to all outgoing seqnum (-1 = random).</BLURB>
+@@ -23496,7 +23496,7 @@
+ <ARG>
+ <NAME>GstRTPMux::timestamp-offset</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Timestamp Offset</NICK>
+ <BLURB>Offset to add to all outgoing timestamps (-1 = random).</BLURB>
+@@ -26670,7 +26670,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>physics</NICK>
+ <BLURB>water density: from 1 to 4.</BLURB>
+-<DEFAULT>4.77831e-299</DEFAULT>
++<DEFAULT>7.7486e-304</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -26710,7 +26710,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>splash</NICK>
+ <BLURB>make a big splash in the center.</BLURB>
+-<DEFAULT>4.77773e-299</DEFAULT>
++<DEFAULT>8.20074e-304</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -26720,7 +26720,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>splash</NICK>
+ <BLURB>make a big splash in the center.</BLURB>
+-<DEFAULT>0</DEFAULT>
++<DEFAULT>4.77773e-299</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -26750,7 +26750,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>ratiox</NICK>
+ <BLURB>x-ratio.</BLURB>
+-<DEFAULT>0</DEFAULT>
++<DEFAULT>1.82049e-316</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -26760,7 +26760,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>ratioy</NICK>
+ <BLURB>y-ratio.</BLURB>
+-<DEFAULT>0</DEFAULT>
++<DEFAULT>-3.77929e+138</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -26820,7 +26820,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>Color-R</NICK>
+ <BLURB>the color of the image.</BLURB>
+-<DEFAULT>0</DEFAULT>
++<DEFAULT>1.30952e-37</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -27150,7 +27150,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>lredscale</NICK>
+ <BLURB>multiplier for downscaling non-edge brightness.</BLURB>
+-<DEFAULT>6.28747e-311</DEFAULT>
++<DEFAULT>2.34986e-310</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -27160,7 +27160,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>lthresh</NICK>
+ <BLURB>threshold for edge lightening.</BLURB>
+-<DEFAULT>6.9235e+228</DEFAULT>
++<DEFAULT>2.34969e-310</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -27170,7 +27170,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>lupscale</NICK>
+ <BLURB>multiplier for upscaling edge brightness.</BLURB>
+-<DEFAULT>1.36347e+161</DEFAULT>
++<DEFAULT>1.59292e-316</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -27340,7 +27340,7 @@
+ <FLAGS>rw</FLAGS>
+ <NICK>blend</NICK>
+ <BLURB>blend factor.</BLURB>
+-<DEFAULT>4.77831e-299</DEFAULT>
++<DEFAULT>0</DEFAULT>
+ </ARG>
+ 
+ <ARG>
+@@ -47106,7 +47106,7 @@
+ <ARG>
+ <NAME>GstJP2kDecimator::max-decomposition-levels</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>[-1,32]</RANGE>
++<RANGE>[G_MAXULONG,32]</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Maximum Number of Decomposition Levels</NICK>
+ <BLURB>Maximum number of decomposition levels to keep (-1 == all).</BLURB>
+@@ -47496,7 +47496,7 @@
+ <ARG>
+ <NAME>GstTSDemux::program-number</NAME>
+ <TYPE>gint</TYPE>
+-<RANGE>>= -1</RANGE>
++<RANGE>>= G_MAXULONG</RANGE>
+ <FLAGS>rw</FLAGS>
+ <NICK>Program number</NICK>
+ <BLURB>Program Number to demux for (-1 to ignore).</BLURB>
+@@ -57934,6 +57934,46 @@
+ </ARG>
+ 
+ <ARG>
++<NAME>GstInterVideoSrc::channel</NAME>
++<TYPE>gchar*</TYPE>
++<RANGE></RANGE>
++<FLAGS>rw</FLAGS>
++<NICK>Channel</NICK>
++<BLURB>Channel name to match inter src and sink elements.</BLURB>
++<DEFAULT>"default"</DEFAULT>
++</ARG>
++
++<ARG>
++<NAME>GstInterVideoSink::channel</NAME>
++<TYPE>gchar*</TYPE>
++<RANGE></RANGE>
++<FLAGS>rw</FLAGS>
++<NICK>Channel</NICK>
++<BLURB>Channel name to match inter src and sink elements.</BLURB>
++<DEFAULT>"default"</DEFAULT>
++</ARG>
++
++<ARG>
++<NAME>GstInterAudioSrc::channel</NAME>
++<TYPE>gchar*</TYPE>
++<RANGE></RANGE>
++<FLAGS>rw</FLAGS>
++<NICK>Channel</NICK>
++<BLURB>Channel name to match inter src and sink elements.</BLURB>
++<DEFAULT>"default"</DEFAULT>
++</ARG>
++
++<ARG>
++<NAME>GstInterAudioSink::channel</NAME>
++<TYPE>gchar*</TYPE>
++<RANGE></RANGE>
++<FLAGS>rw</FLAGS>
++<NICK>Channel</NICK>
++<BLURB>Channel name to match inter src and sink elements.</BLURB>
++<DEFAULT>"default"</DEFAULT>
++</ARG>
++
++<ARG>
+ <NAME>GstSmooth::active</NAME>
+ <TYPE>gboolean</TYPE>
+ <RANGE></RANGE>
+@@ -58023,3 +58063,23 @@
+ <DEFAULT>FALSE</DEFAULT>
+ </ARG>
+ 
++<ARG>
++<NAME>GstChromaprint::duration</NAME>
++<TYPE>guint</TYPE>
++<RANGE></RANGE>
++<FLAGS>rw</FLAGS>
++<NICK>Duration limit</NICK>
++<BLURB>Number of seconds of audio to use for fingerprinting.</BLURB>
++<DEFAULT>120</DEFAULT>
++</ARG>
++
++<ARG>
++<NAME>GstChromaprint::fingerprint</NAME>
++<TYPE>gchar*</TYPE>
++<RANGE></RANGE>
++<FLAGS>r</FLAGS>
++<NICK>Resulting fingerprint</NICK>
++<BLURB>Resulting fingerprint.</BLURB>
++<DEFAULT>NULL</DEFAULT>
++</ARG>
++
+diff --git a/docs/plugins/gst-plugins-bad-plugins.hierarchy b/docs/plugins/gst-plugins-bad-plugins.hierarchy
+deleted file mode 100644
+index ebd6684..0000000
+--- a/docs/plugins/gst-plugins-bad-plugins.hierarchy
++++ /dev/null
+@@ -1,526 +0,0 @@
+-GObject
+-  GstAdapter
+-  GstColorBalanceChannel
+-  GstMixerTrack
+-    GstMixerOptions
+-  GstObject
+-    GstBus
+-    GstClock
+-      GstSystemClock
+-        GstAudioClock
+-    GstElement
+-      ADPCMDec
+-      ADPCMEnc
+-      GstAiffMux
+-      GstAiffParse
+-      GstAsfMux
+-      GstAsfParse
+-      GstAssRender
+-      GstAudioDecoder
+-        GstCeltDec
+-        GstDtsDec
+-        GstFaad
+-      GstAudioEncoder
+-        GstCeltEnc
+-        GstFaac
+-      GstBaseAudioVisualizer
+-        GstSpaceScope
+-        GstSpectraScope
+-        GstSynaeScope
+-        GstWaveScope
+-      GstBaseParse
+-        GstDiracParse
+-        GstH263Parse
+-        GstH264Parse
+-        GstIRTSPParse
+-        GstMpeg4VParse
+-        GstMpegvParse
+-      GstBaseRTPDepayload
+-        GstRtpDTMFDepay
+-        GstRtpVP8Depay
+-      GstBaseRTPPayload
+-        GstRtpAsfPay
+-        GstRtpVP8Pay
+-      GstBaseSink
+-        GstBaseAudioSink
+-          GstAudioSink
+-            GstApExSink
+-        GstChecksumSink
+-        GstCurlSink
+-        GstDCCPClientSink
+-        GstDCCPServerSink
+-        GstFBDEVSink
+-        GstInterAudioSink
+-        GstInterVideoSink
+-        GstLinsysSdiSink
+-        GstRTMPSink
+-        GstSFSink
+-        GstShmSink
+-        GstVideoSink
+-          GstDfbVideoSink
+-          VdpSink
+-      GstBaseSrc
+-        GstDTMFSrc
+-        GstDataURISrc
+-        GstInterAudioSrc
+-        GstInterVideoSrc
+-        GstLinsysSdiSrc
+-        GstPushSrc
+-          GstDCCPClientSrc
+-          GstDCCPServerSrc
+-          GstDc1394
+-          GstDvbSrc
+-          GstMMS
+-          GstMythtvSrc
+-          GstNeonhttpSrc
+-          GstRTMPSrc
+-          GstRfbSrc
+-          GstShmSrc
+-          GstVCDSrc
+-          frei0r-src-ising0r
+-          frei0r-src-lissajous0r
+-          frei0r-src-nois0r
+-          frei0r-src-onecol0r
+-          frei0r-src-partik0l
+-          frei0r-src-plasma
+-        GstRTPDTMFSrc
+-        GstSFSrc
+-      GstBaseTransform
+-        GstAudioFilter
+-          GstBPMDetect
+-          GstOFA
+-          GstStereo
+-        GstBayer2RGB
+-        GstCogScale
+-        GstCogcolorspace
+-        GstCogdownsample
+-        GstColorconvert
+-        GstDebugSpy
+-        GstDtmfDetect
+-        GstFreeverb
+-        GstHDVParse
+-        GstLegacyresample
+-        GstLogoinsert
+-        GstMeasureCollector
+-        GstPatchdetect
+-        GstRGB2Bayer
+-        GstRemoveSilence
+-        GstScaletempo
+-        GstVideoFilter
+-          GaussBlur
+-          GstBurn
+-          GstChromaHold
+-          GstChromium
+-          GstColorEffects
+-          GstCsp
+-          GstDilate
+-          GstDodge
+-          GstExclusion
+-          GstGeometricTransform
+-            GstCircleGeometricTransform
+-              GstBulge
+-              GstCircle
+-              GstKaleidoscope
+-              GstPinch
+-              GstSphere
+-              GstStretch
+-              GstTunnel
+-              GstTwirl
+-              GstWaterRipple
+-            GstDiffuse
+-            GstFisheye
+-            GstMarble
+-            GstMirror
+-            GstRotate
+-            GstSquare
+-          GstRsvgOverlay
+-          GstSmooth
+-          GstSolarize
+-          GstVideoAnalyse
+-          GstVideoDetect
+-          GstVideoMark
+-          frei0r-filter-3-point-color-balance
+-          frei0r-filter-3dflippo
+-          frei0r-filter-b
+-          frei0r-filter-baltan
+-          frei0r-filter-bluescreen0r
+-          frei0r-filter-brightness
+-          frei0r-filter-bw0r
+-          frei0r-filter-cartoon
+-          frei0r-filter-color-distance
+-          frei0r-filter-contrast0r
+-          frei0r-filter-curves
+-          frei0r-filter-dealygrab
+-          frei0r-filter-delay0r
+-          frei0r-filter-distort0r
+-          frei0r-filter-edgeglow
+-          frei0r-filter-equaliz0r
+-          frei0r-filter-flippo
+-          frei0r-filter-g
+-          frei0r-filter-gamma
+-          frei0r-filter-glow
+-          frei0r-filter-hueshift0r
+-          frei0r-filter-invert0r
+-          frei0r-filter-k-means-clustering
+-          frei0r-filter-lens-correction
+-          frei0r-filter-letterb0xed
+-          frei0r-filter-levels
+-          frei0r-filter-luminance
+-          frei0r-filter-mask0mate
+-          frei0r-filter-nervous
+-          frei0r-filter-nosync0r
+-          frei0r-filter-opencvfacedetect
+-          frei0r-filter-perspective
+-          frei0r-filter-pixeliz0r
+-          frei0r-filter-primaries
+-          frei0r-filter-r
+-          frei0r-filter-rgb-parade
+-          frei0r-filter-saturat0r
+-          frei0r-filter-scale0tilt
+-          frei0r-filter-scanline0r
+-          frei0r-filter-sobel
+-          frei0r-filter-squareblur
+-          frei0r-filter-tehroxx0r
+-          frei0r-filter-threelay0r
+-          frei0r-filter-threshold0r
+-          frei0r-filter-tint0r
+-          frei0r-filter-transparency
+-          frei0r-filter-twolay0r
+-          frei0r-filter-vectorscope
+-          frei0r-filter-vertigo
+-          frei0r-filter-water
+-          frei0r-filter-white-balance
+-        GstVideoFilter2
+-          GstSceneChange
+-          GstZebraStripe
+-        GstVideoMaxRate
+-      GstBaseVideoCodec
+-        GstBaseVideoDecoder
+-          GstSchroDec
+-          GstVP8Dec
+-        GstBaseVideoEncoder
+-          GstDiracEnc
+-          GstSchroEnc
+-          GstVP8Enc
+-      GstBin
+-        DvbBaseBin
+-        GstAutoConvert
+-        GstAutoVideoConvert
+-        GstBaseCameraSrc
+-          GstWrapperCameraBinSrc
+-        GstFPSDisplaySink
+-        GstFaceOverlay
+-        GstGSettingsSwitchSink
+-          GstGSettingsAudioSink
+-          GstGSettingsVideoSink
+-        GstGSettingsSwitchSrc
+-          GstGSettingsAudioSrc
+-          GstGSettingsVideoSrc
+-        GstPipeline
+-          GstCameraBin
+-          GstCameraBin2
+-        GstSDPDemux
+-        GstViewfinderBin
+-        RsnDvdBin
+-      GstBz2dec
+-      GstBz2enc
+-      GstCDAudio
+-      GstCDXAParse
+-      GstChopMyData
+-      GstCompare
+-      GstDVBSubOverlay
+-      GstDVDSpu
+-      GstDecklinkSink
+-      GstDecklinkSrc
+-      GstFestival
+-      GstFieldAnalysis
+-      GstFreeze
+-      GstGSMDec
+-      GstGSMEnc
+-      GstHLSDemux
+-      GstInterlace
+-      GstIvfParse
+-      GstJP2kDecimator
+-      GstJifMux
+-      GstJpegParse
+-      GstKateDec
+-      GstKateEnc
+-      GstKateParse
+-        GstKateTag
+-      GstKateTiger
+-      GstLegacyH264Parse
+-      GstLiveAdder
+-      GstMSE
+-      GstMXFDemux
+-      GstMXFMux
+-      GstMimDec
+-      GstMimEnc
+-      GstModPlug
+-      GstMpeg2enc
+-      GstMpegPSDemux
+-      GstMpegTSDemux
+-      GstMplex
+-      GstMusepackDec
+-      GstMveDemux
+-      GstMveMux
+-      GstNsfDec
+-      GstNuvDemux
+-      GstPcapParse
+-      GstPitch
+-      GstPnmdec
+-      GstPnmenc
+-      GstRTPMux
+-        GstRTPDTMFMux
+-      GstRawParse
+-        GstAudioParse
+-        GstVideoParse
+-      GstRealAudioDec
+-      GstRealVideoDec
+-      GstRsvgDec
+-      GstSSim
+-      GstSdiDemux
+-      GstSdiMux
+-      GstSegmentClip
+-        GstAudioSegmentClip
+-        GstVideoSegmentClip
+-      GstSignalProcessor
+-        ladspa-Chorus1
+-        ladspa-Chorus2
+-        ladspa-G2reverb
+-        ladspa-Mvchpf-1
+-        ladspa-Mvclpf-1
+-        ladspa-Mvclpf-2
+-        ladspa-Mvclpf-3
+-        ladspa-Mvclpf-4
+-        ladspa-Phaser1
+-        ladspa-Phaser1+LFO
+-        ladspa-TripleChorus
+-        ladspa-alias
+-        ladspa-allpass-c
+-        ladspa-allpass-l
+-        ladspa-allpass-n
+-        ladspa-amPitchshift
+-        ladspa-amp
+-        ladspa-amp-mono
+-        ladspa-amp-stereo
+-        ladspa-analogueOsc
+-        ladspa-artificialLatency
+-        ladspa-autoPhaser
+-        ladspa-bandpass-a-iir
+-        ladspa-bandpass-iir
+-        ladspa-bodeShifter
+-        ladspa-bodeShifterCV
+-        ladspa-butthigh-iir
+-        ladspa-buttlow-iir
+-        ladspa-bwxover-iir
+-        ladspa-chebstortion
+-        ladspa-comb
+-        ladspa-comb-c
+-        ladspa-comb-l
+-        ladspa-comb-n
+-        ladspa-combSplitter
+-        ladspa-const
+-        ladspa-crossoverDist
+-        ladspa-dcRemove
+-        ladspa-decay
+-        ladspa-decimator
+-        ladspa-declip
+-        ladspa-delay-5s
+-        ladspa-delay-c
+-        ladspa-delay-l
+-        ladspa-delay-n
+-        ladspa-delayorama
+-        ladspa-diode
+-        ladspa-divider
+-        ladspa-dj-eq
+-        ladspa-dj-eq-mono
+-        ladspa-djFlanger
+-        ladspa-dysonCompress
+-        ladspa-fadDelay
+-        ladspa-fastLookaheadLimiter
+-        ladspa-flanger
+-        ladspa-fmOsc
+-        ladspa-foldover
+-        ladspa-fourByFourPole
+-        ladspa-foverdrive
+-        ladspa-freqTracker
+-        ladspa-gate
+-        ladspa-giantFlange
+-        ladspa-gong
+-        ladspa-gongBeater
+-        ladspa-gsm
+-        ladspa-gverb
+-        ladspa-hardLimiter
+-        ladspa-harmonicGen
+-        ladspa-hermesFilter
+-        ladspa-highpass-iir
+-        ladspa-hilbert
+-        ladspa-hpf
+-        ladspa-imp
+-        ladspa-impulse-fc
+-        ladspa-inv
+-        ladspa-karaoke
+-        ladspa-lcrDelay
+-        ladspa-lfoPhaser
+-        ladspa-lowpass-iir
+-        ladspa-lpf
+-        ladspa-lsFilter
+-        ladspa-matrixMSSt
+-        ladspa-matrixSpatialiser
+-        ladspa-matrixStMS
+-        ladspa-mbeq
+-        ladspa-modDelay
+-        ladspa-multivoiceChorus
+-        ladspa-noise-white
+-        ladspa-notch-iir
+-        ladspa-pitchScale
+-        ladspa-pitchScaleHQ
+-        ladspa-plate
+-        ladspa-pointerCastDistortion
+-        ladspa-rateShifter
+-        ladspa-retroFlange
+-        ladspa-revdelay
+-        ladspa-ringmod-1i1o1l
+-        ladspa-ringmod-2i1o
+-        ladspa-satanMaximiser
+-        ladspa-sc1
+-        ladspa-sc2
+-        ladspa-sc3
+-        ladspa-sc4
+-        ladspa-sc4m
+-        ladspa-se4
+-        ladspa-shaper
+-        ladspa-sifter
+-        ladspa-sinCos
+-        ladspa-sine-faaa
+-        ladspa-sine-faac
+-        ladspa-sine-fcaa
+-        ladspa-sine-fcac
+-        ladspa-singlePara
+-        ladspa-sinusWavewrapper
+-        ladspa-smoothDecimate
+-        ladspa-split
+-        ladspa-stepMuxer
+-        ladspa-surroundEncoder
+-        ladspa-svf
+-        ladspa-tap-autopan
+-        ladspa-tap-chorusflanger
+-        ladspa-tap-deesser
+-        ladspa-tap-doubler
+-        ladspa-tap-dynamics-m
+-        ladspa-tap-dynamics-st
+-        ladspa-tap-equalizer
+-        ladspa-tap-equalizer-bw
+-        ladspa-tap-limiter
+-        ladspa-tap-pinknoise
+-        ladspa-tap-pitch
+-        ladspa-tap-reflector
+-        ladspa-tap-reverb
+-        ladspa-tap-rotspeak
+-        ladspa-tap-sigmoid
+-        ladspa-tap-stereo-echo
+-        ladspa-tap-tremolo
+-        ladspa-tap-tubewarmth
+-        ladspa-tap-vibrato
+-        ladspa-tapeDelay
+-        ladspa-transient
+-        ladspa-triplePara
+-        ladspa-valve
+-        ladspa-valveRect
+-        ladspa-vynil
+-        ladspa-waveTerrain
+-        ladspa-xfade
+-        ladspa-xfade4
+-        ladspa-zm1
+-      GstSirenDec
+-      GstSirenEnc
+-      GstSpeed
+-      GstSrtEnc
+-      GstTRM
+-      GstTagMux
+-        GstId3Mux
+-      GstTtaDec
+-      GstTtaParse
+-      GstVMncDec
+-      GstVcdParse
+-      GstVdpVideoPostProcess
+-      GstWebvttEnc
+-      GstWildmidi
+-      GstXvidDec
+-      GstXvidEnc
+-      GstY4mDec
+-      MpegPsMux
+-      MpegTSBase
+-        GstTSDemux
+-        MpegTSParse2
+-      MpegTSParse
+-      MpegTsMux
+-      MpegVideoParse
+-      SatBaseVideoDecoder
+-        GstVdpDecoder
+-          GstVdpH264Dec
+-          GstVdpMpeg4Dec
+-          GstVdpMpegDec
+-      frei0r-mixer-addition
+-      frei0r-mixer-alpha-injection
+-      frei0r-mixer-alphaatop
+-      frei0r-mixer-alphain
+-      frei0r-mixer-alphaout
+-      frei0r-mixer-alphaover
+-      frei0r-mixer-alphaxor
+-      frei0r-mixer-blend
+-      frei0r-mixer-burn
+-      frei0r-mixer-color-only
+-      frei0r-mixer-composition
+-      frei0r-mixer-darken
+-      frei0r-mixer-difference
+-      frei0r-mixer-divide
+-      frei0r-mixer-dodge
+-      frei0r-mixer-grain-extract
+-      frei0r-mixer-grain-merge
+-      frei0r-mixer-hardlight
+-      frei0r-mixer-hue
+-      frei0r-mixer-lighten
+-      frei0r-mixer-multiply
+-      frei0r-mixer-overlay
+-      frei0r-mixer-rgb
+-      frei0r-mixer-saturation
+-      frei0r-mixer-screen
+-      frei0r-mixer-softlight
+-      frei0r-mixer-subtract
+-      frei0r-mixer-uv-map
+-      frei0r-mixer-value
+-      frei0r-mixer-xfade0r
+-    GstPad
+-      GstVdpOutputSrcPad
+-      GstVdpVideoSrcPad
+-    GstPadTemplate
+-      GstSignalProcessorPadTemplate
+-    GstPlugin
+-    GstPluginFeature
+-      GstElementFactory
+-      GstIndexFactory
+-      GstTypeFindFactory
+-    GstRegistry
+-    GstRingBuffer
+-      GstAudioSinkRingBuffer
+-    GstTask
+-    GstTaskPool
+-  GstSignalObject
+-  GstVdpDevice
+-  MpegTsPatInfo
+-  MpegTsPmtInfo
+-GInterface
+-  GTypePlugin
+-  GstChildProxy
+-  GstColorBalance
+-  GstImplementsInterface
+-  GstMixer
+-  GstNavigation
+-  GstPhotography
+-  GstPreset
+-  GstTagSetter
+-  GstTagXmpWriter
+-  GstURIHandler
+-  GstXOverlay
+-  MXFDescriptiveMetadataFrameworkInterface
+diff --git a/docs/plugins/gst-plugins-bad-plugins.interfaces b/docs/plugins/gst-plugins-bad-plugins.interfaces
+index 0420c8b..994ac3c 100644
+--- a/docs/plugins/gst-plugins-bad-plugins.interfaces
++++ b/docs/plugins/gst-plugins-bad-plugins.interfaces
+@@ -1,3 +1,4 @@
++ADPCMEnc GstPreset
+ DvbBaseBin GstChildProxy GstURIHandler
+ GstAmrWbEnc GstPreset
+ GstApExSink GstImplementsInterface GstMixer
+@@ -20,6 +21,7 @@ GstFPSDisplaySink GstChildProxy
+ GstFaac GstPreset
+ GstFaceOverlay GstChildProxy
+ GstFreeverb GstPreset
++GstGSMEnc GstPreset
+ GstGSettingsAudioSink GstChildProxy
+ GstGSettingsAudioSrc GstChildProxy
+ GstGSettingsSwitchSink GstChildProxy
+diff --git a/docs/plugins/inspect/plugin-adpcmdec.xml b/docs/plugins/inspect/plugin-adpcmdec.xml
+index 088b0ce..6c14c7c 100644
+--- a/docs/plugins/inspect/plugin-adpcmdec.xml
++++ b/docs/plugins/inspect/plugin-adpcmdec.xml
+@@ -3,10 +3,10 @@
+   <description>ADPCM decoder</description>
+   <filename>../../gst/adpcmdec/.libs/libgstadpcmdec.so</filename>
+   <basename>libgstadpcmdec.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-adpcmenc.xml b/docs/plugins/inspect/plugin-adpcmenc.xml
+index 7b4356b..6931a29 100644
+--- a/docs/plugins/inspect/plugin-adpcmenc.xml
++++ b/docs/plugins/inspect/plugin-adpcmenc.xml
+@@ -3,10 +3,10 @@
+   <description>ADPCM encoder</description>
+   <filename>../../gst/adpcmenc/.libs/libgstadpcmenc.so</filename>
+   <basename>libgstadpcmenc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-aiff.xml b/docs/plugins/inspect/plugin-aiff.xml
+index 894b171..b6ed536 100644
+--- a/docs/plugins/inspect/plugin-aiff.xml
++++ b/docs/plugins/inspect/plugin-aiff.xml
+@@ -3,10 +3,10 @@
+   <description>Create and parse Audio Interchange File Format (AIFF) files</description>
+   <filename>../../gst/aiff/.libs/libgstaiff.so</filename>
+   <basename>libgstaiff.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-apexsink.xml b/docs/plugins/inspect/plugin-apexsink.xml
+index d3b56fd..ae6e639 100644
+--- a/docs/plugins/inspect/plugin-apexsink.xml
++++ b/docs/plugins/inspect/plugin-apexsink.xml
+@@ -3,10 +3,10 @@
+   <description>Apple AirPort Express Plugin</description>
+   <filename>../../ext/apexsink/.libs/libgstapexsink.so</filename>
+   <basename>libgstapexsink.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-asfmux.xml b/docs/plugins/inspect/plugin-asfmux.xml
+index 70d557b..20f137b 100644
+--- a/docs/plugins/inspect/plugin-asfmux.xml
++++ b/docs/plugins/inspect/plugin-asfmux.xml
+@@ -3,10 +3,10 @@
+   <description>ASF Muxer Plugin</description>
+   <filename>../../gst/asfmux/.libs/libgstasfmux.so</filename>
+   <basename>libgstasfmux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-assrender.xml b/docs/plugins/inspect/plugin-assrender.xml
+index 1e8830a..b719d19 100644
+--- a/docs/plugins/inspect/plugin-assrender.xml
++++ b/docs/plugins/inspect/plugin-assrender.xml
+@@ -3,10 +3,10 @@
+   <description>ASS/SSA subtitle renderer</description>
+   <filename>../../ext/assrender/.libs/libgstassrender.so</filename>
+   <basename>libgstassrender.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-audiovisualizers.xml b/docs/plugins/inspect/plugin-audiovisualizers.xml
+index 2c7431d..39663fb 100644
+--- a/docs/plugins/inspect/plugin-audiovisualizers.xml
++++ b/docs/plugins/inspect/plugin-audiovisualizers.xml
+@@ -3,10 +3,10 @@
+   <description>Creates video visualizations of audio input</description>
+   <filename>../../gst/audiovisualizers/.libs/libgstaudiovisualizers.so</filename>
+   <basename>libgstaudiovisualizers.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-autoconvert.xml b/docs/plugins/inspect/plugin-autoconvert.xml
+index b26bef2..7083fed 100644
+--- a/docs/plugins/inspect/plugin-autoconvert.xml
++++ b/docs/plugins/inspect/plugin-autoconvert.xml
+@@ -3,10 +3,10 @@
+   <description>Selects convertor element based on caps</description>
+   <filename>../../gst/autoconvert/.libs/libgstautoconvert.so</filename>
+   <basename>libgstautoconvert.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-bayer.xml b/docs/plugins/inspect/plugin-bayer.xml
+index 59de637..8352a7c 100644
+--- a/docs/plugins/inspect/plugin-bayer.xml
++++ b/docs/plugins/inspect/plugin-bayer.xml
+@@ -3,10 +3,10 @@
+   <description>Elements to convert Bayer images</description>
+   <filename>../../gst/bayer/.libs/libgstbayer.so</filename>
+   <basename>libgstbayer.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-bz2.xml b/docs/plugins/inspect/plugin-bz2.xml
+index 41ccb5c..75ceedd 100644
+--- a/docs/plugins/inspect/plugin-bz2.xml
++++ b/docs/plugins/inspect/plugin-bz2.xml
+@@ -3,10 +3,10 @@
+   <description>Compress or decompress streams</description>
+   <filename>../../ext/bz2/.libs/libgstbz2.so</filename>
+   <basename>libgstbz2.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-camerabin.xml b/docs/plugins/inspect/plugin-camerabin.xml
+index 4a45cab..b9d6b0e 100644
+--- a/docs/plugins/inspect/plugin-camerabin.xml
++++ b/docs/plugins/inspect/plugin-camerabin.xml
+@@ -3,10 +3,10 @@
+   <description>High level api for DC (Digital Camera) application</description>
+   <filename>../../gst/camerabin/.libs/libgstcamerabin.so</filename>
+   <basename>libgstcamerabin.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-camerabin2.xml b/docs/plugins/inspect/plugin-camerabin2.xml
+index e556420..f61bb7c 100644
+--- a/docs/plugins/inspect/plugin-camerabin2.xml
++++ b/docs/plugins/inspect/plugin-camerabin2.xml
+@@ -3,10 +3,10 @@
+   <description>camerabin2</description>
+   <filename>../../gst/camerabin2/.libs/libgstcamerabin2.so</filename>
+   <basename>libgstcamerabin2.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-cdaudio.xml b/docs/plugins/inspect/plugin-cdaudio.xml
+index 625af0b..0bb15d0 100644
+--- a/docs/plugins/inspect/plugin-cdaudio.xml
++++ b/docs/plugins/inspect/plugin-cdaudio.xml
+@@ -3,10 +3,10 @@
+   <description>Play CD audio through the CD Drive</description>
+   <filename>../../ext/cdaudio/.libs/libgstcdaudio.so</filename>
+   <basename>libgstcdaudio.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-cdxaparse.xml b/docs/plugins/inspect/plugin-cdxaparse.xml
+index d210405..f870744 100644
+--- a/docs/plugins/inspect/plugin-cdxaparse.xml
++++ b/docs/plugins/inspect/plugin-cdxaparse.xml
+@@ -3,10 +3,10 @@
+   <description>Parse a .dat file (VCD) into raw mpeg1</description>
+   <filename>../../gst/cdxaparse/.libs/libgstcdxaparse.so</filename>
+   <basename>libgstcdxaparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-celt.xml b/docs/plugins/inspect/plugin-celt.xml
+index 4df3e44..d13e896 100644
+--- a/docs/plugins/inspect/plugin-celt.xml
++++ b/docs/plugins/inspect/plugin-celt.xml
+@@ -3,10 +3,10 @@
+   <description>CELT plugin library</description>
+   <filename>../../ext/celt/.libs/libgstcelt.so</filename>
+   <basename>libgstcelt.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-chromaprint.xml b/docs/plugins/inspect/plugin-chromaprint.xml
+new file mode 100644
+index 0000000..0e88b0a
+--- /dev/null
++++ b/docs/plugins/inspect/plugin-chromaprint.xml
+@@ -0,0 +1,34 @@
++<plugin>
++  <name>chromaprint</name>
++  <description>Calculate Chromaprint fingerprint from audio files</description>
++  <filename>../../ext/chromaprint/.libs/libgstchromaprint.so</filename>
++  <basename>libgstchromaprint.so</basename>
++  <version>0.10.23.1</version>
++  <license>LGPL</license>
++  <source>gst-plugins-bad</source>
++  <package>GStreamer Bad Plug-ins git</package>
++  <origin>Unknown package origin</origin>
++  <elements>
++    <element>
++      <name>chromaprint</name>
++      <longname>Chromaprint fingerprinting element</longname>
++      <class>Filter/Analyzer/Audio</class>
++      <description>Find an audio fingerprint using the Chromaprint library</description>
++      <author>Lukáš Lalinský &lt;lalinsky@gmail.com&gt;</author>
++      <pads>
++        <caps>
++          <name>sink</name>
++          <direction>sink</direction>
++          <presence>always</presence>
++          <details>audio/x-raw-int, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2 ], endianness=(int){ 1234 }, width=(int){ 16 }, depth=(int){ 16 }, signed=(boolean)true</details>
++        </caps>
++        <caps>
++          <name>src</name>
++          <direction>source</direction>
++          <presence>always</presence>
++          <details>audio/x-raw-int, rate=(int)[ 1, 2147483647 ], channels=(int)[ 1, 2 ], endianness=(int){ 1234 }, width=(int){ 16 }, depth=(int){ 16 }, signed=(boolean)true</details>
++        </caps>
++      </pads>
++    </element>
++  </elements>
++</plugin>
+\ No newline at end of file
+diff --git a/docs/plugins/inspect/plugin-cog.xml b/docs/plugins/inspect/plugin-cog.xml
+index 6e1152a..7b613c5 100644
+--- a/docs/plugins/inspect/plugin-cog.xml
++++ b/docs/plugins/inspect/plugin-cog.xml
+@@ -3,10 +3,10 @@
+   <description>Cog plugin</description>
+   <filename>../../ext/cog/.libs/libgstcog.so</filename>
+   <basename>libgstcog.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-coloreffects.xml b/docs/plugins/inspect/plugin-coloreffects.xml
+index 4ad7c73..e7291b4 100644
+--- a/docs/plugins/inspect/plugin-coloreffects.xml
++++ b/docs/plugins/inspect/plugin-coloreffects.xml
+@@ -3,10 +3,10 @@
+   <description>Color Look-up Table filters</description>
+   <filename>../../gst/coloreffects/.libs/libgstcoloreffects.so</filename>
+   <basename>libgstcoloreffects.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-colorspace.xml b/docs/plugins/inspect/plugin-colorspace.xml
+index 004d402..55b0b13 100644
+--- a/docs/plugins/inspect/plugin-colorspace.xml
++++ b/docs/plugins/inspect/plugin-colorspace.xml
+@@ -3,7 +3,7 @@
+   <description>Colorspace conversion</description>
+   <filename>../../gst/colorspace/.libs/libgstcolorspace.so</filename>
+   <basename>libgstcolorspace.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package></package>
+diff --git a/docs/plugins/inspect/plugin-curl.xml b/docs/plugins/inspect/plugin-curl.xml
+index e0c62e7..4d315bd 100644
+--- a/docs/plugins/inspect/plugin-curl.xml
++++ b/docs/plugins/inspect/plugin-curl.xml
+@@ -3,10 +3,10 @@
+   <description>libcurl-based elements</description>
+   <filename>../../ext/curl/.libs/libgstcurl.so</filename>
+   <basename>libgstcurl.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dataurisrc.xml b/docs/plugins/inspect/plugin-dataurisrc.xml
+index 46ede6a..038ab35 100644
+--- a/docs/plugins/inspect/plugin-dataurisrc.xml
++++ b/docs/plugins/inspect/plugin-dataurisrc.xml
+@@ -3,10 +3,10 @@
+   <description>data: URI source</description>
+   <filename>../../gst/dataurisrc/.libs/libgstdataurisrc.so</filename>
+   <basename>libgstdataurisrc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dc1394.xml b/docs/plugins/inspect/plugin-dc1394.xml
+index 5d85847..e998867 100644
+--- a/docs/plugins/inspect/plugin-dc1394.xml
++++ b/docs/plugins/inspect/plugin-dc1394.xml
+@@ -3,10 +3,10 @@
+   <description>1394 IIDC Video Source</description>
+   <filename>../../ext/dc1394/.libs/libgstdc1394.so</filename>
+   <basename>libgstdc1394.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dccp.xml b/docs/plugins/inspect/plugin-dccp.xml
+index 7b0ae3e..5d9181a 100644
+--- a/docs/plugins/inspect/plugin-dccp.xml
++++ b/docs/plugins/inspect/plugin-dccp.xml
+@@ -3,7 +3,7 @@
+   <description>transfer data over the network via DCCP.</description>
+   <filename>../../gst/dccp/.libs/libgstdccp.so</filename>
+   <basename>libgstdccp.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>DCCP</package>
+diff --git a/docs/plugins/inspect/plugin-debugutilsbad.xml b/docs/plugins/inspect/plugin-debugutilsbad.xml
+index 5c9c5c8..76e6440 100644
+--- a/docs/plugins/inspect/plugin-debugutilsbad.xml
++++ b/docs/plugins/inspect/plugin-debugutilsbad.xml
+@@ -3,10 +3,10 @@
+   <description>Collection of elements that may or may not be useful for debugging</description>
+   <filename>../../gst/debugutils/.libs/libgstdebugutilsbad.so</filename>
+   <basename>libgstdebugutilsbad.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-decklink.xml b/docs/plugins/inspect/plugin-decklink.xml
+index 3bc551c..d04375f 100644
+--- a/docs/plugins/inspect/plugin-decklink.xml
++++ b/docs/plugins/inspect/plugin-decklink.xml
+@@ -3,7 +3,7 @@
+   <description>Blackmagic Decklink plugin</description>
+   <filename>../../sys/decklink/.libs/libgstdecklink.so</filename>
+   <basename>libgstdecklink.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+@@ -26,7 +26,7 @@
+           <name>videosink</name>
+           <direction>sink</direction>
+           <presence>always</presence>
+-          <details>video/x-raw-yuv, format=(fourcc)UYVY, width=(int)720, height=(int)486, framerate=(fraction)30000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)720, height=(int)486, framerate=(fraction)24000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)720, height=(int)576, framerate=(fraction)25/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)720, height=(int)486, framerate=(fraction)30000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)720, height=(int)576, framerate=(fraction)25/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)24000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)24/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)25/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)30000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)30/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)25/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)30000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)30/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)50/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)60000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1920, height=(int)1080, framerate=(fraction)60/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1280, height=(int)720, framerate=(fraction)50/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1280, height=(int)720, framerate=(fraction)60000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc)UYVY, width=(int)1280, height=(int)720, framerate=(fraction)60/1, interlaced=(boolean)false</details>
++          <details>video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)720, height=(int)486, framerate=(fraction)30000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)720, height=(int)486, framerate=(fraction)24000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)720, height=(int)576, framerate=(fraction)25/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)720, height=(int)486, framerate=(fraction)30000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)720, height=(int)576, framerate=(fraction)25/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)24000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)24/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)25/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)30000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)30/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)25/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)30000/1001, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)30/1, interlaced=(boolean)true; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)50/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)60000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1920, height=(int)1080, framerate=(fraction)60/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1280, height=(int)720, framerate=(fraction)50/1, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1280, height=(int)720, framerate=(fraction)60000/1001, interlaced=(boolean)false; video/x-raw-yuv, format=(fourcc){ UYVY, v210 }, width=(int)1280, height=(int)720, framerate=(fraction)60/1, interlaced=(boolean)false</details>
+         </caps>
+       </pads>
+     </element>
+diff --git a/docs/plugins/inspect/plugin-dfbvideosink.xml b/docs/plugins/inspect/plugin-dfbvideosink.xml
+index 7227fce..d9451a4 100644
+--- a/docs/plugins/inspect/plugin-dfbvideosink.xml
++++ b/docs/plugins/inspect/plugin-dfbvideosink.xml
+@@ -3,10 +3,10 @@
+   <description>DirectFB video output plugin</description>
+   <filename>../../ext/directfb/.libs/libgstdfbvideosink.so</filename>
+   <basename>libgstdfbvideosink.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dirac.xml b/docs/plugins/inspect/plugin-dirac.xml
+index 96d7f24..8918e79 100644
+--- a/docs/plugins/inspect/plugin-dirac.xml
++++ b/docs/plugins/inspect/plugin-dirac.xml
+@@ -3,10 +3,10 @@
+   <description>Dirac plugin</description>
+   <filename>../../ext/dirac/.libs/libgstdirac.so</filename>
+   <basename>libgstdirac.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dtmf.xml b/docs/plugins/inspect/plugin-dtmf.xml
+index 8f421c4..0e34206 100644
+--- a/docs/plugins/inspect/plugin-dtmf.xml
++++ b/docs/plugins/inspect/plugin-dtmf.xml
+@@ -3,10 +3,10 @@
+   <description>DTMF plugins</description>
+   <filename>../../gst/dtmf/.libs/libgstdtmf.so</filename>
+   <basename>libgstdtmf.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dtsdec.xml b/docs/plugins/inspect/plugin-dtsdec.xml
+index a2badb7..d6ba5e1 100644
+--- a/docs/plugins/inspect/plugin-dtsdec.xml
++++ b/docs/plugins/inspect/plugin-dtsdec.xml
+@@ -3,10 +3,10 @@
+   <description>Decodes DTS audio streams</description>
+   <filename>../../ext/dts/.libs/libgstdtsdec.so</filename>
+   <basename>libgstdtsdec.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvb.xml b/docs/plugins/inspect/plugin-dvb.xml
+index 2b04eba..42788ff 100644
+--- a/docs/plugins/inspect/plugin-dvb.xml
++++ b/docs/plugins/inspect/plugin-dvb.xml
+@@ -3,10 +3,10 @@
+   <description>DVB elements</description>
+   <filename>../../sys/dvb/.libs/libgstdvb.so</filename>
+   <basename>libgstdvb.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvbsuboverlay.xml b/docs/plugins/inspect/plugin-dvbsuboverlay.xml
+index 7ab7755..9a9dd5f 100644
+--- a/docs/plugins/inspect/plugin-dvbsuboverlay.xml
++++ b/docs/plugins/inspect/plugin-dvbsuboverlay.xml
+@@ -3,10 +3,10 @@
+   <description>DVB subtitle renderer</description>
+   <filename>../../gst/dvbsuboverlay/.libs/libgstdvbsuboverlay.so</filename>
+   <basename>libgstdvbsuboverlay.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-dvdspu.xml b/docs/plugins/inspect/plugin-dvdspu.xml
+index 0670475..7c4e6c3 100644
+--- a/docs/plugins/inspect/plugin-dvdspu.xml
++++ b/docs/plugins/inspect/plugin-dvdspu.xml
+@@ -3,10 +3,10 @@
+   <description>DVD Sub-picture Overlay element</description>
+   <filename>../../gst/dvdspu/.libs/libgstdvdspu.so</filename>
+   <basename>libgstdvdspu.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-faac.xml b/docs/plugins/inspect/plugin-faac.xml
+index fbe3531..ccf870f 100644
+--- a/docs/plugins/inspect/plugin-faac.xml
++++ b/docs/plugins/inspect/plugin-faac.xml
+@@ -3,10 +3,10 @@
+   <description>Free AAC Encoder (FAAC)</description>
+   <filename>../../ext/faac/.libs/libgstfaac.so</filename>
+   <basename>libgstfaac.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-faad.xml b/docs/plugins/inspect/plugin-faad.xml
+index 82610b1..a36935b 100644
+--- a/docs/plugins/inspect/plugin-faad.xml
++++ b/docs/plugins/inspect/plugin-faad.xml
+@@ -3,10 +3,10 @@
+   <description>Free AAC Decoder (FAAD)</description>
+   <filename>../../ext/faad/.libs/libgstfaad.so</filename>
+   <basename>libgstfaad.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-faceoverlay.xml b/docs/plugins/inspect/plugin-faceoverlay.xml
+index 7116b79..970bf2f 100644
+--- a/docs/plugins/inspect/plugin-faceoverlay.xml
++++ b/docs/plugins/inspect/plugin-faceoverlay.xml
+@@ -3,7 +3,7 @@
+   <description>SVG Face Overlay</description>
+   <filename>../../gst/faceoverlay/.libs/libgstfaceoverlay.so</filename>
+   <basename>libgstfaceoverlay.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-fbdevsink.xml b/docs/plugins/inspect/plugin-fbdevsink.xml
+index 8d551c5..09db197 100644
+--- a/docs/plugins/inspect/plugin-fbdevsink.xml
++++ b/docs/plugins/inspect/plugin-fbdevsink.xml
+@@ -3,10 +3,10 @@
+   <description>linux framebuffer video sink</description>
+   <filename>../../sys/fbdev/.libs/libgstfbdevsink.so</filename>
+   <basename>libgstfbdevsink.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-festival.xml b/docs/plugins/inspect/plugin-festival.xml
+index 2ff9191..d3d21ff 100644
+--- a/docs/plugins/inspect/plugin-festival.xml
++++ b/docs/plugins/inspect/plugin-festival.xml
+@@ -3,10 +3,10 @@
+   <description>Synthesizes plain text into audio</description>
+   <filename>../../gst/festival/.libs/libgstfestival.so</filename>
+   <basename>libgstfestival.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-fieldanalysis.xml b/docs/plugins/inspect/plugin-fieldanalysis.xml
+index de7b096..27a32cb 100644
+--- a/docs/plugins/inspect/plugin-fieldanalysis.xml
++++ b/docs/plugins/inspect/plugin-fieldanalysis.xml
+@@ -3,7 +3,7 @@
+   <description>Video field analysis</description>
+   <filename>../../gst/fieldanalysis/.libs/libgstfieldanalysis.so</filename>
+   <basename>libgstfieldanalysis.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-fragmented.xml b/docs/plugins/inspect/plugin-fragmented.xml
+index 6ef8d2f..62650d6 100644
+--- a/docs/plugins/inspect/plugin-fragmented.xml
++++ b/docs/plugins/inspect/plugin-fragmented.xml
+@@ -3,7 +3,7 @@
+   <description>Fragmented streaming plugins</description>
+   <filename>../../gst/hls/.libs/libgstfragmented.so</filename>
+   <basename>libgstfragmented.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-freeverb.xml b/docs/plugins/inspect/plugin-freeverb.xml
+index f249107..e96a892 100644
+--- a/docs/plugins/inspect/plugin-freeverb.xml
++++ b/docs/plugins/inspect/plugin-freeverb.xml
+@@ -3,10 +3,10 @@
+   <description>Reverberation/room effect</description>
+   <filename>../../gst/freeverb/.libs/libgstfreeverb.so</filename>
+   <basename>libgstfreeverb.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-freeze.xml b/docs/plugins/inspect/plugin-freeze.xml
+index 8f21e8c..eaab6ab 100644
+--- a/docs/plugins/inspect/plugin-freeze.xml
++++ b/docs/plugins/inspect/plugin-freeze.xml
+@@ -3,10 +3,10 @@
+   <description>Stream freezer</description>
+   <filename>../../gst/freeze/.libs/libgstfreeze.so</filename>
+   <basename>libgstfreeze.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-frei0r.xml b/docs/plugins/inspect/plugin-frei0r.xml
+index 5c0edc4..ab8fbfa 100644
+--- a/docs/plugins/inspect/plugin-frei0r.xml
++++ b/docs/plugins/inspect/plugin-frei0r.xml
+@@ -3,10 +3,10 @@
+   <description>frei0r plugin library</description>
+   <filename>../../gst/frei0r/.libs/libgstfrei0r.so</filename>
+   <basename>libgstfrei0r.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-gaudieffects.xml b/docs/plugins/inspect/plugin-gaudieffects.xml
+index 116ec8e..c458ac8 100644
+--- a/docs/plugins/inspect/plugin-gaudieffects.xml
++++ b/docs/plugins/inspect/plugin-gaudieffects.xml
+@@ -3,7 +3,7 @@
+   <description>Gaudi video effects.</description>
+   <filename>../../gst/gaudieffects/.libs/libgstgaudieffects.so</filename>
+   <basename>libgstgaudieffects.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-geometrictransform.xml b/docs/plugins/inspect/plugin-geometrictransform.xml
+index 2717c5d..f5e5320 100644
+--- a/docs/plugins/inspect/plugin-geometrictransform.xml
++++ b/docs/plugins/inspect/plugin-geometrictransform.xml
+@@ -3,10 +3,10 @@
+   <description>Various geometric image transform elements</description>
+   <filename>../../gst/geometrictransform/.libs/libgstgeometrictransform.so</filename>
+   <basename>libgstgeometrictransform.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-gsettings.xml b/docs/plugins/inspect/plugin-gsettings.xml
+index 2a5ac70..472fa4b 100644
+--- a/docs/plugins/inspect/plugin-gsettings.xml
++++ b/docs/plugins/inspect/plugin-gsettings.xml
+@@ -3,10 +3,10 @@
+   <description>GSettings plugin</description>
+   <filename>../../ext/gsettings/.libs/libgstgsettingselements.so</filename>
+   <basename>libgstgsettingselements.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-gsm.xml b/docs/plugins/inspect/plugin-gsm.xml
+index bd26d45..5e995d1 100644
+--- a/docs/plugins/inspect/plugin-gsm.xml
++++ b/docs/plugins/inspect/plugin-gsm.xml
+@@ -3,10 +3,10 @@
+   <description>GSM encoder/decoder</description>
+   <filename>../../ext/gsm/.libs/libgstgsm.so</filename>
+   <basename>libgstgsm.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-gstsiren.xml b/docs/plugins/inspect/plugin-gstsiren.xml
+index 7fbd1de..2548297 100644
+--- a/docs/plugins/inspect/plugin-gstsiren.xml
++++ b/docs/plugins/inspect/plugin-gstsiren.xml
+@@ -3,10 +3,10 @@
+   <description>Siren encoder/decoder/payloader/depayloader plugins</description>
+   <filename>../../gst/siren/.libs/libgstsiren.so</filename>
+   <basename>libgstsiren.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-h264parse.xml b/docs/plugins/inspect/plugin-h264parse.xml
+index c8b34a2..d037dc8 100644
+--- a/docs/plugins/inspect/plugin-h264parse.xml
++++ b/docs/plugins/inspect/plugin-h264parse.xml
+@@ -3,10 +3,10 @@
+   <description>Element parsing raw h264 streams</description>
+   <filename>../../gst/h264parse/.libs/libgsth264parse.so</filename>
+   <basename>libgsth264parse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-hdvparse.xml b/docs/plugins/inspect/plugin-hdvparse.xml
+index 9a668fc..bfd251a 100644
+--- a/docs/plugins/inspect/plugin-hdvparse.xml
++++ b/docs/plugins/inspect/plugin-hdvparse.xml
+@@ -3,7 +3,7 @@
+   <description>HDV private stream parser</description>
+   <filename>../../gst/hdvparse/.libs/libgsthdvparse.so</filename>
+   <basename>libgsthdvparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-id3tag.xml b/docs/plugins/inspect/plugin-id3tag.xml
+index 2034f4c..45f5cff 100644
+--- a/docs/plugins/inspect/plugin-id3tag.xml
++++ b/docs/plugins/inspect/plugin-id3tag.xml
+@@ -3,10 +3,10 @@
+   <description>ID3 v1 and v2 muxing plugin</description>
+   <filename>../../gst/id3tag/.libs/libgstid3tag.so</filename>
+   <basename>libgstid3tag.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-inter.xml b/docs/plugins/inspect/plugin-inter.xml
+index efbdd39..4883ad6 100644
+--- a/docs/plugins/inspect/plugin-inter.xml
++++ b/docs/plugins/inspect/plugin-inter.xml
+@@ -3,7 +3,7 @@
+   <description>plugin for inter-pipeline communication</description>
+   <filename>../../gst/inter/.libs/libgstinter.so</filename>
+   <basename>libgstinter.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+@@ -40,6 +40,36 @@
+       </pads>
+     </element>
+     <element>
++      <name>intersubsink</name>
++      <longname>FIXME Long name</longname>
++      <class>Generic</class>
++      <description>FIXME Description</description>
++      <author>FIXME &lt;fixme@example.com&gt;</author>
++      <pads>
++        <caps>
++          <name>sink</name>
++          <direction>sink</direction>
++          <presence>always</presence>
++          <details>text/plain</details>
++        </caps>
++      </pads>
++    </element>
++    <element>
++      <name>intersubsrc</name>
++      <longname>Inter-pipeline subtitle source</longname>
++      <class>Source/Subtitle</class>
++      <description>Inter-pipeline subtitle source</description>
++      <author>David Schleef &lt;ds@entropywave.com&gt;</author>
++      <pads>
++        <caps>
++          <name>src</name>
++          <direction>source</direction>
++          <presence>always</presence>
++          <details>application/unknown</details>
++        </caps>
++      </pads>
++    </element>
++    <element>
+       <name>intervideosink</name>
+       <longname>FIXME Long name</longname>
+       <class>Generic</class>
+diff --git a/docs/plugins/inspect/plugin-interlace.xml b/docs/plugins/inspect/plugin-interlace.xml
+index f84c6fe..ae157e8 100644
+--- a/docs/plugins/inspect/plugin-interlace.xml
++++ b/docs/plugins/inspect/plugin-interlace.xml
+@@ -3,10 +3,10 @@
+   <description>Create an interlaced video stream</description>
+   <filename>../../gst/interlace/.libs/libgstinterlace.so</filename>
+   <basename>libgstinterlace.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-ivfparse.xml b/docs/plugins/inspect/plugin-ivfparse.xml
+index b724818..8004f20 100644
+--- a/docs/plugins/inspect/plugin-ivfparse.xml
++++ b/docs/plugins/inspect/plugin-ivfparse.xml
+@@ -3,10 +3,10 @@
+   <description>IVF parser</description>
+   <filename>../../gst/ivfparse/.libs/libgstivfparse.so</filename>
+   <basename>libgstivfparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-jp2kdecimator.xml b/docs/plugins/inspect/plugin-jp2kdecimator.xml
+index 308ca79..805a1d9 100644
+--- a/docs/plugins/inspect/plugin-jp2kdecimator.xml
++++ b/docs/plugins/inspect/plugin-jp2kdecimator.xml
+@@ -3,10 +3,10 @@
+   <description>JPEG2000 decimator</description>
+   <filename>../../gst/jp2kdecimator/.libs/libgstjp2kdecimator.so</filename>
+   <basename>libgstjp2kdecimator.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-jpegformat.xml b/docs/plugins/inspect/plugin-jpegformat.xml
+index f80015e..b893f81 100644
+--- a/docs/plugins/inspect/plugin-jpegformat.xml
++++ b/docs/plugins/inspect/plugin-jpegformat.xml
+@@ -3,10 +3,10 @@
+   <description>JPEG interchange format plugin</description>
+   <filename>../../gst/jpegformat/.libs/libgstjpegformat.so</filename>
+   <basename>libgstjpegformat.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-kate.xml b/docs/plugins/inspect/plugin-kate.xml
+index c8ef18d..288b52f 100644
+--- a/docs/plugins/inspect/plugin-kate.xml
++++ b/docs/plugins/inspect/plugin-kate.xml
+@@ -3,10 +3,10 @@
+   <description>Kate plugin</description>
+   <filename>../../ext/kate/.libs/libgstkate.so</filename>
+   <basename>libgstkate.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+@@ -110,13 +110,13 @@
+           <name>video_sink</name>
+           <direction>sink</direction>
+           <presence>always</presence>
+-          <details>video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)16711680, green_mask=(int)65280, blue_mask=(int)255, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)65280, green_mask=(int)16711680, blue_mask=(int)-16777216, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-yuv, format=(fourcc){ AYUV, I420, YV12, UYVY, NV12, NV21 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
++          <details>video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)16711680, green_mask=(int)65280, blue_mask=(int)255, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)65280, green_mask=(int)16711680, blue_mask=(int)-16777216, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-yuv, format=(fourcc){ I420, YV12, AYUV, YUY2, UYVY, v308, v210, v216, Y41B, Y42B, Y444, Y800, Y16 , NV12, NV21, UYVP, A420, YUV9, IYU1 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
+         </caps>
+         <caps>
+           <name>src</name>
+           <direction>source</direction>
+           <presence>always</presence>
+-          <details>video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)16711680, green_mask=(int)65280, blue_mask=(int)255, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)65280, green_mask=(int)16711680, blue_mask=(int)-16777216, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-yuv, format=(fourcc){ AYUV, I420, YV12, UYVY, NV12, NV21 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
++          <details>video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)16711680, green_mask=(int)65280, blue_mask=(int)255, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-rgb, bpp=(int)32, depth=(int)24, endianness=(int)4321, red_mask=(int)65280, green_mask=(int)16711680, blue_mask=(int)-16777216, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-yuv, format=(fourcc){ I420, YV12, AYUV, YUY2, UYVY, v308, v210, v216, Y41B, Y42B, Y444, Y800, Y16 , NV12, NV21, UYVP, A420, YUV9, IYU1 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
+         </caps>
+       </pads>
+     </element>
+diff --git a/docs/plugins/inspect/plugin-ladspa.xml b/docs/plugins/inspect/plugin-ladspa.xml
+index 6d7d163..a8225e0 100644
+--- a/docs/plugins/inspect/plugin-ladspa.xml
++++ b/docs/plugins/inspect/plugin-ladspa.xml
+@@ -3,10 +3,10 @@
+   <description>All LADSPA plugins</description>
+   <filename>../../ext/ladspa/.libs/libgstladspa.so</filename>
+   <basename>libgstladspa.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-legacyresample.xml b/docs/plugins/inspect/plugin-legacyresample.xml
+index 077654c..77451a3 100644
+--- a/docs/plugins/inspect/plugin-legacyresample.xml
++++ b/docs/plugins/inspect/plugin-legacyresample.xml
+@@ -3,10 +3,10 @@
+   <description>Resamples audio</description>
+   <filename>../../gst/legacyresample/.libs/libgstlegacyresample.so</filename>
+   <basename>libgstlegacyresample.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-linsys.xml b/docs/plugins/inspect/plugin-linsys.xml
+index 9ce7b6f..d46bd38 100644
+--- a/docs/plugins/inspect/plugin-linsys.xml
++++ b/docs/plugins/inspect/plugin-linsys.xml
+@@ -3,7 +3,7 @@
+   <description>FIXME</description>
+   <filename>../../sys/linsys/.libs/libgstlinsys.so</filename>
+   <basename>libgstlinsys.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-liveadder.xml b/docs/plugins/inspect/plugin-liveadder.xml
+index 1088d04..aa3264a 100644
+--- a/docs/plugins/inspect/plugin-liveadder.xml
++++ b/docs/plugins/inspect/plugin-liveadder.xml
+@@ -3,10 +3,10 @@
+   <description>Adds multiple live discontinuous streams</description>
+   <filename>../../gst/liveadder/.libs/libgstliveadder.so</filename>
+   <basename>libgstliveadder.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mimic.xml b/docs/plugins/inspect/plugin-mimic.xml
+index 6e4569c..b44b5ad 100644
+--- a/docs/plugins/inspect/plugin-mimic.xml
++++ b/docs/plugins/inspect/plugin-mimic.xml
+@@ -3,10 +3,10 @@
+   <description>Mimic codec</description>
+   <filename>../../ext/mimic/.libs/libgstmimic.so</filename>
+   <basename>libgstmimic.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mms.xml b/docs/plugins/inspect/plugin-mms.xml
+index acbe053..9c7a89e 100644
+--- a/docs/plugins/inspect/plugin-mms.xml
++++ b/docs/plugins/inspect/plugin-mms.xml
+@@ -3,10 +3,10 @@
+   <description>Microsoft Multi Media Server streaming protocol support</description>
+   <filename>../../ext/libmms/.libs/libgstmms.so</filename>
+   <basename>libgstmms.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-modplug.xml b/docs/plugins/inspect/plugin-modplug.xml
+index b1582e1..f32d61a 100644
+--- a/docs/plugins/inspect/plugin-modplug.xml
++++ b/docs/plugins/inspect/plugin-modplug.xml
+@@ -3,10 +3,10 @@
+   <description>.MOD audio decoding</description>
+   <filename>../../ext/modplug/.libs/libgstmodplug.so</filename>
+   <basename>libgstmodplug.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpeg2enc.xml b/docs/plugins/inspect/plugin-mpeg2enc.xml
+index 51d90ee..be6ccf5 100644
+--- a/docs/plugins/inspect/plugin-mpeg2enc.xml
++++ b/docs/plugins/inspect/plugin-mpeg2enc.xml
+@@ -3,10 +3,10 @@
+   <description>High-quality MPEG-1/2 video encoder</description>
+   <filename>../../ext/mpeg2enc/.libs/libgstmpeg2enc.so</filename>
+   <basename>libgstmpeg2enc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegdemux2.xml b/docs/plugins/inspect/plugin-mpegdemux2.xml
+index bd5a9d5..06d4d5a 100644
+--- a/docs/plugins/inspect/plugin-mpegdemux2.xml
++++ b/docs/plugins/inspect/plugin-mpegdemux2.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG demuxers</description>
+   <filename>../../gst/mpegdemux/.libs/libgstmpegdemux.so</filename>
+   <basename>libgstmpegdemux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>unknown</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegpsmux.xml b/docs/plugins/inspect/plugin-mpegpsmux.xml
+index 51bb99e..47ff527 100644
+--- a/docs/plugins/inspect/plugin-mpegpsmux.xml
++++ b/docs/plugins/inspect/plugin-mpegpsmux.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG-PS muxer</description>
+   <filename>../../gst/mpegpsmux/.libs/libgstmpegpsmux.so</filename>
+   <basename>libgstmpegpsmux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegtsdemux.xml b/docs/plugins/inspect/plugin-mpegtsdemux.xml
+index 04c408e..b6c95d6 100644
+--- a/docs/plugins/inspect/plugin-mpegtsdemux.xml
++++ b/docs/plugins/inspect/plugin-mpegtsdemux.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG TS demuxer</description>
+   <filename>../../gst/mpegtsdemux/.libs/libgstmpegtsdemux.so</filename>
+   <basename>libgstmpegtsdemux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>unknown</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+@@ -27,7 +27,7 @@ Edward Hervey &lt;edward.hervey@collabora.co.uk&gt;</author>
+           <name>audio_%04x</name>
+           <direction>source</direction>
+           <presence>sometimes</presence>
+-          <details>audio/mpeg, mpegversion=(int)1; audio/mpeg, mpegversion=(int)4, stream-format=(string)adts; audio/x-lpcm, width=(int){ 16, 20, 24 }, rate=(int){ 48000, 96000 }, channels=(int)[ 1, 8 ], dynamic_range=(int)[ 0, 255 ], emphasis=(boolean){ false, true }, mute=(boolean){ false, true }; audio/x-ac3; audio/x-eac3; audio/x-dts; audio/x-private-ts-lpcm</details>
++          <details>audio/mpeg, mpegversion=(int)1; audio/mpeg, mpegversion=(int)4, stream-format=(string){ adts, loas }; audio/x-lpcm, width=(int){ 16, 20, 24 }, rate=(int){ 48000, 96000 }, channels=(int)[ 1, 8 ], dynamic_range=(int)[ 0, 255 ], emphasis=(boolean){ false, true }, mute=(boolean){ false, true }; audio/x-ac3; audio/x-eac3; audio/x-dts; audio/x-private-ts-lpcm</details>
+         </caps>
+         <caps>
+           <name>private_%04x</name>
+diff --git a/docs/plugins/inspect/plugin-mpegtsmux.xml b/docs/plugins/inspect/plugin-mpegtsmux.xml
+index 621dcd0..303bd9b 100644
+--- a/docs/plugins/inspect/plugin-mpegtsmux.xml
++++ b/docs/plugins/inspect/plugin-mpegtsmux.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG-TS muxer</description>
+   <filename>../../gst/mpegtsmux/.libs/libgstmpegtsmux.so</filename>
+   <basename>libgstmpegtsmux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mpegvideoparse.xml b/docs/plugins/inspect/plugin-mpegvideoparse.xml
+index 10f45a2..873316b 100644
+--- a/docs/plugins/inspect/plugin-mpegvideoparse.xml
++++ b/docs/plugins/inspect/plugin-mpegvideoparse.xml
+@@ -3,10 +3,10 @@
+   <description>MPEG-1 and MPEG-2 video parser</description>
+   <filename>../../gst/mpegvideoparse/.libs/libgstmpegvideoparse.so</filename>
+   <basename>libgstmpegvideoparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mplex.xml b/docs/plugins/inspect/plugin-mplex.xml
+index 1a5cc81..a961843 100644
+--- a/docs/plugins/inspect/plugin-mplex.xml
++++ b/docs/plugins/inspect/plugin-mplex.xml
+@@ -3,10 +3,10 @@
+   <description>High-quality MPEG/DVD/SVCD/VCD video/audio multiplexer</description>
+   <filename>../../ext/mplex/.libs/libgstmplex.so</filename>
+   <basename>libgstmplex.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-musepack.xml b/docs/plugins/inspect/plugin-musepack.xml
+index abb804a..7d05a48 100644
+--- a/docs/plugins/inspect/plugin-musepack.xml
++++ b/docs/plugins/inspect/plugin-musepack.xml
+@@ -3,10 +3,10 @@
+   <description>Musepack decoder</description>
+   <filename>../../ext/musepack/.libs/libgstmusepack.so</filename>
+   <basename>libgstmusepack.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-musicbrainz.xml b/docs/plugins/inspect/plugin-musicbrainz.xml
+index b494d33..1a5fc05 100644
+--- a/docs/plugins/inspect/plugin-musicbrainz.xml
++++ b/docs/plugins/inspect/plugin-musicbrainz.xml
+@@ -3,10 +3,10 @@
+   <description>A TRM signature producer based on libmusicbrainz</description>
+   <filename>../../ext/musicbrainz/.libs/libgsttrm.so</filename>
+   <basename>libgsttrm.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mve.xml b/docs/plugins/inspect/plugin-mve.xml
+index 1a0bfc6..74fcea7 100644
+--- a/docs/plugins/inspect/plugin-mve.xml
++++ b/docs/plugins/inspect/plugin-mve.xml
+@@ -3,10 +3,10 @@
+   <description>Interplay MVE movie format manipulation</description>
+   <filename>../../gst/mve/.libs/libgstmve.so</filename>
+   <basename>libgstmve.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mxf.xml b/docs/plugins/inspect/plugin-mxf.xml
+index 6be7427..4394d08 100644
+--- a/docs/plugins/inspect/plugin-mxf.xml
++++ b/docs/plugins/inspect/plugin-mxf.xml
+@@ -3,10 +3,10 @@
+   <description>MXF plugin library</description>
+   <filename>../../gst/mxf/.libs/libgstmxf.so</filename>
+   <basename>libgstmxf.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-mythtv.xml b/docs/plugins/inspect/plugin-mythtv.xml
+index 99b33f4..231c9dc 100644
+--- a/docs/plugins/inspect/plugin-mythtv.xml
++++ b/docs/plugins/inspect/plugin-mythtv.xml
+@@ -3,10 +3,10 @@
+   <description>lib MythTV src</description>
+   <filename>../../ext/mythtv/.libs/libgstmythtvsrc.so</filename>
+   <basename>libgstmythtvsrc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-neon.xml b/docs/plugins/inspect/plugin-neon.xml
+index 3bc1f14..12c4c7e 100644
+--- a/docs/plugins/inspect/plugin-neon.xml
++++ b/docs/plugins/inspect/plugin-neon.xml
+@@ -3,10 +3,10 @@
+   <description>lib neon http client src</description>
+   <filename>../../ext/neon/.libs/libgstneonhttpsrc.so</filename>
+   <basename>libgstneonhttpsrc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-nsf.xml b/docs/plugins/inspect/plugin-nsf.xml
+index e9b9cad..7554379 100644
+--- a/docs/plugins/inspect/plugin-nsf.xml
++++ b/docs/plugins/inspect/plugin-nsf.xml
+@@ -3,10 +3,10 @@
+   <description>Uses nosefart to decode .nsf files</description>
+   <filename>../../gst/nsf/.libs/libgstnsf.so</filename>
+   <basename>libgstnsf.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-nuvdemux.xml b/docs/plugins/inspect/plugin-nuvdemux.xml
+index eaf0c4b..0d4e316 100644
+--- a/docs/plugins/inspect/plugin-nuvdemux.xml
++++ b/docs/plugins/inspect/plugin-nuvdemux.xml
+@@ -3,10 +3,10 @@
+   <description>Demuxes MythTV NuppelVideo files</description>
+   <filename>../../gst/nuvdemux/.libs/libgstnuvdemux.so</filename>
+   <basename>libgstnuvdemux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-ofa.xml b/docs/plugins/inspect/plugin-ofa.xml
+index 8519340..73f348d 100644
+--- a/docs/plugins/inspect/plugin-ofa.xml
++++ b/docs/plugins/inspect/plugin-ofa.xml
+@@ -3,10 +3,10 @@
+   <description>Calculate MusicIP fingerprint from audio files</description>
+   <filename>../../ext/ofa/.libs/libgstofa.so</filename>
+   <basename>libgstofa.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-patchdetect.xml b/docs/plugins/inspect/plugin-patchdetect.xml
+index baf5ac7..5631d48 100644
+--- a/docs/plugins/inspect/plugin-patchdetect.xml
++++ b/docs/plugins/inspect/plugin-patchdetect.xml
+@@ -3,7 +3,7 @@
+   <description>patchdetect element</description>
+   <filename>../../gst/patchdetect/.libs/libgstpatchdetect.so</filename>
+   <basename>libgstpatchdetect.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-pcapparse.xml b/docs/plugins/inspect/plugin-pcapparse.xml
+index 9cff580..1818c62 100644
+--- a/docs/plugins/inspect/plugin-pcapparse.xml
++++ b/docs/plugins/inspect/plugin-pcapparse.xml
+@@ -3,7 +3,7 @@
+   <description>Element parsing raw pcap streams</description>
+   <filename>../../gst/pcapparse/.libs/libgstpcapparse.so</filename>
+   <basename>libgstpcapparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-pnm.xml b/docs/plugins/inspect/plugin-pnm.xml
+index b48e8f7..e630147 100644
+--- a/docs/plugins/inspect/plugin-pnm.xml
++++ b/docs/plugins/inspect/plugin-pnm.xml
+@@ -3,10 +3,10 @@
+   <description>PNM plugin</description>
+   <filename>../../gst/pnm/.libs/libgstpnm.so</filename>
+   <basename>libgstpnm.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-rawparse.xml b/docs/plugins/inspect/plugin-rawparse.xml
+index d9ce953..6248994 100644
+--- a/docs/plugins/inspect/plugin-rawparse.xml
++++ b/docs/plugins/inspect/plugin-rawparse.xml
+@@ -3,10 +3,10 @@
+   <description>Parses byte streams into raw frames</description>
+   <filename>../../gst/rawparse/.libs/libgstrawparse.so</filename>
+   <basename>libgstrawparse.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-real.xml b/docs/plugins/inspect/plugin-real.xml
+index d781465..3806dc3 100644
+--- a/docs/plugins/inspect/plugin-real.xml
++++ b/docs/plugins/inspect/plugin-real.xml
+@@ -3,10 +3,10 @@
+   <description>Decode REAL streams</description>
+   <filename>../../gst/real/.libs/libgstreal.so</filename>
+   <basename>libgstreal.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-removesilence.xml b/docs/plugins/inspect/plugin-removesilence.xml
+index 3003873..00e3bce 100644
+--- a/docs/plugins/inspect/plugin-removesilence.xml
++++ b/docs/plugins/inspect/plugin-removesilence.xml
+@@ -3,10 +3,10 @@
+   <description>Removes silence from an audio stream</description>
+   <filename>../../gst/removesilence/.libs/libgstremovesilence.so</filename>
+   <basename>libgstremovesilence.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-resindvd.xml b/docs/plugins/inspect/plugin-resindvd.xml
+index 13efc61..61848db 100644
+--- a/docs/plugins/inspect/plugin-resindvd.xml
++++ b/docs/plugins/inspect/plugin-resindvd.xml
+@@ -3,7 +3,7 @@
+   <description>Resin DVD playback elements</description>
+   <filename>../../ext/resindvd/.libs/libresindvd.so</filename>
+   <basename>libresindvd.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-rfbsrc.xml b/docs/plugins/inspect/plugin-rfbsrc.xml
+index 2068035..97b501a 100644
+--- a/docs/plugins/inspect/plugin-rfbsrc.xml
++++ b/docs/plugins/inspect/plugin-rfbsrc.xml
+@@ -3,10 +3,10 @@
+   <description>Connects to a VNC server and decodes RFB stream</description>
+   <filename>../../gst/librfb/.libs/libgstrfbsrc.so</filename>
+   <basename>libgstrfbsrc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-rsvg.xml b/docs/plugins/inspect/plugin-rsvg.xml
+index 8c9e329..94c31f3 100644
+--- a/docs/plugins/inspect/plugin-rsvg.xml
++++ b/docs/plugins/inspect/plugin-rsvg.xml
+@@ -3,10 +3,10 @@
+   <description>RSVG plugin library</description>
+   <filename>../../ext/rsvg/.libs/libgstrsvg.so</filename>
+   <basename>libgstrsvg.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-rtmp.xml b/docs/plugins/inspect/plugin-rtmp.xml
+index ca6c8e4..446cc4c 100644
+--- a/docs/plugins/inspect/plugin-rtmp.xml
++++ b/docs/plugins/inspect/plugin-rtmp.xml
+@@ -3,10 +3,10 @@
+   <description>RTMP source and sink</description>
+   <filename>../../ext/rtmp/.libs/libgstrtmp.so</filename>
+   <basename>libgstrtmp.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-rtpmux.xml b/docs/plugins/inspect/plugin-rtpmux.xml
+index b6b295d..c4fe730 100644
+--- a/docs/plugins/inspect/plugin-rtpmux.xml
++++ b/docs/plugins/inspect/plugin-rtpmux.xml
+@@ -3,10 +3,10 @@
+   <description>RTP Muxer plugins</description>
+   <filename>../../gst/rtpmux/.libs/libgstrtpmux.so</filename>
+   <basename>libgstrtpmux.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-rtpvp8.xml b/docs/plugins/inspect/plugin-rtpvp8.xml
+index 94a7d35..52a7545 100644
+--- a/docs/plugins/inspect/plugin-rtpvp8.xml
++++ b/docs/plugins/inspect/plugin-rtpvp8.xml
+@@ -3,10 +3,10 @@
+   <description>rtpvp8</description>
+   <filename>../../gst/rtpvp8/.libs/libgstrtpvp8.so</filename>
+   <basename>libgstrtpvp8.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-scaletempo.xml b/docs/plugins/inspect/plugin-scaletempo.xml
+index 55437ce..cbecfc8 100644
+--- a/docs/plugins/inspect/plugin-scaletempo.xml
++++ b/docs/plugins/inspect/plugin-scaletempo.xml
+@@ -3,7 +3,7 @@
+   <description>Scale audio tempo in sync with playback rate</description>
+   <filename>../../gst/scaletempo/.libs/libgstscaletempoplugin.so</filename>
+   <basename>libgstscaletempoplugin.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-schro.xml b/docs/plugins/inspect/plugin-schro.xml
+index c2425b6..9112897 100644
+--- a/docs/plugins/inspect/plugin-schro.xml
++++ b/docs/plugins/inspect/plugin-schro.xml
+@@ -3,10 +3,10 @@
+   <description>Schroedinger plugin</description>
+   <filename>../../ext/schroedinger/.libs/libgstschro.so</filename>
+   <basename>libgstschro.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+@@ -26,7 +26,7 @@
+           <name>src</name>
+           <direction>source</direction>
+           <presence>always</presence>
+-          <details>video/x-raw-yuv, format=(fourcc){ I420, YUY2, AYUV }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
++          <details>video/x-raw-yuv, format=(fourcc){ I420, YV12, YUY2, UYVY, AYUV, Y42B, Y444, v216, v210, AY64 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]; video/x-raw-rgb, bpp=(int)32, depth=(int)32, endianness=(int)4321, red_mask=(int)16711680, green_mask=(int)65280, blue_mask=(int)255, alpha_mask=(int)-16777216, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
+         </caps>
+       </pads>
+     </element>
+@@ -41,7 +41,7 @@
+           <name>sink</name>
+           <direction>sink</direction>
+           <presence>always</presence>
+-          <details>video/x-raw-yuv, format=(fourcc){ I420, YV12, YUY2, UYVY, AYUV }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
++          <details>video/x-raw-yuv, format=(fourcc){ I420, YV12, YUY2, UYVY, AYUV, Y42B, Y444, v216, v210, AY64 }, width=(int)[ 1, 2147483647 ], height=(int)[ 1, 2147483647 ], framerate=(fraction)[ 0/1, 2147483647/1 ]</details>
+         </caps>
+         <caps>
+           <name>src</name>
+diff --git a/docs/plugins/inspect/plugin-sdi.xml b/docs/plugins/inspect/plugin-sdi.xml
+index 8b941fe..43e8d6b 100644
+--- a/docs/plugins/inspect/plugin-sdi.xml
++++ b/docs/plugins/inspect/plugin-sdi.xml
+@@ -3,7 +3,7 @@
+   <description>SDI elements</description>
+   <filename>../../gst/sdi/.libs/libgstsdi.so</filename>
+   <basename>libgstsdi.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-sdp.xml b/docs/plugins/inspect/plugin-sdp.xml
+index 832c160..4b2b42a 100644
+--- a/docs/plugins/inspect/plugin-sdp.xml
++++ b/docs/plugins/inspect/plugin-sdp.xml
+@@ -3,10 +3,10 @@
+   <description>configure streaming sessions using SDP</description>
+   <filename>../../gst/sdp/.libs/libgstsdpelem.so</filename>
+   <basename>libgstsdpelem.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-segmentclip.xml b/docs/plugins/inspect/plugin-segmentclip.xml
+index d8d7e06..1af2ccb 100644
+--- a/docs/plugins/inspect/plugin-segmentclip.xml
++++ b/docs/plugins/inspect/plugin-segmentclip.xml
+@@ -3,10 +3,10 @@
+   <description>Segment clip elements</description>
+   <filename>../../gst/segmentclip/.libs/libgstsegmentclip.so</filename>
+   <basename>libgstsegmentclip.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-shm.xml b/docs/plugins/inspect/plugin-shm.xml
+index c7fa7b4..6e83daa 100644
+--- a/docs/plugins/inspect/plugin-shm.xml
++++ b/docs/plugins/inspect/plugin-shm.xml
+@@ -3,10 +3,10 @@
+   <description>shared memory sink source</description>
+   <filename>../../sys/shm/.libs/libgstshm.so</filename>
+   <basename>libgstshm.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-smooth.xml b/docs/plugins/inspect/plugin-smooth.xml
+index 81586c7..85dcdb2 100644
+--- a/docs/plugins/inspect/plugin-smooth.xml
++++ b/docs/plugins/inspect/plugin-smooth.xml
+@@ -3,10 +3,10 @@
+   <description>Apply a smooth filter to an image</description>
+   <filename>../../gst/smooth/.libs/libgstsmooth.so</filename>
+   <basename>libgstsmooth.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-sndfile.xml b/docs/plugins/inspect/plugin-sndfile.xml
+index 36d3076..10d0607 100644
+--- a/docs/plugins/inspect/plugin-sndfile.xml
++++ b/docs/plugins/inspect/plugin-sndfile.xml
+@@ -3,10 +3,10 @@
+   <description>use libsndfile to read and write audio from and to files</description>
+   <filename>../../ext/sndfile/.libs/libgstsndfile.so</filename>
+   <basename>libgstsndfile.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-soundtouch.xml b/docs/plugins/inspect/plugin-soundtouch.xml
+index 60c9c87..626347f 100644
+--- a/docs/plugins/inspect/plugin-soundtouch.xml
++++ b/docs/plugins/inspect/plugin-soundtouch.xml
+@@ -3,10 +3,10 @@
+   <description>Audio Pitch Controller &amp; BPM Detection</description>
+   <filename>../../ext/soundtouch/.libs/libgstsoundtouch.so</filename>
+   <basename>libgstsoundtouch.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-speed.xml b/docs/plugins/inspect/plugin-speed.xml
+index f680f0e..502b5e4 100644
+--- a/docs/plugins/inspect/plugin-speed.xml
++++ b/docs/plugins/inspect/plugin-speed.xml
+@@ -3,10 +3,10 @@
+   <description>Set speed/pitch on audio/raw streams (resampler)</description>
+   <filename>../../gst/speed/.libs/libgstspeed.so</filename>
+   <basename>libgstspeed.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-stereo.xml b/docs/plugins/inspect/plugin-stereo.xml
+index ebde5c5..cf2a342 100644
+--- a/docs/plugins/inspect/plugin-stereo.xml
++++ b/docs/plugins/inspect/plugin-stereo.xml
+@@ -3,10 +3,10 @@
+   <description>Muck with the stereo signal, enhance it&apos;s &apos;stereo-ness&apos;</description>
+   <filename>../../gst/stereo/.libs/libgststereo.so</filename>
+   <basename>libgststereo.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-subenc.xml b/docs/plugins/inspect/plugin-subenc.xml
+index 0bcc413..1aff047 100644
+--- a/docs/plugins/inspect/plugin-subenc.xml
++++ b/docs/plugins/inspect/plugin-subenc.xml
+@@ -3,10 +3,10 @@
+   <description>subtitle encoders</description>
+   <filename>../../gst/subenc/.libs/libgstsubenc.so</filename>
+   <basename>libgstsubenc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-tta.xml b/docs/plugins/inspect/plugin-tta.xml
+index 98fdd3a..8b09489 100644
+--- a/docs/plugins/inspect/plugin-tta.xml
++++ b/docs/plugins/inspect/plugin-tta.xml
+@@ -3,10 +3,10 @@
+   <description>TTA lossless audio format handling</description>
+   <filename>../../gst/tta/.libs/libgsttta.so</filename>
+   <basename>libgsttta.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-vcdsrc.xml b/docs/plugins/inspect/plugin-vcdsrc.xml
+index 23e05f3..beefe2c 100644
+--- a/docs/plugins/inspect/plugin-vcdsrc.xml
++++ b/docs/plugins/inspect/plugin-vcdsrc.xml
+@@ -3,10 +3,10 @@
+   <description>Asynchronous read from VCD disk</description>
+   <filename>../../sys/vcd/.libs/libgstvcdsrc.so</filename>
+   <basename>libgstvcdsrc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-vdpau.xml b/docs/plugins/inspect/plugin-vdpau.xml
+index f32c0d6..3758f6d 100644
+--- a/docs/plugins/inspect/plugin-vdpau.xml
++++ b/docs/plugins/inspect/plugin-vdpau.xml
+@@ -3,7 +3,7 @@
+   <description>Various elements utilizing VDPAU</description>
+   <filename>../../sys/vdpau/.libs/libgstvdpau.so</filename>
+   <basename>libgstvdpau.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer</package>
+diff --git a/docs/plugins/inspect/plugin-videofiltersbad.xml b/docs/plugins/inspect/plugin-videofiltersbad.xml
+index bafc8f9..629306f 100644
+--- a/docs/plugins/inspect/plugin-videofiltersbad.xml
++++ b/docs/plugins/inspect/plugin-videofiltersbad.xml
+@@ -3,7 +3,7 @@
+   <description>Video filters in gst-plugins-bad</description>
+   <filename>../../gst/videofilters/.libs/libgstvideofiltersbad.so</filename>
+   <basename>libgstvideofiltersbad.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/inspect/plugin-videomaxrate.xml b/docs/plugins/inspect/plugin-videomaxrate.xml
+index 7d532d0..4db9f45 100644
+--- a/docs/plugins/inspect/plugin-videomaxrate.xml
++++ b/docs/plugins/inspect/plugin-videomaxrate.xml
+@@ -3,10 +3,10 @@
+   <description>Drop extra frames</description>
+   <filename>../../gst/videomaxrate/.libs/libgstvideomaxrate.so</filename>
+   <basename>libgstvideomaxrate.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-videomeasure.xml b/docs/plugins/inspect/plugin-videomeasure.xml
+index c2751e4..2efa462 100644
+--- a/docs/plugins/inspect/plugin-videomeasure.xml
++++ b/docs/plugins/inspect/plugin-videomeasure.xml
+@@ -3,10 +3,10 @@
+   <description>Various video measurers</description>
+   <filename>../../gst/videomeasure/.libs/libgstvideomeasure.so</filename>
+   <basename>libgstvideomeasure.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-videoparsersbad.xml b/docs/plugins/inspect/plugin-videoparsersbad.xml
+index e4cf6e8..a6cdb36 100644
+--- a/docs/plugins/inspect/plugin-videoparsersbad.xml
++++ b/docs/plugins/inspect/plugin-videoparsersbad.xml
+@@ -3,10 +3,10 @@
+   <description>videoparsers</description>
+   <filename>../../gst/videoparsers/.libs/libgstvideoparsersbad.so</filename>
+   <basename>libgstvideoparsersbad.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-videosignal.xml b/docs/plugins/inspect/plugin-videosignal.xml
+index f105c2b..39ee3ab 100644
+--- a/docs/plugins/inspect/plugin-videosignal.xml
++++ b/docs/plugins/inspect/plugin-videosignal.xml
+@@ -3,10 +3,10 @@
+   <description>Various video signal analysers</description>
+   <filename>../../gst/videosignal/.libs/libgstvideosignal.so</filename>
+   <basename>libgstvideosignal.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-vmnc.xml b/docs/plugins/inspect/plugin-vmnc.xml
+index be3caf9..088c562 100644
+--- a/docs/plugins/inspect/plugin-vmnc.xml
++++ b/docs/plugins/inspect/plugin-vmnc.xml
+@@ -3,10 +3,10 @@
+   <description>VmWare Video Codec plugins</description>
+   <filename>../../gst/vmnc/.libs/libgstvmnc.so</filename>
+   <basename>libgstvmnc.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-vp8.xml b/docs/plugins/inspect/plugin-vp8.xml
+index 4aa642a..e8e1a0b 100644
+--- a/docs/plugins/inspect/plugin-vp8.xml
++++ b/docs/plugins/inspect/plugin-vp8.xml
+@@ -3,10 +3,10 @@
+   <description>VP8 plugin</description>
+   <filename>../../ext/vp8/.libs/libgstvp8.so</filename>
+   <basename>libgstvp8.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-wildmidi.xml b/docs/plugins/inspect/plugin-wildmidi.xml
+index 27fc4a0..233d339 100644
+--- a/docs/plugins/inspect/plugin-wildmidi.xml
++++ b/docs/plugins/inspect/plugin-wildmidi.xml
+@@ -3,10 +3,10 @@
+   <description>Wildmidi Plugin</description>
+   <filename>../../ext/timidity/.libs/libgstwildmidi.so</filename>
+   <basename>libgstwildmidi.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-xvid.xml b/docs/plugins/inspect/plugin-xvid.xml
+index 00ba1f8..26de3c0 100644
+--- a/docs/plugins/inspect/plugin-xvid.xml
++++ b/docs/plugins/inspect/plugin-xvid.xml
+@@ -3,10 +3,10 @@
+   <description>XviD plugin library</description>
+   <filename>../../ext/xvid/.libs/libgstxvid.so</filename>
+   <basename>libgstxvid.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>GPL</license>
+   <source>gst-plugins-bad</source>
+-  <package>GStreamer Bad Plug-ins source release</package>
++  <package>GStreamer Bad Plug-ins git</package>
+   <origin>Unknown package origin</origin>
+   <elements>
+     <element>
+diff --git a/docs/plugins/inspect/plugin-y4mdec.xml b/docs/plugins/inspect/plugin-y4mdec.xml
+index 14907e3..40670cb 100644
+--- a/docs/plugins/inspect/plugin-y4mdec.xml
++++ b/docs/plugins/inspect/plugin-y4mdec.xml
+@@ -3,7 +3,7 @@
+   <description>Demuxes/decodes YUV4MPEG streams</description>
+   <filename>../../gst/y4m/.libs/libgsty4mdec.so</filename>
+   <basename>libgsty4mdec.so</basename>
+-  <version>0.10.23</version>
++  <version>0.10.23.1</version>
+   <license>LGPL</license>
+   <source>gst-plugins-bad</source>
+   <package>GStreamer Bad Plug-ins</package>
+diff --git a/docs/plugins/scanobj-build.stamp b/docs/plugins/scanobj-build.stamp
+deleted file mode 100644
+index e69de29..0000000
+diff --git a/docs/random/LICENSE b/docs/random/LICENSE
+new file mode 100644
+index 0000000..1fedf92
+--- /dev/null
++++ b/docs/random/LICENSE
+@@ -0,0 +1,18 @@
++/* GStreamer
++ * Copyright (C) <1999> Erik Walthinsen <omega@cse.ogi.edu>
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Library General Public
++ * License as published by the Free Software Foundation; either
++ * version 2 of the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Library General Public License for more details.
++ *
++ * You should have received a copy of the GNU Library General Public
++ * License along with this library; if not, write to the
++ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
++ * Boston, MA 02111-1307, USA.
++ */
+diff --git a/docs/random/PORTED_09 b/docs/random/PORTED_09
+new file mode 100644
+index 0000000..b9bdd8a
+--- /dev/null
++++ b/docs/random/PORTED_09
+@@ -0,0 +1,27 @@
++When porting a plugin start with 0.8 CVS head, not the old code in this module. There are many bugfixes which have gone into 0.8 which you want to keep.
++
++List of ported plugins (update when you commit a ported plugin):
++libmms      (alima)
++wavpack     (alima)
++musepack    (alima)
++ivorbis     (alima)
++gsmdec      (alima)
++sdl         (alima)
++speed       (fcarvalho)
++gsmenc      (fcarvalho)
++faac        (fcarvalho)
++wavenc      (fcarvalho)
++effectv     (wim)
++mad	    (wim)
++videofilter (wim)
++aalib	    (wim)
++libcaca	    (zeeshan)
++law	    (wim)
++shout2      (zaheer) - not fully tested
++esdsink     (arwed)
++
++osssink is partially done in the threaded branch (wim)
++
++- Remember that some plugins are already ported and now in the gst-plugins-base module.
++
++When you have ported a plugin remember to copy the relevant parts from configure.ac.orig into configure.ac and re-enable it in the Makefile.am files.
+-- 
+1.8.1.4
+
