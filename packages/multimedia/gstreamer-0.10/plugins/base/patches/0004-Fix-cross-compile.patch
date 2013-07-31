@@ -1,0 +1,68 @@
+From 5ec57fb6b2bee771b2fcb1fae4fc618b16075a68 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Thu, 11 Apr 2013 11:04:54 +0200
+Subject: [PATCH] Fix cross-compile
+
+---
+ configure.ac                   | 1 +
+ gst-libs/gst/audio/Makefile.am | 4 ++--
+ gst-libs/gst/audio/Makefile.in | 9 +++++----
+ 3 files changed, 8 insertions(+), 6 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index bca59c6..49ebf9c 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -20,6 +20,7 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
+ 
+ dnl can autoconf find the source ?
+ AC_CONFIG_SRCDIR([gst/audiotestsrc/gstaudiotestsrc.c])
++AC_CONFIG_MACRO_DIR([m4])
+ 
+ dnl define the output header for config
+ AC_CONFIG_HEADERS([config.h])
+diff --git a/gst-libs/gst/audio/Makefile.am b/gst-libs/gst/audio/Makefile.am
+index 00fef8a..f5421fe 100644
+--- a/gst-libs/gst/audio/Makefile.am
++++ b/gst-libs/gst/audio/Makefile.am
+@@ -54,8 +54,8 @@ nodist_libgstaudio_@GST_MAJORMINOR@include_HEADERS = \
+ 
+ libgstaudio_@GST_MAJORMINOR@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+ libgstaudio_@GST_MAJORMINOR@_la_LIBADD = \
+-  $(top_builddir)/gst-libs/gst/pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
+-  $(top_builddir)/gst-libs/gst/interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
++  ../pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
++  ../interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
+   $(GST_BASE_LIBS) $(GST_LIBS)
+ libgstaudio_@GST_MAJORMINOR@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+ 
+diff --git a/gst-libs/gst/audio/Makefile.in b/gst-libs/gst/audio/Makefile.in
+index 712cf3c..4e39241 100644
+--- a/gst-libs/gst/audio/Makefile.in
++++ b/gst-libs/gst/audio/Makefile.in
+@@ -144,8 +144,9 @@ am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(girdir)" \
+ 	"$(DESTDIR)$(libgstaudio_@GST_MAJORMINOR@includedir)"
+ LTLIBRARIES = $(lib_LTLIBRARIES)
+ am__DEPENDENCIES_1 =
+-libgstaudio_@GST_MAJORMINOR@_la_DEPENDENCIES = $(top_builddir)/gst-libs/gst/pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
+-	$(top_builddir)/gst-libs/gst/interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
++libgstaudio_@GST_MAJORMINOR@_la_DEPENDENCIES =  \
++	../pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
++	../interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
+ 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+ am_libgstaudio_@GST_MAJORMINOR@_la_OBJECTS =  \
+ 	libgstaudio_@GST_MAJORMINOR@_la-audio.lo \
+@@ -575,8 +576,8 @@ nodist_libgstaudio_@GST_MAJORMINOR@include_HEADERS = \
+ 
+ libgstaudio_@GST_MAJORMINOR@_la_CFLAGS = $(GST_PLUGINS_BASE_CFLAGS) $(GST_BASE_CFLAGS) $(GST_CFLAGS)
+ libgstaudio_@GST_MAJORMINOR@_la_LIBADD = \
+-  $(top_builddir)/gst-libs/gst/pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
+-  $(top_builddir)/gst-libs/gst/interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
++  ../pbutils/libgstpbutils-@GST_MAJORMINOR@.la \
++  ../interfaces/libgstinterfaces-@GST_MAJORMINOR@.la \
+   $(GST_BASE_LIBS) $(GST_LIBS)
+ 
+ libgstaudio_@GST_MAJORMINOR@_la_LDFLAGS = $(GST_LIB_LDFLAGS) $(GST_ALL_LDFLAGS) $(GST_LT_LDFLAGS)
+-- 
+1.8.1.4
+
