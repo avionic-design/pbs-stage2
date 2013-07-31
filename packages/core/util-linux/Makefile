@@ -51,14 +51,13 @@ stripfiles = \
 	/bin/mount \
 	/bin/mountpoint \
 	/bin/su \
-	/bin/wdctl \
 	/bin/umount \
-	/lib/*.so.* \
+	/bin/wdctl \
 	/sbin/agetty \
 	/sbin/blkid \
 	/sbin/blockdev \
-	/sbin/chcpu \
 	/sbin/cfdisk \
+	/sbin/chcpu \
 	/sbin/ctrlaltdel \
 	/sbin/fdisk \
 	/sbin/findfs \
@@ -90,7 +89,6 @@ stripfiles = \
 	$(prefix)/bin/colrm \
 	$(prefix)/bin/column \
 	$(prefix)/bin/cytune \
-	$(prefix)/bin/ddate \
 	$(prefix)/bin/eject \
 	$(prefix)/bin/fallocate \
 	$(prefix)/bin/flock \
@@ -101,7 +99,6 @@ stripfiles = \
 	$(prefix)/bin/ipcrm \
 	$(prefix)/bin/ipcs \
 	$(prefix)/bin/isosize \
-	$(prefix)/bin/line \
 	$(prefix)/bin/logger \
 	$(prefix)/bin/look \
 	$(prefix)/bin/lscpu \
@@ -126,6 +123,7 @@ stripfiles = \
 	$(prefix)/bin/uuidgen \
 	$(prefix)/bin/wall \
 	$(prefix)/bin/whereis \
+	$(prefix)/lib/*.so.* \
 	$(prefix)/sbin/addpart \
 	$(prefix)/sbin/delpart \
 	$(prefix)/sbin/fdformat \
