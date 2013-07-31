@@ -121,13 +121,13 @@ $(pkgtree)/.extract: $(pkgtree)/.checksum $(extract)
 setup-deps := $(pkgtree)/.extract
 dist-deps  := $(addprefix $(objtree)/dist/download/,$(tarballs))
 
-quiet_cmd_svn_export = SVN     $(LOCATION_SVN)
-      cmd_svn_export = rm -rf $(pkgbuildtree) && \
+quiet_cmd_checkout_svn = SVN     $(LOCATION_SVN)
+      cmd_checkout_svn = rm -rf $(pkgbuildtree) && \
 			cd $(dir $(pkgbuildtree)) && \
 			svn export $(LOCATION_SVN) $(notdir $(pkgbuildtree)) > /dev/null
 
 $(pkgtree)/.svn-export: $(pkgtree)/.directory
-	$(call cmd,svn_export)
+	$(call cmd,checkout_svn)
 	$(call cmd,stamp)
 
 ifneq ($(LOCATION_SVN),)
@@ -139,12 +139,12 @@ GIT_ARGS = \
 	$(if $(GIT_REFERENCE_DIR),--reference $(GIT_REFERENCE_DIR),--depth 1) \
 	-q -b $(or $(call unquote,$(GIT_CHECKOUT)),master)
 
-quiet_cmd_git_clone = GIT     $(GIT_URL)
-      cmd_git_clone = rm -rf $(pkgbuildtree) && \
+quiet_cmd_checkout_git = GIT     $(GIT_URL)
+      cmd_checkout_git = rm -rf $(pkgbuildtree) && \
 			git clone $(GIT_ARGS) $(GIT_URL) $(pkgbuildtree)
 
 $(pkgtree)/.git-clone: $(pkgtree)/.directory
-	$(call cmd,git_clone)
+	$(call cmd,checkout_git)
 	$(call cmd,stamp)
 
 ifneq ($(GIT_URL),)
