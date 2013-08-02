@@ -3,3 +3,15 @@ config PACKAGE_CORE_E2FSPROGS
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_CORE_UTIL_LINUX if !PACKAGE_CORE_E2FSPROGS_USE_INTERNAL
+	help
+	  The e2fsprogs package contains a number of utilities for creating,
+	  checking, modifying, and correcting any inconsistencies in second,
+	  third and fourth extended (ext2/ext3/ext4) filesystems.
+
+config PACKAGE_CORE_E2FSPROGS_USE_INTERNAL
+	bool "Use internal uuid implementation"
+	help
+	  The e2fsprogs can provide its one version of uuidd, libuuid and
+	  libblkid. Which is also provided by util-linux package, to avoid
+	  clashes, we should use only one.

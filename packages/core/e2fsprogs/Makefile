@@ -11,10 +11,14 @@ conf-args += \
 	--enable-symlink-install \
 	--enable-relative-symlinks \
 	--enable-symlink-build \
-	--disable-fsck \
+	--disable-fsck
+
+ifneq ($(CONFIG_PACKAGE_CORE_E2FSPROGS_USE_INTERNAL),y)
+  conf-args += \
 	--disable-libuuid \
 	--disable-libblkid \
 	--disable-uuidd
+endif
 
 ifneq ($(LIBC),gnu)
   conf-args += \
