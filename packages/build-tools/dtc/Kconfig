@@ -1,3 +1,4 @@
 config PACKAGE_BUILD_TOOLS_DTC
 	bool "dtc - device tree compiler"
 	select PACKAGE_BUILD_TOOLS_BISON
+	select PACKAGE_BUILD_TOOLS_FLEX
