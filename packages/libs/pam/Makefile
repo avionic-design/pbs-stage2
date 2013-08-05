@@ -10,7 +10,7 @@ include packages/autotools-reconf.mk
 conf-args += \
 	--sbindir=$(prefix)/sbin \
 	--libdir=$(prefix)/lib \
-	--disable-regenerate-docu \
+	--disable-documentation \
 	--disable-rpath
 
 prunefiles = \

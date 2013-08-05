@@ -1,2 +1,3 @@
 autotools.patch
 cross-compile.patch
+add-disable-doc.patch
