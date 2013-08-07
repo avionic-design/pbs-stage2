@@ -9,6 +9,10 @@ include packages/autotools.mk
 conf-args += \
 	--disable-examples
 
+ifeq ($(CONFIG_ARCH_ARM_SOFT_FP),y)
+  conf-args += --disable-float
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
