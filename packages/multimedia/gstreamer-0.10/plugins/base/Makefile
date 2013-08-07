@@ -13,13 +13,11 @@ conf-args += \
 	--disable-docs \
 	--disable-gnome_vfs
 
-ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
-conf-args += \
-	--disable-vorbis
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBVORBIS),y)
+  conf-args += --disable-vorbis
 endif
-ifneq ($(PACKAGE_MULTIMEDIA_LIBOGG),y)
-conf-args += \
-	--disable-ogg
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBOGG),y)
+  conf-args += --disable-ogg
 endif
 
 plugin = $(prefix)/lib/gstreamer-0.10
