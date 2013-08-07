@@ -11,7 +11,8 @@ conf-args += \
 	--sbindir=$(prefix)/sbin \
 	--libdir=$(prefix)/lib \
 	--disable-documentation \
-	--disable-rpath
+	--disable-rpath \
+	--disable-nls
 
 prunefiles = \
 	$(prefix)/lib/security/*.la \
