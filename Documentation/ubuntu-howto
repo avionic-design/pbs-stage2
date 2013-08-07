@@ -22,7 +22,7 @@ We assume you have made a default installation without selecting or
 deselecting any packages.
 
    $ sudo apt-get install build-essential git quilt flex bison gawk
-   $ sudo apt-get install libncurses5-dev autoconf
+   $ sudo apt-get install libncurses5-dev autoconf fakeroot
 
 These packages may not be required, but to avoid problems we recommend to
 install them as well.

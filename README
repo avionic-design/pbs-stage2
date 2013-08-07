@@ -191,9 +191,8 @@ Requirements:
 General requirements:
 
 	- automake, autoconf, gcc, make, quilt, bash, fakeroot
-	- ncurses-devel
 
-	- gettext-devel
+	- ncurses-devel       (menuconfig)
 	- expat-devel         (build-tools/dbus)
 	- zlib-devel          (build-tools/glib)
 	- libffi-devel        (build-tools/glib)
@@ -211,14 +210,10 @@ Programs used to generate documentation during package creation:
 
 Libraries and tools required during platform setup:
 
-	- bison
-
 	- gperf               (core/udev - uclibc toolchain)
 	- luadoc              (wm/awesome)
 	- ImageMagick         (wm/awesome)
 	  * Ubuntu: imagemagick
 	- docbook-utils       (net/tunctl)
-	# libgpg-error-devel  (libs/libgcrypt)
-	# intltool            (libs/glib-networking)
 --
 vim: tw=78
