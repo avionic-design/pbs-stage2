@@ -138,7 +138,7 @@ on the selected packages and the speed of your computer.
 
 Once all the packages have been built, create the initrd filesystem:
 
-   $ nice make O=build/initrd initrd
+   $ fakeroot nice make O=build/initrd initrd
 
 For the rootfs the procedure is similar, but the build will take a lot more
 time because we have a lot more packages to build. So lets start and load the
@@ -153,7 +153,7 @@ Optional: Same as above.
 And build the root filesystem
 
    $ nice make O=build/rootfs
-   $ nice make O=build/rootfs rootfs
+   $ fakeroot nice make O=build/rootfs rootfs
 
 
 Prepare an SD-Card:

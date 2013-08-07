@@ -101,6 +101,10 @@ This will pack all relevant files into a single compressed file, to be used
 by the bootloader or later from the kernel. This process will exclude all
 development and documentation files from the target filesystem to save space.
 
+NOTE: If you set INITRD_MOUNT_TMPFS=n or ROOTFS_MOUNT_TMPFS=n you don't need
+superuser permissions (sudo) anymore. But to preserve the fileownership you
+need to use fakeroot instead.
+
 
 Packages:
 ---------
