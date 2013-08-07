@@ -19,7 +19,7 @@ targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
 packages := $(addprefix install-,$(depends-dirs))
 
 quiet_cmd_install_package =
-      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/initrd
+      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/initrd priv=
 
 $(packages): install-%:
 	$(call cmd,install_package)

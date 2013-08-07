@@ -16,7 +16,7 @@ targets-y := $(obj)/rootfs.img
 packages := $(addprefix install-,$(depends-dirs))
 
 quiet_cmd_install_package =
-      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/rootfs
+      cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(objtree)/rootfs priv=
 
 $(packages): install-%:
 	$(call cmd,install_package)
