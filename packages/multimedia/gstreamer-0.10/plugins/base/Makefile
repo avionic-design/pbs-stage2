@@ -16,6 +16,9 @@ conf-args += \
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBVORBIS),y)
   conf-args += --disable-vorbis
 endif
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBTREMOR),y)
+  conf-args += --disable-ivorbis
+endif
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBOGG),y)
   conf-args += --disable-ogg
 endif
