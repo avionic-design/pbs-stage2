@@ -70,10 +70,9 @@ $(dist-dirs): dist-%: dist-pbs
 
 # Files included in the distrib if the platform contain one named $(FILE).$(PLATFORM).
 doc-files     := README NEWS TODO
-platform      := $(filter platforms/%,$(platform-depends-dirs))
-platform-docs := $(wildcard $(patsubst %,$(srctree)/$(platform)/%.*,$(doc-files)))
+platform-docs := $(wildcard $(patsubst %,$(srctree)/$(master-platform)/%.*,$(doc-files)))
 platform-docs := $(patsubst $(srctree)/%,%,$(platform-docs))
-platform-docs := $(filter-out $(platform)/.% %~ %.bak,$(platform-docs))
+platform-docs := $(filter-out $(master-platform)/.% %~ %.bak,$(platform-docs))
 dist-docs     := $(addprefix dist-docs-,$(platform-docs))
 
 quiet_cmd_copy_doc = CP      $* dist
