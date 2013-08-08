@@ -68,6 +68,18 @@ PHONY += $(dist-dirs)
 $(dist-dirs): dist-%: dist-pbs
 	$(Q)$(MAKE) $(package)=$* dist
 
+platform-modules := $(sort $(foreach p,$(depends-platforms),$(word 2,$(subst /, ,$(p)))))
+platform-modules := $(addprefix platform-module-,$(platform-modules))
+
+quiet_cmd_git_export_platform = GIT     platforms/$* dist
+      cmd_git_export_platform = cd $(srctree)/platforms/$* && \
+				git archive --format=tar HEAD | \
+					tar -x -C $(objtree)/dist/platforms/$*
+
+PHONY += $(platform-modules)
+$(platform-modules): platform-module-%: dist-pbs
+	$(call cmd,git_export_platform)
+
 # Files included in the distrib if the platform contain one named $(FILE).$(PLATFORM).
 doc-files     := README NEWS TODO
 platform-docs := $(wildcard $(patsubst %,$(srctree)/$(master-platform)/%.*,$(doc-files)))
@@ -101,7 +113,7 @@ dist-pbs:
 	$(call cmd,ln_config)
 
 PHONY += dist
-dist: $(dist-dirs) $(dist-docs)
+dist: $(platform-modules) $(dist-dirs) $(dist-docs)
 	@:
 
 PHONY += $(uscan-dirs)
