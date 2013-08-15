@@ -5,3 +5,4 @@ webcore-user-agent.patch
 webkit2-user-agent.patch
 gtk-dnd-drag-threshold.patch
 unicode.patch
+fix-arm-neon-build-issue.patch

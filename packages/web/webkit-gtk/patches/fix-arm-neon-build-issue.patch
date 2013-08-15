@@ -1,0 +1,26 @@
+From 968bb930804d1bbc5ef1cba5d39ebe0ea2835f38 Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Wed, 14 Aug 2013 15:25:44 +0200
+Subject: [PATCH] ARM: Fix neon build
+Organization: Avionic Design GmbH
+
+---
+ Source/WTF/wtf/Platform.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WTF/wtf/Platform.h b/Source/WTF/wtf/Platform.h
+index 605f049..d236559 100644
+--- a/Source/WTF/wtf/Platform.h
++++ b/Source/WTF/wtf/Platform.h
+@@ -294,7 +294,7 @@
+ #endif
+ 
+ #if CPU(ARM_NEON) && (!COMPILER(GCC) || GCC_VERSION_AT_LEAST(4, 7, 0))
+-// All NEON intrinsics usage can be disabled by this macro.
++/* All NEON intrinsics usage can be disabled by this macro. */
+ #define HAVE_ARM_NEON_INTRINSICS 1
+ #endif
+ 
+-- 
+1.8.3.1
+
