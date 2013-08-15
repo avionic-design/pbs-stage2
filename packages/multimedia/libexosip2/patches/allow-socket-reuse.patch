@@ -1,0 +1,27 @@
+diff --git a/src/eXtl_tcp.c b/src/eXtl_tcp.c
+index b367cc5..078643c 100644
+--- a/src/eXtl_tcp.c
++++ b/src/eXtl_tcp.c
+@@ -153,6 +153,7 @@ static int tcp_tl_open(void)
+ 	int res;
+ 	struct addrinfo *addrinfo = NULL;
+ 	struct addrinfo *curinfo;
++	int optval = 1;
+ 	int sock = -1;
+ 
+ 	if (eXtl_tcp.proto_port < 0)
+@@ -197,6 +198,14 @@ static int tcp_tl_open(void)
+ #endif							/* IPV6_V6ONLY */
+ 		}
+ 
++		res = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval));
++		if (res < 0) {
++			OSIP_TRACE(osip_trace
++					   (__FILE__, __LINE__, OSIP_ERROR, NULL,
++						"Cannot set socket option: %s\n",
++						strerror(-res)));
++		}
++
+ 		res = bind(sock, curinfo->ai_addr, curinfo->ai_addrlen);
+ 		if (res < 0) {
+ 			OSIP_TRACE(osip_trace
