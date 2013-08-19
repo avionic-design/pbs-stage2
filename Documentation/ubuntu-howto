@@ -88,6 +88,10 @@ to avoid the usage of mount. This will slow down the final buildstep a bit.
 Build Toolchains for ARM:
 -------------------------
 
+NOTE: The toolchain you create here is softfp only. For a hardfp toolchain
+      please use pbs-stage1, or use your own toolchain. Please refer to:
+      Documenation/user-configuration TOOLCHAIN_BASE_PATH.
+
 These steps can take a long time depending on your system speed. Be patient
 and get a coffee.
 
@@ -97,9 +101,6 @@ and get a coffee.
 If you already have a toolchain (e.g from linaro) you can update your pbs.mk
 file to use it and skip this part. See Documenation/user-configuration for
 details.
-
-Please note: The toolchain you create here is only softfp. For a hardfp
-toolchain please use pbs-stage1.
 
 
 Build Platform:
