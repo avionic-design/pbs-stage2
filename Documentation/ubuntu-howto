@@ -50,21 +50,33 @@ if you like.
 
    $ git clone https://github.com/avionic-design/linux-l4t.git kernel/linux.git
 
+NOTE: Currently we have not merged the branches for Tegra2 and Tegra3. So you
+      have to checkout the right branch.
+
+   $ cd kernel/linux.git
+
+For Tamonten T20 (Tegra2) use:
+   $ git checkout -b tamonten/l4t-r16-2 origin/tamonten/l4t-r16-2
+
+For Tamonten T30 (Tegra3) use:
+   $ git checkout -b tamonten/l4t-r16-3 origin/tamonten/l4t-r16-3
+
 
 Checkout PBS:
 -------------
 
 The latest version of PBS splits the base and the platform specific stuff
-into seperate repositories. Due to some limitations on github you can not use
-a regular recursive clone here. So you will need to clone the subprojects
-manually.
+into seperate repositories. So you have to use a recursive checkout.
 
-   $ git clone https://github.com/avionic-design/pbs-splitted-pbs.git pbs
-   $ git clone https://github.com/avionic-design/pbs-splitted-platforms-avionic-design.git pbs/platforms/avionic-design
+   $ git clone --recursive https://github.com/avionic-design/pbs-stage2
+
+NOTE: Not all platforms (sub-repositories) are publicly accessible, so if you
+      do not have the required access or you've been asked for your username,
+      you can safely abort the checkout at this point.
 
 Now prepare the build enviroment.
 
-   $ cd pbs
+   $ cd pbs-stage2
    $ mkdir build download logs
 
 To keep the repository nice and clean we add some directories to the ignore
