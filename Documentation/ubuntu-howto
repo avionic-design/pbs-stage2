@@ -68,6 +68,7 @@ Checkout PBS:
 The latest version of PBS splits the base and the platform specific stuff
 into seperate repositories. So you have to use a recursive checkout.
 
+   $ cd ~/devel
    $ git clone --recursive https://github.com/avionic-design/pbs-stage2
 
 NOTE: Not all platforms (sub-repositories) are publicly accessible, so if you
