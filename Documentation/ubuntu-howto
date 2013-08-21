@@ -139,7 +139,7 @@ For now we load the default configuration for the TEC initrd:
 
 Optional: Change package selection or adjust kernel path.
 
-   $ nice make O=build/rootfs menuconfig
+   $ nice make O=build/initrd menuconfig
         Packages -->
             Operating System Kernel -->
                 (...) path to local directory
