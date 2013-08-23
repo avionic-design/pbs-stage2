@@ -2,7 +2,7 @@ PACKAGE = live
 VERSION = 2013.01.22
 LICENSE = LGPL
 
-LOCATION = http://live555.com/liveMedia/public
+LOCATION = ftp://ftp.avionic-design.de/pub/avionic/proxy
 TARBALLS = $(PACKAGE).$(VERSION).tar.gz
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)
