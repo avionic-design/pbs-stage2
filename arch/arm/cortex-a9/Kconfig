@@ -4,7 +4,18 @@ config CPU
 	string
 	default "unknown"
 
+choice
+	prompt "Silicon"
+
+config ARCH_UNSPECIFIED
+	bool "Unspecified"
+
 config ARCH_TEGRA_2x_SOC
-	bool
+	bool "Nvidia Tegra 2"
+
+config ARCH_TEGRA_3x_SOC
+	bool "Nvidia Tegra 3"
+
+endchoice
 
 endif
