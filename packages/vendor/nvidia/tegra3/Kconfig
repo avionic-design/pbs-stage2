@@ -1,0 +1,9 @@
+if ARCH_TEGRA_3x_SOC
+
+menu "NVIDIA Tegra3"
+
+source "packages/vendor/nvidia/tegra3/l4t/Kconfig"
+
+endmenu
+
+endif

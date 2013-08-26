@@ -1,5 +1,6 @@
 menu "NVIDIA"
 
 source "packages/vendor/nvidia/tegra2/Kconfig"
+source "packages/vendor/nvidia/tegra3/Kconfig"
 
 endmenu

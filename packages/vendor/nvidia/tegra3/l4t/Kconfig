@@ -1,0 +1,5 @@
+config PACKAGE_VENDOR_NVIDIA_TEGRA3_L4T
+	bool "Linux4Tegra (L4T) binaries"
+	select STABLE_API
+	help
+	  Provides the binary drivers and OpenGL ES2 implementation for Tegra3.

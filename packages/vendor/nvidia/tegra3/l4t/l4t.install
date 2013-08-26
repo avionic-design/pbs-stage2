@@ -1,0 +1,5 @@
+/etc
+/usr/lib/lib*.so
+/usr/lib/lib*.so.*
+/usr/lib/firmware
+/usr/lib/xorg
