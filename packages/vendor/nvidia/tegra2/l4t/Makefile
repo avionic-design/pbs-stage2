@@ -1,9 +1,9 @@
-PACKAGE = l4t
+PACKAGE = l4t-t20
 
 ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
-VERSION = 16-hfp-3.1
+VERSION = r16.3-hfp
 else
-VERSION = 15.2.1-2
+VERSION = r15.2-sfp
 endif
 
 LOCATION = http://ftp.avionic-design.de/pub/nvidia
