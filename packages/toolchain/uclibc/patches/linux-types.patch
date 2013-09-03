@@ -12,3 +12,15 @@ index 766a306..15d01fb 100644
  typedef unsigned short		__kernel_dev_t;
  typedef unsigned long		__kernel_ino_t;
  typedef unsigned short		__kernel_mode_t;
+--- a/libc/sysdeps/linux/powerpc/bits/kernel_types.h	2012-05-15 09:20:09.000000000 +0200
++++ b/libc/sysdeps/linux/powerpc/bits/kernel_types.h	2013-08-17 11:53:56.279179664 +0200
+@@ -10,6 +10,9 @@
+ #define _PPC64_POSIX_TYPES_H
+ #define _ASM_POWERPC_POSIX_TYPES_H
+ 
++typedef long		__kernel_long_t;
++typedef unsigned long	__kernel_ulong_t;
++
+ # if __WORDSIZE == 64
+ typedef unsigned int	__kernel_dev_t;
+ typedef unsigned int	__kernel_ino_t;
