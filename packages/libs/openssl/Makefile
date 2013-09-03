@@ -27,6 +27,10 @@ ifeq ($(CONFIG_ARCH),x86)
   config = linux-generic32
 endif
 
+ifeq ($(CONFIG_ARCH),powerpc)
+  config = linux-ppc
+endif
+
 ifndef config
   $(error no configuration defined)
 endif
