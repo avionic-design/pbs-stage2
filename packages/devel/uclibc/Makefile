@@ -64,3 +64,8 @@ stripfiles = \
 
 include packages/cleanup.mk
 include packages/binary.mk
+
+PHONY += configure
+configure:
+	cd $(pkgbuildtree) && \
+		$(env) TERM=$(TERM) $(MAKE) $(conf-args) menuconfig
