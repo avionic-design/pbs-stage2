@@ -1,9 +1,10 @@
 PACKAGE = dtc
-VERSION = v1.3.0
+VERSION = v1.4.0
 LICENSE = GPL
 
-LOCATION = http://jdl.com/software
-TARBALLS = $(PACKAGE)-$(VERSION).tgz
+# Upstream didn't provide any tarball, so we have to pull it from git
+GIT_URL = git://git.jdl.com/software/dtc.git
+GIT_CHECKOUT = $(VERSION)
 
 include packages/build-tools/common.mk
 
