@@ -135,7 +135,7 @@ configurations.
 
 For now we load the default configuration for the TEC initrd:
 
-   $ make O=build/initrd tec-initrd_defconfig
+   $ make O=build/initrd teg-ng-initrd_defconfig
 
 Optional: Change package selection or adjust kernel path.
 
@@ -158,7 +158,7 @@ For the rootfs the procedure is similar, but the build will take a lot more
 time because we have a lot more packages to build. So lets start and load the
 default package selection for the root filesystem.
 
-   $ make O=build/rootfs tec-rootfs_defconfig
+   $ make O=build/rootfs teg-ng-rootfs_defconfig
 
 Optional: Same as above.
 
