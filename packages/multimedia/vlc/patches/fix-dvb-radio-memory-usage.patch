@@ -1,0 +1,32 @@
+From 6970bd4a077e6f40b08d03d20c412733360b3bbc Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Fri, 20 Sep 2013 11:41:28 +0200
+Subject: [PATCH] access: dvb: Realloc block to actually used size.
+
+For low bandwidth streams (seen with DVB-C Radio) it can happen that the blocks
+are not fully used, because less than 20 TS packets are available from the
+demuxer at the given time. This leads to a quite high memory usage due to empty
+buffer memory lying around. Avoid this by reallocating the buffer blocks to the
+actually used size, like it is done in other access modules (ie udp) already.
+
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ modules/access/dtv/access.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/access/dtv/access.c b/modules/access/dtv/access.c
+index 359768f..efe355b 100644
+--- a/modules/access/dtv/access.c
++++ b/modules/access/dtv/access.c
+@@ -510,7 +510,7 @@ static block_t *Read (access_t *access)
+     if ((sys->signal_poll++) == 0)
+         access->info.i_update |= INPUT_UPDATE_SIGNAL;
+ 
+-    return block;
++    return block_Realloc (block, 0, val);
+ }
+ 
+ static int Control (access_t *access, int query, va_list args)
+-- 
+1.8.4
+
