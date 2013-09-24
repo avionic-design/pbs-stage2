@@ -1,0 +1,5 @@
+config PACKAGE_XORG_LIB_XSS
+	bool "libXScrnSaver"
+	select PACKAGE_XORG_LIB_XEXT
+	help
+	  X.Org X11 libXss runtime library.
