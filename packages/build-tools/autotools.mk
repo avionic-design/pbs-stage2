@@ -2,12 +2,6 @@ include packages/build-tools/common.mk
 
 BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
 
-env += \
-	PKG_CONFIG_PATH=$(prefix)/lib/pkgconfig \
-	LD_LIBRARY_PATH=$(prefix)/lib \
-	LIBRARY_PATH=$(prefix)/lib \
-	CPATH=$(prefix)/include
-
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 

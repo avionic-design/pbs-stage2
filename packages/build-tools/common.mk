@@ -1,5 +1,10 @@
 prefix = $(objtree)/build-tools
-env = env -i PATH=$(prefix)/bin:$(PATH)
+env = env -i \
+	PATH=$(prefix)/bin:$(PATH) \
+	PKG_CONFIG_PATH=$(prefix)/lib/pkgconfig \
+	LD_LIBRARY_PATH=$(prefix)/lib \
+	LIBRARY_PATH=$(prefix)/lib \
+	CPATH=$(prefix)/include
 
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
 ifeq ($(NUM_CPU),)
