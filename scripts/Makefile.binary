@@ -19,9 +19,7 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-ifneq ($(wildcard $(pkgtree)/.symlink-source),)
-  VERSION := $(VERSION)+
-endif
+PBS_VERSION := $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)
 
 pkg-ext = $(VERSION)_$(TARGET).tar.bz2
 
@@ -75,8 +73,8 @@ quiet_cmd_install_files = INSTALL $*
 
 quiet_cmd_build_package = BUILD   $*_$(VERSION)_$(TARGET).tar.bz2
       cmd_build_package = $(env) $(priv) $(srctree)/scripts/pbs-binary \
-				$(pbs_quiet) -t $(TARGET) -v $(VERSION) \
-				-b $(objtree)/binary/$(obj) $*
+				$(pbs_quiet) -t $(TARGET) -v $(PBS_VERSION) \
+				-p $(VERSION) -b $(objtree)/binary/$(obj) $*
 
 PHONY += $(build-packages)
 $(build-packages): build-$(obj)/%:

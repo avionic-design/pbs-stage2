@@ -38,6 +38,11 @@ for arg in $@; do
 			shift
 			;;
 
+		-p | --plain-version)
+			prev=plain_version
+			shift
+			;;
+
 		-b | --binary)
 			prev=binary
 			shift
@@ -64,6 +69,11 @@ if [ "x$version" = "x" ]; then
 	exit 1
 fi
 
+if [ "x$plain_version" = "x" ]; then
+	echo "ERROR: no plain package version specified - try using -v PATH"
+	exit 1
+fi
+
 if [ "x$binary" = "x" ]; then
 	echo "ERROR: no binary directory specified - try using -b PATH"
 	exit 1
@@ -82,7 +92,7 @@ for package in $packages; do
 
 	if [ -x "$srcdir/$package/DEBIAN/hooks/binary" ]; then
 		"$srcdir/$package/DEBIAN/hooks/binary" \
-			"$srcdir/$package" "$version" || exit $?
+			"$srcdir/$package" "$plain_version" || exit $?
 	fi
 
 	log -n "Building binary package: $tarball ... "
