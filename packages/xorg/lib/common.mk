@@ -1,2 +1,2 @@
 include packages/xorg/lib/location.mk
-include packages/autotools.mk
+include packages/autotools-reconf.mk
