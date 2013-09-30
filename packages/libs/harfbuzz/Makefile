@@ -5,10 +5,7 @@ LICENSE = MIT
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
-
-conf-vars += \
-	CXXFLAGS='$(CPPFLAGS)'
+include packages/autotools-reconf.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la
