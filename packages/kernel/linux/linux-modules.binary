@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
 rootfs="$1"
-version="${2%+}"
+version="$2"
 
 depmod -b "$rootfs" "$version"
