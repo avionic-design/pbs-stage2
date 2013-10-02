@@ -3,3 +3,6 @@ config PACKAGE_LIBS_LIBESTR
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	help
+	  This package compiles the string handling essentials library
+	  used by the Rsyslog daemon.
