@@ -1,3 +1,0 @@
-cppflags-for-errno-table.patch
-autoreconf.patch
-ltmain-sysroot.patch
