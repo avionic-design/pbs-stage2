@@ -1,5 +1,5 @@
 PACKAGE = inputproto
-VERSION = 2.2.99.1
+VERSION = 2.3
 LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
