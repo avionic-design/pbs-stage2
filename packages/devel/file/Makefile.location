@@ -1,0 +1,6 @@
+PACKAGE = file
+VERSION = 5.14
+LICENSE = GPL
+
+LOCATION = ftp://ftp.astron.com/pub/${PACKAGE}
+TARBALLS = ${PACKAGE}-${VERSION}.tar.gz

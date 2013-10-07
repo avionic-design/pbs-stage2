@@ -1,0 +1,9 @@
+config PACKAGE_BUILD_TOOLS_FILE
+	bool "flex"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	help
+	  The file command is used to identify a particular file according to the
+	  type of data contained by the file.  File can identify many different
+	  file types, including ELF binaries, system libraries, RPM packages, and
+	  different graphics formats.

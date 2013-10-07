@@ -1,6 +1,7 @@
 obj-y += lua/
 
 obj-$(CONFIG_PACKAGE_DEVEL_FLEX) += flex
+obj-$(CONFIG_PACKAGE_DEVEL_FILE) += file
 obj-$(CONFIG_PACKAGE_DEVEL_GCC_LIBS) += gcc-libs
 obj-$(CONFIG_PACKAGE_DEVEL_GDB) += gdb
 obj-$(CONFIG_PACKAGE_DEVEL_GLIBC) += glibc

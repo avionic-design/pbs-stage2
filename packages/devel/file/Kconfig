@@ -1,0 +1,9 @@
+config PACKAGE_DEVEL_FILE
+	bool "file"
+	select PACKAGE_BUILD_TOOLS_FILE
+	select PACKAGE_LIBS_ZLIB
+	help
+	  The file command is used to identify a particular file according to the
+	  type of data contained by the file.  File can identify many different
+	  file types, including ELF binaries, system libraries, RPM packages, and
+	  different graphics formats.
