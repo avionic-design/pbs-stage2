@@ -21,7 +21,7 @@ include $(kbuild-file)
 
 PBS_VERSION := $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)
 
-pkg-ext = $(VERSION)_$(TARGET).tar.bz2
+pkg-ext = $(PBS_VERSION)_$(TARGET).tar.bz2
 
 ifeq ($(install-packages-y),)
   install-packages-y := $(wildcard $(srctree)/$(obj)/*.install)
