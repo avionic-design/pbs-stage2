@@ -1,0 +1,13 @@
+diff --git a/va/Makefile.am b/va/Makefile.am
+index ba429fa..d1d2384 100644
+--- a/va/Makefile.am
++++ b/va/Makefile.am
+@@ -59,7 +59,7 @@ libva_source_h_priv = \
+ 
+ libva_ldflags = \
+ 	$(LDADD) -no-undefined	\
+-	-Wl,-version-script,libva.syms \
++	-Wl,-version-script,$(top_srcdir)/va/libva.syms \
+ 	$(NULL)
+ 
+ lib_LTLIBRARIES			= libva.la

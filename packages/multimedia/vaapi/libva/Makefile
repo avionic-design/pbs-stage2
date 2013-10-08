@@ -1,5 +1,5 @@
 PACKAGE = libva
-VERSION = 1.1.0
+VERSION = 1.2.1
 LICENSE = PD
 
 LOCATION = http://www.freedesktop.org/software/vaapi/releases/$(PACKAGE)

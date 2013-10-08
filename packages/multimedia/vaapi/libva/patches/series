@@ -1,2 +1,2 @@
-wayland-1.0.patch
 automake.patch
+fix-out-of-tree-build.patch

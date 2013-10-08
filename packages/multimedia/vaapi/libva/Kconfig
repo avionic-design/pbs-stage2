@@ -1,3 +1,5 @@
 config PACKAGE_MULTIMEDIA_VAAPI_LIBVA
 	bool "libva"
 	select PACKAGE_LIBS_LIBDRM
+	help
+	  Libva is a library providing the VA API video acceleration API.
