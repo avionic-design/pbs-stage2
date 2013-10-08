@@ -1,0 +1,45 @@
+diff --git a/mozilla/security/nss/pkg/linux/install-pkgconfig.sh b/mozilla/security/nss/pkg/linux/install-pkgconfig.sh
+new file mode 100755
+index 0000000..be26a79
+--- /dev/null
++++ b/mozilla/security/nss/pkg/linux/install-pkgconfig.sh
+@@ -0,0 +1,22 @@
++#!/bin/sh -e
++
++BASEPATH=$1
++DESTDIR=$2
++
++if -z $BASEPATH; then
++	echo "Usage: $0 BASEPATH [DESTDIR]"
++	exit 1
++fi
++
++NSS_VMAJOR=$(grep '#define.*NSS_VMAJOR' $DESTDIR/usr/include/nss/nss.h | awk '{print $3}')
++NSS_VMINOR=$(grep '#define.*NSS_VMINOR' $DESTDIR/usr/include/nss/nss.h | awk '{print $3}')
++NSS_VPATCH=$(grep '#define.*NSS_VPATCH' $DESTDIR/usr/include/nss/nss.h | awk '{print $3}')
++
++mkdir -p $DESTDIR/usr/lib/pkgconfig && \
++	sed $BASEPATH/pkg/linux/nss.pc.in \
++		-e "s,%libdir%,/usr/lib,g" \
++		-e "s,%prefix%,/usr,g" \
++		-e "s,%exec_prefix%,/usr/bin,g" \
++		-e "s,%includedir%,/usr/include/nss,g" \
++		-e "s,%NSS_VERSION%,$NSS_VMAJOR.$NSS_VMINOR,g" \
++	> "$DESTDIR/usr/lib/pkgconfig/nss.pc"
+diff --git a/mozilla/security/nss/pkg/linux/nss.pc.in b/mozilla/security/nss/pkg/linux/nss.pc.in
+new file mode 100644
+index 0000000..c001a7d
+--- /dev/null
++++ b/mozilla/security/nss/pkg/linux/nss.pc.in
+@@ -0,0 +1,11 @@
++prefix=%prefix%
++exec_prefix=%exec_prefix%
++libdir=%libdir%
++includedir=%includedir%
++
++Name: NSS
++Description: Network Security Services
++Version: %NSS_VERSION%
++Requires: nspr, nss-util >= %NSSUTIL_VERSION%
++Libs: -L${libdir} -lssl3 -lsmime3 -lnss3
++Cflags: -I${includedir}

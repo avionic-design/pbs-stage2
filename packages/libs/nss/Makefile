@@ -82,7 +82,9 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(INSTALL) -m 644 -t $(DESTDIR)$(prefix)/include/nss \
 			$(DISTDIR)/public/nss/*.h
 	$(INSTALL) -m 644 -t $(DESTDIR)$(prefix)/lib \
-		$(DISTDIR)/lib/libcrmf.a
+		$(DISTDIR)/lib/libcrmf.a && \
+	sh $(pkgbuildtree)/mozilla/security/nss/pkg/linux/install-pkgconfig.sh \
+		$(pkgbuildtree)/mozilla/security/nss $(DESTDIR)
 	$(call cmd,stamp)
 
 stripfiles = \

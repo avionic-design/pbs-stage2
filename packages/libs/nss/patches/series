@@ -3,3 +3,4 @@ disable-rpath.patch
 glibc-realpath.patch
 spi+cacert.patch
 ssl-renegotiate-transitional.patch
+pkgconfig-support.patch
