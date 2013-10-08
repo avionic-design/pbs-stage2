@@ -54,9 +54,13 @@ dri-drivers-$(CONFIG_PACKAGE_LIBS_MESA_DRI_FFB) += ffb
 dri-drivers-y := $(subst $(empty) $(empty),$(comma),$(dri-drivers-y))
 
 conf-args += \
-	--with-dri-drivers='$(dri-drivers-y)' \
 	--without-gallium-drivers \
 	--enable-shared-glapi
+
+ifeq ($(CONFIG_OPENGL_MESA_OPENGL),y)
+conf-args += \
+	--with-dri-drivers='$(dri-drivers-y)'
+endif
 
 ifneq ($(CONFIG_PACKAGE_LIBS_MESA_GBM),y)
   conf-args += --disable-gbm
