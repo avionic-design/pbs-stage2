@@ -1,6 +1,7 @@
 menu "Miscellaneous Utilities"
 
 source "packages/util/adak/Kconfig"
+source "packages/util/c-ray/Kconfig"
 source "packages/util/flashrom/Kconfig"
 source "packages/util/flashtool/Kconfig"
 source "packages/util/gnome-doc-utils/Kconfig"

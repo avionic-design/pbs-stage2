@@ -1,0 +1,74 @@
+diff --git a/Makefile b/Makefile
+index 8dbabb6..1fbefd6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,20 +1,29 @@
+-obj = c-ray-mt.o
+-bin = c-ray-mt
++prefix ?= /usr/local
+ 
+-CC = gcc
+-CFLAGS = -O3 -ffast-math
++CC ?= gcc
+ 
+-$(bin): $(obj)
+-	$(CC) -o $@ $(obj) -lm -lpthread
++
++all:
++	$(CC) -o c-ray-f c-ray-f.c -lm -pipe -O3 -ffast-math $(CFLAGS)
++	$(CC) -o c-ray-mt c-ray-mt.c -lpthread -lm -pipe -O3 -ffast-math $(CFLAGS)
+ 
+ .PHONY: clean
+ clean:
+-	rm -f $(obj) $(bin)
++	rm -f c-ray-f c-ray-mt
+ 
+ .PHONY: install
+ install:
+-	cp $(bin) /usr/local/bin/$(bin)
++	install -dm755 ${DESTDIR}${prefix}/{bin,share/doc/c-ray,share/c-ray} && \
++		install -m644 README ${DESTDIR}${prefix}/share/doc/c-ray && \
++		install -m644 sphfract ${DESTDIR}${prefix}/share/c-ray && \
++		install -m644 scene ${DESTDIR}${prefix}/share/c-ray && \
++		install -m755 c-ray-f ${DESTDIR}${prefix}/bin && \
++		install -m755 c-ray-mt ${DESTDIR}${prefix}/bin && \
++		install -m755 c-ray-run ${DESTDIR}${prefix}/bin && \
++		install -m755 c-ray-run-full ${DESTDIR}${prefix}/bin
+ 
+ .PHONY: uninstall
+ uninstall:
+-	rm -f /usr/local/bin/$(bin)
++	rm -f ${DESTDIR}${prefix}/bin/c-ray* && \
++		rm -rf ${DESTDIR}${prefix}/share/c-ray && \
++		rm -rf ${DESTDIR}${prefix}/share/doc/c-ray
+diff --git a/c-ray-run b/c-ray-run
+new file mode 100644
+index 0000000..9ca9279
+--- /dev/null
++++ b/c-ray-run
+@@ -0,0 +1,3 @@
++#!/bin/sh
++
++cat /usr/share/c-ray/scene | c-ray-f > foo.ppm
+diff --git a/c-ray-run-full b/c-ray-run-full
+new file mode 100644
+index 0000000..fe25c86
+--- /dev/null
++++ b/c-ray-run-full
+@@ -0,0 +1,16 @@
++#!/bin/sh
++
++_threads=`cat /proc/cpuinfo | grep -c processor`
++
++echo "Single thread test"
++cat /usr/share/c-ray/scene | c-ray-f > foo_st1.ppm
++cat /usr/share/c-ray/sphfract | c-ray-f > foo_st2.ppm
++cat /usr/share/c-ray/sphfract | c-ray-f -s 1024x768 -r 8 > foo_st3.ppm
++cat /usr/share/c-ray/scene | c-ray-f -s 7500x3500 > foo_st4.ppm
++
++echo
++echo "Multi thread test"
++cat /usr/share/c-ray/scene | c-ray-mt -t $_threads > foo_mt1.ppm
++cat /usr/share/c-ray/sphfract | c-ray-mt -t $_threads > foo_mt2.ppm
++cat /usr/share/c-ray/sphfract | c-ray-mt -t $_threads -s 1024x768 -r 8 > foo_mt3.ppm
++cat /usr/share/c-ray/scene | c-ray-mt -t $_threads -s 7500x3500 > foo_mt4.ppm

@@ -1,0 +1,5 @@
+config PACKAGE_UTIL_CRAY
+	bool "c-ray"
+	select VIRTUAL_DEVEL_LIBC
+	help
+	  Simple raytracer and CPU benchmark.
