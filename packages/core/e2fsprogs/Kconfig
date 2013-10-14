@@ -11,6 +11,7 @@ config PACKAGE_CORE_E2FSPROGS
 
 config PACKAGE_CORE_E2FSPROGS_USE_INTERNAL
 	bool "Use internal uuid implementation"
+	depends on PACKAGE_CORE_E2FSPROGS
 	help
 	  The e2fsprogs can provide its one version of uuidd, libuuid and
 	  libblkid. Which is also provided by util-linux package, to avoid
