@@ -6,3 +6,9 @@ config PACKAGE_LIBS_CAIRO
 	select PACKAGE_XORG_LIB_XEXT
 	select PACKAGE_XORG_LIB_XRENDER
 	select VIRTUAL_OPENGL_ES if HAVE_OPENGL_ES
+	help
+	  Cairo is a 2D graphics library designed to provide high-quality display
+	  and print output.
+	  Cairo is designed to produce consistent output on all output media while
+	  taking advantage of display hardware acceleration when available (e.g.
+	  through the X Render Extension or OpenGL).

@@ -1,5 +1,5 @@
 PACKAGE = cairo
-VERSION = 1.12.14
+VERSION = 1.12.16
 LICENSE = LGPL MPL
 
 LOCATION = http://cairographics.org/releases
@@ -9,12 +9,14 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
-	--enable-xcb
+	--disable-full-testing \
+	--enable-cogl=no
 
+ifeq ($(CONFIG_HAVE_OPENGL),y)
+conf-args += --enable-gl=auto
+endif
 ifeq ($(CONFIG_HAVE_OPENGL_ES),y)
-conf-args += \
-	--enable-glesv2=auto \
-	--enable-cogl=auto
+conf-args += --enable-glesv2=auto
 endif
 
 prunefiles = \
