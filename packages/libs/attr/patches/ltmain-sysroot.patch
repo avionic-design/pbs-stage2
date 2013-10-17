@@ -1,8 +1,10 @@
 diff --git a/ltmain.sh b/ltmain.sh
-index aa5624c..0b11ae2 100755
+old mode 100644
+new mode 100755
+index 63ae69d..79fb897
 --- a/ltmain.sh
 +++ b/ltmain.sh
-@@ -6904,7 +6904,7 @@ func_mode_link ()
+@@ -6918,7 +6918,7 @@ func_mode_link ()
  	      fi
  	    else
  	      # We cannot seem to hardcode it, guess we'll fake it.

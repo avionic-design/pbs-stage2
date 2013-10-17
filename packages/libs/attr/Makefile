@@ -1,5 +1,5 @@
 PACKAGE = attr
-VERSION = 2.4.46
+VERSION = 2.4.47
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).src.tar.gz
@@ -50,7 +50,8 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/attr \
 	$(prefix)/bin/getfattr \
-	$(prefix)/bin/setfattr
+	$(prefix)/bin/setfattr \
+	$(prefix)/lib/*.so.*
 
 include packages/cleanup.mk
 include packages/binary.mk
