@@ -1,5 +1,5 @@
 PACKAGE = fuse
-VERSION = 2.9.2
+VERSION = 2.9.3
 LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
