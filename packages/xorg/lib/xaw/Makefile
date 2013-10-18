@@ -1,5 +1,5 @@
 PACKAGE = libXaw
-VERSION = 1.0.11
+VERSION = 1.0.12
 LICENSE = custom
 
 include packages/xorg/lib/common.mk
