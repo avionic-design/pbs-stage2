@@ -1,5 +1,5 @@
 PACKAGE = libXcursor
-VERSION = 1.1.13
+VERSION = 1.1.14
 
 include packages/xorg/lib/common.mk
 
