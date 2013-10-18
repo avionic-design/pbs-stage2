@@ -1,2 +1,2 @@
 version=3
-http://sqlite.org/sqlite-(.*)\.tar\.bz2
+http://sqlite.org/2013/sqlite-(.*)\.tar\.gz
