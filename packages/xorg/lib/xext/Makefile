@@ -1,5 +1,5 @@
 PACKAGE = libXext
-VERSION = 1.3.1
+VERSION = 1.3.2
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
