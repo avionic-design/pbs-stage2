@@ -1,5 +1,5 @@
 PACKAGE = libfontenc
-VERSION = 1.1.1
+VERSION = 1.1.2
 
 include packages/xorg/lib/common.mk
 
