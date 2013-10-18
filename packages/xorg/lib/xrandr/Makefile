@@ -1,5 +1,5 @@
 PACKAGE = libXrandr
-VERSION = 1.4.0
+VERSION = 1.4.2
 LICENSE = custom
 
 include packages/xorg/lib/common.mk
