@@ -1,5 +1,5 @@
 PACKAGE = libXpm
-VERSION = 3.5.10
+VERSION = 3.5.11
 
 include packages/xorg/lib/common.mk
 
