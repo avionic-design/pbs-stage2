@@ -1,5 +1,5 @@
 PACKAGE = libpng
-VERSION = 1.5.14
+VERSION = 1.5.17
 LICENSE = custom
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
