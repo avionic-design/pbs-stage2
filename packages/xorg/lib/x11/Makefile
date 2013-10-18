@@ -1,8 +1,8 @@
 PACKAGE = libX11
-VERSION = 1.5.0
+VERSION = 1.6.2
 LICENSE = MIT X
 
-include packages/xorg/lib/common.mk
+include packages/xorg/lib/common-reconf.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT)
