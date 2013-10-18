@@ -1,5 +1,5 @@
 PACKAGE = xcb-util-wm
-VERSION = 0.3.8
+VERSION = 0.3.9
 
 LOCATION = http://xcb.freedesktop.org/dist
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
