@@ -3,3 +3,9 @@ config PACKAGE_LIBS_LIBEV
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	help
+	  High-performance event loop/event model with lots of features
+
+	  Libev is modeled (very loosely) after libevent and the Event Perl
+	  module, but is faster, scales better and is more correct, and also more
+	  featureful. And also smaller.
