@@ -1,5 +1,5 @@
 PACKAGE = libXfixes
-VERSION = 5.0
+VERSION = 5.0.1
 
 include packages/xorg/lib/common.mk
 
