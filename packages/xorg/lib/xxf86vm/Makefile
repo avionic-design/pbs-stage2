@@ -1,5 +1,5 @@
 PACKAGE = libXxf86vm
-VERSION = 1.1.2
+VERSION = 1.1.3
 
 include packages/xorg/lib/common.mk
 
