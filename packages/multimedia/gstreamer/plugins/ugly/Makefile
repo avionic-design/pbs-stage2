@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))

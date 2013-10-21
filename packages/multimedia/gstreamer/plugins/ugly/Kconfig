@@ -4,3 +4,10 @@ config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_UGLY
 	select PACKAGE_MULTIMEDIA_LIBID3TAG
 	select PACKAGE_MULTIMEDIA_LIBMAD
 	select PACKAGE_MULTIMEDIA_MPEG2DEC
+	help
+	  This package contains well-written plug-ins that can't be shipped in
+	  gstreamer-plugins-good because:
+	   - the license is not LGPL
+	   - the license of the library is not LGPL
+	   - there are possible licensing issues with the code.
+
