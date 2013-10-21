@@ -1,5 +1,5 @@
 PACKAGE = orc
-VERSION = 0.4.16
+VERSION = 0.4.18
 LICENSE = custom
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
