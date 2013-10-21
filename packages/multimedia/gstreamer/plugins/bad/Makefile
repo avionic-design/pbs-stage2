@@ -33,6 +33,13 @@ conf-args += \
 	--with-sdl-prefix=$(SYSROOT)$(prefix)
 endif
 
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_ORC),y)
+  conf-vars += ORCC=orcc
+  conf-args += --enable-orc
+else
+  conf-args += --disable-orc
+endif
+
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE),y)
 conf-args += \
 	--disable-adpcmdec \

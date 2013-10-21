@@ -14,7 +14,7 @@ conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-system-libav
 
-ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_LIBAV_ORC),y)
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_ORC),y)
   conf-vars += ORCC=orcc
   conf-args += --enable-orc
 else

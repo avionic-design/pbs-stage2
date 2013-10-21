@@ -12,8 +12,7 @@ include packages/autotools-reconf.mk
 
 conf-args += \
 	--disable-examples \
-	--disable-rpath \
-	--disable-orc
+	--disable-rpath
 
 ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
 conf-args += \
@@ -22,6 +21,13 @@ endif
 ifneq ($(PACKAGE_MULTIMEDIA_LIBOGG),y)
 conf-args += \
 	--disable-ogg
+endif
+
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_ORC),y)
+  conf-vars += ORCC=orcc
+  conf-args += --enable-orc
+else
+  conf-args += --disable-orc
 endif
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE),y)
