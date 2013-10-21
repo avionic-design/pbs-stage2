@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-good
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -10,14 +10,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
-env += FATAL_WARNINGS=no
-
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
+	--disable-examples \
+	--disable-shout2 \
 	--disable-aalib \
-	--disable-annodex \
-	--disable-esd \
-	--disable-shout2
+	--disable-rpath \
+	--disable-orc
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_RARE),y)
 conf-args += \

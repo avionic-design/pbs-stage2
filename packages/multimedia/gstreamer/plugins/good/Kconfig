@@ -1,3 +1,6 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_GOOD
 	bool "good"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_BASE
+	help
+	  GStreamer Good Plugins is a collection of well-supported plugins of
+	  good quality and under the LGPL license.

@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 5372c40..6095ec7 100644
+index 86807f5..0b31ffe 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -23,6 +23,9 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
+@@ -21,6 +21,9 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
  dnl can autoconf find the source ?
  AC_CONFIG_SRCDIR([gst/law/alaw.c])
  
@@ -10,9 +10,9 @@ index 5372c40..6095ec7 100644
 +AC_CONFIG_MACRO_DIR([m4])
 +
  dnl define the output header for config
- AM_CONFIG_HEADER([config.h])
+ AC_CONFIG_HEADERS([config.h])
  
-@@ -583,76 +586,32 @@ dnl Check for X11
+@@ -637,76 +640,32 @@ dnl Check for X11
  translit(dnm, m, l) AM_CONDITIONAL(USE_X, true)
  AG_GST_CHECK_FEATURE(X, [X libraries and plugins],
                    [ximagesrc], [
