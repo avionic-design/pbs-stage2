@@ -1,5 +1,5 @@
 PACKAGE = libusb-compat
-VERSION = 0.1.4
+VERSION = 0.1.5
 LICENSE = LGPL
 
 LOCATION = http://prdownloads.sourceforge.net/libusb
