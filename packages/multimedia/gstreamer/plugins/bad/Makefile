@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-bad
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -18,13 +18,13 @@ conf-args += \
 	--disable-dvdspu \
 	--disable-camerabin2 \
 	--disable-dvbsuboverlay \
-	--disable-dtmf \
 	--disable-fieldanalysis \
 	--disable-gaudieffects \
 	--disable-geometrictransform \
 	--disable-decklink \
 	--disable-rsvg \
-	--disable-hls
+	--disable-hls \
+	--disable-uvch264
 
 ifneq ($(CONFIG_PACKAGE_LIBS_SDL_CORE),y)
 conf-args += --disable-sdl

@@ -1,10 +1,1 @@
 ltmain-sysroot.patch
-0001-tsdemux-Fix-caps-string-leak.patch
-0002-mpegtsdemux-Fix-various-compiler-warnings.patch
-0003-tsdemux-remove-unused-current_program_number-field.patch
-0004-mpegtsbase-Call-program_stopped-after-removing-all-s.patch
-0005-tsdemux-Check-the-continuity-counter-for-non-section.patch
-0006-mpegtsdemux-check-value-before-using-as-denominator.patch
-0007-mpegtsdemux-header-cleanups-updates.patch
-0008-tsdemux-convert-packet-PTS-DTS-as-soon-as-possible.patch
-0001-dvb-Fix-build-warning-due-missing-argument.patch

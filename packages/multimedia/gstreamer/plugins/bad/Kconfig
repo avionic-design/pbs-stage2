@@ -1,4 +1,6 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_BAD
 	bool "bad"
-	select PACKAGE_MULTIMEDIA_GSTREAMER_CORE
 	select PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_LIBAV
+	help
+	  This package contains plug-ins that aren't tested well enough, or the code
+	  is not of good enough quality.
