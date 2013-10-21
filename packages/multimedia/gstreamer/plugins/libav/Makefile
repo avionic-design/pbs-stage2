@@ -1,5 +1,5 @@
 PACKAGE = gst-libav
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -10,15 +10,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-env += FATAL_WARNINGS=no
-
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-system-libav
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_LIBAV_ORC),y)
-  conf-args += --enable-orc
   conf-vars += ORCC=orcc
+  conf-args += --enable-orc
 else
   conf-args += --disable-orc
 endif
