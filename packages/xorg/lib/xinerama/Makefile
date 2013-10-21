@@ -1,5 +1,5 @@
 PACKAGE = libXinerama
-VERSION = 1.1.2
+VERSION = 1.1.3
 
 ifeq ($(CONFIG_XORG_IEGD),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
