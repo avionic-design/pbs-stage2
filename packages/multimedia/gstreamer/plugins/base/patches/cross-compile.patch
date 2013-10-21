@@ -1,8 +1,8 @@
 diff --git a/configure.ac b/configure.ac
-index 0165d31..191e23b 100644
+index 20f4d4e..416b811 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -23,6 +23,9 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
+@@ -21,6 +21,9 @@ AS_NANO(GST_GIT="no", GST_GIT="yes")
  dnl can autoconf find the source ?
  AC_CONFIG_SRCDIR([gst/audiotestsrc/gstaudiotestsrc.c])
  
@@ -10,9 +10,9 @@ index 0165d31..191e23b 100644
 +AC_CONFIG_MACRO_DIR([m4])
 +
  dnl define the output header for config
- AM_CONFIG_HEADER([config.h])
+ AC_CONFIG_HEADERS([config.h])
  
-@@ -488,30 +491,12 @@ dnl *** X11 ***
+@@ -508,30 +511,12 @@ dnl *** X11 ***
  translit(dnm, m, l) AM_CONDITIONAL(USE_X, true)
  AG_GST_CHECK_FEATURE(X, [X libraries and plugins],
                    [ximagesink], [

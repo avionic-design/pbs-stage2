@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-base
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -12,6 +12,7 @@ include packages/autotools-reconf.mk
 
 conf-args += \
 	--disable-examples \
+	--disable-rpath \
 	--disable-orc
 
 ifneq ($(PACKAGE_MULTIMEDIA_LIBVORBIS),y)
