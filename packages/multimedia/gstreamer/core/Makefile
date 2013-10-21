@@ -1,5 +1,5 @@
 PACKAGE = gstreamer
-VERSION = 1.0.7
+VERSION = 1.2.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -10,8 +10,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-env += FATAL_WARNINGS=no
-
 conf-args += \
 	--libexecdir=$(prefix)/lib \
 	--with-sysroot=$(SYSROOT) \
@@ -19,10 +17,6 @@ conf-args += \
 	--disable-examples \
 	--disable-tests \
 	--disable-check
-
-conf-vars += \
-	ac_cv_func_register_printf_specifier=no \
-	ac_cv_func_register_printf_function=no
 
 plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
