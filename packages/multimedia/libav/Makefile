@@ -1,5 +1,5 @@
 PACKAGE = libav
-VERSION = 0.8.7
+VERSION = 9.10
 
 LOCATION = http://libav.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -15,8 +15,6 @@ conf-args = \
 	--sysroot=$(SYSROOT) \
 	--enable-shared \
 	--enable-gpl \
-	--enable-postproc \
-	--enable-swscale \
 	--disable-encoders \
 	--disable-doc \
 	$(platform-conf-args)
