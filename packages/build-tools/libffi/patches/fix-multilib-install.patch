@@ -11,3 +11,190 @@ index 8f1362a..4ea9284 100644
  noinst_LTLIBRARIES = libffi_convenience.la
  
  libffi_la_SOURCES = src/prep_cif.c src/types.c \
+diff --git a/Makefile.in b/Makefile.in
+index fc5e80e..63f4bb2 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -142,9 +142,9 @@ am__uninstall_files_from_dir = { \
+     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
+          $(am__cd) "$$dir" && rm -f $$files; }; \
+   }
+-am__installdirs = "$(DESTDIR)$(toolexeclibdir)" "$(DESTDIR)$(infodir)" \
++am__installdirs = "$(DESTDIR)$(libdir)" "$(DESTDIR)$(infodir)" \
+ 	"$(DESTDIR)$(pkgconfigdir)"
+-LTLIBRARIES = $(noinst_LTLIBRARIES) $(toolexeclib_LTLIBRARIES)
++LTLIBRARIES = $(lib_LTLIBRARIES) $(noinst_LTLIBRARIES)
+ libffi_la_LIBADD =
+ am__dirstamp = $(am__leading_dot)dirstamp
+ am_libffi_la_OBJECTS = src/prep_cif.lo src/types.lo src/raw_api.lo \
+@@ -549,7 +549,7 @@ AM_MAKEFLAGS = \
+ # Subdir rules rely on $(FLAGS_TO_PASS)
+ FLAGS_TO_PASS = $(AM_MAKEFLAGS)
+ MAKEOVERRIDES = 
+-toolexeclib_LTLIBRARIES = libffi.la
++lib_LTLIBRARIES = libffi.la
+ noinst_LTLIBRARIES = libffi_convenience.la
+ libffi_la_SOURCES = src/prep_cif.c src/types.c \
+ 		src/raw_api.c src/java_raw_api.c src/closures.c
+@@ -630,44 +630,44 @@ distclean-hdr:
+ 	-rm -f fficonfig.h stamp-h1
+ libffi.pc: $(top_builddir)/config.status $(srcdir)/libffi.pc.in
+ 	cd $(top_builddir) && $(SHELL) ./config.status $@
+-
+-clean-noinstLTLIBRARIES:
+-	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
+-	@list='$(noinst_LTLIBRARIES)'; \
+-	locs=`for p in $$list; do echo $$p; done | \
+-	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+-	      sort -u`; \
+-	test -z "$$locs" || { \
+-	  echo rm -f $${locs}; \
+-	  rm -f $${locs}; \
+-	}
+-install-toolexeclibLTLIBRARIES: $(toolexeclib_LTLIBRARIES)
++install-libLTLIBRARIES: $(lib_LTLIBRARIES)
+ 	@$(NORMAL_INSTALL)
+-	@list='$(toolexeclib_LTLIBRARIES)'; test -n "$(toolexeclibdir)" || list=; \
++	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+ 	list2=; for p in $$list; do \
+ 	  if test -f $$p; then \
+ 	    list2="$$list2 $$p"; \
+ 	  else :; fi; \
+ 	done; \
+ 	test -z "$$list2" || { \
+-	  echo " $(MKDIR_P) '$(DESTDIR)$(toolexeclibdir)'"; \
+-	  $(MKDIR_P) "$(DESTDIR)$(toolexeclibdir)" || exit 1; \
+-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(toolexeclibdir)'"; \
+-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(toolexeclibdir)"; \
++	  echo " $(MKDIR_P) '$(DESTDIR)$(libdir)'"; \
++	  $(MKDIR_P) "$(DESTDIR)$(libdir)" || exit 1; \
++	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 '$(DESTDIR)$(libdir)'"; \
++	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$list2 "$(DESTDIR)$(libdir)"; \
+ 	}
+ 
+-uninstall-toolexeclibLTLIBRARIES:
++uninstall-libLTLIBRARIES:
+ 	@$(NORMAL_UNINSTALL)
+-	@list='$(toolexeclib_LTLIBRARIES)'; test -n "$(toolexeclibdir)" || list=; \
++	@list='$(lib_LTLIBRARIES)'; test -n "$(libdir)" || list=; \
+ 	for p in $$list; do \
+ 	  $(am__strip_dir) \
+-	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(toolexeclibdir)/$$f'"; \
+-	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(toolexeclibdir)/$$f"; \
++	  echo " $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$f'"; \
++	  $(LIBTOOL) $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$f"; \
+ 	done
+ 
+-clean-toolexeclibLTLIBRARIES:
+-	-test -z "$(toolexeclib_LTLIBRARIES)" || rm -f $(toolexeclib_LTLIBRARIES)
+-	@list='$(toolexeclib_LTLIBRARIES)'; \
++clean-libLTLIBRARIES:
++	-test -z "$(lib_LTLIBRARIES)" || rm -f $(lib_LTLIBRARIES)
++	@list='$(lib_LTLIBRARIES)'; \
++	locs=`for p in $$list; do echo $$p; done | \
++	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
++	      sort -u`; \
++	test -z "$$locs" || { \
++	  echo rm -f $${locs}; \
++	  rm -f $${locs}; \
++	}
++
++clean-noinstLTLIBRARIES:
++	-test -z "$(noinst_LTLIBRARIES)" || rm -f $(noinst_LTLIBRARIES)
++	@list='$(noinst_LTLIBRARIES)'; \
+ 	locs=`for p in $$list; do echo $$p; done | \
+ 	      sed 's|^[^/]*$$|.|; s|/[^/]*$$||; s|$$|/so_locations|' | \
+ 	      sort -u`; \
+@@ -944,7 +944,7 @@ src/xtensa/sysv.lo: src/xtensa/$(am__dirstamp) \
+ src/xtensa/ffi.lo: src/xtensa/$(am__dirstamp) \
+ 	src/xtensa/$(DEPDIR)/$(am__dirstamp)
+ libffi.la: $(libffi_la_OBJECTS) $(libffi_la_DEPENDENCIES) $(EXTRA_libffi_la_DEPENDENCIES) 
+-	$(libffi_la_LINK) -rpath $(toolexeclibdir) $(libffi_la_OBJECTS) $(libffi_la_LIBADD) $(LIBS)
++	$(libffi_la_LINK) -rpath $(libdir) $(libffi_la_OBJECTS) $(libffi_la_LIBADD) $(LIBS)
+ libffi_convenience.la: $(libffi_convenience_la_OBJECTS) $(libffi_convenience_la_DEPENDENCIES) $(EXTRA_libffi_convenience_la_DEPENDENCIES) 
+ 	$(LINK)  $(libffi_convenience_la_OBJECTS) $(libffi_convenience_la_LIBADD) $(LIBS)
+ 
+@@ -1659,7 +1659,7 @@ check: check-recursive
+ all-am: Makefile $(INFO_DEPS) $(LTLIBRARIES) $(DATA) fficonfig.h
+ installdirs: installdirs-recursive
+ installdirs-am:
+-	for dir in "$(DESTDIR)$(toolexeclibdir)" "$(DESTDIR)$(infodir)" "$(DESTDIR)$(pkgconfigdir)"; do \
++	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(infodir)" "$(DESTDIR)$(pkgconfigdir)"; do \
+ 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+ 	done
+ install: install-recursive
+@@ -1741,9 +1741,8 @@ maintainer-clean-generic:
+ 	@echo "it deletes files that may require special tools to rebuild."
+ clean: clean-recursive
+ 
+-clean-am: clean-aminfo clean-generic clean-libtool \
+-	clean-noinstLTLIBRARIES clean-toolexeclibLTLIBRARIES \
+-	mostlyclean-am
++clean-am: clean-aminfo clean-generic clean-libLTLIBRARIES \
++	clean-libtool clean-noinstLTLIBRARIES mostlyclean-am
+ 
+ distclean: distclean-recursive
+ 	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+@@ -1783,7 +1782,7 @@ install-dvi-am: $(DVIS)
+ 	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(dvidir)'"; \
+ 	  $(INSTALL_DATA) $$files "$(DESTDIR)$(dvidir)" || exit $$?; \
+ 	done
+-install-exec-am: install-toolexeclibLTLIBRARIES
++install-exec-am: install-libLTLIBRARIES
+ 
+ install-html: install-html-recursive
+ 
+@@ -1905,8 +1904,8 @@ ps: ps-recursive
+ ps-am: $(PSS)
+ 
+ uninstall-am: uninstall-dvi-am uninstall-html-am uninstall-info-am \
+-	uninstall-pdf-am uninstall-pkgconfigDATA uninstall-ps-am \
+-	uninstall-toolexeclibLTLIBRARIES
++	uninstall-libLTLIBRARIES uninstall-pdf-am \
++	uninstall-pkgconfigDATA uninstall-ps-am
+ 
+ .MAKE: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) all \
+ 	cscopelist-recursive ctags-recursive install-am install-strip \
+@@ -1914,28 +1913,26 @@ uninstall-am: uninstall-dvi-am uninstall-html-am uninstall-info-am \
+ 
+ .PHONY: $(RECURSIVE_CLEAN_TARGETS) $(RECURSIVE_TARGETS) CTAGS GTAGS \
+ 	all all-am am--refresh check check-am clean clean-aminfo \
+-	clean-cscope clean-generic clean-libtool \
+-	clean-noinstLTLIBRARIES clean-toolexeclibLTLIBRARIES cscope \
+-	cscopelist cscopelist-recursive ctags ctags-recursive dist \
+-	dist-all dist-bzip2 dist-gzip dist-info dist-lzip dist-shar \
+-	dist-tarZ dist-xz dist-zip distcheck distclean \
+-	distclean-compile distclean-generic distclean-hdr \
+-	distclean-libtool distclean-tags distcleancheck distdir \
+-	distuninstallcheck dvi dvi-am html html-am info info-am \
+-	install install-am install-data install-data-am install-dvi \
+-	install-dvi-am install-exec install-exec-am install-html \
+-	install-html-am install-info install-info-am install-man \
+-	install-pdf install-pdf-am install-pkgconfigDATA install-ps \
+-	install-ps-am install-strip install-toolexeclibLTLIBRARIES \
++	clean-cscope clean-generic clean-libLTLIBRARIES clean-libtool \
++	clean-noinstLTLIBRARIES cscope cscopelist cscopelist-recursive \
++	ctags ctags-recursive dist dist-all dist-bzip2 dist-gzip \
++	dist-info dist-lzip dist-shar dist-tarZ dist-xz dist-zip \
++	distcheck distclean distclean-compile distclean-generic \
++	distclean-hdr distclean-libtool distclean-tags distcleancheck \
++	distdir distuninstallcheck dvi dvi-am html html-am info \
++	info-am install install-am install-data install-data-am \
++	install-dvi install-dvi-am install-exec install-exec-am \
++	install-html install-html-am install-info install-info-am \
++	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
++	install-pkgconfigDATA install-ps install-ps-am install-strip \
+ 	installcheck installcheck-am installdirs installdirs-am \
+ 	maintainer-clean maintainer-clean-aminfo \
+ 	maintainer-clean-generic maintainer-clean-vti mostlyclean \
+ 	mostlyclean-aminfo mostlyclean-compile mostlyclean-generic \
+ 	mostlyclean-libtool mostlyclean-vti pdf pdf-am ps ps-am tags \
+ 	tags-recursive uninstall uninstall-am uninstall-dvi-am \
+-	uninstall-html-am uninstall-info-am uninstall-pdf-am \
+-	uninstall-pkgconfigDATA uninstall-ps-am \
+-	uninstall-toolexeclibLTLIBRARIES
++	uninstall-html-am uninstall-info-am uninstall-libLTLIBRARIES \
++	uninstall-pdf-am uninstall-pkgconfigDATA uninstall-ps-am
+ 
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
