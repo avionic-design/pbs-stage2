@@ -110,12 +110,16 @@ while ! test -e "$dev"; do
 done
 log_action_end_msg $?
 
-# if initrd contains a utils for filesystem check use them at least
-# on the filesystem containing the rootfs.img file.
-if test -x /usr/sbin/fsck; then
-	log_action_begin_msg "Checking root device: $dev"
-	PATH=$PATH:/usr/sbin /usr/sbin/fsck -p $dev
-	log_action_end_msg $?
+# If initrd contains a executable for filesystem checks use it,
+# to check at least all linux partitions before they gets mounted.
+if test -x /usr/sbin/e2fsck
+then
+	for i in `fdisk -l | grep Linux | sed '/^Disk/d'|sed 's/^\([^ ]*\)  *.*/\1/'`
+	do
+		log_action_begin_msg "Checking partition: $i"
+		/usr/sbin/e2fsck -p $i
+		log_action_end_msg $?
+	done
 fi
 
 log_action_begin_msg "Mounting root filesystem: $mp"
