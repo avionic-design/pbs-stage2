@@ -1,5 +1,15 @@
 config PACKAGE_LIBS_LIBSOUP
 	bool "libsoup"
-	select PACKAGE_LIBS_GNUTLS
+	select PACKAGE_LIBS_GLIB_NETWORKING
 	select PACKAGE_LIBS_LIBXML2
 	select PACKAGE_LIBS_SQLITE
+	help
+	  Libsoup is an HTTP library implementation in C. It was originally part
+	  of a SOAP (Simple Object Access Protocol) implementation called Soup, but
+	  the SOAP and non-SOAP parts have now been split into separate packages.
+
+	  libsoup uses the Glib main loop and is designed to work well with GTK
+	  applications. This enables GNOME applications to access HTTP servers
+	  on the network in a completely asynchronous fashion, very similar to
+	  the Gtk+ programming model (a synchronous operation mode is also
+	  supported for those who want it).
