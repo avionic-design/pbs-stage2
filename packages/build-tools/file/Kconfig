@@ -1,5 +1,5 @@
 config PACKAGE_BUILD_TOOLS_FILE
-	bool "flex"
+	bool "file"
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	help
