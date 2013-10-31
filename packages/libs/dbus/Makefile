@@ -4,7 +4,7 @@ include packages/autotools.mk
 conf-args += \
 	--libexec=$(prefix)/lib/dbus-1.0 \
 	--disable-modular-tests \
-	--with-root=$(SYSROOT)
+	--with-sysroot=$(SYSROOT)
 
 ifeq ($(CONFIG_PACKAGE_LIBS_DBUS_X11),y)
   conf-args += --with-x
