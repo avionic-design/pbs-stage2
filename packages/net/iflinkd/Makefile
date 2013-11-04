@@ -1,5 +1,5 @@
 PACKAGE = iflinkd
-VERSION = 0.2.4
+VERSION = 0.2.6
 LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
