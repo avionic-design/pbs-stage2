@@ -1,6 +1,9 @@
 include packages/kernel/kmod/Makefile.location
 include packages/autotools.mk
 
+conf-args += \
+	--disable-manpages
+
 dirs = \
 	$(prefix)/bin \
 	$(prefix)/sbin
