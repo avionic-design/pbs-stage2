@@ -1,5 +1,5 @@
 PACKAGE = clutter
-VERSION = 1.12.2
+VERSION = 1.14.4
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -10,8 +10,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools.mk
 
 conf-args += \
-	--disable-examples \
 	--disable-tests \
+	--disable-examples \
+	--disable-conformance \
+	--enable-introspection=no \
 	--enable-egl-backend=yes
 
 prunefiles = \
