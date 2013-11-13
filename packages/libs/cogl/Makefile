@@ -1,5 +1,5 @@
 PACKAGE = cogl
-VERSION = 1.12.2
+VERSION = 1.16.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -11,13 +11,19 @@ include packages/autotools.mk
 
 conf-args += \
 	--disable-nls \
-	--enable-gtk-doc=no
+	--disable-glibtest \
+	--enable-cairo=no \
+	--enable-gtk-doc=no \
+	--enable-introspection=no \
 
+ifneq ($(CONFIG_HAVE_OPENGL),y)
+conf-args += \
+	--enable-gl=no
+endif
 ifeq ($(CONFIG_HAVE_OPENGL_ES),y)
 conf-args += \
-	--enable-gles1=no \
 	--enable-gles2=yes \
-	--enable-gl=no
+	--enable-cogl-gles2
 endif
 
 prunefiles = \
