@@ -18,7 +18,7 @@ index 6ae8529..c4d48fa 100644
  	for dir in $(ICON_SIZES); do \
  	  for ctxt in $(ICON_CONTEXTS); do \
  	    mkdir -p $(DESTDIR)$(datadir)/icons/hicolor/$$dir/$$ctxt; \
-@@ -42,10 +43,10 @@ tag:
+@@ -42,11 +43,13 @@ tag:
  	cvs tag DEFAULT_ICON_THEME_`echo $(VERSION)|sed "s/\./_/"`
  
  # cause rebuilds
@@ -27,8 +27,12 @@ index 6ae8529..c4d48fa 100644
  	./config.status Makefile
 -configure: configure.ac
 -	autoconf
+-config.status: configure
++
 +configure: $(srcdir)/configure.ac
 +	cd $(srcdir) && autoconf
- config.status: configure
++
++$(srcdir)/config.status: configure
  	./config.status --recheck
  
+ .PHONY: all install dist tag
