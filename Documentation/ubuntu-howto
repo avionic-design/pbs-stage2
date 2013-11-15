@@ -32,6 +32,11 @@ install them as well.
    $ sudo apt-get install gperf device-tree-compiler intltool
    $ sudo apt-get install luadoc imagemagick libxml-simple-perl
 
+To validate, that you have at least the essential tools required by PBS
+installed, you should run the following command:
+
+   $ ./configure
+
 
 Prepare your self:
 ------------------
@@ -66,7 +71,7 @@ Checkout PBS:
 -------------
 
 The latest version of PBS splits the base and the platform specific stuff
-into seperate repositories. So you have to use a recursive checkout.
+into separate repositories. So you have to use a recursive checkout.
 
    $ cd ~/devel
    $ git clone --recursive https://github.com/avionic-design/pbs-stage2
@@ -75,7 +80,7 @@ NOTE: Not all platforms (sub-repositories) are publicly accessible, so if you
       do not have the required access or you've been asked for your username,
       you can safely abort the checkout at this point.
 
-Now prepare the build enviroment.
+Now prepare the build environment.
 
    $ cd pbs-stage2
    $ mkdir build download logs
@@ -90,9 +95,9 @@ list.
    EOF
 
 To avoid the need of root permissions, we update our user-configuration file
-to avoid the usage of mount. This will slow down the final buildstep a bit.
+to avoid the usage of mount. This will slow down the final build-step a bit.
 
-    $ cat >> .pbs.mk << EOF
+    $ cat >> pbs.mk << EOF
     export INITRD_MOUNT_TMPFS=n
     export ROOTFS_MOUNT_TMPFS=n
     EOF
@@ -101,19 +106,13 @@ to avoid the usage of mount. This will slow down the final buildstep a bit.
 Build Toolchains for ARM:
 -------------------------
 
-NOTE: The toolchain you create here is softfp only. For a hardfp toolchain
-      please use pbs-stage1, or use your own toolchain. Please refer to:
-      Documenation/user-configuration TOOLCHAIN_BASE_PATH.
+The PBS is tested with toolchains build via pbs-stage1. You can find this
+project here: https://github.com/avionic-design/pbs-stage1
 
-These steps can take a long time depending on your system speed. Be patient
-and get a coffee.
+Please refer to: Documentation/user-configuration item TOOLCHAIN_BASE_PATH.
 
-   $ nice make O=toolchains/arm-unknown-linux-uclibceabi
-   $ nice make O=toolchains/arm-unknown-linux-gnueabi
-
-If you already have a toolchain (e.g from linaro) you can update your pbs.mk
-file to use it and skip this part. See Documenation/user-configuration for
-details.
+NOTE: If you already have a toolchain (e.g from linaro) you can use it.
+      But we can not guaranty that every think works.
 
 
 Build Platform:
