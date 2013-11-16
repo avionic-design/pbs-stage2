@@ -2,7 +2,8 @@ include packages/kernel/kmod/Makefile.location
 include packages/build-tools/autotools.mk
 
 conf-args += \
-	--disable-manpages
+	--disable-manpages \
+	--without-bashcompletiondir
 
 quiet_cmd_symlink = SYMLINK $@
       cmd_symlink = ln -s $(<F) $@
