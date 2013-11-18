@@ -12,6 +12,9 @@ include packages/autotools.mk
 engine = $(prefix)/lib/xfce4/session/splash-engines
 panel = $(prefix)/lib/xfce4/panel/plugins
 
+env += \
+	ICEAUTH=$(prefix)/bin/iceauth
+
 prunefiles = \
 	$(prefix)/lib/*.la \
 	$(engine)/*.la \
