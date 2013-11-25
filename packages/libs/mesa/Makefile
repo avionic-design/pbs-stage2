@@ -26,8 +26,10 @@ $(pkgtree)/.autoreconfigure: $(pkgtree)/.patch
 pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
 
 conf-args += \
-	--host=$(TARGET) \
+	--build=$(BUILD_GNU_TYPE) \
+	--host=$(HOST_GNU_TYPE) \
 	--prefix=$(prefix) \
+	--libdir=$(prefix)/lib \
 	--mandir=$(prefix)/share/man \
 	--infodir=$(prefix)/share/info \
 	--localstatedir=/var \
