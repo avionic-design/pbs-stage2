@@ -5,7 +5,7 @@ LICENSE = LPGL
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la
