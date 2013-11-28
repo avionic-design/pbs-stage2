@@ -1,0 +1,5 @@
+config PACKAGE_MULTIMEDIA_VAAPI_LIBVA_VDPAU
+	bool "libva-driver-vdpau"
+	select PACKAGE_MULTIMEDIA_VAAPI_LIBVA
+	help
+	  HW video decode support for VDPAU platforms.
