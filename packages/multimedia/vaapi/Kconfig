@@ -1,5 +1,6 @@
 menu "Video Acceleration (VA) API"
 
 source "packages/multimedia/vaapi/libva/Kconfig"
+source "packages/multimedia/vaapi/libva-drv-intel/Kconfig"
 
 endmenu
