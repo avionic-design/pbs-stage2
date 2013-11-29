@@ -1,5 +1,8 @@
-		 Ubuntu - 12.04 LTS - PBS HowTo
-		================================
+		 Platform Build System - HowTo
+		===============================
+
+This howto is intended to guide you through the basic usage of PBS. It has
+been confirmed to work with Ubuntu 12.04 LTS and Fedora 20.
 
 PBS builds everything from scratch. We try to keep the dependencies to the
 host system as little as possible. But not all packages have complete
@@ -94,37 +97,44 @@ list.
    logs
    EOF
 
-To avoid the need of root permissions, we update our user-configuration file
-to avoid the usage of mount. This will slow down the final build-step a bit.
+Before you can start building, a user configuration file needs to be set
+up. TOOLCHAINS_BASE_PATH shall contain the path to the toolchains to be
+used for compiling. To avoid confusion an absolute path is recommended.
+
+To avoid the need of root permissions, additional variables can be set
+to prevent the usage of mount.
+
+The user configuration file must be named "pbs.mk" and reside in the PBS
+top level directory. Generate it with the following commands, replacing
+the toolchain path with your own path (without brackets):
 
     $ cat >> pbs.mk << EOF
+    export TOOLCHAINS_BASE_PATH=<path_to_toolchains>
     export INITRD_MOUNT_TMPFS=n
     export ROOTFS_MOUNT_TMPFS=n
     EOF
 
 
-Build Toolchains for ARM:
--------------------------
+Build Toolchains (PBS Stage 1):
+-------------------------------
 
-The PBS is tested with toolchains build via pbs-stage1. You can find this
+The PBS is tested with toolchains built by pbs-stage1. You can find this
 project here: https://github.com/avionic-design/pbs-stage1
 
-Please refer to: Documentation/user-configuration item TOOLCHAIN_BASE_PATH.
-
-NOTE: If you already have a toolchain (e.g from linaro) you can use it.
-      But we can not guaranty that every think works.
+NOTE: If you already have a toolchain (e.g from linaro) and you want use it,
+      please do so at your own risk.
 
 
-Build Platform:
----------------
+Build Platform (PBS Stage 2):
+-----------------------------
 
 The build steps can take a very long time depending on your system speed. Get
 more coffee. For this howto we use the TEC platform as example. All other
-platforms work more or less the same way. Some platform are splitted into
-initrd and rootfs. Other platform don't use a initrd, so its just one step
+platforms work more or less the same way. Some platforms are splitted into
+initrd and rootfs. Other platforms do not use an initrd, so its just one step
 instead of two.
 
-Lets start and create the platform build output directories:
+Start with creating the platform build output directories:
 
    $ mkdir -p build/initrd build/rootfs
 
@@ -153,6 +163,13 @@ Once all the packages have been built, create the initrd filesystem:
 
    $ fakeroot nice make O=build/initrd initrd
 
+HINT: As a speedup measure you may want to check which variant of fakeroot
+      is used. The SYSV implementation is much faster than the TCP one.
+      Check the fake* symlinks in /usr/bin - both faked and fakeroot itself
+      must point to the same variant. If anything goes wrong in your
+      freshly built embedded Linux regarding permissions, be sure to
+      try fakeroot-tcp.
+
 For the rootfs the procedure is similar, but the build will take a lot more
 time because we have a lot more packages to build. So lets start and load the
 default package selection for the root filesystem.
@@ -169,21 +186,38 @@ And build the root filesystem
    $ fakeroot nice make O=build/rootfs rootfs
 
 
-Prepare an SD-Card:
+Prepare a SD card:
 -------------------
 
-Put an sd-card in you cardreader, partionize it and create the filesystems.
-This must be done only once.
+Put a SD card in you cardreader, partition it and create the filesystems
+using the following commands:
 
    $ pushd platforms/avionic-design/plutux
    $ sudo ./make-sdcard /dev/sdX
    $ popd
 
-Now copy the kernel-initrd and rootfs to the sd-card.
+You only need to do this once (despite the misleading path, the partition
+script can be used for other platforms too).
+
+Now copy the kernel-initrd and rootfs to the SD card.
 
    $ sudo mount /dev/sdX1 /mnt
    $ sudo cp build/rootfs/rootfs.img /mnt
    $ sudo cp build/initrd/uImage /mnt/boot
+
+Last but not least you need to create a uboot script:
+
+   $ cat >> boot.cmd << EOF
+   >> setenv bootargs mem=1024M console=ttyS0,115200n8 root=LABEL=boot:/rootfs.img rootfstype=squashfs rootwait ro
+   >> setenv loadaddr 0x90000000
+   >> ext2load mmc 1:1 ${loadaddr} /boot/uImage
+   >> bootm
+   >> EOF
+   $ mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n "PBS rootfs sd-card" -d boot.cmd boot.scr
+   $ sudo cp boot.scr /mnt/boot
    $ sudo umount /dev/sdX1
 
-Now you can put the sd-card into the device and powerup.
+Note that especially the last step is very specific for the tec-ng-T30
+platform, you may be required to use a different procedure for your device.
+
+Now you can put the SD card into the device and boot your brand new system!

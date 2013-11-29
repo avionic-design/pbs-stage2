@@ -9,7 +9,7 @@ from the internet and runs the contained build system to configure, build and
 install each package.
 
 **Note:** For a quickstart with step by step guidance please see this
-          [HowTo](./Documentation/ubuntu-howto).
+          [HowTo](./Documentation/linux-howto).
 
 The source tree contains the following directories:
 
