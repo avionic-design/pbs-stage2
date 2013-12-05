@@ -67,7 +67,7 @@ $(local-files): $(srctree)/download/%: | $(srctree)/download
 
 quiet_cmd_checksum_sha256 = SHA256  $<
       cmd_checksum_sha256 = cd $(srctree) && \
-		grep download/$* checksums/sha256 | sha256sum -c --quiet
+		grep download/$* $(obj)/checksums | sha256sum -c --quiet
 
 $(chksum): $(chksum-prefix)%: $(srctree)/download/%
 	$(call cmd,checksum_sha256)
