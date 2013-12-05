@@ -5,7 +5,7 @@ LICENSE = GPL
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-vars += \
 	CXXFLAGS='$(CPPFLAGS)'
