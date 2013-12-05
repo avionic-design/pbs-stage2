@@ -1,9 +1,0 @@
-#!/bin/sh -e
-
-find toolchains -mindepth 2 -maxdepth 2 -path '*/all.config' | sort | (
-	while read file; do
-		dir=`dirname $file`
-		toolchain=`basename $dir`
-		echo $toolchain
-	done
-)

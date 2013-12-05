@@ -6,7 +6,6 @@ config STABLE_ABI
 config WITH_BUILD_TOOLS_LOCALES
 	bool
 
-source "packages/toolchain/Kconfig"
 source "packages/build-tools/Kconfig"
 source "packages/boot/Kconfig"
 source "packages/kernel/Kconfig"

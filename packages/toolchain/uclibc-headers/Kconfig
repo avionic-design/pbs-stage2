@@ -1,4 +1,0 @@
-config PACKAGE_TOOLCHAIN_UCLIBC_HEADERS
-	bool "uClibc - headers"
-	depends on UCLIBC
-	select PACKAGE_TOOLCHAIN_LINUX_HEADERS

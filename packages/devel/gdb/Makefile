@@ -1,4 +1,10 @@
-include packages/toolchain/gdb/Makefile.location
+PACKAGE = gdb
+VERSION = 7.5.1
+LICENSE = GPL
+
+LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+
 include packages/autotools.mk
 
 prunefiles = \

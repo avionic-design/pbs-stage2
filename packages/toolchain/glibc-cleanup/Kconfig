@@ -1,4 +1,0 @@
-config PACKAGE_TOOLCHAIN_GLIBC_CLEANUP
-	bool "GNU C library - cleanup"
-	depends on GLIBC
-	select PACKAGE_TOOLCHAIN_GCC

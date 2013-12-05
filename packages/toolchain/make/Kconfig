@@ -1,2 +1,0 @@
-config PACKAGE_TOOLCHAIN_MAKE
-	bool "GNU make"

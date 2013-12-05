@@ -18,7 +18,7 @@ CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-TOOLCHAIN_BASE_PATH ?= $(srctree)/toolchains/$(TARGET)/usr
+TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
 PATH := $(BUILD_TOOLS)/bin:$(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
 LD_LIBRARY_PATH := $(BUILD_TOOLS)/lib$(if $(LD_LIBRARY_PATH),:$(LD_LIBRARY_PATH))
 LOCPATH := $(BUILD_TOOLS)/lib/locale$(if $(LOCPATH),:$(LOCPATH))

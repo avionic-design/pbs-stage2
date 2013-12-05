@@ -1,2 +1,0 @@
-config PACKAGE_TOOLCHAIN_GMP
-	bool "GNU MP - multiprecision arithmetic library"

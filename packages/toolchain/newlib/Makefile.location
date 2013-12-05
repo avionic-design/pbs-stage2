@@ -1,5 +1,0 @@
-PACKAGE = newlib
-VERSION = 1.19.0
-
-LOCATION = ftp://sources.redhat.com/pub/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

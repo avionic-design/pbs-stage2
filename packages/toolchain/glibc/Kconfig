@@ -1,4 +1,0 @@
-config PACKAGE_TOOLCHAIN_GLIBC
-	bool "GNU C library"
-	depends on GLIBC
-	select PACKAGE_TOOLCHAIN_GCC_CORE

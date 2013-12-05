@@ -1,8 +1,2 @@
 source "platforms/generic/initrd/Kconfig"
 source "platforms/generic/install/Kconfig"
-
-if PLATFORM_GENERIC
-
-source "platforms/generic/toolchain/Kconfig"
-
-endif

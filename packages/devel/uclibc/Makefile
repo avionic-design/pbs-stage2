@@ -1,4 +1,10 @@
-include packages/toolchain/uclibc/Makefile.location
+PACKAGE = uClibc
+VERSION = 0.9.33.2
+LICENSE = LGPL
+
+LOCATION = http://uclibc.org/downloads
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+
 include packages/common.mk
 include packages/devel/uclibc/Makefile.dotconfig
 

@@ -1,2 +1,0 @@
-config PACKAGE_TOOLCHAIN_PPL
-	bool "ppl - Parma Polyhedra Library"

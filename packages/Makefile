@@ -13,7 +13,6 @@ obj-y += multimedia/
 obj-y += net/
 obj-y += shells/
 obj-y += ti/
-obj-y += toolchain/
 obj-y += util/
 obj-y += web/
 obj-y += desktop/
