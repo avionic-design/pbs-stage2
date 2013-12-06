@@ -52,7 +52,7 @@ dlurl = $(call url-pathname,$(filter %$*,$(remote-files)))
 destination = $(if $(filter %/$(@F),$(dlurl)),,(-> $(@F)))
 
 quiet_cmd_wget = WGET    $(dlurl) $(destination)
-      cmd_wget = wget --no-check-certificate -q "$(dlurl)" -O $@ || ( rm $@ ; false )
+      cmd_wget = $(srctree)/scripts/download "$(dlurl)" $@
 
 $(srctree)/download:
 	$(call cmd,mkdir_p)

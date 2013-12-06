@@ -1,0 +1,60 @@
+#!/bin/sh
+
+WGET="wget --no-check-certificate"
+
+URL="$1"
+DST="$2"
+DST_FILE="$(basename "$2")"
+
+FILE_LOCK="$DST.lock"
+OUR_LOCK="$FILE_LOCK.$(hostname).$$"
+
+LOCKER="$(hostname).$$"
+
+# Setup the exit trap to clean the lock files
+on_exit() {
+	# Release the file lock if we had it
+	locker="$(cat "$FILE_LOCK" 2> /dev/null)"
+	[ "$locker" = "$LOCKER" ] && rm -f "$FILE_LOCK"
+	# Delete our lock
+	rm -f "$OUR_LOCK"
+}
+
+# Cleanup when the script exit
+trap 'on_exit' 0
+# In case of a signal we want to cleanup and re-raise the signal
+# to get the proper exit code
+for sig in INT QUIT TERM ; do
+	trap "trap - $sig ; on_exit ; kill -$sig $$" "$sig"
+done
+
+# Try to get the lock
+echo "$LOCKER" > "$OUR_LOCK"
+
+warned=false
+while true ; do
+	ln "$OUR_LOCK" "$FILE_LOCK" 2> /dev/null && break
+	if ! $warned ; then
+		echo "Waiting for the lock on $DST_FILE"
+		warned=true
+	fi
+	sleep 1
+done
+
+# Check if the file has already been downloaded while we waited
+if [ -f "$DST" ] ; then
+	echo "$DST_FILE has already been downloaded"
+	exit
+fi
+
+# We must download to a temp file to make sure the final
+# file never exists with partial content.
+$WGET -O "$DST.part" "$URL" ; ret=$?
+
+if [ $ret -eq 0 ] ; then
+	mv "$DST.part" "$DST"
+else
+	rm -f "$DST.part"
+fi
+
+exit $ret
