@@ -1,7 +1,7 @@
 PACKAGE = pcsc-lite
 VERSION = 1.6.1
 
-LOCATION = https://alioth.debian.org/frs/download.php/3298
+LOCATION = https://alioth.debian.org/frs/download.php/file/3298
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
