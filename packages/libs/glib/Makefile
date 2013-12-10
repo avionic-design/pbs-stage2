@@ -19,6 +19,11 @@ else
   conf-vars += ac_cv_alignof_unsigned_long=4
 endif
 
+# The configure get confused by uclibc, force using the external libiconv
+ifeq ($(CONFIG_UCLIBC),y)
+  conf-args += --with-libiconv=gnu
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
