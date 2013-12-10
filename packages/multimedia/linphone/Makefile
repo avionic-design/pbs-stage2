@@ -24,7 +24,9 @@ conf-args += \
 	--disable-rpath
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_LINPHONE_GTK),y)
-  conf-args += --enable-gtk_ui=yes
+  conf-args += \
+	--enable-gtk_ui=yes \
+	--enable-strict=no
 else
   conf-args += --enable-gtk_ui=no
 endif
