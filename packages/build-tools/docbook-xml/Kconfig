@@ -1,0 +1,8 @@
+config PACKAGE_BUILD_TOOLS_DOCBOOK_XML
+	bool "DocBook XML"
+	select PACKAGE_BUILD_TOOLS_LIBXML2
+	help
+	  DocBook is a semantic markup language for technical documentation.
+	  It was originally intended for writing technical documents related
+	  to computer hardware and software but it can be used for any other
+	  sort of documentation
