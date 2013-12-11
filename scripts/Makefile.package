@@ -19,6 +19,10 @@ export pkgtree pkgsrctree patchdir
 # because $(PACKAGE) and $(VERSION) are defined in the following include.
 pkgbuildtree     = $(pkgtree)/$(PACKAGE)-$(VERSION)
 
+# Allow overriding where zip files are extracted, in case they don't contains
+# a sub directory.
+unzip_pkgtree    = $(pkgtree)
+
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
@@ -42,6 +46,7 @@ extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
 extract-xz      := $(filter %.tar.xz,$(extract))
+extract-zip     := $(filter %.zip,$(extract))
 extract-bin     := $(filter %.bin,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
@@ -83,6 +88,9 @@ quiet_cmd_tar_lzma = TAR     $<
 quiet_cmd_tar_xz = TAR     $<
       cmd_tar_xz = cd $(pkgtree) && tar xJf $<
 
+quiet_cmd_unzip = UNZIP   $<
+      cmd_unzip = mkdir -p $(unzip_pkgtree) && unzip -q -d $(unzip_pkgtree) $<
+
 quiet_cmd_run_bin = RUN     $<
       cmd_run_bin = cd $(pkgtree) && \
 			(test -x $(run_bin_PROG) || chmod +x $(run_bin_PROG)) && \
@@ -105,6 +113,10 @@ $(extract-lzma): $(extprefix)%.tar.lzma: $(srctree)/download/%.tar.lzma
 
 $(extract-xz): $(extprefix)%.tar.xz: $(srctree)/download/%.tar.xz
 	$(call cmd,tar_xz)
+	$(call cmd,stamp)
+
+$(extract-zip): $(extprefix)%.zip: $(srctree)/download/%.zip
+	$(call cmd,unzip)
 	$(call cmd,stamp)
 
 $(extract-bin): $(extprefix)%.bin: $(srctree)/download/%.bin
