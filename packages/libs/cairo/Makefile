@@ -14,9 +14,10 @@ conf-args += \
 
 ifeq ($(CONFIG_HAVE_OPENGL),y)
 conf-args += --enable-gl=auto
-endif
+else
 ifeq ($(CONFIG_HAVE_OPENGL_ES),y)
 conf-args += --enable-glesv2=auto
+endif
 endif
 
 prunefiles = \
