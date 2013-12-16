@@ -16,7 +16,11 @@ ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_UXA),y)
 endif
 
 ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG),y)
-  conf-args += --enable-debug=full
+  conf-args += --enable-debug
+endif
+
+ifeq ($(CONFIG_PACKAGE_XORG_DRIVER_VIDEO_INTEL_DEBUG_VALGRIND),y)
+  conf-args += --enable-valgrind
 endif
 
 prunefiles = \
