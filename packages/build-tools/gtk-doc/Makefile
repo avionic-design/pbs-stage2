@@ -11,4 +11,5 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/build-tools/autotools.mk
 
 conf-args += \
-	--disable-scrollkeeper
+	--disable-scrollkeeper \
+	--with-xml-catalog=$(prefix)/etc/xml/catalog
