@@ -1,4 +1,4 @@
 config PACKAGE_DEVEL_GDB
 	bool "gdb: GNU debugger"
 	select PACKAGE_BUILD_TOOLS_TEXINFO
-	select PACKAGE_LIBS_NCURSES
+	select PACKAGE_LIBS_READLINE
