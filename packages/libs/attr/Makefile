@@ -11,7 +11,9 @@ $(pkgtree)/.setup:
 
 # libtool requires bash to work properly. The configure script doesn't detect
 # that properly so force it.
-env += CONFIG_SHELL=/bin/bash
+env += CONFIG_SHELL=/bin/bash \
+	CFLAGS='$(CFLAGS)' \
+	LDFLAGS='$(LDFLAGS)'
 
 conf-args = \
 	--host=$(TARGET) \
@@ -19,10 +21,6 @@ conf-args = \
 	--libdir=$(prefix)/lib \
 	--libexecdir=$(prefix)/lib \
 	--disable-gettext
-
-conf-vars = \
-	CFLAGS='$(CFLAGS)' \
-	LDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
