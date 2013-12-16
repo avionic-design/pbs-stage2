@@ -1,0 +1,8 @@
+config PACKAGE_BUILD_TOOLS_DOCBOOK_XSL
+	bool "DocBook XSL"
+	select PACKAGE_BUILD_TOOLS_DOCBOOK_XML
+	help
+	  The DocBook XSL stylesheets are a set of stylesheets for use with
+	  an XSLT engine (such as xsltproc or Saxon) for transforming DocBook
+	  XML documents into other DocBookOutputFormats, such as HTML, PDF,
+	  Microsoft HTML Help, and man pages.
