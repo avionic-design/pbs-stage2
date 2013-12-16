@@ -1,8 +1,10 @@
 config PACKAGE_VENDOR_AVIONIC_DESIGN_RUM
 	bool "rum"
+	select PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL
 	select PACKAGE_CORE_LM_SENSORS
 	select PACKAGE_LIBS_JSON_GLIB
 	select PACKAGE_LIBS_LIBSOUP
+	select PACKAGE_LIBS_LIBNL
 	help
 	  The Remote-Unit-Manager is a simple HTTP server providing
 	  information about discovered devices and allowing these
