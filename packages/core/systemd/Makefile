@@ -11,6 +11,8 @@ conf-args += \
 	--with-firmware-path=$(prefix)/lib/firmware \
 	--with-rootprefix=$(prefix) \
 	--libexecdir=$(prefix)/lib \
+	--disable-gtk-doc-html \
+	--disable-manpages \
 	--enable-split-usr \
 	--disable-selinux \
 	--without-python \
