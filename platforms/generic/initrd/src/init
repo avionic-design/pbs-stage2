@@ -78,7 +78,7 @@ for arg in $cmdline; do
 
 		UUID=*)
 			uuid=`echo $arg | cut -d= -f3-`
-			root="/dev/disk/by-uuid/$root"
+			root="/dev/disk/by-uuid/$uuid"
 			;;
 		esac
 		;;
