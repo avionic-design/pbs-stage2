@@ -207,8 +207,6 @@ General requirements:
 Programs used to generate documentation during package creation:
 
   * texinfo
-  * docbook-dtds,docbook-style-xsl
-    * Ubuntu: docbook-xml, docbook-xsl
   * xmlto
 
 Libraries and tools required during platform setup:
