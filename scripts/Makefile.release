@@ -9,9 +9,6 @@ platform-name         := $(call package-name,$(master-platform))
 release-dir  := $(obj)/release
 release-file := $(obj)/$(platform-name)_$(platform-version).tar
 
-quiet_cmd_cp = CP      $@
-      cmd_cp = cp $< $@
-
 quiet_cmd_make_fs = MAKE    $@
       cmd_make_fs = $(MAKE) $(fs)=$(obj) quiet=silent_ rootfs-img=$@
 

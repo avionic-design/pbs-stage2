@@ -236,4 +236,7 @@ quiet_cmd_hash_file = SHA1    $(abspath $@)
 		( sha1sum $^ | sha1sum --check --status $@ 2> /dev/null) || \
 		( mkdir -p $(@D) && sha1sum $^ | sha1sum > $@ )
 
+quiet_cmd_cp = CP      $@
+      cmd_cp = cp $< $@
+
 # vim: ft=make noet
