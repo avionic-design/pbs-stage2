@@ -19,7 +19,7 @@ quiet_cmd_make_fs = MAKE    $@
       cmd_make_fs = $(MAKE) $(fs)=$(obj) quiet=silent_ rootfs-img=$@
 
 quiet_cmd_tar = TAR [c] $@
-      cmd_tar = tar -C $(release-dir) -cf $@ $(notdir $^)
+      cmd_tar = tar -C $(release-dir) -cf $@ $(^:$(release-dir)/%=%)
 
 quiet_cmd_mk_release_dir = MKDIR   $(release-dir)
       cmd_mk_release_dir = rm -rf $(release-dir) && mkdir -p $(release-dir)
