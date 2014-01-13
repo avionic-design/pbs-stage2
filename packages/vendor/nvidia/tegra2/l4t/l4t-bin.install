@@ -1,2 +1,3 @@
 /usr/bin
-/usr/lib/gstreamer-0.10
+/usr/lib/gstreamer-0.10/libgstnvvidconv.so
+/usr/lib/gstreamer-0.10/libgstomx.so
