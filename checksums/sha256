@@ -141,7 +141,7 @@ b5638b2d2ffa1b3aa2dbdba75a3134d9dc4b6e4ed7a287855fed2811956cd4ed  download/gtk+-
 785b591c561be1c8206f0d2575dc63558ea6199c3afe49cbc4efde94a6629a20  download/gtk-doc-1.18.tar.xz
 15b680abca6c773ecb85253521fa100dd3b8549befeecc7595b10209d62d66b5  download/gtk-engines-2.20.2.tar.bz2
 8cbae7254746bc7df7cce882d9b9a916c4e00dba7bdacd1c50b5d096a484cf56  download/gtkmm-2.24.0.tar.bz2
-414c71594c313506639ae667c04781c3d5aca4460a225166eaee19f4bb1eea57  download/gtkosk-0.2.0.tar.xz
+85e3ac15266df2db1488370e26e585ed646ab1018bf9ae3556e6356e14feda86  download/gtkosk-0.2.2.tar.xz
 3f565be05f7f3d1aff117c030eb7c738300510b7d098cedea796ca8e4cd587af  download/gzip-1.3.12.tar.gz
 f36f4a01a5ac898b5ec49a04a43b051d3809f07c3d0841188fd6a5c512389025  download/GConf-2.32.4.tar.xz
 c4c5ecc5d50d5d9c061dc06c405461b1f71c12f2c60ed062350b2e6db2f1c51e  download/hal-0.5.14.tar.bz2
