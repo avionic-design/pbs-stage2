@@ -7,7 +7,8 @@ BUILD_TOOLS = $(objtree)/build-tools
 export PATH := $(BUILD_TOOLS)/bin:$(PATH)
 export LD_LIBRARY_PATH := $(BUILD_TOOLS)/lib$(if $(LD_LIBRARY_PATH),:$(LD_LIBRARY_PATH))
 
-platform-make-release := $(if $(KBUILD_SRC),$(srctree)/)$(master-platform)/make-release.mk
+platform-src          := $(if $(KBUILD_SRC),$(srctree)/)$(master-platform)
+platform-make-release := $(platform-src)/make-release.mk
 platform-version      := $(call package-version,$(master-platform))
 platform-name         := $(call package-name,$(master-platform))
 
