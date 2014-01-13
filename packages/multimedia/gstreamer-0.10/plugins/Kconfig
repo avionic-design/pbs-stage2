@@ -8,6 +8,7 @@ source "packages/multimedia/gstreamer-0.10/plugins/v4l2/Kconfig"
 source "packages/multimedia/gstreamer-0.10/plugins/ffmpeg/Kconfig"
 source "packages/multimedia/gstreamer-0.10/plugins/gl/Kconfig"
 source "packages/multimedia/gstreamer-0.10/plugins/gles/Kconfig"
+source "packages/multimedia/gstreamer-0.10/plugins/nvxvimagesink/Kconfig"
 source "packages/multimedia/gstreamer-0.10/plugins/omx/Kconfig"
 
 endmenu
