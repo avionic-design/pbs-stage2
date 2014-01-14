@@ -20,9 +20,11 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
+install-target ?= install
+
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree)/obj-$(BUILD_GNU_TYPE) && \
-		$(env) $(MAKE) $(install-args) install
+		$(env) $(MAKE) $(install-args) $(install-target)
 	$(call cmd,stamp)
 
 include packages/build-tools/cleanup.mk
