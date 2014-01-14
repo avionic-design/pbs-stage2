@@ -1,6 +1,5 @@
 PACKAGE = libdvbpsi
-VERSION = 1.1.2
-LICENSE = LGPL
+VERSION = 1.1.0
 
 LOCATION = http://download.videolan.org/pub/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

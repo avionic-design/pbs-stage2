@@ -37,10 +37,10 @@ index 02621e6..cc1152a 100644
 -decode_bat_LDFLAGS = -L../src -ldvbpsi
 +decode_bat_LDFLAGS = ../src/libdvbpsi.la
 diff --git a/examples/Makefile.in b/examples/Makefile.in
-index 95d9757..81f237e 100644
+index dc5c88e..800f4bf 100644
 --- a/examples/Makefile.in
 +++ b/examples/Makefile.in
-@@ -370,22 +370,22 @@ SUBDIRS = dvbinfo
+@@ -295,22 +295,22 @@ SUBDIRS = dvbinfo
  DIST_SUBDIRS = $(SUBDIRS)
  decode_pat_SOURCES = decode_pat.c
  decode_pat_CPPFLAGS = -DDVBPSI_DIST
@@ -94,10 +94,10 @@ index 5468079..f22a33c 100644
  noinst_HEADERS = test_dr.h
  
 diff --git a/misc/Makefile.in b/misc/Makefile.in
-index 73e9def..7bb41d5 100644
+index b1972fa..824cc54 100644
 --- a/misc/Makefile.in
 +++ b/misc/Makefile.in
-@@ -308,13 +308,13 @@ top_srcdir = @top_srcdir@
+@@ -238,13 +238,13 @@ top_srcdir = @top_srcdir@
  gen_crc_SOURCES = gen_crc.c
  gen_pat_SOURCES = gen_pat.c
  gen_pat_CPPFLAGS = -DDVBPSI_DIST
