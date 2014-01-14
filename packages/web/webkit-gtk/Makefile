@@ -63,6 +63,12 @@ else
 	--with-gtk=3.0
 endif
 
+ifeq ($(CONFIG_PLATFORM_AVIONIC_DESIGN_MEDCOM_WIDE),y)
+  conf-args += --enable-nvxvimagesink
+else
+  conf-args += --disable-nvxvimagesink
+endif
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
