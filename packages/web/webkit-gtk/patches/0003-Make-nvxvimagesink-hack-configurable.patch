@@ -1,0 +1,280 @@
+From bf764faafe6ae23f5d7373787da2ca295c9435d0 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Mon, 6 Jan 2014 14:14:41 +0100
+Subject: [PATCH 3/3] Make nvxvimagesink hack configurable
+
+Add a configure option to explicitly enable the nvxvimagesink hack that forces
+fullscreen playback with nvidias accelerated xvimagesink. This allows us to
+build it only on platforms where it is required and supported.
+
+Change-Id: Ibc411f395e4680e301a4eed1c69f44fc0cfa7193
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ Source/WebCore/GNUmakefile.am                      | 10 ++++++++
+ .../graphics/gstreamer/GStreamerGWorld.cpp         |  4 +---
+ .../gstreamer/MediaPlayerPrivateGStreamer.cpp      | 28 ++++++++++++----------
+ .../gstreamer/MediaPlayerPrivateGStreamer.h        | 10 ++++----
+ configure.ac                                       | 11 +++++++++
+ 5 files changed, 41 insertions(+), 22 deletions(-)
+
+diff --git a/Source/WebCore/GNUmakefile.am b/Source/WebCore/GNUmakefile.am
+index 2f24764..4c19a1b 100644
+--- a/Source/WebCore/GNUmakefile.am
++++ b/Source/WebCore/GNUmakefile.am
+@@ -770,6 +770,16 @@ FEATURE_DEFINES += ENABLE_WIDGET_REGION=1
+ webcore_cppflags += -DENABLE_WIDGET_REGION=1
+ endif  # END ENABLE_WIDGET_REGION
+ 
++# ----
++# NVXVImageSink support
++# ----
++if ENABLE_NVXVIMAGESINK
++FEATURE_DEFINES += ENABLE_NVXVIMAGESINK=1
++webcore_cppflags += -DENABLE_NVXVIMAGESINK=1
++else
++webcore_cppflags += -DENABLE_NVXVIMAGESINK=0
++endif # END ENABLE_NVXVIMAGESINK
++
+ # ---
+ # Spell check support
+ # ---
+diff --git a/Source/WebCore/platform/graphics/gstreamer/GStreamerGWorld.cpp b/Source/WebCore/platform/graphics/gstreamer/GStreamerGWorld.cpp
+index de0f8ae..0ff3fc4 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/GStreamerGWorld.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/GStreamerGWorld.cpp
+@@ -21,8 +21,6 @@
+ #include "GStreamerGWorld.h"
+ #if ENABLE(VIDEO) && USE(GSTREAMER) && !defined(GST_API_VERSION_1)
+ 
+-#define GST_NVXVIMAGESINK
+-
+ #include "GRefPtrGStreamer.h"
+ #include <gst/gst.h>
+ #include <gst/interfaces/xoverlay.h>
+@@ -62,7 +60,7 @@ GStreamerGWorld::GStreamerGWorld(GstElement* pipeline)
+ {
+     // XOverlay messages need to be handled synchronously.
+     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_pipeline));
+-#ifndef GST_NVXVIMAGESINK
++#if !ENABLE(NVXVIMAGESINK)
+     gst_bus_set_sync_handler(bus, gst_bus_sync_signal_handler, this);
+ #endif
+     g_signal_connect(bus, "sync-message::element", G_CALLBACK(gstGWorldSyncMessageCallback), this);
+diff --git a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+index 7556a9c..1902a76 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+@@ -103,18 +103,18 @@ static int greatestCommonDivisor(int a, int b)
+     return ABS(a);
+ }
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+ static GstBusSyncReply mediaPlayerBusSyncHandler(GstBus *bus,
+     GstMessage* message, MediaPlayerPrivateGStreamer *player)
+ {
+     return player->handleMessageSync(message);
+ }
+-#endif
+ 
+ static gboolean mediaPlayerPrivateMessageCallback(GstBus*, GstMessage* message, MediaPlayerPrivateGStreamer* player)
+ {
+     return player->handleMessage(message);
+ }
++#endif
+ 
+ static void mediaPlayerPrivateSourceChangedCallback(GObject*, GParamSpec*, MediaPlayerPrivateGStreamer* player)
+ {
+@@ -215,7 +215,7 @@ bool MediaPlayerPrivateGStreamer::isAvailable()
+     return factory;
+ }
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+ bool MediaPlayerPrivateGStreamer::setXOverlay()
+ {
+ 
+@@ -280,14 +280,14 @@ MediaPlayerPrivateGStreamer::MediaPlayerPrivateGStreamer(MediaPlayer* player)
+     , m_webkitAudioSink(0)
+     , m_totalBytes(-1)
+     , m_originalPreloadWasAutoAndWasOverridden(false)
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+     , m_signalPaused(true)
+ #endif
+ {
+     if (initializeGStreamerAndRegisterWebKitElements())
+         createGSTPlayBin();
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+     /* Create the window used for accelerated video rendering */
+     m_window = PlatformVideoWindow::createWindow();
+     gdk_display_sync(gdk_display_get_default());
+@@ -449,7 +449,7 @@ void MediaPlayerPrivateGStreamer::prepareToPlay()
+ 
+ void MediaPlayerPrivateGStreamer::play()
+ {
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+     /* HACK: If a pause action is pending ignore the play command.
+      * This is used to workaround crappy html5 video players which try
+      * to avoid pause events */
+@@ -467,7 +467,7 @@ void MediaPlayerPrivateGStreamer::play()
+     }
+ }
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+ void MediaPlayerPrivateGStreamer::pauseSignalled()
+ {
+     m_signalPaused = true;
+@@ -477,7 +477,7 @@ void MediaPlayerPrivateGStreamer::pauseSignalled()
+ 
+ void MediaPlayerPrivateGStreamer::pause()
+ {
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+     if (m_window)
+         gtk_widget_hide(m_window->window());
+ #endif
+@@ -842,7 +842,7 @@ PassRefPtr<TimeRanges> MediaPlayerPrivateGStreamer::buffered() const
+     return timeRanges.release();
+ }
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+ static gboolean window_clicked(GtkWidget *widget, GdkEventButton *event,
+                             gpointer user_data)
+ {
+@@ -944,8 +944,10 @@ gboolean MediaPlayerPrivateGStreamer::handleMessage(GstMessage* message)
+         break;
+     case GST_MESSAGE_EOS:
+         LOG_MEDIA_MESSAGE("End of Stream");
++#if ENABLE(NVXVIMAGESINK)
+         if (m_window)
+             gtk_widget_hide(m_window->window());
++#endif
+         didEnd();
+         break;
+     case GST_MESSAGE_STATE_CHANGED:
+@@ -965,7 +967,7 @@ gboolean MediaPlayerPrivateGStreamer::handleMessage(GstMessage* message)
+             GstState oldState, newState;
+             gst_message_parse_state_changed(message, &oldState, &newState, 0);
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+             if (newState == GST_STATE_PAUSED && m_signalPaused) {
+                 m_signalPaused = false;
+                 m_player->playbackStateChanged();
+@@ -1827,7 +1829,7 @@ bool MediaPlayerPrivateGStreamer::hasSingleSecurityOrigin() const
+ 
+ bool MediaPlayerPrivateGStreamer::supportsFullscreen() const
+ {
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+     /* Actually the nvxvimagesink is always running fullscreen, so this is a
+      * little bit of cheating. But it is less error-prone when a website thinks
+      * there is no fullscreen, as it does not try to interact with fullscreen
+@@ -1899,8 +1901,8 @@ void MediaPlayerPrivateGStreamer::createGSTPlayBin()
+ 
+     GstBus* bus = gst_pipeline_get_bus(GST_PIPELINE(m_playBin));
+     gst_bus_add_signal_watch(bus);
++#if ENABLE(NVXVIMAGESINK)
+     gst_bus_set_sync_handler(bus, (GstBusSyncHandler)mediaPlayerBusSyncHandler, this);
+-#ifdef GST_NVXVIMAGESINK
+     g_signal_connect(bus, "message", G_CALLBACK(mediaPlayerPrivateMessageCallback), this);
+ #endif
+     gst_object_unref(bus);
+@@ -1913,7 +1915,7 @@ void MediaPlayerPrivateGStreamer::createGSTPlayBin()
+     g_signal_connect(m_playBin, "video-changed", G_CALLBACK(mediaPlayerPrivateVideoChangedCallback), this);
+     g_signal_connect(m_playBin, "audio-changed", G_CALLBACK(mediaPlayerPrivateAudioChangedCallback), this);
+ 
+-#ifndef GST_NVXVIMAGESINK
++#if !ENABLE(NVXVIMAGESINK)
+ #ifndef GST_API_VERSION_1
+     m_webkitVideoSink = webkitVideoSinkNew(m_gstGWorld.get());
+ #else
+diff --git a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h
+index b143d2e..bd4d1a3 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.h
+@@ -24,11 +24,9 @@
+ #define MediaPlayerPrivateGStreamer_h
+ #if ENABLE(VIDEO) && USE(GSTREAMER)
+ 
+-#define GST_NVXVIMAGESINK
+-
+ #include "GRefPtrGStreamer.h"
+ #include "MediaPlayerPrivate.h"
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+ #include "PlatformVideoWindow.h"
+ #endif
+ #include "Timer.h"
+@@ -131,7 +129,7 @@ class MediaPlayerPrivateGStreamer : public MediaPlayerPrivateInterface {
+ 
+             MediaPlayer::MovieLoadType movieLoadType() const;
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+             GstBusSyncReply handleMessageSync(GstMessage*);
+             void pauseSignalled();
+ #endif
+@@ -165,7 +163,7 @@ class MediaPlayerPrivateGStreamer : public MediaPlayerPrivateInterface {
+             virtual String engineDescription() const { return "GStreamer"; }
+             bool isLiveStream() const { return m_isStreaming; }
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+             bool setXOverlay();
+ #endif
+ 
+@@ -218,7 +216,7 @@ class MediaPlayerPrivateGStreamer : public MediaPlayerPrivateInterface {
+             KURL m_url;
+             bool m_originalPreloadWasAutoAndWasOverridden;
+ 
+-#ifdef GST_NVXVIMAGESINK
++#if ENABLE(NVXVIMAGESINK)
+             RefPtr<PlatformVideoWindow> m_window;
+             bool m_signalPaused;
+ #endif
+diff --git a/configure.ac b/configure.ac
+index 947cb3c..4feaf00 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1167,6 +1167,14 @@ AC_ARG_ENABLE(css_compositing,
+               [],[enable_css_compositing="no"])
+ AC_MSG_RESULT([$enable_css_compositing])
+ 
++# check whether to enable NVXVImagesink
++AC_MSG_CHECKING([whether to enable NVXVImageSink])
++AC_ARG_ENABLE(nvxvimagesink,
++              AC_HELP_STRING([--enable-nvxvimagesink],
++                             [enable support for NVXVImageSink[default=no]]),
++              [],[enable_nvxvimagesink="no"])
++AC_MSG_RESULT([$enable_nvxvimagesink])
++
+ G_IR_SCANNER=
+ G_IR_COMPILER=
+ G_IR_GENERATE=
+@@ -1508,6 +1516,8 @@ AM_CONDITIONAL([ENABLE_CSS_FILTERS],[test "$enable_css_filters" = "yes"])
+ AM_CONDITIONAL([ENABLE_CSS_COMPOSITING],[test "$enable_css_compositing" = "yes"])
+ AM_CONDITIONAL([ENABLE_WIDGET_REGION],[test "$enable_widget_region" = "yes"])
+ 
++AM_CONDITIONAL([ENABLE_NVXVIMAGESINK],[test "$enable_nvxvimagesink" = "yes"])
++
+ # Gtk conditionals
+ AM_CONDITIONAL([ENABLE_INTROSPECTION],[test "$enable_introspection" = "yes"])
+ 
+@@ -1618,6 +1628,7 @@ Features:
+  Web Workers support                                      : $enable_workers
+  WebGL                                                    : $enable_webgl
+  Widget region support                                    : $enable_widget_region
++ NVXVImageSink                                            : $enable_nvxvimagesink
+  XSLT support                                             : $enable_xslt
+ 
+ WebKit2 support:
+-- 
+1.8.5.2
+
