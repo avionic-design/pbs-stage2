@@ -1,0 +1,28 @@
+From 4674d6590ae9cd38567f00d555eaeff67528618f Mon Sep 17 00:00:00 2001
+From: Armin K <krejzi@email.com>
+Date: Sat, 29 Jun 2013 12:16:16 +0200
+Subject: [PATCH] vaapi: Switch to compat api for VA-API 0.34.0
+
+Fixes build with libva 1.2.x untill VLC VA-API
+module is ported to the new API.
+---
+ modules/codec/avcodec/vaapi.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/modules/codec/avcodec/vaapi.c b/modules/codec/avcodec/vaapi.c
+index 893ea15..5871249 100644
+--- a/modules/codec/avcodec/vaapi.c
++++ b/modules/codec/avcodec/vaapi.c
+@@ -36,6 +36,9 @@
+ #include <libavcodec/vaapi.h>
+ #include <X11/Xlib.h>
+ #include <va/va_x11.h>
++#if VA_MINOR_VERSION >= 34
++# include <va/va_compat.h>
++#endif
+ 
+ #include "avcodec.h"
+ #include "va.h"
+-- 
+1.8.3.1
+
