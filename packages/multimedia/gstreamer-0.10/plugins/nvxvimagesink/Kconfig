@@ -1,5 +1,6 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_0_10_PLUGINS_NVXVIMAGESINK
 	bool "nvxvimakesink"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_0_10_BASE
+	select PACKAGE_XORG_LIB_XV
 	help
 	  NVidias omx videosink, derived from xvimagesink.
