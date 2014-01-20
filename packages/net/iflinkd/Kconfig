@@ -1,3 +1,4 @@
 config PACKAGE_NET_IFLINKD
 	bool "iflinkd"
 	select PACKAGE_LIBS_LIBNL
+	select PACKAGE_BUILD_TOOLS_DOCBOOK_XSL
