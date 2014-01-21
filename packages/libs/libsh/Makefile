@@ -6,6 +6,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
+conf-vars += \
+	ac_cv_prog_XSLTPROC=no
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
