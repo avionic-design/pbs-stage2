@@ -75,8 +75,7 @@ obj	:= $(objtree)
 VPATH	:= $(srctree)
 export srctree objtree VPATH
 
-SRCARCH := $(ARCH)
-export SRCARCH
+export PLATFORM
 
 KCONFIG_CONFIG ?= .config
 

@@ -113,11 +113,11 @@ ifeq ($(KBUILD_DEFCONFIG),)
 	$< --defconfig $(Kconfig)
 else
 	@echo "*** Default configuration is based on '$(KBUILD_DEFCONFIG)'"
-	$(Q)$< --defconfig=configs/$(KBUILD_DEFCONFIG) $(Kconfig)
+	$(Q)$< --defconfig=platforms/$(PLATFORM)/configs/$(KBUILD_DEFCONFIG) $(Kconfig)
 endif
 
 %_defconfig: $(obj)/conf
-	$(Q)$< --defconfig=configs/$@ $(Kconfig)
+	$(Q)$< --defconfig=platforms/$(PLATFORM)/configs/$@ $(Kconfig)
 
 # Help text used by make help
 help:

@@ -138,13 +138,13 @@ Start with creating the platform build output directories:
 
    $ mkdir -p build/initrd build/rootfs
 
-The platform configuration files are located under <pbs-dir>/configs. So if
-you want to use a different platform, you can look here for all available
-configurations.
+The platform configuration files are located in the configs directory found
+in each platforms repository: <pbs-dir>/platforms/<repository>/configs.
 
-For now we load the default configuration for the TEC initrd:
+For now we load the default configuration to build an initrd image for the
+TEC-NG platform from the avionic-design platform repository:
 
-   $ make O=build/initrd tec-ng-initrd_defconfig
+   $ make O=build/initrd PLATFORM=avionic-design tec-ng-initrd_defconfig
 
 Optional: Change package selection or adjust kernel path.
 
