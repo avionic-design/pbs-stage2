@@ -44,6 +44,7 @@ source "packages/build-tools/texinfo/Kconfig"
 source "packages/build-tools/u-boot/Kconfig"
 source "packages/build-tools/vala/Kconfig"
 source "packages/build-tools/wayland/Kconfig"
+source "packages/build-tools/xproto/Kconfig"
 source "packages/build-tools/zlib/Kconfig"
 
 endmenu
