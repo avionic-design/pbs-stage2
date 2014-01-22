@@ -1,5 +1,5 @@
 PACKAGE = libwebp
-VERSION = 0.2.1
+VERSION = 0.4.0
 LICENSE = custom
 
 LOCATION = https://webp.googlecode.com/files
