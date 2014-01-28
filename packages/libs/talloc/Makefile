@@ -7,5 +7,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
 
+conf-vars += \
+	ac_cv_prog_XSLTPROC=no
+
 stripfiles = \
 	$(prefix)/lib/*.so.*
