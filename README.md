@@ -1,7 +1,7 @@
 # What is PBS:
 
 PBS is the Platform Build System. It is a set of scripts that automatically
-build a defined set of software packages that can be installed in a root
+builds a defined set of software packages that can be installed in a root
 filesystem or as an initial ramdisk.
 
 PBS builds everything from source. To do this, it downloads software tarballs
@@ -9,7 +9,7 @@ from the internet and runs the contained build system to configure, build and
 install each package.
 
 **Note:** For a quickstart with step by step guidance please see this
-          [HowTo](./Documentation/linux-howto).
+[HowTo](./Documentation/linux-howto).
 
 The source tree contains the following directories:
 
@@ -36,16 +36,18 @@ By passing the path (absolute or relative) to the build directory in the "O"
 
 # Packages and platforms:
 
-A package is any software component that can be built in an automated way.
-
 A platform is a collection of packages and some additional files and scripts
 to complete the filesystem.
+For more informations please see: [Platforms](./Documentation/platforms.md)
+
+A package is any software component that can be built in an automated way.
+For more informations please see: [Packages](./Documentation/packages.md)
 
 
 # Building a toolchain:
 
-To build a platform you need a toolchain. PBS is able to provide you
-toolchains for various architectures, which can be build from PBS.
+To build a platform you need a toolchain. PBS is able to provide toolchains
+for various architectures, which can be build from PBS.
 See Documentation/toolchains for details.
 
 But you can also use an external toolchain, for instance a toolchain provided
@@ -88,105 +90,24 @@ command or used a default platform configuration.
 Once the build is completed, you need to generate the target filesystem. The
 most common targets are:
 
-	$ sudo make O=<build directory> initrd
+	$ fakeroot make O=<build directory> initrd
 	(outputs <build directory>/uImage, uboot image)
 
 and
 
-	$ sudo make O=<build directory> rootfs
+	$ fakeroot make O=<build directory> rootfs
 	(outputs <build directory>/rootfs.img, compressed squashfs)
 
 This will pack all relevant files into a single compressed file, to be used
-by the bootloader or later from the kernel. This process will exclude all
+by the bootloader or later by the kernel. This process will exclude all
 development and documentation files from the target filesystem to save space.
 
-NOTE: If you set INITRD_MOUNT_TMPFS=n or ROOTFS_MOUNT_TMPFS=n you don't need
-superuser permissions (sudo) anymore. But to preserve the fileownership you
-need to use fakeroot instead.
+**NOTE:** If you set INITRD_MOUNT_TMPFS=y or ROOTFS_MOUNT_TMPFS=y you will need
+superuser permissions (sudo).
 
-
-# Packages:
-
-Packages in PBS are defined in the packages directory. They are categorized
-by placing them into subdirectories.
-To define a new packages, create a new directory with the name of the new
-package in packages folder or even better in on of its subdirectories.
-Building the package requires basically two files. The first one is a Kconfig
-file. It defines the config variable for the package and is responsible
-for dependency tracking. The second file is the Makefile which defines the
-actual build process. To simplify package definition we have several
-predefined profiles. The most common and recommended type of packages is
-auto-tools based (include package/autotools.mk).
-Once you're done with Makefile and Kconfig, you have to update the Kconfig and
-Makefile of the parent directory. Otherwise the new package is not known.
-Finally you'll need to update one of the checksum files (usually sha256).
-
-For the development process it can be handy, to build a package from
-development sources instead of a source tarball or svn/git repository.
-This is done by defining a source link. Therefor go the <build directory> and
-create a directory called "source" as well as the package hierarchie and
-create a link to the package source e.g.
-
-	$ tree <build directory>/source/
-	<build directory>/source/
-	`-- packages
-	    |-- libs
-	    |   `-- libmodem -> ../../../../../../avionic-design/libmodem
-	    `-- vendor
-	        `-- medcom-wide
-	            `-- utils -> /home/user/sources/utils
-
-
-# Build Process:
-
-Each package is build in several steps. Each steps is marked complete with
-stamp files created in the build directory. At the end of the build process
-the following files are exist:
-
-  * .directory      - Setup package build dir.
-  * .checksum       - Verify package checksum.
-  * .extract        - Soucres have been extracted.
-  * .setup          - Create all directories to build.
-  * .patch          - Apply patches to the package source.
-  * .configure      - Configures the package (autotools).
-  * .build          - Build the package.
-  * .prune          - Prune marked files.
-  * .strip          - Strip the marked files.
-  * .binary         - Create binary packages.
-  * .install        - Install in sysroot dir.
-
-These steps can by triggered partially for single packages. The most useful
-are: build, rebuild and the kernel only option configure.
-
-To configure the kernel without changing the kernels defconfig.
-
-	$ make O=<build directory> packages/kernel/linux/configure
-
-Build a single package:
-
-	$ make O=<build directory> packages/kernel/linux/build
-
-Rebuild a single package:
-
-	$ make O=<build directory> packages/kernel/linux/rebuild
-
-Rebuilding a package will erase the entire package build directory first and
-then build the package. So all changes made in the package build directory are
-lost.
-
-Other useful package targets are:
-
-  * install       - Reinstall the package.
-  * binary        - Repack the package.
-  * print         - Print package version.
-
-Besides the default platform build targets rootfs and initrd, we have some
-targets been notable as well:
-
-  * watch             - Check for package updates.
-  * print             - Print the versions of the selected packages.
-  * license           - Print the license of the selected packages.
-  * rebuild-sysroot   - Recreate the sysroot directory.
+For more details regarding the build process please refer to:
+  * [Packages](./Documentation/packages.md)
+  * [Platforms](./Documentation/platforms.md)
 
 
 # Requirements:
