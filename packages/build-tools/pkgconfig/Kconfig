@@ -1,3 +1,2 @@
 config PACKAGE_BUILD_TOOLS_PKGCONFIG
 	bool "pkgconfig"
-	select PACKAGE_BUILD_TOOLS_GLIB
