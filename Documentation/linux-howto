@@ -98,7 +98,7 @@ list.
    EOF
 
 Before you can start building, a user configuration file needs to be set
-up. TOOLCHAINS_BASE_PATH shall contain the path to the toolchains to be
+up. TOOLCHAIN_BASE_PATH shall contain the path to the toolchains to be
 used for compiling. To avoid confusion an absolute path is recommended.
 
 To avoid the need of root permissions, additional variables can be set
@@ -109,7 +109,7 @@ top level directory. Generate it with the following commands, replacing
 the toolchain path with your own path (without brackets):
 
     $ cat >> pbs.mk << EOF
-    export TOOLCHAINS_BASE_PATH=<path_to_toolchains>
+    export TOOLCHAIN_BASE_PATH=<path_to_toolchains>
     export INITRD_MOUNT_TMPFS=n
     export ROOTFS_MOUNT_TMPFS=n
     EOF
