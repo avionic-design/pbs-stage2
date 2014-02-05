@@ -1,0 +1,26 @@
+From 12002df7650f6c5280a5b7c77b6254df57ad0786 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 5 Feb 2014 12:31:06 +0100
+Subject: [PATCH] build: Fix the live55 check to work with sysroot
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index fa8b7ef..789fc82 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1736,7 +1736,7 @@ AS_IF([test "${enable_live555}" != "no" -a -n "${CXX}"], [
+   AC_LANG_PUSH(C++)
+   CPPFLAGS_save="${CPPFLAGS}"
+   AS_IF([test -z "${CONTRIB_DIR}"], [
+-    CPPFLAGS_live555="-I/usr/include/liveMedia -I/usr/include/groupsock -I/usr/include/BasicUsageEnvironment -I/usr/include/UsageEnvironment"
++    CPPFLAGS_live555="-I=/usr/include/liveMedia -I=/usr/include/groupsock -I=/usr/include/BasicUsageEnvironment -I=/usr/include/UsageEnvironment"
+   ], [
+     CPPFLAGS_live555="-I${CONTRIB_DIR}/include/liveMedia -I${CONTRIB_DIR}/include/groupsock -I${CONTRIB_DIR}/include/BasicUsageEnvironment -I${CONTRIB_DIR}/include/UsageEnvironment"
+   ])
+-- 
+1.8.5.3
+
