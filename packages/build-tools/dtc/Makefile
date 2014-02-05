@@ -3,7 +3,7 @@ VERSION = v1.4.0
 LICENSE = GPL
 
 # Upstream didn't provide any tarball, so we have to pull it from git
-GIT_URL = git://git.jdl.com/software/dtc.git
+GIT_URL = http://git.jdl.com/software/dtc.git
 GIT_CHECKOUT = $(VERSION)
 
 include packages/build-tools/common.mk
