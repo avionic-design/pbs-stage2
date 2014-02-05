@@ -35,7 +35,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		install -m 0755 -d $(DESTDIR)$(prefix)/include/$$dir; \
 		install -m 0644 $$dir/*.a \
 			$(DESTDIR)$(prefix)/lib; \
-		install -m 0644 $$dir/include/*.hh \
+		install -m 0644 $$dir/include/*.h* \
 			$(DESTDIR)$(prefix)/include/$$dir; \
 	done
 	$(call cmd,stamp)
