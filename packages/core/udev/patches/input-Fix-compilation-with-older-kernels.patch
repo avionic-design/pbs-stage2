@@ -1,0 +1,39 @@
+From d9d4a04c36ba776ba7ce81c017a53811facf04ee Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 6 Feb 2014 14:12:44 +0100
+Subject: [PATCH] input: Fix compilation with older kernels
+
+---
+ src/udev-builtin-input_id.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/src/udev-builtin-input_id.c b/src/udev-builtin-input_id.c
+index a062ef7..849a7d8 100644
+--- a/src/udev-builtin-input_id.c
++++ b/src/udev-builtin-input_id.c
+@@ -38,6 +38,13 @@
+ #define LONG(x) ((x)/BITS_PER_LONG)
+ #define test_bit(bit, array)    ((array[LONG(bit)] >> OFF(bit)) & 1)
+ 
++/* Newer kernel have the trigger happy buttons after the keys */
++#ifdef BTN_TRIGGER_HAPPY
++#define LAST_KEY BTN_TRIGGER_HAPPY
++#else
++#define LAST_KEY KEY_MAX
++#endif
++
+ /*
+  * Read a capability attribute and return bitmask.
+  * @param dev udev_device
+@@ -162,7 +169,7 @@ static void test_key (struct udev_device *dev,
+         }
+         /* If there are no keys in the lower block, check the higher block */
+         if (!found) {
+-                for (i = KEY_OK; i < BTN_TRIGGER_HAPPY; ++i) {
++                for (i = KEY_OK; i < LAST_KEY; ++i) {
+                         if (test_bit (i, bitmask_key)) {
+                                 info(udev, "test_key: Found key %x in high block\n", i);
+                                 found = 1;
+-- 
+1.8.5.3
+

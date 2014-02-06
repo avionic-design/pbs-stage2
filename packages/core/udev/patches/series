@@ -1,1 +1,2 @@
 uclibc.patch
+input-Fix-compilation-with-older-kernels.patch
