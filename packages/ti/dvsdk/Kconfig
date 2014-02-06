@@ -1,11 +1,13 @@
 config PACKAGE_TI_DVSDK
 	bool "dvsdk"
 
+if PACKAGE_TI_DVSDK
+
 config PACKAGE_TI_DM365_MMAP
 	bool "DM365 mmap driver"
-	select PACKAGE_TI_DVSDK
 	select VIRTUAL_KERNEL_LINUX_LIBC
 
 config PACKAGE_TI_DM365_CODECS
 	bool "DM365 codecs"
-	select PACKAGE_TI_DVSDK
+
+endif
