@@ -1,7 +1,6 @@
 config PACKAGE_TI_FFMPEG_CSC
 	bool "ffmpeg for CSC"
-	select PACKAGE_BUILD_TOOLS_AUTOCONF
-	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select VIRTUAL_DEVEL_LIBC
 
 config FFMPEG_CSC_BRANCH
 	string "ffmpeg csc repository branch"
