@@ -7,7 +7,7 @@ MINOR   = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = http://upstart.ubuntu.com/download/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--sbindir=/sbin \
