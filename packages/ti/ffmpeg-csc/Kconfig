@@ -1,6 +1,9 @@
 config PACKAGE_TI_FFMPEG_CSC
 	bool "ffmpeg for CSC"
-	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_TI_CODEC_ENGINE
+	select PACKAGE_TI_DVSDK
+	select PACKAGE_TI_DM365_CODECS
+	select PACKAGE_TI_DM365_MMAP
 
 config FFMPEG_CSC_BRANCH
 	string "ffmpeg csc repository branch"
