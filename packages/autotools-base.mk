@@ -15,6 +15,8 @@ conf-args += \
 conf-vars += \
 	CPPFLAGS='$(CPPFLAGS)' \
 	CFLAGS='$(CFLAGS)' \
+	CXXFLAGS='$(CFLAGS)' \
+	ASFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
 install-args += \
