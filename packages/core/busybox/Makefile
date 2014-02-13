@@ -106,5 +106,10 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(priv) chmod u+s $(DESTDIR)/bin/busybox
 	$(call cmd,stamp)
 
+PHONY += configure
+configure:
+	cd $(pkgbuildtree) && \
+		$(env) TERM=$(TERM) $(MAKE) $(conf-args) menuconfig
+
 include packages/cleanup.mk
 include packages/binary.mk
