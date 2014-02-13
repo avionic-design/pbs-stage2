@@ -15,52 +15,53 @@ CPU_CONFIG = minimal-$(CONFIG_CPU)
 CONFIGS = $(strip $(if $(wildcard $(pkgsrctree)/conf/$(CPU_CONFIG)), \
 		$(CPU_CONFIG), $(DEF_CONFIG)))
 
-ifeq ($(CONFIG_PACKAGE_KERNEL_KMOD),y)
-  CONFIGS += modutils-n
-else
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_MODUTILS),y)
   CONFIGS += modutils-y
+else
+  CONFIGS += modutils-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_LIBS_XZ),y)
-  CONFIGS += xz-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_XZ),y)
   CONFIGS += xz-y
+else
+  CONFIGS += xz-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX),y)
-  CONFIGS += util-linux-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_UTIL_LINUX),y)
   CONFIGS += util-linux-y
+else
+  CONFIGS += util-linux-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_COREUTILS),y)
-  CONFIGS += coreutils-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_COREUTILS),y)
   CONFIGS += coreutils-y
+else
+  CONFIGS += coreutils-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_PROCPS),y)
-  CONFIGS += procps-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_PROCPS),y)
   CONFIGS += procps-y
+else
+  CONFIGS += procps-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_CORE_PSMISC),y)
-  CONFIGS += psmisc-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_PSMISC),y)
   CONFIGS += psmisc-y
+else
+  CONFIGS += psmisc-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_NET_BRIDGE_UTILS),y)
-  CONFIGS += bridge-utils-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_BRIDGE_UTILS),y)
   CONFIGS += bridge-utils-y
+else
+  CONFIGS += bridge-utils-n
 endif
 
-ifeq ($(CONFIG_PACKAGE_NET_NTPD),y)
-  CONFIGS += ntpd-n
-else
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_NTPD),y)
   CONFIGS += ntpd-y
+else
+  CONFIGS += ntpd-n
 endif
 
 CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))

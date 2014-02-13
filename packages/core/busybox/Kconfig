@@ -1,3 +1,39 @@
-config PACKAGE_CORE_BUSYBOX
+menuconfig PACKAGE_CORE_BUSYBOX
 	bool "busybox"
 	select VIRTUAL_DEVEL_LIBC
+
+if PACKAGE_CORE_BUSYBOX
+
+config PACKAGE_CORE_BUSYBOX_MODUTILS
+	bool "modutils"
+	default y if !PACKAGE_KERNEL_KMOD
+
+config PACKAGE_CORE_BUSYBOX_XZ
+	bool "xz"
+	default y if !PACKAGE_LIBS_XZ
+
+config PACKAGE_CORE_BUSYBOX_UTIL_LINUX
+	bool "util linux"
+	default y if !PACKAGE_CORE_UTIL_LINUX
+
+config PACKAGE_CORE_BUSYBOX_COREUTILS
+	bool "coreutils"
+	default y if !PACKAGE_CORE_COREUTILS
+
+config PACKAGE_CORE_BUSYBOX_PROCPS
+	bool "procps"
+	default y if !PACKAGE_CORE_PROCPS
+
+config PACKAGE_CORE_BUSYBOX_PSMISC
+	bool "psmisc"
+	default y if !PACKAGE_CORE_PSMISC
+
+config PACKAGE_CORE_BUSYBOX_BRIDGE_UTILS
+	bool "bridge utils"
+	default y if !PACKAGE_NET_BRIDGE_UTILS
+
+config PACKAGE_CORE_BUSYBOX_NTPD
+	bool "ntpd"
+	default y if !PACKAGE_NET_NTPD
+
+endif
