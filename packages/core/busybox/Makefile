@@ -69,12 +69,15 @@ CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-conf-args = \
-	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
+common-args = \
+	EXTRA_CPPFLAGS="$(CPPFLAGS)" \
+	EXTRA_LDFLAGS="$(LDFLAGS)" \
+	EXTRA_CFLAGS="$(CFLAGS)" \
 	CROSS_COMPILE=$(TARGET)- \
 	ARCH=$(CONFIG_ARCH)
+
+conf-args = \
+	$(common-args)
 
 $(pkgbuildtree)/.config:
 	cat $(CONFIGS) > $@
@@ -84,23 +87,15 @@ $(pkgtree)/.configure: $(pkgtree)/.patch $(pkgbuildtree)/.config
 	$(call cmd,stamp)
 
 build-args = \
-	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
-	CROSS_COMPILE=$(TARGET)- \
-	ARCH=$(CONFIG_ARCH)
+	$(common-args)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(env) $(MAKE) -j $(NUM_CPU) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
-	EXTRA_CPPFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_LDFLAGS="--sysroot $(SYSROOT)" \
-	EXTRA_CFLAGS="--sysroot $(SYSROOT)" \
-	CROSS_COMPILE=$(TARGET)- \
+	$(common-args) \
 	CONFIG_PREFIX=$(DESTDIR) \
-	ARCH=$(CONFIG_ARCH)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(priv) $(env) $(MAKE) $(install-args) install
