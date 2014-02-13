@@ -9,7 +9,7 @@ include packages/autotools.mk
 conf-args += \
 	--disable-examples
 
-ifeq ($(CONFIG_ARCH_ARM_SOFT_FP),y)
+ifneq ($(CONFIG_ARCH_HAS_HARD_FLOAT),y)
   conf-args += --disable-float
 endif
 

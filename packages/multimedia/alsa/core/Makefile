@@ -13,7 +13,7 @@ conf-args += \
 	--disable-python \
 	--with-versioned=no
 
-ifeq ($(FLOAT),soft)
+ifneq ($(CONFIG_ARCH_HAS_HARD_FLOAT),y)
 conf-args += \
 	--with-softfloat
 endif

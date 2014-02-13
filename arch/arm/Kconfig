@@ -51,6 +51,7 @@ config ARCH_ARM_SOFT_FP
 
 config ARCH_ARM_HARD_FP
 	bool "hardfp"
+	select ARCH_HAS_HARD_FLOAT
 
 endchoice
 

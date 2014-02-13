@@ -18,7 +18,7 @@ conf-args = \
 	--enable-addons=nptl,libidn \
 	--enable-obsolete-rpc
 
-ifeq ($(FLOAT),soft)
+ifneq ($(CONFIG_ARCH_HAS_HARD_FLOAT),y)
   conf-args += --without-fp
 endif
 

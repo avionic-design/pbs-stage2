@@ -6,9 +6,11 @@ config ARCH_ALPHA
 
 config ARCH_X86
 	bool "x86"
+	select ARCH_HAS_HARD_FLOAT
 
 config ARCH_X86_64
 	bool "x86_64"
+	select ARCH_HAS_HARD_FLOAT
 
 config ARCH_ARM
 	bool "arm"
@@ -19,6 +21,7 @@ config ARCH_BLACKFIN
 
 config ARCH_IA64
 	bool "ia64"
+	select ARCH_HAS_HARD_FLOAT
 
 config ARCH_M68K
 	bool "m68k"
@@ -47,6 +50,9 @@ config MARCH
         string "Machine architecture (-march)"
 
 config ARCH_HAS_UBOOT
+	bool
+
+config ARCH_HAS_HARD_FLOAT
 	bool
 
 source "arch/alpha/Kconfig"
