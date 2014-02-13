@@ -17,7 +17,7 @@ else
 endif
 
 ifeq ($(CONFIG_ARCH_ARM_ARCH_V7),y)
-  ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+  ifeq ($(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP),y)
     ARCH := $(ARCH)v7
 
     ifeq ($(CONFIG_ARCH_ARM_ENDIAN_LITTLE),y)
@@ -28,7 +28,7 @@ ifeq ($(CONFIG_ARCH_ARM_ARCH_V7),y)
   endif
 endif
 
-ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+ifeq ($(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP),y)
   ABI := $(ABI)hf
 endif
 
@@ -45,8 +45,9 @@ export CPPFLAGS
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_BIG) += -mbig-endian
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_LITTLE) += -mlittle-endian
 
-abiflags-$(CONFIG_ARCH_ARM_HARD_FP) += -mfloat-abi=hard -D__ARM_PCS_VFP
-abiflags-$(CONFIG_ARCH_ARM_SOFT_FP) += -mfloat-abi=softfp -mapcs
+abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP) += -mfloat-abi=hard -D__ARM_PCS_VFP
+abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_SOFTFP) += -mfloat-abi=softfp -mapcs
+abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_SOFT) += -mfloat-abi=soft
 
 abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mabi=aapcs-linux -mno-thumb-interwork
 

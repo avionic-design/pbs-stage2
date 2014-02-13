@@ -1,6 +1,6 @@
 PACKAGE = l4t-t20
 
-ifeq ($(CONFIG_ARCH_ARM_HARD_FP),y)
+ifeq ($(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP),y)
 VERSION = r16.3-hfp
 else
 VERSION = r15.2-sfp
