@@ -115,3 +115,13 @@ stripfiles = \
 	$(prefix)/sbin/rpcinfo \
 	$(prefix)/sbin/zdump \
 	$(prefix)/sbin/zic
+
+$(pkgtree)/build/obj-$(HOST_GNU_TYPE)/configparms: $(pkgtree)/.patch
+	@mkdir -p $(@D)
+	@echo "CPPFLAGS += $(CPPFLAGS)"  > $@
+	@echo "CFLAGS   += $(CFLAGS)"   >> $@
+	@echo "CXXFLAGS += $(CFLAGS)"   >> $@
+	@echo "ASFLAGS  += $(CFLAGS)"   >> $@
+	@echo "LDFLAGS  += $(LDFLAGS)"  >> $@
+
+$(pkgtree)/.configure: $(pkgtree)/build/obj-$(HOST_GNU_TYPE)/configparms
