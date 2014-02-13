@@ -18,7 +18,7 @@ $(pkgtree)/.setup:
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
 		find -name '*.so' -o -name '*.o' -exec rm '{}' ';' && \
-		find -name '*.lua' -o -name 'wsapi.cgi' -exec fromdos '{}' ';' && \
+		find -name '*.lua' -o -name 'wsapi.cgi' -exec sed 's,\r$$,,' -i '{}' ';' && \
 		echo "LIB_OPTION= -shared" > config && \
 		echo "LUA_DIR= $(DESTDIR)$(LUA_DIR)" >> config && \
 		echo "BIN_DIR= $(DESTDIR)$(LUA_BINDIR)" >> config && \
