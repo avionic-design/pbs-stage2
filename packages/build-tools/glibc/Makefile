@@ -1,4 +1,4 @@
-include packages/toolchain/glibc/Makefile.location
+include packages/devel/glibc/Makefile.location
 include packages/build-tools/autotools.mk
 
 conf-args += \

@@ -1,14 +1,4 @@
-PACKAGE = glibc
-VERSION = 2.17
-LICENSE = LGPL
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
-MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-MINOR = $(word 2,$(subst ., ,$(VERSION)))
-MICRO = $(word 3,$(subst ., ,$(VERSION)))
-
+include packages/devel/glibc/Makefile.location
 include packages/autotools.mk
 
 # always optimize glibc for speed (it won't even compile with -Os)
