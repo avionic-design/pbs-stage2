@@ -45,6 +45,14 @@ export CPPFLAGS
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_BIG) += -mbig-endian
 abiflags-$(CONFIG_ARCH_ARM_ENDIAN_LITTLE) += -mlittle-endian
 
+abiflags-$(CONFIG_ARCH_ARM_FPU_VFP) += -mfpu=vfp
+abiflags-$(CONFIG_ARCH_ARM_FPU_VFPV3) += -mfpu=vfpv3
+abiflags-$(CONFIG_ARCH_ARM_FPU_VFPV3_D16) += -mfpu=vfpv3-d16
+abiflags-$(CONFIG_ARCH_ARM_FPU_NEON) += -mfpu=neon
+abiflags-$(CONFIG_ARCH_ARM_FPU_VFPV4) += -mfpu=vfpv4
+abiflags-$(CONFIG_ARCH_ARM_FPU_VFPV4_D16) += -mfpu=vfpv4-d16
+abiflags-$(CONFIG_ARCH_ARM_FPU_NEON_VFP4) += -mfpu=neon-vfpv4
+
 abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP) += -mfloat-abi=hard -D__ARM_PCS_VFP
 abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_SOFTFP) += -mfloat-abi=softfp -mapcs
 abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_SOFT) += -mfloat-abi=soft

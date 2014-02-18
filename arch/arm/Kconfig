@@ -18,6 +18,8 @@ config ARCH_ARM_CPU_XSCALE
 
 config ARCH_ARM_CPU_CORTEX_A9
 	bool "Cortex-A9"
+	select ARCH_ARM_EXT_VFP
+	select ARCH_ARM_EXT_VFPV3
 
 endchoice
 
@@ -43,6 +45,43 @@ endchoice
 # Floating point configuration
 #
 choice
+	prompt "Floating point unit"
+
+config ARCH_ARM_FPU_NONE
+	bool "none"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_CPU_XSCALE
+
+config ARCH_ARM_FPU_NEON_VFP4
+	bool "neon-vfpv4"
+	depends on ARCH_ARM_CPU_GENERIC || (ARCH_ARM_EXT_NEON && ARCH_ARM_EXT_VFPV4)
+
+config ARCH_ARM_FPU_VFPV4
+	bool "vfpv4"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_VFPV4
+
+config ARCH_ARM_FPU_VFPV4_D16
+	bool "vfpv4-d16"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_VFPV4_D16
+
+config ARCH_ARM_FPU_NEON
+	bool "neon"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_NEON
+
+config ARCH_ARM_FPU_VFPV3
+	bool "vfpv3"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_VFPV3
+
+config ARCH_ARM_FPU_VFPV3_D16
+	bool "vfpv3-d16"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_VFPV3_D16
+
+config ARCH_ARM_FPU_VFP
+	bool "vfp"
+	depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_EXT_VFP
+
+endchoice
+
+choice
 	prompt "Floating point ABI"
 
 config ARCH_ARM_FLOAT_ABI_SOFT
@@ -50,10 +89,12 @@ config ARCH_ARM_FLOAT_ABI_SOFT
 
 config ARCH_ARM_FLOAT_ABI_SOFTFP
 	bool "softfp"
+	depends on !ARCH_ARM_FPU_NONE
 	select ARCH_HAS_HARD_FLOAT
 
 config ARCH_ARM_FLOAT_ABI_HARDFP
 	bool "hardfp"
+	depends on !ARCH_ARM_FPU_NONE
 	select ARCH_HAS_HARD_FLOAT
 
 endchoice
@@ -107,6 +148,24 @@ config ARCH_ARM_EXT_Z
        bool
 
 config ARCH_ARM_EXT_ZK
+       bool
+
+config ARCH_ARM_EXT_VFP
+       bool
+
+config ARCH_ARM_EXT_VFPV3
+       bool
+
+config ARCH_ARM_EXT_VFPV3_D16
+       bool
+
+config ARCH_ARM_EXT_NEON
+       bool
+
+config ARCH_ARM_EXT_VFPV4
+       bool
+
+config ARCH_ARM_EXT_VFPV4_D16
        bool
 
 #
