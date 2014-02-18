@@ -13,6 +13,8 @@ conf-args = \
 	--target-os=$(CONFIG_OS) \
 	--arch=$(CONFIG_ARCH) \
 	--sysroot=$(SYSROOT) \
+	--extra-cflags="$(CFLAGS)" \
+	--extra-ldflags="$(LDFLAGS)" \
 	--enable-shared \
 	--enable-gpl \
 	--disable-encoders \
