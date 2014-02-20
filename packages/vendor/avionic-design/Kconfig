@@ -7,5 +7,6 @@ source "packages/vendor/avionic-design/medcom-wide/Kconfig"
 source "packages/vendor/avionic-design/ptip/Kconfig"
 source "packages/vendor/avionic-design/remote-control/Kconfig"
 source "packages/vendor/avionic-design/rum/Kconfig"
+source "packages/vendor/avionic-design/comnet/Kconfig"
 
 endmenu

@@ -1,0 +1,5 @@
+menu "Comnet"
+
+source "packages/vendor/avionic-design/comnet/anica/Kconfig"
+
+endmenu
