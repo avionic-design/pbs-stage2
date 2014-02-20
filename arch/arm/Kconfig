@@ -84,18 +84,18 @@ endchoice
 choice
 	prompt "Floating point ABI"
 
-config ARCH_ARM_FLOAT_ABI_SOFT
-	bool "soft"
+config ARCH_ARM_FLOAT_ABI_HARDFP
+	bool "hardfp"
+	depends on !ARCH_ARM_FPU_NONE
+	select ARCH_HAS_HARD_FLOAT
 
 config ARCH_ARM_FLOAT_ABI_SOFTFP
 	bool "softfp"
 	depends on !ARCH_ARM_FPU_NONE
 	select ARCH_HAS_HARD_FLOAT
 
-config ARCH_ARM_FLOAT_ABI_HARDFP
-	bool "hardfp"
-	depends on !ARCH_ARM_FPU_NONE
-	select ARCH_HAS_HARD_FLOAT
+config ARCH_ARM_FLOAT_ABI_SOFT
+	bool "soft"
 
 endchoice
 
