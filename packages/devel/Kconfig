@@ -5,6 +5,7 @@ config VIRTUAL_DEVEL_LIBC
 	select PACKAGE_DEVEL_GLIBC if GLIBC
 	select PACKAGE_DEVEL_UCLIBC if UCLIBC
 
+source "packages/devel/check/Kconfig"
 source "packages/devel/flex/Kconfig"
 source "packages/devel/file/Kconfig"
 source "packages/devel/gcc-libs/Kconfig"

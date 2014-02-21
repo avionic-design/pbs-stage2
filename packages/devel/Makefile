@@ -1,5 +1,6 @@
 obj-y += lua/
 
+obj-$(CONFIG_PACKAGE_DEVEL_CHECK) += check
 obj-$(CONFIG_PACKAGE_DEVEL_FLEX) += flex
 obj-$(CONFIG_PACKAGE_DEVEL_FILE) += file
 obj-$(CONFIG_PACKAGE_DEVEL_GCC_LIBS) += gcc-libs
