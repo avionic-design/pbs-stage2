@@ -2,34 +2,52 @@
 # Check ncurses compatibility
 
 # What library to link
-ldflags()
+ldflags_at()
 {
 	for ext in so a dylib ; do
 		for lib in ncursesw ncurses curses ; do
-			$cc -print-file-name=lib${lib}.${ext} | grep -q /
+			LIBRARY_PATH=$1 $cc -print-file-name=lib${lib}.${ext} | grep -q /
 			if [ $? -eq 0 ]; then
-				echo "-l${lib}"
-				exit
+				echo "${1+-L$1 }-l${lib}"
+				return 0
 			fi
 		done
+	done
+	return 1
+}
+
+ldflags()
+{
+	for base in $TOOLCHAIN_BASE_PATH/lib "" ; do
+		ldflags_at $base && exit
 	done
 	exit 1
 }
 
 # Where is ncurses.h?
+ccflags_at()
+{
+	if [ -z "$1" ]; then
+		return 1
+	elif [ -f $1/include/ncurses/ncurses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncurses/ncurses.h>"'
+	elif [ -f $1/include/ncurses/curses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncurses/curses.h>"'
+	elif [ -f $1/include/ncursesw/curses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncursesw/curses.h>"'
+	elif [ -f $1/include/ncurses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncurses.h>"'
+	else
+		return 1
+	fi
+}
+
 ccflags()
 {
-	if [ -f /usr/include/ncurses/ncurses.h ]; then
-		echo '-I/usr/include/ncurses -DCURSES_LOC="<ncurses.h>"'
-	elif [ -f /usr/include/ncurses/curses.h ]; then
-		echo '-I/usr/include/ncurses -DCURSES_LOC="<ncurses/curses.h>"'
-	elif [ -f /usr/include/ncursesw/curses.h ]; then
-		echo '-I/usr/include/ncursesw -DCURSES_LOC="<ncursesw/curses.h>"'
-	elif [ -f /usr/include/ncurses.h ]; then
-		echo '-DCURSES_LOC="<ncurses.h>"'
-	else
-		echo '-DCURSES_LOC="<curses.h>"'
-	fi
+	for base in $TOOLCHAIN_BASE_PATH /usr ; do
+		ccflags_at $base && return
+	done
+	echo '-DCURSES_LOC="<curses.h>"'
 }
 
 # Temp file, try to clean up after us

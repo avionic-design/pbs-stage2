@@ -95,7 +95,9 @@ $(pkgtree)/.setup: $(source) | $(pkgtree)/build
 #
 
 conf-args = $(common-args)
-conf-vars = $(common-vars)
+conf-vars = $(common-vars) \
+	TOOLCHAIN_BASE_PATH=$(TOOLCHAIN_BASE_PATH) \
+	check-lxdialog=$(srctree)/scripts/kconfig/lxdialog/check-lxdialog.sh
 
 quiet_cmd_configure = CONFIG  $(KERNEL_CONFIG)
       cmd_configure = $(env) $(MAKE) -C $(KERNELSRC) $(conf-args) \

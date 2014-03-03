@@ -77,7 +77,9 @@ common-args = \
 	ARCH=$(CONFIG_ARCH)
 
 conf-args = \
-	$(common-args)
+	$(common-args) \
+	TOOLCHAIN_BASE_PATH=$(TOOLCHAIN_BASE_PATH) \
+	check-lxdialog=$(srctree)/scripts/kconfig/lxdialog/check-lxdialog.sh
 
 $(pkgbuildtree)/.config:
 	cat $(CONFIGS) > $@

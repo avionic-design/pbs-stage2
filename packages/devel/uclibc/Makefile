@@ -17,6 +17,8 @@ $(pkgtree)/.setup:
 conf-args = \
 	KERNEL_HEADERS="$(SYSROOT)$(prefix)/include" \
 	CROSS=$(CROSS_COMPILE) \
+	TOOLCHAIN_BASE_PATH=$(TOOLCHAIN_BASE_PATH) \
+	check-lxdialog=$(srctree)/scripts/kconfig/lxdialog/check-lxdialog.sh \
 	O=$(pkgtree)/build
 
 $(pkgtree)/.configure: $(pkgtree)/.dotconfig
