@@ -1,0 +1,30 @@
+From af9884c41db550e473000f4b24f7da8f59a69422 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Tue, 18 Mar 2014 12:22:34 +0100
+Subject: [PATCH] Fix linker issue due to nostdlib
+
+---
+ source/config/mh-linux | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/source/config/mh-linux b/source/config/mh-linux
+index 366f0cc..3ddff2c 100644
+--- a/source/config/mh-linux
++++ b/source/config/mh-linux
+@@ -20,8 +20,11 @@ LIBCPPFLAGS =
+ LD_RPATH= -Wl,-zorigin,-rpath,'$$'ORIGIN 
+ LD_RPATH_PRE = -Wl,-rpath,
+ 
+-## These are the library specific LDFLAGS
+-LDFLAGSICUDT=-nodefaultlibs -nostdlib
++#### Disable this as it causes linker issues. See
++#### https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=653457
++#### for details
++### These are the library specific LDFLAGS
++#LDFLAGSICUDT=-nodefaultlibs -nostdlib
+ 
+ ## Compiler switch to embed a library name
+ # The initial tab in the next line is to prevent icu-config from reading it.
+-- 
+1.9.0
+
