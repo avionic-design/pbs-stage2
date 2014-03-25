@@ -55,6 +55,9 @@ if test -x /usr/sbin/plymouthd; then
 fi
 
 log_action_begin_msg "Waiting for /dev filesystem to be populated"
+# do this at least twice to get events from 2nd level devices (e.g. behind a USB hub)
+/usr/bin/udevadm trigger
+/usr/bin/udevadm settle || true
 /usr/bin/udevadm trigger
 /usr/bin/udevadm settle || true
 log_action_end_msg $?
