@@ -9,3 +9,4 @@ fix-arm-neon-build-issue.patch
 0001-Fix-Assertion-failure-in-JavaSCriptCore.patch
 0002-hack-Use-dedicated-video-window-for-playback.patch
 0003-Make-nvxvimagesink-hack-configurable.patch
+0004-gstreamer-Explicit-window-size-for-fullscreen-with-n.patch

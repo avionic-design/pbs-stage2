@@ -1,0 +1,75 @@
+From c3e5fd4ddd9df11441630ed917381c965a905684 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Mon, 20 Jan 2014 11:06:34 +0100
+Subject: [PATCH 4/4] gstreamer: Explicit window size for fullscreen with no wm
+
+If no windowmanager is running the set_fullscreen request is not working. Hence
+replace it by an explicit gtk_window_resize.
+
+Change-Id: Id3ff3d6fb3b3c683533547df2882f1402732411f
+Signed-off-by: Julian Scheel <julian@jusst.de>
+Reviewed-on: http://review.adnet.avionic-design.de/1004
+Reviewed-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ .../graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp   |  3 ++-
+ .../platform/graphics/gstreamer/PlatformVideoWindow.h    |  1 +
+ .../graphics/gstreamer/PlatformVideoWindowGtk.cpp        | 16 ++++++++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+index 1902a76..3cf5704 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+@@ -458,9 +458,10 @@ void MediaPlayerPrivateGStreamer::play()
+ 
+     if (m_window) {
+         gtk_widget_show(m_window->window());
+-        gtk_window_fullscreen(GTK_WINDOW(m_window->window()));
++        m_window->fullscreen();
+     }
+ #endif
++
+     if (changePipelineState(GST_STATE_PLAYING)) {
+         m_isEndReached = false;
+         LOG_MEDIA_MESSAGE("Play");
+diff --git a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindow.h b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindow.h
+index 2f8d365..6b81610 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindow.h
++++ b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindow.h
+@@ -42,6 +42,7 @@ class PlatformVideoWindow : public RefCounted<PlatformVideoWindow> {
+ 
+ 
+         void prepareForOverlay(GstMessage*);
++        void fullscreen();
+ #if !PLATFORM(MAC)
+         PlatformWidget window() const { return m_window; }
+ #else
+diff --git a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+index 70cee83..04aeea5 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+@@ -66,5 +66,21 @@ PlatformVideoWindow::~PlatformVideoWindow()
+ void PlatformVideoWindow::prepareForOverlay(GstMessage*)
+ {
+ }
++
++void PlatformVideoWindow::fullscreen()
++{
++    if (m_window) {
++        GdkScreen *screen = gdk_screen_get_default();
++        const char *wm = gdk_x11_screen_get_window_manager_name(screen);
++
++        if (!wm || strcmp(wm, "unknown") == 0) {
++            int height = gdk_screen_get_height(screen);
++            int width = gdk_screen_get_width(screen);
++            gtk_window_resize(GTK_WINDOW(m_window), width, height);
++        } else {
++            gtk_window_fullscreen(GTK_WINDOW(m_window));
++        }
++    }
++}
+ #endif // ENABLE(VIDEO) && USE(GSTREAMER) && !defined(GST_API_VERSION_1)
+ 
+-- 
+1.9.0
+
