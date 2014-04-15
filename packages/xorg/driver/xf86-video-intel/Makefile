@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-intel
-VERSION = 2.21.12
+VERSION = 2.20.9
 LICENSE = MIT
 
 include packages/xorg/driver/common.mk
