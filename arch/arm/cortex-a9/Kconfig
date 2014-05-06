@@ -10,13 +10,16 @@ choice
 config ARCH_UNSPECIFIED
 	bool "Unspecified"
 	select ARCH_ARM_EXT_NEON
+	select ARCH_ARM_EXT_VFPV3
 
 config ARCH_TEGRA_2x_SOC
 	bool "Nvidia Tegra 2"
+	select ARCH_ARM_EXT_VFPV3_D16
 
 config ARCH_TEGRA_3x_SOC
 	bool "Nvidia Tegra 3"
 	select ARCH_ARM_EXT_NEON
+	select ARCH_ARM_EXT_VFPV3
 
 endchoice
 

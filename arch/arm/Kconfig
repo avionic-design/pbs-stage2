@@ -18,8 +18,6 @@ config ARCH_ARM_CPU_XSCALE
 
 config ARCH_ARM_CPU_CORTEX_A9
 	bool "Cortex-A9"
-	select ARCH_ARM_EXT_VFP
-	select ARCH_ARM_EXT_VFPV3
 
 endchoice
 
