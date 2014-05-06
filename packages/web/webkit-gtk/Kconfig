@@ -19,6 +19,11 @@ config PACKAGE_WEB_WEBKIT_GTK
 
 if PACKAGE_WEB_WEBKIT_GTK
 
+config PACKAGE_WEB_WEBKIT_WITH_DEBUG
+	bool "Enable debug"
+	help
+	  Enables build with debug symbols, this requires +4G RAM to link!
+
 choice PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND
 	prompt "Unicode backend"
 

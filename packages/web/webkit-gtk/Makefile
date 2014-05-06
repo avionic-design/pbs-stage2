@@ -16,6 +16,11 @@ conf-args += \
 	--disable-geolocation \
 	--disable-spellcheck
 
+# Disable debug symbols to allow build on machine without enough RAM
+ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
+CFLAGS += -g0
+endif
+
 ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_ICU),y)
   conf-args += --with-unicode-backend=icu
 else
