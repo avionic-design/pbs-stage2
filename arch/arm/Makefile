@@ -61,6 +61,10 @@ abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mabi=aapcs-linux -mno-thumb-interwork
 
 ABIFLAGS = $(abiflags-y)
 
+ifneq ($(CONFIG_MARCH),"")
+  ABIFLAGS += -march=$(call unquote,$(CONFIG_MARCH))
+endif
+
 #
 # CPU specific configuration
 #
