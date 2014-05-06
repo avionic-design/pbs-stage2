@@ -1,7 +1,1 @@
 OPTFLAGS := -g -O2 -marm -mtune=cortex-a9
-
-ifeq ($(CONFIG_ARCH_TEGRA_3x_SOC),y)
-OPTFLAGS += -mfpu=neon
-else
-OPTFLAGS += -mfpu=vfpv3-d16
-endif
