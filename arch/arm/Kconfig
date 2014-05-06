@@ -275,7 +275,7 @@ endchoice
 
 
 config MARCH
-       default "armv7"      if ARCH_ARM_ARCH_V7
+       default "armv7-a"    if ARCH_ARM_ARCH_V7
        default "armv6zk"    if ARCH_ARM_ARCH_V6ZK
        default "armv6z"     if ARCH_ARM_ARCH_V6Z
        default "armv6t2"    if ARCH_ARM_ARCH_V6T2
