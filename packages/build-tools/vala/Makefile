@@ -10,5 +10,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/build-tools/autotools.mk
 
+conf-vars += \
+	ac_cv_path_XSLTPROC=:
+
 prunefiles = \
 	$(prefix)/lib/libvala-$(MAJOR).$(MINOR).la
