@@ -35,7 +35,7 @@ endif
 TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)
 export TARGET
 
-CPPFLAGS = --sysroot $(SYSROOT)
+CPPFLAGS = --sysroot $(SYSROOT) -Uarm
 export CPPFLAGS
 
 #
