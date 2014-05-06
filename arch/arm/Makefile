@@ -66,6 +66,17 @@ ifneq ($(CONFIG_MARCH),"")
 endif
 
 #
+# Debug and optimization flags
+#
+
+optflags-$(CONFIG_DEBUG) += -g
+optflags-$(CONFIG_OPTIMIZATION_SIZE) += -Os
+optflags-$(CONFIG_OPTIMIZATION_SPEED) += -O2
+optflags-$(CONFIG_OPTIMIZATION_NONE) += -O0
+
+OPTFLAGS = $(optflags-y)
+
+#
 # CPU specific configuration
 #
 

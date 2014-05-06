@@ -104,3 +104,21 @@ config GLIBC
 
 endchoice
 endif
+
+config DEBUG
+	bool "Enable Debug Symbols"
+	default y
+
+choice
+	prompt "Optimization"
+
+config OPTIMIZATION_SIZE
+	bool "For size"
+
+config OPTIMIZATION_SPEED
+	bool "For speed"
+
+config OPTIMIZATION_NONE
+	bool "None"
+
+endchoice

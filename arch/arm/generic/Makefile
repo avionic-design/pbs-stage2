@@ -1,1 +1,1 @@
-OPTFLAGS := -g -Os
+OPTFLAGS +=
