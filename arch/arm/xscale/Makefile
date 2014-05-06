@@ -1,1 +1,1 @@
-OPTFLAGS := -g -Os -marm -mtune=xscale -Wa,-mcpu=xscale
+OPTFLAGS := -g -Os -mtune=xscale -Wa,-mcpu=xscale

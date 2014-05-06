@@ -59,7 +59,7 @@ abiflags-$(CONFIG_ARCH_ARM_FLOAT_ABI_SOFT) += -mfloat-abi=soft
 
 abiflags-$(CONFIG_ARCH_ARM_ABI_EABI) += -mabi=aapcs-linux -mno-thumb-interwork
 
-ABIFLAGS = $(abiflags-y)
+ABIFLAGS = -marm $(abiflags-y)
 
 ifneq ($(CONFIG_MARCH),"")
   ABIFLAGS += -march=$(call unquote,$(CONFIG_MARCH))

@@ -1,1 +1,1 @@
-OPTFLAGS := -g -O2 -marm -mtune=cortex-a9
+OPTFLAGS := -g -O2 -mtune=cortex-a9
