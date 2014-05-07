@@ -112,17 +112,11 @@ config ARCH_ARM_ABI_EABI
 
 endchoice
 
-if ARCH_ARM_ABI_OABI
 config ABI
 	string
+	default "eabihf" if ARCH_ARM_ABI_EABI && ARCH_ARM_FLOAT_ABI_HARDFP
+	default "eabi" if ARCH_ARM_ABI_EABI && !ARCH_ARM_FLOAT_ABI_HARDFP
 	default ""
-endif
-
-if ARCH_ARM_ABI_EABI
-config ABI
-	string
-	default "eabi"
-endif
 
 #
 # CPU Extensions

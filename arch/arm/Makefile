@@ -28,10 +28,6 @@ ifeq ($(CONFIG_ARCH_ARM_ARCH_V7),y)
   endif
 endif
 
-ifeq ($(CONFIG_ARCH_ARM_FLOAT_ABI_HARDFP),y)
-  ABI := $(ABI)hf
-endif
-
 TARGET := $(ARCH)-$(CPU)$(OS)-$(LIBC)$(ABI)
 export TARGET
 
