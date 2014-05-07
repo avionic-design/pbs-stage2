@@ -1,0 +1,2 @@
+config PLATFORM_GENERIC_EMPTY
+	bool "Empty Testing Platform"
