@@ -1,0 +1,5 @@
+menu "X.Org - Applications"
+
+source "packages/build-tools/xorg/app/xkbcomp/Kconfig"
+
+endmenu

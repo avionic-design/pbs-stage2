@@ -1,0 +1,11 @@
+menu "X.Org - Libraries"
+
+source "packages/build-tools/xorg/lib/pthread-stubs/Kconfig"
+source "packages/build-tools/xorg/lib/x11/Kconfig"
+source "packages/build-tools/xorg/lib/xau/Kconfig"
+source "packages/build-tools/xorg/lib/xcb/Kconfig"
+source "packages/build-tools/xorg/lib/xdmcp/Kconfig"
+source "packages/build-tools/xorg/lib/xkbfile/Kconfig"
+source "packages/build-tools/xorg/lib/xtrans/Kconfig"
+
+endmenu

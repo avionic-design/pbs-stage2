@@ -1,0 +1,8 @@
+menu "X.Org - X11 Windowing System"
+
+source "packages/build-tools/xorg/app/Kconfig"
+source "packages/build-tools/xorg/lib/Kconfig"
+source "packages/build-tools/xorg/proto/Kconfig"
+source "packages/build-tools/xorg/util/Kconfig"
+
+endmenu

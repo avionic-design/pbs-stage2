@@ -1,0 +1,5 @@
+menu "X.Org - Utilities"
+
+source "packages/build-tools/xorg/util/util-macros/Kconfig"
+
+endmenu

@@ -1,0 +1,9 @@
+menu "X.Org - Protocols"
+
+source "packages/build-tools/xorg/proto/input/Kconfig"
+source "packages/build-tools/xorg/proto/kb/Kconfig"
+source "packages/build-tools/xorg/proto/x/Kconfig"
+source "packages/build-tools/xorg/proto/xcb/Kconfig"
+source "packages/build-tools/xorg/proto/xext/Kconfig"
+
+endmenu
