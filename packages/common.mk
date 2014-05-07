@@ -10,11 +10,11 @@ ROOTFS ?= $(objtree)/rootfs
 prefix ?= /usr
 export SYSROOT DESTDIR ROOTFS prefix
 
-CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
-CONFIG_CPU := $(subst $(quote),,$(CONFIG_CPU))
-CONFIG_OS := $(subst $(quote),,$(CONFIG_OS))
-CONFIG_LIBC := $(subst $(quote),,$(CONFIG_LIBC))
-CONFIG_ABI := $(subst $(quote),,$(CONFIG_ABI))
+CONFIG_ARCH := $(call unquote,$(CONFIG_ARCH))
+CONFIG_CPU := $(call unquote,$(CONFIG_CPU))
+CONFIG_OS := $(call unquote,$(CONFIG_OS))
+CONFIG_LIBC := $(call unquote,$(CONFIG_LIBC))
+CONFIG_ABI := $(call unquote,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 

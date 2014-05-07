@@ -15,7 +15,7 @@ include $(srctree)/scripts/Makefile.lib
 
 export PATH:=$(objtree)/build-tools/bin:$(PATH)
 
-CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+CONFIG_ARCH := $(call unquote,$(CONFIG_ARCH))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 

@@ -9,7 +9,7 @@ include include/config/depends.mk
 include scripts/Kbuild.include
 include scripts/Makefile.lib
 
-CONFIG_ARCH := $(subst $(quote),,$(CONFIG_ARCH))
+CONFIG_ARCH := $(call unquote,$(CONFIG_ARCH))
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
 platform-depends-dirs := $(depends-dirs)
