@@ -34,3 +34,27 @@ The following is a list of supported variables:
 		is a default value set pointing to <pbsdir>/toolchains, but
 		this behaviour may be dropped soon - do not rely on the
 		existence of a default value!
+
+	GIT_REFERENCE_DIR
+		Setting this variable allow using a local git cache to speedup
+		cloning from remote repositories. This variable must be set to
+		to the path of the git cache directory to use.
+
+		A git cache is just a normal repository, but as no working tree
+		is needed a bare repository can be used:
+
+			$ mkdir ~/git-cache
+			$ cd ~/git-cache
+			$ git init --bare
+
+		Then add the repositories that need to be cached:
+
+			$ git remote add kernel git://git.kernel.org/...
+			$ git remote add ...
+
+		And fetch the packs from the repositories:
+
+			$ git fetch --all
+
+		The cache is then ready to use, you might also want to setup
+		a cron job to regularly update your cache repository.
