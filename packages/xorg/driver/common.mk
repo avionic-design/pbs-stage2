@@ -1,4 +1,3 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/driver
-TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
+SUBDIR ?= driver
 
-include packages/autotools.mk
+include packages/xorg/common.mk

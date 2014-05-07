@@ -1,2 +1,4 @@
-include packages/xorg/lib/location.mk
-include packages/autotools-reconf.mk
+SUBDIR ?= lib
+BUILD_SCRIPT ?= autotools-reconf.mk
+
+include packages/xorg/common.mk

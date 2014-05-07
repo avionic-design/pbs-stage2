@@ -1,4 +1,3 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/app
-TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
+SUBDIR ?= app
 
-include packages/autotools.mk
+include packages/xorg/common.mk

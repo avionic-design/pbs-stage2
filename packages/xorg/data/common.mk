@@ -1,4 +1,3 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/data
-TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
+SUBDIR ?= data
 
-include packages/autotools.mk
+include packages/xorg/common.mk

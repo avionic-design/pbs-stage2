@@ -1,4 +1,3 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/proto
-TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
+SUBDIR ?= proto
 
-include packages/autotools.mk
+include packages/xorg/common.mk

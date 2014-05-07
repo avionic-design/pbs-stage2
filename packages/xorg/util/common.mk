@@ -1,4 +1,3 @@
-LOCATION ?= http://xorg.freedesktop.org/releases/individual/util
-TARBALLS ?= $(PACKAGE)-$(VERSION).tar.bz2
+SUBDIR ?= util
 
-include packages/autotools.mk
+include packages/xorg/common.mk
