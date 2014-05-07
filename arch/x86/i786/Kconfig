@@ -1,7 +1,0 @@
-if ARCH_X86_I786
-
-config CPU
-	string
-	default "i786"
-
-endif

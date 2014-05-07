@@ -6,17 +6,17 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-ifeq ($(CONFIG_ARCH),x86)
-  ifeq ($(CONFIG_CPU),i786)
+ifeq ($(ARCH),x86)
+  ifeq ($(MACHINE),i786)
     CPU := i686
   else
-    CPU := $(CONFIG_CPU)
+    CPU := $(MACHINE)
   endif
 else
-  CPU := $(CONFIG_ARCH)
+  CPU := $(MACHINE)
 endif
 
-TARGET_PLATFORM := $(CPU)-$(CONFIG_OS)
+TARGET_PLATFORM := $(CPU)-$(OS)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)

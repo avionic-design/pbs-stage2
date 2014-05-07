@@ -4,6 +4,11 @@ config ARCH
 	string
 	default "mips"
 
+config MACHINE
+	string
+	default "mipsel" if ARCH_MIPS_ENDIAN_LITTLE
+	default "mips"
+
 choice
 	prompt "Endianness"
 

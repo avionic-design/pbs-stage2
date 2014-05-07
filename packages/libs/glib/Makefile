@@ -1,8 +1,6 @@
 include packages/libs/glib/Makefile.location
 include packages/autotools-reconf.mk
 
-ARCH := $(call unquote,$(CONFIG_ARCH))
-
 conf-vars += \
 	glib_cv_stack_grows=no \
 	glib_cv_monotonic_clock=yes \

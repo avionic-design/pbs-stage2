@@ -1,7 +1,0 @@
-if ARCH_X86_GENERIC
-
-config CPU
-	string
-	default "i386"
-
-endif

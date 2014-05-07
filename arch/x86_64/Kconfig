@@ -4,6 +4,10 @@ config ARCH
 	string
 	default "x86_64"
 
+config VENDOR
+	string
+	default "unknown" if !OS_NONE
+
 #
 # x86-64 CPU selection
 #
@@ -14,7 +18,5 @@ config ARCH_X86_64_GENERIC
 	bool "generic"
 
 endchoice
-
-source "arch/x86_64/generic/Kconfig"
 
 endif

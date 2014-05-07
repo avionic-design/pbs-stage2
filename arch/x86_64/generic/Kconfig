@@ -1,7 +1,0 @@
-if ARCH_X86_64_GENERIC
-
-config CPU
-	string
-	default "generic"
-
-endif

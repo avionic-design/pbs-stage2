@@ -4,6 +4,16 @@ config ARCH
 	string
 	default "arm"
 
+config MACHINE
+	string
+	default "armv7l" if ARCH_ARM_ARCH_V7 && ARCH_ARM_FLOAT_ABI_HARDFP && ARCH_ARM_ENDIAN_LITTLE
+	default "armv7b" if ARCH_ARM_ARCH_V7 && ARCH_ARM_FLOAT_ABI_HARDFP && ARCH_ARM_ENDIAN_BIG
+	default "arm"
+
+config VENDOR
+	string
+	default "unknown" if !OS_NONE
+
 #
 # ARM CPU selection
 #

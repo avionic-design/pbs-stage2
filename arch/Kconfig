@@ -49,6 +49,9 @@ endchoice
 config MARCH
         string "Machine architecture (-march)"
 
+config VENDOR
+	string
+
 config ARCH_HAS_UBOOT
 	bool
 

@@ -1,11 +1,1 @@
-TARGET := $(ARCH)-$(OS)-
-export TARGET
-
-CPPFLAGS = --sysroot $(SYSROOT)
-export CPPFLAGS
-
-CFLAGS = $(CPPFLAGS) $(ABIFLAGS) $(OPTFLAGS)
-export CFLAGS
-
-LDFLAGS = --sysroot $(SYSROOT)
-export LDFLAGS
+include arch/common.mk

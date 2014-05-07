@@ -5,8 +5,6 @@ LICENSE = proprietary
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-ARCH = $(call unquote,$(CONFIG_ARCH))
-
 ifeq ($(ARCH),x86)
   FLASH_ARCH = i386
   BITS = 32

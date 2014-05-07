@@ -15,7 +15,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	SYSTEM="linux" \
-	M_ARCH=$(ARCH) \
+	M_ARCH=$(MACHINE) \
 	CC='$(CC)' \
 	CFLAGS.EXTRA='$(CFLAGS)' \
 	LD='$(CC)' \
@@ -28,7 +28,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 install-args = \
 	SYSTEM="linux" \
-	M_ARCH=$(ARCH) \
+	M_ARCH=$(MACHINE) \
 	GLEW_DEST=$(DESTDIR)$(prefix)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build

@@ -8,10 +8,6 @@ include include/config/depends-dirs.mk
 # select images on a per-architecture basis
 #
 
-ARCH := $(call unquote,$(CONFIG_ARCH))
-ARCH := $(patsubst mips%,mips,$(ARCH))
-ARCH := $(patsubst i%86,x86,$(ARCH))
-
   image-blackfin = vmImage
 install-blackfin = install
 

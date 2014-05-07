@@ -1,7 +1,0 @@
-if ARCH_X86_I686
-
-config CPU
-	string
-	default "i686"
-
-endif

@@ -34,11 +34,11 @@ endif
 ifeq ($(ARCH),x86)
   conf-vars += ac_cv_sizeof_long_double=8
 
-  ifeq ($(CPU),i686)
+  ifeq ($(MACHINE),i686)
     conf-vars += CFLAGS='-march=i686 -O2 -g'
   endif
 
-  ifeq ($(CPU),i786)
+  ifeq ($(MACHINE),i786)
     conf-vars += CFLAGS='-march=prescott -O2 -g'
   endif
 endif

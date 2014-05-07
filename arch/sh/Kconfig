@@ -4,4 +4,8 @@ config ARCH
 	string
 	default "sh"
 
+config MACHINE
+	string
+	default "sh4"
+
 endif

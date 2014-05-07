@@ -4,6 +4,20 @@ config ARCH
 	string
 	default "x86"
 
+config MACHINE
+	string
+	default "i786" if ARCH_X86_I786
+	default "i686" if ARCH_X86_I686
+	default "i386"
+
+config VENDOR
+	string
+	default "pc" if !OS_NONE
+
+config MARCH
+	default "i686" if ARCH_X86_I686 || ARCH_X86_I786
+	default "i386" if ARCH_X86_I386
+
 #
 # x86 CPU selection
 #
@@ -20,9 +34,5 @@ config ARCH_X86_I786
 	bool "i786"
 
 endchoice
-
-source "arch/x86/i386/Kconfig"
-source "arch/x86/i686/Kconfig"
-source "arch/x86/i786/Kconfig"
 
 endif

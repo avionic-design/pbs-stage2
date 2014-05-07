@@ -4,4 +4,8 @@ config ARCH
 	string
 	default "blackfin"
 
+config MACHINE
+	string
+	default "bfin"
+
 endif
