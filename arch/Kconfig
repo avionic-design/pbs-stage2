@@ -80,19 +80,14 @@ config OS_LINUX
 
 endchoice
 
-if OS_NONE
 config OS
 	string
+	default "linux" if OS_LINUX
 	default "none"
-endif
-
-if OS_LINUX
-config OS
-	string
-	default "linux"
 
 choice
 	prompt "C runtime library"
+	depends on !OS_NONE
 
 config UCLIBC
 	bool "uclibc: uClibc"
@@ -103,7 +98,6 @@ config GLIBC
 	depends on OS_LINUX
 
 endchoice
-endif
 
 config DEBUG
 	bool "Enable Debug Symbols"
