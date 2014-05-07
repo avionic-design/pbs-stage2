@@ -1,2 +1,0 @@
-config PACKAGE_BUILD_TOOLS_XPROTO
-	bool "xproto"
