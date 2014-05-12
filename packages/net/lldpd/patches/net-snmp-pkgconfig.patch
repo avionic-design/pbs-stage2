@@ -2,12 +2,15 @@ diff --git a/configure.ac b/configure.ac
 index 9692b8b..aae12e9 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -199,7 +199,7 @@ AC_ARG_WITH([snmp],
+@@ -199,7 +199,10 @@ AC_ARG_WITH([snmp],
      [Enable the use of SNMP @<:@default=no@:>@]
    ))
  if test x"$with_snmp" = x"yes"; then
 -   lldp_CHECK_SNMP
-+   PKG_CHECK_MODULES([NETSNMP], [net-snmp-agent], [], [lldp_CHECK_SNMP])
++   PKG_CHECK_MODULES([NETSNMP], [net-snmp-agent],
++      [AC_DEFINE_UNQUOTED([USE_SNMP], 1)
++       NETSNMP_LIBS="${NETSNMP_LIBS} -lnetsnmpmibs"
++      ], [lldp_CHECK_SNMP])
  fi
  
  AC_ARG_WITH([xml],
