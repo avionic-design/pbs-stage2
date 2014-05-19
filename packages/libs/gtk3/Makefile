@@ -1,5 +1,5 @@
 PACKAGE = gtk+
-VERSION = 3.8.6
+VERSION = 3.8.9
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -9,6 +9,9 @@ LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
+
+env += \
+       PKG_CONFIG_FOR_BUILD=/usr/bin/pkg-config
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
