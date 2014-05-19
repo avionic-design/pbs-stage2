@@ -36,6 +36,7 @@ ifeq ($(install-packages-y),)
   install-packages-y := $(filter-out %-l10n,$(install-packages-y))
   install-packages-y := $(filter-out %-locale,$(install-packages-y))
   install-packages-y := $(filter-out %-man,$(install-packages-y))
+  install-packages-y := $(filter-out %-dbg,$(install-packages-y))
 
   ifneq ($(exclude-packages-y),)
     install-packages-y := $(filter-out $(exclude-packages-y),$(install-packages-y))
