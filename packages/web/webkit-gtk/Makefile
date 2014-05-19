@@ -54,8 +54,13 @@ endif
 
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2),y)
   conf-args += \
-	--disable-webkit2 \
-	--with-gtk=2.0
+	--disable-webkit2
+
+ifeq ($(CONFIG_VIRTUAL_LIBS_GTK_GTK3),y)
+  conf-args += --with-gtk=3.0
+else
+  conf-args += --with-gtk=2.0
+endif
 else
   # requires gtk3
   conf-args += \
