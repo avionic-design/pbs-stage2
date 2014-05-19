@@ -11,7 +11,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--libexecdir=$(prefix)/lib/at-spi2
+	--libexecdir=$(prefix)/lib/at-spi2 \
+	--with-dbus-daemondir=/usr/bin
 
 prunefiles = \
 	$(prefix)/lib/*.la
