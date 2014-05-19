@@ -1,1 +1,3 @@
 /usr/lib/*.so.*
+/usr/lib/gtk-2.0/modules/*.so
+/usr/lib/gtk-3.0/modules/*.so
