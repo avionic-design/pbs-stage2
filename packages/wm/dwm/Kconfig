@@ -1,0 +1,22 @@
+config PACKAGE_WM_DWM
+	bool "dwm"
+	select PACKAGE_XORG_LIB_X11
+	help
+	  dwm is a dynamic window manager for X. It is designed for easy and
+	  static manipulation directly in the sourcecode.
+	  Due to this different patchsets are provided for different
+	  functionality.
+
+if PACKAGE_WM_DWM
+
+choice PACKAGE_WM_DWM_PATCHSET
+	prompt "Patchset"
+
+config PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL
+	bool "remote-control"
+	help
+	  Patchset for using dwm as window manager to run along remote-control.
+
+endchoice
+
+endif
