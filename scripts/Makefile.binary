@@ -24,23 +24,24 @@ PBS_VERSION := $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)
 
 pkg-ext = $(PBS_VERSION)_$(TARGET).tar.bz2
 
+include-packages :=
+include-packages += $(include-packages-y)
+
+exclude-packages := %-dbg %-man %-locale %-l10n %-doc %-dev linux-headers
+exclude-packages += $(exclude-packages-y)
+
 ifeq ($(install-packages-y),)
   install-packages-y := $(wildcard $(srctree)/$(obj)/*.install)
   install-packages-y := $(patsubst %.install,%,$(install-packages-y))
   install-packages-y := $(patsubst $(srctree)/$(obj)/%,%,$(install-packages-y))
+endif
 
-  # filter-out unwanted packages
-  install-packages-y := $(filter-out linux-headers,$(install-packages-y))
-  install-packages-y := $(filter-out %-dev,$(install-packages-y))
-  install-packages-y := $(filter-out %-doc,$(install-packages-y))
-  install-packages-y := $(filter-out %-l10n,$(install-packages-y))
-  install-packages-y := $(filter-out %-locale,$(install-packages-y))
-  install-packages-y := $(filter-out %-man,$(install-packages-y))
-  install-packages-y := $(filter-out %-dbg,$(install-packages-y))
+ifneq ($(strip $(include-packages)),)
+  install-packages-y := $(filter $(include-packages),$(install-packages-y))
+endif
 
-  ifneq ($(exclude-packages-y),)
-    install-packages-y := $(filter-out $(exclude-packages-y),$(install-packages-y))
-  endif
+ifneq ($(strip $(exclude-packages)),)
+  install-packages-y := $(filter-out $(exclude-packages),$(install-packages-y))
 endif
 
 install-packages := $(addprefix install-$(obj)/,$(install-packages-y))
