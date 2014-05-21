@@ -14,20 +14,17 @@ OBJCOPY := $(CROSS_COMPILE)objcopy
 
 # add the and rootfs prefix and expand wildcards
 stripfiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(stripfiles)))
-# resolve symlinks and remove double entries
-stripfiles := $(sort $(realpath $(stripfiles)))
 # add the strip- prefix
 stripfiles := $(patsubst %,strip-%,$(stripfiles))
 
-debugfile = $(<:$(DESTDIR)/%=$(DESTDIR)/debug/%.dbg)
+env += \
+	DESTDIR=$(DESTDIR) \
+	OBJCOPY=$(OBJCOPY)
 
 PHONY += $(stripfiles)
 $(stripfiles): strip-%: %
 	@echo "  STRIP   $(subst $(DESTDIR),,$<)"
-	@$(env) mkdir -p $(dir $(debugfile))
-	@$(env) $(OBJCOPY) --only-keep-debug $< $(debugfile)
-	@$(env) chmod -x $(debugfile)
-	@$(env) $(OBJCOPY) --strip-all --add-gnu-debuglink $(debugfile) $<
+	@$(env) $(srctree)/scripts/pbs-strip $<
 
 PHONY += strip
 strip: $(stripfiles)

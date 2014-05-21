@@ -1,0 +1,70 @@
+#!/bin/sh
+
+if [ -z "$DESTDIR" ] ; then
+	echo "DESTDIR is undefined" >&2
+	exit 1
+fi
+
+[ -z "$OBJCOPY" ] && OBJCOPY=${CROSS_COMPILE}objcopy
+
+checkfile()
+{
+	if [ "$1" = "${1#$DESTDIR/}" ] ; then
+		echo "$f isn't in DESTDIR" >&2
+		return 1
+	fi
+
+	if ! [ -e "$1" ] ; then
+		echo "$f doesn't exist" >&2
+		return 1
+	fi
+}
+
+debugfile()
+{
+	echo "${DESTDIR}/debug/${1#$DESTDIR/}.dbg"
+}
+
+do_strip_file()
+{
+	mkdir -p "$(dirname "$2")" && \
+		$OBJCOPY --only-keep-debug "$1" "$2" && \
+		chmod -x "$2" && \
+		$OBJCOPY --strip-all --add-gnu-debuglink "$2" "$1"
+}
+
+do_strip_symlink()
+{
+	# If it is relative link use the same target with .dbg added
+	# otherwise compute the debug filename.
+	target="$(readlink "$1")"
+	if [ "${target#/}" = "$target" ] ; then
+		target="$target.dbg"
+	else
+		target="$(debugfile "$target")"
+	fi
+
+	mkdir -p "$(dirname "$2")" && \
+		rm -f "$2" && \
+		ln -s "$target" "$2"
+}
+
+do_strip()
+{
+	if test -L "$1" ; then
+		do_strip_symlink "$@"
+	elif test -f "$1" ; then
+		do_strip_file "$@"
+	else
+		echo "$1 isn't a file or symlink" >&2
+		return 1
+	fi
+}
+
+for f in "$@" ; do
+	checkfile "$f" || exit
+done
+
+for f in "$@" ; do
+	do_strip "$f" "$(debugfile "$f")" || exit
+done
