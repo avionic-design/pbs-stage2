@@ -16,8 +16,13 @@ include scripts/Makefile.lib
 export PATH:=$(objtree)/build-tools/bin:$(PATH)
 
 ROOTFS_BUILD_DIR=$(obj)/rootfs
+DEBUGFS_BUILD_DIR=$(obj)/debugfs
 
-targets-y := $(obj)/rootfs.img
+BUILD_ROOTFS = y
+BUILD_DEBUGFS = n
+
+targets-$(BUILD_ROOTFS) += $(obj)/rootfs.img
+targets-$(BUILD_DEBUGFS) += $(obj)/debugfs.img
 
 packages := $(addprefix install-,$(depends-dirs))
 
@@ -27,7 +32,13 @@ quiet_cmd_install_package =
 $(packages): install-%:
 	$(call cmd,install_package)
 
+dbg-packages := $(addprefix dbg-install-,$(depends-dirs))
 
+quiet_cmd_install_dbg_package =
+      cmd_install_dbg_package = $(MAKE) $(binary)=$* rootfs=$(DEBUGFS_BUILD_DIR) priv= include-packages=%-dbg exclude-packages=
+
+$(dbg-packages): dbg-install-%:
+	$(call cmd,install_dbg_package)
 
 quiet_cmd_delete = DELETE  $*
       cmd_delete = rm -f $*
@@ -46,17 +57,25 @@ $(ROOTFS_BUILD_DIR): KERNEL_VERSION = $(VERSION)
 $(ROOTFS_BUILD_DIR): %: $(packages) FORCE
 	$(call cmd,depmod)
 
+$(DEBUGFS_BUILD_DIR): %: $(dbg-packages) FORCE
+
 MKSQUASHFS ?= mksquashfs
 
 quiet_cmd_mksquashfs = SQUASHFS $@
-      cmd_mksquashfs = $(MKSQUASHFS) $< $@ -noappend
+      cmd_mksquashfs = $(MKSQUASHFS) $(fsroot) $@ -noappend
 
 quiet_cmd_rm_rootfs = RM      $<
       cmd_rm_rootfs = rm -rf $<
 
-$(obj)/rootfs.img: $(ROOTFS_BUILD_DIR) FORCE
+%.img:
 	$(call cmd,mksquashfs)
 	$(call cmd,rm_rootfs)
+
+$(obj)/rootfs.img: fsroot=$<
+$(obj)/rootfs.img: $(ROOTFS_BUILD_DIR) FORCE
+
+$(obj)/debugfs.img: fsroot=$</debug
+$(obj)/debugfs.img: $(DEBUGFS_BUILD_DIR) FORCE
 
 all: $(targets-y)
 
