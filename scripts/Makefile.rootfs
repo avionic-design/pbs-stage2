@@ -27,16 +27,7 @@ quiet_cmd_install_package =
 $(packages): install-%:
 	$(call cmd,install_package)
 
-ifeq ($(ROOTFS_MOUNT_TMPFS),y)
-quiet_cmd_mount_ramdisk = MOUNT   $*
-      cmd_mount_ramdisk = mkdir -p $* && mount -t tmpfs tmpfs $*
-else
-quiet_cmd_mount_ramdisk = MOUNT   $*
-      cmd_mount_ramdisk = mkdir -p $*
-endif
 
-mount-$(ROOTFS_BUILD_DIR): mount-%:
-	$(call cmd,mount_ramdisk)
 
 quiet_cmd_delete = DELETE  $*
       cmd_delete = rm -f $*
@@ -52,7 +43,7 @@ quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
 include $(objtree)/build/packages/kernel/linux/kernel-version
 
 $(ROOTFS_BUILD_DIR): KERNEL_VERSION = $(VERSION)
-$(ROOTFS_BUILD_DIR): %: mount-% $(packages) FORCE
+$(ROOTFS_BUILD_DIR): %: $(packages) FORCE
 	$(call cmd,depmod)
 
 MKSQUASHFS ?= mksquashfs
@@ -60,17 +51,12 @@ MKSQUASHFS ?= mksquashfs
 quiet_cmd_mksquashfs = SQUASHFS $@
       cmd_mksquashfs = $(MKSQUASHFS) $< $@ -noappend
 
-ifeq ($(ROOTFS_MOUNT_TMPFS),y)
-quiet_cmd_umount_ramdisk = UMOUNT  $<
-      cmd_umount_ramdisk = umount $< && rmdir $<
-else
-quiet_cmd_umount_ramdisk = UMOUNT  $<
-      cmd_umount_ramdisk = rm -r $<
-endif
+quiet_cmd_rm_rootfs = RM      $<
+      cmd_rm_rootfs = rm -rf $<
 
 $(obj)/rootfs.img: $(ROOTFS_BUILD_DIR) FORCE
 	$(call cmd,mksquashfs)
-	$(call cmd,umount_ramdisk)
+	$(call cmd,rm_rootfs)
 
 all: $(targets-y)
 
