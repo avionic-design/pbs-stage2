@@ -1,0 +1,6 @@
+/debug/usr/bin
+/debug/usr/sbin
+/debug/usr/lib/systemd
+/debug/usr/lib/syslog-ng/*.so.dbg
+/debug/usr/lib/syslog-ng/*.so.*.dbg
+/debug/usr/lib/*.so.dbg

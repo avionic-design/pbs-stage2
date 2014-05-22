@@ -1,0 +1,5 @@
+/debug/usr/bin
+/debug/usr/sbin
+/debug/usr/lib/*.so.*.dbg
+/debug/usr/lib/plymouth/*.so.dbg
+/debug/usr/lib/plymouth/renderers/*.so.dbg

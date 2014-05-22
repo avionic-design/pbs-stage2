@@ -1,0 +1,4 @@
+/debug/usr/lib/libpulse*.so.*.dbg
+/debug/usr/lib/libpulsecore-*.so.dbg
+/debug/usr/lib/pulse-3.0/modules/*.so.dbg
+/debug/usr/lib/pulseaudio/*.so.dbg

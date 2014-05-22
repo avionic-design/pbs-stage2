@@ -1,0 +1,5 @@
+/debug/usr/lib/alsa-lib
+/debug/usr/lib/bluetooth
+/debug/usr/lib/gstreamer-0.10
+/debug/var/lib/bluetooth
+/debug/usr/lib/*.so.*.dbg

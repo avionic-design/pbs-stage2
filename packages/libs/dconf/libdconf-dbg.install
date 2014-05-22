@@ -1,0 +1,3 @@
+/debug/usr/lib/dconf
+/debug/usr/lib/gio
+/debug/usr/lib/*.so.*.dbg

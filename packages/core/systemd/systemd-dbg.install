@@ -1,0 +1,7 @@
+/debug/usr/bin
+/debug/usr/lib/modules-load.d
+/debug/usr/lib/security
+/debug/usr/lib/sysctl.d
+/debug/usr/lib/systemd
+/debug/usr/lib/tmpfiles.d
+/debug/usr/lib/udev

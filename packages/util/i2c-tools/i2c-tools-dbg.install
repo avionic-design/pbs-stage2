@@ -1,0 +1,4 @@
+/debug/usr/sbin/i2cdetect.dbg
+/debug/usr/sbin/i2cdump.dbg
+/debug/usr/sbin/i2cget.dbg
+/debug/usr/sbin/i2cset.dbg

@@ -1,0 +1,5 @@
+/debug/usr/bin
+/debug/usr/sbin
+/debug/usr/lib/libv4l
+/debug/usr/lib/udev
+/debug/usr/lib/*.so.*.dbg

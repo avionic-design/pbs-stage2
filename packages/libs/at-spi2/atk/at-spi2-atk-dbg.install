@@ -1,0 +1,3 @@
+/debug/usr/lib/*.so.*.dbg
+/debug/usr/lib/gtk-2.0/modules/*.so.dbg
+/debug/usr/lib/gtk-3.0/modules/*.so.dbg

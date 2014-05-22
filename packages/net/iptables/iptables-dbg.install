@@ -1,0 +1,4 @@
+/debug/usr/bin
+/debug/usr/sbin
+/debug/usr/lib/xtables
+/debug/usr/lib/*.so.*.dbg
