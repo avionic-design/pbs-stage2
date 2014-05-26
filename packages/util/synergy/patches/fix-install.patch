@@ -1,0 +1,120 @@
+From 801111df113ffd11808a1234c9288ac543fac68a Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Mon, 26 May 2014 13:05:14 +0200
+Subject: [PATCH] fix install
+
+---
+ src/cmd/synergyc/CMakeLists.txt | 9 +++------
+ src/cmd/synergyd/CMakeLists.txt | 9 +++------
+ src/cmd/synergyp/CMakeLists.txt | 9 +++------
+ src/cmd/synergys/CMakeLists.txt | 9 +++------
+ src/cmd/synmacph/CMakeLists.txt | 9 +++------
+ src/cmd/syntool/CMakeLists.txt  | 9 +++------
+ 6 files changed, 18 insertions(+), 36 deletions(-)
+
+diff --git a/src/cmd/synergyc/CMakeLists.txt b/src/cmd/synergyc/CMakeLists.txt
+index f263117..0c6e1a1 100644
+--- a/src/cmd/synergyc/CMakeLists.txt
++++ b/src/cmd/synergyc/CMakeLists.txt
+@@ -60,9 +60,6 @@ add_executable(synergyc ${sources})
+ target_link_libraries(synergyc
+ 	arch base client common io mt net ipc platform server synergy cryptopp ${libs})
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		synergyc
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/synergyc
++	DESTINATION bin)
+diff --git a/src/cmd/synergyd/CMakeLists.txt b/src/cmd/synergyd/CMakeLists.txt
+index 6587a26..7f2548b 100644
+--- a/src/cmd/synergyd/CMakeLists.txt
++++ b/src/cmd/synergyd/CMakeLists.txt
+@@ -37,9 +37,6 @@ endif()
+ target_link_libraries(synergyd
+ 	arch base common io ipc mt net platform synergy cryptopp ${libs})
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		synergyd
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/synergyd
++	DESTINATION bin)
+diff --git a/src/cmd/synergyp/CMakeLists.txt b/src/cmd/synergyp/CMakeLists.txt
+index 97062eb..7b0fef7 100644
+--- a/src/cmd/synergyp/CMakeLists.txt
++++ b/src/cmd/synergyp/CMakeLists.txt
+@@ -65,9 +65,6 @@ endif()
+ target_link_libraries(synergyp
+ 	arch base client common io mt net ipc platform server synergy client cryptopp ${libs})
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		synergyp
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/synergyp
++	DESTINATION bin)
+diff --git a/src/cmd/synergys/CMakeLists.txt b/src/cmd/synergys/CMakeLists.txt
+index 58fbc0c..bb12b68 100644
+--- a/src/cmd/synergys/CMakeLists.txt
++++ b/src/cmd/synergys/CMakeLists.txt
+@@ -60,9 +60,6 @@ add_executable(synergys ${sources})
+ target_link_libraries(synergys
+ 	arch base client common io mt net ipc platform server synergy cryptopp ${libs})
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		synergys
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/synergys
++	DESTINATION bin)
+diff --git a/src/cmd/synmacph/CMakeLists.txt b/src/cmd/synmacph/CMakeLists.txt
+index 180a340..3942dc9 100644
+--- a/src/cmd/synmacph/CMakeLists.txt
++++ b/src/cmd/synmacph/CMakeLists.txt
+@@ -31,9 +31,6 @@ endif()
+ 
+ target_link_libraries(synmacph)
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		synmacph
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
+\ No newline at end of file
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/synmacph
++	DESTINATION bin)
+diff --git a/src/cmd/syntool/CMakeLists.txt b/src/cmd/syntool/CMakeLists.txt
+index 7b2048d..c9bf21d 100644
+--- a/src/cmd/syntool/CMakeLists.txt
++++ b/src/cmd/syntool/CMakeLists.txt
+@@ -31,9 +31,6 @@ add_executable(syntool ${sources})
+ target_link_libraries(syntool
+ 	synergy arch base client common io ipc mt net platform server cryptopp ${libs})
+ 
+-if (CONF_CPACK)
+-	install(TARGETS
+-		syntool
+-		COMPONENT core
+-		DESTINATION bin)
+-endif()
++INSTALL(PROGRAMS
++	${EXECUTABLE_OUTPUT_PATH}/syntool
++	DESTINATION bin)
+-- 
+1.9.3
+
