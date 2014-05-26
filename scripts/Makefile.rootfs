@@ -15,8 +15,9 @@ include scripts/Makefile.lib
 
 export PATH:=$(objtree)/build-tools/bin:$(PATH)
 
-ROOTFS_BUILD_DIR=$(obj)/rootfs
-DEBUGFS_BUILD_DIR=$(obj)/debugfs
+BUILD_DIR=$(obj)
+ROOTFS_BUILD_DIR=$(BUILD_DIR)/rootfs
+DEBUGFS_BUILD_DIR=$(BUILD_DIR)/debugfs
 
 BUILD_ROOTFS = y
 BUILD_DEBUGFS = n
