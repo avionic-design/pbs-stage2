@@ -1,10 +1,4 @@
-PACKAGE = xz
-VERSION = 5.0.5
-LICENSE = GPL LGPL custom
-
-LOCATION = http://tukaani.org/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/libs/xz/Makefile.location
 include packages/autotools.mk
 
 prunefiles = \
