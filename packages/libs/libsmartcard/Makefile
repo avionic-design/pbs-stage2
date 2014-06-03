@@ -1,5 +1,5 @@
 PACKAGE = libsmartcard
-VERSION = 0.1.2
+VERSION = 0.1.4
 
 LOCATION = http://ftp.avionic-design.de/pub/libsmartcard
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
