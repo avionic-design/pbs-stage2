@@ -1,0 +1,60 @@
+From 85e0996154a5aa9f6458de7f3e276d8a8416b550 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Wed, 4 Jun 2014 10:32:06 +0200
+Subject: [PATCH] Ensure that data is valid for dbus_message_iter
+
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ dbind/dbind-any.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/dbind/dbind-any.c b/dbind/dbind-any.c
+index fdde7b6..0abc7f4 100644
+--- a/dbind/dbind-any.c
++++ b/dbind/dbind-any.c
+@@ -540,24 +540,30 @@ dbind_any_demarshal (DBusMessageIter *iter,
+ #endif
+ 
+     switch (**type) {
+-    case DBIND_POD_CASES:
+-        len = dbind_gather_alloc_info (*type);
+-        dbus_message_iter_get_basic (iter, *data);
+-        *data = ((guchar *)*data) + len;
+-        (*type)++;
++    case DBIND_POD_CASES: {
++        if (*data) {
++            len = dbind_gather_alloc_info (*type);
++            dbus_message_iter_get_basic (iter, *data);
++            *data = ((guchar *)*data) + len;
++            (*type)++;
++        }
+         break;
++    }
+     case DBUS_TYPE_STRING:
+     case DBUS_TYPE_OBJECT_PATH:
+-    case DBUS_TYPE_SIGNATURE:
+-        len = dbind_gather_alloc_info (*type);
+-        dbus_message_iter_get_basic (iter, *data);
++    case DBUS_TYPE_SIGNATURE: {
++        if (*data) {
++            len = dbind_gather_alloc_info (*type);
++            dbus_message_iter_get_basic (iter, *data);
+ #ifdef DEBUG
+-        fprintf (stderr, "dup string '%s' (%p)\n", **(void ***)data, **(void ***)data);
++            fprintf (stderr, "dup string '%s' (%p)\n", **(void ***)data, **(void ***)data);
+ #endif
+-        **(void ***)data = g_strdup (**(void ***)data);
+-        *data = ((guchar *)*data) + len;
+-        (*type)++;
++            **(void ***)data = g_strdup (**(void ***)data);
++            *data = ((guchar *)*data) + len;
++            (*type)++;
++        }
+         break;
++    }
+     case DBUS_TYPE_ARRAY: {
+         GArray *vals;
+         DBusMessageIter child;
+-- 
+1.9.3
+
