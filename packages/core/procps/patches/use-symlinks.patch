@@ -1,0 +1,25 @@
+diff --git a/Makefile b/Makefile
+index 09fb3ed..c71ff20 100644
+--- a/Makefile
++++ b/Makefile
+@@ -228,8 +228,8 @@ $(MANFILES) : all
+ 	$(install) --mode a=r $(notdir $@) $@
+ 
+ install: $(filter-out $(SKIP) $(addprefix $(DESTDIR),$(SKIP)),$(INSTALL))
+-	cd $(usr/bin) && $(ln_f) skill snice
+-	cd $(usr/proc/bin) && $(ln_f) pgrep pkill
++	cd $(usr/bin) && $(ln_sf) skill snice
++	cd $(usr/proc/bin) && $(ln_sf) pgrep pkill
+ 
+ ############ prog.c --> prog.o
+ 
+@@ -255,7 +255,7 @@ watch: % : %.o
+ ############ progX --> progY
+ 
+ snice kill: skill
+-	$(ln_f) skill $@
++	$(ln_sf) skill $@
+ 
+ pkill: pgrep
+-	$(ln_f) pgrep pkill
++	$(ln_sf) pgrep pkill
