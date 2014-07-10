@@ -67,7 +67,7 @@ endif # KBUILD_SRC
 config-files = \
 	/etc/pbs.mk \
 	$(HOME)/.pbs.mk \
-	$(srctree)/pbs.mk
+	$(if $(KBUILD_SRC),$(KBUILD_SRC),$(CURDIR))/pbs.mk
 
 -include $(config-files)
 export TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
