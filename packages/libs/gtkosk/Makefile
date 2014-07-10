@@ -19,3 +19,10 @@ prunefiles = \
 stripfiles = \
 	$(prefix)/bin/gtkosk \
 	$(prefix)/lib/*.so.*
+
+$(pkgtree)/.gtkdocize:
+	cd $(pkgbuildtree) && \
+		$(env) gtkdocize
+	$(call cmd,stamp)
+
+$(pkgtree)/.autoreconfigure: $(pkgtree)/.gtkdocize
