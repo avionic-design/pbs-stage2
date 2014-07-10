@@ -31,7 +31,7 @@ quiet_cmd_install_package =
       cmd_install_package = $(MAKE) $(binary)=$* rootfs=$(ROOTFS_BUILD_DIR) priv=
 
 $(packages): install-%:
-	$(call cmd,install_package)
+	+$(call cmd,install_package)
 
 dbg-packages := $(addprefix dbg-install-,$(depends-dirs))
 
@@ -39,7 +39,7 @@ quiet_cmd_install_dbg_package =
       cmd_install_dbg_package = $(MAKE) $(binary)=$* rootfs=$(DEBUGFS_BUILD_DIR) priv= include-packages=%-dbg exclude-packages=
 
 $(dbg-packages): dbg-install-%:
-	$(call cmd,install_dbg_package)
+	+$(call cmd,install_dbg_package)
 
 quiet_cmd_delete = DELETE  $*
       cmd_delete = rm -f $*
