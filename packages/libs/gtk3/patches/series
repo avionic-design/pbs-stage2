@@ -1,2 +1,3 @@
 ltmain-sysroot.patch
 0001-Fix-compiling-native-update-icon-cache-for-cross-com.patch
+fix-native-update-icon-cache-autoreconf.patch
