@@ -1,0 +1,34 @@
+From 09b855f82e3eb3f87550827a8cbba1cf00993e6e Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 17 Jul 2014 10:58:47 +0200
+Subject: [PATCH] fix reconnect after resolv.conf change
+
+---
+ src/lib/arch/unix/ArchNetworkBSD.cpp | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/lib/arch/unix/ArchNetworkBSD.cpp b/src/lib/arch/unix/ArchNetworkBSD.cpp
+index 33e913d..4d1ca79 100644
+--- a/src/lib/arch/unix/ArchNetworkBSD.cpp
++++ b/src/lib/arch/unix/ArchNetworkBSD.cpp
+@@ -31,6 +31,7 @@
+ #	include <netinet/tcp.h>
+ #endif
+ #include <arpa/inet.h>
++#include <resolv.h>
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <string.h>
+@@ -692,6 +693,9 @@ CArchNetworkBSD::nameToAddr(const std::string& name)
+ 		// mutexed address lookup (ugh)
+ 		ARCH->lockMutex(m_mutex);
+ 		struct hostent* info = gethostbyname(name.c_str());
++		// try to reload the resolv.conf
++		if (info == NULL && res_init() == 0)
++			info = gethostbyname(name.c_str());
+ 		if (info == NULL) {
+ 			ARCH->unlockMutex(m_mutex);
+ 			delete addr;
+-- 
+2.0.1
+

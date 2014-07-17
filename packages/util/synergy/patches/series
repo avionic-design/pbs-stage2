@@ -1,2 +1,3 @@
 remove-cryptopp-flags.patch
 fix-install.patch
+fix-reconnect-after-resolv.conf-change.patch
