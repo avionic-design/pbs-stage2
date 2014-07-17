@@ -11,7 +11,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools.mk
 
 env += \
-       PKG_CONFIG_FOR_BUILD=$(objtree)/build-tools/bin/pkg-config-build
+	PKG_CONFIG_FOR_BUILD=$(objtree)/build-tools/bin/pkg-config-build
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
