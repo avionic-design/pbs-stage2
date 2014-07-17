@@ -23,6 +23,9 @@ $(pkgtree)/.unzip-%.zip: $(pkgbuildtree)/%.zip
 
 $(pkgtree)/.setup: $(unzip)
 
+cmake-args += \
+	-DCMAKE_BUILD_TYPE=Debug
+
 stripfiles = \
 	/usr/bin/synergyc \
 	/usr/bin/synergyd \
