@@ -287,6 +287,9 @@ static bool find_symbol(struct expr *e, struct symbol *sym)
 
 		break;
 
+	case E_NOT:
+		return find_symbol(e->left.expr, sym);
+
 	case E_SYMBOL:
 		if (sym == e->left.sym)
 			return true;
@@ -397,6 +400,9 @@ static bool check_deps(struct expr *e)
 			return false;
 
 		break;
+
+	case E_NOT:
+		return check_deps(e->left.expr);
 
 	case E_SYMBOL:
 		if (symbol_is_package(sym) && !symbol_is_platform(sym))
