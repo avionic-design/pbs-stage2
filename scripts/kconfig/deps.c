@@ -43,6 +43,18 @@ static void dependency_destroy(struct dependency *dependency)
 	free(dependency);
 }
 
+static void dependency_list_free(struct list_head *head)
+{
+	struct list_head *node, *next;
+
+	list_for_each_safe(node, next, head) {
+		struct dependency *dep =
+			container_of(node, struct dependency, list);
+		list_del(node);
+		free(dep);
+	}
+}
+
 static struct symbol *stable = NULL;
 
 struct package {
@@ -114,16 +126,6 @@ static int package_destroy(struct package *package)
 	return 0;
 }
 
-static int package_add_dependency(struct package *package, struct package *dep)
-{
-	struct dependency *d = dependency_create(dep);
-	if (!d)
-		return -ENOMEM;
-
-	list_add_tail(&d->list, &package->deps);
-	return 0;
-}
-
 static struct package *package_resolve_virtual(struct package *package)
 {
 	if (package_is_virtual(package)) {
@@ -187,28 +189,63 @@ static void resolve_deps(struct list_head *packages)
 	}
 }
 
-static void build_package_deps_expr(struct list_head *packages,
-		struct package *package, struct expr *expr)
+static tristate build_package_deps_expr(struct list_head *packages,
+		struct list_head *deps, struct expr *expr)
 {
-	struct package *dep;
+	struct list_head new_deps = LIST_HEAD_INIT(new_deps);
+	tristate left_val, right_val = no;
+	tristate val = no;
 
 	switch (expr->type) {
 	case E_AND:
+		left_val = build_package_deps_expr(
+			packages, &new_deps, expr->left.expr);
+		right_val = build_package_deps_expr(
+			packages, &new_deps, expr->right.expr);
+		val = EXPR_AND(left_val, right_val);
+		break;
+
 	case E_OR:
-		build_package_deps_expr(packages, package, expr->left.expr);
-		build_package_deps_expr(packages, package, expr->right.expr);
+		left_val = build_package_deps_expr(
+			packages, &new_deps, expr->left.expr);
+		if (left_val == no)
+			dependency_list_free(&new_deps);
+		right_val = build_package_deps_expr(
+			packages, &new_deps, expr->right.expr);
+		val = EXPR_OR(left_val, right_val);
+		break;
+
+	case E_NOT:
+		val = build_package_deps_expr(
+			packages, &new_deps, expr->left.expr);
+		val = EXPR_NOT(val);
 		break;
 
 	case E_SYMBOL:
-		dep = find_package(packages, expr->left.sym);
-		if (dep)
-			package_add_dependency(dep, package);
-
-		break;
+		val = expr->left.sym->curr.tri;
+		if (val != no) {
+			struct package *dep =
+				find_package(packages, expr->left.sym);
+			if (dep) {
+				struct dependency *d =
+					dependency_create(dep);
+				list_add_tail(&d->list, deps);
+			}
+		}
+		return val;
 
 	default:
-		break;
+		fprintf(stderr, "WARNING: Unhandled expression type %d\n",
+			expr->type);
+		return no;
 	}
+
+	if (val != no)
+		list_splice_tail(&new_deps, deps);
+	else
+		dependency_list_free(&new_deps);
+
+	return val;
 }
 
 static void build_package_deps(struct list_head *packages,
@@ -216,7 +253,21 @@ static void build_package_deps(struct list_head *packages,
 {
 	if (package->symbol->rev_dep.expr) {
 		struct expr_value *rd = &package->symbol->rev_dep;
-		build_package_deps_expr(packages, package, rd->expr);
+		struct list_head deps = LIST_HEAD_INIT(deps);
+		struct list_head *node, *next;
+
+		/* Create the list of packages that depend on this one */
+		build_package_deps_expr(packages, &deps, rd->expr);
+		/* Add this package as dependency to all these packages */
+		list_for_each_safe(node, next, &deps) {
+			struct dependency *dep =
+				container_of(node, struct dependency, list);
+			struct package *pkg = dep->package;
+
+			list_del_init(&dep->list);
+			dep->package = package;
+			list_add_tail(&dep->list, &pkg->deps);
+		}
 	}
 }
 
