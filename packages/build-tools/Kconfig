@@ -48,7 +48,6 @@ source "packages/build-tools/u-boot/Kconfig"
 source "packages/build-tools/vala/Kconfig"
 source "packages/build-tools/wayland/Kconfig"
 source "packages/build-tools/xorg/Kconfig"
-source "packages/build-tools/xz/Kconfig"
 source "packages/build-tools/zlib/Kconfig"
 
 endmenu
