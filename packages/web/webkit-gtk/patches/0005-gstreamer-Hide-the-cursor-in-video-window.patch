@@ -1,0 +1,44 @@
+From 026235a9575de14badc10ce147d85b7e4caadd87 Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Thu, 28 Aug 2014 09:30:00 +0200
+Subject: [PATCH 5/6] gstreamer: Hide the cursor in video window
+
+The cursor should not be visible while watching videos.
+
+Change-Id: Ief81b864c17d10a864b94e73ae25959781eea49a
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/1909
+Reviewed-by: Julian Scheel <julian@jusst.de>
+---
+ .../platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp        | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+index 04aeea5..fa68d06 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+@@ -29,6 +29,13 @@
+ 
+ using namespace WebCore;
+ 
++static void hide_cursor(GtkWidget *widget)
++{
++    GdkCursor *cursor = gdk_cursor_new(GDK_BLANK_CURSOR);
++    gdk_window_set_cursor(gtk_widget_get_window(widget), cursor);
++    g_object_unref(cursor);
++}
++
+ PlatformVideoWindow::PlatformVideoWindow()
+ {
+     m_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+@@ -41,6 +48,7 @@ PlatformVideoWindow::PlatformVideoWindow()
+     gtk_container_add(GTK_CONTAINER(m_window), m_videoWindow);
+ 
+     gtk_widget_realize(m_window);
++    hide_cursor(m_window);
+ 
+ #ifdef GDK_WINDOWING_X11
+     m_videoWindowId = GDK_WINDOW_XID(gtk_widget_get_window(m_window));
+-- 
+1.9.3
+

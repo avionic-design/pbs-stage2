@@ -1,0 +1,32 @@
+From cb448cb3bfff9212653b9f677406a4e2a5f40993 Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Thu, 28 Aug 2014 09:28:27 +0200
+Subject: [PATCH 6/6] gstreamer: Use ring-buffer for input cache instead of
+ temp files
+
+Using a temp-file for download may eat up all memory.
+Activating the ring-buffer-feature limits the memory usage.
+
+Change-Id: I9a2040b62caa24291f507215a19b30339dd74724
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/1908
+Reviewed-by: Julian Scheel <julian@jusst.de>
+---
+ .../WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp  | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+index 3cf5704..d3760be 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/MediaPlayerPrivateGStreamer.cpp
+@@ -2013,6 +2013,7 @@ void MediaPlayerPrivateGStreamer::createGSTPlayBin()
+     if (videoSinkPad)
+         g_signal_connect(videoSinkPad.get(), "notify::caps", G_CALLBACK(mediaPlayerPrivateVideoSinkCapsChangedCallback), this);
+ 
++    g_object_set(m_playBin, "ring-buffer-max-size", 32L * 1024 * 1024, NULL);
+ }
+ 
+ }
+-- 
+1.9.3
+
