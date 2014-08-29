@@ -92,7 +92,8 @@ else
 endif
 
 conf-args += \
-	--disable-nls
+	--disable-nls \
+	--disable-werror
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
