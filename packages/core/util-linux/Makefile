@@ -17,7 +17,7 @@ ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
   conf-args += --without-ncurses
 endif
 
-ifneq ($(PACKAGE_CORE_UTIL_LINUX_PAM),y)
+ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_PAM),y)
   conf-args += \
 	--disable-login \
 	--disable-su
