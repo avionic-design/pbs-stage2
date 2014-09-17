@@ -1,0 +1,53 @@
+From 590f47d25778b0336ca83d8a777952d57d2dfb50 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 17 Sep 2014 15:24:06 +0200
+Subject: [PATCH] Fix infinite loop when using rpl_malloc()
+
+The rpl_malloc() implementation call malloc(), leading to an infinite
+loop when malloc is defined as rpl_malloc. To fix this add an undef
+malloc before the rpl_malloc() implementation. To avoid problems with
+other calls to malloc() in dfu.c also move the rpl_malloc()
+implementation at the end of the file. While at it also put it under
+ifdef to avoid a warning when malloc isn't defined and spare a few
+byte as rpl_malloc() is then unneeded.
+---
+ src/dfu.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
+
+diff --git a/src/dfu.c b/src/dfu.c
+index 7dbcc57..fe45464 100644
+--- a/src/dfu.c
++++ b/src/dfu.c
+@@ -117,14 +117,6 @@ static void dfu_msg_response_output( const char *function, const int32_t result
+  */
+ 
+ // ________  F U N C T I O N S  _______________________________
+-void* rpl_malloc( size_t n ) {
+-    if( 0 == n ) {
+-        n = 1;
+-    }
+-
+-    return malloc( n );
+-}
+-
+ int32_t dfu_detach( dfu_device_t *device, const int32_t timeout ) {
+     int32_t result;
+ 
+@@ -852,3 +844,14 @@ static void dfu_msg_response_output( const char *function,
+         DEBUG( "%s 0x%08x (%d)\n", msg, result, result );
+     }
+ }
++
++#ifdef malloc
++#undef malloc
++void* rpl_malloc( size_t n ) {
++    if( 0 == n ) {
++        n = 1;
++    }
++
++    return malloc( n );
++}
++#endif
+-- 
+2.1.0
+
