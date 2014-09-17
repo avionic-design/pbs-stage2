@@ -19,6 +19,19 @@ conf-vars += \
 	ASFLAGS='$(CFLAGS)' \
 	LDFLAGS='$(LDFLAGS)'
 
+# Fix a few typical autoconf tests
+ifeq ($(CONFIG_LIBC),gnu)
+conf-vars += \
+	ac_cv_func_realloc_0_nonnull=yes \
+	ac_cv_func_malloc_0_nonnull=yes
+else
+conf-vars += \
+	ac_cv_func_realloc_0_nonnull=no \
+	ac_cv_func_malloc_0_nonnull=no
+endif
+# Checking memcmp is obsolescent nowadays, hence always pass this test
+conf-vars += ac_cv_func_memcmp_working=yes
+
 install-args += \
 	DESTDIR=$(DESTDIR)
 

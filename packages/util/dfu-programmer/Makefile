@@ -9,4 +9,3 @@ include packages/autotools-reconf.mk
 stripfiles = \
 	/usr/bin/dfu-programmer
 
-conf-vars += ac_cv_func_malloc_0_nonnull=yes

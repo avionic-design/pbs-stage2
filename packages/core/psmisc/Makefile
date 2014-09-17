@@ -10,16 +10,6 @@ include packages/autotools.mk
 conf-args += \
 	--disable-harden-flags
 
-ifeq ($(CONFIG_LIBC),gnu)
-  conf-vars += \
-	ac_cv_func_realloc_0_nonnull=yes \
-	ac_cv_func_malloc_0_nonnull=yes
-else
-  conf-vars += \
-	ac_cv_func_realloc_0_nonnull=no \
-	ac_cv_func_malloc_0_nonnull=no
-endif
-
 stripfiles = \
 	$(prefix)/bin/fuser \
 	$(prefix)/bin/killall \

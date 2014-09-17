@@ -31,9 +31,6 @@ else
   conf-args += --enable-gudev
 endif
 
-conf-vars += \
-	ac_cv_func_malloc_0_nonnull=yes
-
 compat-links = \
 	/bin/systemctl \
 	/bin/systemd
