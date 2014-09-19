@@ -1,0 +1,40 @@
+From a55722cbb3fb3377f40658227eec472f2ae3c440 Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Wed, 3 Sep 2014 15:49:17 +0200
+Subject: [PATCH] gstreamer: Use black background for gtk video window
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Don´t use the default color of the theme. The video background should be black.
+
+Change-Id: Ib671cadaa93be1f64d67703b1d5630d5b2699cbd
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ .../WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp   | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+index fa68d06..d016932 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+@@ -38,11 +38,16 @@ static void hide_cursor(GtkWidget *widget)
+ 
+ PlatformVideoWindow::PlatformVideoWindow()
+ {
++    GdkColor color;
++
+     m_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+     gtk_widget_set_events(m_window, GDK_POINTER_MOTION_MASK |
+                         GDK_KEY_PRESS_MASK | GDK_FOCUS_CHANGE_MASK |
+                         GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK);
+ 
++    if (gdk_color_parse("#000", &color))
++        gtk_widget_modify_bg(m_window, GTK_STATE_NORMAL, &color);
++
+     m_videoWindow = gtk_drawing_area_new();
+     gtk_widget_set_double_buffered(m_videoWindow, FALSE);
+     gtk_container_add(GTK_CONTAINER(m_window), m_videoWindow);
+-- 
+1.9.3
+
