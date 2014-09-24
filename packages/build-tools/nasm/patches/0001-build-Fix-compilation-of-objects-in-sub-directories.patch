@@ -1,0 +1,38 @@
+From 33c959445308bde5aa152b9bd0b59286c9f7ac31 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 24 Sep 2014 14:25:26 +0200
+Subject: [PATCH 1/2] build: Fix compilation of objects in sub directories
+
+When doing an out of tree build the sub directory doesn't exists. So
+add a call to mkdir to the compile rules to make sure the target
+directory exists.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ Makefile.in | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 8c102ce..266cc47 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -56,13 +56,13 @@ endif
+ .PHONY: manpages
+ 
+ .c.$(O):
+-	$(CC) -c $(ALL_CFLAGS) -o $@ $<
++	$(MKDIR) -p $(@D) && $(CC) -c $(ALL_CFLAGS) -o $@ $<
+ 
+ .c.s:
+-	$(CC) -S $(ALL_CFLAGS) -o $@ $<
++	$(MKDIR) -p $(@D) && $(CC) -S $(ALL_CFLAGS) -o $@ $<
+ 
+ .c.i:
+-	$(CC) -E $(ALL_CFLAGS) -o $@ $<
++	$(MKDIR) -p $(@D) && $(CC) -E $(ALL_CFLAGS) -o $@ $<
+ 
+ .txt.xml:
+ 	$(ASCIIDOC) -b docbook -d manpage -o $@ $<
+-- 
+2.1.1
+

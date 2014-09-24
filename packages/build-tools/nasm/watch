@@ -1,0 +1,2 @@
+version=3
+http://www.nasm.us/pub/nasm/releasebuilds/(.+)/nasm-(.+)\.tar\.xz

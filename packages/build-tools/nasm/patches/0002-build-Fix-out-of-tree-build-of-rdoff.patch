@@ -1,0 +1,32 @@
+From fe7dea2e3292291b5e7368bd0a4c23c5a09d6024 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Wed, 24 Sep 2014 14:27:17 +0200
+Subject: [PATCH 2/2] build: Fix out-of-tree build of rdoff
+
+The tools in rdoff/ include compile.h, from the top source directory,
+which in turn include "config.h". However in the in the case of
+out-of-tree build config.h is in the build directory, so it is missing
+from the include path. Add .. to the include path to workaround this
+problem.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ rdoff/Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/rdoff/Makefile.in b/rdoff/Makefile.in
+index 41fc5f1..e9081ce 100644
+--- a/rdoff/Makefile.in
++++ b/rdoff/Makefile.in
+@@ -19,7 +19,7 @@ datarootdir	= @datarootdir@
+ CC		= @CC@
+ CFLAGS		= @CFLAGS@
+ BUILD_CFLAGS	= $(CFLAGS) @DEFS@
+-INTERNAL_CFLAGS = -I$(srcdir) -I$(top_srcdir)
++INTERNAL_CFLAGS = -I$(srcdir) -I$(top_srcdir) -I..
+ ALL_CFLAGS	= $(BUILD_CFLAGS) $(INTERNAL_CFLAGS)
+ LDFLAGS		= @LDFLAGS@
+ 
+-- 
+2.1.1
+
