@@ -15,6 +15,8 @@ include scripts/Makefile.lib
 
 export PATH:=$(objtree)/build-tools/bin:$(PATH)
 
+include $(if $(KBUILD_SRC),$(srctree)/arch/$(call unquote,$(CONFIG_ARCH))/Makefile)
+
 KERNEL_DTB = $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
 
 targets-y := $(obj)/initrd.gz

@@ -19,6 +19,8 @@ BUILD_DIR=$(obj)
 ROOTFS_BUILD_DIR=$(BUILD_DIR)/rootfs
 DEBUGFS_BUILD_DIR=$(BUILD_DIR)/debugfs
 
+include $(if $(KBUILD_SRC),$(srctree)/arch/$(call unquote,$(CONFIG_ARCH))/Makefile)
+
 BUILD_ROOTFS = y
 BUILD_DEBUGFS = n
 
