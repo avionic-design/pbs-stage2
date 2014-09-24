@@ -16,9 +16,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args += \
-	XZ_SUPPORT=1 \
-	LZO_SUPPORT=1 \
-	LZMA_XZ_SUPPORT=1
+	LZO_SUPPORT=1
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \

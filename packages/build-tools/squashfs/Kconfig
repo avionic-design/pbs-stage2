@@ -2,7 +2,6 @@ config PACKAGE_BUILD_TOOLS_SQUASHFS
 	bool "squashfs"
 	select PACKAGE_BUILD_TOOLS_ZLIB
 	select PACKAGE_BUILD_TOOLS_LZO
-	select PACKAGE_BUILD_TOOLS_XZ
 	help
 	  Squashfs is a highly compressed read-only filesystem for Linux. This package
 	  contains the utilities for manipulating squashfs filesystems.
