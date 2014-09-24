@@ -1,0 +1,28 @@
+--- a/sys/v4l2/v4l2_calls.c	2014-09-24 15:58:32.156829919 +0200
++++ b/sys/v4l2/v4l2_calls.c	2014-09-24 15:59:30.116827912 +0200
+@@ -54,10 +54,10 @@
+ #include "gst/gst-i18n-plugin.h"
+ 
+ /* Those are ioctl calls */
+-#ifndef V4L2_CID_HCENTER
++#if !defined(V4L2_CID_HCENTER) && defined(V4L2_CID_HCENTER_DEPRECATED)
+ #define V4L2_CID_HCENTER V4L2_CID_HCENTER_DEPRECATED
+ #endif
+-#ifndef V4L2_CID_VCENTER
++#if !defined(V4L2_CID_VCENTER) && defined(V4L2_CID_VCENTER_DEPRECATED)
+ #define V4L2_CID_VCENTER V4L2_CID_VCENTER_DEPRECATED
+ #endif
+ 
+@@ -294,8 +294,12 @@
+         break;
+       case V4L2_CID_HFLIP:
+       case V4L2_CID_VFLIP:
++#ifdef V4L2_CID_HCENTER
+       case V4L2_CID_HCENTER:
++#endif
++#ifdef V4L2_CID_VCENTER
+       case V4L2_CID_VCENTER:
++#endif
+ #ifdef V4L2_CID_PAN_RESET
+       case V4L2_CID_PAN_RESET:
+ #endif

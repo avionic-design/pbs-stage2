@@ -2,3 +2,4 @@
 0002-Rebase-to-2013-04-09.patch
 0003-Rebase-test-to-2013-04-09.patch
 proxy-support.patch
+linux-headers-3.10.patch
