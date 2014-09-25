@@ -54,10 +54,15 @@ DEPMOD ?= depmod
 quiet_cmd_depmod = DEPMOD  $(KERNEL_VERSION)
       cmd_depmod = $(DEPMOD) -b $@ $(KERNEL_VERSION)
 
+quiet_cmd_chmod = CHMOD   $(MODE)
+      cmd_chmod = chmod $(MODE) $@
+
 include $(objtree)/build/packages/kernel/linux/kernel-version
 
 $(ROOTFS_BUILD_DIR): KERNEL_VERSION = $(VERSION)
+$(ROOTFS_BUILD_DIR): MODE = 755
 $(ROOTFS_BUILD_DIR): %: $(packages) FORCE
+	$(call cmd,chmod)
 	$(call cmd,depmod)
 
 $(DEBUGFS_BUILD_DIR): %: $(dbg-packages) FORCE
