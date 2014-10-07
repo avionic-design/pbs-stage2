@@ -1,6 +1,7 @@
 config PACKAGE_WM_DWM
 	bool "dwm"
 	select PACKAGE_XORG_LIB_X11
+	select PACKAGE_XORG_LIB_XINERAMA
 	help
 	  dwm is a dynamic window manager for X. It is designed for easy and
 	  static manipulation directly in the sourcecode.
