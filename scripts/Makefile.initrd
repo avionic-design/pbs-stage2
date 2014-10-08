@@ -21,6 +21,9 @@ KERNEL_DTB = $(call unquote,$(CONFIG_PACKAGE_KERNEL_LINUX_DTB))
 
 targets-y := $(obj)/initrd.gz
 targets-$(CONFIG_ARCH_HAS_UBOOT) += $(obj)/uImage
+ifneq ($(wildcard $(srctree)/$(master-platform)/boot.scr),)
+targets-y += $(obj)/boot.scr.uimg
+endif
 
 packages := $(addprefix install-,$(depends-dirs))
 
@@ -99,6 +102,12 @@ quiet_cmd_uimage = UIMAGE  $@
 
 $(obj)/uImage: $(obj)/multi.its $(obj)/initrd.gz
 	$(call cmd,uimage)
+
+quiet_cmd_scr_uimage = UIMAGE  $@
+      cmd_scr_uimage = $(MKIMAGE) -T script -C none -d $< $@ $(if $(Q),> /dev/null 2>&1,)
+
+$(obj)/boot.scr.uimg: $(srctree)/$(master-platform)/boot.scr
+	$(call cmd,scr_uimage)
 
 all: $(targets-y)
 	@:
