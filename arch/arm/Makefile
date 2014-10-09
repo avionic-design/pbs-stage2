@@ -32,4 +32,5 @@ ABIFLAGS += -marm
 cpu-$(CONFIG_ARCH_ARM_CPU_GENERIC) := arch/arm/generic/Makefile
 cpu-$(CONFIG_ARCH_ARM_CPU_XSCALE) := arch/arm/xscale/Makefile
 cpu-$(CONFIG_ARCH_ARM_CPU_CORTEX_A9) := arch/arm/cortex-a9/Makefile
+cpu-$(CONFIG_ARCH_ARM_CPU_CORTEX_A15) := arch/arm/cortex-a15/Makefile
 include $(cpu-y)

@@ -29,11 +29,15 @@ config ARCH_ARM_CPU_XSCALE
 config ARCH_ARM_CPU_CORTEX_A9
 	bool "Cortex-A9"
 
+config ARCH_ARM_CPU_CORTEX_A15
+	bool "Cortex-A15"
+
 endchoice
 
 source "arch/arm/generic/Kconfig"
 source "arch/arm/xscale/Kconfig"
 source "arch/arm/cortex-a9/Kconfig"
+source "arch/arm/cortex-a15/Kconfig"
 
 #
 # Endianness configuration
@@ -203,7 +207,7 @@ config ARCH_ARM_ARCH_V6
 
 config ARCH_ARM_ARCH_V7
        bool "v7"
-       depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_CPU_CORTEX_A9
+       depends on ARCH_ARM_CPU_GENERIC || ARCH_ARM_CPU_CORTEX_A9 || ARCH_ARM_CPU_CORTEX_A15
 
 endchoice
 

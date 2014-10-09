@@ -1,0 +1,22 @@
+if ARCH_ARM_CPU_CORTEX_A15
+
+config CPU
+	string
+	default "unknown"
+
+choice
+	prompt "Silicon"
+
+config ARCH_CORTEX_A15_UNSPECIFIED
+	bool "Unspecified"
+	select ARCH_ARM_EXT_NEON
+	select ARCH_ARM_EXT_VFPV4
+
+config ARCH_TEGRA_124_SOC
+	bool "Nvidia Tegra 124 (K1)"
+	select ARCH_ARM_EXT_NEON
+	select ARCH_ARM_EXT_VFPV4
+
+endchoice
+
+endif
