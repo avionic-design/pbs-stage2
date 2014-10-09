@@ -1,3 +1,10 @@
+
+config BUILD_INITRD
+	bool
+	select PACKAGE_BUILD_TOOLS_CPIO
+	select PACKAGE_BUILD_TOOLS_DTC if PACKAGE_KERNEL_LINUX_DTB
+	select PACKAGE_BUILD_TOOLS_UBOOT if ARCH_HAS_UBOOT
+
 menu "Platform"
 
 choice PLATFORM
@@ -8,5 +15,32 @@ choice PLATFORM
 endchoice
 
 glob_source "platforms/*/Kconfig"
+
+if BUILD_INITRD && ARCH_HAS_UBOOT
+
+config KERNEL_LOAD_ADDRESS
+	hex "Kernel load address"
+	default 0x81000000 if ARCH_TEGRA_124_SOC
+	default 0x80008000 if ARCH_TEGRA_3x_SOC
+	default 0x00008000 if ARCH_TEGRA_2x_SOC
+
+config KERNEL_ENTRY_ADDRESS
+	hex "Kernel entry address"
+	default 0x81000000 if ARCH_TEGRA_124_SOC
+	default 0x80008000 if ARCH_TEGRA_3x_SOC
+	default 0x00008000 if ARCH_TEGRA_2x_SOC
+
+config INITRD_LOAD_ADDRESS
+	hex "Initrd load address"
+	default 0x82100000 if ARCH_TEGRA_124_SOC
+	default 0x82100000 if ARCH_TEGRA_3x_SOC
+	default 0x02100000 if ARCH_TEGRA_2x_SOC
+
+config FDT_LOAD_ADDRESS
+	hex "Flattened Device Treee load address"
+	default 0x82000000 if ARCH_TEGRA_124_SOC
+	default 0 # For platforms that don't need an explicit address
+
+endif
 
 endmenu
