@@ -64,15 +64,16 @@ skip-makefile := 1
 endif # KBUILD_OUTPUT
 endif # KBUILD_SRC
 
+ifneq ($(skip-makefile),1)
+
 config-files = \
 	/etc/pbs.mk \
 	$(HOME)/.pbs.mk \
-	$(if $(KBUILD_SRC),$(KBUILD_SRC),$(CURDIR))/pbs.mk
+	$(KBUILD_SRC)/pbs.mk
 
 -include $(config-files)
 export TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
 
-ifneq ($(skip-makefile),1)
 PHONY += all
 _all: all
 
