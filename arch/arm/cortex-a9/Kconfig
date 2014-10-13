@@ -7,7 +7,7 @@ config CPU
 choice
 	prompt "Silicon"
 
-config ARCH_UNSPECIFIED
+config ARCH_CORTEX_A9_UNSPECIFIED
 	bool "Unspecified"
 	select ARCH_ARM_EXT_NEON
 	select ARCH_ARM_EXT_VFPV3
