@@ -7,6 +7,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-vars += \
+	CC_BUILD=gcc
+
 conf-args += \
 	--with-sysroot=$(SYSROOT)
 
