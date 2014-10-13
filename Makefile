@@ -69,7 +69,8 @@ ifneq ($(skip-makefile),1)
 config-files = \
 	/etc/pbs.mk \
 	$(HOME)/.pbs.mk \
-	$(KBUILD_SRC)/pbs.mk
+	$(KBUILD_SRC)/pbs.mk \
+	$(CURDIR)/pbs.mk
 
 -include $(config-files)
 export TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
