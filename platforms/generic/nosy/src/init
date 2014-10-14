@@ -1,0 +1,40 @@
+#!/bin/sh
+
+. /lib/lsb/init-functions
+
+log_action_begin_msg "Mounting /proc filesystem"
+mount -t proc none /proc
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /sys filesystem"
+mount -t sysfs none /sys
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /tmp filesystem"
+mount -t tmpfs none /tmp
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /dev filesystem"
+# We first mount it in /tmp to copy the existing devices
+# before moving it to /dev.
+mkdir /tmp/dev
+mount -t tmpfs none /tmp/dev
+cp -a /dev/ /tmp
+mount --move /tmp/dev /dev
+rm -r /tmp/dev
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /dev/pts filesystem"
+mkdir -p /dev/pts && mount -t devpts none /dev/pts
+log_action_end_msg $?
+
+log_action_begin_msg "Mounting /var/run filesystem"
+mount -t tmpfs none /var/run
+touch /var/run/resolv.conf
+log_action_end_msg $?
+
+log_action_begin_msg "Populating /dev filesystem"
+echo /sbin/mdev > /proc/sys/kernel/hotplug && /sbin/mdev -s
+log_action_end_msg $?
+
+exec /sbin/init

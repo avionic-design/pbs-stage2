@@ -1,0 +1,12 @@
+config PLATFORM_GENERIC_NOSY
+	bool "No-OS-Yet bringup Image"
+	select BUILD_INITRD
+	select PACKAGE_CORE_BASE_FILES
+	select PACKAGE_CORE_BUSYBOX
+	select PACKAGE_CORE_PCIUTILS
+	select PACKAGE_MULTIMEDIA_ALSA_UTILS
+	select PACKAGE_UTIL_I2C_TOOLS
+	select PACKAGE_UTIL_MTD_UTILS
+	# We need to disable UBI to support to avoid pulling util-linux in
+	select PACKAGE_UTIL_MTD_UTILS_WITHOUT_UBI
+	select PACKAGE_UTIL_ADAK

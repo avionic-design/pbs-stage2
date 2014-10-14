@@ -1,0 +1,8 @@
+# The default run level
+:1:initdefault:
+# The consoles
+:1:respawn:/sbin/getty 38400 tty0 linux
+:1:respawn:/sbin/getty 38400 tty1 linux
+:1:respawn:/sbin/getty 38400 tty2 linux
+:1:respawn:/sbin/getty 38400 tty3 linux
+:1:respawn:/sbin/getty -L 115200 ttyS0 vt100
