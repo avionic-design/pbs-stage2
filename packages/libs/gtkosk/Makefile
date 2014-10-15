@@ -1,5 +1,5 @@
 PACKAGE = gtkosk
-VERSION = 0.3.4
+VERSION = 0.3.6
 LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
