@@ -12,7 +12,8 @@ include scripts/Makefile.lib
 
 pkgtree		:= $(objtree)/build/$(obj)
 pkgsrctree	:= $(srctree)/$(obj)
-patchdir	:= $(pkgsrctree)/patches
+# Try version specific patches before the generic ones
+patchdir	= $(or $(wildcard $(pkgsrctree)/patches-$(VERSION)),$(pkgsrctree)/patches)
 export pkgtree pkgsrctree patchdir
 
 # Declare a default value for $(pkgbuildtree), it can't be a simple variable
@@ -27,8 +28,9 @@ kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-# Turn $(pkgbuildtree) into a simple variable
+# Turn $(pkgbuildtree) and $(patchdir) into a simple variable
 pkgbuildtree	:= $(pkgbuildtree)
+patchdir	:= $(patchdir)
 
 url-filename	= $(lastword $(subst /, ,$(subst ;filename=, ,$(1))))
 url-pathname	= $(firstword $(subst ;filename=, ,$(1)))
