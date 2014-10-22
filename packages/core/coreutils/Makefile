@@ -1,5 +1,5 @@
 PACKAGE = coreutils
-VERSION = 8.21
+VERSION = 8.23
 LICENSE = GPL
 
 LOCATION = ftp://ftp.gnu.org/gnu/coreutils

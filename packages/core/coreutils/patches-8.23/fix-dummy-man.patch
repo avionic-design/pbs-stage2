@@ -1,0 +1,34 @@
+From d2bcb04400cb00ffd55e7a1d4e5a8e3e7329c062 Mon Sep 17 00:00:00 2001
+From: Bernhard Voelker <mail@bernhard-voelker.de>
+Date: Tue, 23 Sep 2014 01:49:47 +0200
+Subject: [PATCH] build: pass program name to help2man after other options
+
+* man/local.mk (.x.1): Move the program name argument down after
+the last option argument when calling $(run_help2man).
+While the other way would be accepted for the GNU help2man program,
+it is not for the 'dummy-man' script (called as a fallback on
+systems lacking perl).
+The wrong order was introduced in commit v8.21-119-gb3578fc while
+adding the --info-page option.
+---
+ man/local.mk | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/man/local.mk b/man/local.mk
+index 61ecd00..24cdce0 100644
+--- a/man/local.mk
++++ b/man/local.mk
+@@ -101,8 +101,9 @@ endif
+ 	  && $(run_help2man)						\
+ 		     --source='$(PACKAGE_STRING)'			\
+ 		     --include=$(srcdir)/man/$$name.x			\
+-		     --output=$$t/$$name.1 $$t/$$argv			\
++		     --output=$$t/$$name.1				\
+		     --info-page='coreutils \(aq'$$name' invocation\(aq' \
++		     $$t/$$argv						\
+ 	  && sed \
+ 	       -e 's|$*\.td/||g' \
+ 	       -e '/For complete documentation/d' \
+-- 
+2.1.0
+
