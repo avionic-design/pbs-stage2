@@ -1,2 +1,2 @@
-ltmain-sysroot.patch
+ltmain-sysroot.patch -d build-scripts
 cross-compile.patch
