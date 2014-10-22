@@ -1,3 +1,2 @@
-glibc-all-make-v4.patch
 no-archive-locales.patch
-static-localedef.patch
+install-locales.patch
