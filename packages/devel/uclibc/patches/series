@@ -4,3 +4,4 @@ linux-types.patch
 arg-max.patch
 rpmatch.patch
 scanf-ms.patch
+add-mkostemp.patch
