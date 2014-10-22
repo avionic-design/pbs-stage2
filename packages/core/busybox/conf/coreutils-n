@@ -28,6 +28,7 @@
 # CONFIG_SHA1SUM is not set
 # CONFIG_SHA256SUM is not set
 # CONFIG_SHA512SUM is not set
+# CONFIG_SHA3SUM is not set
 # CONFIG_RUNCON is not set
 # CONFIG_PRINTENV is not set
 # CONFIG_PRINTF is not set
