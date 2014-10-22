@@ -36,6 +36,12 @@ NM = $(CROSS_COMPILE)nm
 RANLIB = $(CROSS_COMPILE)ranlib
 STRIP = $(CROSS_COMPILE)strip
 
+BUILD_CPPFLAGS = -I$(BUILD_TOOLS)/include
+BUILD_CFLAGS =
+BUILD_CXXFLAGS =
+BUILD_ASFLAGS =
+BUILD_LDFLAGS = -L$(BUILD_TOOLS)/lib
+
 HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
 BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)
 
