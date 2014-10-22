@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.22.2
+VERSION = 2.25.1
 LICENSE = GPL/BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -11,7 +11,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-args += \
-	--disable-rpath
+	--disable-rpath \
+	--without-python
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
   conf-args += --without-ncurses

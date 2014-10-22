@@ -1,0 +1,13 @@
+diff --git a/configure.ac b/configure.ac
+index 387372f..80984a0 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -373,7 +373,7 @@ AS_CASE([$have_dirfd:$have_ddfd],
+ 
+ AC_MSG_CHECKING([whether program_invocation_short_name is defined])
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+-	#include <argp.h>
++	#include <errno.h>
+ ]], [[
+ 	program_invocation_short_name = "test";
+ ]])], [
