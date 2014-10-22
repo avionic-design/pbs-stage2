@@ -1,5 +1,5 @@
 PACKAGE = bison
-VERSION = 2.7
+VERSION = 3.0.2
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
