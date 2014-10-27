@@ -1,5 +1,5 @@
 PACKAGE = usbutils
-VERSION = 006
+VERSION = 007
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/usb/$(PACKAGE)
