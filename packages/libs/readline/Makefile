@@ -1,5 +1,5 @@
 PACKAGE = readline
-VERSION = 6.2
+VERSION = 6.3
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
@@ -9,6 +9,9 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-curses
+
+conf-vars += \
+	bash_cv_wcwidth_broken=no
 
 build-args += \
 	SHLIB_LIBS="-lncurses"
