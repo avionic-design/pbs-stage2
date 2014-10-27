@@ -1,5 +1,5 @@
 PACKAGE = libffi
-VERSION = 3.0.13
+VERSION = 3.1
 LICENSE = MIT
 
 LOCATION = ftp://sourceware.org/pub/$(PACKAGE)
