@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 2.0.7
+VERSION = 2.1.5
 LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
@@ -8,7 +8,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 include packages/autotools-reconf.mk
 
 conf-vars += \
-	CXXFLAGS='$(CPPFLAGS)'
+	CXXFLAGS='$(CPPFLAGS)' \
+	LIVE555_PREFIX=$(SYSROOT)/usr
 
 conf-args += \
 	--enable-run-as-root \
