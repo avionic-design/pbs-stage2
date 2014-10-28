@@ -75,6 +75,9 @@ config-files = \
 -include $(config-files)
 export TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
 
+# Add the toolchain to search PATH ASAP
+export PATH := $(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
+
 PHONY += all
 _all: all
 
