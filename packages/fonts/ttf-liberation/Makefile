@@ -1,5 +1,5 @@
 PACKAGE = liberation-fonts
-VERSION = 1.07.2
+VERSION = 2.00.1
 LICENSE = GPL custom
 
 LOCATION = https://fedorahosted.org/releases/l/i/$(PACKAGE)
