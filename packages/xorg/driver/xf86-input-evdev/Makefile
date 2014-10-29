@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-evdev
-VERSION = 2.7.3
+VERSION = 2.9.0
 LICENSE = custom
 
 include packages/xorg/driver/common.mk

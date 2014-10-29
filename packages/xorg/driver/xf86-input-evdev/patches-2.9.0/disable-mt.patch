@@ -1,0 +1,81 @@
+--- a/configure	2014-05-20 07:41:52.000000000 +0200
++++ b/configure	2014-10-29 11:05:21.087725671 +0100
+@@ -798,6 +798,7 @@
+ enable_libtool_lock
+ enable_selective_werror
+ enable_strict_compilation
++enable_multitouch
+ with_xorg_module_dir
+ with_sdkdir
+ '
+@@ -1459,6 +1460,7 @@
+   --enable-strict-compilation
+                           Enable all warnings from compiler and make them
+                           errors (default: disabled)
++  --disable-multitouch    Disable multitouch support (default: no)
+ 
+ Optional Packages:
+   --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+@@ -17999,8 +18040,17 @@
+ 
+ fi
+ 
+-if test "x$HAVE_XI22" = xyes; then
+-        # Obtain compiler/linker options for mtdev
++# Check whether --enable-multitouch was given.
++if test "${enable_multitouch+set}" = set; then :
++  enableval=$enable_multitouch;
++else
++  enable_multitouch=yes
++fi
++
++
++if test "x$enable_multitouch" != "xno"; then
++        if test "x$HAVE_XI22" = xyes; then
++                # Obtain compiler/linker options for mtdev
+ 
+ pkg_failed=no
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking for MTDEV" >&5
+@@ -18072,11 +18122,12 @@
+ $as_echo "yes" >&6; }
+ 	HAVE_MTDEV="yes"
+ fi
+-fi
+-if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
++        fi
++        if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
+ 
+ $as_echo "#define MULTITOUCH 1" >>confdefs.h
+ 
++        fi
+ fi
+ 
+ # Define a configure option for an alternate input module directory
+--- a/configure.ac
++++ b/configure.ac
+@@ -50,12 +50,19 @@ PKG_CHECK_MODULES(UDEV, libudev)
+ PKG_CHECK_MODULES(XI22, [inputproto >= 2.1.99.3] [xorg-server >= 1.11.99.901], HAVE_XI22="yes", HAVE_XI22="no")
+ PKG_CHECK_MODULES(LIBEVDEV, [libevdev >= 0.4])
+ 
+-if test "x$HAVE_XI22" = xyes; then
+-        # Obtain compiler/linker options for mtdev
+-        PKG_CHECK_MODULES(MTDEV, mtdev, HAVE_MTDEV="yes", HAVE_MTDEV="no")
+-fi
+-if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
+-        AC_DEFINE(MULTITOUCH, 1, [XI2.2 available])
++AC_ARG_ENABLE([multitouch],
++              AS_HELP_STRING([--disable-multitouch],
++                             [Disable multitouch support (default: no)]),
++              [], [enable_multitouch=yes])
++
++if test "x$enable_multitouch" != "xno"; then
++        if test "x$HAVE_XI22" = xyes; then
++                # Obtain compiler/linker options for mtdev
++                PKG_CHECK_MODULES(MTDEV, mtdev, HAVE_MTDEV="yes", HAVE_MTDEV="no")
++        fi
++        if test "x$HAVE_XI22" = xyes && test "x$HAVE_MTDEV" = xyes; then
++                AC_DEFINE(MULTITOUCH, 1, [XI2.2 available])
++        fi
+ fi
+ 
+ # Define a configure option for an alternate input module directory
