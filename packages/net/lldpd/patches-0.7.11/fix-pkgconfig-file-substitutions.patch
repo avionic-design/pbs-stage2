@@ -1,0 +1,24 @@
+From acdb7107e764a0bca8e5fd09a13d3aa62ef2ad71 Mon Sep 17 00:00:00 2001
+From: Vincent Bernat <vincent@bernat.im>
+Date: Sun, 9 Nov 2014 14:47:31 +0100
+Subject: [PATCH] lib: fix pkgconfig file substitutions
+
+---
+ src/lib/lldpctl.pc.in | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/lib/lldpctl.pc.in b/src/lib/lldpctl.pc.in
+index e64da323700a..65ce1ef646d1 100644
+--- a/src/lib/lldpctl.pc.in
++++ b/src/lib/lldpctl.pc.in
+@@ -2,5 +2,5 @@ Name: lldpctl
+ Description: Library to interface with lldpd, a 802.1AB daemon
+ Version: @VERSION@
+ URL: @PACKAGE_URL@
+-Libs: -L${libdir} -llldpctl
+-Cflags: -I${includedir}
++Libs: -L@libdir@ -llldpctl
++Cflags: -I@includedir@
+-- 
+2.1.3
+

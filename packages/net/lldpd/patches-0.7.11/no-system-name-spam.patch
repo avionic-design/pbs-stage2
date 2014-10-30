@@ -1,0 +1,25 @@
+From dc4523188e8c0d0606c038d022a19a37fda397f6 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 30 Oct 2014 15:27:07 +0100
+Subject: [PATCH 4/4] Prevent syslog spam when no system name is set
+
+---
+ src/daemon/priv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/daemon/priv.c b/src/daemon/priv.c
+index a8ac50d..bb09e50 100644
+--- a/src/daemon/priv.c
++++ b/src/daemon/priv.c
+@@ -221,7 +221,7 @@ asroot_gethostbyname()
+ 	if (uname(&un) < 0)
+ 		fatal("privsep", "failed to get system information");
+ 	if ((hp = gethostbyname(un.nodename)) == NULL) {
+-		log_info("privsep", "unable to get system name");
++		log_debug("privsep", "unable to get system name");
+ #ifdef HAVE_RES_INIT
+ 		res_init();
+ #endif
+-- 
+2.1.1
+

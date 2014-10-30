@@ -1,0 +1,28 @@
+From 003af392b87399c22a90491705ec8b1a524e6942 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 30 Oct 2014 15:25:53 +0100
+Subject: [PATCH 3/4] Use pkgconfig to check for libxml2
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ configure.ac | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index bee4e87..d83a830 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -186,7 +186,9 @@ AC_ARG_WITH([xml],
+     [Enable XML output via libxml2 @<:@default=no@:>@]
+   ))
+ if test x"$with_xml" = x"yes"; then
+-   lldp_CHECK_XML2
++   PKG_CHECK_MODULES([XML2], [libxml-2.0],
++     [AC_DEFINE_UNQUOTED([USE_XML], 1)],
++     [lldp_CHECK_XML2])
+ fi
+ 
+ # JSON
+-- 
+2.1.1
+

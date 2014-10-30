@@ -1,0 +1,28 @@
+From 93e3f33864d193159d64c4be24ac94417d8a4ed2 Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 30 Oct 2014 15:23:40 +0100
+Subject: [PATCH 2/4] Use pkgconfig to check for net-snmp
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ configure.ac | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index dfdfeca..bee4e87 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -174,7 +174,9 @@ AC_ARG_WITH([snmp],
+     [Enable the use of SNMP @<:@default=no@:>@]
+   ))
+ if test x"$with_snmp" = x"yes"; then
+-   lldp_CHECK_SNMP
++  PKG_CHECK_MODULES([NETSNMP], [net-snmp-agent],
++    [AC_DEFINE_UNQUOTED([USE_SNMP], 1) NETSNMP_LIBS="${NETSNMP_LIBS} -lnetsnmpmibs"],
++    [lldp_CHECK_SNMP])
+ fi
+ 
+ # XML
+-- 
+2.1.1
+
