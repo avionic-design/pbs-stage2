@@ -10,7 +10,9 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 include packages/build-tools/autotools.mk
 
 conf-args += \
-	--enable-shared
+	--enable-shared \
+	--with-system-expat \
+	--with-system-ffi
 
 edit = sed 's/@MAJOR@/$(MAJOR)/g;s/@MINOR@/$(MINOR)/g' $(pkgsrctree)/python.in
 
