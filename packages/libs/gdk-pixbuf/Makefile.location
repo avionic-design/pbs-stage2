@@ -1,5 +1,5 @@
 PACKAGE = gdk-pixbuf
-VERSION = 2.28.2
+VERSION = 2.30.8
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
