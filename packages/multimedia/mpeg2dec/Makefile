@@ -1,5 +1,5 @@
-PACKAGE = mpeg2dec
-VERSION = 0.4.1
+PACKAGE = libmpeg2
+VERSION = 0.5.1
 
 LOCATION = http://libmpeg2.sourceforge.net/files
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
