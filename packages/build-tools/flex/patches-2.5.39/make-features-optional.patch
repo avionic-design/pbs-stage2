@@ -1,0 +1,85 @@
+From f93a81afae3249ad34cbbe8b41405c0233da9e8b Mon Sep 17 00:00:00 2001
+From: Soeren Grunewald <soeren.grunewald@avionic-design.de>
+Date: Tue, 30 Jul 2013 12:16:24 +0200
+Subject: [PATCH] Make docs,examples and tests optional.
+
+Add options to disable building documentation, examples and tests.
+---
+ Makefile.am  | 15 +++++++++++----
+ configure.in | 34 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 45 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index a354699..5e69f0e 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -117,10 +117,17 @@ BUILT_SOURCES = \
+ SUBDIRS = \
+ 	lib \
+ 	. \
+-	doc \
+-	examples \
+-	po \
+-	tests
++	po
++
++if BUILD_DOCUMENTATION
++SUBDIRS += doc
++endif
++if BUILD_EXAMPLES
++SUBDIRS += examples
++endif
++if BUILD_TESTS
++SUBDIRS += tests
++endif
+ 
+ localedir = $(datadir)/locale
+ AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -I$(top_srcdir)/intl
+diff --git a/configure.in b/configure.in
+index 1563137..9387b6f 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -110,6 +110,40 @@ AC_FUNC_MALLOC
+ AC_FUNC_REALLOC
+ AC_CHECK_FUNCS([dup2 isascii memset pow regcomp setlocale strchr strtol])
+ 
++AC_ARG_ENABLE([documentation],
++	[AS_HELP_STRING([--disable-documentation],
++		[Do not generate documentation files])],[
++	 case "${enableval}" in
++		yes) build_docs=yes ;;
++		no) build_docs=no ;;
++		*) AC_MSG_ERROR([bad value ${enableval} for --disable-documentation]) ;;
++	 esac
++	],[build_docs=yes]
++)
++AM_CONDITIONAL([BUILD_DOCUMENTATION], [test "x$build_docs" = "xyes"])
++
++AC_ARG_ENABLE([examples],
++	[AS_HELP_STRING([--disable-examples], [Do not build examples])],[
++	 case "${enableval}" in
++		yes) build_examples=yes ;;
++		no) build_examples=no ;;
++		*) AC_MSG_ERROR([bad value ${enableval} for --disable-examples]) ;;
++	 esac
++	],[build_examples=yes]
++)
++AM_CONDITIONAL(BUILD_EXAMPLES, test "x$build_examples" = "xyes")
++
++AC_ARG_ENABLE([tests],
++	[AS_HELP_STRING([--disable-tests], [Do not build tests])],[
++	 case "${enableval}" in
++		yes) build_tests=yes ;;
++		no) build_tests=no ;;
++		*) AC_MSG_ERROR([bad value ${enableval} for --disable-tests]) ;;
++	 esac
++	],[build_tests=yes]
++)
++AM_CONDITIONAL(BUILD_TESTS, test "x$build_tests" = "xyes")
++
+ AC_CONFIG_FILES(
+ Makefile
+ doc/Makefile
+-- 
+1.8.3.1
+
