@@ -25,4 +25,5 @@ $(pkgtree)/.generate-wrapper:
 $(pkgtree)/.install: $(pkgtree)/.generate-wrapper
 
 prunefiles = \
-	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxml2mod.la
+	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxml2mod.la \
+	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxsltmod.la
