@@ -1,11 +1,17 @@
 PACKAGE = rsyslog
-VERSION = 6.4.1
+VERSION = 8.4.2
 LICENSE = GPL
 
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
+
+CFLAGS += -std=c99
+
+conf-args += \
+	--disable-generate-man-pages \
+	--disable-libgcrypt
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
