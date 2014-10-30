@@ -1,5 +1,5 @@
 PACKAGE = libusb
-VERSION = 1.0.9
+VERSION = 1.0.19
 LICENSE = LGPL
 
 LOCATION = http://prdownloads.sourceforge.net/libusb
