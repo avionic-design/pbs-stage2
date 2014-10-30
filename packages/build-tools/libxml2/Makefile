@@ -2,6 +2,9 @@ include packages/libs/libxml2/Makefile.location
 include packages/build-tools/autotools-reconf.mk
 include packages/build-tools/xml.mk
 
+conf-args += \
+	--with-python=$(prefix)
+
 prunefiles = \
 	$(prefix)/lib/libxml2.la
 
