@@ -1,5 +1,5 @@
 PACKAGE = libav
-VERSION = 9.10
+VERSION = 10
 
 LOCATION = http://libav.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
