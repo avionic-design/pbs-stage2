@@ -1,5 +1,5 @@
 PACKAGE = logrotate
-VERSION = 3.8.3
+VERSION = 3.8.8
 LICENSE = GPL
 
 LOCATION = https://fedorahosted.org/releases/l/o/$(PACKAGE)
