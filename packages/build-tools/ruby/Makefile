@@ -1,5 +1,5 @@
 PACKAGE = ruby
-VERSION = 1.9.3-p286
+VERSION = 2.0.0-p594
 LICENSE = BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
