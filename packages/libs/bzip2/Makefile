@@ -1,5 +1,5 @@
 PACKAGE = bzip2
-VERSION = 1.0.5
+VERSION = 1.0.6
 
 LOCATION = http://www.bzip.org/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
