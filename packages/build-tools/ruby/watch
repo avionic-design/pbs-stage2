@@ -1,2 +1,2 @@
 version=3
-http://ftp.ruby-lang.org/pub/ruby/([\d\.]+)/ruby-([\d\.]+-p\d+)\.tar\.bz2
+http://ftp.ruby-lang.org/pub/ruby/ruby-([\d\.]+-p\d+)\.tar\.bz2
