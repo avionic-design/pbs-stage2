@@ -1,0 +1,14 @@
+diff --git a/src/Makefile b/src/Makefile
+index 7b4b2b7..2e4222f 100644
+--- a/src/Makefile
++++ b/src/Makefile
+@@ -65,6 +65,9 @@ $(LUA_T): $(LUA_O) $(LUA_A)
+ $(LUAC_T): $(LUAC_O) $(LUA_A)
+ 	$(CC) -o $@ $(LDFLAGS) $(LUAC_O) $(LUA_A) $(LIBS)
+ 
++%.o: %.c
++	$(CC) $(CFLAGS) -o $@ -c $<
++
+ clean:
+ 	$(RM) $(ALL_T) $(ALL_O)
+ 
