@@ -1,4 +1,4 @@
-/usr/include/pcap
+/usr/include
 /usr/lib/*.a
 /usr/lib/*.so
 /usr/lib/pkgconfig

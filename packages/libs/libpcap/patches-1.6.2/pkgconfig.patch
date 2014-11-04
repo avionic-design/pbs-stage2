@@ -1,0 +1,106 @@
+diff --git a/Makefile.in b/Makefile.in
+index 1c2d745..d56ec3d 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -33,6 +33,8 @@ includedir = @includedir@
+ libdir =  @libdir@
+ # Pathname of directory to install the man pages
+ mandir = @mandir@
++# Pathname of directory to install the pkg-config data
++pkgconfigdir = @libdir@/pkgconfig
+ 
+ # VPATH
+ srcdir = @srcdir@
+@@ -152,7 +154,7 @@ TAGFILES = \
+ 
+ CLEANFILES = $(OBJ) libpcap.* $(TESTS) \
+ 	$(PROG)-`cat $(srcdir)/VERSION`.tar.gz $(GENSRC) $(GENHDR) \
+-	lex.yy.c pcap-config
++	lex.yy.c pcap-config pcap.pc
+ 
+ MAN1 = pcap-config.1
+ 
+@@ -302,6 +304,7 @@ EXTRA_DIST = \
+ 	pcap-canusb-linux.c \
+ 	pcap-canusb-linux.h \
+ 	pcap-config.in \
++	pcap.pc.in \
+ 	pcap-dag.c \
+ 	pcap-dag.h \
+ 	pcap-dbus.c \
+@@ -357,7 +360,7 @@ EXTRA_DIST = \
+ 	Win32/Src/inet_net.c \
+ 	Win32/Src/inet_pton.c
+ 
+-all: libpcap.a shared pcap-config
++all: libpcap.a shared pcap-config pcap.pc
+ 
+ libpcap.a: $(OBJ)
+ 	@rm -f $@
+@@ -522,6 +525,11 @@ pcap-config: $(srcdir)/pcap-config.in ./config.status
+ 	mv $@.tmp $@
+ 	chmod a+x $@
+ 
++pcap.pc: $(srcdir)/pcap.pc.in ./config.status
++	@rm -f $@ $@.tmp
++	./config.status --file=$@.tmp:$(srcdir)/pcap.pc.in
++	mv $@.tmp $@
++
+ #
+ # Test programs - not built by default, and not installed.
+ #
+@@ -545,7 +553,7 @@ selpolltest: tests/selpolltest.c libpcap.a
+ valgrindtest: tests/valgrindtest.c libpcap.a
+ 	$(CC) $(FULL_CFLAGS) -I. -L. -o valgrindtest $(srcdir)/tests/valgrindtest.c libpcap.a $(LIBS)
+ 
+-install: install-shared install-archive pcap-config
++install: install-shared install-archive pcap-config pcap.pc
+ 	[ -d $(DESTDIR)$(libdir) ] || \
+ 	    (mkdir -p $(DESTDIR)$(libdir); chmod 755 $(DESTDIR)$(libdir))
+ 	[ -d $(DESTDIR)$(includedir) ] || \
+@@ -566,6 +574,9 @@ install: install-shared install-archive pcap-config
+ 	[ -d $(DESTDIR)$(bindir) ] || \
+ 	    (mkdir -p $(DESTDIR)$(bindir); chmod 755 $(DESTDIR)$(bindir))
+ 	$(INSTALL_PROGRAM) pcap-config $(DESTDIR)$(bindir)/pcap-config
++	[ -d $(DESTDIR)$(pkgconfigdir) ] || \
++	    (mkdir -p $(DESTDIR)$(pkgconfigdir); chmod 755 $(DESTDIR)$(pkgconfigdir))
++	$(INSTALL_DATA) pcap.pc $(DESTDIR)$(pkgconfigdir)/pcap.pc
+ 	for i in $(MAN1); do \
+ 		$(INSTALL_DATA) $(srcdir)/$$i \
+ 		    $(DESTDIR)$(mandir)/man1/$$i; done
+@@ -671,6 +682,7 @@ uninstall: uninstall-shared
+ 	for i in $(PUBHDR); do \
+ 		rm -f $(DESTDIR)$(includedir)/$$i; done
+ 	-rmdir $(DESTDIR)$(includedir)/pcap
++	rm -f $(DESTDIR)$(pkgconfigdir)/pcap.pc
+ 	rm -f $(DESTDIR)/$(bindir)/pcap-config
+ 	for i in $(MAN1); do \
+ 		rm -f $(DESTDIR)$(mandir)/man1/$$i; done
+diff --git a/configure.in b/configure.in
+index 4530aed..ccfbaae 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1706,7 +1706,7 @@ AC_OUTPUT_COMMANDS([if test -f .devel; then
+ 	cat Makefile-devel-adds >> Makefile
+ 	make depend
+ fi])
+-AC_OUTPUT(Makefile pcap-filter.manmisc pcap-linktype.manmisc
++AC_OUTPUT(Makefile pcap.pc pcap-filter.manmisc pcap-linktype.manmisc
+ 	pcap-tstamp.manmisc pcap-savefile.manfile pcap.3pcap
+ 	pcap_compile.3pcap pcap_datalink.3pcap pcap_dump_open.3pcap
+ 	pcap_get_tstamp_precision.3pcap pcap_list_datalinks.3pcap
+diff --git a/pcap.pc.in b/pcap.pc.in
+index e69de29..170cdc3 100644
+--- a/pcap.pc.in
++++ b/pcap.pc.in
+@@ -0,0 +1,10 @@
++prefix=@prefix@
++exec_prefix=@exec_prefix@
++libdir=@libdir@
++includedir=@includedir@
++
++Name: pcap
++Description: a system-independent interface for user-level packet capture
++Version: @VERSION@
++Cflags: -I${includedir} -I${includedir}/pcap
++Libs: -L${libdir} -lpcap
