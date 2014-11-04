@@ -1,9 +1,9 @@
 PACKAGE = strace
-VERSION = 4.5.20
+VERSION = 4.9
 LICENSE = BSD
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 

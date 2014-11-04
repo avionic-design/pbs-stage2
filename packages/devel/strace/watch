@@ -1,2 +1,2 @@
 version=3
-http://sf.net/strace/strace-(.+)\.tar\.bz2
+http://sf.net/strace/strace-(.+)\.tar\.xz
