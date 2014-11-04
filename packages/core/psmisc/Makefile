@@ -1,5 +1,5 @@
 PACKAGE = psmisc
-VERSION = 22.20
+VERSION = 22.21
 LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
