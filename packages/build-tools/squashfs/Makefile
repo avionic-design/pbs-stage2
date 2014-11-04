@@ -1,5 +1,5 @@
 PACKAGE = squashfs
-VERSION = 4.2
+VERSION = 4.3
 LICENSE = GPL
 
 LOCATION = http://downloads.sourceforge.net/project/$(PACKAGE)/$(PACKAGE)/$(PACKAGE)$(VERSION)
