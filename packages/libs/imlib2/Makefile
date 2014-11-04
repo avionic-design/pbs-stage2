@@ -1,5 +1,5 @@
 PACKAGE = imlib2
-VERSION = 1.4.5
+VERSION = 1.4.6
 
 LOCATION = http://prdownloads.sourceforge.net/enlightenment
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
