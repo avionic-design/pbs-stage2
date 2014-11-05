@@ -1,2 +1,2 @@
 version=3
-http://www.openssl.org/source/openssl-([\d.]+\d+)\.tar\.gz
+https://www.openssl.org/source/openssl-([\d.]+[a-z]*)\.tar\.gz
