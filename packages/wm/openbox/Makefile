@@ -1,5 +1,5 @@
 PACKAGE = openbox
-VERSION = 3.5.0
+VERSION = 3.5.2
 LICENSE = GPL
 
 LOCATION = http://openbox.org/dist/$(PACKAGE)
