@@ -1,2 +1,2 @@
 version=3
-http://sf.net/mpeg2dec/mpeg2dec-(.*)\.tar\.gz
+http://libmpeg2.sourceforge.net/ libmpeg2-(.*)\.tar\.gz
