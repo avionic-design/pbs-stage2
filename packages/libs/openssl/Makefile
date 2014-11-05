@@ -1,9 +1,4 @@
-PACKAGE = openssl
-VERSION = 1.0.1j
-
-LOCATION = http://www.openssl.org/source
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
-
+include packages/libs/openssl/Makefile.location
 include packages/common.mk
 
 $(pkgtree)/.setup:
