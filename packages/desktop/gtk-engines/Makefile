@@ -1,5 +1,9 @@
 PACKAGE = gtk-engines
+ifneq ($(CONFIG_PACKAGE_LIBS_GTK3),)
+VERSION = 2.91.1
+else
 VERSION = 2.20.2
+endif
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
