@@ -1,2 +1,2 @@
 version=3
-http://libestr.adiscon.com/download http://libestr.adiscon.com/files/download/libestr-(.*)\.tar\.gz
+http://libestr.adiscon.com/download libestr-(.*)\.tar\.gz
