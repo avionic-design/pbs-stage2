@@ -1,0 +1,4 @@
+no-rpath.patch
+extra-cflags.patch
+engines-path.patch
+disable-manpages.patch
