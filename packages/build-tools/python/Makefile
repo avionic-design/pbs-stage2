@@ -2,7 +2,7 @@ PACKAGE = Python
 VERSION = 2.7.3
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
