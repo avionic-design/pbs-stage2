@@ -1,2 +1,2 @@
 version=3
-http://downloads.sourceforge.net/project/squashfs/squashfs/squashfs(v[\d\.]+)/squashfs(v[\d\.]+)\.tar\.gz
+http://sf.net/squashfs/squashfs([\d\.]+)\.tar\.gz
