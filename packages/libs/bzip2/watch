@@ -1,2 +1,2 @@
 version=3
-http://www.bzip.org/(.*)/bzip2-(.*)\.tar\.gz
+http://www.bzip.org/downloads.html bzip2-(.*)\.tar\.gz
