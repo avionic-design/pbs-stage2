@@ -12,6 +12,7 @@ $(pkgbuildtree)/m4:
 $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 prunefiles = \
+	$(prefix)/include/event.h \
 	$(prefix)/lib/*.la
 
 stripfiles = \
