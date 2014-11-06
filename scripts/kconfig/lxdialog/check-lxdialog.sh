@@ -8,7 +8,7 @@ ldflags_at()
 		for lib in ncursesw ncurses curses ; do
 			LIBRARY_PATH=$1 $cc -print-file-name=lib${lib}.${ext} | grep -q /
 			if [ $? -eq 0 ]; then
-				echo "${1+-L$1 }-l${lib}"
+				echo "${1+-Wl,-rpath=$1 }-l${lib}"
 				return 0
 			fi
 		done
