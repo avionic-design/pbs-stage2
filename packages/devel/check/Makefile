@@ -1,5 +1,5 @@
 PACKAGE = check
-VERSION = 0.9.12
+VERSION = 0.9.14
 LICENSE = LGPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
