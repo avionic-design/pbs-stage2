@@ -1,0 +1,25 @@
+diff --git a/Makefile.am b/Makefile.am
+index c670535..b4bdfa7 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -47,5 +47,5 @@ pkgconfigdir=$(libdir)/pkgconfig
+ pkgconfig_DATA = libtirpc.pc
+ 
+ install-exec-local:
+-	cp -p ./doc/etc_netconfig /etc/netconfig
+-	chmod 0644 /etc/netconfig
++	$(MKDIR_P) $(DESTDIR)/$(sysconfdir)
++	$(INSTALL) -m 0644 $(top_srcdir)/doc/etc_netconfig $(DESTDIR)/$(sysconfdir)/netconfig
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 79bec0b..c83b8bb 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -6,7 +6,7 @@
+ ## anything like that.
+ 
+ 
+-INCLUDES = -I../tirpc -DPORTMAP -DINET6 -DVERSION="\"$(VERSION)\"" \
++INCLUDES = -I$(top_srcdir)/tirpc -DPORTMAP -DINET6 -DVERSION="\"$(VERSION)\"" \
+ 		-D_GNU_SOURCE -Wall -pipe  
+ 
+ lib_LTLIBRARIES = libtirpc.la
