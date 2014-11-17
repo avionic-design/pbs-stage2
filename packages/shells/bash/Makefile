@@ -1,5 +1,5 @@
 PACKAGE = bash
-VERSION = 4.2
+VERSION = 4.3.30
 
 LOCATION = ftp://ftp.gnu.org/pub/gnu/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
