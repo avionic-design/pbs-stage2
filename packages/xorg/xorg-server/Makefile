@@ -30,7 +30,8 @@ conf-args += \
 	--disable-xfbdev \
 	--disable-xvfb \
 	--enable-dpms \
-	--enable-xorg
+	--enable-xorg \
+	--disable-unit-tests
 
 ifeq ($(CONFIG_PACKAGE_XORG_XORG_SERVER_DGA),y)
   conf-args += --enable-dga
