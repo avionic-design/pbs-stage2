@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.1.8
+VERSION = 3.3.10
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -8,11 +8,9 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = ftp://ftp.gnutls.org/gcrypt/$(PACKAGE)/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
-	--with-libnettle-prefix=$(SYSROOT)$(prefix) \
-	--with-libtasn1-prefix=$(SYSROOT)$(prefix) \
 	--with-libz-prefix=$(SYSROOT)$(prefix) \
 	--disable-rpath \
 	--disable-doc
