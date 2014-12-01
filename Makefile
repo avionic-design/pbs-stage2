@@ -208,6 +208,9 @@ depend: $(depend-dirs)
 quiet_cmd_gen_depends = GEN     $@
       cmd_gen_depends = $< $(src)/Kconfig
 
+scripts/kconfig/deps:
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+
 include/config/depends.mk: scripts/kconfig/deps \
 		include/config/auto.conf
 	$(call cmd,gen_depends)
