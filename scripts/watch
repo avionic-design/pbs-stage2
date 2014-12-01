@@ -18,7 +18,9 @@ def process_recursive(url, pattern, options, final):
 		print 'opening URL', url, '(%s)' % pattern
 
 	try:
-		content = urllib2.urlopen(url)
+		req = urllib2.Request(url)
+		req.add_header('Accept', '*/*')
+		content = urllib2.urlopen(req)
 	except Exception as err:
 		print "Failed to retrieve %s: %s" % (url, err)
 		return None
