@@ -127,7 +127,7 @@ def process_line(line, options):
 
 	base = match.group(1)
 	if base == 'http://sf.net':
-		base = 'http://qa.debian.org/watch/sf.php'
+		base = 'https://qa.debian.org/watch/sf.php'
 		if options.verbose > 0:
 			print 'using redirector:', base
 
