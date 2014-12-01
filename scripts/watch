@@ -19,7 +19,8 @@ def process_recursive(url, pattern, options, final):
 
 	try:
 		content = urllib2.urlopen(url)
-	except:
+	except Exception as err:
+		print "Failed to retrieve %s: %s" % (url, err)
 		return None
 
 	for line in content:
