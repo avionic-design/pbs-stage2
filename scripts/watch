@@ -29,8 +29,14 @@ def process_recursive(url, pattern, options, final):
 		if uri.scheme == 'ftp':
 			regex = re.compile('(\S+)$', re.IGNORECASE)
 		else:
-			regex = re.compile('href=[\'"]([^\'"]+)[\'"]', \
-					re.IGNORECASE)
+			# If the match is an absolute path or URL try to match the whole
+			# href, otherwise strip all path components.
+			if '://' in pattern or pattern[0] == '/':
+				regex = re.compile('href=[\'"]([^\'"]+?)[\'"]', \
+							re.IGNORECASE)
+			else:
+				regex = re.compile('href=[\'"](?:[^\'"]*/)?([^\'"]+?)[\'"]', \
+							re.IGNORECASE)
 
 		matches = regex.findall(line)
 		if not matches:
