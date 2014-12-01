@@ -1,5 +1,5 @@
 PACKAGE = e2fsprogs
-VERSION = 1.42.8
+VERSION = 1.42.12
 LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
@@ -22,7 +22,8 @@ endif
 
 ifneq ($(LIBC),gnu)
   conf-args += \
-	--disable-tls
+	--disable-tls \
+	--disable-defrag
 endif
 
 prunefiles = \
