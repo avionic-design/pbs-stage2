@@ -1,1 +1,1 @@
-ltmain-sysroot.patch
+ltmain-sysroot.patch -d build

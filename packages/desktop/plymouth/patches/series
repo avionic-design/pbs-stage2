@@ -1,4 +1,4 @@
-ltmain-sysroot.patch
+ltmain-sysroot.patch -d build-tools
 optional-gtk.patch
 uclibc.patch
 autoreconf.patch

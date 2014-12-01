@@ -1,2 +1,2 @@
-ltmain-sysroot.patch
+ltmain-sysroot.patch -d build-aux
 out-of-tree.patch

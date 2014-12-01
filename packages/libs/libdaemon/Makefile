@@ -1,7 +1,8 @@
 PACKAGE = libdaemon
 VERSION = 0.14
+MD5=509dc27107c21bcd9fbf2f95f5669563
 
-LOCATION = http://0pointer.de/lennart/projects/$(PACKAGE)
+LOCATION = http://pkgs.fedoraproject.org/repo/pkgs/$(PACKAGE)/$(PACKAGE)-$(VERSION).tar.gz/$(MD5)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
