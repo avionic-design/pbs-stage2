@@ -1,5 +1,5 @@
 PACKAGE = sshfs-fuse
-VERSION = 2.4
+VERSION = 2.5
 
 LOCATION = http://sourceforge.net/projects/fuse/files/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
