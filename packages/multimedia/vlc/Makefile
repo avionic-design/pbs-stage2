@@ -40,6 +40,7 @@ plugin = $(prefix)/lib/vlc/plugins
 
 prunefiles = \
 	$(prefix)/lib/*.la \
+	$(prefix)/lib/vlc/*.la \
 	$(plugin)/3dnow/*.la \
 	$(plugin)/access/*.la \
 	$(plugin)/access_output/*.la \
