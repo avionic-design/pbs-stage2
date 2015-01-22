@@ -14,7 +14,9 @@ conf-args += \
 	--enable-page-visibility-api \
 	--disable-silent-rules \
 	--disable-geolocation \
-	--disable-spellcheck
+	--disable-spellcheck \
+	--enable-css3-flexbox \
+	--enable-css3-text-decoration
 
 # Disable debug symbols to allow build on machine without enough RAM
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
