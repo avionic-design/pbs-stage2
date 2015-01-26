@@ -1,3 +1,4 @@
-fix-dvb-radio-memory-usage.patch
-vaapi-api-compat.patch
-fix-live55-check.patch
+0001-Revert-codec-mpeg_audio-fix-pts-update.patch
+0002-gles2-Raise-priority-to-force-default-usage-of-plugi.patch
+0003-upd-Fix-to-enable-smoth-initial-playback.patch
+0004-gles2-Enable-xid-feature-needed-by-remote-control.patch

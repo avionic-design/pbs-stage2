@@ -1,11 +1,14 @@
 PACKAGE = vlc
-VERSION = 2.0.7
+VERSION = 3.0.0
+BUILD = 20150126-0532
 LICENSE = GPL
 
-LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+LOCATION = http://nightlies.videolan.org/build/source/
+TARBALLS = $(PACKAGE)-$(VERSION)-$(BUILD).tar.xz
 
 include packages/autotools-reconf.mk
+
+pkgbuildtree = $(pkgtree)/$(PACKAGE)-$(VERSION)-git
 
 conf-vars += \
 	CXXFLAGS='$(CPPFLAGS)'
@@ -21,9 +24,9 @@ conf-args += \
 	--disable-qt4 \
 	--disable-skins2 \
 	--disable-neon \
-	--disable-glx \
 	--disable-postproc \
-	--disable-dbus
+	--disable-dbus \
+	--enable-gles2
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
   conf-args += --disable-speex

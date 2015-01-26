@@ -1,0 +1,26 @@
+From 9fb18036c6857856da42de6fd939fa5855acec6d Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Mon, 26 Jan 2015 09:59:54 +0100
+Subject: [PATCH 4/4] gles2: Enable xid feature needed by remote-control
+
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ modules/video_output/gl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/video_output/gl.c b/modules/video_output/gl.c
+index 6bf01b1..0016267 100644
+--- a/modules/video_output/gl.c
++++ b/modules/video_output/gl.c
+@@ -51,7 +51,7 @@ vlc_module_begin ()
+     set_description (N_("OpenGL for Embedded Systems 2 video output"))
+     set_capability ("vout display", /*265*/500)
+     set_callbacks (Open, Close)
+-    add_shortcut ("opengles2", "gles2")
++    add_shortcut ("opengles2", "gles2", "xid")
+     add_module ("gles2", "opengl es2", NULL,
+                 GLES2_TEXT, PROVIDER_LONGTEXT, true)
+ 
+-- 
+2.1.0
+

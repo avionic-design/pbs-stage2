@@ -1,0 +1,28 @@
+From 82cb0930870fb274b3d07417cd7a074a47e03f0a Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Thu, 22 Jan 2015 14:37:37 +0100
+Subject: [PATCH 1/4] Revert "codec: mpeg_audio: fix pts update"
+
+Breaks audio after PTS wrap.
+
+This reverts commit 72b03859fd8b715d9baeb5b378170d81517b01e8.
+---
+ modules/codec/mpeg_audio.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/modules/codec/mpeg_audio.c b/modules/codec/mpeg_audio.c
+index 936b1fa..e8a2f99 100644
+--- a/modules/codec/mpeg_audio.c
++++ b/modules/codec/mpeg_audio.c
+@@ -251,7 +251,7 @@ static block_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block )
+             /* New frame, set the Presentation Time Stamp */
+             p_sys->i_pts = p_sys->bytestream.p_block->i_pts;
+             if( p_sys->i_pts > VLC_TS_INVALID &&
+-                p_sys->i_pts > date_Get( &p_sys->end_date ) )
++                p_sys->i_pts != date_Get( &p_sys->end_date ) )
+             {
+                 date_Set( &p_sys->end_date, p_sys->i_pts );
+             }
+-- 
+2.1.0
+
