@@ -19,6 +19,7 @@ conf-args = \
 	--enable-gpl \
 	--disable-encoders \
 	--disable-doc \
+	--pkg-config=pkg-config \
 	$(platform-conf-args)
 
 conf-vars = \
