@@ -9,3 +9,7 @@ LOCATION = http://ftp.ruby-lang.org/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/build-tools/autotools.mk
+
+conf-args += \
+	--disable-install-doc \
+	--with-out-ext=tk
