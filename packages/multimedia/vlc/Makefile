@@ -1,6 +1,6 @@
 PACKAGE = vlc
 VERSION = 3.0.0
-BUILD = 20150126-0532
+BUILD = 20150130-0655
 LICENSE = GPL
 
 LOCATION = http://nightlies.videolan.org/build/source/
