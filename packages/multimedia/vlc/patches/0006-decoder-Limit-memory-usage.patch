@@ -1,0 +1,29 @@
+From 514108ec078c5a507787ca66b796a853ff235c2b Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Tue, 3 Feb 2015 08:47:51 +0100
+Subject: [PATCH 6/7] decoder: Limit memory usage
+
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ src/input/decoder.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/input/decoder.c b/src/input/decoder.c
+index fd615d7..c4dc9fa 100644
+--- a/src/input/decoder.c
++++ b/src/input/decoder.c
+@@ -356,7 +356,11 @@ void input_DecoderDecode( decoder_t *p_dec, block_t *p_block, bool b_do_pace )
+             block_FifoPace( p_owner->p_fifo, 10, SIZE_MAX );
+     }
+ #ifdef __arm__
++#ifdef OPTIMIZE_MEMORY
++    else if( block_FifoSize( p_owner->p_fifo ) > 10*1024*1024 /* 10 MiB */ )
++#else
+     else if( block_FifoSize( p_owner->p_fifo ) > 50*1024*1024 /* 50 MiB */ )
++#endif
+ #else
+     else if( block_FifoSize( p_owner->p_fifo ) > 400*1024*1024 /* 400 MiB, ie ~ 50mb/s for 60s */ )
+ #endif
+-- 
+2.1.0
+

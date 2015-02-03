@@ -1,0 +1,71 @@
+From d474d2026b40f94d00a3ff5a08748865eb77d71f Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Mon, 2 Feb 2015 09:59:47 +0100
+Subject: [PATCH 3/4] udp: Don't call block_FifoGet in BlockUDP if thread is
+ not active
+
+If the reading thread stopped, we won't get any new packets. So don't call
+block_FifoGet in BlockUDP, since it will wait for ever if the queue is empty.
+
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ modules/access/udp.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/modules/access/udp.c b/modules/access/udp.c
+index 895c934..f16b11a 100644
+--- a/modules/access/udp.c
++++ b/modules/access/udp.c
+@@ -42,6 +42,7 @@
+ #include <vlc_access.h>
+ #include <vlc_network.h>
+ #include <vlc_block.h>
++#include <vlc_atomic.h>
+ 
+ #define MTU 65535
+ 
+@@ -75,6 +76,7 @@ struct access_sys_t
+     size_t fifo_size;
+     block_fifo_t *fifo;
+     vlc_thread_t thread;
++    atomic_bool active;
+ };
+ 
+ /*****************************************************************************
+@@ -167,6 +169,7 @@ static int Open( vlc_object_t *p_this )
+     }
+ 
+     sys->fifo_size = var_InheritInteger( p_access, "udp-buffer");
++    atomic_init(&sys->active, true);
+ 
+     if( vlc_clone( &sys->thread, ThreadRead, p_access,
+                    VLC_THREAD_PRIORITY_INPUT ) )
+@@ -189,6 +192,7 @@ static void Close( vlc_object_t *p_this )
+     access_t     *p_access = (access_t*)p_this;
+     access_sys_t *sys = p_access->p_sys;
+ 
++    atomic_store(&sys->active, false);
+     vlc_cancel( sys->thread );
+     vlc_join( sys->thread, NULL );
+     block_FifoRelease( sys->fifo );
+@@ -237,7 +241,8 @@ static block_t *BlockUDP( access_t *p_access )
+ {
+     access_sys_t *sys = p_access->p_sys;
+ 
+-    return block_FifoGet( sys->fifo );
++    return (block_FifoCount(sys->fifo) || atomic_load(&sys->active)) ?
++            block_FifoGet(sys->fifo) : NULL;
+ }
+ 
+ /*****************************************************************************
+@@ -275,6 +280,7 @@ static void* ThreadRead( void *data )
+         pkt->i_buffer = len;
+         block_FifoPut( sys->fifo, pkt );
+     }
++    atomic_store(&sys->active, false);
+ 
+     block_FifoWake( sys->fifo );
+     return NULL;
+-- 
+2.1.0
+

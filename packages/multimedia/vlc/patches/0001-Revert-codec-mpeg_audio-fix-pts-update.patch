@@ -1,4 +1,4 @@
-From 82cb0930870fb274b3d07417cd7a074a47e03f0a Mon Sep 17 00:00:00 2001
+From 897ccb7070aa1048e1510a3570384879733d0b43 Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Thu, 22 Jan 2015 14:37:37 +0100
 Subject: [PATCH 1/4] Revert "codec: mpeg_audio: fix pts update"

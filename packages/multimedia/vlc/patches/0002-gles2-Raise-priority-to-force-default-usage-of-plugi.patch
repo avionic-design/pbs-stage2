@@ -1,7 +1,7 @@
-From 536752336d9640a0f5da858fee5e4784c7e51c22 Mon Sep 17 00:00:00 2001
+From 524875a847129e7ce3ce093a5821bef57d5a9a86 Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Mon, 26 Jan 2015 09:56:14 +0100
-Subject: [PATCH 2/4] gles2: Raise priority to force default usage of plugin
+Subject: [PATCH 2/7] gles2: Raise priority to force default usage of plugin
 
 Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
 ---

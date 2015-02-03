@@ -1,7 +1,7 @@
-From 59bb8434cbc2da462ab50a8c8b9a08c2a493d5ea Mon Sep 17 00:00:00 2001
+From 6b431675ab279fca2c42d99301645407f46671ca Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Mon, 26 Jan 2015 09:58:03 +0100
-Subject: [PATCH 3/7] upd: Fix to enable smoth initial playback
+Subject: [PATCH 2/4] upd: Fix to enable smoth initial playback
 
 Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
 ---

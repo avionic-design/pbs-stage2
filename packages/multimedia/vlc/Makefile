@@ -15,6 +15,7 @@ conf-vars += \
 
 conf-args += \
 	--enable-run-as-root \
+	--enable-optimize-memory \
 	--disable-rpath \
 	--disable-a52 \
 	--disable-dvdnav \
@@ -26,8 +27,8 @@ conf-args += \
 	--disable-neon \
 	--disable-postproc \
 	--disable-dbus \
-	--enable-optimize-memory \
-	--enable-gles2
+	--disable-glx \
+	--disable-gles2
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
   conf-args += --disable-speex

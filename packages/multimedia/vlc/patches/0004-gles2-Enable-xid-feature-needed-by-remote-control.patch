@@ -1,7 +1,7 @@
-From 9fb18036c6857856da42de6fd939fa5855acec6d Mon Sep 17 00:00:00 2001
+From 3dbf217f0a740a5955957596bd68969a0427ce55 Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Mon, 26 Jan 2015 09:59:54 +0100
-Subject: [PATCH 4/4] gles2: Enable xid feature needed by remote-control
+Subject: [PATCH 4/7] gles2: Enable xid feature needed by remote-control
 
 Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
 ---

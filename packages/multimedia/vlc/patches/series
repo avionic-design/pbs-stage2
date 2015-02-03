@@ -1,4 +1,4 @@
 0001-Revert-codec-mpeg_audio-fix-pts-update.patch
-0002-gles2-Raise-priority-to-force-default-usage-of-plugi.patch
-0003-upd-Fix-to-enable-smoth-initial-playback.patch
-0004-gles2-Enable-xid-feature-needed-by-remote-control.patch
+0002-upd-Fix-to-enable-smoth-initial-playback.patch
+0003-udp-Don-t-call-block_FifoGet-in-BlockUDP-if-thread-i.patch
+0004-Fix-live555-detection-for-sysroot.patch
