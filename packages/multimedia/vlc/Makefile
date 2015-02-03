@@ -26,6 +26,7 @@ conf-args += \
 	--disable-neon \
 	--disable-postproc \
 	--disable-dbus \
+	--enable-optimize-memory \
 	--enable-gles2
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
