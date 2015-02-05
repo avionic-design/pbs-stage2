@@ -11,6 +11,7 @@ conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--disable-nouveau \
 	--disable-vmwgfx \
+	--disable-manpages \
 	--disable-radeon
 
 prunefiles = \
