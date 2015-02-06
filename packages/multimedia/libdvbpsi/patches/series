@@ -1,2 +1,2 @@
 ltmain-sysroot.patch -d .auto
-cross-compile.patch
+libtool-ldflags.patch
