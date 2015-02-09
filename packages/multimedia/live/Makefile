@@ -1,5 +1,5 @@
 PACKAGE = live
-VERSION = 2013.01.22
+VERSION = 2015.01.27
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.avionic-design.de/pub/avionic/proxy
