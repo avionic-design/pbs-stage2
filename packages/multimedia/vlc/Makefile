@@ -1,21 +1,17 @@
 PACKAGE = vlc
-VERSION = 3.0.0
-BUILD = 20150130-0655
+VERSION = 2.0.7
 LICENSE = GPL
 
-LOCATION = http://nightlies.videolan.org/build/source/
-TARBALLS = $(PACKAGE)-$(VERSION)-$(BUILD).tar.xz
+LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
-
-pkgbuildtree = $(pkgtree)/$(PACKAGE)-$(VERSION)-git
 
 conf-vars += \
 	CXXFLAGS='$(CPPFLAGS)'
 
 conf-args += \
 	--enable-run-as-root \
-	--enable-optimize-memory \
 	--disable-rpath \
 	--disable-a52 \
 	--disable-dvdnav \
