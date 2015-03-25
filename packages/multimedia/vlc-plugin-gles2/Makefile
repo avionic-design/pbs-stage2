@@ -1,5 +1,5 @@
 PACKAGE = vlc-plugin-gles2
-VERSION = 0.1.2
+VERSION = 0.1.4
 LICENSE = GPL
 
 LOCATION = ftp.avionic-design.de/pub/vlc-plugin-gles2
