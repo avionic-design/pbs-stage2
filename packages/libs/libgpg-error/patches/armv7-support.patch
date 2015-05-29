@@ -1,0 +1,52 @@
+--- /dev/null	2014-10-01 10:53:01.513907871 +0200
++++ b/src/syscfg/lock-obj-pub.armv7l-unknown-linux-gnueabi.h	2014-10-01 17:20:34.109806536 +0200
+@@ -0,0 +1,23 @@
++## lock-obj-pub.arm-unknown-linux-gnueabi.h
++## File created by gen-posix-lock-obj - DO NOT EDIT
++## To be included by mkheader into gpg-error.h
++
++typedef struct
++{
++  long _vers;
++  union {
++    volatile char _priv[24];
++    long _x_align;
++    long *_xp_align;
++  } u;
++} gpgrt_lock_t;
++
++#define GPGRT_LOCK_INITIALIZER {1,{{0,0,0,0,0,0,0,0, \
++                                    0,0,0,0,0,0,0,0, \
++                                    0,0,0,0,0,0,0,0}}}
++##
++## Local Variables:
++## mode: c
++## buffer-read-only: t
++## End:
++##
+--- /dev/null	2014-10-01 10:53:01.513907871 +0200
++++ b/src/syscfg/lock-obj-pub.armv7l-unknown-linux-gnueabihf.h	2014-10-01 17:20:26.265806808 +0200
+@@ -0,0 +1,23 @@
++## lock-obj-pub.arm-unknown-linux-gnueabihf.h
++## File created by gen-posix-lock-obj - DO NOT EDIT
++## To be included by mkheader into gpg-error.h
++
++typedef struct
++{
++  long _vers;
++  union {
++    volatile char _priv[24];
++    long _x_align;
++    long *_xp_align;
++  } u;
++} gpgrt_lock_t;
++
++#define GPGRT_LOCK_INITIALIZER {1,{{0,0,0,0,0,0,0,0, \
++                                    0,0,0,0,0,0,0,0, \
++                                    0,0,0,0,0,0,0,0}}}
++##
++## Local Variables:
++## mode: c
++## buffer-read-only: t
++## End:
++##
