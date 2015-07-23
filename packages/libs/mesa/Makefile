@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 9.0.2
+VERSION = 10.5.8
 LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
@@ -7,7 +7,7 @@ VERSION = 7.5.2
 endif
 
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(VERSION)
-TARBALLS = MesaLib-$(VERSION).tar.bz2
+TARBALLS = mesa-$(VERSION).tar.xz
 
 ifneq ($(wildcard $(objtree)/source/$(obj)),)
 VERSION = git
@@ -23,7 +23,7 @@ $(pkgtree)/.autoreconfigure: $(pkgtree)/.patch
 		$(env) autoreconf --install --force $(ACLOCAL_FLAGS)
 	$(call cmd,stamp)
 
-pkgbuildtree := $(pkgtree)/Mesa-$(VERSION)
+pkgbuildtree := $(pkgtree)/mesa-$(VERSION)
 
 conf-args += \
 	--build=$(BUILD_GNU_TYPE) \
