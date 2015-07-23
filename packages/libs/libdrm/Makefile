@@ -1,5 +1,5 @@
 PACKAGE = libdrm
-VERSION = 2.4.58
+VERSION = 2.4.62
 LICENSE = custom
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
@@ -12,7 +12,8 @@ conf-args += \
 	--disable-nouveau \
 	--disable-vmwgfx \
 	--disable-manpages \
-	--disable-radeon
+	--disable-radeon \
+	--disable-valgrind
 
 prunefiles = \
 	$(prefix)/lib/*.la
