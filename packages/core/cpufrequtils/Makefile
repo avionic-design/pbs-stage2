@@ -1,8 +1,8 @@
 PACKAGE = cpufrequtils
 VERSION = 008
 
-LOCATION = http://www.kernel.org/pub/linux/utils/kernel/cpufreq
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = https://www.kernel.org/pub/linux/utils/kernel/cpufreq
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
