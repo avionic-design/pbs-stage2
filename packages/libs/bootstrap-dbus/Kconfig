@@ -1,6 +1,7 @@
 config PACKAGE_LIBS_BOOTSTRAP_DBUS
 	bool "bootstrap dbus"
 	select PACKAGE_LIBS_EXPAT
+	select PACKAGE_XORG_LIB_X11
 	---help---
 	  Simple interprocess messaging system. Minimal version to break the
 	  cyclic dependency between dbus and systemd.
