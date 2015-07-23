@@ -67,9 +67,19 @@ $(srctree)/download:
 $(local-files): $(srctree)/download/%: | $(srctree)/download
 	$(call cmd,wget)
 
+ifeq ($(GENERATE_CHECKSUMS),y)
 quiet_cmd_checksum_sha256 = SHA256  $<
-      cmd_checksum_sha256 = cd $(srctree) && \
+      cmd_checksum_sha256 = echo "check sha256 for download/$* in $(srctree) / $(obj)/checksums" && \
+		cd $(srctree) && \
+		(grep download/$* $(obj)/checksums | sha256sum -c --quiet || \
+			(echo "generate sha256 for download/$*" && \
+				sha256sum download/$* >> $(obj)/checksums))
+else
+quiet_cmd_checksum_sha256 = SHA256  $<
+      cmd_checksum_sha256 = echo "check sha256 for download/$* in $(srctree) / $(obj)/checksums" && \
+		cd $(srctree) && \
 		grep download/$* $(obj)/checksums | sha256sum -c --quiet
+endif
 
 $(chksum): $(chksum-prefix)%: $(srctree)/download/%
 	$(call cmd,checksum_sha256)
