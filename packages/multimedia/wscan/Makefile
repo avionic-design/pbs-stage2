@@ -1,5 +1,5 @@
 PACKAGE = w_scan
-VERSION = 20130331
+VERSION = 20141122
 LICENSE = GPL
 
 LOCATION = http://wirbel.htpc-forum.de/w_scan
