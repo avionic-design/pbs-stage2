@@ -1,5 +1,5 @@
 PACKAGE = vlc
-VERSION = 2.1.5
+VERSION = 2.2.1
 LICENSE = GPL
 
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
@@ -22,7 +22,6 @@ conf-args += \
 	--disable-qt4 \
 	--disable-skins2 \
 	--disable-neon \
-	--disable-glx \
 	--disable-postproc \
 	--disable-dbus
 
