@@ -1,0 +1,4 @@
+config PACKAGE_XORG_LIB_XSHMFENCE
+	bool "xshmfence"
+	select PACKAGE_XORG_UTIL_MACROS
+	select PACKAGE_XORG_PROTO_X
