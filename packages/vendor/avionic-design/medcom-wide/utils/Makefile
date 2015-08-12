@@ -1,5 +1,5 @@
 PACKAGE = medcom-wide-utils
-VERSION = 0.1.2
+VERSION = 0.2.0
 LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
