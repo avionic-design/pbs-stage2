@@ -2,7 +2,7 @@ PACKAGE = nspr
 VERSION = 4.9.6
 LICENSE = MPL
 
-LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
+LOCATION = https://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk

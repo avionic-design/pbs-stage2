@@ -1,7 +1,7 @@
 PACKAGE = xulrunner
 VERSION = 1.9.2
 
-LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
+LOCATION = https://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/$(VERSION)/source
 TARBALLS = $(PACKAGE)-$(VERSION).source.tar.bz2
 
 include packages/common.mk
