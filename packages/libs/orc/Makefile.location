@@ -5,5 +5,5 @@ LICENSE = custom
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = http://code.entropywave.com/download/$(PACKAGE)
+LOCATION = https://download.videolan.org/contrib
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
