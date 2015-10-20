@@ -23,7 +23,9 @@ conf-args += \
 	--disable-skins2 \
 	--disable-neon \
 	--disable-postproc \
-	--disable-dbus
+	--disable-dbus \
+	--disable-glx \
+	--disable-gles2
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_SPEEX),y)
   conf-args += --disable-speex

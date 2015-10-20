@@ -1,0 +1,31 @@
+From e4354637f5f9c80095c3241aed9d3d244a25530b Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Wed, 4 Feb 2015 09:44:13 +0100
+Subject: [PATCH 7/7] Fix live555 detection for sysroot
+
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ configure.ac | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e5a22c3..1b52eca 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1618,11 +1618,11 @@ AS_IF([test "${enable_live555}" != "no" -a -n "${CXX}"], [
+ 
+     dnl detect include paths
+     AS_IF([test -f "${CONTRIB_DIR}/include/UsageEnvironment.hh"], [
+-      CPPFLAGS_live555="-I${CONTRIB_DIR}/include/liveMedia -I${CONTRIB_DIR}/include/groupsock -I${CONTRIB_DIR}/include/BasicUsageEnvironment -I${CONTRIB_DIR}/include/UsageEnvironment"
++      CPPFLAGS_live555="-I=${CONTRIB_DIR}/include/liveMedia -I=${CONTRIB_DIR}/include/groupsock -I=${CONTRIB_DIR}/include/BasicUsageEnvironment -I=${CONTRIB_DIR}/include/UsageEnvironment"
+     ], [
+       AS_IF([test "${SYS}" != "os2"], [
+         LIVE555_PREFIX=${LIVE555_PREFIX-"/usr"}
+-        CPPFLAGS_live555="-I${LIVE555_PREFIX}/include/liveMedia -I${LIVE555_PREFIX}/include/groupsock -I${LIVE555_PREFIX}/include/BasicUsageEnvironment -I${LIVE555_PREFIX}/include/UsageEnvironment"
++        CPPFLAGS_live555="-I=${LIVE555_PREFIX}/include/liveMedia -I=${LIVE555_PREFIX}/include/groupsock -I=${LIVE555_PREFIX}/include/BasicUsageEnvironment -I=${LIVE555_PREFIX}/include/UsageEnvironment"
+       ], [
+         LIVE555_PREFIX=${LIVE555_PREFIX-"/usr/lib/live"}
+         CPPFLAGS_live555="-I${LIVE555_PREFIX}/liveMedia/include -I${LIVE555_PREFIX}/groupsock/include -I${LIVE555_PREFIX}/BasicUsageEnvironment/include -I${LIVE555_PREFIX}/UsageEnvironment/include"
+-- 
+2.1.0
+

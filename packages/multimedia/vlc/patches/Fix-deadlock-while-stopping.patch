@@ -1,0 +1,76 @@
+From 710bf4b6dc4292fd0354a380f1f681435f957f56 Mon Sep 17 00:00:00 2001
+From: Dirk Leber <dirk.leber@avionic-design.de>
+Date: Tue, 1 Sep 2015 12:28:55 +0200
+Subject: [PATCH] Fix deadlock while stopping
+
+Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+---
+ lib/media_player.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/lib/media_player.c b/lib/media_player.c
+index b426637..09c8c65 100644
+--- a/lib/media_player.c
++++ b/lib/media_player.c
+@@ -119,7 +119,8 @@ static inline void unlock_input(libvlc_media_player_t *mp)
+  * Object lock is NOT held.
+  * Input lock is held or instance is being destroyed.
+  */
+-static void release_input_thread( libvlc_media_player_t *p_mi, bool b_input_abort )
++static void release_input_thread( libvlc_media_player_t *p_mi, bool b_input_abort,
++    bool b_locked )
+ {
+     assert( p_mi );
+ 
+@@ -128,6 +129,10 @@ static void release_input_thread( libvlc_media_player_t *p_mi, bool b_input_abor
+         return;
+     p_mi->input.p_thread = NULL;
+ 
++    /* Don't lock here since the callbacks may use functions that also lock! */
++    if( b_locked )
++        unlock_input(p_mi);
++
+     var_DelCallback( p_input_thread, "can-seek",
+                      input_seekable_changed, p_mi );
+     var_DelCallback( p_input_thread, "can-pause",
+@@ -135,6 +140,9 @@ static void release_input_thread( libvlc_media_player_t *p_mi, bool b_input_abor
+     var_DelCallback( p_input_thread, "intf-event",
+                      input_event_changed, p_mi );
+ 
++    if( b_locked )
++        lock_input(p_mi);
++
+     /* We owned this one */
+     input_Stop( p_input_thread, b_input_abort );
+     input_Close( p_input_thread );
+@@ -567,7 +575,7 @@ static void libvlc_media_player_destroy( libvlc_media_player_t *p_mi )
+ 
+     /* No need for lock_input() because no other threads knows us anymore */
+     if( p_mi->input.p_thread )
+-        release_input_thread(p_mi, true);
++        release_input_thread(p_mi, true, false);
+     if( p_mi->input.p_resource )
+     {
+         input_resource_Terminate( p_mi->input.p_resource );
+@@ -633,7 +641,8 @@ void libvlc_media_player_set_media(
+     release_input_thread( p_mi,
+                           p_mi->input.p_thread &&
+                           !p_mi->input.p_thread->b_eof &&
+-                          !p_mi->input.p_thread->b_error );
++                          !p_mi->input.p_thread->b_error,
++                          true );
+ 
+     lock( p_mi );
+     set_state( p_mi, libvlc_NothingSpecial, true );
+@@ -804,7 +813,7 @@ void libvlc_media_player_stop( libvlc_media_player_t *p_mi )
+     libvlc_state_t state = libvlc_media_player_get_state( p_mi );
+ 
+     lock_input(p_mi);
+-    release_input_thread( p_mi, true ); /* This will stop the input thread */
++    release_input_thread( p_mi, true, true ); /* This will stop the input thread */
+ 
+     /* Force to go to stopped state, in case we were in Ended, or Error
+      * state. */
+-- 
+2.4.3
+

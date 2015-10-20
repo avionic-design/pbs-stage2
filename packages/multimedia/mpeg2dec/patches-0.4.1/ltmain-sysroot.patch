@@ -1,8 +1,8 @@
 diff --git a/autotools/ltmain.sh b/autotools/ltmain.sh
 index 8fc56db..22491c1 100644
---- a/autotools/ltmain.sh
-+++ b/autotools/ltmain.sh
-@@ -1244,6 +1244,13 @@ EOF
+--- a/.auto/ltmain.sh
++++ b/.auto/ltmain.sh
+@@ -1291,6 +1291,13 @@ EOF
  	  prev=
  	  continue
  	  ;;
@@ -16,7 +16,7 @@ index 8fc56db..22491c1 100644
  	precious_regex)
  	  precious_files_regex="$arg"
  	  prev=
-@@ -1499,6 +1506,11 @@ EOF
+@@ -1546,6 +1553,11 @@ EOF
  	continue
  	;;
  
@@ -28,8 +28,8 @@ index 8fc56db..22491c1 100644
        # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
        # so, if we see these flags be careful not to treat them like -L
        -L[A-Z][A-Z]*:*)
-@@ -2115,7 +2127,7 @@ EOF
- 	  for searchdir in $newlib_search_path $lib_search_path $sys_lib_search_path $shlib_search_path; do
+@@ -2173,7 +2185,7 @@ EOF
+ 	  for searchdir in $searchdirs; do
  	    for search_ext in .la $std_shrext .so .a; do
  	      # Search the libtool library
 -	      lib="$searchdir/lib${name}${search_ext}"

@@ -1,2 +1,3 @@
 dix-composite.patch
 ltmain-sysroot.patch
+check_transform_invert.patch

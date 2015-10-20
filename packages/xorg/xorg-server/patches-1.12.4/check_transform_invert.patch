@@ -1,0 +1,15 @@
+diff --git a/dix/getevents.c b/dix/getevents.c
+index fade40c..d69ea80 100644
+--- a/dix/getevents.c
++++ b/dix/getevents.c
+@@ -1194,8 +1194,8 @@ transformAbsolute(DeviceIntPtr dev, ValuatorMask *mask)
+         ox = dev->last.valuators[0];
+         oy = dev->last.valuators[1];
+ 
+-        pixman_f_transform_invert(&invert, &dev->transform);
+-        transform(&invert, &ox, &oy);
++        if (pixman_f_transform_invert(&invert, &dev->transform))
++            transform(&invert, &ox, &oy);
+ 
+         x = ox;
+         y = oy;

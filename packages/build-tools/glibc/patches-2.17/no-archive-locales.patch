@@ -2,7 +2,7 @@ diff --git a/localedata/Makefile b/localedata/Makefile
 index 9501a79..57cfd52 100644
 --- a/localedata/Makefile
 +++ b/localedata/Makefile
-@@ -210,6 +210,7 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
+@@ -233,6 +233,7 @@ $(INSTALL-SUPPORTED-LOCALES): install-locales-dir
  	echo -n '...'; \
  	input=`echo $$locale | sed 's/\([^.]*\)[^@]*\(.*\)/\1\2/'`; \
  	$(LOCALEDEF) --alias-file=../intl/locale.alias \
