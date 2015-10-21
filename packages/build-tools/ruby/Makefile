@@ -12,4 +12,5 @@ include packages/build-tools/autotools.mk
 
 conf-args += \
 	--disable-install-doc \
-	--with-out-ext=tk
+	--with-out-ext=tk \
+	--with-openssl-lib=$(prefix)/lib64
