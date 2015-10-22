@@ -13,3 +13,6 @@ fix-arm-neon-build-issue.patch
 0005-gstreamer-Hide-the-cursor-in-video-window.patch
 0006-gstreamer-Use-ring-buffer-for-input-cache-instead-of.patch
 0007-gstreamer-Use-black-background-for-gtk-video-window.patch
+0008-Fix-build-issue-with-bison-3.patch
+0009-webkit2-fix-missing-include.patch
+0010-webkit2-fix-linker-error-due-to-missing-flag.patch
