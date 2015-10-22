@@ -1,0 +1,35 @@
+From 0c101fe583d62c658c3192973510ee11a2dc1f98 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 21 Oct 2015 17:00:28 +0200
+Subject: [PATCH 3/3] Prevent empty SYS_DVBC_ANNEX_AC
+
+In some cases with specific DVB kernel header version and this package's
+configure magic SYS_DVBC_ANNEX_AC might end up defined but empty,
+breaking the build. As redefining to SYS_DVBC_ANNEX_A does not work, set
+SYS_DVBC_ANNEX_AC to the hard coded value from SYS_DVBC_ANNEX_A as it is
+supposed to be from the kernel header.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ extended_frontend.h | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/extended_frontend.h b/extended_frontend.h
+index 26005f2..418bf57 100644
+--- a/extended_frontend.h
++++ b/extended_frontend.h
+@@ -108,6 +108,11 @@ typedef enum fe_siso_miso {
+ #endif
+ #endif                                         //// \END     REMOVE UP TO HERE!!!
+ 
++#if defined SYS_DVBC_ANNEX_AC && !SYS_DVBC_ANNEX_AC
++#undef SYS_DVBC_ANNEX_AC
++#define SYS_DVBC_ANNEX_AC 1
++#endif
++
+ #ifndef SYS_DVBC_ANNEX_A
+ #define SYS_DVBC_ANNEX_A SYS_DVBC_ANNEX_AC
+ #endif
+-- 
+2.1.0
+
