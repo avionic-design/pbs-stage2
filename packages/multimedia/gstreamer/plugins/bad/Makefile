@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-bad
-VERSION = 1.2.0
+VERSION = 1.6.0
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
