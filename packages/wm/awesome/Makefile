@@ -1,5 +1,5 @@
 PACKAGE = awesome
-VERSION = 3.4.14
+VERSION = 3.5.6
 LICENSE = GPL
 
 LOCATION = http://$(PACKAGE).naquadah.org/download
