@@ -8,6 +8,7 @@ obj-$(CONFIG_PACKAGE_XORG_LIB_XAU) += xau
 obj-$(CONFIG_PACKAGE_XORG_LIB_XAW) += xaw
 obj-$(CONFIG_PACKAGE_XORG_LIB_XCB) += xcb
 obj-$(CONFIG_PACKAGE_XORG_LIB_XCB_UTIL) += xcb-util
+obj-$(CONFIG_PACKAGE_XORG_LIB_XCB_UTIL_CURSOR) += xcb-util-cursor
 obj-$(CONFIG_PACKAGE_XORG_LIB_XCB_UTIL_IMAGE) += xcb-util-image
 obj-$(CONFIG_PACKAGE_XORG_LIB_XCB_UTIL_KEYSYMS) += xcb-util-keysyms
 obj-$(CONFIG_PACKAGE_XORG_LIB_XCB_UTIL_RENDERUTIL) += xcb-util-renderutil
