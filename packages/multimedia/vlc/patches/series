@@ -3,3 +3,4 @@ vaapi-api-compat.patch
 fix-live55-check.patch
 Prerender-spu-in-seperate-thread.patch
 Fix-deadlock-while-stopping.patch
+Fix-deadlock-while-canceling-thread.patch
