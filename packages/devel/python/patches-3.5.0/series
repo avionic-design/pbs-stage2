@@ -1,1 +1,2 @@
 0001-cross-compile-avoid-generated-binaries-execution.patch
+0002-cross-compile-do-not-add-LIBDIR-and-INCLUDEDIR-to-fl.patch
