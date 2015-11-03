@@ -1,0 +1,46 @@
+From f2c7ff2236f5f00f7f245482e67be00edad863e2 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 28 Oct 2015 14:49:55 +0100
+Subject: [PATCH] cross compile: avoid generated binaries execution
+
+Do not try to execute cross-compiled binaries. This can be avoided by
+submake invocation, see https://bugs.python.org/issue22625
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.pre.in | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index ce2c0aa..4f0b5ac 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -696,11 +696,13 @@ Programs/_freeze_importlib.o: Programs/_freeze_importlib.c Makefile
+ Programs/_freeze_importlib: Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN)
+ 	$(LINKCC) $(PY_LDFLAGS) -o $@ Programs/_freeze_importlib.o $(LIBRARY_OBJS_OMIT_FROZEN) $(LIBS) $(MODLIBS) $(SYSLIBS) $(LDLAST)
+ 
+-Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py Programs/_freeze_importlib
++Python/importlib_external.h: $(srcdir)/Lib/importlib/_bootstrap_external.py
++	$(MAKE) Programs/_freeze_importlib
+ 	./Programs/_freeze_importlib \
+ 		$(srcdir)/Lib/importlib/_bootstrap_external.py Python/importlib_external.h
+ 
+-Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py Programs/_freeze_importlib
++Python/importlib.h: $(srcdir)/Lib/importlib/_bootstrap.py
++	$(MAKE) Programs/_freeze_importlib
+ 	./Programs/_freeze_importlib \
+ 		$(srcdir)/Lib/importlib/_bootstrap.py Python/importlib.h
+ 
+@@ -762,7 +764,8 @@ Python/sysmodule.o: $(srcdir)/Python/sysmodule.c Makefile
+ 
+ $(IO_OBJS): $(IO_H)
+ 
+-$(GRAMMAR_H): $(GRAMMAR_INPUT) $(PGEN)
++$(GRAMMAR_H): $(GRAMMAR_INPUT)
++		$(MAKE) $(PGEN)
+ 		@$(MKDIR_P) Include
+ 		$(PGEN) $(GRAMMAR_INPUT) $(GRAMMAR_H) $(GRAMMAR_C)
+ $(GRAMMAR_C): $(GRAMMAR_H)
+-- 
+2.1.0
+

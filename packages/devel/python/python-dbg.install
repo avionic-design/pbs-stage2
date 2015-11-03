@@ -1,3 +1,1 @@
-/debug/usr/bin/python3.1.dbg
-/debug/usr/bin/python3.dbg
-/debug/usr/bin/python.dbg
+/debug/usr/bin/python3.*.dbg
