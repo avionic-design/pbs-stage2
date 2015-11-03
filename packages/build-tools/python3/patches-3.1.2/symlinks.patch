@@ -26,10 +26,10 @@ index e280dc4..28ef9c4 100644
 -	-rm -f $(DESTDIR)$(LIBPC)/python3.pc
 -	(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python3.pc)
 +	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE) python$(MAJOR)$(EXE))
-+	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(MAJOR)$(EXE) python$(EXE))
++	(cd $(DESTDIR)$(BINDIR); test -f python$(EXE) || $(LN) -s python$(MAJOR)$(EXE) python$(EXE))
 +	-rm -f $(DESTDIR)$(BINDIR)/python$(MAJOR)-config
 +	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python$(MAJOR)-config)
-+	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(MAJOR)-config python-config)
++	(cd $(DESTDIR)$(BINDIR); test -f python-config ||  $(LN) -s python$(MAJOR)-config python-config)
 +	-rm -f $(DESTDIR)$(LIBPC)/python$(MAJOR).pc
 +	(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python$(MAJOR).pc)
  
