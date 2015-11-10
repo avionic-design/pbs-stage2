@@ -1,5 +1,5 @@
 PACKAGE = zvbi
-VERSION = 0.2.33
+VERSION = 0.2.35
 
 LOCATION = http://prdownloads.sourceforge.net/zapping
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
