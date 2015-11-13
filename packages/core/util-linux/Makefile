@@ -8,11 +8,12 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--disable-rpath \
-	--without-python
+	--without-python \
+	--with-sysroot=$(SYSROOT)
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
   conf-args += --without-ncurses
