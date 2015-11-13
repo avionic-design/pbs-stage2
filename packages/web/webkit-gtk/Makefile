@@ -1,6 +1,12 @@
 PACKAGE = webkitgtk
-VERSION = 1.10.2
+VERSION = 2.4.9
 LICENSE = LGPL BSD
+
+# Stick to 1.10.2 for L4T due to gstreamer-0.10 dependencies for video
+# playback
+ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+VERSION = 1.10.2
+endif
 
 LOCATION = http://www.webkitgtk.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -11,6 +17,7 @@ ACLOCAL_FLAGS += -I Source/autotools
 
 conf-args += \
 	--libexecdir=$(prefix)/lib/webkit \
+	--enable-dependency-tracking \
 	--enable-page-visibility-api \
 	--disable-geolocation \
 	--disable-spellcheck \

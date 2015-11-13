@@ -1,0 +1,30 @@
+From 37eff197928e346808c9ec61165921e01c4d2576 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Tue, 17 Dec 2013 14:39:04 +0100
+Subject: [PATCH] Fix Assertion failure in JavaSCriptCore
+
+JSC::DFG::AssemblyHelpers::decodedCodeMapForAssertion crashes in several cases.
+---
+ Source/JavaScriptCore/jit/JIT.cpp | 6 +-----
+ 1 file changed, 1 insertion(+), 5 deletions(-)
+
+diff --git a/Source/JavaScriptCore/jit/JIT.cpp b/Source/JavaScriptCore/jit/JIT.cpp
+index c3508b0..defa386 100644
+--- a/Source/JavaScriptCore/jit/JIT.cpp
++++ b/Source/JavaScriptCore/jit/JIT.cpp
+@@ -654,11 +654,7 @@ CompilationResult JIT::privateCompile(JITCompilationEffort effort)
+     }
+ 
+ #if ENABLE(DFG_JIT) || ENABLE(LLINT)
+-    if (canBeOptimizedOrInlined()
+-#if ENABLE(LLINT)
+-        || true
+-#endif
+-        ) {
++    {
+         CompactJITCodeMap::Encoder jitCodeMapEncoder;
+         for (unsigned bytecodeOffset = 0; bytecodeOffset < m_labels.size(); ++bytecodeOffset) {
+             if (m_labels[bytecodeOffset].isSet())
+-- 
+2.7.0
+
