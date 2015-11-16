@@ -12,7 +12,6 @@ ACLOCAL_FLAGS += -I Source/autotools
 conf-args += \
 	--libexecdir=$(prefix)/lib/webkit \
 	--enable-page-visibility-api \
-	--disable-silent-rules \
 	--disable-geolocation \
 	--disable-spellcheck \
 	--enable-css3-flexbox \
