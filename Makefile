@@ -246,6 +246,10 @@ PHONY += license
 license: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ license
 
+PHONY += time
+time: include/config/depends.mk
+	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ time
+
 PHONY += touch
 touch: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) touch
@@ -328,6 +332,9 @@ distclean: clean $(distclean-dirs)
 
 %/print:
 	$(Q)$(MAKE) $(package)=$* print
+
+%/time:
+	$(Q)$(MAKE) $(package)=$* time
 
 %/configure:
 	$(Q)$(MAKE) $(package)=$* configure
