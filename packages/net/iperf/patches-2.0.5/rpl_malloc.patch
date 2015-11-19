@@ -1,0 +1,22 @@
+--- a/src/ReportCSV.c	2007-04-30 14:12:47.000000000 +0200
++++ b/src/ReportCSV.c	2007-04-30 14:13:26.000000000 +0200
+@@ -56,6 +56,19 @@
+ #include "report_CSV.h"
+ #include "Locale.h"
+ 
++#if malloc == rpl_malloc
++#undef malloc
++void *malloc(size_t size);
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
++
+ void CSV_timestamp( char *timestamp, int length );
+  
+ void CSV_stats( Transfer_Info *stats ) {
