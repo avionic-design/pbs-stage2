@@ -1,5 +1,5 @@
 PACKAGE = dbus
-VERSION = 1.9.0
+VERSION = 1.10.4
 LICENSE = GPL
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)

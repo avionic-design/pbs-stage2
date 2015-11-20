@@ -4,6 +4,7 @@ include packages/autotools-reconf.mk
 conf-args += \
 	--libexec=$(prefix)/lib/dbus-1.0 \
 	--disable-modular-tests \
+	--disable-doxygen-docs \
 	--with-sysroot=$(SYSROOT)
 
 conf-vars += \
