@@ -29,12 +29,12 @@ ccflags_at()
 {
 	if [ -z "$1" ]; then
 		return 1
+	elif [ -f $1/include/ncursesw/curses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncursesw/curses.h>" -DNCURSES_WIDECHAR=1'
 	elif [ -f $1/include/ncurses/ncurses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses/ncurses.h>"'
 	elif [ -f $1/include/ncurses/curses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses/curses.h>"'
-	elif [ -f $1/include/ncursesw/curses.h ]; then
-		echo '-I'$1'/include -DCURSES_LOC="<ncursesw/curses.h>"'
 	elif [ -f $1/include/ncurses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses.h>"'
 	else
