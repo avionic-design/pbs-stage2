@@ -1,0 +1,31 @@
+From 59baa76883a0ea403adb25edac3607eb2d0008f8 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 25 Nov 2015 13:42:18 +0100
+Subject: [PATCH] Create symlink for multi-user target
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/Makefile.am b/Makefile.am
+index 103aa6f..9f4058d 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -55,6 +55,13 @@ CLEANFILES = \
+ %.service: %.service.in
+ 	$(AM_V_GEN)sed -e 's,@sbindir\@,$(sbindir),g' $< > $@
+ 
++install-data-hook:
++	$(MKDIR_P) -m 0755 \
++		$(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants
++	( cd $(DESTDIR)$(systemdsystemunitdir)/multi-user.target.wants && \
++		rm -f rsyslog.service && \
++		$(LN_S) ../rsyslog.service rsyslog.service )
++
+ endif
+ 
+ EXTRA_DIST = \
+-- 
+2.1.0
+

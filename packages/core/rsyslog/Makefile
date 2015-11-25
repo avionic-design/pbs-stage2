@@ -5,7 +5,7 @@ LICENSE = GPL
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 CFLAGS += -std=c99
 
