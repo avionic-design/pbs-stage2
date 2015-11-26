@@ -3,3 +3,4 @@ xml2-pkgconfig.patch
 no-system-name-spam.patch
 fix-pkgconfig-file-substitutions.patch
 fix-systemd-unit-file.patch
+0001-lldpcli-don-t-complain-when-reading-a-commented-line.patch
