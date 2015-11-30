@@ -1,6 +1,6 @@
 config PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_LIBAV
 	bool "libav"
 	select PACKAGE_MULTIMEDIA_GSTREAMER_PLUGINS_BASE
-	select PACKAGE_MULTIMEDIA_LIBAV
+	select VIRTUAL_LIBAV
 	help
 	  This package provides libav-based GStreamer plug-ins.
