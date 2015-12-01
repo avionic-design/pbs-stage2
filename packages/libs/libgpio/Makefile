@@ -1,5 +1,5 @@
 PACKAGE = libgpio
-VERSION = 0.4.0
+VERSION = 0.5.0
 LICENSE = GPL
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
