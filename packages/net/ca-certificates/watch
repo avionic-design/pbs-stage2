@@ -1,0 +1,2 @@
+version=3
+http://http.debian.net/debian/pool/main/c/ca-certificates/ca-certificates_(\d+)\.tar\.xz

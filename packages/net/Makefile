@@ -1,5 +1,6 @@
 obj-$(CONFIG_PACKAGE_NET_BIND_LIBS) += bind-libs
 obj-$(CONFIG_PACKAGE_NET_BRIDGE_UTILS) += bridge-utils
+obj-$(CONFIG_PACKAGE_NET_CA_CERTIFICATES) += ca-certificates
 obj-$(CONFIG_PACKAGE_NET_CIFS_UTILS) += cifs-utils
 obj-$(CONFIG_PACKAGE_NET_DDIP) += ddip
 obj-$(CONFIG_PACKAGE_NET_DHCPCD) += dhcpcd

@@ -1,0 +1,8 @@
+config PACKAGE_NET_CA_CERTIFICATES
+	bool "ca-certificates"
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_LIBS_OPENSSL
+	help
+	  This packages contains trusted CA Certificate signatures needed to
+	  check authenticity of SSL/TLS connections. Contains CAs trusted by
+	  Mozilla and Debian.

@@ -2,6 +2,7 @@ menu "Networking"
 
 source "packages/net/bind-libs/Kconfig"
 source "packages/net/bridge-utils/Kconfig"
+source "packages/net/ca-certificates/Kconfig"
 source "packages/net/cifs-utils/Kconfig"
 source "packages/net/ddip/Kconfig"
 source "packages/net/dhcpcd/Kconfig"
