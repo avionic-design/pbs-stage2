@@ -1,0 +1,36 @@
+From c27ef97450b45dab1ec730fd0426ca5c222f9cf1 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Wed, 13 Jan 2016 08:59:24 +0100
+Subject: [PATCH] dhcpcd.conf: Default to hardware address identifier
+
+Recent dhcpcd versions changed to use duid as identifier to the DHCP server.
+As this is known not to work with some non RFC compliant DHCP servers revert
+to the previous default of using the hardware address.
+
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ dhcpcd.conf | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/dhcpcd.conf b/dhcpcd.conf
+index e5a19cd..3f28024 100644
+--- a/dhcpcd.conf
++++ b/dhcpcd.conf
+@@ -8,12 +8,12 @@
+ hostname
+ 
+ # Use the hardware address of the interface for the Client ID.
+-#clientid
++clientid
+ # or
+ # Use the same DUID + IAID as set in DHCPv6 for DHCPv4 ClientID as per RFC4361.
+ # Some non-RFC compliant DHCP servers do not reply with this set.
+ # In this case, comment out duid and enable clientid above.
+-duid
++#duid
+ 
+ # Persist interface configuration when dhcpcd exits.
+ persistent
+-- 
+2.6.2
+
