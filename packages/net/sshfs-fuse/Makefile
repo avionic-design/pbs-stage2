@@ -1,7 +1,7 @@
 PACKAGE = sshfs-fuse
 VERSION = 2.5
 
-LOCATION = http://sourceforge.net/projects/fuse/files/$(PACKAGE)/$(VERSION)
+LOCATION = https://github.com/libfuse/sshfs/releases/download/sshfs_2_5/
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
