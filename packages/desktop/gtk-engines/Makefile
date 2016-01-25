@@ -1,5 +1,5 @@
 PACKAGE = gtk-engines
-ifneq ($(CONFIG_PACKAGE_LIBS_GTK3),)
+ifeq ($(CONFIG_VIRTUAL_LIBS_GTK_GTK3),y)
 VERSION = 2.91.1
 else
 VERSION = 2.20.2
