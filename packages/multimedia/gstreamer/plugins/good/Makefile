@@ -32,7 +32,6 @@ conf-args += \
 	--disable-effectv \
 	--disable-icydemux \
 	--disable-imagefreeze \
-	--disable-isomp4 \
 	--disable-monoscope \
 	--disable-shapewipe \
 	--disable-smpte \
@@ -44,9 +43,6 @@ conf-args += \
 	--disable-sunaudio \
 	--disable-osx_audio \
 	--disable-osx_video \
-	--disable-x \
-	--disable-xshm \
-	--disable-xvideo \
 	--disable-aalib \
 	--disable-aalibtest \
 	--disable-jack \
