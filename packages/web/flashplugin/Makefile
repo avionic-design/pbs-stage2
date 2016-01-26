@@ -5,6 +5,8 @@ LICENSE = proprietary
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
+include packages/common.mk
+
 ifeq ($(ARCH),x86)
   FLASH_ARCH = i386
   BITS = 32
@@ -19,8 +21,6 @@ endif
 
 LOCATION = http://fpdownload.macromedia.com/get/flashplayer/pdc/$(VERSION)
 TARBALLS = install_flash_player_$(MAJOR)_linux.$(FLASH_ARCH).tar.gz
-
-include packages/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
