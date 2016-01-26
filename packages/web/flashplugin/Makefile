@@ -1,5 +1,5 @@
 PACKAGE = flashplugin
-VERSION = 11.2.202.540
+VERSION = 11.2.202.559
 LICENSE = proprietary
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
