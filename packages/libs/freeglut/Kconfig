@@ -3,6 +3,7 @@ config PACKAGE_LIBS_FREEGLUT
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_LIBS_GLU
 
 	help
 	  Provides functionality for small OpenGL programs
