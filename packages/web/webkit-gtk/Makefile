@@ -1,11 +1,15 @@
 PACKAGE = webkitgtk
-VERSION = 2.4.9
+VERSION = 1.10.2
 LICENSE = LGPL BSD
 
 # Stick to 1.10.2 for L4T due to gstreamer-0.10 dependencies for video
 # playback
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
-VERSION = 1.10.2
+conf-args += \
+	--with-gstreamer=0.1
+else
+conf-args += \
+	--with-gstreamer=1.0
 endif
 
 LOCATION = http://www.webkitgtk.org/releases
