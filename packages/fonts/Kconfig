@@ -1,5 +1,6 @@
 menu "Fonts"
 
+source "packages/fonts/ttf-arphic-uming/Kconfig"
 source "packages/fonts/ttf-bitstream-vera/Kconfig"
 source "packages/fonts/ttf-freefont/Kconfig"
 source "packages/fonts/ttf-liberation/Kconfig"
