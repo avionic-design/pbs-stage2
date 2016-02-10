@@ -4,6 +4,7 @@ config PACKAGE_LIBS_FREEGLUT
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	select PACKAGE_LIBS_GLU
+	select PACKAGE_XORG_LIB_XI
 
 	help
 	  Provides functionality for small OpenGL programs
