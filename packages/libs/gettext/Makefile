@@ -4,7 +4,8 @@ include packages/autotools.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--disable-openmp \
-	--disable-rpath
+	--disable-rpath \
+	--disable-curses
 
 conf-vars += \
 	am_cv_func_iconv_works=yes
