@@ -6,7 +6,7 @@ LICENSE = LGPL BSD
 # playback
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
 conf-args += \
-	--with-gstreamer=0.1
+	--with-gstreamer=0.10
 else
 conf-args += \
 	--with-gstreamer=1.0
