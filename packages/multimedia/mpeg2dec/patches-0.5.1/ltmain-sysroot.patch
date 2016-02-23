@@ -1,0 +1,39 @@
+diff --git a/autotools/ltmain.sh b/autotools/ltmain.sh
+index 8fc56db..22491c1 100644
+--- a/.auto/ltmain.sh
++++ b/.auto/ltmain.sh
+@@ -1291,6 +1291,13 @@ EOF
+ 	  prev=
+ 	  continue
+ 	  ;;
++	sysroot)
++	  sysroot="$arg"
++	  compiler_flags="$compiler_flags --sysroot $arg"
++	  compile_command="$compile_command --sysroot $arg"
++	  prev=
++	  continue
++	  ;;
+ 	precious_regex)
+ 	  precious_files_regex="$arg"
+ 	  prev=
+@@ -1546,6 +1553,11 @@ EOF
+ 	continue
+ 	;;
+ 
++      --sysroot)
++	prev=sysroot
++	continue
++	;;
++
+       # The native IRIX linker understands -LANG:*, -LIST:* and -LNO:*
+       # so, if we see these flags be careful not to treat them like -L
+       -L[A-Z][A-Z]*:*)
+@@ -2173,7 +2185,7 @@ EOF
+ 	  for searchdir in $searchdirs; do
+ 	    for search_ext in .la $std_shrext .so .a; do
+ 	      # Search the libtool library
+-	      lib="$searchdir/lib${name}${search_ext}"
++	      lib="${sysroot}$searchdir/lib${name}${search_ext}"
+ 	      if test -f "$lib"; then
+ 		if test "$search_ext" = ".la"; then
+ 		  found=yes

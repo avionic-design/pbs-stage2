@@ -1,5 +1,5 @@
 PACKAGE = dbus
-VERSION = 1.8.2
+VERSION = 1.10.4
 LICENSE = GPL
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)

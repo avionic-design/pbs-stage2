@@ -1,0 +1,31 @@
+From f402af2640241dbc5a041e57a5e33eea7f62577d Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 1 Oct 2015 22:14:49 +0200
+Subject: [PATCH 09/10] webkit2: fix missing include
+
+Add a missing include to fix a compilation error for webkit2.
+
+Change-Id: I4f8e7f2f5cf8f5801ab3aef479ce56d3400e6822
+Originally-by: Eduardo Lima Mitev  <elima@igalia.com>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/4208
+Reviewed-by: Hendrik Lippek <hendrik.lippek@avionic-design.de>
+---
+ Source/WebKit2/UIProcess/Launcher/gtk/ProcessLauncherGtk.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Source/WebKit2/UIProcess/Launcher/gtk/ProcessLauncherGtk.cpp b/Source/WebKit2/UIProcess/Launcher/gtk/ProcessLauncherGtk.cpp
+index 8fb619e..e8cd89b 100644
+--- a/Source/WebKit2/UIProcess/Launcher/gtk/ProcessLauncherGtk.cpp
++++ b/Source/WebKit2/UIProcess/Launcher/gtk/ProcessLauncherGtk.cpp
+@@ -41,6 +41,7 @@
+ 
+ #if OS(LINUX)
+ #include <sys/prctl.h>
++#include <sys/socket.h>
+ #endif
+ 
+ #ifdef SOCK_SEQPACKET
+-- 
+2.1.0
+

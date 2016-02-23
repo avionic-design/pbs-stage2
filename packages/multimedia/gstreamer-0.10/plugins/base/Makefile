@@ -11,7 +11,8 @@ conf-args += \
 	--disable-examples \
 	--disable-test \
 	--disable-docs \
-	--disable-gnome_vfs
+	--disable-gnome_vfs \
+	--disable-orc
 
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LIBVORBIS),y)
   conf-args += --disable-vorbis

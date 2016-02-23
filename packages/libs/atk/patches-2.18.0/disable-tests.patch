@@ -1,0 +1,25 @@
+From 01251b0c5618ef93fd188c729fffcd171aaf882d Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Tue, 20 May 2014 10:30:17 +0200
+Subject: [PATCH] Disable tests
+
+---
+ Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index 6926716..9c5f9d7 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -417,7 +417,7 @@ top_srcdir = @top_srcdir@
+ 
+ # Process this file with automake to create Makefile.in.
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+-SUBDIRS = atk tests docs po build
++SUBDIRS = atk docs po build
+ EXTRA_DIST = \
+ 	MAINTAINERS		\
+ 	atk-uninstalled.pc.in	\
+-- 
+1.9.3
+

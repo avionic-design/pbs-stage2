@@ -1,5 +1,5 @@
 PACKAGE = libsecret
-VERSION = 0.12
+VERSION = 0.18
 
 LOCATION = http://ftp.gnome.org/pub/gnome/sources/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz

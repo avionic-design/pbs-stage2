@@ -1,9 +1,9 @@
 PACKAGE = orc
-VERSION = 0.4.18
+VERSION = 0.4.24
 LICENSE = custom
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = https://download.videolan.org/contrib
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz

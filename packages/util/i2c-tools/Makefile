@@ -1,5 +1,5 @@
 PACKAGE = i2c-tools
-VERSION = 3.1.0
+VERSION = 3.1.1
 LICENSE = GPL
 
 LOCATION = http://dl.lm-sensors.org/$(PACKAGE)/releases

@@ -1,0 +1,40 @@
+From 903c7f51c35bfa5251f18438c80fcfd965f8f518 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 21 Oct 2015 16:36:11 +0200
+Subject: [PATCH 2/3] Fix broken character encoding
+
+Remove strange symbols from descriptor.c to get ASCII only characters
+and prevent gcc from tripping over this.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ descriptors.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/descriptors.c b/descriptors.c
+index ada403e..05fb24c 100644
+--- a/descriptors.c
++++ b/descriptors.c
+@@ -735,8 +735,8 @@ void parse_C2_delivery_system_descriptor (const unsigned char *buf,
+      default:t->C2_tuning_frequency_type = DATA_SLICE_TUNING_FREQUENCY;                              // This is the default option for C2 systems
+      }
+   switch((*bp & 0x38) >> 3) {                                                                        // active_OFDM_symbol_duration  3 uimsbf
+-     case 0: t->active_OFDM_symbol_duration = FFT_4K_8MHZ; break;                                    // 448µsec    (4k FFT mode for 8MHz CATV systems)
+-     case 1: t->active_OFDM_symbol_duration = FFT_4K_6MHZ; break;                                    // 597,33µsec (4k FFT mode for 6MHz CATV systems)
++     case 0: t->active_OFDM_symbol_duration = FFT_4K_8MHZ; break;                                    // 448usec    (4k FFT mode for 8MHz CATV systems)
++     case 1: t->active_OFDM_symbol_duration = FFT_4K_6MHZ; break;                                    // 597,33usec (4k FFT mode for 6MHz CATV systems)
+    //case 2 ... 7: reserved_for_future_use                                                           //
+      default:t->active_OFDM_symbol_duration = FFT_4K_8MHZ;                                           // defaulting to here to 8MHz CATV systems, as nothing better found so far.
+      }
+@@ -1296,7 +1296,7 @@ void parse_network_change_notify_descriptor(const unsigned char *buf, network_ch
+         bp++; descriptor_length--; loop_length--;
+         change->message_id = *bp;                                           //           message_id                 8 uimsbf
+         bp++; descriptor_length--; loop_length--;
+-        if (change->invariant_ts.present == 1) {                            //           if (invariant_ts_present == ‘1’) {
++        if (change->invariant_ts.present == 1) {                            //           if (invariant_ts_present == 1) {
+            change->invariant_ts.tsid = get_u16(bp);                         //              invariant_ts_tsid       16 uimsbf
+            bp+=2; descriptor_length-=2; loop_length-=2;
+            change->invariant_ts.onid = get_u16(bp);                         //              invariant_ts_onid       16 uimsbf
+-- 
+2.1.0
+

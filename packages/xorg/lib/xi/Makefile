@@ -1,9 +1,8 @@
 PACKAGE = libXi
-VERSION = 1.6.2
+VERSION = 1.7.4
 LICENSE = custom
 
 ifeq ($(CONFIG_XORG_IEGD),y)
-patchdir = $(pkgsrctree)/patches-$(VERSION)
 VERSION = 1.2.1
 endif
 

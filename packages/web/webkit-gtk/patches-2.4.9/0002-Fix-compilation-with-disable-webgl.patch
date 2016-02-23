@@ -1,0 +1,28 @@
+From d6b0cbf0af7016913358bf4e34498f7ec992993d Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 11 Nov 2015 18:21:57 +0100
+Subject: [PATCH 2/2] Fix compilation with --disable-webgl
+
+See https://bugs.webkit.org/show_bug.cgi?id=131267#c11
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Source/WebCore/platform/graphics/OpenGLShims.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/platform/graphics/OpenGLShims.cpp b/Source/WebCore/platform/graphics/OpenGLShims.cpp
+index d77a8b0..96c7a5e 100644
+--- a/Source/WebCore/platform/graphics/OpenGLShims.cpp
++++ b/Source/WebCore/platform/graphics/OpenGLShims.cpp
+@@ -17,7 +17,7 @@
+  */
+ 
+ #include "config.h"
+-#if USE(3D_GRAPHICS) || defined(QT_OPENGL_SHIMS)
++#if USE(3D_GRAPHICS) || defined(QT_OPENGL_SHIMS) || USE(EGL) || USE(GLX)
+ 
+ #define DISABLE_SHIMS
+ #include "OpenGLShims.h"
+-- 
+2.1.0
+

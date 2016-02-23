@@ -1,5 +1,5 @@
 PACKAGE = libav
-VERSION = 9.10
+VERSION = 11.4
 
 LOCATION = http://libav.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -19,6 +19,7 @@ conf-args = \
 	--enable-gpl \
 	--disable-encoders \
 	--disable-doc \
+	--pkg-config=pkg-config \
 	$(platform-conf-args)
 
 conf-vars = \

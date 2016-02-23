@@ -53,9 +53,6 @@
   should also ship pkg-config files that are compatible with those provided
   by the libs/mesa package.
 
-+ Provide development files in the OpenGL ES and OpenMAX packages based on
-  the NVIDIA Vibrante releases.
-
 + Move the packages/ti directory into packages/vendor. Move the net/rum and
   net/remote-control packages into packages/vendor/avionic-design.
 

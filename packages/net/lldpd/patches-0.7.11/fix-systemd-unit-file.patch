@@ -1,0 +1,24 @@
+From dfa28313479598d6deeaaacc850594245745d21d Mon Sep 17 00:00:00 2001
+From: Vincent Bernat <vincent@bernat.im>
+Date: Sun, 26 Oct 2014 18:40:32 +0100
+Subject: [PATCH] systemd: fix systemd unit file
+
+@sbindir@ was not properly replaced.
+---
+ edit.am | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/edit.am b/edit.am
+index ab1fc018a29e..a5508dbd6554 100644
+--- a/edit.am
++++ b/edit.am
+@@ -1,5 +1,6 @@
+ edit = $(SED) \
+         -e 's|@bindir[@]|$(bindir)|g' \
++        -e 's|@sbindir[@]|$(sbindir)|g' \
+         -e 's|@pkgdatadir[@]|$(pkgdatadir)|g' \
+         -e 's|@libdir[@]|$(libdir)|g' \
+         -e 's|@includedir[@]|$(includedir)|g' \
+-- 
+2.1.1
+

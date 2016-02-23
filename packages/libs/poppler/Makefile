@@ -1,9 +1,9 @@
 PACKAGE = poppler
-VERSION = 0.22.1
+VERSION = 0.28.1
 LICENSE = GPL
 
 LOCATION = http://poppler.freedesktop.org
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 

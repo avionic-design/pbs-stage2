@@ -1,5 +1,5 @@
 PACKAGE = lzo
-VERSION = 2.06
+VERSION = 2.08
 LICENSE = GPL
 
 LOCATION = http://www.oberhumer.com/opensource/$(PACKAGE)/download

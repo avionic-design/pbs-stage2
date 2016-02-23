@@ -1,5 +1,5 @@
 PACKAGE = vim
-VERSION = 7.3
+VERSION = 7.4
 
 LOCATION = http://ftp.vim.org/pub/vim/unix
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

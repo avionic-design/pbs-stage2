@@ -1,0 +1,25 @@
+From 9b1d6a7fb75981e857d2ac0547adee9841e047cb Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Thu, 11 Dec 2014 16:02:27 +0100
+Subject: [PATCH 4/4] disable man pages
+
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index ee13fa7..6f753c0 100644
+--- a/Makefile
++++ b/Makefile
+@@ -541,7 +541,7 @@ dist:
+ dist_pem_h:
+ 	(cd crypto/pem; $(MAKE) -e $(BUILDENV) pem.h; $(MAKE) clean)
+ 
+-install: all install_docs install_sw
++install: all install_sw
+ 
+ install_sw:
+ 	@$(PERL) $(TOP)/util/mkdir-p.pl $(INSTALL_PREFIX)$(INSTALLTOP)/bin \
+-- 
+2.2.0
+

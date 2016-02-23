@@ -1,5 +1,5 @@
 PACKAGE = dmidecode
-VERSION = 2.11
+VERSION = 2.12
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

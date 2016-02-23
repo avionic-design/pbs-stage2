@@ -1,5 +1,5 @@
 PACKAGE = lldpd
-VERSION = 0.5.7
+VERSION = 0.7.11
 LICENSE = ISC
 
 LOCATION = http://media.luffy.cx/files/$(PACKAGE)
@@ -12,10 +12,14 @@ conf-args-$(CONFIG_PACKAGE_NET_LLDPD_XML) += --with-xml
 conf-args-$(CONFIG_PACKAGE_CORE_SYSTEMD) += \
 	--with-systemdsystemunitdir=/etc/systemd/system
 
-conf-args += $(conf-args-y)
+conf-args += \
+	--without-readline \
+	$(conf-args-y)
 conf-vars += \
 	ac_cv_cflags_gcc_option__fstack_protector=no
 
 stripfiles = \
+	$(prefix)/sbin/lldpcli \
 	$(prefix)/sbin/lldpctl \
-	$(prefix)/sbin/lldpd
+	$(prefix)/sbin/lldpd \
+	$(prefix)/lib/*.so.*

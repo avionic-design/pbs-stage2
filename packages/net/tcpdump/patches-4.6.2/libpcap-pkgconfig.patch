@@ -1,0 +1,20 @@
+diff --git a/aclocal.m4 b/aclocal.m4
+index 80614cf..ae8d48f 100644
+--- a/aclocal.m4
++++ b/aclocal.m4
+@@ -466,7 +466,14 @@ AC_DEFUN(AC_LBL_LIBPCAP,
+ 	    # Look for pcap-config.
+ 	    #
+ 	    AC_PATH_TOOL(PCAP_CONFIG, pcap-config)
+-	    if test -n "$PCAP_CONFIG" ; then
++	    AC_PATH_TOOL(PKG_CONFIG, pkg-config)
++	    if test -n "$PKG_CONFIG" && "$PKG_CONFIG" --exists pcap ; then
++	    	echo "Using pkg-config CFLAGS: `"$PKG_CONFIG" pcap --cflags`"
++	    	echo "Using pkg-config LIBS: `"$PKG_CONFIG" pcap --libs`"
++		cflags=`"$PKG_CONFIG" pcap --cflags`
++		$2="$cflags $$2"
++		libpcap=`"$PKG_CONFIG" pcap --libs`
++	    elif test -n "$PCAP_CONFIG" ; then
+ 		#
+ 		# Found - use it to get the include flags for
+ 		# libpcap and the flags to link with libpcap.

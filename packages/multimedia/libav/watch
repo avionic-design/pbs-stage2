@@ -1,2 +1,2 @@
 version=3
-http://libav.org/releases/libav-([\d.]+)\./tar\.xz
+http://libav.org/releases/libav-([\d.]+)\.tar\.xz

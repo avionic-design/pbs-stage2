@@ -1,0 +1,33 @@
+diff --git a/configure.in b/configure.in
+index fe43b08..3f5e429 100644
+--- a/configure.in
++++ b/configure.in
+@@ -142,6 +142,15 @@ AC_MSG_CHECKING([for CC_FOR_BUILD])
+ AC_MSG_RESULT([$CC_FOR_BUILD])
+ AC_SUBST(CC_FOR_BUILD)
+ 
++if test "x${BUILD_CPPFLAGS+set}" != "xset" ; then
++  if test "x$cross_compiling" = "xyes" ; then
++    BUILD_CPPFLAGS=
++  else
++    BUILD_CPPFLAGS=${CPPFLAGS}
++  fi
++fi
++AC_SUBST(BUILD_CPPFLAGS)
++
+ if test "x${BUILD_CFLAGS+set}" != "xset" ; then
+   if test "x$cross_compiling" = "xyes" ; then
+     BUILD_CFLAGS=
+diff --git a/doc/specs/Makefile.am b/doc/specs/Makefile.am
+index 2688220..c3b3e8e 100644
+--- a/doc/specs/Makefile.am
++++ b/doc/specs/Makefile.am
+@@ -12,7 +12,8 @@ draft-morgan-pam-current.txt: padout draft-morgan-pam.raw
+ AM_YFLAGS = -d
+ 
+ CC = @CC_FOR_BUILD@
++CPPFLAGS = @BUILD_CPPFLAGS@
+ CFLAGS = @BUILD_CFLAGS@
+ LDFLAGS = @BUILD_LDFLAGS@
+ 
+ BUILT_SOURCES = parse_y.h

@@ -1,5 +1,5 @@
 PACKAGE = grep
-VERSION = 2.14
+VERSION = 2.20
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
@@ -13,6 +13,4 @@ conf-vars += \
 endif
 
 stripfiles = \
-	$(prefix)/bin/egrep \
-	$(prefix)/bin/fgrep \
 	$(prefix)/bin/grep

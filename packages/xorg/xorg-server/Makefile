@@ -1,11 +1,7 @@
 PACKAGE = xorg-server
-VERSION = 1.13.1
+VERSION = 1.17.2
 LICENSE = MIT X
 
-ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_XORG),y)
-patchdir = $(pkgsrctree)/patches-$(VERSION)
-VERSION = 1.9.5
-endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
 patchdir = $(pkgsrctree)/patches-$(VERSION)
 VERSION = 1.12.4
@@ -30,7 +26,8 @@ conf-args += \
 	--disable-xfbdev \
 	--disable-xvfb \
 	--enable-dpms \
-	--enable-xorg
+	--enable-xorg \
+	--disable-unit-tests
 
 ifeq ($(CONFIG_PACKAGE_XORG_XORG_SERVER_DGA),y)
   conf-args += --enable-dga

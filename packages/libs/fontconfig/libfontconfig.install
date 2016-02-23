@@ -1,3 +1,4 @@
 /etc/fonts
 /usr/lib/*.so.*
+/usr/share/fontconfig
 /var/cache

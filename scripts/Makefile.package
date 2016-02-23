@@ -12,23 +12,25 @@ include scripts/Makefile.lib
 
 pkgtree		:= $(objtree)/build/$(obj)
 pkgsrctree	:= $(srctree)/$(obj)
-patchdir	:= $(pkgsrctree)/patches
+# Try version specific patches before the generic ones
+patchdir	= $(or $(wildcard $(pkgsrctree)/patches-$(VERSION)),$(pkgsrctree)/patches)
 export pkgtree pkgsrctree patchdir
 
 # Declare a default value for $(pkgbuildtree), it can't be a simple variable
 # because $(PACKAGE) and $(VERSION) are defined in the following include.
-pkgbuildtree     = $(pkgtree)/$(PACKAGE)-$(VERSION)
+pkgbuildtree	= $(pkgtree)/$(PACKAGE)-$(VERSION)
 
 # Allow overriding where zip files are extracted, in case they don't contains
 # a sub directory.
-unzip_pkgtree    = $(pkgtree)
+unzip_pkgtree	= $(pkgtree)
 
 kbuild-dir := $(if $(filter /%,$(src)),$(src),$(srctree)/$(src))
 kbuild-file := $(if $(wildcard $(kbuild-dir)/Kbuild),$(kbuild-dir)/Kbuild,$(kbuild-dir)/Makefile)
 include $(kbuild-file)
 
-# Turn $(pkgbuildtree) into a simple variable
-pkgbuildtree    := $(pkgbuildtree)
+# Turn $(pkgbuildtree) and $(patchdir) into a simple variable
+pkgbuildtree	:= $(pkgbuildtree)
+patchdir	:= $(patchdir)
 
 url-filename	= $(lastword $(subst /, ,$(subst ;filename=, ,$(1))))
 url-pathname	= $(firstword $(subst ;filename=, ,$(1)))
@@ -45,9 +47,9 @@ extract		:= $(addprefix $(extprefix),$(tarballs))
 extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
-extract-xz      := $(filter %.tar.xz,$(extract))
-extract-zip     := $(filter %.zip,$(extract))
-extract-bin     := $(filter %.bin,$(extract))
+extract-xz	:= $(filter %.tar.xz,$(extract))
+extract-zip	:= $(filter %.zip,$(extract))
+extract-bin	:= $(filter %.bin,$(extract))
 
 local-files	:= $(addprefix $(srctree)/download/,$(tarballs) $(files))
 remote-files	:= $(addprefix $(LOCATION)/,$(TARBALLS)) $(FILES)
@@ -65,9 +67,19 @@ $(srctree)/download:
 $(local-files): $(srctree)/download/%: | $(srctree)/download
 	$(call cmd,wget)
 
+ifeq ($(GENERATE_CHECKSUMS),y)
 quiet_cmd_checksum_sha256 = SHA256  $<
-      cmd_checksum_sha256 = cd $(srctree) && \
+      cmd_checksum_sha256 = echo "check sha256 for download/$* in $(srctree) / $(obj)/checksums" && \
+		cd $(srctree) && \
+		(grep download/$* $(obj)/checksums | sha256sum -c --quiet || \
+			(echo "generate sha256 for download/$*" && \
+				sha256sum download/$* >> $(obj)/checksums))
+else
+quiet_cmd_checksum_sha256 = SHA256  $<
+      cmd_checksum_sha256 = echo "check sha256 for download/$* in $(srctree) / $(obj)/checksums" && \
+		cd $(srctree) && \
 		grep download/$* $(obj)/checksums | sha256sum -c --quiet
+endif
 
 $(chksum): $(chksum-prefix)%: $(srctree)/download/%
 	$(call cmd,checksum_sha256)
@@ -251,13 +263,29 @@ PHONY += dist
 dist: $(dist-deps) $(extra-dist-deps)
 	@:
 
+PKGSTR=$(PACKAGE): $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)
+
 PHONY += print
 print:
-	@echo "$(PACKAGE): $(VERSION)$(if $(wildcard $(pkgtree)/.symlink-source),+)"
+	@echo "$(PKGSTR)"
 
 PHONY += license
 license:
 	@echo "$(PACKAGE): $(LICENSE)"
+
+cmd_time_pkgtree = \
+	$$(printf "%-31s " '$(PKGSTR)' && \
+		[ -f $(pkgtree)/.directory ] && \
+		([ -f $(pkgtree)/.install ] && \
+			(printf "%'10d s" $$(($$(stat -c %X $(pkgtree)/.install) - \
+				$$(stat -c %X $(pkgtree)/.directory)))) || \
+			printf '%12s' '(unfinished)') || \
+		printf '%12s' '(not built)' \
+	)
+
+PHONY += time
+time:
+	@echo "$(call cmd_time_pkgtree)"
 
 PHONY += FORCE
 FORCE: ;

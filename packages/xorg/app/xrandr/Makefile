@@ -1,5 +1,5 @@
 PACKAGE = xrandr
-VERSION = 1.4.1
+VERSION = 1.4.3
 LICENSE = custom
 
 LOCATION = http://xorg.freedesktop.org/releases/individual/app

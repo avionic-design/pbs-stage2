@@ -8,22 +8,21 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 conf-args = \
-	--host=$(TARGET) \
-	--target=$(TARGET) \
+	--host=$(HOST_GNU_TYPE) \
+	--build=$(BUILD_GNU_TYPE) \
 	--prefix=$(prefix) \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
-	--with-cxx-main=$(TARGET)-g++
+	--with-cxx-main=$(TARGET)-g++ \
+	--enable-ipv6
 
 conf-args += \
 	--with-system-ffi
 
 conf-vars = \
-	CPPFLAGS='$(CPPFLAGS)' \
-	CFLAGS='$(CFLAGS)' \
-	CXXFLAGS='$(CXXFLAGS)' \
-	LDFLAGS='$(LDFLAGS)'
+	ac_cv_file__dev_ptmx=no \
+	ac_cv_file__dev_ptc=no
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgbuildtree)/obj-$(TARGET) && \
@@ -31,16 +30,12 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 			$(env) ../configure $(conf-args) $(conf-vars)
 	$(call cmd,stamp)
 
-build-args = \
-	EXTRA_CFLAGS='$(CFLAGS)'
-
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
-	EXTRA_CFLAGS='$(CFLAGS)' \
 	DESTDIR=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build

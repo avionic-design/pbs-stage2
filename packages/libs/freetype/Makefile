@@ -1,5 +1,5 @@
 PACKAGE = freetype
-VERSION = 2.4.11
+VERSION = 2.5.3
 LICENSE = FreeType/GPL
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)

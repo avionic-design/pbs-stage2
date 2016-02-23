@@ -1,0 +1,2 @@
+add-rpcsvc-nis.h-header-for-nis-types.patch
+fix-out-of-tree-build.patch

@@ -1,0 +1,2 @@
+ltmain-sysroot.patch -d build-aux
+fix_rpl_gettimeofday.patch

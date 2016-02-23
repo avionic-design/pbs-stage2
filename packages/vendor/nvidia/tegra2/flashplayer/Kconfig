@@ -1,6 +1,0 @@
-config PACKAGE_VENDOR_NVIDIA_TEGRA2_FLASHPLAYER
-	bool "Flashplayer"
-	select PACKAGE_LIBS_NSS
-	help
-	  This package contains the flashplayer for tegra2. The files are taken
-	  from Vibrante but working also under L4T.

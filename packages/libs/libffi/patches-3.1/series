@@ -1,0 +1,2 @@
+remove-libtool-ldflags.patch
+0001-Fix-paths-in-libffi.pc.in.patch

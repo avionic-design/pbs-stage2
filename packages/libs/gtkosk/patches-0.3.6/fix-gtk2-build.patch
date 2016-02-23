@@ -1,0 +1,13 @@
+diff --git a/bin/gtkosk.c b/bin/gtkosk.c
+index a96f683..1f65339 100644
+--- a/bin/gtkosk.c
++++ b/bin/gtkosk.c
+@@ -112,7 +112,7 @@ int main(int argc, char *argv[])
+ 	gtkosk.window = window;
+ 	gtkosk.source = NULL;
+ 
+-	vbox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 2);
++	vbox = gtk_vbox_new(FALSE, 2);
+ 	gtk_container_add(GTK_CONTAINER(window), vbox);
+ 
+ 	if (opt_wordlist)

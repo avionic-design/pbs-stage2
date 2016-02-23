@@ -1,0 +1,12 @@
+diff --git a/configure b/configure
+index 25714c0..3e4a0b5 100755
+--- a/configure
++++ b/configure
+@@ -55,6 +55,7 @@ for x do
+ 	--with-ccopts|CFLAGS) CFLAGS=$var;;
+ 	CC) CC=$var;;
+ 	CPPFLAGS) CPPFLAGS=$var;;
++	LDFLAGS) LDFLAGS=$var;;
+ 	--with-hook) HOOKSCRIPTS="$HOOKSCRIPTS${HOOKSCRIPTS:+ }$var";;
+ 	--with-hooks|HOOKSCRIPTS) HOOKSCRIPTS=$var; HOOKSET=true;;
+ 	--build) BUILD=$var;;

@@ -1,5 +1,5 @@
 PACKAGE = libestr
-VERSION = 0.1.6
+VERSION = 0.1.9
 LICENSE = LGPL
 
 LOCATION = http://libestr.adiscon.com/files/download

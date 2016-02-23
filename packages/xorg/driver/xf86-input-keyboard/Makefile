@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-keyboard
-VERSION = 1.6.2
+VERSION = 1.8.0
 LICENSE = custom
 
 include packages/xorg/driver/common.mk

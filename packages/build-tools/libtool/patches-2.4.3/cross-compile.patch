@@ -1,0 +1,90 @@
+diff --git a/m4/libtool.m4 b/m4/libtool.m4
+index 068f0d8..4c231f2 100644
+--- a/m4/libtool.m4
++++ b/m4/libtool.m4
+@@ -6084,8 +6084,13 @@ if test yes != "$_lt_caught_CXX_error"; then
+       # Check if GNU C++ uses GNU ld as the underlying linker, since the
+       # archiving commands below assume that GNU ld is being used.
+       if test yes = "$with_gnu_ld"; then
+-        _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname -o $lib'
+-        _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname $wl-retain-symbols-file $wl$export_symbols -o $lib'
++        if test "$cross_compiling" = yes; then
++	  _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag $compiler_flags -shared $libobjs $deplibs ${wl}-soname $wl$soname -o $lib'
++	  _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag $compiler_flags -shared $libobjs $deplibs ${wl}-soname $wl$soname ${wl}-retain-symbols-file $wl$export_symbols -o $lib'
++	else
++          _LT_TAGVAR(archive_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname -o $lib'
++          _LT_TAGVAR(archive_expsym_cmds, $1)='$CC $pic_flag -shared -nostdlib $predep_objects $libobjs $deplibs $postdep_objects $compiler_flags $wl-soname $wl$soname $wl-retain-symbols-file $wl$export_symbols -o $lib'
++	fi
+ 
+         _LT_TAGVAR(hardcode_libdir_flag_spec, $1)='$wl-rpath $wl$libdir'
+         _LT_TAGVAR(export_dynamic_flag_spec, $1)='$wl--export-dynamic'
+@@ -7175,23 +7180,27 @@ if AC_TRY_EVAL(ac_compile); then
+        if test no = "$pre_test_object_deps_done"; then
+ 	 case $prev in
+ 	 -L | -R)
+-	   # Internal compiler library paths should come after those
+-	   # provided the user.  The postdeps already come after the
+-	   # user supplied libs so there is no need to process them.
+-	   if test -z "$_LT_TAGVAR(compiler_lib_search_path, $1)"; then
+-	     _LT_TAGVAR(compiler_lib_search_path, $1)=$prev$p
+-	   else
+-	     _LT_TAGVAR(compiler_lib_search_path, $1)="${_LT_TAGVAR(compiler_lib_search_path, $1)} $prev$p"
++	   if test "$cross_compiling" != yes; then
++	     # Internal compiler library paths should come after those
++	     # provided the user.  The postdeps already come after the
++	     # user supplied libs so there is no need to process them.
++	     if test -z "$_LT_TAGVAR(compiler_lib_search_path, $1)"; then
++	       _LT_TAGVAR(compiler_lib_search_path, $1)=$prev$p
++	     else
++	       _LT_TAGVAR(compiler_lib_search_path, $1)="${_LT_TAGVAR(compiler_lib_search_path, $1)} $prev$p"
++	     fi
+ 	   fi
+ 	   ;;
+ 	 # The "-l" case would never come before the object being
+ 	 # linked, so don't bother handling this case.
+ 	 esac
+        else
+-	 if test -z "$_LT_TAGVAR(postdeps, $1)"; then
+-	   _LT_TAGVAR(postdeps, $1)=$prev$p
+-	 else
+-	   _LT_TAGVAR(postdeps, $1)="${_LT_TAGVAR(postdeps, $1)} $prev$p"
++	 if test "$cross_compiling" != yes; then
++	   if test -z "$_LT_TAGVAR(postdeps, $1)"; then
++	     _LT_TAGVAR(postdeps, $1)=$prev$p
++	   else
++	     _LT_TAGVAR(postdeps, $1)="${_LT_TAGVAR(postdeps, $1)} $prev$p"
++	   fi
+ 	 fi
+        fi
+        prev=
+@@ -7206,17 +7215,19 @@ if AC_TRY_EVAL(ac_compile); then
+ 	 continue
+        fi
+ 
+-       if test no = "$pre_test_object_deps_done"; then
+-	 if test -z "$_LT_TAGVAR(predep_objects, $1)"; then
+-	   _LT_TAGVAR(predep_objects, $1)=$p
+-	 else
+-	   _LT_TAGVAR(predep_objects, $1)="$_LT_TAGVAR(predep_objects, $1) $p"
+-	 fi
+-       else
+-	 if test -z "$_LT_TAGVAR(postdep_objects, $1)"; then
+-	   _LT_TAGVAR(postdep_objects, $1)=$p
+-	 else
+-	   _LT_TAGVAR(postdep_objects, $1)="$_LT_TAGVAR(postdep_objects, $1) $p"
++       if test "$cross_compiling" != yes; then
++	 if test no = "$pre_test_object_deps_done"; then
++	   if test -z "$_LT_TAGVAR(predep_objects, $1)"; then
++	     _LT_TAGVAR(predep_objects, $1)=$p
++	   else
++	     _LT_TAGVAR(predep_objects, $1)="$_LT_TAGVAR(predep_objects, $1) $p"
++	   fi
++         else
++	   if test -z "$_LT_TAGVAR(postdep_objects, $1)"; then
++	     _LT_TAGVAR(postdep_objects, $1)=$p
++	   else
++	     _LT_TAGVAR(postdep_objects, $1)="$_LT_TAGVAR(postdep_objects, $1) $p"
++	   fi
+ 	 fi
+        fi
+        ;;

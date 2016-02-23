@@ -3,3 +3,7 @@ config PACKAGE_NET_IPERF
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	help
+	  iperf is a network bandwidth measurement tool. This selects the old
+	  iperf package from the original codebase. If you do not have to
+	  support legacy code, you probably want to select iperf3 instead.

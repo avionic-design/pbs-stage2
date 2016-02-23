@@ -1,5 +1,5 @@
 PACKAGE = libogg
-VERSION = 1.3.1
+VERSION = 1.3.2
 LICENSE = BSD
 
 LOCATION = http://downloads.xiph.org/releases/ogg

@@ -1,5 +1,5 @@
 PACKAGE = talloc
-VERSION = 2.0.8
+VERSION = 2.1.1
 LICENSE = LGPL
 
 LOCATION = http://samba.org/ftp/$(PACKAGE)
@@ -9,6 +9,9 @@ include packages/autotools-reconf.mk
 
 conf-vars += \
 	ac_cv_prog_XSLTPROC=no
+
+conf-args += \
+	--disable-werror
 
 stripfiles = \
 	$(prefix)/lib/*.so.*

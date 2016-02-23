@@ -1,0 +1,229 @@
+From 6a9d9862798e65e3bf20cb5414b976e692d11c75 Mon Sep 17 00:00:00 2001
+From: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
+Date: Mon, 17 Nov 2014 17:07:52 +0100
+Subject: [PATCH 3/3] Add optional logging to file
+
+If a filename is passed as an argument to the -o option, it is used to
+log test results.  This is handy for non-interactive use.
+
+Signed-off-by: Nikolaus Schulz <nikolaus.schulz@avionic-design.de>
+---
+ memtester.c | 70 +++++++++++++++++++++++++++++++++++++++++++++++--------------
+ memtester.h |  2 ++
+ tests.c     |  8 +++----
+ 3 files changed, 60 insertions(+), 20 deletions(-)
+
+diff --git a/memtester.c b/memtester.c
+index 3db2ad4..acb31dc 100644
+--- a/memtester.c
++++ b/memtester.c
+@@ -12,7 +12,7 @@
+  *
+  */
+ 
+-#define __version__ "4.3.0"
++#define __version__ "4.3.0 with AD log extension"
+ 
+ #include <stddef.h>
+ #include <stdlib.h>
+@@ -24,10 +24,13 @@
+ #include <fcntl.h>
+ #include <string.h>
+ #include <errno.h>
++#include <stdarg.h>
++#include <time.h>
+ 
+ #include "types.h"
+ #include "sizes.h"
+ #include "tests.h"
++#include "memtester.h"
+ 
+ #define EXIT_FAIL_NONSTARTER    0x01
+ #define EXIT_FAIL_ADDRESSLINES  0x02
+@@ -56,6 +59,32 @@ struct test tests[] = {
+     { NULL, NULL }
+ };
+ 
++FILE *logfile;
++
++int init_logfile(const char *logfile_name)
++{
++    logfile = fopen(logfile_name, "a");
++    if (!logfile)
++        return -1;
++    setvbuf(logfile, NULL, _IOLBF, 0);
++    return 0;
++}
++
++void log_printf(FILE *out, const char *fmt, ...)
++{
++    va_list ap;
++    static char buf[256];
++
++    va_start(ap, fmt);
++    vsnprintf(buf, sizeof(buf), fmt, ap);
++    va_end(ap);
++
++    fputs(buf, out);
++    if (logfile)
++        fputs(buf, logfile);
++}
++
++
+ /* Sanity checks and portability helper macros. */
+ #ifdef _SC_VERSION
+ void check_posix_system(void) {
+@@ -102,8 +131,8 @@ off_t physaddrbase = 0;
+ /* Function definitions */
+ void usage(char *me) {
+     fprintf(stderr, "\n"
+-            "Usage: %s [-p physaddrbase [-d device]] <mem>[B|K|M|G] [loops]\n",
+-            me);
++            "Usage: %s [-p physaddrbase [-d device]] [-o logfile] "
++            "<mem>[B|K|M|G] [loops]\n", me);
+     exit(EXIT_FAIL_NONSTARTER);
+ }
+ 
+@@ -126,8 +155,9 @@ int main(int argc, char **argv) {
+     int device_specified = 0;
+     char *env_testmask = 0;
+     ul testmask = 0;
++    time_t tm;
+ 
+-    printf("memtester version " __version__ " (%d-bit)\n", UL_LEN);
++    log_printf(stdout, "memtester version " __version__ " (%d-bit)\n", UL_LEN);
+     printf("Copyright (C) 2001-2012 Charles Cazabon.\n");
+     printf("Licensed under the GNU General Public License version 2 (only).\n");
+     printf("\n");
+@@ -147,10 +177,10 @@ int main(int argc, char **argv) {
+                     env_testmask, strerror(errno));
+             usage(argv[0]); /* doesn't return */
+         }
+-        printf("using testmask 0x%lx\n", testmask);
++        log_printf(stdout, "using testmask 0x%lx\n", testmask);
+     }
+ 
+-    while ((opt = getopt(argc, argv, "p:d:")) != -1) {
++    while ((opt = getopt(argc, argv, "p:d:o:")) != -1) {
+         switch (opt) {
+             case 'p':
+                 errno = 0;
+@@ -193,6 +223,13 @@ int main(int argc, char **argv) {
+                     }
+                 }
+                 break;              
++            case 'o':
++                if (init_logfile(optarg)) {
++                    fprintf(stderr, "Could not open logfile `%s': %s\n",
++                            optarg, strerror(errno));
++                    exit(EXIT_FAILURE);
++                }
++                break;
+             default: /* '?' */
+                 usage(argv[0]); /* doesn't return */
+         }
+@@ -356,7 +393,7 @@ int main(int argc, char **argv) {
+         }
+     }
+ 
+-    if (!do_mlock) fprintf(stderr, "Continuing with unlocked memory; testing "
++    if (!do_mlock) log_printf(stderr, "Continuing with unlocked memory; testing "
+                            "will be slower and less reliable.\n");
+ 
+     halflen = bufsize / 2;
+@@ -365,15 +402,16 @@ int main(int argc, char **argv) {
+     bufb = (ulv *) ((size_t) aligned + halflen);
+ 
+     for(loop=1; ((!loops) || loop <= loops); loop++) {
+-        printf("Loop %lu", loop);
++        time(&tm);
++        log_printf(stdout, "Loop %lu", loop);
+         if (loops) {
+-            printf("/%lu", loops);
++            log_printf(stdout, "/%lu", loops);
+         }
+-        printf(":\n");
+-        printf("  %-20s: ", "Stuck Address");
++        log_printf(stdout, ": %s", ctime(&tm));
++        log_printf(stdout, "  %-20s: ", "Stuck Address");
+         fflush(stdout);
+         if (!test_stuck_address(aligned, bufsize / sizeof(ul))) {
+-             printf("ok\n");
++             log_printf(stdout, "ok\n");
+         } else {
+             exit_code |= EXIT_FAIL_ADDRESSLINES;
+         }
+@@ -385,19 +423,19 @@ int main(int argc, char **argv) {
+             if (testmask && (!((1 << i) & testmask))) {
+                 continue;
+             }
+-            printf("  %-20s: ", tests[i].name);
++            log_printf(stdout, "  %-20s: ", tests[i].name);
+             if (!tests[i].fp(bufa, bufb, count)) {
+-                printf("ok\n");
++                log_printf(stdout, "ok\n");
+             } else {
+                 exit_code |= EXIT_FAIL_OTHERTEST;
+             }
+             fflush(stdout);
+         }
+-        printf("\n");
++        log_printf(stdout, "\n");
+         fflush(stdout);
+     }
+     if (do_mlock) munlock((void *) aligned, bufsize);
+-    printf("Done.\n");
++    log_printf(stdout, "Done.\n");
+     fflush(stdout);
+     exit(exit_code);
+ }
+diff --git a/memtester.h b/memtester.h
+index 229bca3..0b19cc0 100644
+--- a/memtester.h
++++ b/memtester.h
+@@ -15,6 +15,8 @@
+ 
+ #include <sys/types.h>
+ 
++void log_printf(FILE *out, const char *fmt, ...);
++
+ /* extern declarations. */
+ 
+ extern int use_phys;
+diff --git a/tests.c b/tests.c
+index be1b350..5f48e95 100644
+--- a/tests.c
++++ b/tests.c
+@@ -40,12 +40,12 @@ int compare_regions(ulv *bufa, ulv *bufb, size_t count) {
+         if (*p1 != *p2) {
+             if (use_phys) {
+                 physaddr = physaddrbase + (i * sizeof(ul));
+-                fprintf(stderr, 
++                log_printf(stderr,
+                         "FAILURE: 0x%08lx != 0x%08lx at physical address "
+                         "0x%08lx.\n", 
+                         (ul) *p1, (ul) *p2, physaddr);
+             } else {
+-                fprintf(stderr, 
++                log_printf(stderr,
+                         "FAILURE: 0x%08lx != 0x%08lx at offset 0x%08lx.\n", 
+                         (ul) *p1, (ul) *p2, (ul) (i * sizeof(ul)));
+             }
+@@ -81,12 +81,12 @@ int test_stuck_address(ulv *bufa, size_t count) {
+             if (*p1 != (((j + i) % 2) == 0 ? (ul) p1 : ~((ul) p1))) {
+                 if (use_phys) {
+                     physaddr = physaddrbase + (i * sizeof(ul));
+-                    fprintf(stderr, 
++                    log_printf(stderr,
+                             "FAILURE: possible bad address line at physical "
+                             "address 0x%08lx.\n", 
+                             physaddr);
+                 } else {
+-                    fprintf(stderr, 
++                    log_printf(stderr,
+                             "FAILURE: possible bad address line at offset "
+                             "0x%08lx.\n", 
+                             (ul) (i * sizeof(ul)));
+-- 
+2.1.4
+

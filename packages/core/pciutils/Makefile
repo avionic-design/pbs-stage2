@@ -1,5 +1,5 @@
 PACKAGE = pciutils
-VERSION = 3.1.10
+VERSION = 3.2.1
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/software/utils/$(PACKAGE)

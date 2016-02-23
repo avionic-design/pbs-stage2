@@ -21,6 +21,7 @@ uscan-dirs := $(addprefix uscan-,$(platform-depends-dirs))
 watch-dirs := $(addprefix watch-,$(platform-depends-dirs))
 print-dirs := $(addprefix print-,$(platform-depends-dirs))
 license-dirs := $(addprefix license-,$(platform-depends-dirs))
+time-dirs := $(addprefix time-,$(platform-depends-dirs))
 
 PHONY += $(build-dirs)
 $(build-dirs): build-%:
@@ -141,6 +142,14 @@ $(license-dirs): license-%:
 
 PHONY += license
 license: $(license-dirs)
+	@:
+
+PHONY += $(time-dirs)
+$(time-dirs): time-%:
+	$(Q)$(MAKE) $(package)=$* time
+
+PHONY += time
+time: $(time-dirs)
 	@:
 
 PHONY += FORCE

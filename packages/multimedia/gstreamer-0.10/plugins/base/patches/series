@@ -1,3 +1,4 @@
 0001-Rebase-common-to-2013-03-10.patch
 0002-Rebase-to-2013-03-18.patch
+0003-audioresample-fix-build-on-BSD.patch
 0004-Fix-cross-compile.patch

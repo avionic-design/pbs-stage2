@@ -1,5 +1,5 @@
 PACKAGE = libev
-VERSION = 4.15
+VERSION = 4.19
 
 LOCATION = http://dist.schmorp.de/$(PACKAGE)/Attic
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
@@ -12,6 +12,7 @@ $(pkgbuildtree)/m4:
 $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 prunefiles = \
+	$(prefix)/include/event.h \
 	$(prefix)/lib/*.la
 
 stripfiles = \

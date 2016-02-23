@@ -1,8 +1,7 @@
 config PACKAGE_CORE_COREUTILS
 	bool "coreutils"
 	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_BUILD_TOOLS_AUTOCONF
-	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_BUILD_TOOLS_TEXINFO
 	select PACKAGE_BUILD_TOOLS_GETTEXT
 	help
 	  These are the GNU core utilities. This package is the combination of

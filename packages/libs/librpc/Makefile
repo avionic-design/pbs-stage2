@@ -5,6 +5,9 @@ conf-vars += \
 	ac_cv_prog_XSLTPROC=no \
 	CFLAGS="$(CFLAGS) -D_DEFAULT_SOURCE"
 
+conf-args += \
+	--disable-werror
+
 prunefiles = \
 	$(prefix)/lib/*.la
 

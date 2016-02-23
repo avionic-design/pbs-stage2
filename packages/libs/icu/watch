@@ -1,0 +1,2 @@
+version=3
+http://download.icu-project.org/files/icu4c/(\d+\.[\d\.]+)/icu4c-([\d_\.]+)-src.tgz

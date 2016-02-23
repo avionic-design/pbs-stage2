@@ -1,0 +1,3 @@
+0001-Fix-cross-compilation-by-making-the-build-honor-CC.patch
+0002-Fix-bashism-brace-expansion-in-the-upstream-Makefile.patch
+0003-Add-optional-logging-to-file.patch

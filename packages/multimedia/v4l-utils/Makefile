@@ -1,5 +1,5 @@
 PACKAGE = v4l-utils
-VERSION = 0.9.3
+VERSION = 1.6.0
 LICENSE = LGPL
 
 LOCATION = http://linuxtv.org/downloads/$(PACKAGE)

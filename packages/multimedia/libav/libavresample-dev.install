@@ -1,0 +1,4 @@
+/usr/include/libavresample
+/usr/lib/libavresample.so
+/usr/lib/libavresample.a
+/usr/lib/pkgconfig/libavresample.pc

@@ -1,5 +1,5 @@
 PACKAGE = dhcpcd
-VERSION = 5.6.6
+VERSION = 6.9.0
 LICENSE = BSD
 
 LOCATION = http://roy.marples.name/downloads/$(PACKAGE)
@@ -16,7 +16,8 @@ conf-args = \
 	--prefix=$(prefix) \
 	--libexecdir=$(prefix)/lib/$(PACKAGE) \
 	--dbdir=/var/lib/dhcp \
-	--sysconfdir=/etc
+	--sysconfdir=/etc \
+	--without-udev
 
 conf-vars = \
 	CPPFLAGS='$(CPPFLAGS)' \

@@ -1,5 +1,5 @@
 PACKAGE = libXfont
-VERSION = 1.4.5
+VERSION = 1.5.1
 
 include packages/xorg/lib/common.mk
 

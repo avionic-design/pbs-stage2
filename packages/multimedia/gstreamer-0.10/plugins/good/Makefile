@@ -14,7 +14,8 @@ conf-args += \
 	--disable-aalib \
 	--disable-annodex \
 	--disable-esd \
-	--disable-shout2
+	--disable-shout2 \
+	--disable-orc
 
 plugin = $(prefix)/lib/gstreamer-0.10
 

@@ -1,6 +1,5 @@
-/usr/bin/python3.1-config
+/usr/bin/python3.*-config
 /usr/bin/python3-config
-/usr/bin/python-config
 /usr/include
 /usr/lib/*.a
 /usr/lib/pkgconfig

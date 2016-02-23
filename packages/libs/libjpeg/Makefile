@@ -1,5 +1,5 @@
 PACKAGE = libjpeg
-VERSION = 8d
+VERSION = 9a
 
 LOCATION = http://www.ijg.org/files
 TARBALLS = jpegsrc.v$(VERSION).tar.gz

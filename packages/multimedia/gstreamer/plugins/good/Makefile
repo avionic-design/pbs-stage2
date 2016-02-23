@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-good
-VERSION = 1.2.0
+VERSION = 1.6.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -8,7 +8,7 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
@@ -32,7 +32,6 @@ conf-args += \
 	--disable-effectv \
 	--disable-icydemux \
 	--disable-imagefreeze \
-	--disable-isomp4 \
 	--disable-monoscope \
 	--disable-shapewipe \
 	--disable-smpte \
@@ -44,9 +43,6 @@ conf-args += \
 	--disable-sunaudio \
 	--disable-osx_audio \
 	--disable-osx_video \
-	--disable-x \
-	--disable-xshm \
-	--disable-xvideo \
 	--disable-aalib \
 	--disable-aalibtest \
 	--disable-jack \

@@ -1,0 +1,32 @@
+From 63272f1e68e5573f810edd2578bb8077c83af827 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 1 Oct 2015 22:00:41 +0200
+Subject: [PATCH 08/10] Fix build issue with bison 3
+
+Make glslang.y compatible with bison 3.0 by using %lex-param to set
+YYLEX_PARAM.
+
+Change-Id: Ia40a8d7c4f239d90e43756137ffbe35003f42179
+Originally-by: Allan Sandfeld Jensen  <allan.jensen@digia.com>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/4207
+Reviewed-by: Hendrik Lippek <hendrik.lippek@avionic-design.de>
+---
+ Source/ThirdParty/ANGLE/src/compiler/glslang.y | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Source/ThirdParty/ANGLE/src/compiler/glslang.y b/Source/ThirdParty/ANGLE/src/compiler/glslang.y
+index 3cad335..b41e95a 100644
+--- a/Source/ThirdParty/ANGLE/src/compiler/glslang.y
++++ b/Source/ThirdParty/ANGLE/src/compiler/glslang.y
+@@ -47,6 +47,7 @@ WHICH GENERATES THE GLSL ES PARSER (glslang_tab.cpp AND glslang_tab.h).
+ %expect 1 /* One shift reduce conflict because of if | else */
+ %pure-parser
+ %parse-param {TParseContext* context}
++%lex-param {YYLEX_PARAM}
+ 
+ %union {
+     struct {
+-- 
+2.1.0
+

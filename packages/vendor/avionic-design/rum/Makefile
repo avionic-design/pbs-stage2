@@ -8,7 +8,8 @@ include packages/autotools.mk
 
 conf-args += \
 	--libexecdir=$(prefix)/lib/$(PACKAGE) \
-	--with-libsensors=$(SYSROOT)/$(prefix)
+	--with-libsensors=$(SYSROOT)/$(prefix) \
+	--disable-werror
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \

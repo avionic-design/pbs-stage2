@@ -1,2 +1,2 @@
 version=3
-http://jdl.com/software/dtc-(v[\d\.]+)\.tgz
+http://git.kernel.org/cgit/utils/dtc/dtc.git \?id=v([\d\.]+)

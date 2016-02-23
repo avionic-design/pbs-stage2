@@ -1,0 +1,41 @@
+From 6d2c29c781db241f8f162398b4063eab53f78532 Mon Sep 17 00:00:00 2001
+From: Vincent Bernat <vincent@bernat.im>
+Date: Tue, 14 Oct 2014 18:11:47 +0200
+Subject: [PATCH] lldpcli: don't complain when reading a commented line
+
+Since we ship a default configuration file with only a comment, this was
+annoying.
+---
+ NEWS                 | 4 ++++
+ src/client/lldpcli.c | 3 ++-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/NEWS b/NEWS
+index e8a9008..094e729 100644
+--- a/NEWS
++++ b/NEWS
+@@ -1,3 +1,7 @@
++lldpd (0.7.12)
++  * Fix:
++    + Don't complain when parsing a commented line
++
+ lldpd (0.7.11)
+   * Features:
+     + Ship bash and zsh completion.
+diff --git a/src/client/lldpcli.c b/src/client/lldpcli.c
+index 8eeac70..ef565c7 100644
+--- a/src/client/lldpcli.c
++++ b/src/client/lldpcli.c
+@@ -494,7 +494,8 @@ main(int argc, char *argv[])
+ 				line = strndup(line, len);
+ 				if (line[len - 1] == '\n') {
+ 					line[len - 1] = '\0';
+-					parse_and_exec(conn, fmt, line);
++					if (line[0] != '#')
++						parse_and_exec(conn, fmt, line);
+ 				}
+ 				free(line);
+ 			}
+-- 
+2.1.0
+

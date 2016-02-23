@@ -1,0 +1,3 @@
+ltmain-sysroot.patch -d build-aux
+gtk3-bug-731013-fix-cross-compilation.patch
+fix-updateiconcache.patch

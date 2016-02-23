@@ -1,2 +1,2 @@
 version=3
-http://sf.net/iperf/iperf-(.*)\.tar\.gz
+http://downloads.sourceforge.net/project/iperf/iperf-([\d\.]+)\.tar\.gz

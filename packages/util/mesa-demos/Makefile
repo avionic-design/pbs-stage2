@@ -1,5 +1,5 @@
 PACKAGE = mesa-demos
-VERSION = 8.0.1
+VERSION = 8.3.0
 
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/demos/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2

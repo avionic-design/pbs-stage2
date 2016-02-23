@@ -1,2 +1,2 @@
 version=3
-http://oss.metaparadigm.com/json-c/json-c-(.*)\.tar\.gz
+https://github.com/json-c/json-c/releases json-c-([\d\.]+)-\d+\.tar\.gz

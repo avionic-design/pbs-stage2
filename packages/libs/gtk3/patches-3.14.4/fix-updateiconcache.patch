@@ -1,0 +1,22 @@
+--- a/gtk/native/Makefile.am	2014-11-03 16:23:33.839282527 +0100
++++ b/gtk/native/Makefile.am	2014-11-03 16:23:20.883282976 +0100
+@@ -6,7 +6,7 @@
+ 
+ native-update-icon-cache$(BUILD_EXEEXT): $(srcdir)/../updateiconcache.c
+ 	echo '#define GETTEXT_PACKAGE "gtk30"' > $(srcdir)/config.h
+-	$(AM_V_CCLD)$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir)/../.. $(NATIVE_GDKPIXBUF_CFLAGS) $(CFLAGS_FOR_BUILD) $^ $(LDFLAGS_FOR_BUILD) $(NATIVE_GDKPIXBUF_LIBS) $(LIBS_FOR_BUILD) -o $@
++	$(AM_V_CCLD)$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir) -I$(srcdir)/../.. $(NATIVE_GDKPIXBUF_CFLAGS) $(CFLAGS_FOR_BUILD) $^ $(LDFLAGS_FOR_BUILD) $(NATIVE_GDKPIXBUF_LIBS) $(LIBS_FOR_BUILD) -o $@
+ 	rm -f $(srcdir)/config.h
+ 
+ if CROSS_COMPILING
+--- a/gtk/native/Makefile.in	2014-11-03 16:26:44.091275940 +0100
++++ a/gtk/native/Makefile.in	2014-11-03 16:26:46.227275866 +0100
+@@ -579,7 +579,7 @@
+ 
+ native-update-icon-cache$(BUILD_EXEEXT): $(srcdir)/../updateiconcache.c
+ 	echo '#define GETTEXT_PACKAGE "gtk30"' > $(srcdir)/config.h
+-	$(AM_V_CCLD)$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir)/../.. $(NATIVE_GDKPIXBUF_CFLAGS) $(CFLAGS_FOR_BUILD) $^ $(LDFLAGS_FOR_BUILD) $(NATIVE_GDKPIXBUF_LIBS) $(LIBS_FOR_BUILD) -o $@
++	$(AM_V_CCLD)$(CC_FOR_BUILD) $(CPPFLAGS_FOR_BUILD) -I. -I$(srcdir) -I$(srcdir)/../.. $(NATIVE_GDKPIXBUF_CFLAGS) $(CFLAGS_FOR_BUILD) $^ $(LDFLAGS_FOR_BUILD) $(NATIVE_GDKPIXBUF_LIBS) $(LIBS_FOR_BUILD) -o $@
+ 	rm -f $(srcdir)/config.h
+ 
+ @CROSS_COMPILING_TRUE@@USE_EXTERNAL_ICON_CACHE_FALSE@all-local: native-update-icon-cache$(BUILD_EXEEXT)

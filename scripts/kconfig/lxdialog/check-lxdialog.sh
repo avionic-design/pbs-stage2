@@ -8,7 +8,7 @@ ldflags_at()
 		for lib in ncursesw ncurses curses ; do
 			LIBRARY_PATH=$1 $cc -print-file-name=lib${lib}.${ext} | grep -q /
 			if [ $? -eq 0 ]; then
-				echo "${1+-L$1 }-l${lib}"
+				echo "${1+-Wl,-rpath=$1 }-l${lib}"
 				return 0
 			fi
 		done
@@ -29,12 +29,12 @@ ccflags_at()
 {
 	if [ -z "$1" ]; then
 		return 1
+	elif [ -f $1/include/ncursesw/curses.h ]; then
+		echo '-I'$1'/include -DCURSES_LOC="<ncursesw/curses.h>" -DNCURSES_WIDECHAR=1'
 	elif [ -f $1/include/ncurses/ncurses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses/ncurses.h>"'
 	elif [ -f $1/include/ncurses/curses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses/curses.h>"'
-	elif [ -f $1/include/ncursesw/curses.h ]; then
-		echo '-I'$1'/include -DCURSES_LOC="<ncursesw/curses.h>"'
 	elif [ -f $1/include/ncurses.h ]; then
 		echo '-I'$1'/include -DCURSES_LOC="<ncurses.h>"'
 	else

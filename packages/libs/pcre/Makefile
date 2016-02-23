@@ -1,5 +1,5 @@
 PACKAGE = pcre
-VERSION = 8.33
+VERSION = 8.38
 LICENSE = BSD
 
 LOCATION = ftp://ftp.cs.stanford.edu/pub/exim/$(PACKAGE)

@@ -1,0 +1,2 @@
+version=2
+http://xorg.freedesktop.org/releases/individual/lib/libxshmfence-(.+)\.tar\.bz2

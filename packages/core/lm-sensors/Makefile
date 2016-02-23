@@ -1,5 +1,5 @@
 PACKAGE = lm_sensors
-VERSION = 3.3.4
+VERSION = 3.3.5
 LICENSE = GPL LGPL
 
 LOCATION = ftp://ftp.netroedge.com/pub/lm-sensors

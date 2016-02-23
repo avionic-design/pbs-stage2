@@ -1,8 +1,8 @@
 PACKAGE = Python
-VERSION = 2.7.3
+VERSION = 2.7.8
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -10,7 +10,9 @@ MINOR = $(word 2,$(subst ., ,$(VERSION)))
 include packages/build-tools/autotools.mk
 
 conf-args += \
-	--enable-shared
+	--enable-shared \
+	--with-system-expat \
+	--with-system-ffi
 
 edit = sed 's/@MAJOR@/$(MAJOR)/g;s/@MINOR@/$(MINOR)/g' $(pkgsrctree)/python.in
 
@@ -25,4 +27,5 @@ $(pkgtree)/.generate-wrapper:
 $(pkgtree)/.install: $(pkgtree)/.generate-wrapper
 
 prunefiles = \
-	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxml2mod.la
+	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxml2mod.la \
+	$(prefix)/lib/python$(MAJOR).$(MINOR)/site-packages/libxsltmod.la

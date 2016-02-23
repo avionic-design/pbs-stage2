@@ -1,0 +1,37 @@
+diff --git a/Makefile.pre.in b/Makefile.pre.in
+index e280dc4..28ef9c4 100644
+--- a/Makefile.pre.in
++++ b/Makefile.pre.in
+@@ -25,6 +25,7 @@ MODOBJS=        _MODOBJS_
+ 
+ # === Variables set by configure
+ VERSION=	@VERSION@
++MAJOR=		$(word 1,$(subst ., ,$(VERSION)))
+ srcdir=		@srcdir@
+ VPATH=		@srcdir@
+ 
+@@ -806,15 +831,17 @@ altbininstall: $(BUILDPYTHON)
+ 	fi
+ 
+ bininstall: altbininstall
+-	-if test -f $(DESTDIR)$(BINDIR)/$(PYTHON)3$(EXE) -o -h $(DESTDIR)$(BINDIR)/$(PYTHON)3$(EXE); \
+-	then rm -f $(DESTDIR)$(BINDIR)/$(PYTHON)3$(EXE); \
++	-if test -f $(DESTDIR)$(BINDIR)/$(PYTHON)$(MAJOR)$(EXE) -o -h $(DESTDIR)$(BINDIR)/$(PYTHON)3$(EXE); \
++	then rm -f $(DESTDIR)$(BINDIR)/$(PYTHON)$(MAJOR)$(EXE); \
+ 	else true; \
+ 	fi
+-	(cd $(DESTDIR)$(BINDIR); $(LN) python$(VERSION)$(EXE) $(PYTHON)3$(EXE))
+-	-rm -f $(DESTDIR)$(BINDIR)/python3-config
+-	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python3-config)
+-	-rm -f $(DESTDIR)$(LIBPC)/python3.pc
+-	(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python3.pc)
++	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)$(EXE) python$(MAJOR)$(EXE))
++	(cd $(DESTDIR)$(BINDIR); test -f python$(EXE) || $(LN) -s python$(MAJOR)$(EXE) python$(EXE))
++	-rm -f $(DESTDIR)$(BINDIR)/python$(MAJOR)-config
++	(cd $(DESTDIR)$(BINDIR); $(LN) -s python$(VERSION)-config python$(MAJOR)-config)
++	(cd $(DESTDIR)$(BINDIR); test -f python-config ||  $(LN) -s python$(MAJOR)-config python-config)
++	-rm -f $(DESTDIR)$(LIBPC)/python$(MAJOR).pc
++	(cd $(DESTDIR)$(LIBPC); $(LN) -s python-$(VERSION).pc python$(MAJOR).pc)
+ 
+ # Install the manual page
+ maninstall:

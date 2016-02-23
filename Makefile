@@ -75,6 +75,9 @@ config-files = \
 -include $(config-files)
 export TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
 
+# Add the toolchain to search PATH ASAP
+export PATH := $(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
+
 PHONY += all
 _all: all
 
@@ -208,6 +211,9 @@ depend: $(depend-dirs)
 quiet_cmd_gen_depends = GEN     $@
       cmd_gen_depends = $< $(src)/Kconfig
 
+scripts/kconfig/deps:
+	$(Q)$(MAKE) $(build)=scripts/kconfig $@
+
 include/config/depends.mk: scripts/kconfig/deps \
 		include/config/auto.conf
 	$(call cmd,gen_depends)
@@ -239,6 +245,10 @@ print: include/config/depends.mk
 PHONY += license
 license: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ license
+
+PHONY += time
+time: include/config/depends.mk
+	$(Q)$(MAKE) $(platform)=$(obj) quiet=silent_ time
 
 PHONY += touch
 touch: include/config/depends.mk
@@ -322,6 +332,9 @@ distclean: clean $(distclean-dirs)
 
 %/print:
 	$(Q)$(MAKE) $(package)=$* print
+
+%/time:
+	$(Q)$(MAKE) $(package)=$* time
 
 %/configure:
 	$(Q)$(MAKE) $(package)=$* configure

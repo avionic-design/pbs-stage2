@@ -5,3 +5,7 @@ conf-args += \
 	--disable-documentation \
 	--disable-examples \
 	--disable-tests
+
+prunefiles = \
+	$(prefix)/lib/libfl.la \
+	$(prefix)/lib/libfl_pic.la

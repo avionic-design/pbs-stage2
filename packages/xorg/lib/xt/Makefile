@@ -1,5 +1,5 @@
 PACKAGE = libXt
-VERSION = 1.1.4
+VERSION = 1.1.5
 
 include packages/xorg/lib/common-reconf.mk
 

@@ -1,0 +1,25 @@
+diff --git a/configure.ac b/configure.ac
+index 0ad765c..db7b1a5 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -35,6 +35,7 @@ AC_MSG_RESULT([***
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
++AM_PROG_AR
+ AM_PROG_AS
+ AC_PROG_CXX
+ gl_EARLY
+diff --git a/m4/po.m4 b/m4/po.m4
+index 47f36a4..2c9532f 100644
+--- a/m4/po.m4
++++ b/m4/po.m4
+@@ -24,7 +24,7 @@ AC_DEFUN([AM_PO_SUBDIRS],
+ [
+   AC_REQUIRE([AC_PROG_MAKE_SET])dnl
+   AC_REQUIRE([AC_PROG_INSTALL])dnl
+-  AC_REQUIRE([AM_PROG_MKDIR_P])dnl defined by automake
++  AC_REQUIRE([AC_PROG_MKDIR_P])dnl
+   AC_REQUIRE([AM_NLS])dnl
+ 
+   dnl Release version of the gettext macros. This is used to ensure that

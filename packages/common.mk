@@ -18,8 +18,7 @@ CONFIG_ABI := $(call unquote,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-TOOLCHAIN_BASE_PATH ?= $(HOME)/pbs-stage1
-PATH := $(BUILD_TOOLS)/bin:$(TOOLCHAIN_BASE_PATH)/bin:$(PATH)
+PATH := $(BUILD_TOOLS)/bin:$(PATH)
 LD_LIBRARY_PATH := $(BUILD_TOOLS)/lib$(if $(LD_LIBRARY_PATH),:$(LD_LIBRARY_PATH))
 LOCPATH := $(BUILD_TOOLS)/lib/locale$(if $(LOCPATH),:$(LOCPATH))
 CROSS_COMPILE ?= $(TARGET)-
@@ -35,6 +34,12 @@ AR = $(CROSS_COMPILE)ar
 NM = $(CROSS_COMPILE)nm
 RANLIB = $(CROSS_COMPILE)ranlib
 STRIP = $(CROSS_COMPILE)strip
+
+BUILD_CPPFLAGS = -I$(BUILD_TOOLS)/include
+BUILD_CFLAGS =
+BUILD_CXXFLAGS =
+BUILD_ASFLAGS =
+BUILD_LDFLAGS = -L$(BUILD_TOOLS)/lib
 
 HOST_GNU_TYPE = $(shell $(srctree)/support/config.sub $(TARGET))
 BUILD_GNU_TYPE = $(shell $(srctree)/support/config.guess)

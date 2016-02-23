@@ -1,5 +1,5 @@
 PACKAGE = fontconfig
-VERSION = 2.10.95
+VERSION = 2.11.94
 LICENSE = custom
 
 LOCATION = http://fontconfig.org/release

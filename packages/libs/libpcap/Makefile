@@ -1,5 +1,5 @@
 PACKAGE = libpcap
-VERSION = 1.3.0
+VERSION = 1.6.2
 LICENSE = BSD
 
 LOCATION = http://www.tcpdump.org/release

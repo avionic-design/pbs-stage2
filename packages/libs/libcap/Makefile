@@ -2,8 +2,8 @@ PACKAGE = libcap
 VERSION = 2.22
 LICENSE = GPL
 
-LOCATION = ftp://ftp.archlinux.org/other/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = https://www.kernel.org/pub/linux/libs/security/linux-privs/$(PACKAGE)2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 

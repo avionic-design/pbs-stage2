@@ -1,5 +1,5 @@
 PACKAGE = Linux-PAM
-VERSION = 1.1.6
+VERSION = 1.1.8
 LICENSE = GPL
 
 LOCATION = https://fedorahosted.org/releases/l/i/linux-pam
@@ -10,7 +10,7 @@ include packages/autotools-reconf.mk
 conf-args += \
 	--sbindir=$(prefix)/sbin \
 	--libdir=$(prefix)/lib \
-	--disable-documentation \
+	--disable-regenerate-docu \
 	--disable-rpath \
 	--disable-nls
 

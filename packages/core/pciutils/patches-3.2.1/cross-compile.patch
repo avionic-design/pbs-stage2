@@ -1,0 +1,21 @@
+diff --git a/Makefile b/Makefile
+index 0a21ee8..68fdcd4 100644
+--- a/Makefile
++++ b/Makefile
+@@ -2,7 +2,7 @@
+ # (c) 1998--2013 Martin Mares <mj@ucw.cz>
+ 
+ OPT=-O2
+-CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes
++CFLAGS=$(OPT) -Wall -W -Wno-parentheses -Wstrict-prototypes -Wmissing-prototypes $(EXTRA_CFLAGS)
+ 
+ VERSION=3.2.1
+ DATE=2013-11-10
+@@ -41,7 +41,6 @@ PKGCFDIR=$(LIBDIR)/pkgconfig
+ # Commands
+ INSTALL=install
+ DIRINSTALL=install -d
+-STRIP=-s
+ CC=$(CROSS_COMPILE)gcc
+ AR=$(CROSS_COMPILE)ar
+ RANLIB=$(CROSS_COMPILE)ranlib

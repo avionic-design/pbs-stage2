@@ -9,5 +9,4 @@ conf-vars += \
 	LDFLAGS='$(LDFLAGS)'
 
 prunefiles = \
-	$(prefix)/lib/libpng15.la \
-	$(prefix)/lib/libpng.la
+	$(prefix)/lib/libpng*.la

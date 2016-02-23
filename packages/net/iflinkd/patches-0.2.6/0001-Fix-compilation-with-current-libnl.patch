@@ -1,0 +1,41 @@
+From fa0c7063fbcd4854b7aac45fe869cbb233eabc5a Mon Sep 17 00:00:00 2001
+From: Alban Bedel <alban.bedel@avionic-design.de>
+Date: Mon, 27 Oct 2014 15:00:34 +0100
+Subject: [PATCH] Fix compilation with current libnl
+
+Including net/if.h lead to various double definitions with current
+libnl. PBS used to patch libnl to woraround this problem. However with
+these old versions we still need net/if.h for IFF_UP and co. Solve
+this by including net/if.h only when IFF_UP hasn't been defined by
+netlink/route/link.h.
+
+Change-Id: I0e638be5d31640c5674591d2daa93f9e0f45eda5
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+---
+ main.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/main.c b/main.c
+index 991b7ee..7f5dabe 100644
+--- a/main.c
++++ b/main.c
+@@ -20,11 +20,15 @@
+ 
+ #include <sys/stat.h>
+ #include <sys/wait.h>
+-#include <net/if.h>
+ 
+ #include <netlink/netlink.h>
+ #include <netlink/msg.h>
+ #include <netlink/route/link.h>
++/* Workaround for old PBS versions of libnl that removed linux/if.h
++ * from netlink/route/link.h */
++#ifndef IFF_UP
++#include <net/if.h>
++#endif
+ 
+ #include "ethtool.h"
+ 
+-- 
+2.1.1
+

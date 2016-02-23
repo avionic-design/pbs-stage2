@@ -1,0 +1,32 @@
+From 384907d98737e62cac90abb7ca1656c829860cf0 Mon Sep 17 00:00:00 2001
+From: Julian Scheel <julian@jusst.de>
+Date: Tue, 10 Nov 2015 10:46:02 +0100
+Subject: [PATCH] Fix out of tree build
+
+Signed-off-by: Julian Scheel <julian@jusst.de>
+---
+ Source/WebKit2/GNUmakefile.am | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Source/WebKit2/GNUmakefile.am b/Source/WebKit2/GNUmakefile.am
+index 3d7b611..c877602 100644
+--- a/Source/WebKit2/GNUmakefile.am
++++ b/Source/WebKit2/GNUmakefile.am
+@@ -405,12 +405,12 @@ BUILT_SOURCES += $(top_builddir)/stamp-webkit2-forwarding-headers
+ $(GENSOURCES_WEBKIT2)/webkit2gtk/include/webkit2: $(webkit2gtk_h_api)
+ 	$(AM_V_GEN)mkdir -p $(GENSOURCES_WEBKIT2)/webkit2gtk/include \
+ 	&& rm -f $@ \
+-	&& ln -n -s -f ${shell pwd}/$(WebKit2)/UIProcess/API/gtk $@
++	&& ln -n -s -f $(WebKit2)/UIProcess/API/gtk $@
+ 
+ $(GENSOURCES_WEBKIT2)/webkit2extension/include/webkit2: $(webkit2gtk_h_api)
+ 	$(AM_V_GEN)mkdir -p $(GENSOURCES_WEBKIT2)/webkit2extension/include \
+ 	&& rm -f $@ \
+-	&& ln -n -s -f ${shell pwd}/$(WebKit2)/WebProcess/InjectedBundle/API/gtk $@
++	&& ln -n -s -f $(WebKit2)/WebProcess/InjectedBundle/API/gtk $@
+ 
+ BUILT_SOURCES += \
+ 	$(GENSOURCES_WEBKIT2)/webkit2extension/include/webkit2 \
+-- 
+2.6.1
+
