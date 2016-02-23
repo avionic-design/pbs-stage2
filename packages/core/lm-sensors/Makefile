@@ -2,7 +2,7 @@ PACKAGE = lm_sensors
 VERSION = 3.3.5
 LICENSE = GPL LGPL
 
-LOCATION = http://dl.lm-sensors.org/lm-sensors/releases
+LOCATION = ftp://ftp.netroedge.com/pub/lm-sensors
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk

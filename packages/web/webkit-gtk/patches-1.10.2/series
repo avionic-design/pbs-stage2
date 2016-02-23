@@ -16,3 +16,4 @@ fix-arm-neon-build-issue.patch
 0008-Fix-build-issue-with-bison-3.patch
 0009-webkit2-fix-missing-include.patch
 0010-webkit2-fix-linker-error-due-to-missing-flag.patch
+0008-Use-big-media-buttons.patch

@@ -2,7 +2,7 @@ PACKAGE = nss
 VERSION = 3.14
 LICENSE = MPL
 
-LOCATION = ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_RTM/src
+LOCATION = https://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_$(subst .,_,$(VERSION))_RTM/src
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk

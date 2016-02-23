@@ -2,7 +2,7 @@ PACKAGE = pcre
 VERSION = 8.38
 LICENSE = BSD
 
-LOCATION = ftp://ftp.csx.cam.ac.uk/pub/software/programming/$(PACKAGE)
+LOCATION = ftp://ftp.cs.stanford.edu/pub/exim/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools-reconf.mk
