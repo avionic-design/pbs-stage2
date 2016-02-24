@@ -6,9 +6,8 @@ ldflags_at()
 {
 	for ext in so a dylib ; do
 		for lib in ncursesw ncurses curses ; do
-			LIBRARY_PATH=$1 $cc -print-file-name=lib${lib}.${ext} | grep -q /
-			if [ $? -eq 0 ]; then
-				echo "${1+-Wl,-rpath=$1 }-l${lib}"
+			if [ -f "$1"/lib${lib}.${ext} ]; then
+				echo "-L$1 ${1+-Wl,-rpath=$1 }-l${lib}"
 				return 0
 			fi
 		done
@@ -18,7 +17,7 @@ ldflags_at()
 
 ldflags()
 {
-	for base in $TOOLCHAIN_BASE_PATH/lib "" ; do
+	for base in $TOOLCHAIN_BASE_PATH/lib /lib /lib64 ; do
 		ldflags_at $base && exit
 	done
 	exit 1
