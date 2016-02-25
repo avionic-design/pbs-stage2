@@ -1,5 +1,5 @@
 PACKAGE = bcg729
-VERSION = 1.0.0
+VERSION = 1.0.1
 LICENSE = GPLv2
 
 LOCATION = http://download-mirror.savannah.gnu.org/releases/linphone/plugins/sources
