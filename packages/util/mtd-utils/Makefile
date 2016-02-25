@@ -1,5 +1,5 @@
 PACKAGE = mtd-utils
-VERSION = 1.5.1
+VERSION = 1.5.2
 LICENSE = GPL
 
 LOCATION = ftp://ftp.infradead.org/pub/$(PACKAGE)
