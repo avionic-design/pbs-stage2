@@ -1,5 +1,5 @@
 PACKAGE = docbook-xml
-VERSION = 4.3
+VERSION = 4.5
 LICENSE = custom
 
 LOCATION = http://www.docbook.org/xml/$(VERSION)
