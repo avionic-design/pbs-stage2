@@ -1,5 +1,5 @@
 PACKAGE = docbook-xsl
-VERSION = 1.78.1
+VERSION = 1.79.1
 LICENSE = MIT-like
 
 LOCATION = http://prdownloads.sf.net/docbook/$(PACKAGE)
