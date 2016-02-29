@@ -1,5 +1,5 @@
 PACKAGE = libxml2
-VERSION = 2.9.2
+VERSION = 2.9.3
 LICENSE = MIT
 
 LOCATION = ftp://xmlsoft.org/$(PACKAGE)
