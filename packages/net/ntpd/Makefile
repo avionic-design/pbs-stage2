@@ -1,5 +1,5 @@
 PACKAGE = ntp
-VERSION = 4.2.6p5
+VERSION = 4.2.8p6
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
@@ -10,6 +10,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
+	--with-yielding-select=yes \
 	--without-ntpsnmpd
 
 stripfiles = \
