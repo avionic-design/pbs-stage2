@@ -1,5 +1,5 @@
 PACKAGE = alsa-lib
-VERSION = 1.0.28
+VERSION = 1.1.0
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.alsa-project.org/pub/lib
