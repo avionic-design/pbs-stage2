@@ -1,5 +1,5 @@
 PACKAGE = xz
-VERSION = 5.0.7
+VERSION = 5.2.2
 LICENSE = GPL LGPL custom
 
 LOCATION = http://tukaani.org/$(PACKAGE)
