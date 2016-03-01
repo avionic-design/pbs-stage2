@@ -1,5 +1,5 @@
 PACKAGE = p11-kit
-VERSION = 0.22.1
+VERSION = 0.23.2
 LICENSE = BSD
 
 LOCATION = http://p11-glue.freedesktop.org/releases
