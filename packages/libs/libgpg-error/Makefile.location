@@ -1,5 +1,5 @@
 PACKAGE = libgpg-error
-VERSION = 1.19
+VERSION = 1.21
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.gnupg.org/GnuPG/$(PACKAGE)
