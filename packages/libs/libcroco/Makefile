@@ -1,5 +1,5 @@
 PACKAGE = libcroco
-VERSION = 0.6.8
+VERSION = 0.6.11
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
