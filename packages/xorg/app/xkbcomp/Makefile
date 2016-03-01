@@ -1,5 +1,5 @@
 PACKAGE = xkbcomp
-VERSION = 1.2.4
+VERSION = 1.3.1
 
 include packages/xorg/app/common.mk
 
