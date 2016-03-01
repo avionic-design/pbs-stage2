@@ -1,5 +1,5 @@
 PACKAGE = gtk-doc
-VERSION = 1.21
+VERSION = 1.24
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
