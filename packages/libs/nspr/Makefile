@@ -1,5 +1,5 @@
 PACKAGE = nspr
-VERSION = 4.9.6
+VERSION = 4.12
 LICENSE = MPL
 
 LOCATION = https://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
@@ -31,7 +31,7 @@ conf-args = \
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
-			$(env) $(pkgbuildtree)/mozilla/nsprpub/configure $(conf-args)
+			$(env) $(pkgbuildtree)/nspr/configure $(conf-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
