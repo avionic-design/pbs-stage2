@@ -1,5 +1,5 @@
 PACKAGE = kbd
-VERSION = 2.0.2
+VERSION = 2.0.3
 LICENSE = GPL
 
 LOCATION = ftp://ftp.altlinux.org/pub/people/legion/$(PACKAGE)
