@@ -1,5 +1,5 @@
 PACKAGE = libxcb
-VERSION = 1.11
+VERSION = 1.11.1
 LICENSE = custom
 
 LOCATION = http://xcb.freedesktop.org/dist
