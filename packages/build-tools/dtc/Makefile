@@ -1,5 +1,5 @@
 PACKAGE = dtc
-VERSION = v1.4.0
+VERSION = v1.4.1
 LICENSE = GPL
 
 # Upstream didn't provide any tarball, so we have to pull it from git
