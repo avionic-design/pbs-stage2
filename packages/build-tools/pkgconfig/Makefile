@@ -1,5 +1,5 @@
 PACKAGE = pkg-config
-VERSION = 0.28
+VERSION = 0.29
 LICENSE = GPL
 
 LOCATION = http://pkgconfig.freedesktop.org/releases
