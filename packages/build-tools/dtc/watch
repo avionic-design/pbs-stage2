@@ -1,2 +1,2 @@
 version=3
-http://git.kernel.org/cgit/utils/dtc/dtc.git \?id=v([\d\.]+)
+http://git.kernel.org/cgit/utils/dtc/dtc.git \?h=v([\d\.]+)
