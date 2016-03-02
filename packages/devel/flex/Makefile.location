@@ -1,5 +1,5 @@
 PACKAGE = flex
-VERSION = 2.5.39
+VERSION = 2.6.0
 LICENSE = custom
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
