@@ -8,6 +8,9 @@ include packages/autotools.mk
 
 conf-args += --with-sysroot=$(SYSROOT)
 
+conf-vars += \
+	CPPFLAGS='-Wno-error=deprecated-declarations'
+
 plugin = $(prefix)/lib/gio/modules
 
 prunefiles = \
