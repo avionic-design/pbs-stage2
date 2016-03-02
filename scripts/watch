@@ -165,7 +165,7 @@ def process_file(filename, options):
 			if match.group(1) != '3':
 				print 'Invalid version %s: Only version 3 ' \
 						'watchfiles supported.' % \
-						m.group(1)
+						match.group(1)
 				sys.exit(1)
 
 			continue
