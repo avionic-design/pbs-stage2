@@ -6,6 +6,7 @@ $(pkgtree)/.setup:
 
 conf-args = \
 	--prefix=$(prefix) \
+	--libdir=lib \
 	shared zlib-dynamic
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
