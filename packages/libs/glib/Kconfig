@@ -3,6 +3,7 @@ config PACKAGE_LIBS_GLIB
 	select PACKAGE_BUILD_TOOLS_GLIB
 	select PACKAGE_LIBS_GETTEXT
 	select PACKAGE_LIBS_LIBFFI
+	select PACKAGE_LIBS_PCRE
 	select PACKAGE_LIBS_ZLIB
 	help
 	  GLib is the low-level core library that forms the basis for projects
