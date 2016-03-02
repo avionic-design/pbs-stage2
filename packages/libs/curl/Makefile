@@ -1,5 +1,5 @@
 PACKAGE = curl
-VERSION = 7.39.0
+VERSION = 7.47.1
 LICENSE = MIT/X derivate
 
 LOCATION = http://$(PACKAGE).haxx.se/download
