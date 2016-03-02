@@ -2,6 +2,7 @@
 
 from distutils import version
 from optparse import OptionParser
+from socket import timeout
 import urlparse
 import urllib2
 import sys
@@ -20,13 +21,20 @@ def process_recursive(url, pattern, options, final):
 	try:
 		req = urllib2.Request(url)
 		req.add_header('Accept', '*/*')
-		content = urllib2.urlopen(req)
+		content = urllib2.urlopen(req, timeout=10)
+	except timeout:
+		print "Timeout retrieving %s" % url
+		return None
 	except Exception as err:
 		print "Failed to retrieve %s: %s" % (url, err)
 		return None
 
 	for line in content:
-		line = line.strip()
+		try:
+			line = line.strip()
+		except timeout:
+			print "Timeout reading %s" % (url)
+			return None
 
 		if uri.scheme == 'ftp':
 			regex = re.compile('(\S+)$', re.IGNORECASE)
