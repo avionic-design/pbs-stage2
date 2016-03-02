@@ -1,5 +1,5 @@
 PACKAGE = help2man
-VERSION = 1.46.4
+VERSION = 1.47.3
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
