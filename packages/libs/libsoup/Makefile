@@ -1,5 +1,5 @@
 PACKAGE = libsoup
-VERSION = 2.48.0
+VERSION = 2.54.0.1
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
