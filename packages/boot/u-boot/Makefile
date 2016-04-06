@@ -5,9 +5,11 @@ LICENSE = GPL
 GIT_URL      = git://git.adnet.avionic-design.de/kernel/u-boot.git
 GIT_CHECKOUT = $(CONFIG_U_BOOT_BRANCH)
 
-CONFIG_U_BOOT_BOARD:=$(call unquote,$(CONFIG_U_BOOT_BOARD))
-ifeq ($(CONFIG_U_BOOT_BOARD),)
-$(error CONFIG_U_BOOT_BOARD is not defined!)
+ifneq ($(MAKECMDGOALS),watch)
+  CONFIG_U_BOOT_BOARD:=$(call unquote,$(CONFIG_U_BOOT_BOARD))
+  ifeq ($(CONFIG_U_BOOT_BOARD),)
+    $(error CONFIG_U_BOOT_BOARD is not defined!)
+  endif
 endif
 
 pkgbuildtree := $(pkgbuildtree)
