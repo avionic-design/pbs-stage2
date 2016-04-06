@@ -1,5 +1,5 @@
 PACKAGE = dbus-glib
-VERSION = 0.102
+VERSION = 0.106
 LICENSE = GPL
 
 LOCATION = http://dbus.freedesktop.org/releases/$(PACKAGE)
