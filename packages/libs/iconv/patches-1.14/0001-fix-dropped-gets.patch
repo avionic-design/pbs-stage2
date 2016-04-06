@@ -1,0 +1,32 @@
+From 893c50e78e73de307a26c0e67a4cd6fb245a085c Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 6 Apr 2016 19:57:22 +0200
+Subject: [PATCH] fix dropped gets
+
+C11 has dropped gets(), and so has glibc. The assumption of always
+having gets() no longer holds, so put it in a conditional. The upcoming
+iconv release will have this fixed.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ srclib/stdio.in.h | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/srclib/stdio.in.h b/srclib/stdio.in.h
+index 473c84c..6c029be 100644
+--- a/srclib/stdio.in.h
++++ b/srclib/stdio.in.h
+@@ -695,8 +695,10 @@ _GL_CXXALIASWARN (gets);
+ /* It is very rare that the developer ever has full control of stdin,
+    so any use of gets warrants an unconditional warning.  Assume it is
+    always declared, since it is required by C89.  */
++#if HAVE_RAW_DECL_GETS
+ _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
+ #endif
++#endif
+ 
+ 
+ #if @GNULIB_OBSTACK_PRINTF@ || @GNULIB_OBSTACK_PRINTF_POSIX@
+-- 
+2.1.0
+
