@@ -1,0 +1,26 @@
+From 00d0ac599608b4675368036d6559be56711ee41e Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 6 Apr 2016 18:55:20 +0200
+Subject: [PATCH] disable tests
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.in | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.in b/Makefile.in
+index bb286df..49b0ad8 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -425,7 +425,7 @@ top_srcdir = @top_srcdir@
+ 
+ # Process this file with automake to create Makefile.in.
+ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
+-SUBDIRS = atk tests docs po build
++SUBDIRS = atk docs po build
+ EXTRA_DIST = \
+ 	MAINTAINERS		\
+ 	atk-uninstalled.pc.in	\
+-- 
+2.1.0
+
