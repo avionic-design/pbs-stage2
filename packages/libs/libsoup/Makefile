@@ -12,7 +12,9 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
-	--without-gnome
+	--without-gnome \
+	--enable-vala=no \
+	--with-gssapi=no
 
 prunefiles = \
 	$(prefix)/lib/*.la
