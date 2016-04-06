@@ -1,5 +1,5 @@
 PACKAGE = talloc
-VERSION = 2.1.1
+VERSION = 2.1.6
 LICENSE = LGPL
 
 LOCATION = http://samba.org/ftp/$(PACKAGE)
