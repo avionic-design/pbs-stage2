@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.4.9
+VERSION = 3.4.10
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
