@@ -20,7 +20,6 @@ prunefiles = \
 	$(plugin)/*.la
 
 stripfiles = \
-	$(prefix)/bin/pango-querymodules \
 	$(prefix)/bin/pango-view \
 	$(prefix)/lib/*.so.* \
 	$(plugin)/*.so
