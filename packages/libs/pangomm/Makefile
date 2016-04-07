@@ -1,5 +1,5 @@
 PACKAGE = pangomm
-VERSION = 2.27.1
+VERSION = 2.40.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
