@@ -1,5 +1,5 @@
 PACKAGE = libsecret
-VERSION = 0.18.4
+VERSION = 0.18.5
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
