@@ -1,5 +1,5 @@
 PACKAGE = giflib
-VERSION = 4.1.6
+VERSION = 5.1.4
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
