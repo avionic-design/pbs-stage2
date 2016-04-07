@@ -1,5 +1,5 @@
 PACKAGE = mtdev
-VERSION = 1.1.3
+VERSION = 1.1.5
 LICENSE = MIT
 
 LOCATION = http://bitmath.org/code/$(PACKAGE)
