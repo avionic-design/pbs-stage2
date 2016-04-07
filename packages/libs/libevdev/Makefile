@@ -1,5 +1,5 @@
 PACKAGE = libevdev
-VERSION = 1.3
+VERSION = 1.4.6
 LICENSE = X11
 
 LOCATION = http://www.freedesktop.org/software/libevdev
