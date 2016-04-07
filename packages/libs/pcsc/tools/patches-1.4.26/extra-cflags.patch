@@ -1,0 +1,13 @@
+diff --git a/Makefile b/Makefile
+index e2d733b..4653c2b 100644
+--- a/Makefile
++++ b/Makefile
+@@ -6,7 +6,7 @@ PCSC_LDLIBS ?= $(shell pkg-config libpcsclite --libs)
+ DESTDIR ?= /usr/local
+ 
+ VERSION := $(shell pwd | sed s/.*tools-//)
+-CFLAGS := $(CFLAGS) -DVERSION=\"$(VERSION)\" $(PCSC_CFLAGS)
++CFLAGS := $(CFLAGS) -DVERSION=\"$(VERSION)\" $(PCSC_CFLAGS) $(EXTRA_CFLAGS)
+ LDLIBS := $(PCSC_LDLIBS)
+ # On xBSD systems use
+ #LDLIBS = -lc_r $(PCSC_LDLIBS)
