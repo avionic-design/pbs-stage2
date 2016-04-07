@@ -9,6 +9,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
 
+conf-args += \
+	--disable-documentation
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
