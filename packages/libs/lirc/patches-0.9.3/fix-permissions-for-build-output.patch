@@ -1,0 +1,42 @@
+From b8c1b9eb394ac09f8fe2933b4c8ccb5c0654329c Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 7 Apr 2016 13:16:04 +0200
+Subject: [PATCH] fix permissions for build output
+
+Generated HTML docs have their permissions set to 0000, as does
+lirc-config-tool. Fix this for now by setting permissions in the
+respective build steps.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ doc/Makefile.am   | 1 +
+ tools/Makefile.am | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/doc/Makefile.am b/doc/Makefile.am
+index 73ed553..5fc5943 100644
+--- a/doc/Makefile.am
++++ b/doc/Makefile.am
+@@ -115,6 +115,7 @@ $(generated_html): $(html_sources) docpage.xsl driver-toc.xsl
+ 	xsltproc --html docpage.xsl \
+ 	    $$(echo $(srcdir)/$@ | $(SED) 's|html/|html-source/|') > $@
+ 	$(SED) -i "s/@version@/$(VERSION)/" $@
++	@chmod u+rw $@
+ 
+ $(manpage_html): $(nodist_man_MANS) $(srcdir)/manpage.xsl
+ 	@mkdir man-html 2>/dev/null || :
+diff --git a/tools/Makefile.am b/tools/Makefile.am
+index f3fd3c4..3547425 100644
+--- a/tools/Makefile.am
++++ b/tools/Makefile.am
+@@ -105,6 +105,7 @@ python3:
+ 
+ install-exec-hook:
+ 	$(SED) -i 's/@version@/$(VERSION)/' $(DESTDIR)$(bindir)/lirc-config-tool
++	chmod 755 $(DESTDIR)$(bindir)/lirc-config-tool
+ 	rm -f $(DESTDIR)/$(bindir)/lirc-setup
+ 	$(srcdir)/make_rel_symlink.py \
+ 	    $(DESTDIR)/$(pkgpythondir)/lirc-setup \
+-- 
+2.1.0
+

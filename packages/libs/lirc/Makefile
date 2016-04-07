@@ -1,15 +1,10 @@
 PACKAGE = lirc
-VERSION = 0.8.7
+VERSION = 0.9.3
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
-
-conf-args += \
-	--with-syslog=LOG_DAEMON \
-	--with-driver=userspace \
-	--enable-sandboxed
 
 conf-vars += \
 	ac_cv_have_kernel=false
