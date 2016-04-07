@@ -1,5 +1,5 @@
 PACKAGE = pcsc-lite
-VERSION = 1.8.13
+VERSION = 1.8.16
 
 LOCATION = https://alioth.debian.org/frs/download.php/file/3298
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
