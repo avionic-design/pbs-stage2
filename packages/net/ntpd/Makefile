@@ -10,6 +10,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
+	--sbindir=/usr/bin \
 	--with-yielding-select=yes \
 	--without-ntpsnmpd
 
