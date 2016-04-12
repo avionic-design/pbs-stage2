@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.cups.org/pub/cups/([\d\.]+[\d])/cups-(.*)-source\.tar\.bz2
+https://github.com/apple/cups/releases/release-([\d\.]+)/cups-([\d\.]+)-source\.tar\.bz2

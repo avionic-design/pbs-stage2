@@ -1,7 +1,7 @@
 PACKAGE = cups
 VERSION = 1.4.4
 
-LOCATION = ftp://ftp.cups.org/pub/$(PACKAGE)/$(VERSION)
+LOCATION = https://github.com/apple/$(PACKAGE)/releases/download/release-$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION)-source.tar.bz2
 
 include packages/common.mk
