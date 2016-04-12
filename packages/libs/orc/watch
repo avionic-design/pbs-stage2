@@ -1,2 +1,2 @@
 version=3
-http://code.entropywave.com/download/orc/orc-(.*)\.tar\.gz
+https://gstreamer.freedesktop.org/src/orc/orc-(.*)\.tar\.xz
