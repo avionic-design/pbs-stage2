@@ -2,7 +2,7 @@ PACKAGE = fuse
 VERSION = 2.9.3
 LICENSE = GPL
 
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
+LOCATION = https://github.com/libfuse/libfuse/releases/download/$(PACKAGE)_$(subst .,_,$(VERSION))
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk

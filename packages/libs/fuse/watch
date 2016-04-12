@@ -1,2 +1,2 @@
 version=3
-http://sf.net/fuse/fuse-([\d.]+)\.tar\.gz
+https://github.com/libfuse/libfuse/releases/fuse(_\d+){3}/fuse-([\d\.]+)\.tar.gz
