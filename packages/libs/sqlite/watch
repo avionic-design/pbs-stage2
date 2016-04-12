@@ -1,2 +1,2 @@
 version=3
-http://sqlite.org/2013/sqlite-(.*)\.tar\.gz
+http://ftp.osuosl.org/pub/blfs/conglomeration/sqlite/sqlite-autoconf-(\d+)\.tar\.gz

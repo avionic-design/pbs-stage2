@@ -1,7 +1,7 @@
 PACKAGE = sqlite-autoconf
 VERSION = 3080100
 
-LOCATION = http://www.sqlite.org/2013
+LOCATION = http://ftp.osuosl.org/pub/blfs/conglomeration/sqlite/
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
