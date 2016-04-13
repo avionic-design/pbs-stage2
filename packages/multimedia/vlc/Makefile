@@ -2,6 +2,14 @@ PACKAGE = vlc
 VERSION = 2.2.2
 LICENSE = GPL
 
+ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+# Tegra2 runs best with VLC 2.0.7 and some patches.
+# If this can be ignored sometime in the future, remember to also update the
+# depending packages libav and libdvbpsi
+VERSION = 2.0.7
+patchdir = $(pkgsrctree)/patches-$(VERSION)-tegra2
+endif
+
 LOCATION = http://download.videolan.org/pub/videolan/$(PACKAGE)/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
