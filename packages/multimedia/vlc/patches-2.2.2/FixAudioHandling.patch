@@ -1,0 +1,34 @@
+diff --git a/src/input/decoder.c b/src/input/decoder.c
+index 94b7983..8da60ae 100644
+--- a/src/input/decoder.c
++++ b/src/input/decoder.c
+@@ -1177,6 +1177,7 @@ static void DecoderPlayAudio( decoder_t *p_dec, block_t *p_audio,
+ 
+         DecoderWaitDate( p_dec, &b_reject,
+                          p_audio->i_pts - AOUT_MAX_PREPARE_TIME );
++        vlc_mutex_unlock( &p_owner->lock );
+ 
+         if( unlikely(p_owner->b_paused != b_paused) )
+             continue; /* race with input thread? retry... */
+@@ -1199,7 +1200,6 @@ static void DecoderPlayAudio( decoder_t *p_dec, block_t *p_audio,
+ 
+         break;
+     }
+-    vlc_mutex_unlock( &p_owner->lock );
+ }
+ 
+ static void DecoderDecodeAudio( decoder_t *p_dec, block_t *p_block )
+@@ -1961,11 +1961,11 @@ static int aout_update_format( decoder_t *p_dec )
+ 
+         /* Parameters changed, restart the aout */
+         vlc_mutex_lock( &p_owner->lock );
+-
+-        aout_DecDelete( p_owner->p_aout );
+         p_owner->p_aout = NULL;
+ 
+         vlc_mutex_unlock( &p_owner->lock );
++        aout_DecDelete( p_owner->p_aout );
++
+         input_resource_PutAout( p_owner->p_resource, p_aout );
+     }
+ 
