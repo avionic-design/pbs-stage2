@@ -1,6 +1,12 @@
 PACKAGE = libav
 VERSION = 11.4
 
+ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+# Tegra2 needs VLC 2.0.7 that needs libavcodec <= 54
+# Go back to 9.18 since thats the latest version supporting that version
+VERSION = 9.18
+endif
+
 LOCATION = http://libav.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
