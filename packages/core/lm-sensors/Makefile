@@ -19,6 +19,18 @@ build-args = \
 	LDFLAGS='$(LDFLAGS)' \
 	EXLDFLAGS='$(LDFLAGS)'
 
+# lm-sensors iconv detection uses host ldconfig, so preset it here. Flag is
+# needed for glibc builds with iconv package selected only though.
+ifeq ($(CONFIG_GLIBC),y)
+ifeq ($(CONFIG_PACKAGE_LIBS_ICONV),y)
+build-args += \
+	LIBICONV='-liconv'
+endif
+else
+build-args += \
+	LIBICONV=''
+endif
+
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) $(build-args)
