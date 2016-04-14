@@ -2,8 +2,8 @@ PACKAGE = lm_sensors
 VERSION = 3.3.5
 LICENSE = GPL LGPL
 
-LOCATION = ftp://ftp.netroedge.com/pub/lm-sensors
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = http://http.debian.net/debian/pool/main/l/$(subst _,-,$(PACKAGE))
+TARBALLS = $(subst _,-,$(PACKAGE))_$(VERSION).orig.tar.bz2;filename=$(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
