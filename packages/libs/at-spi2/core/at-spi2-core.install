@@ -3,3 +3,4 @@
 /usr/lib/at-spi2
 /usr/lib/*.so.*
 /usr/share/dbus-1
+/usr/share/defaults
