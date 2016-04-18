@@ -1,5 +1,5 @@
 PACKAGE = fuse
-VERSION = 2.9.3
+VERSION = 2.9.5
 LICENSE = GPL
 
 LOCATION = https://github.com/libfuse/libfuse/releases/download/$(PACKAGE)_$(subst .,_,$(VERSION))
