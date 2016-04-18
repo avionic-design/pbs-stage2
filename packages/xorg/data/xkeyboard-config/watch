@@ -1,2 +1,2 @@
 version=3
-http://xlibs.freedesktop.org/xkbdesc/xkeyboard-config-(.*)\.tar\.bz2
+http://www.x.org/releases/individual/data/xkeyboard-config/xkeyboard-config-(.*)\.tar\.bz2

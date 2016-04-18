@@ -1,6 +1,6 @@
 PACKAGE = xkeyboard-config
 VERSION = 2.0
 
-LOCATION = http://xlibs.freedesktop.org/xkbdesc
+LOCATION = http://www.x.org/releases/individual/data/$(PACKAGE)
 
 include packages/xorg/data/common.mk
