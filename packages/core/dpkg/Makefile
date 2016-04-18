@@ -2,7 +2,7 @@ PACKAGE = dpkg
 VERSION = 1.15.5.6
 
 LOCATION = http://ftp.debian.org/debian/pool/main/d/dpkg
-TARBALLS = $(PACKAGE)_$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)_$(VERSION).tar.xz
 
 include packages/autotools.mk
 
