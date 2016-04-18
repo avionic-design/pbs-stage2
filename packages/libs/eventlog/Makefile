@@ -5,7 +5,7 @@ LICENSE = custom
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = http://www.balabit.com/downloads/files/$(PACKAGE)/$(MAJOR).$(MINOR)
+LOCATION = https://my.balabit.com/downloads/$(PACKAGE)/$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)_$(VERSION).tar.gz
 
 include packages/autotools.mk

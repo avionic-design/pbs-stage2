@@ -1,2 +1,2 @@
 version=3
-http://www.balabit.com/downloads/files/eventlog/(.*)/eventlog_(.*)\.tar\.gz
+https://my.balabit.com/downloads/eventlog/([\d\.]+)/eventlog_(.*)\.tar\.gz
