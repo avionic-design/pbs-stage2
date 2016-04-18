@@ -1,0 +1,37 @@
+From 0a84caea8f108ad8eaf1f9ee51ada259b6d397de Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 13 Apr 2016 21:07:32 +0200
+Subject: [PATCH] JSC: fix LDRH instruction for armv7l
+
+LDRH with immediate offset was loading from the wrong offset.
+
+https://bugs.webkit.org/show_bug.cgi?id=136914
+https://bugs.webkit.org/show_bug.cgi?id=140937
+
+Change-Id: I5d6e096b930501e29ba737fffdd0a6f5af7a5a05
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/5416
+Reviewed-by: Hendrik Lippek <hendrik.lippek@avionic-design.de>
+---
+ Source/JavaScriptCore/assembler/ARMv7Assembler.h | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/Source/JavaScriptCore/assembler/ARMv7Assembler.h b/Source/JavaScriptCore/assembler/ARMv7Assembler.h
+index e9b9fcc..e002ebb 100644
+--- a/Source/JavaScriptCore/assembler/ARMv7Assembler.h
++++ b/Source/JavaScriptCore/assembler/ARMv7Assembler.h
+@@ -1098,9 +1098,10 @@ public:
+     {
+         ASSERT(rn != ARMRegisters::pc); // LDR (literal)
+         ASSERT(imm.isUInt12());
++        ASSERT(!(imm.getUInt12() & 1));
+ 
+         if (!((rt | rn) & 8) && imm.isUInt6())
+-            m_formatter.oneWordOp5Imm5Reg3Reg3(OP_LDRH_imm_T1, imm.getUInt6() >> 2, rn, rt);
++            m_formatter.oneWordOp5Imm5Reg3Reg3(OP_LDRH_imm_T1, imm.getUInt6() >> 1, rn, rt);
+         else
+             m_formatter.twoWordOp12Reg4Reg4Imm12(OP_LDRH_imm_T2, rn, rt, imm.getUInt12());
+     }
+-- 
+2.1.0
+
