@@ -2,8 +2,8 @@ PACKAGE = i2c-tools
 VERSION = 3.1.1
 LICENSE = GPL
 
-LOCATION = http://dl.lm-sensors.org/$(PACKAGE)/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION = http://http.debian.net/debian/pool/main/i/$(PACKAGE)
+TARBALLS = $(PACKAGE)_$(VERSION).orig.tar.bz2;filename=$(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
