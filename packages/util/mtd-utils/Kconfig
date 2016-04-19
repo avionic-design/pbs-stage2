@@ -11,5 +11,6 @@ config PACKAGE_UTIL_MTD_UTILS_WITHOUT_LZO
 
 config PACKAGE_UTIL_MTD_UTILS_WITHOUT_UBI
 	bool "mtd-utils without UBI support"
+	depends on !PACKAGE_UTIL_MTD_UTILS_WITHOUT_LZO
 
 endif
