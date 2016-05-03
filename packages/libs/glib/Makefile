@@ -20,6 +20,11 @@ endif
 # The configure get confused by uclibc, force using the external libiconv
 ifeq ($(CONFIG_UCLIBC),y)
   conf-args += --with-libiconv=gnu
+else
+# Use the external libiconv when it is enabled
+ifeq ($(CONFIG_PACKAGE_LIBS_ICONV),y)
+  conf-args += --with-libiconv=gnu
+endif
 endif
 
 prunefiles = \
