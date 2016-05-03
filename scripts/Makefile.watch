@@ -23,7 +23,11 @@ watch-cmd = $(srctree)/scripts/watch -c $(VERSION) -q $(srctree)/$(obj)/watch
 
 cmd-watch = \
 	@if version=`$(watch-cmd)`; then \
-		echo "package is up-to-date: $(obj)"; \
+		if grep -q '^\(http\|ftp\).*\[.*[[:digit:]]\+\]' $(srctree)/$(obj)/watch ; then \
+			echo "package is up-to-date (probably pinned!): $(obj)";  \
+		else \
+			echo "package is up-to-date: $(obj)"; \
+		fi \
 	elif test x$$? = x1; then \
 		echo "new version available: $(obj) (current: $(VERSION), new: $$version)"; \
 	else \
