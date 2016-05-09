@@ -37,7 +37,7 @@ config INITRD_LOAD_ADDRESS
 	default 0x02100000 if ARCH_TEGRA_2x_SOC
 
 config FDT_LOAD_ADDRESS
-	hex "Flattened Device Treee load address"
+	hex "Flattened Device Tree load address"
 	default 0x82000000 if ARCH_TEGRA_124_SOC
 	default 0 # For platforms that don't need an explicit address
 
