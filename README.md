@@ -46,13 +46,15 @@ For more informations please see: [Packages](./Documentation/packages.md)
 
 # Building a toolchain:
 
-To build a platform you need a toolchain. PBS is able to provide toolchains
-for various architectures, which can be build from PBS.
-See Documentation/toolchains for details.
+To build a platform you need a toolchain. PBS Stage 1 is able to provide
+toolchains for various architectures. See its
+[README](https://github.com/avionic-design/pbs-stage1/blob/master/README.md)
+for details.
 
 But you can also use an external toolchain, for instance a toolchain provided
-by your distribution. To use such a toolchain you have to update your pbs.mk
-file. See Documentation/user-configuration for more details.
+by your distribution. To use such a toolchain you have to update your
+[pbs.mk](./pbs.mk) file.
+See [User-configuration](./Documentation/user-configuration) for more details.
 
 
 # Configuring a platform:
