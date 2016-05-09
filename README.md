@@ -62,7 +62,7 @@ defconfig. These files are located under <pbsdir>/configs. These defconfigs
 contain the toolchain to use, the kernel configuration and a packages
 selections for this package for this platform.
 
-	$ make O=<build directory> <platform>_defconfig
+	$ make O=<build directory> PLATFORM=<platform-vendor> <platform>_defconfig
 
 If you like to change a the platform settings or create a new platform this
 can be done with the following command:
