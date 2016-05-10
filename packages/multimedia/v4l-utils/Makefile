@@ -2,7 +2,7 @@ PACKAGE = v4l-utils
 VERSION = 1.10.0
 LICENSE = LGPL
 
-LOCATION = http://linuxtv.org/downloads/$(PACKAGE)
+LOCATION = https://www.linuxtv.org/downloads/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
