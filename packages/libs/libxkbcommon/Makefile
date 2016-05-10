@@ -1,9 +1,9 @@
 PACKAGE = libxkbcommon
-VERSION = 0.2.0
+VERSION = 0.6.1
 LICENSE = MIT/X11
 
 LOCATION = http://xkbcommon.org/download
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 

@@ -1,0 +1,53 @@
+From d3d04a8dbefa7c29b656092876b195ce9915d74f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 10 May 2016 11:37:36 +0200
+Subject: [PATCH] create man pages instead of nothing
+
+Doxygen needs to have at least one of the GENERATE_* settings set to yes
+to make any docs at all. While at, make man pages instead of html.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am     | 8 ++++----
+ doc/Doxyfile.in | 2 ++
+ 2 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index e91c484..be3869a 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -156,14 +156,14 @@ doc/stamp-doxygen: $(top_srcdir)/xkbcommon/*.h
+ 	touch $@
+ 
+ clean-doxygen:
+-	rm -rf doc/html doc/stamp-doxygen
++	rm -rf doc/man doc/stamp-doxygen
+ 
+ install-data-local:: doc
+-	$(MKDIR_P) $(DESTDIR)$(htmldir)
+-	$(INSTALL_DATA) doc/html/* $(DESTDIR)$(htmldir)
++	$(MKDIR_P) $(DESTDIR)$(mandir)/man3
++	$(INSTALL_DATA) doc/man/man3/* $(DESTDIR)$(mandir)/man3
+ 
+ uninstall-local::
+-	rm -rf $(DESTDIR)$(htmldir)
++	rm -rf $(DESTDIR)$(mandir)/man3
+ endif HAVE_DOXYGEN
+ endif ENABLE_DOCS
+ 
+diff --git a/doc/Doxyfile.in b/doc/Doxyfile.in
+index 36d517d..0befdda 100644
+--- a/doc/Doxyfile.in
++++ b/doc/Doxyfile.in
+@@ -4,6 +4,8 @@ PROJECT_NUMBER         = @PACKAGE_VERSION@
+ 
+ OUTPUT_DIRECTORY       = @abs_top_builddir@/doc
+ 
++GENERATE_MAN           = YES
++
+ BRIEF_MEMBER_DESC      = NO
+ 
+ JAVADOC_AUTOBRIEF      = YES
+-- 
+2.1.0
+
