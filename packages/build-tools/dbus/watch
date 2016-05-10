@@ -1,2 +1,1 @@
-version=3
-http://dbus.freedesktop.org/releases/dbus/dbus-(.+)\.tar\.gz
+../../libs/dbus/watch
