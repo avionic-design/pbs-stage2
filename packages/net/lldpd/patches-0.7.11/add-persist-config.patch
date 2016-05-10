@@ -1,0 +1,12 @@
+diff --git a/src/daemon/lldpd.service.in b/src/daemon/lldpd.service.in
+index 9e6d33a..411d5ff 100644
+--- a/src/daemon/lldpd.service.in
++++ b/src/daemon/lldpd.service.in
+@@ -9,6 +9,7 @@ Type=notify
+ NotifyAccess=main
+ EnvironmentFile=-/etc/default/lldpd
+ EnvironmentFile=-/etc/sysconfig/lldpd
++EnvironmentFile=-/persist/etc/default/lldpd
+ ExecStart=@sbindir@/lldpd $DAEMON_ARGS $LLDPD_OPTIONS
+ Restart=on-failure
+ 
