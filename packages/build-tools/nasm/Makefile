@@ -1,5 +1,5 @@
 PACKAGE = nasm
-VERSION = 2.11.05
+VERSION = 2.12.01
 LICENSE = Simplified BSD
 
 LOCATION = http://www.nasm.us/pub/$(PACKAGE)/releasebuilds/$(VERSION)
