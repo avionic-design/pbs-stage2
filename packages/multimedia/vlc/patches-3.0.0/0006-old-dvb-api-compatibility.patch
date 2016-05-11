@@ -1,0 +1,63 @@
+From fef2e86aeac2a8cb282c8ed5d7057e771733a336 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 11 May 2016 16:51:03 +0200
+Subject: [PATCH] old dvb api compatibility
+
+Provide compatibility for older kernel DVB API versions by using a
+couple hacky #ifdefs. The affected file is already cleaned up upstream,
+hence this patch can be dropped once VLC is updated far enough.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ modules/access/dvb/linux_dvb.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/modules/access/dvb/linux_dvb.c b/modules/access/dvb/linux_dvb.c
+index 0e68983..0567e4c 100644
+--- a/modules/access/dvb/linux_dvb.c
++++ b/modules/access/dvb/linux_dvb.c
+@@ -491,10 +491,12 @@ static enum fe_delivery_system FrontEndGetDeliverySys( access_t *p_access )
+     {
+         return ( b_2g ) ? SYS_DVBT2 : SYS_DVBT;
+     }
++#ifdef SYS_DVBC_ANNEX_C
+     else if( p_frontend->info.type == FE_QAM )
+     {
+         return SYS_DVBC_ANNEX_C;
+     }
++#endif
+     else if( p_frontend->info.type == FE_QPSK )
+     {
+         return ( b_2g ) ? SYS_DVBS2 : SYS_DVBS;
+@@ -518,9 +520,13 @@ int  FrontendFillScanParameter( access_t *p_access, scan_parameter_t *p_scan )
+ 
+     switch( FrontEndGetDeliverySys( p_access ) )
+     {
++#ifdef SYS_DVBC_ANNEX_A
+         case SYS_DVBC_ANNEX_A:
++#endif
+         case SYS_DVBC_ANNEX_B:
++#ifdef SYS_DVBC_ANNEX_C
+         case SYS_DVBC_ANNEX_C:
++#endif
+         case SYS_ISDBC:
+             i_ret = ScanParametersDvbC( p_access, p_scan );
+             break;
+@@ -542,10 +548,14 @@ int  FrontendFillScanParameter( access_t *p_access, scan_parameter_t *p_scan )
+         case SYS_ATSCMH:
+ 
+         case SYS_DSS:
++#ifdef SYS_DTMB
+         case SYS_DTMB:
++#endif
+         case SYS_CMMB:
+         case SYS_DAB:
++#ifdef SYS_TURBO
+         case SYS_TURBO:
++#endif
+         default:
+             msg_Err( p_access, "frontend scanning not supported" );
+             break;
+-- 
+2.1.0
+
