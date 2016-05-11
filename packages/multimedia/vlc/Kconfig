@@ -18,6 +18,14 @@ config PACKAGE_MULTIMEDIA_VLC
 
 if PACKAGE_MULTIMEDIA_VLC
 
+config PACKAGE_MULTIMEDIA_VLC_VLC2X
+	bool "vlc 2.x"
+	default y if PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T
+	help
+	  Build VLC 2 instead of 3. More suitable for T20 targets but also
+	  requires legacy versions of libdvbpsi and libav, which in turn are
+	  incompatible to gstreamer-1.
+
 config PACKAGE_MULTIMEDIA_VLC_TELETEXT
 	bool "teletext support"
 

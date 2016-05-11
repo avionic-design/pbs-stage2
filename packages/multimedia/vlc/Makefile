@@ -1,10 +1,8 @@
 PACKAGE = vlc
 LICENSE = GPL
 
-ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
-  # Tegra2 runs best with VLC 2.0.7 and some patches.
-  # If this can be ignored sometime in the future, remember to also update the
-  # depending packages libav and libdvbpsi
+ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_VLC_VLC2X),y)
+  # Legacy VLC 2.0.7 for Tegra 2.
   VERSION = 2.0.7
   patchdir = $(pkgsrctree)/patches-$(VERSION)-tegra2
 else
