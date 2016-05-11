@@ -13,6 +13,14 @@ if PACKAGE_WM_DWM
 
 choice PACKAGE_WM_DWM_PATCHSET
 	prompt "Patchset"
+	default PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL if PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL
+	help
+	  Select a patchset for dwm. If unsure, say 'none'.
+
+config PACKAGE_WM_DWM_PATCH_NONE
+	bool "none"
+	help
+	  No patchset, meaning the dwm master branch.
 
 config PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL
 	bool "remote-control"
