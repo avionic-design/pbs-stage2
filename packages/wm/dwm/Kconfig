@@ -13,8 +13,6 @@ if PACKAGE_WM_DWM
 
 choice PACKAGE_WM_DWM_PATCHSET
 	prompt "Patchset"
-	optional
-	default y
 
 config PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL
 	bool "remote-control"
