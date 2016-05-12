@@ -15,14 +15,14 @@ $(pkgtree)/.setup:
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
-ifneq ($(CONFIG_PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL),y)
+ifeq ($(CONFIG_PACKAGE_WM_DWM_PATCH_NONE),y)
 CFLAGS += \
-	'-I${SYSROOT}/usr/X11R6/include' \
-	'-I${SYSROOT}/usr/include/freetype2'
+	-I${SYSROOT}/usr/X11R6/include \
+	-I${SYSROOT}/usr/include/freetype2
 
 LDFLAGS += \
-	'-L${SYSROOT}/usr/X11R6/lib' \
-	' -lX11 -lXinerama -lfontconfig -lXft'
+	-L${SYSROOT}/usr/X11R6/lib \
+	-lX11 -lXinerama -lfontconfig -lXft
 endif
 
 build-args = \
