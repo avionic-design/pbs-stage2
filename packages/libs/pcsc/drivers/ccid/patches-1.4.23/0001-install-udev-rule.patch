@@ -1,0 +1,59 @@
+From adabe337e94c536654f1ce0ad6990d6b781f371f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 20 May 2016 11:21:17 +0200
+Subject: [PATCH] install udev rule
+
+Instead of just displaying a warning, actually install the udev rule.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/Makefile.am | 4 +---
+ src/Makefile.in | 3 +--
+ 2 files changed, 2 insertions(+), 5 deletions(-)
+
+diff --git a/src/Makefile.am b/src/Makefile.am
+index 54bed53..446393c 100644
+--- a/src/Makefile.am
++++ b/src/Makefile.am
+@@ -78,8 +78,6 @@ EXTRA_DIST = Info.plist.src create_Info_plist.pl reader.conf.in \
+ # rule. We do not want to _add_ files to install
+ install: $(LIBS_TO_INSTALL)
+ 
+-INSTALL_UDEV_RULE_FILE=@/bin/echo -e "\n\33[01;31m***************\n" ; echo "copy the src/92_pcscd_ccid.rules file in udev directory (/etc/udev/rules.d/)" ; /bin/echo -e "\n***************\n\33[0m"
+-
+ Info.plist: Info.plist.src $(srcdir)/../readers/supported_readers.txt
+ 	$(srcdir)/create_Info_plist.pl $(srcdir)/../readers/supported_readers.txt $(srcdir)/Info.plist.src --target=$(CCID_LIB) --version=$(VERSION) $(NOCLASS) > Info.plist
+ 
+@@ -89,7 +87,7 @@ install_ccid: libccid.la Info.plist
+ 	$(mkinstalldirs) $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/$(BUNDLE_HOST)/
+ 	cp Info.plist $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/
+ 	cp .libs/$(CCID_LIB) $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/$(BUNDLE_HOST)/$(CCID_LIB)
+-	$(INSTALL_UDEV_RULE_FILE)
++	mkdir -p $(DESTDIR)/etc/udev/rules.d && cp $(srcdir)/92_pcscd_ccid.rules $(DESTDIR)/etc/udev/rules.d/
+ 
+ install_ccidtwin: libccidtwin.la
+ 	$(mkinstalldirs) $(DESTDIR)$(ccidtwindir)
+diff --git a/src/Makefile.in b/src/Makefile.in
+index f2309ab..736b71a 100644
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -486,7 +486,6 @@ EXTRA_DIST = Info.plist.src create_Info_plist.pl reader.conf.in \
+ 	towitoko/COPYING towitoko/README openct/LICENSE \
+ 	convert_version.pl 92_pcscd_ccid.rules
+ 
+-INSTALL_UDEV_RULE_FILE = @/bin/echo -e "\n\33[01;31m***************\n" ; echo "copy the src/92_pcscd_ccid.rules file in udev directory (/etc/udev/rules.d/)" ; /bin/echo -e "\n***************\n\33[0m"
+ DISTCLEANFILES = tokenparser.c Info.plist
+ all: all-am
+ 
+@@ -1193,7 +1192,7 @@ install_ccid: libccid.la Info.plist
+ 	$(mkinstalldirs) $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/$(BUNDLE_HOST)/
+ 	cp Info.plist $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/
+ 	cp .libs/$(CCID_LIB) $(DESTDIR)$(usbdropdir)/$(CCID_BUNDLE)/Contents/$(BUNDLE_HOST)/$(CCID_LIB)
+-	$(INSTALL_UDEV_RULE_FILE)
++	$(MKDIR_P) $(DESTDIR)/etc/udev/rules.d && cp $(srcdir)/92_pcscd_ccid.rules $(DESTDIR)/etc/udev/rules.d/
+ 
+ install_ccidtwin: libccidtwin.la
+ 	$(mkinstalldirs) $(DESTDIR)$(ccidtwindir)
+-- 
+2.1.0
+
