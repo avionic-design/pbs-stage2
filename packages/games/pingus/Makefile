@@ -1,7 +1,7 @@
 PACKAGE = pingus
 VERSION = 0.7.2
 
-GIT_URL = git://git.adnet.avionic-design.de/games/pingus.git
+GIT_URL = http://review.adnet.avionic-design.de/games/pingus.git
 include packages/autotools-git.mk
 
 conf-args += \

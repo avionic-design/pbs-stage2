@@ -1,7 +1,7 @@
 PACKAGE = xdgmime
 VERSION = 0.0
 
-GIT_URL = git://git.adnet.avionic-design.de/fdo/xdg/xdgmime.git
+GIT_URL = http://review.adnet.avionic-design.de/fdo/xdg/xdgmime.git
 GIT_CHECKOUT = master
 
 include packages/autotools-git.mk

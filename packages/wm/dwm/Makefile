@@ -2,7 +2,7 @@ PACKAGE = dwm
 VERSION = git
 LICENSE = MIT/X
 
-GIT_URL = git://git.adnet.avionic-design.de/dwm.git
+GIT_URL = http://review.adnet.avionic-design.de/dwm.git
 ifeq ($(CONFIG_PACKAGE_WM_DWM_PATCH_REMOTE_CONTROL),y)
 	GIT_CHECKOUT = remote-control-v0.1.1
 endif

@@ -1,7 +1,7 @@
 PACKAGE = teeworlds
 VERSION = git
 
-GIT_URL = git://git.adnet.avionic-design.de/games/teeworlds.git
+GIT_URL = http://review.adnet.avionic-design.de/games/teeworlds.git
 include packages/autotools-git.mk
 
 stripfiles = \

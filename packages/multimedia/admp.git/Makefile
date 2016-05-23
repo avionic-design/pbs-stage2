@@ -1,7 +1,7 @@
 PACKAGE = admp
 VERSION = git
 
-GIT_URL = git://git.adnet.avionic-design.de/git/admp.git
+GIT_URL = http://review.adnet.avionic-design.de/git/admp.git
 include packages/autotools-git.mk
 
 stripfiles = \

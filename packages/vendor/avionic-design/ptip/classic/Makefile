@@ -2,7 +2,7 @@ PACKAGE = ptip-classic
 VERSION = 0.0.0
 LICENSE = GPL
 
-GIT_URL = git://git.adnet.avionic-design.de/avionic-design/ptip.git
+GIT_URL = http://review.adnet.avionic-design.de/avionic-design/ptip.git
 
 include packages/autotools-git.mk
 
