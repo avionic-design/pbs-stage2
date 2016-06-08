@@ -11,6 +11,7 @@ obj-$(CONFIG_PACKAGE_UTIL_MEDATOM_UTILS) += medatom-utils
 obj-$(CONFIG_PACKAGE_UTIL_MEMTESTER) += memtester
 obj-$(CONFIG_PACKAGE_UTIL_MESA_DEMOS) += mesa-demos
 obj-$(CONFIG_PACKAGE_UTIL_MTD_UTILS) += mtd-utils
+obj-$(CONFIG_PACKAGE_UTIL_SOCAT) += socat
 obj-$(CONFIG_PACKAGE_UTIL_SUPERIOTOOL) += superiotool
 obj-$(CONFIG_PACKAGE_UTIL_SYNERGY) += synergy
 obj-$(CONFIG_PACKAGE_UTIL_XPATH) += xpath

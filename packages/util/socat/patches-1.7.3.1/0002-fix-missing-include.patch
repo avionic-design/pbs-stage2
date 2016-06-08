@@ -1,0 +1,28 @@
+From 272ad444e00802a906ad8dbbc3121bd7bc76bd98 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 8 Jun 2016 13:02:29 +0200
+Subject: [PATCH 2/2] fix missing include
+
+When build without openssl support, the missing inclusion of stddef.h in
+nestlex.c becomes apparent, so fix this.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ nestlex.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/nestlex.c b/nestlex.c
+index f4a8962..efb0d17 100644
+--- a/nestlex.c
++++ b/nestlex.c
+@@ -4,6 +4,7 @@
+ 
+ /* a function for lexical scanning of nested character patterns */
+ 
++#include <stddef.h>
+ #include "config.h"
+ #include "mytypes.h"
+ 
+-- 
+2.1.0
+
