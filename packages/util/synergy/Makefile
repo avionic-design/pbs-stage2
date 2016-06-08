@@ -27,7 +27,7 @@ cmake-args += \
 	-DCMAKE_BUILD_TYPE=Debug
 
 stripfiles = \
-	/usr/bin/synergyc \
-	/usr/bin/synergyd \
-	/usr/bin/synergys \
-	/usr/bin/syntool
+	$(prefix)/bin/synergyc \
+	$(prefix)/bin/synergyd \
+	$(prefix)/bin/synergys \
+	$(prefix)/bin/syntool

@@ -7,7 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools-reconf.mk
 
 stripfiles = \
-	/usr/bin/dfu-programmer
+	$(prefix)/bin/dfu-programmer
 
 # The 0.7.0 release is missing some files needed to reconfigure
 $(pkgbuildtree)/NEWS $(pkgbuildtree)/ChangeLog:

@@ -14,5 +14,5 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/usr/bin/tnj3324test \
+	$(prefix)/bin/tnj3324test \
 	$(prefix)/lib/*.so.*
