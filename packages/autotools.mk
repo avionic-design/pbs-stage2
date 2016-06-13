@@ -1,10 +1,5 @@
 include packages/autotools-base.mk
 
-$(pkgtree)/.autoreconfigure:
-	cd $(pkgbuildtree) && \
-		$(env) autoreconf --force --install $(ACLOCAL_FLAGS)
-	$(call cmd,stamp)
-
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	mkdir -p $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
 		cd $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
@@ -23,5 +18,13 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 		$(env) $(priv) $(MAKE) $(install-args) $(install-target)
 	$(call cmd,stamp)
 
+# Rule to automatically run reconf if configure doesn't exists
 .SECONDEXPANSION:
-$(pkgtree)/.configure: $$(if $$(wildcard $$(local-src)),$(pkgtree)/.autoreconfigure)
+$(pkgtree)/.configure: $$(conf-cmd)
+
+# Build rule for the default $(conf-cmd). We can't use the
+# .autoreconfigure rule, otherwise reconf is always called because
+# of the missing .autoreconfigure stamp file
+$(pkgbuildtree)/configure:
+	cd $(pkgbuildtree) && \
+		$(env) autoreconf --force --install $(ACLOCAL_FLAGS)
