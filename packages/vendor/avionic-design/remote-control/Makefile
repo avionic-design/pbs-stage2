@@ -30,12 +30,16 @@ endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_GST),y)
 	conf-args += --with-video-backend=gst
 endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_SMARTCARD_LIBPCSCLITE),y)
+	conf-args += --enable-libpcsclite
+endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_SMARTCARD_LIBSMARTCARD),y)
-	conf-args += --with-smartcard-backend=libsmartcard
+	conf-args += --enable-libsmartcard
 endif
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_SMARTCARD_LIBCCID),y)
-	conf-args += --with-smartcard-backend=libccid
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_SMARTCARD_INFO),y)
+	conf-args += --enable-smartcard_info
 endif
+
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VOIP_LINPHONE),y)
 	conf-args += --with-voip-backend=linphone
 endif
