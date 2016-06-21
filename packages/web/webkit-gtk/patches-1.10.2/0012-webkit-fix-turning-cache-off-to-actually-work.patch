@@ -1,0 +1,31 @@
+From 08d76d8e4087ba72473c6f2a16a7bb6a4078d5a9 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 21 Jun 2016 10:25:24 +0200
+Subject: [PATCH] webkit: fix turning cache off to actually work
+
+https://bugs.webkit.org/show_bug.cgi?id=118345
+
+Change-Id: Ib681391194ef5082d0be4471d9b4ea956e0d9a99
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/5841
+Reviewed-by: Hendrik Lippek <hendrik.lippek@avionic-design.de>
+---
+ Source/WebKit/gtk/webkit/webkitglobals.cpp | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Source/WebKit/gtk/webkit/webkitglobals.cpp b/Source/WebKit/gtk/webkit/webkitglobals.cpp
+index 40356b8..eb59408 100644
+--- a/Source/WebKit/gtk/webkit/webkitglobals.cpp
++++ b/Source/WebKit/gtk/webkit/webkitglobals.cpp
+@@ -161,6 +161,8 @@ void webkit_set_cache_model(WebKitCacheModel model)
+         g_return_if_reached();
+     }
+ 
++    bool disableCache = !cacheMinDeadCapacity && !cacheMaxDeadCapacity && !cacheTotalCapacity;
++    memoryCache()->setDisabled(disableCache);
+     memoryCache()->setCapacities(cacheMinDeadCapacity, cacheMaxDeadCapacity, cacheTotalCapacity);
+     memoryCache()->setDeadDecodedDataDeletionInterval(deadDecodedDataDeletionInterval);
+     pageCache()->setCapacity(pageCacheCapacity);
+-- 
+2.1.0
+
