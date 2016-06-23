@@ -1,8 +1,8 @@
-VERSION = 2010
-PATCHLEVEL = 08
+VERSION = 2016
+PATCHLEVEL = 06
 SUBLEVEL =
 EXTRAVERSION = -wip
-NAME =
+NAME = PBS
 
 ifeq ($(O),)
   $(error O=<build-path> must be set!)
