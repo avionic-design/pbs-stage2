@@ -14,6 +14,11 @@ The following is a list of supported variables:
 
 		A cache size of several GiB is recommended.
 
+	CCACHE_DIR
+		Path to cached files for ccache. Defaults to <pbsdir>/ccache
+		but can (and should) be overridden if ccache is used for other
+		projects as well.
+
 	INITRD_MOUNT_TMPFS
 		Enabling this option causes the initial ramdisk to be created
 		in a temporary (RAM-based) filesystem. This can speed up the
