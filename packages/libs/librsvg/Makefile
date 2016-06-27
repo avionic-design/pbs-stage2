@@ -1,5 +1,5 @@
 PACKAGE = librsvg
-VERSION = 2.40.5
+VERSION = 2.40.16
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
