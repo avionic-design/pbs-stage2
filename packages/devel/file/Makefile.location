@@ -1,5 +1,5 @@
 PACKAGE = file
-VERSION = 5.26
+VERSION = 5.28
 LICENSE = GPL
 
 LOCATION = ftp://ftp.astron.com/pub/${PACKAGE}
