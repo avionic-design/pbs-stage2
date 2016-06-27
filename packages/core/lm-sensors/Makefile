@@ -1,5 +1,5 @@
 PACKAGE = lm_sensors
-VERSION = 3.3.5
+VERSION = 3.4.0
 LICENSE = GPL LGPL
 
 LOCATION = http://http.debian.net/debian/pool/main/l/$(subst _,-,$(PACKAGE))
