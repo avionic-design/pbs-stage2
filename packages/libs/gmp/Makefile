@@ -1,5 +1,5 @@
 PACKAGE = gmp
-VERSION = 6.0.0
+VERSION = 6.1.1
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.gmplib.org/pub/$(PACKAGE)-$(VERSION)
