@@ -3,6 +3,7 @@ include packages/build-tools/autotools.mk
 
 conf-args += \
 	--disable-systemtap \
+	--disable-dtrace \
 	--with-pcre=internal
 
 prunefiles = \
