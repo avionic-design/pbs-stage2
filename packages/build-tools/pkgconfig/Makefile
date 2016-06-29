@@ -8,7 +8,8 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/build-tools/autotools.mk
 
 conf-args += \
-	--with-internal-glib
+	--with-internal-glib \
+	--disable-compile-warnings
 
 quiet_cmd_m4_gen = GEN     $(@F)
       cmd_m4_gen = mkdir -p $(@D) && m4 -P -DBUILD_TOOLS=$(prefix) $< > $@ && \
