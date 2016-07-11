@@ -1,5 +1,5 @@
 PACKAGE = ortp
-VERSION = 0.20.0
+VERSION = 0.25.0
 LICENSE = LGPL
 
 LOCATION = http://download.savannah.gnu.org/releases/linphone/$(PACKAGE)/sources
