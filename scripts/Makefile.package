@@ -44,6 +44,7 @@ chksum		:= $(addprefix $(chksum-prefix),$(tarballs) $(files))
 
 extprefix	:= $(pkgtree)/.extract-
 extract		:= $(addprefix $(extprefix),$(tarballs))
+extract-deb	:= $(filter %.deb,$(extract))
 extract-gz	:= $(filter %.tar.gz,$(extract)) $(filter %.tgz,$(extract))
 extract-bz2	:= $(filter %.tar.bz2,$(extract))
 extract-lzma	:= $(filter %.tar.lzma,$(extract))
@@ -88,6 +89,9 @@ $(chksum): $(chksum-prefix)%: $(srctree)/download/%
 $(pkgtree)/.checksum: $(pkgtree)/.directory $(chksum)
 	$(call cmd,stamp)
 
+quiet_cmd_deb = DEB     $<
+      cmd_deb = dpkg-deb --extract $< $(pkgbuildtree)
+
 quiet_cmd_tar_gz = TAR     $<
       cmd_tar_gz = cd $(pkgtree) && tar xzf $<
 
@@ -113,6 +117,10 @@ run_bin_PROG ?= $<
 
 $(extract-gz): $(extprefix)%: $(srctree)/download/%
 	$(call cmd,tar_gz)
+	$(call cmd,stamp)
+
+$(extract-deb): $(extprefix)%.deb: $(srctree)/download/%.deb
+	$(call cmd,deb)
 	$(call cmd,stamp)
 
 $(extract-bz2): $(extprefix)%.tar.bz2: $(srctree)/download/%.tar.bz2
