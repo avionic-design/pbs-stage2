@@ -1,0 +1,26 @@
+From 9f05a62aa880d09dabceb28cd9f66c8567f24422 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 12 Jul 2016 16:31:48 +0200
+Subject: [PATCH] cross-compile
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 9867f7e..7115006 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -64,7 +64,7 @@ include_HEADERS =	include/antlr3.h						\
+ 
+ libantlr3c_la_LDFLAGS = -avoid-version
+ 
+-INCLUDES = -Iinclude
++INCLUDES = -I$(top_srcdir)/include
+ 
+ EXTRA_DIST = 	\
+ 				vsrulefiles/antlr3lexerandparser.rules		\
+-- 
+2.1.0
+
