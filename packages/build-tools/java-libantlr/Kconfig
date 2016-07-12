@@ -1,0 +1,8 @@
+config PACKAGE_BUILD_TOOLS_JAVA_LIBANTLR
+	bool "java-libantlr"
+	help
+	  ANTLR, ANother Tool for Language Recognition, is a language tool that
+	  provides a framework for constructing recognizers, compilers, and
+	  translators from grammatical descriptions containing C++ or Java
+	  actions. This package contains the java libraries without a dependency
+	  on any runtime.
