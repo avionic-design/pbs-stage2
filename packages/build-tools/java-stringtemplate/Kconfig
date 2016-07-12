@@ -1,0 +1,8 @@
+config PACKAGE_BUILD_TOOLS_JAVA_STRINGTEMPLATE
+	bool "java-stringtemplate"
+	help
+	  ST (StringTemplate) is a java template engine for generating source
+	  code, web pages, emails, or any other formatted text output. ST is
+	  particularly good at multi-targeted code generators, multiple site
+	  skins, and internationalization/localization. ST also powers the
+	  ANTLR v3 code generator.
