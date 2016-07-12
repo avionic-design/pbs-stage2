@@ -1,0 +1,12 @@
+config PACKAGE_MULTIMEDIA_BELLE_SIP
+	bool "belle-sip"
+	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_ANTLR3_2
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_BUILD_TOOLS_INTLTOOL
+	select PACKAGE_BUILD_TOOLS_LIBTOOL
+	select PACKAGE_LIBS_LIBANTLR3C
+	help
+	  Belle-sip is a SIP (RFC3261) implementation written in C, with an
+	  object oriented API.
