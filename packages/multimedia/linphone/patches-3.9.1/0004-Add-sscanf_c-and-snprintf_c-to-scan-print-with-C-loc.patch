@@ -1,0 +1,205 @@
+From b0f1c7533ff83c0bdfddaf883f308ac9a2aed8d8 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 14:42:49 +0200
+Subject: [PATCH 4/6] Add sscanf_c() and snprintf_c() to scan/print with C
+ locale
+
+The standard scanf/printf use, among other things, the decimal mark
+from the locale. However there is several situations where this is not
+desirable, in particular when reading/writing config files.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.ac           | 15 ++++++++++
+ coreapi/linphonecall.c |  2 +-
+ coreapi/lpconfig.c     |  5 ++--
+ coreapi/misc.c         | 81 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ coreapi/private.h      |  3 ++
+ 5 files changed, 103 insertions(+), 3 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 61640db..97c6931 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -555,6 +555,21 @@ AC_DEFINE_UNQUOTED(PACKAGE_SOUND_DIR, "${package_prefix}/${DATADIRNAME}/sounds/l
+ dnl check if we have the getifaddrs() sytem call
+ AC_CHECK_FUNCS(getifaddrs)
+ 
++dnl check if locale.h exists
++AC_CHECK_HEADERS(locale.h)
++
++dnl check if vsscanf_l() exists
++AC_CHECK_FUNCS(vsscanf_l)
++
++dnl check if vsnprintf_l() exists
++AC_CHECK_FUNCS(vsnprintf_l)
++
++dnl check if uselocale() exists
++AC_CHECK_FUNCS(uselocale)
++
++dnl check if newlocale() exists
++AC_CHECK_FUNCS(newlocale)
++
+ if test "$console_ui" = "true" ; then
+ 	dnl check gnu readline
+ 	LP_CHECK_READLINE
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index ec95cff..5018b6a 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -2525,7 +2525,7 @@ static void parametrize_equalizer(LinphoneCore *lc, AudioStream *st){
+ 				do{
+ 					int bytes;
+ 					MSEqualizerGain g;
+-					if (sscanf(gains,"%f:%f:%f %n",&g.frequency,&g.gain,&g.width,&bytes)==3){
++					if (sscanf_c(gains,"%f:%f:%f %n",&g.frequency,&g.gain,&g.width,&bytes)==3){
+ 						ms_message("Read equalizer gains: %f(~%f) --> %f",g.frequency,g.width,g.gain);
+ 						ms_filter_call_method(f,MS_EQUALIZER_SET_GAIN,&g);
+ 						gains+=bytes;
+diff --git a/coreapi/lpconfig.c b/coreapi/lpconfig.c
+index 2ad6059..61b0391 100644
+--- a/coreapi/lpconfig.c
++++ b/coreapi/lpconfig.c
+@@ -25,6 +25,7 @@
+ #define MAX_LEN 16384
+ 
+ #include "linphonecore.h"
++#include "private.h"
+ 
+ #include <stdio.h>
+ #include <stdlib.h>
+@@ -562,7 +563,7 @@ float lp_config_get_float(const LpConfig *lpconfig,const char *section, const ch
+ 	const char *str=lp_config_get_string(lpconfig,section,key,NULL);
+ 	float ret=default_value;
+ 	if (str==NULL) return default_value;
+-	sscanf(str,"%f",&ret);
++	sscanf_c(str,"%f",&ret);
+ 	return ret;
+ }
+ 
+@@ -614,7 +615,7 @@ void lp_config_set_int64(LpConfig *lpconfig,const char *section, const char *key
+ 
+ void lp_config_set_float(LpConfig *lpconfig,const char *section, const char *key, float value){
+ 	char tmp[30];
+-	snprintf(tmp,sizeof(tmp),"%f",value);
++	snprintf_c(tmp,sizeof(tmp),"%f",value);
+ 	lp_config_set_string(lpconfig,section,key,tmp);
+ }
+ 
+diff --git a/coreapi/misc.c b/coreapi/misc.c
+index f971d89..a0164d5 100644
+--- a/coreapi/misc.c
++++ b/coreapi/misc.c
+@@ -54,6 +54,11 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ #define pclose _pclose
+ #endif
+ 
++#ifdef HAVE_LOCALE_H
++#include <locale.h>
++#else
++typedef void* locale_t;
++#endif
+ 
+ #define UDP_HDR_SZ 8
+ #define RTP_HDR_SZ 12
+@@ -61,6 +66,82 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ 
+ static void clear_ice_check_list(LinphoneCall *call, IceCheckList *removed);
+ 
++#ifdef HAVE_USELOCALE
++#define SET_LOCALE(l) uselocale(l)
++#define RESTORE_LOCALE() uselocale(LC_GLOBAL_LOCALE)
++#else // Fallback on hoping that the locale won't do bad things
++#define SET_LOCALE(l)
++#define RESTORE_LOCALE()
++#endif
++
++#ifndef HAVE_VSSCANF_L
++int vsscanf_l(const char * str, locale_t loc, const char * format, va_list ap)
++{
++	int r;
++
++	if (loc)
++		SET_LOCALE(loc);
++	r = vsscanf(str, format, ap);
++	if (loc)
++		RESTORE_LOCALE();
++
++	return r;
++}
++#endif /* HAVE_VSSCANF_L */
++
++#ifndef HAVE_VSNPRINTF_L
++int vsnprintf_l(char * str, size_t size, locale_t loc,
++                const char * format, va_list ap)
++{
++	int r;
++
++	if (loc)
++		SET_LOCALE(loc);
++	r = vsnprintf(str, size, format, ap);
++	if (loc)
++		RESTORE_LOCALE();
++
++	return r;
++}
++#endif /* HAVE_VSPRINTF_L */
++
++
++static locale_t get_c_locale(void)
++{
++#ifdef HAVE_NEWLOCALE
++	static locale_t c_locale = NULL;
++	if (!c_locale)
++		c_locale = newlocale(LC_ALL, "C", NULL);
++	return c_locale;
++#else
++	return NULL;
++#endif
++}
++
++int sscanf_c(const char * str, const char * format, ...)
++{
++	va_list ap;
++	int r;
++
++	va_start(ap, format);
++	r = vsscanf_l(str, get_c_locale(), format, ap);
++	va_end(ap);
++
++	return r;
++}
++
++int snprintf_c(char * str, size_t size, const char * format, ...)
++{
++	va_list ap;
++	int r;
++
++	va_start(ap, format);
++	r = vsnprintf_l(str, size, get_c_locale(), format, ap);
++	va_end(ap);
++
++	return r;
++}
++
+ bool_t linphone_core_payload_type_enabled(LinphoneCore *lc, const LinphonePayloadType *pt){
+ 	if (ms_list_find(lc->codecs_conf.audio_codecs, (PayloadType*) pt) || ms_list_find(lc->codecs_conf.video_codecs, (PayloadType*)pt) || ms_list_find(lc->codecs_conf.text_codecs, (PayloadType*)pt)){
+ 		return payload_type_enabled(pt);
+diff --git a/coreapi/private.h b/coreapi/private.h
+index 009efb7..b052db0 100644
+--- a/coreapi/private.h
++++ b/coreapi/private.h
+@@ -619,6 +619,9 @@ struct _LinphoneChatRoom{
+ 
+ BELLE_SIP_DECLARE_VPTR(LinphoneChatRoom);
+ 
++/* sscanf() and snprintf() with C locale (ie. the decimal mark is always '.' and so on) */
++int sscanf_c(const char * str, const char * format, ...);
++int snprintf_c(char * str, size_t size, const char * format, ...);
+ 
+ struct _LinphoneFriend{
+ 	belle_sip_object_t base;
+-- 
+2.1.0
+

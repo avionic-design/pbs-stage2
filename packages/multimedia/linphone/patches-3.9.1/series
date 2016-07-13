@@ -1,0 +1,6 @@
+0001-Substitute-ACLOCAL_MACOS_FLAGS-as-shell-variable.patch
+0002-Expand-API-to-switch-echo-cancellation-preprocessor.patch
+0003-LSD-Make-sure-that-players-don-t-get-re-used-until-t.patch
+0004-Add-sscanf_c-and-snprintf_c-to-scan-print-with-C-loc.patch
+0005-add-call-audio-settings.patch
+0006-fix-gcc-4.8-build.patch

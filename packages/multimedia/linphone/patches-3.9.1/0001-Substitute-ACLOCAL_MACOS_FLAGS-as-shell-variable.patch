@@ -1,0 +1,33 @@
+From 478fa59a83c3ed36676c7f0ee66383b27e0ad8ab Mon Sep 17 00:00:00 2001
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Date: Thu, 23 Feb 2012 09:22:12 +0100
+Subject: [PATCH 1/6] Substitute ACLOCAL_MACOS_FLAGS as shell variable
+
+The $(ACLOCAL_MACOS_FLAGS) syntax for substituting only works if it is
+actually run through make. However, the autotools use ACLOCAL_AMFLAGS as
+is and provide them as command line flags for automake, which will
+result in $(...) causing the shell to try and run the non-existing
+ACLOCAL_MACOS_FLAGS command.
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index f080b33..b175490 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+ ## Process this file with automake to produce Makefile.in
+ 
+ # let make re-run automake upon need
+-ACLOCAL_AMFLAGS = -I m4 $(ACLOCAL_MACOS_FLAGS)
++ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_MACOS_FLAGS}
+ 
+ SUBDIRS = build m4 pixmaps po @ORTP_DIR@ @MS2_DIR@ \
+ 		coreapi console gtk share scripts tools tester include
+-- 
+2.1.0
+

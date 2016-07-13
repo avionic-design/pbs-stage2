@@ -1,0 +1,26 @@
+From 6524931dd0379122e001666048a525e23bd40211 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 15:36:39 +0200
+Subject: [PATCH 6/6] fix gcc 4.8 build
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ coreapi/bellesip_sal/sal_sdp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/coreapi/bellesip_sal/sal_sdp.c b/coreapi/bellesip_sal/sal_sdp.c
+index f473b59..74bf4fb 100644
+--- a/coreapi/bellesip_sal/sal_sdp.c
++++ b/coreapi/bellesip_sal/sal_sdp.c
+@@ -17,7 +17,7 @@ along with this program; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+ #include "sal_impl.h"
+-#define keywordcmp(key,b) strncmp(key,b,sizeof(key))
++#define keywordcmp(key,b) strncmp(key,b,strlen(key))
+ 
+ 
+ static void add_ice_candidates(belle_sdp_media_description_t *md, const SalStreamDescription *desc){
+-- 
+2.1.0
+

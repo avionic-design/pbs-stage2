@@ -1,0 +1,189 @@
+From e43574becd6dcb4f78eda85f5f7f149b5dfb973b Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 15:03:18 +0200
+Subject: [PATCH 5/6] add call audio settings
+
+Subjects of the original 4 commits found in this patch:
+- ms2: Add methods to set the echo limiter and noise gate parameters
+- ms2: Allow controlling the audiostream AGC while it is running
+- ms2: Allow changing the EC settings at run time
+- Add methods to control the audio settings of each call
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ coreapi/linphonecall.c | 53 +++++++++++++++++++++++++++++++++++++++
+ coreapi/linphonecore.h | 67 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 119 insertions(+), 1 deletion(-)
+
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index 5018b6a..ed92b23 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -3647,6 +3647,13 @@ void linphone_call_enable_echo_cancellation(LinphoneCall *call, bool_t enable) {
+ 		ms_filter_call_method(call->audiostream->ec,MS_ECHO_CANCELLER_SET_BYPASS_MODE,&bypass_mode);
+ 	}
+ }
++
++void linphone_call_set_echo_cancellation_params(LinphoneCall *call, int tail_len_ms, int delay_ms, int framesize) {
++	if (call!=NULL && call->audiostream!=NULL){
++		audio_stream_set_echo_canceller_params(call->audiostream, tail_len_ms, delay_ms, framesize);
++	}
++}
++
+ bool_t linphone_call_echo_cancellation_enabled(LinphoneCall *call) {
+ 	if (call!=NULL && call->audiostream!=NULL && call->audiostream->ec){
+ 		bool_t val;
+@@ -3671,6 +3678,12 @@ void linphone_call_enable_echo_limiter(LinphoneCall *call, bool_t val){
+ 	}
+ }
+ 
++void linphone_call_set_echo_limiter_params(LinphoneCall *call, float threshold, float speed, float force, int sustain, float tx_threshold) {
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_echo_limiter_params(call->audiostream, threshold, speed, force, sustain, tx_threshold);
++	}
++}
++
+ bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call){
+ 	if (call!=NULL && call->audiostream!=NULL ){
+ 		return call->audiostream->el_type !=ELInactive ;
+@@ -3679,6 +3692,46 @@ bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call){
+ 	}
+ }
+ 
++void linphone_call_enable_noise_gate(LinphoneCall *call, bool_t val){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_enable_noise_gate(call->audiostream, val);
++	}
++}
++
++bool_t linphone_call_noise_gate_enabled(const LinphoneCall *call){
++	if (call!=NULL && call->audiostream!=NULL && call->audiostream->volsend){
++		return call->audiostream->use_ng;
++	} else {
++		return FALSE;
++	}
++}
++
++void linphone_call_set_noise_gate_params(LinphoneCall *call, float threshold, float floorgain){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_noise_gate_params(call->audiostream, threshold, floorgain);
++	}
++}
++
++void linphone_call_enable_agc(LinphoneCall *call, bool_t val){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_enable_automatic_gain_control(call->audiostream, val);
++	}
++}
++
++bool_t linphone_call_agc_enabled(LinphoneCall *call){
++	if (call!=NULL && call->audiostream!=NULL && call->audiostream->volsend){
++		return call->audiostream->use_agc;
++	} else {
++		return FALSE;
++	}
++}
++
++void linphone_call_set_mic_gain(LinphoneCall *call, float gain){
++	if (call!=NULL && call->audiostream!=NULL ){
++		audio_stream_set_mic_gain(call->audiostream, gain);
++	}
++}
++
+ /**
+  * @addtogroup call_misc
+  * @{
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index 60ca8ea..2f1a5cc 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -887,6 +887,15 @@ LINPHONE_PUBLIC	bool_t linphone_call_is_in_conference(const LinphoneCall *call);
+ **/
+ LINPHONE_PUBLIC	void linphone_call_enable_echo_cancellation(LinphoneCall *call, bool_t val) ;
+ /**
++ * Set the echo cancellation parameters for this call
++ * @param call
++ * @param tail_len_ms
++ * @param delay_ms
++ * @param framesize
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_set_echo_cancellation_params(LinphoneCall *call, int tail_len_ms, int delay_ms, int framesize);
++/**
+  * Returns TRUE if echo cancellation is enabled.
+  *
+  * @ingroup media_parameters
+@@ -901,12 +910,68 @@ LINPHONE_PUBLIC	bool_t linphone_call_echo_cancellation_enabled(LinphoneCall *lc)
+ **/
+ LINPHONE_PUBLIC	void linphone_call_enable_echo_limiter(LinphoneCall *call, bool_t val);
+ /**
++ * Set the echo limiter parameters for this call
++ * @param call
++ * @param threshold
++ * @param speed
++ * @param force
++ * @param sustain
++ * @param tx_threshold
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_set_echo_limiter_params(LinphoneCall *call, float threshold, float speed, float force, int sustain, float tx_threshold);
++/**
+  * Returns TRUE if echo limiter is enabled.
+  *
+  * @ingroup media_parameters
+ **/
+ LINPHONE_PUBLIC	bool_t linphone_call_echo_limiter_enabled(const LinphoneCall *call);
+-
++/**
++ * Enables or disable the noise gate for this call
++ * @param call
++ * @param val
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_enable_noise_gate(LinphoneCall *call, bool_t val);
++/**
++ * Returns TRUE if the noise gate is enabled.
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	bool_t linphone_call_noise_gate_enabled(const LinphoneCall *call);
++/**
++ * Set the noise gate paramters for this call
++ * @param call
++ * @param threshold
++ * @param floorgain
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_set_noise_gate_params(LinphoneCall *call, float threshold, float floorgain);
++/**
++ * Enables or disable the automatic gain control for this call
++ * @param call
++ * @param val
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_enable_agc(LinphoneCall *call, bool_t val);
++/**
++ * Returns TRUE if the automatic gain control is enabled.
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	bool_t linphone_call_agc_enabled(LinphoneCall *call);
++/**
++ * Set the microphone gain for this call
++ * @param call
++ * @param gain
++ *
++ * @ingroup media_parameters
++**/
++LINPHONE_PUBLIC	void linphone_call_set_mic_gain(LinphoneCall *call, float gain);
+ /**
+  * Enum describing type of audio route.
+  * @ingroup call_control
+-- 
+2.1.0
+

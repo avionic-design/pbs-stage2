@@ -1,0 +1,98 @@
+From d2497365ed5afe029f0360724f43f08ba8a5f596 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 12:06:51 +0200
+Subject: [PATCH 2/6] Expand API to switch echo cancellation preprocessor
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ coreapi/linphonecall.c |  4 +++-
+ coreapi/linphonecore.c | 21 +++++++++++++++++++++
+ coreapi/linphonecore.h |  2 ++
+ coreapi/private.h      |  1 +
+ 4 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/coreapi/linphonecall.c b/coreapi/linphonecall.c
+index f9ec3ec..ec95cff 100644
+--- a/coreapi/linphonecall.c
++++ b/coreapi/linphonecall.c
+@@ -2330,10 +2330,11 @@ void linphone_call_init_audio_stream(LinphoneCall *call){
+ 
+ 	audio_stream_enable_gain_control(audiostream,TRUE);
+ 	if (linphone_core_echo_cancellation_enabled(lc)){
+-		int len,delay,framesize;
++		int len,delay,framesize,preprocess;
+ 		len=lp_config_get_int(lc->config,"sound","ec_tail_len",0);
+ 		delay=lp_config_get_int(lc->config,"sound","ec_delay",0);
+ 		framesize=lp_config_get_int(lc->config,"sound","ec_framesize",0);
++		preprocess=lp_config_get_int(lc->config,"sound","ec_preprocess",1);
+ 		audio_stream_set_echo_canceller_params(audiostream,len,delay,framesize);
+ 		if (audiostream->ec) {
+ 			char *statestr=ms_malloc0(EC_STATE_MAX_LEN);
+@@ -2342,6 +2343,7 @@ void linphone_call_init_audio_stream(LinphoneCall *call){
+ 				ms_filter_call_method(audiostream->ec, MS_ECHO_CANCELLER_SET_STATE_STRING, statestr);
+ 			}
+ 			ms_free(statestr);
++			ms_filter_call_method(audiostream->ec,MS_ECHO_CANCELLER_SET_PREPROCESS,&preprocess);
+ 		}
+ 	}
+ 	audio_stream_enable_automatic_gain_control(audiostream,linphone_core_agc_enabled(lc));
+diff --git a/coreapi/linphonecore.c b/coreapi/linphonecore.c
+index 080feb8..3834e4c 100644
+--- a/coreapi/linphonecore.c
++++ b/coreapi/linphonecore.c
+@@ -4355,6 +4355,27 @@ void linphone_core_set_ring_level(LinphoneCore *lc, int level){
+ }
+ 
+ /**
++ * Enables or disable echo cancellation preprocessor. Value is saved an used for subsequent calls
++ *
++ * @ingroup media_parameters
++**/
++void linphone_core_enable_echo_cancellation_preprocessor(LinphoneCore *lc, bool_t val){
++	lc->sound_conf.ec_preprocess=val;
++	if ( linphone_core_ready(lc))
++		lp_config_set_int(lc->config,"sound","ec_preprocess",val);
++}
++
++/**
++ * Returns TRUE if echo cancellation preprocessor is enabled.
++ *
++ * @ingroup media_parameters
++**/
++bool_t linphone_core_echo_cancellation_preprocessor_enabled(LinphoneCore *lc){
++	return lc->sound_conf.ec_preprocess;
++}
++
++
++/**
+  * Allow to control microphone level:  gain in db
+  *
+  * @ingroup media_parameters
+diff --git a/coreapi/linphonecore.h b/coreapi/linphonecore.h
+index ccaa059..60ca8ea 100644
+--- a/coreapi/linphonecore.h
++++ b/coreapi/linphonecore.h
+@@ -3191,6 +3191,8 @@ LINPHONE_PUBLIC int linphone_core_preview_ring(LinphoneCore *lc, const char *rin
+ LINPHONE_PUBLIC int linphone_core_play_local(LinphoneCore *lc, const char *audiofile);
+ LINPHONE_PUBLIC	void linphone_core_enable_echo_cancellation(LinphoneCore *lc, bool_t val);
+ LINPHONE_PUBLIC	bool_t linphone_core_echo_cancellation_enabled(LinphoneCore *lc);
++LINPHONE_PUBLIC void linphone_core_enable_echo_cancellation_preprocessor(LinphoneCore *lc, bool_t val);
++LINPHONE_PUBLIC bool_t linphone_core_echo_cancellation_preprocessor_enabled(LinphoneCore *lc);
+ 
+ /**
+  * Enables or disable echo limiter.
+diff --git a/coreapi/private.h b/coreapi/private.h
+index 3205da3..009efb7 100644
+--- a/coreapi/private.h
++++ b/coreapi/private.h
+@@ -727,6 +727,7 @@ typedef struct sound_config
+ 	char *remote_ring;
+ 	char *ringback_tone;
+ 	bool_t ec;
++	bool_t ec_preprocess;
+ 	bool_t ea;
+ 	bool_t agc;
+ } sound_config_t;
+-- 
+2.1.0
+

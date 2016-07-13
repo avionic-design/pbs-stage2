@@ -1,5 +1,5 @@
 PACKAGE = linphone
-VERSION = 3.5.2
+VERSION = 3.9.1
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -10,18 +10,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
 
-m4-dirs = \
-	$(pkgbuildtree)/mediastreamer2/m4 \
-	$(pkgbuildtree)/oRTP/m4
-
-$(m4-dirs):
-	$(call cmd,mkdir_p)
-
-$(pkgtree)/.autoreconfigure: | $(m4-dirs)
-
 conf-args += \
 	--disable-video \
-	--disable-rpath
+	--disable-rpath \
+	--enable-external-mediastreamer \
+	--enable-external-ortp \
+	--disable-tests \
+	--disable-tutorials
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_LINPHONE_GTK),y)
   conf-args += \
@@ -42,10 +37,7 @@ prunefiles = \
 
 stripfiles = \
 	$(prefix)/bin/linphone \
-	$(prefix)/bin/linphone-3 \
 	$(prefix)/bin/linphonec \
 	$(prefix)/bin/linphonecsh \
-	$(prefix)/bin/mediastream \
-	$(prefix)/bin/sipomatic \
-	$(prefix)/libexec/mediastream \
+	$(prefix)/bin/lp-autoanswer \
 	$(prefix)/lib/*.so.*
