@@ -1,0 +1,61 @@
+From 3f34fc4c97bf9a9cf330f71d5e5d1522a5084f1b Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 14:33:45 +0200
+Subject: [PATCH 06/11] Use snd_pcm_recover() instead of open coding it
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/alsa.c | 29 ++++++++---------------------
+ 1 file changed, 8 insertions(+), 21 deletions(-)
+
+diff --git a/src/audiofilters/alsa.c b/src/audiofilters/alsa.c
+index 3d7d8c6..12e1736 100644
+--- a/src/audiofilters/alsa.c
++++ b/src/audiofilters/alsa.c
+@@ -343,16 +343,10 @@ static int alsa_read(snd_pcm_t *handle,unsigned char *buf,int nsamples)
+ 	int err;
+ 	err=snd_pcm_readi(handle,buf,nsamples);
+ 	if (err<0) {
+-		if (err!=-EAGAIN)
+-			ms_warning("alsa_read: snd_pcm_readi() returned %i",err);
+-		if (err==-EPIPE){
+-			snd_pcm_prepare(handle);
+-			err=snd_pcm_readi(handle,buf,nsamples);
+-			if (err<0) ms_warning("alsa_read: snd_pcm_readi() failed:%s.",snd_strerror(err));
+-		}else if (err==-ESTRPIPE){
+-			alsa_resume(handle);
+-		}else if (err!=-EWOULDBLOCK){
+-			ms_warning("alsa_read: snd_pcm_readi() failed:%s.",snd_strerror(err));
++		if (err != -EAGAIN) {
++			err = snd_pcm_recover(handle, err, 0);
++			if (err < 0)
++				ms_warning("alsa_read: recovery failed: %s (%i)", snd_strerror(err), err);
+ 		}
+ 	}else if (err==0){
+ 		ms_warning("alsa_read: snd_pcm_readi() returned 0");
+@@ -365,17 +359,10 @@ static int alsa_write(snd_pcm_t *handle,unsigned char *buf,int nsamples)
+ {
+ 	int err;
+ 	if ((err=snd_pcm_writei(handle,buf,nsamples))<0){
+-		if (err==-EPIPE){
+-			snd_pcm_prepare(handle);
+-#ifdef EPIPE_BUGFIX
+-			alsa_fill_w (handle);
+-#endif
+-			err=snd_pcm_writei(handle,buf,nsamples);
+-			if (err<0) ms_warning("alsa_card_write: Error writing sound buffer (nsamples=%i):%s",nsamples,snd_strerror(err));
+-		}else if (err==-ESTRPIPE){
+-			alsa_resume(handle);
+-		}else if (err!=-EWOULDBLOCK){
+-			ms_warning("alsa_card_write: snd_pcm_writei() failed:%s.",snd_strerror(err));
++		if (err != -EAGAIN) {
++			err = snd_pcm_recover(handle, err, 0);
++			if (err < 0)
++				ms_warning("alsa_write: recovery failed: %s (%i)", snd_strerror(err), err);
+ 		}
+ 	}else if (err!=nsamples) {
+ 		ms_debug("Only %i samples written instead of %i",err,nsamples);
+-- 
+2.1.0
+

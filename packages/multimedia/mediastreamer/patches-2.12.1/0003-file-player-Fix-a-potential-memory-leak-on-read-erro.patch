@@ -1,0 +1,26 @@
+From af4e6666cbd448e32b006eaf4bfa10e9e382004f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 12:29:54 +0200
+Subject: [PATCH 03/11] file player: Fix a potential memory leak on read errors
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/msfileplayer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/audiofilters/msfileplayer.c b/src/audiofilters/msfileplayer.c
+index 732a439..2c98594 100644
+--- a/src/audiofilters/msfileplayer.c
++++ b/src/audiofilters/msfileplayer.c
+@@ -395,6 +395,7 @@ static void player_process(MSFilter *f){
+ 				}
+ 			}else{
+ 				ms_warning("Fail to read %i bytes: %s",bytes,strerror(errno));
++				freemsg(om);
+ 			}
+ 		}
+ 	}
+-- 
+2.1.0
+

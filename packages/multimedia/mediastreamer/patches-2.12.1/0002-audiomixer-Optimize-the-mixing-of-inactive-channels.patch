@@ -1,0 +1,44 @@
+From 1a2f91f36beb34ffacb8293b65d5e453e0bdcaa1 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 12:12:43 +0200
+Subject: [PATCH 02/11] audiomixer: Optimize the mixing of inactive channels
+
+The data comming from a channel would always be read in the input
+buffer, even if it would never be used. Instead the data is now
+dropped without doing any useless copy.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/audiomixer.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
+
+diff --git a/src/audiofilters/audiomixer.c b/src/audiofilters/audiomixer.c
+index 2900f52..9a8d7de 100644
+--- a/src/audiofilters/audiomixer.c
++++ b/src/audiofilters/audiomixer.c
+@@ -77,15 +77,16 @@ static void channel_prepare(Channel *chan, int bytes_per_tick){
+ 
+ static int channel_process_in(Channel *chan, MSQueue *q, int32_t *sum, int nsamples){
+ 	ms_bufferizer_put_from_queue(&chan->bufferizer,q);
+-	if (ms_bufferizer_read(&chan->bufferizer,(uint8_t*)chan->input,nsamples*2)!=0){
+-		if (chan->active){
++	if (chan->active){
++		if (ms_bufferizer_read(&chan->bufferizer,(uint8_t*)chan->input,nsamples*2)!=0){
+ 			if (chan->gain!=1.0){
+ 				apply_gain(chan->input,nsamples,chan->gain);
+ 			}
+ 			accumulate(sum,chan->input,nsamples);
+-		}
+-		return nsamples;
+-	}else memset(chan->input,0,nsamples*2);
++			return nsamples;
++		}else memset(chan->input,0,nsamples*2);
++	} else
++		ms_bufferizer_skip_bytes(&chan->bufferizer, nsamples*2);
+ 	return 0;
+ }
+ 
+-- 
+2.1.0
+

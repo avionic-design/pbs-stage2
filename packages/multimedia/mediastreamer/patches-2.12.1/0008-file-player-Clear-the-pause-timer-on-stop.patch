@@ -1,0 +1,32 @@
+From db18dd072089814b2ff6f52b1373c9ac532dd992 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 15:07:21 +0200
+Subject: [PATCH 08/11] file player: Clear the pause timer on stop()
+
+When playing a loop with a pause stop() doesn't clear the pause. So if
+the player is stopped while in the pause, on the next play it would
+first finish the pause before starting to play.
+
+To fix this clear the pause time in stop().
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/msfileplayer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/audiofilters/msfileplayer.c b/src/audiofilters/msfileplayer.c
+index 2c98594..2afde9a 100644
+--- a/src/audiofilters/msfileplayer.c
++++ b/src/audiofilters/msfileplayer.c
+@@ -222,6 +222,7 @@ static int player_stop(MSFilter *f, void *arg){
+ 	ms_filter_lock(f);
+ 	if (d->state!=MSPlayerClosed){
+ 		d->state=MSPlayerPaused;
++		d->pause_time = 0;
+ 		lseek(d->fd,d->hsize,SEEK_SET);
+ 	}
+ 	ms_filter_unlock(f);
+-- 
+2.1.0
+

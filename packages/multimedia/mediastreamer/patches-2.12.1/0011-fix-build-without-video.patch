@@ -1,0 +1,30 @@
+From be3ca67dfabb5b64da79ba98a1129b0de85ede39 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 13 Jul 2016 09:26:15 +0200
+Subject: [PATCH 11/11] fix build without video
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/voip/audiostream.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/src/voip/audiostream.c b/src/voip/audiostream.c
+index b4f9aa5..cf3a43c 100644
+--- a/src/voip/audiostream.c
++++ b/src/voip/audiostream.c
+@@ -576,10 +576,12 @@ static void video_input_updated(void *stream, MSFilter *f, unsigned int event_id
+ }
+ 
+ static void av_recorder_handle_event(void *userdata, MSFilter *recorder, unsigned int event, void *event_arg){
++#ifdef VIDEO_ENABLED
+ 	AudioStream *audiostream = (AudioStream *)userdata;
+ 	if (audiostream->videostream != NULL) {
+ 		video_recorder_handle_event(audiostream->videostream, recorder, event, event_arg);
+ 	}
++#endif
+ }
+ 
+ static void setup_av_recorder(AudioStream *stream, int sample_rate, int nchannels){
+-- 
+2.1.0
+

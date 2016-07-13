@@ -1,0 +1,114 @@
+From 28dedb142b787814c614755dcef069f07c89474d Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 14:31:08 +0200
+Subject: [PATCH 05/11] alsa: Remove alsa_can_read() which breaks some drivers
+
+Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/alsa.c | 57 ++++++-------------------------------------------
+ 1 file changed, 7 insertions(+), 50 deletions(-)
+
+diff --git a/src/audiofilters/alsa.c b/src/audiofilters/alsa.c
+index bf49a44..3d7d8c6 100644
+--- a/src/audiofilters/alsa.c
++++ b/src/audiofilters/alsa.c
+@@ -338,43 +338,13 @@ static snd_pcm_t * alsa_open_w(const char *pcmdev,int bits,int stereo,int rate)
+ 	return pcm_handle;
+ }
+ 
+-static int alsa_can_read(snd_pcm_t *dev)
+-{
+-	snd_pcm_sframes_t avail;
+-	int err;
+-
+-	alsa_resume(dev);
+-	avail = snd_pcm_avail_update(dev);
+-	/* A buggy driver does not return an error while being in Xrun */
+-	if (avail >= 0 && snd_pcm_state(dev) == SND_PCM_STATE_XRUN) avail=-EPIPE;
+-	if (avail < 0) {
+-		ms_error("snd_pcm_avail_update: %s", snd_strerror(avail));	// most probably -EPIPE
+-		/* overrun occured, snd_pcm_state() would return SND_PCM_STATE_XRUN
+-		 FIXME: handle other error conditions*/
+-		ms_error("*** alsa_can_read fixup, trying to recover");
+-		snd_pcm_drain(dev); /* Ignore possible error, at least -EAGAIN.*/
+-		err = snd_pcm_recover(dev, avail, 0);
+-		if (err){
+-			ms_error("snd_pcm_recover() failed with err %d: %s", err, snd_strerror(err));
+-			return -1;
+-		}
+-		err = snd_pcm_start(dev);
+-		if (err){
+-			ms_error("snd_pcm_start() failed with err %d: %s", err, snd_strerror(err));
+-			return -1;
+-		}
+-		ms_message("Recovery done");
+-	}
+-	return avail;
+-}
+-
+-
+ static int alsa_read(snd_pcm_t *handle,unsigned char *buf,int nsamples)
+ {
+ 	int err;
+ 	err=snd_pcm_readi(handle,buf,nsamples);
+ 	if (err<0) {
+-		ms_warning("alsa_read: snd_pcm_readi() returned %i",err);
++		if (err!=-EAGAIN)
++			ms_warning("alsa_read: snd_pcm_readi() returned %i",err);
+ 		if (err==-EPIPE){
+ 			snd_pcm_prepare(handle);
+ 			err=snd_pcm_readi(handle,buf,nsamples);
+@@ -839,7 +809,6 @@ static void * alsa_write_thread(void *p){
+ 	AlsaReadData *ad=(AlsaReadData*)p;
+ 	int samples=(160*ad->rate)/8000;
+ 	int err;
+-	int count=0;
+ 	mblk_t *om=NULL;
+ 	struct timeval timeout;
+ 	if (ad->handle==NULL && ad->pcmdev!=NULL){
+@@ -849,23 +818,10 @@ static void * alsa_write_thread(void *p){
+ 
+ 	while (ad->read_started)
+ 	  {
+-		count = alsa_can_read(ad->handle,samples);
+-		if (count==24)
+-		  { /* keep this value for this driver */ }
+-		else if (count<=0)
+-		  {
+-		count = samples;
+-		  }
+-		else if (count>0)
+-		  {
+-		//ms_warning("%i count", count);
+-		//count = samples;
+-		  }
+-
+-		int size=count*2;
++		int size=samples*2;
+ 		om=allocb(size,0);
+ 
+-		if ((err=alsa_read(ad->handle,om->b_wptr,count))<=0)
++		if ((err=alsa_read(ad->handle,om->b_wptr,samples))<=0)
+ 		  {
+ 		ms_warning("nothing to read");
+ 		//ms_warning("Fail to read samples %i", count);
+@@ -979,12 +935,13 @@ void alsa_read_process(MSFilter *obj){
+ 		}
+ 	}
+ 	if (ad->handle==NULL) return;
+-	while (alsa_can_read(ad->handle)>=samples){
++	while (1){
+ 
+ 		int size=samples*2*ad->nchannels;
+ 		om=allocb(size,0);
+ 		if ((err=alsa_read(ad->handle,om->b_wptr,samples))<=0) {
+-			ms_warning("Fail to read samples");
++			if (err!=-EAGAIN)
++				ms_warning("Fail to read samples");
+ 			freemsg(om);
+ 			return;
+ 		}
+-- 
+2.1.0
+

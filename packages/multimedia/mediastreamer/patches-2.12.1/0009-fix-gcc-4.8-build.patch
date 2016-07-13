@@ -1,0 +1,26 @@
+From f6fc1fb127cfe2c93480490c402e6648f73b28b4 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 15:36:39 +0200
+Subject: [PATCH 09/11] fix gcc 4.8 build
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/voip/mediastream.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/voip/mediastream.c b/src/voip/mediastream.c
+index 7f1fc89..4bc058e 100644
+--- a/src/voip/mediastream.c
++++ b/src/voip/mediastream.c
+@@ -466,7 +466,7 @@ RtpSession * media_stream_get_rtp_session(const MediaStream *stream) {
+ 	return stream->sessions.rtp_session;
+ }
+ 
+-#define keywordcmp(key,b) strncmp(key,b,sizeof(key))
++#define keywordcmp(key,b) strncmp(key,b,strlen(key))
+ 
+ /* see  http://www.iana.org/assignments/sdp-security-descriptions/sdp-security-descriptions.xhtml#sdp-security-descriptions-3 */
+ 
+-- 
+2.1.0
+

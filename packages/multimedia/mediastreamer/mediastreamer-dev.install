@@ -1,0 +1,3 @@
+/usr/include/mediastreamer2
+/usr/lib/libmediastreamer_*.so*
+/usr/lib/pkgconfig/mediastreamer.pc

@@ -1,0 +1,10 @@
+config PACKAGE_MULTIMEDIA_MEDIASTREAMER
+	bool "mediastreamer"
+	select VIRTUAL_DEVEL_LIBC
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select PACKAGE_MULTIMEDIA_ORTP
+	help
+	  Mediastreamer is a GPL licensed library to make audio and video
+	  real-time streaming and processing. Written in pure C, it is based
+	  upon the ortp library.

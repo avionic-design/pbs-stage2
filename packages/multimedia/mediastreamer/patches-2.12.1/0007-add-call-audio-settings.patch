@@ -1,0 +1,166 @@
+From 5b3929fc3ad296a63396fdc5f94c6c479cd3d569 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 15:03:18 +0200
+Subject: [PATCH 07/11] add call audio settings
+
+Subjects of the original 4 commits found in this patch:
+- ms2: Add methods to set the echo limiter and noise gate parameters
+- ms2: Allow controlling the audiostream AGC while it is running
+- ms2: Allow changing the EC settings at run time
+- Add methods to control the audio settings of each call
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/audiofilters/speexec.c | 38 +++++++++++++++++++++++++++-----------
+ src/voip/audiostream.c     | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 11 deletions(-)
+
+diff --git a/src/audiofilters/speexec.c b/src/audiofilters/speexec.c
+index 3120b0a..be4a5ba 100644
+--- a/src/audiofilters/speexec.c
++++ b/src/audiofilters/speexec.c
+@@ -225,7 +225,7 @@ static void speex_ec_preprocess(MSFilter *f){
+ */
+ static void speex_ec_process(MSFilter *f){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	int nbytes=s->framesize*2;
++	int nbytes;
+ 	mblk_t *refm;
+ 	uint8_t *ref,*echo;
+ 	
+@@ -238,7 +238,9 @@ static void speex_ec_process(MSFilter *f){
+ 		}
+ 		return;
+ 	}
+-	
++
++	ms_filter_lock(f);
++
+ 	if (f->inputs[0]!=NULL){
+ 		if (s->echostarted){
+ 			while((refm=ms_queue_get(f->inputs[0]))!=NULL){
+@@ -256,7 +258,8 @@ static void speex_ec_process(MSFilter *f){
+ 	}
+ 
+ 	ms_bufferizer_put_from_queue(&s->echo,f->inputs[1]);
+-	
++
++	nbytes=s->framesize*2;
+ 	ref=(uint8_t*)alloca(nbytes);
+ 	echo=(uint8_t*)alloca(nbytes);
+ 	while (ms_bufferizer_read(&s->echo,echo,nbytes)==nbytes){
+@@ -330,6 +333,8 @@ static void speex_ec_process(MSFilter *f){
+ 		s->min_ref_samples=-1;
+ 		s->flow_control_time = f->ticker->time;
+ 	}
++
++	ms_filter_unlock(f);
+ }
+ 
+ static void speex_ec_postprocess(MSFilter *f){
+@@ -348,28 +353,39 @@ static void speex_ec_postprocess(MSFilter *f){
+ 	}
+ }
+ 
+-static int speex_ec_set_sr(MSFilter *f, void *arg){
++static int speex_ec_set_int_param(MSFilter *f, int* param, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->samplerate = *(int*)arg;
++	int val = *(int*)arg;
++	ms_filter_lock(f);
++	if (val != *param) {
++		*param = val;
++		if (s->ecstate || s->den) {
++			speex_ec_postprocess(f);
++			speex_ec_preprocess(f);
++		}
++	}
++	ms_filter_unlock(f);
+ 	return 0;
+ }
+ 
++static int speex_ec_set_sr(MSFilter *f, void *arg){
++	SpeexECState *s=(SpeexECState*)f->data;
++	return speex_ec_set_int_param(f, &s->samplerate, arg);
++}
++
+ static int speex_ec_set_framesize(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->framesize_at_8000 = *(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->framesize, arg);
+ }
+ 
+ static int speex_ec_set_delay(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->delay_ms = *(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->delay_ms, arg);
+ }
+ 
+ static int speex_ec_set_tail_length(MSFilter *f, void *arg){
+ 	SpeexECState *s=(SpeexECState*)f->data;
+-	s->tail_length_ms=*(int*)arg;
+-	return 0;
++	return speex_ec_set_int_param(f, &s->tail_length_ms, arg);
+ }
+ static int speex_ec_set_bypass_mode(MSFilter *f, void *arg) {
+ 	SpeexECState *s=(SpeexECState*)f->data;
+diff --git a/src/voip/audiostream.c b/src/voip/audiostream.c
+index 0e39496..b4f9aa5 100644
+--- a/src/voip/audiostream.c
++++ b/src/voip/audiostream.c
+@@ -1436,12 +1436,31 @@ void audio_stream_enable_echo_limiter(AudioStream *stream, EchoLimiterType type)
+ 	}
+ }
+ 
++void audio_stream_set_echo_limiter_params(AudioStream *stream, float threshold, float speed, float force, int sustain, float tx_threshold){
++	if (stream->volsend) {
++		if (threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_THRESHOLD,&threshold);
++		if (speed > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_SPEED,&speed);
++		if (force > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_FORCE,&force);
++		if (sustain > 0)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_SUSTAIN,&sustain);
++		if (tx_threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_EA_TRANSMIT_THRESHOLD,&tx_threshold);
++	} else {
++		ms_warning("cannot set echo limiter parameters because no volume send");
++	}
++}
++
+ void audio_stream_enable_gain_control(AudioStream *stream, bool_t val){
+ 	stream->use_gc=val;
+ }
+ 
+ void audio_stream_enable_automatic_gain_control(AudioStream *stream, bool_t val){
+ 	stream->use_agc=val;
++	if (stream->volsend)
++		ms_filter_call_method(stream->volsend,MS_VOLUME_ENABLE_AGC,&val);
+ }
+ 
+ void audio_stream_enable_noise_gate(AudioStream *stream, bool_t val){
+@@ -1457,6 +1476,17 @@ void audio_stream_set_mic_gain_db(AudioStream *stream, float gain_db) {
+ 	audio_stream_set_rtp_output_gain_db(stream, gain_db);
+ }
+ 
++void audio_stream_set_noise_gate_params(AudioStream *stream, float threshold, float floorgain){
++	if (stream->volsend) {
++		if (threshold > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_NOISE_GATE_THRESHOLD,&threshold);
++		if (floorgain > .0f)
++			ms_filter_call_method(stream->volsend,MS_VOLUME_SET_NOISE_GATE_FLOORGAIN,&floorgain);
++	} else {
++		ms_warning("cannot set noise gate parameters because no volume send");
++	}
++}
++
+ void audio_stream_set_mic_gain(AudioStream *stream, float gain){
+ 	if (stream->volsend){
+ 		ms_filter_call_method(stream->volsend,MS_VOLUME_SET_GAIN,&gain);
+-- 
+2.1.0
+

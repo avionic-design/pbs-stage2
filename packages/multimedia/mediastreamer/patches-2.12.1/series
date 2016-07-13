@@ -1,0 +1,11 @@
+0001-Expand-API-to-switch-echo-cancellation-preprocessor.patch
+0002-audiomixer-Optimize-the-mixing-of-inactive-channels.patch
+0003-file-player-Fix-a-potential-memory-leak-on-read-erro.patch
+0004-alsa-Fix-parameter-setup.patch
+0005-alsa-Remove-alsa_can_read-which-breaks-some-drivers.patch
+0006-Use-snd_pcm_recover-instead-of-open-coding-it.patch
+0007-add-call-audio-settings.patch
+0008-file-player-Clear-the-pause-timer-on-stop.patch
+0009-fix-gcc-4.8-build.patch
+0010-dtmfgen-Add-an-optimized-fixed-point-implementation.patch
+0011-fix-build-without-video.patch

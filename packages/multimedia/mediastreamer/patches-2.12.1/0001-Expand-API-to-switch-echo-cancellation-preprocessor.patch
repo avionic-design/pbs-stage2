@@ -1,0 +1,90 @@
+From eb5948102e404f86bc18d4df115ce23d291f74b1 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 24 Jun 2016 12:06:51 +0200
+Subject: [PATCH 01/11] Expand API to switch echo cancellation preprocessor
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ include/mediastreamer2/msinterfaces.h |  7 +++++++
+ src/audiofilters/speexec.c            | 19 ++++++++++++++++++-
+ 2 files changed, 25 insertions(+), 1 deletion(-)
+
+diff --git a/include/mediastreamer2/msinterfaces.h b/include/mediastreamer2/msinterfaces.h
+index 08fe2be..5298edf 100644
+--- a/include/mediastreamer2/msinterfaces.h
++++ b/include/mediastreamer2/msinterfaces.h
+@@ -201,6 +201,13 @@ typedef enum _MSRecorderState MSRecorderState;
+ #define MS_ECHO_CANCELLER_SET_STATE_STRING \
+ 	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,6, const char)
+ 
++/** get the preprocessor mode */
++#define MS_ECHO_CANCELLER_GET_PREPROCESS \
++	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,7,bool_t)
++
++/** enable/disable the preprocessor  */
++#define MS_ECHO_CANCELLER_SET_PREPROCESS \
++	MS_FILTER_METHOD(MSFilterEchoCancellerInterface,8,bool_t)
+ 
+ 
+ /** Event definitions for video decoders */
+diff --git a/src/audiofilters/speexec.c b/src/audiofilters/speexec.c
+index 7502203..3120b0a 100644
+--- a/src/audiofilters/speexec.c
++++ b/src/audiofilters/speexec.c
+@@ -75,6 +75,7 @@ typedef struct SpeexECState{
+ 	bool_t echostarted;
+ 	bool_t bypass_mode;
+ 	bool_t using_zeroes;
++	bool_t preprocess;
+ }SpeexECState;
+ 
+ static void speex_ec_init(MSFilter *f){
+@@ -93,6 +94,7 @@ static void speex_ec_init(MSFilter *f){
+ 	s->using_zeroes=FALSE;
+ 	s->echostarted=FALSE;
+ 	s->bypass_mode=FALSE;
++	s->preprocess=TRUE;
+ 
+ #ifdef EC_DUMP
+ 	{
+@@ -307,7 +309,8 @@ static void speex_ec_process(MSFilter *f){
+ 			fwrite(echo,nbytes,1,s->echofile);
+ #endif
+ 		speex_echo_cancellation(s->ecstate,(short*)echo,(short*)ref,(short*)oecho->b_wptr);
+-		speex_preprocess_run(s->den, (short*)oecho->b_wptr);
++		if (s->preprocess)
++			speex_preprocess_run(s->den, (short*)oecho->b_wptr);
+ #ifdef EC_DUMP
+ 		if (s->cleanfile)
+ 			fwrite(oecho->b_wptr,nbytes,1,s->cleanfile);
+@@ -395,6 +398,18 @@ static int speex_ec_get_state(MSFilter *f, void *arg){
+ 	return 0;
+ }
+ 
++static int speex_ec_set_preprocess(MSFilter *f, void *arg) {
++	SpeexECState *s=(SpeexECState*)f->data;
++	s->preprocess=*(bool_t*)arg;
++	ms_message("set EC preprocess [%i]",s->preprocess);
++	return 0;
++}
++static int speex_ec_get_preprocess(MSFilter *f, void *arg) {
++	SpeexECState *s=(SpeexECState*)f->data;
++	*(bool_t*)arg=s->preprocess;
++	return 0;
++}
++
+ static MSFilterMethod speex_ec_methods[]={
+ 	{	MS_FILTER_SET_SAMPLE_RATE		,	speex_ec_set_sr 		},
+ 	{	MS_ECHO_CANCELLER_SET_TAIL_LENGTH	,	speex_ec_set_tail_length	},
+@@ -404,6 +419,8 @@ static MSFilterMethod speex_ec_methods[]={
+ 	{	MS_ECHO_CANCELLER_GET_BYPASS_MODE	,	speex_ec_get_bypass_mode	},
+ 	{	MS_ECHO_CANCELLER_GET_STATE_STRING	,	speex_ec_get_state		},
+ 	{	MS_ECHO_CANCELLER_SET_STATE_STRING	,	speex_ec_set_state		},
++	{	MS_ECHO_CANCELLER_SET_PREPROCESS	,	speex_ec_set_preprocess		},
++	{	MS_ECHO_CANCELLER_GET_PREPROCESS	,	speex_ec_get_preprocess		},
+ 	{	0, 0 }
+ };
+ 
+-- 
+2.1.0
+
