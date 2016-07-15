@@ -96,6 +96,7 @@ else
 endif
 
 conf-args += \
+	--enable-lldpctl \
 	--disable-nls \
 	--disable-werror
 
