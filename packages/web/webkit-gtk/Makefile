@@ -28,6 +28,11 @@ conf-args += \
 	--enable-css3-flexbox \
 	--enable-css3-text-decoration
 
+# Disable certain gcc warnings thrown a LOT to reduce output and speed up things
+CFLAGS += \
+	-Wno-cast-align \
+	-Wno-unused-local-typedefs
+
 # Disable debug symbols to allow build on machine without enough RAM
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
 CFLAGS += -g0
