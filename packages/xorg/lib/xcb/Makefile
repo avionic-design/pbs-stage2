@@ -9,6 +9,9 @@ include packages/xorg/lib/common-reconf.mk
 env += \
 	LD_LIBRARY_PATH=$(BUILD_TOOLS)/lib
 
+conf-args += \
+	--disable-devel-docs
+
 conf-vars += \
 	ac_cv_XCBPROTO_XCBPYTHONDIR=$(SYSROOT)$(prefix)/lib/python2.7/site-packages \
 	ac_cv_XCBPROTO_XCBINCLUDEDIR=$(SYSROOT)$(prefix)/share/xcb
