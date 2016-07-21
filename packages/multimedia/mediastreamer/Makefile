@@ -13,7 +13,7 @@ conf-args += \
 	--disable-rpath
 
 # set via linphone for legacy reasons
-ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_LINPHONE_SPEEX),y)
+ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_MEDIASTREAMER_SPEEX),y)
   conf-args += --disable-speex
 else
   conf-args += --enable-speex
