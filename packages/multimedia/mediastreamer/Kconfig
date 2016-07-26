@@ -9,6 +9,10 @@ config PACKAGE_MULTIMEDIA_MEDIASTREAMER
 	  real-time streaming and processing. Written in pure C, it is based
 	  upon the ortp library.
 
+if PACKAGE_MULTIMEDIA_MEDIASTREAMER
+
 config PACKAGE_MULTIMEDIA_MEDIASTREAMER_SPEEX
 	bool "speex support"
 	select PACKAGE_MULTIMEDIA_SPEEX
+
+endif
