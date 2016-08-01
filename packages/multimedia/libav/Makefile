@@ -1,5 +1,5 @@
 PACKAGE = libav
-VERSION = 11.4
+VERSION = 11.7
 
 ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_VLC_VLC2X),y)
 # VLC 2.0.7 needs libavcodec <= 54
