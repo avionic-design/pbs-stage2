@@ -14,6 +14,10 @@ conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-system-libav
 
+ifneq ($(CONFIG_LIBAV_FFMPEG),y)
+  $(error gstreamer-plugins-libav requires libav to be supplied from ffmpeg!)
+endif
+
 ifneq ($(CONFIG_PACKAGE_MULTIMEDIA_GSTREAMER_DISABLE_ORC),y)
   conf-vars += ORCC=orcc
   conf-args += --enable-orc
