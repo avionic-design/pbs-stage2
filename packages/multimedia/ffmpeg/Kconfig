@@ -1,15 +1,27 @@
 config PACKAGE_MULTIMEDIA_FFMPEG
 	bool "ffmpeg"
 	select VIRTUAL_DEVEL_LIBC
+	help
+	  FFmpeg is the leading multimedia framework, able to decode, encode,
+	  transcode, mux, demux, stream, filter and play pretty much anything
+	  that humans and machines have created. It supports the most obscure
+	  ancient formats up to the cutting edge.
 
 if PACKAGE_MULTIMEDIA_FFMPEG
 
 config PACKAGE_MULTIMEDIA_FFMPEG_VAAPI
 	bool "VA-API support"
 	select PACKAGE_MULTIMEDIA_VAAPI_LIBVA
+	help
+	  Enables support for the Video Acceleration API, providing access to
+	  hardware acceleration if the driver supports it.
 
 config PACKAGE_MULTIMEDIA_FFMPEG_FFPLAY
 	bool "ffplay"
 	select PACKAGE_LIBS_SDL_CORE
+	help
+	  FFplay is a very simple and portable media player using the FFmpeg
+	  libraries and the SDL library. It is mostly used as a testbed for the
+	  various FFmpeg APIs.
 
 endif

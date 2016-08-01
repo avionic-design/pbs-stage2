@@ -1,8 +1,17 @@
 config PACKAGE_MULTIMEDIA_LIBAV
 	bool "libav"
 	select VIRTUAL_DEVEL_LIBC
+	help
+	  Libav, a fork of FFmpeg, is a friendly and community-driven effort to
+	  provide its users with a set of portable, functional and
+	  high-performance libraries for dealing with multimedia formats of all
+	  sorts.
 
 config PACKAGE_MULTIMEDIA_LIBAV_AVPLAY
 	bool "avplay"
 	depends on PACKAGE_MULTIMEDIA_LIBAV
 	select PACKAGE_LIBS_SDL_CORE
+	help
+	  avplay is a very simple and portable media player using the Libav
+	  libraries and the SDL library. It is mostly used as a testbed for the
+	  various Libav APIs.
