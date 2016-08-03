@@ -41,6 +41,19 @@ installed, you should run the following command:
    $ ./configure
 
 
+Fedora 23:
+----------
+
+Under Fedora 23 the perl version do not work for pbs. A version less or equal
+than 5.20.3 is required.
+
+To install multiple versions and use the required version perlbrew is a good way
+to switch between to versions.
+
+   $ perlbrew install perl-x.xx.x
+   $ perlbrew use x.xx.x
+
+
 Prepare your self:
 ------------------
 
@@ -174,7 +187,7 @@ For the rootfs the procedure is similar, but the build will take a lot more
 time because we have a lot more packages to build. So lets start and load the
 default package selection for the root filesystem.
 
-   $ make O=build/rootfs tec-ng-rootfs_defconfig
+   $ make O=build/rootfs PLATFORM=avionic-design tec-ng-rootfs_defconfig
 
 Optional: Same as above.
 
