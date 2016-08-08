@@ -1,0 +1,15 @@
+diff --git a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+index 1ff7965..b797beb 100644
+--- a/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
++++ b/Source/WebCore/platform/graphics/gstreamer/PlatformVideoWindowGtk.cpp
+@@ -63,8 +63,8 @@ PlatformVideoWindow::PlatformVideoWindow()
+ 
+ PlatformVideoWindow::~PlatformVideoWindow()
+ {
+-    if (m_videoWindow && m_window) {
+-        gtk_container_remove(GTK_CONTAINER(m_window), m_videoWindow);
++
++    if (m_videoWindow) {
+         gtk_widget_destroy(m_videoWindow);
+         m_videoWindow = 0;
+     }
