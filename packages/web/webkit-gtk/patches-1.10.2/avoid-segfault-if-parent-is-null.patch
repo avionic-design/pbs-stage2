@@ -1,0 +1,14 @@
+diff --git a/Source/WebCore/accessibility/gtk/WebKitAccessibleWrapperAtk.cpp b/Source/WebCore/accessibility/gtk/WebKitAccessibleWrapperAtk.cpp
+index b197cb2..d6ee38e 100644
+--- a/Source/WebCore/accessibility/gtk/WebKitAccessibleWrapperAtk.cpp
++++ b/Source/WebCore/accessibility/gtk/WebKitAccessibleWrapperAtk.cpp
+@@ -422,6 +422,9 @@ static gint webkitAccessibleGetIndexInParent(AtkObject* object)
+     if (parent && parent->isTableRow() && coreObject->isTableCell())
+         return getIndexInParentForCellInRow(coreObject);
+ 
++    if (!parent)
++        return -1;
++
+     size_t index = parent->children().find(coreObject);
+     return (index == WTF::notFound) ? -1 : index;
+ }

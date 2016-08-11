@@ -20,3 +20,4 @@ fix-arm-neon-build-issue.patch
 0012-webkit-fix-turning-cache-off-to-actually-work.patch
 Use-big-media-buttons.patch
 avoid-duplicate-destroy.patch
+avoid-segfault-if-parent-is-null.patch
