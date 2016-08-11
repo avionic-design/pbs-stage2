@@ -1,5 +1,5 @@
 PACKAGE = at-spi2-core
-VERSION = 2.21.2
+VERSION = 2.21.4
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
