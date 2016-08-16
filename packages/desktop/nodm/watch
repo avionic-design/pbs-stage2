@@ -1,2 +1,2 @@
 version=3
-http://www.enricozini.org/sw/nodm/nodm-(.*)\.tar\.gz
+https://github.com/spanezz/nodm/releases (.*)\.tar\.gz
