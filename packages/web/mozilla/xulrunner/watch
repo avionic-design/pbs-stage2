@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.mozilla.org/pub/mozilla.org/xulrunner/releases/((\d+\.)+(\d+))/source/xulrunner-(.*)\.source\.tar\.bz2
+http://ftp.mozilla.org/pub/xulrunner/releases/((\d+\.)+\d+(?!\w))/source/xulrunner-([\d\.]+)\.source\.tar\.xz
