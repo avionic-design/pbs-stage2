@@ -1,2 +1,2 @@
 version=3
-http://downloads.sourceforge.net/project/iperf/iperf-([\d\.]+)\.tar\.gz
+https://iperf.fr/iperf-download.php iperf-(2.[\d\.]+)-source\.tar\.gz
