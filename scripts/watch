@@ -12,7 +12,11 @@ def process_recursive(url, pattern, options, final):
 	uri = urlparse.urlparse(url)
 	result = None
 
-	if uri.scheme == 'ftp':
+	# Assume directory listing when the last component of the path
+	# doesn't seem to be a file or a wiki entry.
+	is_file = re.search('[\.:]', uri.path.split('/')[-1])
+	has_query = len(uri.query) > 0
+	if uri.scheme == 'ftp' or not (is_file or has_query):
 		url = url + '/'
 
 	if options.verbose > 1:
