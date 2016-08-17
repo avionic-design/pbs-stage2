@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.samba.org/pub/ppp/ppp-(.+)\.tar\.gz
+https://download.samba.org/pub/ppp/ppp-([\d\.]+)\.tar\.gz
