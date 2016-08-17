@@ -1,2 +1,2 @@
 version=3
-https://code.google.com/p/webp/downloads/list?can=1 libwebp-([\d\.]+)\.tar\.gz
+https://storage.googleapis.com/downloads.webmproject.org/releases/webp/index.html libwebp-([\d\.]+)\.tar\.gz
