@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_([\d_]+)_RTM/src/nss-([\d\.]+)\.tar\.gz
+https://ftp.mozilla.org/pub/security/nss/releases/NSS_([\d_]+)_RTM/src/nss-([\d\.]+)\.tar\.gz
