@@ -1,2 +1,2 @@
 version=3
-http://awesome.naquadah.org/download/awesome-(.*)\.tar\.xz
+https://github.com/awesomeWM/awesome/releases v(.*)\.tar\.gz
