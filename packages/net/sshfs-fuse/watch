@@ -1,2 +1,2 @@
 version=3
-http://sf.net/fuse/sshfs-fuse-(.*)\.tar\.gz
+https://github.com/libfuse/sshfs/releases sshfs-([\d\.]+)\.tar\.gz
