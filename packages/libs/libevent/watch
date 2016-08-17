@@ -1,2 +1,2 @@
 version=3
-http://libevent.org/index.html https://github.com/downloads/libevent/libevent/libevent-(.*)-stable\.tar\.gz
+http://libevent.org/index.html libevent-(.*)-stable\.tar\.gz
