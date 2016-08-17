@@ -23,16 +23,16 @@ def process_recursive(url, pattern, options, final):
 		req.add_header('Accept', '*/*')
 		content = urllib2.urlopen(req, timeout=10)
 	except timeout:
-		print "Timeout retrieving %s" % url
+		print >> sys.stderr, "Timeout retrieving %s" % url
 		return None
 	except Exception as err:
-		print "Failed to retrieve %s: %s" % (url, err)
+		print >> sys.stderr, "Failed to retrieve %s: %s" % (url, err)
 		return None
 
 	try:
 		lines = content.readlines()
 	except timeout:
-		print "Timeout reading %s" % (url)
+		print >> sys.stderr, "Timeout reading %s" % (url)
 		return None
 
 	for line in lines:
