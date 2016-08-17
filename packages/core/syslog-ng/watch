@@ -1,2 +1,2 @@
 version=3
-http://www.balabit.com/downloads/files/syslog-ng/open-source-edition/(.*)/source/syslog-ng_(.*)\.tar\.gz
+https://my.balabit.com/downloads/syslog-ng/open-source-edition/([\d\.]+)/source/syslog-ng_(.*)\.tar\.gz
