@@ -1,2 +1,2 @@
 version=3
-http://matchbox-project.org/sources/libfakekey/(.*)/libfakekey-(.*)\.tar\.bz2
+http://downloads.yoctoproject.org/releases/matchbox/libfakekey/([\d\.]+)/libfakekey-(.*)\.tar\.bz2
