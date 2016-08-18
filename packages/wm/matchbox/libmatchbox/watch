@@ -1,2 +1,2 @@
 version=3
-http://matchbox-project.org/sources/libmatchbox/(.*)/libmatchbox-(.*)\.tar\.bz2
+http://downloads.yoctoproject.org/releases/matchbox/libmatchbox/([\d\.]+)/libmatchbox-(.*)\.tar\.bz2
