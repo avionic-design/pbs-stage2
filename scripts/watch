@@ -48,10 +48,10 @@ def process_recursive(url, pattern, options, final):
 			# If the match is an absolute path or URL try to match the whole
 			# href, otherwise strip all path components.
 			if '://' in pattern or pattern[0] == '/':
-				regex = re.compile('href=[\'"]([^\'"]+?)[\'"]', \
+				regex = re.compile('href\s?=\s?[\'"]([^\'"]+?)[\'"]', \
 							re.IGNORECASE)
 			else:
-				regex = re.compile('href=[\'"](?:[^\'"]*/)?([^\'"]+?)[\'"]', \
+				regex = re.compile('href\s?=\s?[\'"](?:[^\'"]*/)?([^\'"]+?)[\'"]', \
 							re.IGNORECASE)
 
 		matches = regex.findall(line)
