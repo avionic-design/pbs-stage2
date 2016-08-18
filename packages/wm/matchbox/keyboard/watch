@@ -1,2 +1,2 @@
 version=3
-http://matchbox-project.org/sources/matchbox-keyboard/(.*)/matchbox-keyboard-(.*)\.tar\.bz2
+http://downloads.yoctoproject.org/releases/matchbox/matchbox-keyboard/([\d\.]+)/matchbox-keyboard-(.*)\.tar\.bz2
