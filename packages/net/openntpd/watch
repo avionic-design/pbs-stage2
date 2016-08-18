@@ -1,3 +1,2 @@
 version=3
-ftp://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/openntpd-(.+)\.tar\.gz
-
+http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD/openntpd-(.+)\.tar\.gz
