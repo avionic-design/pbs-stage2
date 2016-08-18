@@ -1,2 +1,2 @@
 version=3
-http://wireless.kernel.org/download/iw/iw-(.*)\.tar\.bz2
+https://www.kernel.org/pub/software/network/iw/iw-(.*)\.tar\.bz2
