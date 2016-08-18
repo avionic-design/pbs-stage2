@@ -1,2 +1,2 @@
 version=3
-http://launchpad.net/evemu/+download .*/evemu-(.*)\.tar\.xz
+http://launchpad.net/evemu/+download evemu-(.*)\.tar\.xz
