@@ -1,2 +1,2 @@
 version=3
-http://roy.marples.name/downloads/dhcpcd/dhcpcd-([\d\.]+)\.tar\.bz2
+http://http.debian.net/debian/pool/main/d/dhcpcd/dhcpcd_([\d\.]+)\.orig\.tar\.gz
