@@ -230,10 +230,6 @@ PHONY += dist
 dist: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) dist
 
-PHONY += uscan
-uscan: include/config/depends.mk
-	$(Q)$(MAKE) $(platform)=$(obj) uscan
-
 PHONY += watch
 watch: include/config/depends.mk
 	$(Q)$(MAKE) $(platform)=$(obj) watch

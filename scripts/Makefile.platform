@@ -17,7 +17,6 @@ platform-depends-dirs := $(depends-dirs)
 build-dirs := $(addprefix build-,$(platform-depends-dirs))
 rebuild-sysroot-dirs := $(addprefix rebuild-sysroot-,$(platform-depends-dirs))
 dist-dirs  := $(addprefix dist-, $(platform-depends-dirs))
-uscan-dirs := $(addprefix uscan-,$(platform-depends-dirs))
 watch-dirs := $(addprefix watch-,$(platform-depends-dirs))
 print-dirs := $(addprefix print-,$(platform-depends-dirs))
 license-dirs := $(addprefix license-,$(platform-depends-dirs))
@@ -110,14 +109,6 @@ dist-pbs:
 
 PHONY += dist
 dist: $(platform-modules) $(dist-dirs) $(dist-docs)
-	@:
-
-PHONY += $(uscan-dirs)
-$(uscan-dirs): uscan-%:
-	$(Q)$(MAKE) $(uscan)=$* uscan
-
-PHONY += uscan
-uscan: $(uscan-dirs)
 	@:
 
 PHONY += $(watch-dirs)
