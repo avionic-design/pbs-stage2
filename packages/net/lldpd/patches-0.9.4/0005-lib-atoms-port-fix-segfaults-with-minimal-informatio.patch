@@ -1,0 +1,65 @@
+From ccedc1cb0abba3411a2999a49d1eca5b6be60263 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 30 Aug 2016 15:39:48 +0200
+Subject: [PATCH 5/5] lib/atoms/port: fix segfaults with minimal information
+
+When no packet has yet been received, querying LLDP information leads to
+segfaults. Fix those by adding a couple pointer checks.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/lib/atoms/port.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+diff --git a/src/lib/atoms/port.c b/src/lib/atoms/port.c
+index dda4d85..b4ea346 100644
+--- a/src/lib/atoms/port.c
++++ b/src/lib/atoms/port.c
+@@ -156,10 +156,12 @@ _lldpctl_atom_new_port(lldpctl_atom_t *atom, va_list ap)
+ 	if (port->parent)
+ 		lldpctl_atom_inc_ref((lldpctl_atom_t*)port->parent);
+ 
+-	/* Internal atom. We are the parent, but our reference count is not
+-	 * incremented. */
+-	port->chassis = _lldpctl_new_atom(atom->conn, atom_chassis,
+-		    port->port->p_chassis, port, 1);
++	if (port->port) {
++		/* Internal atom. We are the parent, but our reference count is
++		 * not incremented. */
++		port->chassis = _lldpctl_new_atom(atom->conn, atom_chassis,
++			    port->port->p_chassis, port, 1);
++	}
+ 	return 1;
+ }
+ 
+@@ -197,7 +199,7 @@ _lldpctl_atom_free_port(lldpctl_atom_t *atom)
+ 	TAILQ_INIT(&chassis_list);
+ 
+ 	if (port->parent) lldpctl_atom_dec_ref((lldpctl_atom_t*)port->parent);
+-	else if (!hardware) {
++	else if (!hardware && port->port) {
+ 		/* No parent, no hardware, we assume a single neighbor: one
+ 		 * port, one chassis. */
+ 		if (port->port->p_chassis) {
+@@ -424,6 +426,9 @@ _lldpctl_atom_get_str_port(lldpctl_atom_t *atom, lldpctl_key_t key)
+ 	default: break;
+ 	}
+ 
++	if (!port)
++		return NULL;
++
+ 	/* Local and remote port */
+ 	switch (key) {
+ 	case lldpctl_k_port_protocol:
+@@ -575,6 +580,8 @@ _lldpctl_atom_get_int_port(lldpctl_atom_t *atom, lldpctl_key_t key)
+ 		default: break;
+ 		}
+ 	}
++	if (!port)
++		return SET_ERROR(atom->conn, LLDPCTL_ERR_NOT_EXIST);
+ 
+ 	/* Local and remote port */
+ 	switch (key) {
+-- 
+2.1.0
+
