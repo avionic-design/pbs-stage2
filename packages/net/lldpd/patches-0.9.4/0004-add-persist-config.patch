@@ -1,0 +1,25 @@
+From e906a993770015dd42612e44de0a6e9fc0756833 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 30 Aug 2016 10:44:31 +0200
+Subject: [PATCH 4/4] add persist config
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/daemon/lldpd.service.in | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/daemon/lldpd.service.in b/src/daemon/lldpd.service.in
+index 9e6d33a..e2dbd85 100644
+--- a/src/daemon/lldpd.service.in
++++ b/src/daemon/lldpd.service.in
+@@ -9,6 +9,7 @@ Type=notify
+ NotifyAccess=main
+ EnvironmentFile=-/etc/default/lldpd
+ EnvironmentFile=-/etc/sysconfig/lldpd
++EnvironmentFile=-/persist/etc/default/lldpd
+ ExecStart=@sbindir@/lldpd $DAEMON_ARGS $LLDPD_OPTIONS
+ Restart=on-failure
+ 
+-- 
+2.1.0
+

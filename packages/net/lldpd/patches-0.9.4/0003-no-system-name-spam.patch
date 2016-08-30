@@ -1,0 +1,29 @@
+From 90e9258fd813a4d2b8a07b5e2fb96dbfbe09fca2 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 30 Aug 2016 10:27:43 +0200
+Subject: [PATCH 3/4] no system name spam
+
+Prevent syslog spam when no system name is set.
+
+Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/daemon/priv.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/daemon/priv.c b/src/daemon/priv.c
+index 7a65b12..688edf3 100644
+--- a/src/daemon/priv.c
++++ b/src/daemon/priv.c
+@@ -224,7 +224,7 @@ asroot_gethostname()
+ 	if (uname(&un) < 0)
+ 		fatal("privsep", "failed to get system information");
+ 	if (getaddrinfo(un.nodename, NULL, &hints, &res) != 0) {
+-		log_info("privsep", "unable to get system name");
++		log_debug("privsep", "unable to get system name");
+ #ifdef HAVE_RES_INIT
+ 		res_init();
+ #endif
+-- 
+2.1.0
+
