@@ -23,9 +23,6 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_BACKLIGHT_SYSFS),y)
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_VLC),y)
 	conf-args += --with-video-backend=libvlc
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_VLC_LIBTNJ3324),y)
-	conf-args += --enable-libtnj3324
-endif
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_GST),y)
 	conf-args += --with-video-backend=gst
@@ -47,12 +44,6 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_ALSA),y)
 	conf-args += --with-mixer-backend=alsa
 else
 	conf-args += --with-mixer-backend=none
-endif
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_LIBMODEM),y)
-	conf-args += --with-modem-backend=libmodem
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MODEM_LIBMODEM_ALSALOOP),y)
-	conf-args += --enable-alsaloop
-endif
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_HANDSET_PTIP),y)
 	conf-args += --with-handset-backend=ptip
