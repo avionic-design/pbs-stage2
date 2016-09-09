@@ -45,9 +45,6 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_ALSA),y)
 else
 	conf-args += --with-mixer-backend=none
 endif
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_HANDSET_PTIP),y)
-	conf-args += --with-handset-backend=ptip
-endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_GPIO_GPIODEV),y)
 	conf-args += --with-gpio-backend=gpiodev
 endif
