@@ -1,5 +1,5 @@
 PACKAGE = remote-control
-VERSION = 0.10.10
+VERSION = 1.0.0
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -90,7 +90,5 @@ conf-args += \
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
-	$(prefix)/bin/remote-control-client \
-	$(prefix)/bin/remote-control-gtk \
 	$(prefix)/bin/remote-control \
 	$(prefix)/lib/*.so.*
