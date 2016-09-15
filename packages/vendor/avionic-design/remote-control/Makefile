@@ -40,19 +40,12 @@ endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VOIP_LINPHONE),y)
 	conf-args += --with-voip-backend=linphone
 endif
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_MIXER_ALSA),y)
-	conf-args += --with-mixer-backend=alsa
-else
-	conf-args += --with-mixer-backend=none
-endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_GPIO_GPIODEV),y)
 	conf-args += --with-gpio-backend=gpiodev
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_GPIO_SYSFS),y)
 	conf-args += --with-gpio-backend=sysfs
 endif
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT),y)
-	conf-args += --enable-javascript
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_IR),y)
 	conf-args += --enable-javascript-ir
 else
@@ -67,9 +60,6 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_APP_WATCH
 	conf-args += --enable-javascript-app-watchdog
 else
 	conf-args += --disable-javascript-app-watchdog
-endif
-else
-	conf-args += --disable-javascript
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_WATCHDOG),y)
 	conf-args += --enable-watchdog
