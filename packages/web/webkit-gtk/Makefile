@@ -8,6 +8,7 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
 conf-args += \
 	--with-gstreamer=0.10
 else
+VERSION = 2.4.9
 conf-args += \
 	--with-gstreamer=1.0
 endif
