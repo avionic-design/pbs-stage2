@@ -2,5 +2,5 @@ PACKAGE = libgpg-error
 VERSION = 1.23
 LICENSE = LGPL
 
-LOCATION = ftp://ftp.gnupg.org/GnuPG/$(PACKAGE)
+LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
