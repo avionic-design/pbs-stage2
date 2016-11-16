@@ -1,5 +1,5 @@
 PACKAGE = ca-certificates
-VERSION = 20160104
+VERSION = 20161102
 LICENSE = GPLv2+ (script), MPLv2.0 (data)
 
 LOCATION = http://http.debian.net/debian/pool/main/c/$(PACKAGE)
