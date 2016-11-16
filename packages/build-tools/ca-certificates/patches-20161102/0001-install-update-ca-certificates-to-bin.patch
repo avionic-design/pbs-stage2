@@ -1,0 +1,23 @@
+From b9351da52cffbed5b8bd6d79ea29ca45f94ba688 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 17 Nov 2016 10:47:01 +0100
+Subject: [PATCH] install update-ca-certificates to /bin
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ sbin/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/sbin/Makefile b/sbin/Makefile
+index a9658e7..40d2b48 100644
+--- a/sbin/Makefile
++++ b/sbin/Makefile
+@@ -8,4 +8,4 @@ all:
+ clean:
+ 
+ install:
+-	install -m755 update-ca-certificates $(DESTDIR)/usr/sbin/
++	install -m755 update-ca-certificates $(DESTDIR)/bin/
+-- 
+2.7.4
+

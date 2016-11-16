@@ -1,10 +1,4 @@
-PACKAGE = ca-certificates
-VERSION = 20161102
-LICENSE = GPLv2+ (script), MPLv2.0 (data)
-
-LOCATION = http://http.debian.net/debian/pool/main/c/$(PACKAGE)
-TARBALLS = $(PACKAGE)_$(VERSION).tar.xz
-
+include packages/net/ca-certificates/Makefile.location
 include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)
