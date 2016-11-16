@@ -1,0 +1,7 @@
+config PACKAGE_LIBS_LIBEPOXY
+	bool "libepoxy"
+	select PACKAGE_BUILD_TOOLS_AUTOCONF
+	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+	select VIRTUAL_OPENGL_ES
+	help
+	  Epoxy is a library for handling OpenGL function pointer management.

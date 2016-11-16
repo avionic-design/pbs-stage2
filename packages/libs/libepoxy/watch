@@ -1,0 +1,2 @@
+version=3
+https://github.com/anholt/libepoxy/releases v([\d\.]+).tar.gz
