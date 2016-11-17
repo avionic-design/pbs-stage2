@@ -1,11 +1,14 @@
 PACKAGE = libwebp
-VERSION = 0.4.0
+VERSION = 0.5.1
 LICENSE = custom
 
 LOCATION = https://storage.googleapis.com/downloads.webmproject.org/releases/webp
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
+
+conf-args += \
+	--disable-neon
 
 prunefiles = \
 	$(prefix)/lib/*.la
