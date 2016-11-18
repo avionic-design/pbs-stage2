@@ -1,34 +1,35 @@
-From 59bb8434cbc2da462ab50a8c8b9a08c2a493d5ea Mon Sep 17 00:00:00 2001
+From 25aa30f0115cdba4bd86687ee9d8ac57e4e93f43 Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Mon, 26 Jan 2015 09:58:03 +0100
-Subject: [PATCH 3/7] upd: Fix to enable smoth initial playback
+Subject: [PATCH 2/4] upd: Fix to enable smoth initial playback
 
 Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
 ---
  modules/access/udp.c | 6 +++++-
  1 file changed, 5 insertions(+), 1 deletion(-)
 
 diff --git a/modules/access/udp.c b/modules/access/udp.c
-index 76f68a2..895c934 100644
+index e18b760..f2629c6 100644
 --- a/modules/access/udp.c
 +++ b/modules/access/udp.c
-@@ -209,11 +209,15 @@ static int Control( access_t *p_access, int i_query, va_list args )
-         case ACCESS_CAN_SEEK:
-         case ACCESS_CAN_FASTSEEK:
-         case ACCESS_CAN_PAUSE:
--        case ACCESS_CAN_CONTROL_PACE:
+@@ -201,11 +201,15 @@ static int Control( access_t *p_access, int i_query, va_list args )
+         case STREAM_CAN_SEEK:
+         case STREAM_CAN_FASTSEEK:
+         case STREAM_CAN_PAUSE:
+-        case STREAM_CAN_CONTROL_PACE:
              pb_bool = (bool*)va_arg( args, bool* );
              *pb_bool = false;
              break;
  
-+        case ACCESS_CAN_CONTROL_PACE:
++        case STREAM_CAN_CONTROL_PACE:
 +            pb_bool = (bool*)va_arg( args, bool* );
 +            *pb_bool = true;
 +            break;
 +
-         case ACCESS_GET_PTS_DELAY:
+         case STREAM_GET_PTS_DELAY:
              pi_64 = (int64_t*)va_arg( args, int64_t * );
              *pi_64 = INT64_C(1000)
 -- 
-2.1.0
+2.7.4
 

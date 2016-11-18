@@ -7,7 +7,7 @@ ifeq ($(CONFIG_PACKAGE_MULTIMEDIA_VLC_VLC2X),y)
   patchdir = $(pkgsrctree)/patches-$(VERSION)-tegra2
 else
   VERSION = 3.0.0
-  NIGHTLY = 20160411-0537
+  NIGHTLY = 20161118-0236
 endif
 
 ifeq ($(NIGHTLY),)
@@ -15,7 +15,7 @@ ifeq ($(NIGHTLY),)
   TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 else
   LOCATION = http://nightlies.videolan.org/build/source/
-  TARBALLS = $(PACKAGE)-$(VERSION)-$(NIGHTLY).tar.xz
+  TARBALLS = $(PACKAGE)-$(VERSION)-$(NIGHTLY)-git.tar.xz
   pkgbuildtree = $(pkgtree)/$(PACKAGE)-$(VERSION)-git
 endif
 

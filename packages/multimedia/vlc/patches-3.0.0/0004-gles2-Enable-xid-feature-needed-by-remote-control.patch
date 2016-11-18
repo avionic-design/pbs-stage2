@@ -1,15 +1,16 @@
-From 3dbf217f0a740a5955957596bd68969a0427ce55 Mon Sep 17 00:00:00 2001
+From 925bc5192282d77cd2d7b8cc654d64c1c16660f1 Mon Sep 17 00:00:00 2001
 From: Dirk Leber <dirk.leber@avionic-design.de>
 Date: Mon, 26 Jan 2015 09:59:54 +0100
-Subject: [PATCH 4/7] gles2: Enable xid feature needed by remote-control
+Subject: [PATCH 4/4] gles2: Enable xid feature needed by remote-control
 
 Signed-off-by: Dirk Leber <dirk.leber@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
 ---
  modules/video_output/gl.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/modules/video_output/gl.c b/modules/video_output/gl.c
-index 6bf01b1..0016267 100644
+index 613fffe..3e04623 100644
 --- a/modules/video_output/gl.c
 +++ b/modules/video_output/gl.c
 @@ -51,7 +51,7 @@ vlc_module_begin ()
@@ -22,5 +23,5 @@ index 6bf01b1..0016267 100644
                  GLES2_TEXT, PROVIDER_LONGTEXT, true)
  
 -- 
-2.1.0
+2.7.4
 
