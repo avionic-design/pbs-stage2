@@ -1,8 +1,8 @@
 PACKAGE = ttf-arphic-uming
-VERSION = 0.2.20080216.1
+VERSION = 0.2.20080216.2
 
-LOCATION = http://de.archive.ubuntu.com/ubuntu/pool/main/t/$(PACKAGE)
-TARBALLS = $(PACKAGE)_$(VERSION).orig.tar.gz
+LOCATION = http://de.archive.ubuntu.com/ubuntu/pool/main/f/fonts-arphic-uming
+TARBALLS = fonts-arphic-uming_$(VERSION).orig.tar.bz2
 
 include packages/common.mk
 
@@ -20,7 +20,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	$(priv) mkdir -p $(DESTDIR)$(ttfdir)/$(PACKAGE)
-	$(priv) cp $(pkgtree)/*.ttc $(DESTDIR)$(ttfdir)/$(PACKAGE)
+	$(priv) cp $(pkgtree)/$(PACKAGE)-$(VERSION)/*.ttc $(DESTDIR)$(ttfdir)/$(PACKAGE)
 	$(call cmd,stamp)
 
 include packages/cleanup.mk
