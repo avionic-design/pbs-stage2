@@ -13,6 +13,3 @@
 [submodule "platforms/skidata"]
 	path = platforms/skidata
 	url = ../pbs-platform-skidata.git
-[submodule "platforms/comnet"]
-	path = platforms/comnet
-	url = ../pbs-platform-comnet.git
