@@ -28,6 +28,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
 		mkdir -p $(DESTDIR)/$(CERTSDIR) && \
 		$(env) $(MAKE) $(install-vars) install
-	touch $(prefix)/etc/ca-certificates.conf && \
+	mkdir -p $(prefix)/etc && \
+		touch $(prefix)/etc/ca-certificates.conf && \
 		$(env) update-ca-certificates $(cert-args)
 	$(call cmd,stamp)
