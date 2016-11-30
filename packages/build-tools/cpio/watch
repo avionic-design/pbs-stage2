@@ -1,2 +1,2 @@
 version=3
-http://ftp.gnu.org/pub/gnu/cpio/cpio-(.*)\.tar\.bz2
+http://ftp.gnu.org/pub/gnu/cpio/cpio-([\d\.]*)\.tar\.bz2
