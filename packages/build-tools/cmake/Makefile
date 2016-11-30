@@ -1,5 +1,5 @@
 PACKAGE = cmake
-VERSION = 2.8.10
+VERSION = 3.7.0
 LICENSE = custom
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
