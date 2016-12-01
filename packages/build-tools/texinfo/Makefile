@@ -1,5 +1,5 @@
 PACKAGE = texinfo
-VERSION = 6.1
+VERSION = 6.3
 LICENSE = GPLv3
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
