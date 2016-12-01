@@ -3,7 +3,7 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
-	--disable-scanner
+	--with-host-scanner
 
 prunefiles = \
 	$(prefix)/lib/*.la
