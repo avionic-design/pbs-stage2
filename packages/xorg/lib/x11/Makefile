@@ -1,5 +1,5 @@
 PACKAGE = libX11
-VERSION = 1.6.3
+VERSION = 1.6.4
 LICENSE = MIT X
 
 include packages/xorg/lib/common-reconf.mk
