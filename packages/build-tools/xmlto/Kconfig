@@ -1,0 +1,8 @@
+config PACKAGE_BUILD_TOOLS_XMLTO
+	bool "xmlto"
+	select PACKAGE_BUILD_TOOLS_LIBXSLT
+	help
+	  xmlto is a front-end to an XSL toolchain. It chooses an appropriate
+	  stylesheet for the conversion you want and applies it using an
+	  external XSLT processor. It also performs any necessary
+	  post-processing.
