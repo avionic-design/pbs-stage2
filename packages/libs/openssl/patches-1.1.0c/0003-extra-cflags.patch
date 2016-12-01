@@ -1,0 +1,67 @@
+From cd7384db2d476d092169b60abeae94fd5afecfd4 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 1 Dec 2016 11:06:32 +0100
+Subject: [PATCH 3/3] extra cflags
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Configurations/unix-Makefile.tmpl | 8 ++++----
+ Makefile.shared                   | 2 +-
+ 2 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/Configurations/unix-Makefile.tmpl b/Configurations/unix-Makefile.tmpl
+index a1c1c51..0fe0d2c 100644
+--- a/Configurations/unix-Makefile.tmpl
++++ b/Configurations/unix-Makefile.tmpl
+@@ -177,7 +177,7 @@ HTMLSUFFIX=html
+ 
+ CROSS_COMPILE= {- $config{cross_compile_prefix} -}
+ CC= $(CROSS_COMPILE){- $target{cc} -}
+-CFLAGS={- our $cflags2 = join(" ",(map { "-D".$_} @{$target{defines}}, @{$config{defines}}),"-DOPENSSLDIR=\"\\\"\$(OPENSSLDIR)\\\"\"","-DENGINESDIR=\"\\\"\$(ENGINESDIR)\\\"\"") -} {- $target{cflags} -} {- $config{cflags} -}
++CFLAGS={- our $cflags2 = join(" ",(map { "-D".$_} @{$target{defines}}, @{$config{defines}}),"-DOPENSSLDIR=\"\\\"\$(OPENSSLDIR)\\\"\"","-DENGINESDIR=\"\\\"\$(ENGINESDIR)\\\"\"","\$(EXTRA_CPPFLAGS)","\$(EXTRA_CFLAGS)") -} {- $target{cflags} -} {- $config{cflags} -}
+ CFLAGS_Q={- $cflags2 =~ s|([\\"])|\\$1|g; $cflags2 -} {- $config{cflags} -}
+ LDFLAGS= {- $target{lflags} -}
+ PLIB_LDFLAGS= {- $target{plib_lflags} -}
+@@ -1003,7 +1003,7 @@ $target: $lib$libext $deps $ordinalsfile
+ 		LIBDEPS='\$(PLIB_LDFLAGS) '"$linklibs"' \$(EX_LIBS)' \\
+ 		LIBNAME=$libname LIBVERSION=\$(SHLIB_MAJOR).\$(SHLIB_MINOR) \\
+ 		LIBCOMPATVERSIONS=';\$(SHLIB_VERSION_HISTORY)' \\
+-		CC='\$(CC)' CFLAGS='\$(CFLAGS) \$(LIB_CFLAGS)' \\
++		CC='\$(CC)' CFLAGS='\$(EXTRA_CPPFLAGS) \$(CFLAGS) \$(LIB_CFLAGS) \$(EXTRA_CFLAGS)' \\
+ 		LDFLAGS='\$(LDFLAGS)' \\
+ 		SHARED_LDFLAGS='\$(LIB_LDFLAGS)' SHLIB_EXT=$shlibext \\
+ 		RC='\$(RC)' SHARED_RCFLAGS='\$(RCFLAGS)' \\
+@@ -1037,7 +1037,7 @@ $target: $objs $deps
+ 		PERL="\$(PERL)" SRCDIR='\$(SRCDIR)' DSTDIR="$libd" \\
+ 		LIBDEPS='\$(PLIB_LDFLAGS) '"$shlibdeps"' \$(EX_LIBS)' \\
+ 		LIBNAME=$libname LDFLAGS='\$(LDFLAGS)' \\
+-		CC='\$(CC)' CFLAGS='\$(CFLAGS) \$(DSO_CFLAGS)' \\
++		CC='\$(CC)' CFLAGS='\$(EXTRA_CPPFLAGS) \$(CFLAGS) \$(DSO_CFLAGS) \$(EXTRA_CFLAGS)' \\
+ 		SHARED_LDFLAGS='\$(DSO_LDFLAGS)' \\
+ 		SHLIB_EXT=$dsoext \\
+ 		LIBEXTRAS="$objs" \\
+@@ -1074,7 +1074,7 @@ $bin$exeext: $objs $deps
+ 		PERL="\$(PERL)" SRCDIR=\$(SRCDIR) \\
+ 		APPNAME=$bin$exeext OBJECTS="$objs" \\
+ 		LIBDEPS='\$(PLIB_LDFLAGS) '"$linklibs"' \$(EX_LIBS)' \\
+-		CC='\$(CC)' CFLAGS='\$(CFLAGS) \$(BIN_CFLAGS)' \\
++		CC='\$(CC)' CFLAGS='\$(EXTRA_CPPFLAGS) \$(CFLAGS) \$(BIN_CFLAGS) \$(EXTRA_CFLAGS)' \\
+ 		LDFLAGS='\$(LDFLAGS)' \\
+ 		link_app.$shlib_target
+ EOF
+diff --git a/Makefile.shared b/Makefile.shared
+index 098e1ec..bc03914 100644
+--- a/Makefile.shared
++++ b/Makefile.shared
+@@ -7,7 +7,7 @@
+ 
+ # CC contains the current compiler.  This one MUST be defined
+ CC=cc
+-CFLAGS=$(CFLAG)
++CFLAGS=$(EXTRA_CPPFLAGS) $(CFLAG) $(EXTRA_CFLAGS)
+ # LDFLAGS contains flags to be used when temporary object files (when building
+ # shared libraries) are created, or when an application is linked.
+ # SHARED_LDFLAGS contains flags to be used when the shared library is created.
+-- 
+2.7.4
+

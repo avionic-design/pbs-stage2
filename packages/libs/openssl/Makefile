@@ -8,6 +8,7 @@ conf-args = \
 	--cross-compile-prefix=$(TARGET)- \
 	--prefix=$(prefix) \
 	--openssldir=/etc/ssl \
+	--enginesdir=/usr/lib/ssl/engines \
 	shared zlib-dynamic
 
 ifeq ($(CONFIG_ARCH),arm)
@@ -51,7 +52,8 @@ install-args = \
 	EXTRA_CFLAGS='$(CFLAGS)' \
 	MANDIR=$(prefix)/share/man \
 	MANSUFFIX=ssl \
-	INSTALL_PREFIX=$(DESTDIR)
+	INSTALL_PREFIX=$(DESTDIR) \
+	DESTDIR=$(DESTDIR)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
