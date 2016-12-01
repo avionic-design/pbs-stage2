@@ -7,6 +7,12 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/build-tools/common.mk
 
+u-boot-tools = \
+	dumpimage \
+	img2srec \
+	mkenvimage \
+	mkimage
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
@@ -22,5 +28,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	install -m 755 -d $(prefix)/bin
-	install -m 755 $(pkgbuildtree)/tools/mkimage $(prefix)/bin
+	for tbin in $(u-boot-tools); do \
+		install -m 755 $(pkgbuildtree)/tools/$${tbin} $(prefix)/bin; \
+	done
 	$(call cmd,stamp)
