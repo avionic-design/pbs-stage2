@@ -68,6 +68,8 @@ def process_recursive(url, pattern, options, final):
 					print '  found match:', ref.group(0)
 
 				match = ref.group(1)
+				if options.version_separator:
+					match = match.replace(options.version_separator, '.');
 			else:
 				match = ref.group(0)
 
@@ -165,6 +167,7 @@ def process_line(line, options):
 
 def process_file(filename, options):
 	result = None
+	options.version_separator = None
 
 	if options.verbose > 0:
 		print 'Processing file', filename
@@ -182,6 +185,11 @@ def process_file(filename, options):
 						match.group(1)
 				sys.exit(1)
 
+			continue
+
+		match = re.match('version_separator=(.+)', line)
+		if match:
+			options.version_separator = match.group(1)
 			continue
 
 		match = re.match('^\s*$', line)
