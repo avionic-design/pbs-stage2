@@ -9,6 +9,7 @@ include packages/common.mk
 pkgbuildtree := $(pkgtree)/$(PACKAGE)_$(subst .,_,$(VERSION))
 
 bjam-flags = \
+	-j $(NUM_CPU) \
 	--without-context \
 	--without-coroutine \
 	--without-coroutine2 \
