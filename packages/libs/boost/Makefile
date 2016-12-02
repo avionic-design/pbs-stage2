@@ -7,7 +7,6 @@ TARBALLS = $(PACKAGE)_$(subst .,_,$(VERSION)).tar.bz2
 include packages/common.mk
 
 pkgbuildtree := $(pkgtree)/$(PACKAGE)_$(subst .,_,$(VERSION))
-GCC_VERSION = $(shell $(CC) --version | head -n 1 | awk '{ print $$3}')
 
 $(pkgtree)/.setup:
 	cd $(pkgbuildtree) && ./bootstrap.sh --without-icu
@@ -15,7 +14,7 @@ $(pkgtree)/.setup:
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
-		echo "using gcc : $(GCC_VERSION) : $(TARGET)-g++ $(CFLAGS) ;" > \
+		echo "using gcc : : $(TARGET)-g++ $(CFLAGS) ;" > \
 			tools/build/v2/user-config.jam
 	$(call cmd,stamp)
 
