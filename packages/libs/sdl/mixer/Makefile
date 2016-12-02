@@ -1,5 +1,5 @@
 PACKAGE = SDL_mixer
-VERSION = 1.2.11
+VERSION = 1.2.12
 
 LOCATION = http://www.libsdl.org/projects/$(PACKAGE)/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
