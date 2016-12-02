@@ -1,2 +1,3 @@
 version=3
+version_separator=_
 http://sf.net/boost/boost_([\d_]+)\.tar\.bz2
