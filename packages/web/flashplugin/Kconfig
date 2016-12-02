@@ -1,5 +1,0 @@
-config PACKAGE_WEB_FLASHPLUGIN
-	bool "flashplugin"
-	depends on ARCH_X86 || ARCH_X86_64
-	select PACKAGE_LIBS_GTK
-	select PACKAGE_LIBS_NSS
