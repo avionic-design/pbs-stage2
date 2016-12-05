@@ -1,0 +1,25 @@
+From 0a34a77cc94f839af946a8f8089ce74ca5cb9cc3 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 5 Dec 2016 23:48:47 +0100
+Subject: [PATCH] fix missing include
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/engine/display/display.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/engine/display/display.cpp b/src/engine/display/display.cpp
+index 31ba040..f9c5beb 100644
+--- a/src/engine/display/display.cpp
++++ b/src/engine/display/display.cpp
+@@ -28,6 +28,7 @@
+ #include "engine/display/delta/delta_framebuffer.hpp"
+ #include "engine/display/null_framebuffer.hpp"
+ #include "util/log.hpp"
++#include "util/raise_exception.hpp"
+ 
+ std::unique_ptr<Framebuffer> Display::s_framebuffer;
+ 
+-- 
+2.7.4
+
