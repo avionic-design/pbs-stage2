@@ -15,6 +15,9 @@ conf-args += \
 	--disable-video-directfb \
 	--disable-video-fbcon
 
+config-scriptfiles = \
+	$(prefix)/bin/sdl-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
