@@ -1,0 +1,47 @@
+# Makefile snippet for the package target 'config-scripts'. Meant for
+# target libraries which provide a shell script of their own for work
+# pkg-config normally does: supplying lib locations and build flags.
+# The 'config-scripts' target takes $(config-scriptfiles), places a
+# copy into the build-tools and fixes environment paths so that cross
+# compilation configs can actually use these scripts.
+#
+# The pattern is defined as CONFIG_SCRIPT_REPLACEMENT, use
+# CONFIG_SCRIPT_EXTRA_REPLACEMENT to add extra sed expressions.
+
+ifeq ($(DESTDIR),)
+  $(error DESTDIR is undefined)
+endif
+
+ifeq ($(SYSROOT),)
+  $(error SYSROOT is undefined)
+endif
+
+define CONFIG_SCRIPT_REPLACEMENT
+-e "s,^\(exec_\)\?prefix=.*,\1prefix=$(SYSROOT)/usr/,g" \
+-e "s,-I/usr,-I$(SYSROOT)/usr,g" \
+-e "s,-L/usr,-L$(SYSROOT)/usr,g"
+endef
+
+PHONY += all
+all: config-scripts
+	@:
+
+# add the rootfs prefix and expand wildcards
+config-scriptfiles := $(wildcard $(patsubst %,$(DESTDIR)%,$(config-scriptfiles)))
+# add the config-script- prefix
+config-scriptfiles := $(patsubst %,config-script-%,$(config-scriptfiles))
+
+PHONY += $(config-scriptfiles)
+$(config-scriptfiles): config-script-%:
+	@echo "  CFGSCR  $(subst $(DESTDIR),,$*)"
+	@sed $* \
+		$(CONFIG_SCRIPT_REPLACEMENT) \
+		$(CONFIG_SCRIPT_EXTRA_REPLACEMENT) \
+		> $(objtree)/build-tools/bin/$$(basename $*)
+	@chmod +x $(objtree)/build-tools/bin/$$(basename $*)
+
+PHONY += config-scripts
+config-scripts: $(config-scriptfiles)
+	@:
+
+.PHONY: $(PHONY)
