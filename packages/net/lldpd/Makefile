@@ -5,7 +5,7 @@ LICENSE = ISC
 LOCATION = http://media.luffy.cx/files/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args-$(CONFIG_PACKAGE_NET_LLDPD_SNMP) += --with-snmp
 conf-args-$(CONFIG_PACKAGE_NET_LLDPD_XML) += --with-xml
