@@ -1,0 +1,124 @@
+From 9081b8f7367178088375b549c60c0364e098fec0 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 6 Dec 2016 13:10:54 +0100
+Subject: [PATCH] openssl-1.1.0 compatibility
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ apps/snmpusm.c     | 24 +++++++++++++++++++-----
+ snmplib/keytools.c |  8 ++++++--
+ snmplib/scapi.c    |  8 ++++++--
+ 3 files changed, 31 insertions(+), 9 deletions(-)
+
+diff --git a/apps/snmpusm.c b/apps/snmpusm.c
+index 42919bd..4c3aa05 100644
+--- a/apps/snmpusm.c
++++ b/apps/snmpusm.c
+@@ -190,6 +190,9 @@ get_USM_DH_key(netsnmp_variable_list *vars, netsnmp_variable_list *dhvar,
+                oid *keyoid, size_t keyoid_len) {
+     u_char *dhkeychange;
+     DH *dh;
++    const BIGNUM *dhp;
++    const BIGNUM *dhg;
++    const BIGNUM *pub_key;
+     BIGNUM *other_pub;
+     u_char *key;
+     size_t key_len;
+@@ -204,26 +207,37 @@ get_USM_DH_key(netsnmp_variable_list *vars, netsnmp_variable_list *dhvar,
+         const unsigned char *cp = dhvar->val.string;
+         dh = d2i_DHparams(NULL, &cp, dhvar->val_len);
+     }
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++    DH_get0_pqg(dh, &dhp, NULL, &dhg);
++#else
++    dhg = dh->g;
++    dhp = dh->p;
++#endif
+ 
+-    if (!dh || !dh->g || !dh->p) {
++    if (!dh || !dhg || !dhp) {
+         SNMP_FREE(dhkeychange);
+         return SNMPERR_GENERR;
+     }
+ 
+     DH_generate_key(dh);
+-    if (!dh->pub_key) {
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++    DH_get0_key(dh, &pub_key, NULL);
++#else
++    pub_key = dh->pub_key;
++#endif
++    if (!pub_key) {
+         SNMP_FREE(dhkeychange);
+         return SNMPERR_GENERR;
+     }
+             
+-    if (vars->val_len != (unsigned int)BN_num_bytes(dh->pub_key)) {
++    if (vars->val_len != (unsigned int)BN_num_bytes(pub_key)) {
+         SNMP_FREE(dhkeychange);
+         fprintf(stderr,"incorrect diffie-helman lengths (%lu != %d)\n",
+-                (unsigned long)vars->val_len, BN_num_bytes(dh->pub_key));
++                (unsigned long)vars->val_len, BN_num_bytes(pub_key));
+         return SNMPERR_GENERR;
+     }
+ 
+-    BN_bn2bin(dh->pub_key, dhkeychange + vars->val_len);
++    BN_bn2bin(pub_key, dhkeychange + vars->val_len);
+ 
+     key_len = DH_size(dh);
+     if (!key_len) {
+diff --git a/snmplib/keytools.c b/snmplib/keytools.c
+index 0ccb3a6..5260305 100644
+--- a/snmplib/keytools.c
++++ b/snmplib/keytools.c
+@@ -149,7 +149,9 @@ generate_Ku(const oid * hashtype, u_int hashtype_len,
+      */
+ #ifdef NETSNMP_USE_OPENSSL
+ 
+-#ifdef HAVE_EVP_MD_CTX_CREATE
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++    ctx = EVP_MD_CTX_new();
++#elif defined HAVE_EVP_MD_CTX_CREATE
+     ctx = EVP_MD_CTX_create();
+ #else
+     ctx = malloc(sizeof(*ctx));
+@@ -259,7 +261,9 @@ generate_Ku(const oid * hashtype, u_int hashtype_len,
+     memset(buf, 0, sizeof(buf));
+ #ifdef NETSNMP_USE_OPENSSL
+     if (ctx) {
+-#ifdef HAVE_EVP_MD_CTX_DESTROY
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++       EVP_MD_CTX_free(ctx);
++#elif defined HAVE_EVP_MD_CTX_DESTROY
+         EVP_MD_CTX_destroy(ctx);
+ #else
+         EVP_MD_CTX_cleanup(ctx);
+diff --git a/snmplib/scapi.c b/snmplib/scapi.c
+index 16ac829..5538444 100644
+--- a/snmplib/scapi.c
++++ b/snmplib/scapi.c
+@@ -486,7 +486,9 @@ sc_hash(const oid * hashtype, size_t hashtypelen, const u_char * buf,
+     }
+ 
+ /** initialize the pointer */
+-#ifdef HAVE_EVP_MD_CTX_CREATE
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++    cptr = EVP_MD_CTX_new();
++#elif defined HAVE_EVP_MD_CTX_CREATE
+     cptr = EVP_MD_CTX_create();
+ #else
+     cptr = malloc(sizeof(*cptr));
+@@ -507,7 +509,9 @@ sc_hash(const oid * hashtype, size_t hashtypelen, const u_char * buf,
+ /** do the final pass */
+     EVP_DigestFinal(cptr, MAC, &tmp_len);
+     *MAC_len = tmp_len;
+-#ifdef HAVE_EVP_MD_CTX_DESTROY
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++    EVP_MD_CTX_free(cptr);
++#elif defined HAVE_EVP_MD_CTX_DESTROY
+     EVP_MD_CTX_destroy(cptr);
+ #else
+ #if !defined(OLD_DES)
+-- 
+2.7.4
+
