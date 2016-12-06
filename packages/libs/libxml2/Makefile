@@ -4,6 +4,9 @@ include packages/autotools.mk
 conf-args += \
 	--without-python
 
+config-scriptfiles = \
+	$(prefix)/bin/xml2-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
