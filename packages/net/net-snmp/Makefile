@@ -1,5 +1,5 @@
 PACKAGE = net-snmp
-VERSION = 5.7.2
+VERSION = 5.7.3
 LICENSE = BSD
 
 LOCATION = http://downloads.sourceforge.net/project/$(PACKAGE)/$(PACKAGE)/$(VERSION)
@@ -18,6 +18,10 @@ conf-args += \
 
 conf-vars += \
 	LIBS="-lpthread"
+
+config-scriptfiles = \
+	$(prefix)/bin/net-snmp-config \
+	$(prefix)/bin/net-snmp-create-v3-user
 
 prunefiles = \
 	$(prefix)/lib/*.la
