@@ -1,5 +1,4 @@
 autotools-update.patch
-sdl-pkg-config.patch
 build-fixes.patch
 0001-fix-openssl-1.1.x-detection.patch
 0002-support-openssl-1.1.0.patch
