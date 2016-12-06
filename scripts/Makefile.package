@@ -73,7 +73,7 @@ quiet_cmd_checksum_sha256 = SHA256  $<
       cmd_checksum_sha256 = \
 		cd $(srctree) && \
 		(grep download/$* $(obj)/checksums | sha256sum -c --status 2> /dev/null || \
-			(cat $(obj)/checksums ; sha256sum download/$*) | \
+			(grep -v download/$* $(obj)/checksums ; sha256sum download/$*) | \
 				sort -V -k 2 -o $(obj)/checksums)
 else
 quiet_cmd_checksum_sha256 = SHA256  $<
