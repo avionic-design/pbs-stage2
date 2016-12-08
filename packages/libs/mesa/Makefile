@@ -2,8 +2,10 @@ PACKAGE = mesa
 VERSION = 11.1.1
 LICENSE = custom
 
-ifeq ($(CONFIG_XORG_IEGD),y)
-VERSION = 7.5.2
+ifneq ($(MAKECMDGOALS),watch)
+  ifeq ($(CONFIG_XORG_IEGD),y)
+  VERSION = 7.5.2
+  endif
 endif
 
 LOCATION = ftp://ftp.freedesktop.org/pub/mesa/$(VERSION)
