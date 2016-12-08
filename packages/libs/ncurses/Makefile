@@ -5,6 +5,8 @@ LICENSE = MIT
 LOCATION = http://ftp.gnu.org/pub/gnu/ncurses
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+
 include packages/autotools.mk
 
 conf-args-$(CONFIG_UCLIBC) = \
@@ -18,7 +20,7 @@ conf-args += \
 	$(conf-args-y)
 
 prunefiles = \
-	$(prefix)/bin/ncurses5-config
+	$(prefix)/bin/ncurses$(MAJOR)-config
 
 stripfiles = \
 	$(prefix)/bin/captoinfo \
