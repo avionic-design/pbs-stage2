@@ -11,6 +11,7 @@ include packages/autotools.mk
 
 conf-args += \
 	--without-bzip2 \
+	--enable-silent-rules
 
 env += \
 	PCRECONFIG=$(pkgtree)/build-pcre-config \
