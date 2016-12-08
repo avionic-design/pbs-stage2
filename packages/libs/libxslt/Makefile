@@ -10,6 +10,9 @@ conf-args += \
 	--without-crypto \
 	--without-python
 
+config-scriptfiles = \
+	$(prefix)/bin/xslt-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
