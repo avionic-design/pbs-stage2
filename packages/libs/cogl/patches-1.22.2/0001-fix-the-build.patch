@@ -1,0 +1,26 @@
+From 4e2e20f4524add5520655798219cc6aba8cfcd61 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 8 Dec 2016 23:38:23 +0100
+Subject: [PATCH] fix the build
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ cogl/winsys/cogl-winsys-egl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/cogl/winsys/cogl-winsys-egl.c b/cogl/winsys/cogl-winsys-egl.c
+index 39bfd88..4a9f3aa 100644
+--- a/cogl/winsys/cogl-winsys-egl.c
++++ b/cogl/winsys/cogl-winsys-egl.c
+@@ -1029,7 +1029,7 @@ _cogl_egl_create_image (CoglContext *ctx,
+     egl_ctx = EGL_NO_CONTEXT;
+   else
+ #endif
+-#if COGL_HAS_WAYLAND_EGL_SERVER_SUPPORT
++#ifdef COGL_HAS_WAYLAND_EGL_SERVER_SUPPORT
+   /* The WL_bind_wayland_display spec states that EGL_NO_CONTEXT is to be used
+    * in conjunction with the EGL_WAYLAND_BUFFER_WL target */
+   if (target == EGL_WAYLAND_BUFFER_WL)
+-- 
+2.7.4
+

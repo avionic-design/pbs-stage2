@@ -1,5 +1,5 @@
 PACKAGE = cogl
-VERSION = 1.22.0
+VERSION = 1.22.2
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
