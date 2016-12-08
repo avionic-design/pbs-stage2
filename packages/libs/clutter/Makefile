@@ -1,5 +1,5 @@
 PACKAGE = clutter
-VERSION = 1.14.4
+VERSION = 1.26.0
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
