@@ -1,0 +1,402 @@
+From 0784f2dfc5dd8dcf0c2f9d520935c226bf5e148f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 8 Dec 2016 11:41:31 +0100
+Subject: [PATCH] openssl 1.1.0 compatibility
+
+The patch adds compatibility for openssl 1.1.0 and later. This mostly
+involves moving data objects from stack to heap since those have become
+opaque.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ libfreerdp-core/certificate.c | 23 ++++++++----
+ libfreerdp-core/crypto.c      | 82 ++++++++++++++++++++++++++++---------------
+ libfreerdp-core/crypto.h      |  4 +--
+ libfreerdp-core/ntlmssp.c     | 81 ++++++++++++++++++++++++++++++------------
+ 4 files changed, 131 insertions(+), 59 deletions(-)
+
+diff --git a/libfreerdp-core/certificate.c b/libfreerdp-core/certificate.c
+index 69fcf1d..ccfd3b6 100644
+--- a/libfreerdp-core/certificate.c
++++ b/libfreerdp-core/certificate.c
+@@ -480,6 +480,9 @@ boolean certificate_read_server_certificate(rdpCertificate* certificate, uint8*
+ 
+ rdpKey* key_new(const char* keyfile)
+ {
++	const BIGNUM *rsa_d;
++	const BIGNUM *rsa_e;
++	const BIGNUM *rsa_n;
+ 	rdpKey* key;
+ 	RSA *rsa;
+ 	FILE *fp;
+@@ -525,21 +528,29 @@ rdpKey* key_new(const char* keyfile)
+ 			return NULL;
+ 	}
+ 
+-	if (BN_num_bytes(rsa->e) > 4)
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	RSA_get0_key(rsa, &rsa_n, &rsa_e, &rsa_d);
++#else
++	rsa_d = rsa->d;
++	rsa_e = rsa->e;
++	rsa_n = rsa->n;
++#endif
++
++	if (BN_num_bytes(rsa_e) > 4)
+ 	{
+ 		RSA_free(rsa);
+ 		printf("RSA public exponent too large in %s", keyfile);
+ 		return NULL;
+ 	}
+ 
+-	freerdp_blob_alloc(&key->modulus, BN_num_bytes(rsa->n));
+-	BN_bn2bin(rsa->n, key->modulus.data);
++	freerdp_blob_alloc(&key->modulus, BN_num_bytes(rsa_n));
++	BN_bn2bin(rsa_n, key->modulus.data);
+ 	crypto_reverse(key->modulus.data, key->modulus.length);
+-	freerdp_blob_alloc(&key->private_exponent, BN_num_bytes(rsa->d));
+-	BN_bn2bin(rsa->d, key->private_exponent.data);
++	freerdp_blob_alloc(&key->private_exponent, BN_num_bytes(rsa_d));
++	BN_bn2bin(rsa_d, key->private_exponent.data);
+ 	crypto_reverse(key->private_exponent.data, key->private_exponent.length);
+ 	memset(key->exponent, 0, sizeof(key->exponent));
+-	BN_bn2bin(rsa->e, key->exponent + sizeof(key->exponent) - BN_num_bytes(rsa->e));
++	BN_bn2bin(rsa_e, key->exponent + sizeof(key->exponent) - BN_num_bytes(rsa_e));
+ 	crypto_reverse(key->exponent, sizeof(key->exponent));
+ 
+ 	RSA_free(rsa);
+diff --git a/libfreerdp-core/crypto.c b/libfreerdp-core/crypto.c
+index 2d24da5..62d8a0f 100644
+--- a/libfreerdp-core/crypto.c
++++ b/libfreerdp-core/crypto.c
+@@ -75,31 +75,41 @@ void crypto_rc4_free(CryptoRc4 rc4)
+ CryptoDes3 crypto_des3_encrypt_init(const uint8* key, const uint8* ivec)
+ {
+ 	CryptoDes3 des3 = xmalloc(sizeof(*des3));
+-	EVP_CIPHER_CTX_init(&des3->des3_ctx);
+-	EVP_EncryptInit_ex(&des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
+-	EVP_CIPHER_CTX_set_padding(&des3->des3_ctx, 0);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	des3->des3_ctx = EVP_CIPHER_CTX_new();
++#else
++	des3->des3_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++#endif
++	EVP_CIPHER_CTX_init(des3->des3_ctx);
++	EVP_EncryptInit_ex(des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
++	EVP_CIPHER_CTX_set_padding(des3->des3_ctx, 0);
+ 	return des3;
+ }
+ 
+ CryptoDes3 crypto_des3_decrypt_init(const uint8* key, const uint8* ivec)
+ {
+ 	CryptoDes3 des3 = xmalloc(sizeof(*des3));
+-	EVP_CIPHER_CTX_init(&des3->des3_ctx);
+-	EVP_DecryptInit_ex(&des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
+-	EVP_CIPHER_CTX_set_padding(&des3->des3_ctx, 0);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	des3->des3_ctx = EVP_CIPHER_CTX_new();
++#else
++	des3->des3_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++#endif
++	EVP_CIPHER_CTX_init(des3->des3_ctx);
++	EVP_DecryptInit_ex(des3->des3_ctx, EVP_des_ede3_cbc(), NULL, key, ivec);
++	EVP_CIPHER_CTX_set_padding(des3->des3_ctx, 0);
+ 	return des3;
+ }
+ 
+ void crypto_des3_encrypt(CryptoDes3 des3, uint32 length, const uint8* in_data, uint8* out_data)
+ {
+ 	int len;
+-	EVP_EncryptUpdate(&des3->des3_ctx, out_data, &len, in_data, length);
++	EVP_EncryptUpdate(des3->des3_ctx, out_data, &len, in_data, length);
+ }
+ 
+ void crypto_des3_decrypt(CryptoDes3 des3, uint32 length, const uint8* in_data, uint8* out_data)
+ {
+ 	int len;
+-	EVP_DecryptUpdate(&des3->des3_ctx, out_data, &len, in_data, length);
++	EVP_DecryptUpdate(des3->des3_ctx, out_data, &len, in_data, length);
+ 
+ 	if (length != len)
+ 		abort(); /* TODO */
+@@ -107,35 +117,51 @@ void crypto_des3_decrypt(CryptoDes3 des3, uint32 length, const uint8* in_data, u
+ 
+ void crypto_des3_free(CryptoDes3 des3)
+ {
+-	EVP_CIPHER_CTX_cleanup(&des3->des3_ctx);
++	EVP_CIPHER_CTX_cleanup(des3->des3_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_CIPHER_CTX_free(des3->des3_ctx);
++#else
++	xfree(des3->des3_ctx);
++#endif
+ 	xfree(des3);
+ }
+ 
+ CryptoHmac crypto_hmac_new(void)
+ {
+ 	CryptoHmac hmac = xmalloc(sizeof(*hmac));
+-	HMAC_CTX_init(&hmac->hmac_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	hmac->hmac_ctx = HMAC_CTX_new();
++	HMAC_CTX_reset(hmac->hmac_ctx);
++#else
++	hmac->hmac_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++	HMAC_CTX_init(hmac->hmac_ctx);
++#endif
+ 	return hmac;
+ }
+ 
+ void crypto_hmac_sha1_init(CryptoHmac hmac, const uint8* data, uint32 length)
+ {
+-	HMAC_Init_ex(&hmac->hmac_ctx, data, length, EVP_sha1(), NULL);
++	HMAC_Init_ex(hmac->hmac_ctx, data, length, EVP_sha1(), NULL);
+ }
+ 
+ void crypto_hmac_update(CryptoHmac hmac, const uint8* data, uint32 length)
+ {
+-	HMAC_Update(&hmac->hmac_ctx, data, length);
++	HMAC_Update(hmac->hmac_ctx, data, length);
+ }
+ 
+ void crypto_hmac_final(CryptoHmac hmac, uint8* out_data, uint32 length)
+ {
+-	HMAC_Final(&hmac->hmac_ctx, out_data, &length);
++	HMAC_Final(hmac->hmac_ctx, out_data, &length);
+ }
+ 
+ void crypto_hmac_free(CryptoHmac hmac)
+ {
+-	HMAC_CTX_cleanup(&hmac->hmac_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	HMAC_CTX_free(hmac->hmac_ctx);
++#else
++	HMAC_CTX_cleanup(hmac->hmac_ctx);
++	xfree(hmac->hmac_ctx);
++#endif
+ 	xfree(hmac);
+ }
+ 
+@@ -230,7 +256,7 @@ static void crypto_rsa_common(const uint8* input, int length, uint32 key_length,
+ 	uint8* input_reverse;
+ 	uint8* modulus_reverse;
+ 	uint8* exponent_reverse;
+-	BIGNUM mod, exp, x, y;
++	BIGNUM *mod, *exp, *x, *y;
+ 
+ 	input_reverse = (uint8*) xmalloc(2 * key_length + exponent_size);
+ 	modulus_reverse = input_reverse + key_length;
+@@ -244,26 +270,26 @@ static void crypto_rsa_common(const uint8* input, int length, uint32 key_length,
+ 	crypto_reverse(input_reverse, length);
+ 
+ 	ctx = BN_CTX_new();
+-	BN_init(&mod);
+-	BN_init(&exp);
+-	BN_init(&x);
+-	BN_init(&y);
++	mod = BN_new();
++	exp = BN_new();
++	x = BN_new();
++	y = BN_new();
+ 
+-	BN_bin2bn(modulus_reverse, key_length, &mod);
+-	BN_bin2bn(exponent_reverse, exponent_size, &exp);
+-	BN_bin2bn(input_reverse, length, &x);
+-	BN_mod_exp(&y, &x, &exp, &mod, ctx);
++	BN_bin2bn(modulus_reverse, key_length, mod);
++	BN_bin2bn(exponent_reverse, exponent_size, exp);
++	BN_bin2bn(input_reverse, length, x);
++	BN_mod_exp(y, x, exp, mod, ctx);
+ 
+-	output_length = BN_bn2bin(&y, output);
++	output_length = BN_bn2bin(y, output);
+ 	crypto_reverse(output, output_length);
+ 
+ 	if (output_length < (int) key_length)
+ 		memset(output + output_length, 0, key_length - output_length);
+ 
+-	BN_free(&y);
+-	BN_clear_free(&x);
+-	BN_free(&exp);
+-	BN_free(&mod);
++	BN_free(y);
++	BN_clear_free(x);
++	BN_free(exp);
++	BN_free(mod);
+ 	BN_CTX_free(ctx);
+ 	xfree(input_reverse);
+ }
+diff --git a/libfreerdp-core/crypto.h b/libfreerdp-core/crypto.h
+index 15afca8..3b57964 100644
+--- a/libfreerdp-core/crypto.h
++++ b/libfreerdp-core/crypto.h
+@@ -64,12 +64,12 @@ struct crypto_rc4_struct
+ 
+ struct crypto_des3_struct
+ {
+-	EVP_CIPHER_CTX des3_ctx;
++	EVP_CIPHER_CTX *des3_ctx;
+ };
+ 
+ struct crypto_hmac_struct
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX *hmac_ctx;
+ };
+ 
+ struct crypto_cert_struct
+diff --git a/libfreerdp-core/ntlmssp.c b/libfreerdp-core/ntlmssp.c
+index e285836..5ac1b06 100644
+--- a/libfreerdp-core/ntlmssp.c
++++ b/libfreerdp-core/ntlmssp.c
+@@ -456,7 +456,7 @@ void ntlmssp_compute_lm_hash(char* password, char* hash)
+ 	char text[14];
+ 	char des_key1[8];
+ 	char des_key2[8];
+-	des_key_schedule ks;
++	DES_key_schedule ks;
+ 
+ 	/* LM("password") = E52CAC67419A9A224A3B108F3FA6CB6D */
+ 
+@@ -530,7 +530,7 @@ void ntlmssp_compute_lm_response(char* password, char* challenge, char* response
+ 	char des_key1[8];
+ 	char des_key2[8];
+ 	char des_key3[8];
+-	des_key_schedule ks;
++	DES_key_schedule ks;
+ 
+ 	/* A LM hash is 16-bytes long, but the LM response uses a LM hash null-padded to 21 bytes */
+ 	memset(hash, '\0', 21);
+@@ -1154,19 +1154,32 @@ static void ntlmssp_output_version(STREAM* s)
+ 
+ void ntlmssp_compute_message_integrity_check(NTLMSSP* ntlmssp)
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX *hmac_ctx;
+ 
+ 	/* 
+ 	 * Compute the HMAC-MD5 hash of ConcatenationOf(NEGOTIATE_MESSAGE,
+ 	 * CHALLENGE_MESSAGE, AUTHENTICATE_MESSAGE) using the ExportedSessionKey
+ 	 */
+ 
+-	HMAC_CTX_init(&hmac_ctx);
+-	HMAC_Init_ex(&hmac_ctx, ntlmssp->exported_session_key, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac_ctx, ntlmssp->negotiate_message.data, ntlmssp->negotiate_message.length);
+-	HMAC_Update(&hmac_ctx, ntlmssp->challenge_message.data, ntlmssp->challenge_message.length);
+-	HMAC_Update(&hmac_ctx, ntlmssp->authenticate_message.data, ntlmssp->authenticate_message.length);
+-	HMAC_Final(&hmac_ctx, ntlmssp->message_integrity_check, NULL);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	hmac_ctx = HMAC_CTX_new();
++	HMAC_CTX_reset(hmac_ctx);
++#else
++	hmac_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++	HMAC_CTX_init(hmac_ctx);
++#endif
++	HMAC_Init_ex(hmac_ctx, ntlmssp->exported_session_key, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac_ctx, ntlmssp->negotiate_message.data, ntlmssp->negotiate_message.length);
++	HMAC_Update(hmac_ctx, ntlmssp->challenge_message.data, ntlmssp->challenge_message.length);
++	HMAC_Update(hmac_ctx, ntlmssp->authenticate_message.data, ntlmssp->authenticate_message.length);
++	HMAC_Final(hmac_ctx, ntlmssp->message_integrity_check, NULL);
++
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	HMAC_CTX_free(hmac_ctx);
++#else
++	HMAC_CTX_cleanup(hmac_ctx);
++	xfree(hmac_ctx);
++#endif
+ }
+ 
+ /**
+@@ -1181,17 +1194,23 @@ void ntlmssp_compute_message_integrity_check(NTLMSSP* ntlmssp)
+ 
+ void ntlmssp_encrypt_message(NTLMSSP* ntlmssp, rdpBlob* msg, rdpBlob* encrypted_msg, uint8* signature)
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX *hmac_ctx;
+ 	uint8 digest[16];
+ 	uint8 checksum[8];
+ 	uint32 version = 1;
+ 
+ 	/* Compute the HMAC-MD5 hash of ConcatenationOf(seq_num,msg) using the client signing key */
+-	HMAC_CTX_init(&hmac_ctx);
+-	HMAC_Init_ex(&hmac_ctx, ntlmssp->client_signing_key, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac_ctx, (void*) &ntlmssp->send_seq_num, 4);
+-	HMAC_Update(&hmac_ctx, msg->data, msg->length);
+-	HMAC_Final(&hmac_ctx, digest, NULL);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	hmac_ctx = HMAC_CTX_new();
++	HMAC_CTX_reset(hmac_ctx);
++#else
++	hmac_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++	HMAC_CTX_init(hmac_ctx);
++#endif
++	HMAC_Init_ex(hmac_ctx, ntlmssp->client_signing_key, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac_ctx, (void*) &ntlmssp->send_seq_num, 4);
++	HMAC_Update(hmac_ctx, msg->data, msg->length);
++	HMAC_Final(hmac_ctx, digest, NULL);
+ 
+ 	/* Allocate space for encrypted message */
+ 	freerdp_blob_alloc(encrypted_msg, msg->length);
+@@ -1207,7 +1226,12 @@ void ntlmssp_encrypt_message(NTLMSSP* ntlmssp, rdpBlob* msg, rdpBlob* encrypted_
+ 	memcpy(&signature[4], (void*) checksum, 8);
+ 	memcpy(&signature[12], (void*) &(ntlmssp->send_seq_num), 4);
+ 
+-	HMAC_CTX_cleanup(&hmac_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	HMAC_CTX_free(hmac_ctx);
++#else
++	HMAC_CTX_cleanup(hmac_ctx);
++	xfree(hmac_ctx);
++#endif
+ 
+ 	ntlmssp->send_seq_num++;
+ }
+@@ -1225,7 +1249,7 @@ void ntlmssp_encrypt_message(NTLMSSP* ntlmssp, rdpBlob* msg, rdpBlob* encrypted_
+ 
+ int ntlmssp_decrypt_message(NTLMSSP* ntlmssp, rdpBlob* encrypted_msg, rdpBlob* msg, uint8* signature)
+ {
+-	HMAC_CTX hmac_ctx;
++	HMAC_CTX *hmac_ctx;
+ 	uint8 digest[16];
+ 	uint8 checksum[8];
+ 	uint32 version = 1;
+@@ -1238,11 +1262,17 @@ int ntlmssp_decrypt_message(NTLMSSP* ntlmssp, rdpBlob* encrypted_msg, rdpBlob* m
+ 	crypto_rc4(ntlmssp->recv_rc4_seal, encrypted_msg->length, encrypted_msg->data, msg->data);
+ 
+ 	/* Compute the HMAC-MD5 hash of ConcatenationOf(seq_num,msg) using the client signing key */
+-	HMAC_CTX_init(&hmac_ctx);
+-	HMAC_Init_ex(&hmac_ctx, ntlmssp->server_signing_key, 16, EVP_md5(), NULL);
+-	HMAC_Update(&hmac_ctx, (void*) &ntlmssp->recv_seq_num, 4);
+-	HMAC_Update(&hmac_ctx, msg->data, msg->length);
+-	HMAC_Final(&hmac_ctx, digest, NULL);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	hmac_ctx = HMAC_CTX_new();
++	HMAC_CTX_reset(hmac_ctx);
++#else
++	hmac_ctx = xmalloc(sizeof(EVP_CIPHER_CTX));
++	HMAC_CTX_init(hmac_ctx);
++#endif
++	HMAC_Init_ex(hmac_ctx, ntlmssp->server_signing_key, 16, EVP_md5(), NULL);
++	HMAC_Update(hmac_ctx, (void*) &ntlmssp->recv_seq_num, 4);
++	HMAC_Update(hmac_ctx, msg->data, msg->length);
++	HMAC_Final(hmac_ctx, digest, NULL);
+ 
+ 	/* RC4-encrypt first 8 bytes of digest */
+ 	crypto_rc4(ntlmssp->recv_rc4_seal, 8, digest, checksum);
+@@ -1259,7 +1289,12 @@ int ntlmssp_decrypt_message(NTLMSSP* ntlmssp, rdpBlob* encrypted_msg, rdpBlob* m
+ 		return 0;
+ 	}
+ 
+-	HMAC_CTX_cleanup(&hmac_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	HMAC_CTX_free(hmac_ctx);
++#else
++	HMAC_CTX_cleanup(hmac_ctx);
++	xfree(hmac_ctx);
++#endif
+ 
+ 	ntlmssp->recv_seq_num++;
+ 	return 1;
+-- 
+2.7.4
+
