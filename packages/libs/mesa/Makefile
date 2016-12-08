@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 11.1.1
+VERSION = 13.0.2
 LICENSE = custom
 
 ifneq ($(MAKECMDGOALS),watch)
@@ -102,7 +102,10 @@ endif
 ifeq ($(CONFIG_OPENGL_MESA_OPENGL),y)
 	conf-args += --enable-opengl
 else
-	conf-args += --disable-opengl
+	conf-args += \
+		--disable-opengl \
+		--disable-glx \
+		--disable-dri
 endif
 
 conf-vars += \
