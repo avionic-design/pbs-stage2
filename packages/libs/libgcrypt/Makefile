@@ -5,6 +5,9 @@ conf-args += \
 	--with-gpg-error-prefix=$(SYSROOT)$(prefix) \
 	--disable-asm
 
+config-scriptfiles = \
+	$(prefix)/bin/libgcrypt-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
