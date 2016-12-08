@@ -1,5 +1,5 @@
 PACKAGE = nettle
-VERSION = 3.2
+VERSION = 3.3
 LICENSE = GPL
 
 LOCATION = http://www.lysator.liu.se/~nisse/archive
