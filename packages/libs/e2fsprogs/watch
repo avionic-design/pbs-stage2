@@ -1,2 +1,2 @@
 version=3
-http://sf.net/e2fsprogs/e2fsprogs-libs-(.*)\.tar\.gz
+http://sf.net/e2fsprogs/e2fsprogs-libs-([\d\.]+)\.tar\.gz
