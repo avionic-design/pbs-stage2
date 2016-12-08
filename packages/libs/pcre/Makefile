@@ -15,6 +15,9 @@ $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 conf-args += \
 	--enable-unicode-properties
 
+config-scriptfiles = \
+	$(prefix)/bin/pcre-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
