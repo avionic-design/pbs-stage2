@@ -8,6 +8,9 @@ cross-build = $(objtree)/build/packages/build-tools/icu/icu/source
 conf-args += \
 	--with-cross-build=$(cross-build)/obj-$(BUILD_GNU_TYPE)
 
+config-scriptfiles = \
+	$(prefix)/bin/icu-config
+
 stripfiles = \
 	$(prefix)/bin/derb \
 	$(prefix)/bin/genbrk \
