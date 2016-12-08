@@ -1,5 +1,5 @@
 PACKAGE = libcanberra
-VERSION = 0.26
+VERSION = 0.28
 
 LOCATION = http://0pointer.de/lennart/projects/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
