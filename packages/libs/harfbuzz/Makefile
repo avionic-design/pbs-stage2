@@ -1,5 +1,5 @@
 PACKAGE = harfbuzz
-VERSION = 1.2.5
+VERSION = 1.3.4
 LICENSE = MIT
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/release
