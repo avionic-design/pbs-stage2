@@ -10,6 +10,9 @@ include packages/autotools.mk
 conf-args += \
 	--with-random=/dev/urandom
 
+config-scriptfiles = \
+	$(prefix)/bin/curl-config
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
