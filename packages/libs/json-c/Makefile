@@ -1,5 +1,5 @@
 PACKAGE = json-c
-VERSION = 0.12
+VERSION = 0.12.1
 LICENSE = MIT
 
 LOCATION = https://s3.amazonaws.com/json-c_releases/releases
