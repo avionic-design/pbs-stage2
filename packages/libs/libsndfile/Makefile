@@ -1,5 +1,5 @@
 PACKAGE = libsndfile
-VERSION = 1.0.26
+VERSION = 1.0.27
 LICENSE = LGPL
 
 LOCATION = http://www.mega-nerd.com/$(PACKAGE)/files
