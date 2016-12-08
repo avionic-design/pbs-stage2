@@ -1,5 +1,5 @@
 PACKAGE = imlib2
-VERSION = 1.4.6
+VERSION = 1.4.9
 
 LOCATION = http://prdownloads.sourceforge.net/enlightenment
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -12,6 +12,9 @@ $(pkgbuildtree)/m4:
 $(pkgtree)/.autoreconfigure: | $(pkgbuildtree)/m4
 
 plugin = $(prefix)/lib/imlib2
+
+config-scriptfiles = \
+	$(prefix)/bin/imlib2-config
 
 prunefiles = \
 	$(prefix)/bin/imlib2-config \
