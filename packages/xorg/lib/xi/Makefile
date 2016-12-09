@@ -2,8 +2,10 @@ PACKAGE = libXi
 VERSION = 1.7.6
 LICENSE = custom
 
-ifeq ($(CONFIG_XORG_IEGD),y)
-VERSION = 1.2.1
+ifneq ($(MAKECMDGOALS),watch)
+  ifeq ($(CONFIG_XORG_IEGD),y)
+  VERSION = 1.2.1
+  endif
 endif
 
 include packages/xorg/lib/common.mk
