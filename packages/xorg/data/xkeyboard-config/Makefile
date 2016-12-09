@@ -1,5 +1,5 @@
 PACKAGE = xkeyboard-config
-VERSION = 2.0
+VERSION = 2.19
 
 LOCATION = http://www.x.org/releases/individual/data/$(PACKAGE)
 
