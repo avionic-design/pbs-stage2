@@ -1,9 +1,11 @@
 PACKAGE = libXext
 VERSION = 1.3.3
 
-ifeq ($(CONFIG_XORG_IEGD),y)
-patchdir = $(pkgsrctree)/patches-$(VERSION)
-VERSION = 1.0.5
+ifneq ($(MAKECMDGOALS),watch)
+  ifeq ($(CONFIG_XORG_IEGD),y)
+  patchdir = $(pkgsrctree)/patches-$(VERSION)
+  VERSION = 1.0.5
+  endif
 endif
 
 include packages/xorg/lib/common.mk
