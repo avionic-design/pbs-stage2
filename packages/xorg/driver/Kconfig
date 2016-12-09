@@ -3,7 +3,6 @@ menu "X.Org - Drivers"
 comment "Input Drivers"
 
 source "packages/xorg/driver/xf86-input-evdev/Kconfig"
-source "packages/xorg/driver/xf86-input-evtouch/Kconfig"
 source "packages/xorg/driver/xf86-input-keyboard/Kconfig"
 source "packages/xorg/driver/xf86-input-mouse/Kconfig"
 
