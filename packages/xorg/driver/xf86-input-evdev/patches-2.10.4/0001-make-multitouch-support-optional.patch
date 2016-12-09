@@ -1,0 +1,204 @@
+From 6674359245d4eedcc0adade00168b0930e3cd0f4 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 9 Dec 2016 12:04:53 +0100
+Subject: [PATCH] make multitouch support optional
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.ac | 11 ++++++++++-
+ src/evdev.c  | 30 +++++++++++++++++++++++++++---
+ src/evdev.h  |  4 ++++
+ 3 files changed, 41 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index e4887a3..47eb4a3 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -48,7 +48,16 @@ PKG_CHECK_MODULES(XORG, [xorg-server >= 1.12] xproto [inputproto >= 2.1.99.3])
+ PKG_CHECK_MODULES(UDEV, libudev)
+ 
+ PKG_CHECK_MODULES(LIBEVDEV, [libevdev >= 0.4])
+-PKG_CHECK_MODULES(MTDEV, mtdev)
++
++AC_ARG_ENABLE([multitouch],
++	AS_HELP_STRING([--disable-multitouch],
++		[Disable multitouch support (default: no)]),
++		[], [enable_multitouch=yes])
++
++if test "x$enable_multitouch" != "xno"; then
++	PKG_CHECK_MODULES(MTDEV, mtdev)
++	AC_DEFINE([HAVE_MTDEV], [1], [Multitouch enabled])
++fi
+ 
+ # Define a configure option for an alternate input module directory
+ AC_ARG_WITH(xorg-module-dir,
+diff --git a/src/evdev.c b/src/evdev.c
+index 5ace238..89bbdc2 100644
+--- a/src/evdev.c
++++ b/src/evdev.c
+@@ -54,7 +54,9 @@
+ #include <X11/Xatom.h>
+ #include <evdev-properties.h>
+ #include <xserver-properties.h>
++#ifdef HAVE_MTDEV
+ #include <mtdev-plumbing.h>
++#endif
+ 
+ #ifndef XI_PROP_PRODUCT_ID
+ #define XI_PROP_PRODUCT_ID "Device Product ID"
+@@ -683,9 +685,11 @@ num_slots(EvdevPtr pEvdev)
+ {
+     int value;
+ 
++#ifdef HAVE_MTDEV
+     if (pEvdev->mtdev)
+         value = pEvdev->mtdev->caps.slot.maximum + 1;
+     else
++#endif
+         value = libevdev_get_num_slots(pEvdev->dev);
+ 
+     /* If we don't know how many slots there are, assume at least 10 */
+@@ -706,8 +710,12 @@ EvdevProcessTouchEvent(InputInfoPtr pInfo, struct input_event *ev)
+     EvdevPtr pEvdev = pInfo->private;
+     int map;
+ 
++#ifdef HAVE_MTDEV
+     if (!pEvdev->mtdev &&
+         !libevdev_has_event_code(pEvdev->dev, EV_ABS, ABS_MT_SLOT))
++#else
++    if (!libevdev_has_event_code(pEvdev->dev, EV_ABS, ABS_MT_SLOT))
++#endif
+         return;
+ 
+     if (pEvdev->fake_mt)
+@@ -1038,6 +1046,7 @@ EvdevFreeMasks(EvdevPtr pEvdev)
+         valuator_mask_free(&pEvdev->queue[i].touchMask);
+ }
+ 
++#ifdef HAVE_MTDEV
+ static void
+ EvdevHandleMTDevEvent(InputInfoPtr pInfo, struct input_event *ev)
+ {
+@@ -1052,6 +1061,7 @@ EvdevHandleMTDevEvent(InputInfoPtr pInfo, struct input_event *ev)
+         }
+     }
+ }
++#endif
+ 
+ static void
+ EvdevReadInput(InputInfoPtr pInfo)
+@@ -1070,17 +1080,21 @@ EvdevReadInput(InputInfoPtr pInfo)
+                                        strerror(-rc));
+             break;
+         } else if (rc == LIBEVDEV_READ_STATUS_SUCCESS) {
++#ifdef HAVE_MTDEV
+             if (pEvdev->mtdev)
+                 EvdevHandleMTDevEvent(pInfo, &ev);
+             else
++#endif
+                 EvdevProcessEvent(pInfo, &ev);
+         }
+         else { /* SYN_DROPPED */
+             rc = libevdev_next_event(pEvdev->dev, LIBEVDEV_READ_FLAG_SYNC, &ev);
+             while (rc == LIBEVDEV_READ_STATUS_SYNC) {
++#ifdef HAVE_MTDEV
+                 if (pEvdev->mtdev)
+                     EvdevHandleMTDevEvent(pInfo, &ev);
+                 else
++#endif
+                     EvdevProcessEvent(pInfo, &ev);
+                 rc = libevdev_next_event(pEvdev->dev, LIBEVDEV_READ_FLAG_SYNC, &ev);
+             }
+@@ -1458,7 +1472,11 @@ EvdevAddAbsValuatorClass(DeviceIntPtr device, int num_scroll_axes)
+         for (i = 0; i < num_touches; i++) {
+             for (axis = ABS_MT_TOUCH_MAJOR; axis < ABS_MAX; axis++) {
+                 if (pEvdev->abs_axis_map[axis] >= 0) {
++#ifdef HAVE_MTDEV
+                     int val = pEvdev->mtdev ? 0 : libevdev_get_current_slot(pEvdev->dev);
++#else
++                    int val = 0;
++#endif
+                     /* XXX: read initial values from mtdev when it adds support
+                      *      for doing so. */
+                     valuator_mask_set(pEvdev->last_mt_vals[i],
+@@ -2423,10 +2441,13 @@ EvdevOpenMTDev(InputInfoPtr pInfo)
+ {
+     EvdevPtr pEvdev = pInfo->private;
+ 
++#ifdef HAVE_MTDEV
+     if (pEvdev->mtdev) {
+         pEvdev->cur_slot = pEvdev->mtdev->caps.slot.value;
+         return TRUE;
+-    } else if (libevdev_has_event_code(pEvdev->dev, EV_ABS, ABS_MT_SLOT)) {
++    } else
++#endif
++    if (libevdev_has_event_code(pEvdev->dev, EV_ABS, ABS_MT_SLOT)) {
+         pEvdev->cur_slot = libevdev_get_current_slot(pEvdev->dev);
+         return TRUE;
+     }
+@@ -2439,6 +2460,7 @@ EvdevOpenMTDev(InputInfoPtr pInfo)
+     if (!libevdev_has_event_type(pEvdev->dev, EV_ABS))
+         return TRUE;
+ 
++#ifdef HAVE_MTDEV
+     /* don't need mtdev for protocol B devices */
+     if (libevdev_has_event_code(pEvdev->dev, EV_ABS, ABS_MT_SLOT))
+         return TRUE;
+@@ -2456,6 +2478,7 @@ EvdevOpenMTDev(InputInfoPtr pInfo)
+         EvdevCloseDevice(pInfo);
+         return FALSE;
+     }
++#endif
+ 
+     return TRUE;
+ }
+@@ -2528,19 +2551,20 @@ EvdevOpenDevice(InputInfoPtr pInfo)
+ static void
+ EvdevCloseDevice(InputInfoPtr pInfo)
+ {
+-    EvdevPtr pEvdev = pInfo->private;
+     if (!(pInfo->flags & XI86_SERVER_FD) && pInfo->fd >= 0)
+     {
+         close(pInfo->fd);
+         pInfo->fd = -1;
+     }
+ 
++#ifdef HAVE_MTDEV
++    EvdevPtr pEvdev = pInfo->private;
+     if (pEvdev->mtdev)
+     {
+         mtdev_close_delete(pEvdev->mtdev);
+         pEvdev->mtdev = NULL;
+     }
+-
++#endif
+ }
+ 
+ 
+diff --git a/src/evdev.h b/src/evdev.h
+index c506296..7ed91db 100644
+--- a/src/evdev.h
++++ b/src/evdev.h
+@@ -43,7 +43,9 @@
+ #include <xf86_OSproc.h>
+ #include <xkbstr.h>
+ 
++#ifdef HAVE_MTDEV
+ #include <mtdev.h>
++#endif
+ 
+ #include <libevdev/libevdev.h>
+ 
+@@ -174,7 +176,9 @@ typedef struct {
+         int dirty;
+         enum SlotState state;
+     } *slots;
++#ifdef HAVE_MTDEV
+     struct mtdev *mtdev;
++#endif
+     BOOL fake_mt;
+ 
+     int flags;
+-- 
+2.7.4
+
