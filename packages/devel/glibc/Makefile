@@ -1,6 +1,20 @@
 include packages/devel/glibc/Makefile.location
 include packages/autotools.mk
 
+KERNEL_PACKAGE := linux
+KERNEL_VERSION := $(shell cat $(objtree)/build/packages/kernel/$(KERNEL_PACKAGE)/build/include/config/kernel.release)
+KERNEL_VERSION_TUPLE = $(word 1, $(subst -, ,$(KERNEL_VERSION)))
+KERNEL_VERSION_MAJOR = $(word 1, $(subst ., ,$(KERNEL_VERSION_TUPLE)))
+KERNEL_VERSION_MINOR = $(word 2, $(subst ., ,$(KERNEL_VERSION_TUPLE)))
+KERNEL_VERSION_GLIBC = $(KERNEL_VERSION_MAJOR).$(KERNEL_VERSION_MINOR)
+
+# for non x86 or x86_64 targets, Kernel support pre 3.20 ended with glibc 2.23.
+ifeq (,$(findstring x86,$(ARCH)))
+  ifneq "3.20" "$(word 1, $(sort 3.20 $(KERNEL_VERSION_GLIBC)))"
+    VERSION := 2.23
+  endif
+endif
+
 # always optimize glibc for speed (it won't even compile with -Os)
 CPPFLAGS := $(subst --sysroot $(SYSROOT),,$(CPPFLAGS))
 LDFLAGS := $(subst --sysroot $(SYSROOT),,$(LDFLAGS))
@@ -46,9 +60,6 @@ endif
 ifeq ($(ARCH),x86_64)
   conf-vars += ac_cv_sizeof_long_double=16
 endif
-
-build-args += \
-	MAKEFLAGS=
 
 ifeq ($(MICRO),0)
   LIB_VERSION = $(MAJOR).$(MINOR)
