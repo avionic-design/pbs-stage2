@@ -1,5 +1,5 @@
 PACKAGE = libXi
-VERSION = 1.7.6
+VERSION = 1.7.8
 LICENSE = custom
 
 ifneq ($(MAKECMDGOALS),watch)
