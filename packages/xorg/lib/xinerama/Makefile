@@ -1,9 +1,11 @@
 PACKAGE = libXinerama
 VERSION = 1.1.3
 
-ifeq ($(CONFIG_XORG_IEGD),y)
-patchdir = $(pkgsrctree)/patches-$(VERSION)
-VERSION = 1.0.3
+ifneq ($(MAKECMDGOALS),watch)
+  ifeq ($(CONFIG_XORG_IEGD),y)
+  patchdir = $(pkgsrctree)/patches-$(VERSION)
+  VERSION = 1.0.3
+  endif
 endif
 
 include packages/xorg/lib/common.mk
