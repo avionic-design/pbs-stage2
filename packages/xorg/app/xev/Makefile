@@ -1,5 +1,5 @@
 PACKAGE = xev
-VERSION = 1.2.1
+VERSION = 1.2.2
 LICENSE = custom
 
 include packages/xorg/app/common.mk
