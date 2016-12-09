@@ -1,5 +1,5 @@
 PACKAGE = xf86-video-modesetting
-VERSION = 0.8.0
+VERSION = 0.9.0
 LICENSE = MIT
 
 include packages/xorg/driver/common.mk
