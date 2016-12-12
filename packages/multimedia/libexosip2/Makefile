@@ -7,6 +7,9 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
+config-args += \
+	--enable-silent-rules
+
 prunefiles = \
 	$(prefix)/lib/*.la
 

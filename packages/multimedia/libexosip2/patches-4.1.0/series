@@ -1,1 +1,2 @@
 ltmain-sysroot.patch -d scripts
+0001-openssl-1.1.0-compatibility.patch
