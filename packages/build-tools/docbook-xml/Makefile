@@ -86,7 +86,7 @@ $(pkgtree)/.do-install: $(pkgtree)/.patch
 		$(XMLCATALOG) --add "public" \
 			"-//OASIS//DTD DocBook XML V$${DTDVERSION}//EN" \
 			"http://www.oasis-open.org/docbook/xml/$${DTDVERSION}/docbookx.dtd" \
-			$(catalogdir)/docbook ; \
+			$(catalog) ; \
 		$(XMLCATALOG) --add "rewriteSystem" \
 			"http://www.oasis-open.org/docbook/xml/$${DTDVERSION}" \
 			"file://$(dstdir)" \
