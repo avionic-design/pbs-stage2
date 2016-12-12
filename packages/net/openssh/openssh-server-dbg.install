@@ -1,2 +1,2 @@
 /debug/usr/sbin
-/debug/usr/lib/openssh/sftp-server
+/debug/usr/lib/openssh/sftp-server.dbg
