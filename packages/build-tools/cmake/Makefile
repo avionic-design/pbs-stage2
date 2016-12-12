@@ -11,5 +11,6 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/build-tools/autotools.mk
 
 conf-args = \
+	--parallel=$(NUM_CPU) \
 	--prefix=$(prefix) \
 	-- -DCMAKE_EXE_LINKER_FLAGS="-L $(prefix)/lib"
