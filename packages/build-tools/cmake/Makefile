@@ -11,4 +11,5 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/build-tools/autotools.mk
 
 conf-args = \
-	--prefix=$(prefix)
+	--prefix=$(prefix) \
+	-- -DCMAKE_EXE_LINKER_FLAGS="-L $(prefix)/lib"
