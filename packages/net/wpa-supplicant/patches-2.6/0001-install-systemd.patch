@@ -1,0 +1,74 @@
+From 5368a612c1b45f34bbc11638f4f6ce2c9828b30d Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 12 Dec 2016 13:40:11 +0100
+Subject: [PATCH 1/2] install systemd
+
+Install systemd unit files. Add the Makefile from version 1.1 again to
+save the manual work.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ wpa_supplicant/Makefile         |  6 ++++++
+ wpa_supplicant/dbus/Makefile    |  4 +++-
+ wpa_supplicant/systemd/Makefile | 10 ++++++++++
+ 3 files changed, 19 insertions(+), 1 deletion(-)
+ create mode 100644 wpa_supplicant/systemd/Makefile
+
+diff --git a/wpa_supplicant/Makefile b/wpa_supplicant/Makefile
+index f3e86c1..b5c207a 100644
+--- a/wpa_supplicant/Makefile
++++ b/wpa_supplicant/Makefile
+@@ -17,6 +17,10 @@ LIBS_p := $(LIBS)
+ endif
+ endif
+ 
++export DESTDIR ?=
++export SYSTEMDUNITDIR ?= /usr/local/lib/systemd/system/
++export DATADIR ?= /usr/local/share/
++export SYSCONFDIR ?= /usr/local/etc/
+ export LIBDIR ?= /usr/local/lib/
+ export INCDIR ?= /usr/local/include/
+ export BINDIR ?= /usr/local/sbin/
+@@ -86,6 +90,8 @@ $(DESTDIR)$(BINDIR)/%: %
+ 
+ install: $(addprefix $(DESTDIR)$(BINDIR)/,$(BINALL))
+ 	$(MAKE) -C ../src install
++	$(MAKE) -C dbus install
++	$(MAKE) -C systemd install
+ ifdef CONFIG_BUILD_WPA_CLIENT_SO
+ 	install -m 0644 -D libwpa_client.so $(DESTDIR)/$(LIBDIR)/libwpa_client.so
+ 	install -m 0644 -D ../src/common/wpa_ctrl.h $(DESTDIR)/$(INCDIR)/wpa_ctrl.h
+diff --git a/wpa_supplicant/dbus/Makefile b/wpa_supplicant/dbus/Makefile
+index f355ebe..033efd3 100644
+--- a/wpa_supplicant/dbus/Makefile
++++ b/wpa_supplicant/dbus/Makefile
+@@ -5,7 +5,9 @@ clean:
+ 	rm -f libwpadbus.a
+ 
+ install:
+-	@echo Nothing to be made.
++	install -D -m 0644 dbus-wpa_supplicant.conf $(DESTDIR)$(SYSCONFDIR)/dbus-1/system.d/wpa_supplicant.conf
++	install -D -m 0644 fi.w1.wpa_supplicant1.service $(DESTDIR)$(DATADIR)/dbus-1/system-services/fi.w1.wpa_supplicant1.service
++	install -D -m 0644 fi.epitest.hostap.WPASupplicant.service $(DESTDIR)$(DATADIR)/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service
+ 
+ ifndef CC
+ CC=gcc
+diff --git a/wpa_supplicant/systemd/Makefile b/wpa_supplicant/systemd/Makefile
+new file mode 100644
+index 0000000..fe087cb
+--- /dev/null
++++ b/wpa_supplicant/systemd/Makefile
+@@ -0,0 +1,10 @@
++
++
++install:
++	install -D -m 0755 wpa_supplicant.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant.service
++	install -D -m 0755 wpa_supplicant@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant@.service
++	install -D -m 0755 wpa_supplicant-nl80211@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant-nl80211@.service
++	install -D -m 0755 wpa_supplicant-wired@.service $(DESTDIR)$(SYSTEMDUNITDIR)/wpa_supplicant-wired@.service
++
++clean:
++	rm -f *.service
+-- 
+2.7.4
+

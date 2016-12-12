@@ -1,5 +1,5 @@
 PACKAGE = wpa_supplicant
-VERSION = 1.1
+VERSION = 2.6
 
 LOCATION = http://hostap.epitest.fi/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
