@@ -1,5 +1,5 @@
 PACKAGE = libeXosip2
-VERSION = 3.6.0
+VERSION = 4.1.0
 LICENSE = GPL
 
 LOCATION = http://download.savannah.gnu.org/releases/exosip
