@@ -18,7 +18,7 @@ CONFIG_ABI := $(call unquote,$(CONFIG_ABI))
 
 include $(if $(KBUILD_SRC),$(srctree)/arch/$(CONFIG_ARCH)/Makefile)
 
-PATH := $(BUILD_TOOLS)/bin:$(PATH)
+PATH := $(BUILD_TOOLS)/bin/target:$(BUILD_TOOLS)/bin:$(PATH)
 LD_LIBRARY_PATH := $(BUILD_TOOLS)/lib$(if $(LD_LIBRARY_PATH),:$(LD_LIBRARY_PATH))
 LOCPATH := $(BUILD_TOOLS)/lib/locale$(if $(LOCPATH),:$(LOCPATH))
 CROSS_COMPILE ?= $(TARGET)-

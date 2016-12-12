@@ -34,11 +34,12 @@ config-scriptfiles := $(patsubst %,config-script-%,$(config-scriptfiles))
 PHONY += $(config-scriptfiles)
 $(config-scriptfiles): config-script-%:
 	@echo "  CFGSCR  $(subst $(DESTDIR),,$*)"
+	@mkdir -p $(objtree)/build-tools/bin/target
 	@sed $* \
 		$(CONFIG_SCRIPT_REPLACEMENT) \
 		$(CONFIG_SCRIPT_EXTRA_REPLACEMENT) \
-		> $(objtree)/build-tools/bin/$$(basename $*)
-	@chmod +x $(objtree)/build-tools/bin/$$(basename $*)
+		> $(objtree)/build-tools/bin/target/$$(basename $*)
+	@chmod +x $(objtree)/build-tools/bin/target/$$(basename $*)
 
 PHONY += config-scripts
 config-scripts: $(config-scriptfiles)
