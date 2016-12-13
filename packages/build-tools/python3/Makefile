@@ -1,5 +1,5 @@
 PACKAGE = Python
-VERSION = 3.5.0
+VERSION = 3.5.2
 
 LOCATION = http://python.org/ftp/python/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
