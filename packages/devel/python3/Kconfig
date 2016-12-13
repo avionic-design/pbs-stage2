@@ -1,5 +1,5 @@
-config PACKAGE_DEVEL_PYTHON
-	bool "python"
+config PACKAGE_DEVEL_PYTHON3
+	bool "python3"
 	select PACKAGE_BUILD_TOOLS_PYTHON3
 	select PACKAGE_LIBS_BZIP2
 	select PACKAGE_LIBS_LIBFFI

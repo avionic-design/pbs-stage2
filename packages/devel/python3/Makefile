@@ -1,4 +1,4 @@
-include packages/devel/python/Makefile.location
+include packages/devel/python3/Makefile.location
 include packages/common.mk
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
