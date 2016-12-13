@@ -1,14 +1,10 @@
 PACKAGE = synergy
 VERSION = 1.5.0
-REVISION = r2278
-RELEASE = Source
 
-LOCATION = http://synergy-project.org/files/packages
-TARBALLS = $(PACKAGE)-$(VERSION)-$(REVISION)-$(RELEASE).tar.gz
+LOCATION = https://github.com/symless/$(PACKAGE)/archive
+TARBALLS = $(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/cmake.mk
-
-pkgbuildtree := $(pkgtree)/$(PACKAGE)-$(VERSION)-$(RELEASE)
 
 zipfiles := ext/cryptopp562.zip ext/gmock-1.6.0.zip ext/gtest-1.6.0.zip
 
