@@ -1,5 +1,5 @@
 PACKAGE = strace
-VERSION = 4.9
+VERSION = 4.14
 LICENSE = BSD
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
