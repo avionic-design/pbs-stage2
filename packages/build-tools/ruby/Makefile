@@ -1,5 +1,5 @@
 PACKAGE = ruby
-VERSION = 2.2.3
+VERSION = 2.4.0
 LICENSE = BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -12,5 +12,4 @@ include packages/build-tools/autotools.mk
 
 conf-args += \
 	--disable-install-doc \
-	--with-out-ext=tk \
-	--with-openssl-lib=$(prefix)/lib64
+	--with-out-ext=tk
