@@ -1,0 +1,51 @@
+From e792587da2209b0b21d013cdbcac8af321bca162 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 13 Dec 2016 15:55:08 +0100
+Subject: [PATCH] fix xml2po paths for out of tree builds
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ bootstrap.make                 | 2 +-
+ doc/gnome-doc-make/Makefile.in | 2 +-
+ doc/xslt/Makefile.in           | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/bootstrap.make b/bootstrap.make
+index 44fbb62..ba46c02 100644
+--- a/bootstrap.make
++++ b/bootstrap.make
+@@ -1,4 +1,4 @@
+-_xml2po = PYTHONPATH="$(shell pwd)/$(top_builddir)/xml2po:$(shell pwd)/$(top_srcdir)/xml2po:$(PYTHONPATH)" "$(shell pwd)/$(top_builddir)/xml2po/xml2po/xml2po"
++_xml2po = PYTHONPATH="$(abs_top_builddir)/xml2po:$(abs_top_srcdir)/xml2po:$(PYTHONPATH)" "$(abs_top_builddir)/xml2po/xml2po/xml2po"
+ 
+ _db2html = $(top_srcdir)/xslt/docbook/html/db2html.xsl
+ _db2omf  = $(top_srcdir)/xslt/docbook/omf/db2omf.xsl
+diff --git a/doc/gnome-doc-make/Makefile.in b/doc/gnome-doc-make/Makefile.in
+index 95e0cfc..b172753 100644
+--- a/doc/gnome-doc-make/Makefile.in
++++ b/doc/gnome-doc-make/Makefile.in
+@@ -340,7 +340,7 @@ _clean_dsk = $(if $(_DOC_DSK_IN),clean-doc-dsk)
+ _clean_lc = $(if $(_DOC_REAL_LINGUAS),clean-doc-lc)
+ _clean_dir = $(if $(DOC_MODULE)$(DOC_ID),clean-doc-dir)
+ _doc_install_dir = $(if $(DOC_ID),$(DOC_ID),$(DOC_MODULE))
+-_xml2po = PYTHONPATH="$(shell pwd)/$(top_builddir)/xml2po:$(shell pwd)/$(top_srcdir)/xml2po:$(PYTHONPATH)" "$(shell pwd)/$(top_builddir)/xml2po/xml2po/xml2po"
++_xml2po = PYTHONPATH="$(abs_top_builddir)/xml2po:$(abs_top_srcdir)/xml2po:$(PYTHONPATH)" "$(abs_top_builddir)/xml2po/xml2po/xml2po"
+ _db2html = $(top_srcdir)/xslt/docbook/html/db2html.xsl
+ _db2omf = $(top_srcdir)/xslt/docbook/omf/db2omf.xsl
+ _chunks = $(top_srcdir)/xslt/docbook/utils/chunks.xsl
+diff --git a/doc/xslt/Makefile.in b/doc/xslt/Makefile.in
+index f408c4c..3cc3811 100644
+--- a/doc/xslt/Makefile.in
++++ b/doc/xslt/Makefile.in
+@@ -340,7 +340,7 @@ _clean_dsk = $(if $(_DOC_DSK_IN),clean-doc-dsk)
+ _clean_lc = $(if $(_DOC_REAL_LINGUAS),clean-doc-lc)
+ _clean_dir = $(if $(DOC_MODULE)$(DOC_ID),clean-doc-dir)
+ _doc_install_dir = $(if $(DOC_ID),$(DOC_ID),$(DOC_MODULE))
+-_xml2po = PYTHONPATH="$(shell pwd)/$(top_builddir)/xml2po:$(shell pwd)/$(top_srcdir)/xml2po:$(PYTHONPATH)" "$(shell pwd)/$(top_builddir)/xml2po/xml2po/xml2po"
++_xml2po = PYTHONPATH="$(abs_top_builddir)/xml2po:$(abs_top_srcdir)/xml2po:$(PYTHONPATH)" "$(abs_top_builddir)/xml2po/xml2po/xml2po"
+ _db2html = $(top_srcdir)/xslt/docbook/html/db2html.xsl
+ _db2omf = $(top_srcdir)/xslt/docbook/omf/db2omf.xsl
+ _chunks = $(top_srcdir)/xslt/docbook/utils/chunks.xsl
+-- 
+2.7.4
+
