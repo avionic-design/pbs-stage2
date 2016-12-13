@@ -1,2 +1,2 @@
 version=3
-http://nevill.ch/libxdg-basedir/downloads/libxdg-basedir-([\d\.]+)\.tar\.gz
+https://github.com/devnev/libxdg-basedir/releases libxdg-basedir-([\d\.]+)\.tar\.gz
