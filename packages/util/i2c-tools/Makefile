@@ -1,5 +1,5 @@
 PACKAGE = i2c-tools
-VERSION = 3.1.1
+VERSION = 3.1.2
 LICENSE = GPL
 
 LOCATION = http://http.debian.net/debian/pool/main/i/$(PACKAGE)
