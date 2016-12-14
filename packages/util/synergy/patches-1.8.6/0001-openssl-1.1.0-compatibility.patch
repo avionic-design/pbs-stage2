@@ -1,0 +1,31 @@
+From 77dde226d8174d82f4b03c54f473e58baf38439f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 13 Dec 2016 17:30:00 +0100
+Subject: [PATCH] openssl 1.1.0 compatibility
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/lib/net/SecureSocket.cpp | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/src/lib/net/SecureSocket.cpp b/src/lib/net/SecureSocket.cpp
+index 7076c76..fe18dbf 100644
+--- a/src/lib/net/SecureSocket.cpp
++++ b/src/lib/net/SecureSocket.cpp
+@@ -805,9 +805,11 @@ SecureSocket::showSecureCipherInfo()
+ 		showCipherStackDesc(sStack);
+ 	}
+ 
+-	// m_ssl->m_ssl->session->ciphers is not forward compatable, In future release
+-	// of OpenSSL, it's not visible, need to use SSL_get_client_ciphers() instead
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	STACK_OF(SSL_CIPHER) * cStack = SSL_get_client_ciphers(m_ssl->m_ssl);
++#else
+ 	STACK_OF(SSL_CIPHER) * cStack = m_ssl->m_ssl->session->ciphers;
++#endif
+ 		if (cStack == NULL) {
+ 		LOG((CLOG_DEBUG1 "remote cipher list not available"));
+ 	}
+-- 
+2.7.4
+
