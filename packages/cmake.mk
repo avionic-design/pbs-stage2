@@ -31,9 +31,12 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 install-args = \
 	DESTDIR=$(DESTDIR)
 
-$(pkgtree)/.do-install: $(pkgtree)/.build
+install-cmd ?= \
 	cd $(pkgbuildtree)/obj-$(TARGET) && \
 		$(env) $(priv) $(MAKE) $(install-args) install
+
+$(pkgtree)/.do-install: $(pkgtree)/.build
+	$(install-cmd)
 	$(call cmd,stamp)
 
 include packages/cleanup.mk
