@@ -1,0 +1,396 @@
+From dd64cf764718eed1ede3466fda8e2371a8fb6c5a Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 7 Dec 2016 14:43:57 +0100
+Subject: [PATCH 2/2] support openssl 1.1.0
+
+Compatibility patch for openssl 1.1.0 and later. The 1.0.1 API should
+still work.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/enc.h       | 88 +++++++++++++++++++++++++++++++++++++++++++++------------
+ src/sslhelper.c | 87 +++++++++++++++++++++++++++++++++++++++++++++++---------
+ 2 files changed, 143 insertions(+), 32 deletions(-)
+
+diff --git a/src/enc.h b/src/enc.h
+index 55d49bb..8d7ac14 100644
+--- a/src/enc.h
++++ b/src/enc.h
+@@ -454,8 +454,10 @@ extern void enc_do(char *ciph, char *keyfile, char *lport, char *rhp) {
+ 		p++;
+ 		if (strstr(p, "md5+") == p) {
+ 			Digest = EVP_md5();        p += strlen("md5+");
++#if OPENSSL_VERSION_NUMBER < 0x10100000L && !defined OPENSSL_NO_SHA0
+ 		} else if (strstr(p, "sha+") == p) {
+ 			Digest = EVP_sha();        p += strlen("sha+");
++#endif
+ 		} else if (strstr(p, "sha1+") == p) {
+ 			Digest = EVP_sha1();       p += strlen("sha1+");
+ 		} else if (strstr(p, "ripe+") == p) {
+@@ -696,7 +698,11 @@ static void enc_xfer(int sock_fr, int sock_to, int encrypt) {
+ 	 */
+ 	unsigned char E_keystr[EVP_MAX_KEY_LENGTH];
+ 	unsigned char D_keystr[EVP_MAX_KEY_LENGTH];
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_CIPHER_CTX *E_ctx, *D_ctx;
++#else
+ 	EVP_CIPHER_CTX E_ctx, D_ctx;
++#endif
+ 	EVP_CIPHER_CTX *ctx = NULL;
+ 
+ 	unsigned char buf[BSIZE], out[BSIZE];
+@@ -739,11 +745,16 @@ static void enc_xfer(int sock_fr, int sock_to, int encrypt) {
+ 	encsym = encrypt ? "+" : "-";
+ 
+ 	/* use the encryption/decryption context variables below */
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	E_ctx = EVP_CIPHER_CTX_new();
++	D_ctx = EVP_CIPHER_CTX_new();
++	ctx = encrypt ? E_ctx : D_ctx;
++#else
++	ctx = encrypt ? &E_ctx : &D_ctx;
++#endif
+ 	if (encrypt) {
+-		ctx = &E_ctx;
+ 		keystr = E_keystr;
+ 	} else {
+-		ctx = &D_ctx;
+ 		keystr = D_keystr;
+ 	}
+ 
+@@ -877,9 +888,9 @@ static void enc_xfer(int sock_fr, int sock_to, int encrypt) {
+ 			in_salt = salt;
+ 		}
+ 
+-		if (ivec_size < Cipher->iv_len && !securevnc) {
++		if (ivec_size < EVP_CIPHER_iv_length(Cipher) && !securevnc) {
+ 			fprintf(stderr, "%s: %s - WARNING: short IV %d < %d\n",
+-			    prog, encstr, ivec_size, Cipher->iv_len);
++			    prog, encstr, ivec_size, EVP_CIPHER_iv_length(Cipher));
+ 		}
+ 
+ 		/* make the hashed value and place in keystr */
+@@ -1033,6 +1044,11 @@ static void enc_xfer(int sock_fr, int sock_to, int encrypt) {
+ 	fprintf(stderr,   "%s: %s - close sock_fr\n", prog, encstr);
+ 	close(sock_fr);
+ 
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_CIPHER_CTX_free(E_ctx);
++	EVP_CIPHER_CTX_free(D_ctx);
++#endif
++
+ 	/* kill our partner after 2 secs. */
+ 	sleep(2);
+ 	if (child)  {
+@@ -1101,14 +1117,24 @@ static int securevnc_server_rsa_save_dialog(char *file, char *md5str, unsigned c
+ }
+ 
+ static char *rsa_md5_sum(unsigned char* rsabuf) {
+-	EVP_MD_CTX md;
++	EVP_MD_CTX *md;
+ 	char digest[EVP_MAX_MD_SIZE], tmp[16];
+ 	char md5str[EVP_MAX_MD_SIZE * 8];
+ 	unsigned int i, size = 0;
+ 
+-	EVP_DigestInit(&md, EVP_md5());
+-	EVP_DigestUpdate(&md, rsabuf, SECUREVNC_RSA_PUBKEY_SIZE);
+-	EVP_DigestFinal(&md, (unsigned char *)digest, &size);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	md = EVP_MD_CTX_new();
++#else
++	md = EVP_MD_CTX_create();
++#endif
++	EVP_DigestInit(md, EVP_md5());
++	EVP_DigestUpdate(md, rsabuf, SECUREVNC_RSA_PUBKEY_SIZE);
++	EVP_DigestFinal(md, (unsigned char *)digest, &size);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_MD_CTX_free(md);
++#else
++	EVP_MD_CTX_destroy(md);
++#endif
+ 
+ 	memset(md5str, 0, sizeof(md5str));
+ 	for (i=0; i < size; i++) {
+@@ -1225,7 +1251,7 @@ static void sslexit(char *msg) {
+ 
+ static void securevnc_setup(int conn1, int conn2) {
+ 	RSA *rsa = NULL;
+-	EVP_CIPHER_CTX init_ctx;
++	EVP_CIPHER_CTX *init_ctx;
+ 	unsigned char keystr[EVP_MAX_KEY_LENGTH];
+ 	unsigned char *rsabuf, *rsasav;
+ 	unsigned char *encrypted_keybuf;
+@@ -1364,8 +1390,15 @@ static void securevnc_setup(int conn1, int conn2) {
+ 	/*
+ 	 * Back to the work involving the tmp obscuring key:
+ 	 */
+-	EVP_CIPHER_CTX_init(&init_ctx);
+-	rc = EVP_CipherInit_ex(&init_ctx, EVP_rc4(), NULL, initkey, NULL, 1);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	init_ctx = EVP_CIPHER_CTX_new();
++#else
++
++	EVP_CIPHER_CTX init_ctx_obj;
++	init_ctx = &init_ctx_obj;
++#endif
++	EVP_CIPHER_CTX_init(init_ctx);
++	rc = EVP_CipherInit_ex(init_ctx, EVP_rc4(), NULL, initkey, NULL, 1);
+ 	if (rc == 0) {
+ 		sslexit("securevnc_setup: EVP_CipherInit_ex(init_ctx) failed");
+ 	}
+@@ -1374,6 +1407,9 @@ static void securevnc_setup(int conn1, int conn2) {
+ 	n = read(server, (char *) buf, BSIZE);
+ 	fprintf(stderr, "securevnc_setup: data read: %d\n", n);
+ 	if (n < 0) {
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_CIPHER_CTX_free(init_ctx);
++#endif
+ 		exit(1);
+ 	}
+ 	fprintf(stderr, "securevnc_setup: initial data[%d]: ", n);
+@@ -1381,13 +1417,19 @@ static void securevnc_setup(int conn1, int conn2) {
+ 	/* decode with the tmp key */
+ 	if (n > 0) {
+ 		memset(to_viewer, 0, sizeof(to_viewer));
+-		if (EVP_CipherUpdate(&init_ctx, to_viewer, &len, buf, n) == 0) {
++		if (EVP_CipherUpdate(init_ctx, to_viewer, &len, buf, n) == 0) {
+ 			sslexit("securevnc_setup: EVP_CipherUpdate(init_ctx) failed");
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			EVP_CIPHER_CTX_free(init_ctx);
++#endif
+ 			exit(1);
+ 		}
+ 		to_viewer_len = len;
+ 	}
+-	EVP_CIPHER_CTX_cleanup(&init_ctx);
++	EVP_CIPHER_CTX_cleanup(init_ctx);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	EVP_CIPHER_CTX_free(init_ctx);
++#endif
+ 	free(initkey);
+ 
+ 	/* print what we would send to the viewer (sent below): */
+@@ -1448,7 +1490,7 @@ static void securevnc_setup(int conn1, int conn2) {
+ 
+ 	if (client_auth_req && client_auth) {
+ 		RSA *client_rsa = load_client_auth(client_auth);
+-		EVP_MD_CTX dctx;
++		EVP_MD_CTX *dctx;
+ 		unsigned char digest[EVP_MAX_MD_SIZE], *signature;
+ 		unsigned int ndig = 0, nsig = 0;
+ 
+@@ -1462,8 +1504,13 @@ static void securevnc_setup(int conn1, int conn2) {
+ 			exit(1);
+ 		}
+ 
+-		EVP_DigestInit(&dctx, EVP_sha1());
+-		EVP_DigestUpdate(&dctx, keystr, SECUREVNC_KEY_SIZE);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++		dctx = EVP_MD_CTX_new();
++#else
++		dctx = EVP_MD_CTX_create();
++#endif
++		EVP_DigestInit(dctx, EVP_sha1());
++		EVP_DigestUpdate(dctx, keystr, SECUREVNC_KEY_SIZE);
+ 		/*
+ 		 * Without something like the following MITM is still possible.
+ 		 * This is because the MITM knows keystr and can use it with
+@@ -1474,7 +1521,7 @@ static void securevnc_setup(int conn1, int conn2) {
+ 		 * he doesn't have Viewer_ClientAuth.pkey.
+ 		 */
+ 		if (0) {
+-			EVP_DigestUpdate(&dctx, rsasav, SECUREVNC_RSA_PUBKEY_SIZE);
++			EVP_DigestUpdate(dctx, rsasav, SECUREVNC_RSA_PUBKEY_SIZE);
+ 			if (!keystore_verified) {
+ 				fprintf(stderr, "securevnc_setup:\n");
+ 				fprintf(stderr, "securevnc_setup: Warning: even *WITH* Client Authentication in SecureVNC,\n");
+@@ -1497,7 +1544,12 @@ static void securevnc_setup(int conn1, int conn2) {
+ 				fprintf(stderr, "securevnc_setup:\n");
+ 			}
+ 		}
+-		EVP_DigestFinal(&dctx, (unsigned char *)digest, &ndig);
++		EVP_DigestFinal(dctx, (unsigned char *)digest, &ndig);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++		EVP_MD_CTX_free(dctx);
++#else
++		EVP_MD_CTX_destroy(dctx);
++#endif
+ 
+ 		signature = (unsigned char *) calloc(RSA_size(client_rsa), 1);
+ 		RSA_sign(NID_sha1, digest, ndig, signature, &nsig, client_rsa);
+diff --git a/src/sslhelper.c b/src/sslhelper.c
+index bae897f..940953b 100644
+--- a/src/sslhelper.c
++++ b/src/sslhelper.c
+@@ -801,8 +801,13 @@ static int pem_passwd_callback(char *buf, int size, int rwflag,
+ 
+ /* based on mod_ssl */
+ static int crl_callback(X509_STORE_CTX *callback_ctx) {
+-	X509_STORE_CTX store_ctx;
++	const ASN1_INTEGER *revoked_serial;
++	X509_STORE_CTX *store_ctx;
++#if OPENSSL_VERSION_NUMBER > 0x10100000L
++	X509_OBJECT *obj;
++#else
+ 	X509_OBJECT obj;
++#endif
+ 	X509_NAME *subject;
+ 	X509_NAME *issuer;
+ 	X509 *xs;
+@@ -822,11 +827,19 @@ static int crl_callback(X509_STORE_CTX *callback_ctx) {
+ 	
+ 	/* Try to retrieve a CRL corresponding to the _subject_ of
+ 	* the current certificate in order to verify it's integrity. */
++	store_ctx = X509_STORE_CTX_new();
++	X509_STORE_CTX_init(store_ctx, revocation_store, NULL, NULL);
++#if OPENSSL_VERSION_NUMBER > 0x10100000L
++	obj = X509_OBJECT_new();
++	rc=X509_STORE_get_by_subject(store_ctx, X509_LU_CRL, subject, obj);
++	crl = X509_OBJECT_get0_X509_CRL(obj);
++#else
+ 	memset((char *)&obj, 0, sizeof(obj));
+-	X509_STORE_CTX_init(&store_ctx, revocation_store, NULL, NULL);
+-	rc=X509_STORE_get_by_subject(&store_ctx, X509_LU_CRL, subject, &obj);
+-	X509_STORE_CTX_cleanup(&store_ctx);
++	rc=X509_STORE_get_by_subject(store_ctx, X509_LU_CRL, subject, &obj);
+ 	crl=obj.data.crl;
++#endif
++	X509_STORE_CTX_cleanup(store_ctx);
++	X509_STORE_CTX_free(store_ctx);
+ 
+ 	if(rc>0 && crl) {
+ 		/* Log information about CRL
+@@ -852,7 +865,11 @@ static int crl_callback(X509_STORE_CTX *callback_ctx) {
+ 			rfbLog("Invalid signature on CRL\n");
+ 			X509_STORE_CTX_set_error(callback_ctx,
+ 				X509_V_ERR_CRL_SIGNATURE_FAILURE);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			X509_OBJECT_free(obj);
++#else
+ 			X509_OBJECT_free_contents(&obj);
++#endif
+ 			if(pubkey)
+ 				EVP_PKEY_free(pubkey);
+ 			return 0; /* Reject connection */
+@@ -866,45 +883,78 @@ static int crl_callback(X509_STORE_CTX *callback_ctx) {
+ 			rfbLog("Found CRL has invalid nextUpdate field\n");
+ 			X509_STORE_CTX_set_error(callback_ctx,
+ 				X509_V_ERR_ERROR_IN_CRL_NEXT_UPDATE_FIELD);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			X509_OBJECT_free(obj);
++#else
+ 			X509_OBJECT_free_contents(&obj);
++#endif
+ 			return 0; /* Reject connection */
+ 		}
+ 		if(X509_cmp_current_time(t)<0) {
+ 			rfbLog("Found CRL is expired - "
+ 				"revoking all certificates until you get updated CRL\n");
+ 			X509_STORE_CTX_set_error(callback_ctx, X509_V_ERR_CRL_HAS_EXPIRED);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			X509_OBJECT_free(obj);
++#else
+ 			X509_OBJECT_free_contents(&obj);
++#endif
+ 			return 0; /* Reject connection */
+ 		}
+-		X509_OBJECT_free_contents(&obj);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			X509_OBJECT_free(obj);
++#else
++			X509_OBJECT_free_contents(&obj);
++#endif
+ 	}
+ 
+ 	/* Try to retrieve a CRL corresponding to the _issuer_ of
+ 	 * the current certificate in order to check for revocation. */
++	store_ctx = X509_STORE_CTX_new();
++	X509_STORE_CTX_init(store_ctx, revocation_store, NULL, NULL);
++#if OPENSSL_VERSION_NUMBER > 0x10100000L
++	obj = X509_OBJECT_new();
++	rc=X509_STORE_get_by_subject(store_ctx, X509_LU_CRL, issuer, obj);
++	crl = X509_OBJECT_get0_X509_CRL(obj);
++#else
+ 	memset((char *)&obj, 0, sizeof(obj));
+-	X509_STORE_CTX_init(&store_ctx, revocation_store, NULL, NULL);
+-	rc=X509_STORE_get_by_subject(&store_ctx, X509_LU_CRL, issuer, &obj);
+-	X509_STORE_CTX_cleanup(&store_ctx);
++	rc=X509_STORE_get_by_subject(store_ctx, X509_LU_CRL, issuer, &obj);
+ 	crl=obj.data.crl;
++#endif
++	X509_STORE_CTX_cleanup(store_ctx);
++	X509_STORE_CTX_free(store_ctx);
+ 
+ 	if(rc>0 && crl) {
+ 		/* Check if the current certificate is revoked by this CRL */
+ 		n=sk_X509_REVOKED_num(X509_CRL_get_REVOKED(crl));
+ 		for(i=0; i<n; i++) {
+ 			revoked=sk_X509_REVOKED_value(X509_CRL_get_REVOKED(crl), i);
+-			if(ASN1_INTEGER_cmp(revoked->serialNumber,
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			revoked_serial = X509_REVOKED_get0_serialNumber(revoked);
++#else
++			revoked_serial = revoked->serialNumber;
++#endif
++			if(ASN1_INTEGER_cmp(revoked_serial,
+ 					X509_get_serialNumber(xs)) == 0) {
+-				serial=ASN1_INTEGER_get(revoked->serialNumber);
++				serial=ASN1_INTEGER_get(revoked_serial);
+ 				cp=X509_NAME_oneline(issuer, NULL, 0);
+ 				rfbLog("Certificate with serial %ld (0x%lX) "
+ 					"revoked per CRL from issuer %s\n", serial, serial, cp);
+ 				OPENSSL_free(cp);
+ 				X509_STORE_CTX_set_error(callback_ctx, X509_V_ERR_CERT_REVOKED);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++				X509_OBJECT_free(obj);
++#else
+ 				X509_OBJECT_free_contents(&obj);
++#endif
+ 				return 0; /* Reject connection */
+ 			}
+ 		}
+-		X509_OBJECT_free_contents(&obj);
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++			X509_OBJECT_free(obj);
++#else
++			X509_OBJECT_free_contents(&obj);
++#endif
+ 	}
+ 
+ 	return 1; /* Accept connection */
+@@ -1898,6 +1948,7 @@ static void pr_ssl_info(int verb) {
+ 	SSL_CIPHER *c;
+ 	SSL_SESSION *s;
+ 	char *proto = "unknown";
++	int ssl_version;
+ 
+ 	if (verb) {}
+ 
+@@ -1907,13 +1958,21 @@ static void pr_ssl_info(int verb) {
+ 	c = SSL_get_current_cipher(ssl);
+ 	s = SSL_get_session(ssl);
+ 
++	if (s) {
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++		ssl_version = SSL_SESSION_get_protocol_version(s);
++#else
++		ssl_version = s->ssl_version;
++#endif
++	}
++
+ 	if (s == NULL) {
+ 		proto = "nosession";
+-	} else if (s->ssl_version == SSL2_VERSION) {
++	} else if (ssl_version == SSL2_VERSION) {
+ 		proto = "SSLv2";
+-	} else if (s->ssl_version == SSL3_VERSION) {
++	} else if (ssl_version == SSL3_VERSION) {
+ 		proto = "SSLv3";
+-	} else if (s->ssl_version == TLS1_VERSION) {
++	} else if (ssl_version == TLS1_VERSION) {
+ 		proto = "TLSv1";
+ 	}
+ 	if (c != NULL) {
+-- 
+2.7.4
+
