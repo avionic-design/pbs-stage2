@@ -2,8 +2,10 @@ PACKAGE = LibVNCServer
 VERSION = 0.9.9
 LICENSE = GPL
 
-LOCATION = http://prdownloads.sourceforge.net/libvncserver/libvncserver/$(VERSION)
+LOCATION = https://github.com/LibVNC/libvncserver/archive
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+
+pkgbuildtree := $(pkgtree)/libvncserver-$(PACKAGE)-$(VERSION)
 
 include packages/autotools-reconf.mk
 

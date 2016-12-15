@@ -1,2 +1,2 @@
 version=3
-http://sf.net/libvncserver/LibVNCServer-([\d\.]+)\.tar\.gz
+https://github.com/LibVNC/libvncserver/releases LibVNCServer-([\d\.]+)\.tar\.gz
