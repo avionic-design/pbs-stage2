@@ -1,5 +1,5 @@
 PACKAGE = bluez
-VERSION = 4.46
+VERSION = 5.13
 
 LOCATION = http://www.kernel.org/pub/linux/bluetooth
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
@@ -7,7 +7,15 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--enable-hidd
+	--enable-library
+
+# bluez needs its own headers installed first...
+$(pkgtree)/.install-headers:
+	cd $(pkgtree)/build/obj-$(HOST_GNU_TYPE) && \
+		$(env) $(priv) $(MAKE) DESTDIR=$(SYSROOT) install-includeHEADERS
+	$(call cmd,stamp)
+
+$(pkgtree)/.build: $(pkgtree)/.install-headers
 
 alsa = $(prefix)/lib/alsa-lib
 plugin = $(prefix)/lib/bluetooth/plugins
