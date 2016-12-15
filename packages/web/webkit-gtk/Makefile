@@ -1,103 +1,40 @@
 PACKAGE = webkitgtk
-VERSION = 2.4.9
+VERSION = 2.15.2
 LICENSE = LGPL BSD
-
-# Stick to 1.10.2 for L4T due to gstreamer-0.10 dependencies for video
-# playback
-ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
-# ...but don't mislead the watch script.
-ifneq ($(MAKECMDGOALS),watch)
-  VERSION = 1.10.2
-endif
-conf-args += \
-	--with-gstreamer=0.10
-else
-conf-args += \
-	--with-gstreamer=1.0
-endif
 
 LOCATION = http://www.webkitgtk.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+VERSION_MAJOR = $(word 1, $(subst ., ,$(VERSION)))
+VERSION_MINOR = $(word 2, $(subst ., ,$(VERSION)))
 
-ACLOCAL_FLAGS += -I Source/autotools
+GT = $(shell if [ $(1) -gt $(2) ] ; then echo y ; else echo n ; fi)
+EQ = $(shell if [ $(1) -eq $(2) ] ; then echo y ; else echo n ; fi)
 
-conf-args += \
-	--libexecdir=$(prefix)/lib/webkit \
-	--enable-dependency-tracking \
-	--enable-page-visibility-api \
-	--disable-geolocation \
-	--disable-spellcheck \
-	--enable-css3-flexbox \
-	--enable-css3-text-decoration
+ifneq ($(MAKECMDGOALS),watch)
+  # Stick to 1.10.2 for L4T due to gstreamer-0.10 dependencies for video
+  # playback
+  ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+    VERSION = 1.10.2
+  endif
 
-# Disable certain gcc warnings thrown a LOT to reduce output and speed up things
-CFLAGS += \
-	-Wno-cast-align \
-	-Wno-unused-local-typedefs
+  USE_CMAKE=n
+  # cmake build system from 2.5.0 on
+  ifeq ($(call GT,$(VERSION_MAJOR),2),y)
+    USE_CMAKE=y
+  else
+    ifeq ($(call EQ,$(VERSION_MAJOR),2),y)
+      ifeq ($(call GT,$(VERSION_MINOR),4),y)
+        USE_CMAKE=y
+      endif
+    endif
+  endif
 
-# Disable debug symbols to allow build on machine without enough RAM
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
-CFLAGS += -g0
-endif
-
-ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_UNICODE_BACKEND_ICU),y)
-  conf-args += --with-unicode-backend=icu
-else
-  conf-args += --with-unicode-backend=glib
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_VIDEO),y)
-  conf-args += --disable-video
-else
-  conf-args += --enable-video
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_ACCELERATED_COMPOSITING),y)
-  conf-args += \
-	--disable-accelerated-compositing \
-	--with-acceleration-backend=none
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBGL),y)
-  conf-args += --disable-webgl
-else
-  conf-args += --enable-webgl
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_FS_API),y)
-  conf-args += --disable-file-system
-else
-  conf-args += --enable-file-system
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_ANIM_API),y)
-  conf-args += --disable-animation-api
-else
-  conf-args += --enable-animation-api
-endif
-
-ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2),y)
-  conf-args += \
-	--disable-webkit2
-
-ifeq ($(CONFIG_VIRTUAL_LIBS_GTK_GTK3),y)
-  conf-args += --with-gtk=3.0
-else
-  conf-args += --with-gtk=2.0
-endif
-else
-  # requires gtk3
-  conf-args += \
-	--enable-webkit2 \
-	--with-gtk=3.0
-endif
-
-ifeq ($(CONFIG_PLATFORM_AVIONIC_DESIGN_MEDCOM_WIDE),y)
-  conf-args += --enable-nvxvimagesink
-else
-  conf-args += --disable-nvxvimagesink
+  ifeq ($(USE_CMAKE),y)
+    include packages/web/webkit-gtk/Makefile.cmake
+  else
+    include packages/web/webkit-gtk/Makefile.automake
+  endif
 endif
 
 prunefiles = \
