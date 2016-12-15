@@ -1,14 +1,17 @@
 PACKAGE = webkitgtk
-VERSION = 1.10.2
+VERSION = 2.4.9
 LICENSE = LGPL BSD
 
 # Stick to 1.10.2 for L4T due to gstreamer-0.10 dependencies for video
 # playback
 ifeq ($(CONFIG_PACKAGE_VENDOR_NVIDIA_TEGRA2_L4T),y)
+# ...but don't mislead the watch script.
+ifneq ($(MAKECMDGOALS),watch)
+  VERSION = 1.10.2
+endif
 conf-args += \
 	--with-gstreamer=0.10
 else
-VERSION = 2.4.9
 conf-args += \
 	--with-gstreamer=1.0
 endif
