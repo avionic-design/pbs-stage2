@@ -1,5 +1,5 @@
 PACKAGE = dnsmasq
-VERSION = 2.56
+VERSION = 2.76
 
 LOCATION = http://www.thekelleys.org.uk/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -18,17 +18,14 @@ build-args = \
 	LDFLAGS='$(LDFLAGS)' \
 	PREFIX=$(prefix)
 
-$(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(MAKE) $(build-args)
-	$(call cmd,stamp)
-
 install-args = \
 	DESTDIR=$(DESTDIR) \
 	PREFIX=$(prefix)
 
-$(pkgtree)/.do-install: $(pkgtree)/.build
+# This package builds on the 'install' target. And also installs. Odd.
+$(pkgtree)/.do-install: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
-		$(priv) $(MAKE) $(install-args) install
+		$(priv) $(MAKE) $(build-args) $(install-args) install
 	$(call cmd,stamp)
 
 prunefiles =

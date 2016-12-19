@@ -1,0 +1,26 @@
+From 0a8684eed4ff1fabff814d11297ceb833e8fe93b Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 19 Dec 2016 11:48:21 +0100
+Subject: [PATCH] fix the build
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index dd0513b..c04e709 100644
+--- a/Makefile
++++ b/Makefile
+@@ -153,7 +153,7 @@ $(objs:.o=.c) $(hdrs):
+ 
+ $(objs): $(copts_conf) $(hdrs)
+ 
+-.c.o:
++%.o: %.c
+ 	$(CC) $(CFLAGS) $(COPTS) $(i18n) $(build_cflags) $(RPM_OPT_FLAGS) -c $<	
+ 
+ dnsmasq : $(objs)
+-- 
+2.7.4
+
