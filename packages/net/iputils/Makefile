@@ -1,5 +1,5 @@
 PACKAGE = iputils
-VERSION = s20071127
+VERSION = s20151218
 
 LOCATION = http://www.skbuff.net/iputils
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
