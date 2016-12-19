@@ -1,7 +1,7 @@
 PACKAGE = cifs-utils
-VERSION = 4.8.1
+VERSION = 6.6
 
-LOCATION = ftp://ftp.samba.org/pub/linux-cifs/$(PACKAGE)
+LOCATION = https://download.samba.org/pub/linux-cifs/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
