@@ -1,5 +1,5 @@
 PACKAGE = iw
-VERSION = 3.3
+VERSION = 3.13
 
 LOCATION = https://www.kernel.org/pub/software/network/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
