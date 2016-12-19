@@ -2,7 +2,7 @@ PACKAGE = dnsmasq
 VERSION = 2.56
 
 LOCATION = http://www.thekelleys.org.uk/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.lzma
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
