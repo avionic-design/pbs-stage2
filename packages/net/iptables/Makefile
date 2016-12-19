@@ -8,8 +8,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 include packages/autotools.mk
 
 conf-args += \
-	--with-sysroot=$(SYSROOT) \
-	--disable-nftables
+	--with-sysroot=$(SYSROOT)
+
+ifeq ($(CONFIG_PACKAGE_NET_IPTABLES_NFTABLES_COMPAT),y)
+conf-args += --enable-nftables
+else
+conf-args += --disable-nftables
+endif
 
 plugin = $(prefix)/lib/xtables
 

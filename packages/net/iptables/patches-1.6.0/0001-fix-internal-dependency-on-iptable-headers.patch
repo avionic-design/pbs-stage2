@@ -1,0 +1,124 @@
+From f80b206909432facc08ae906d1c197a372fa0f02 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 19 Dec 2016 17:01:08 +0100
+Subject: [PATCH 1/2] fix internal dependency on iptable headers
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ iptables/Makefile.am |  3 +++
+ iptables/Makefile.in | 24 +++++++++++++++---------
+ 2 files changed, 18 insertions(+), 9 deletions(-)
+
+diff --git a/iptables/Makefile.am b/iptables/Makefile.am
+index 3c0faa5..c3eb8a8 100644
+--- a/iptables/Makefile.am
++++ b/iptables/Makefile.am
+@@ -4,6 +4,8 @@ AM_CFLAGS        = ${regular_CFLAGS}
+ AM_CPPFLAGS      = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
+ AM_YFLAGS = -d
+ 
++BUILT_SOURCES =
++
+ xtables_multi_SOURCES  = xtables-multi.c iptables-xml.c
+ xtables_multi_CFLAGS   = ${AM_CFLAGS}
+ xtables_multi_LDADD    = ../extensions/libext.a
+@@ -27,6 +29,7 @@ xtables_multi_LDADD   += ../libxtables/libxtables.la -lm
+ 
+ # nftables compatibility layer
+ if ENABLE_NFTABLES
++BUILT_SOURCES += xtables-config-parser.h
+ xtables_compat_multi_SOURCES  = xtables-compat-multi.c iptables-xml.c
+ xtables_compat_multi_CFLAGS   = ${AM_CFLAGS}
+ xtables_compat_multi_LDADD    = ../extensions/libext.a ../extensions/libext_ebt.a
+diff --git a/iptables/Makefile.in b/iptables/Makefile.in
+index 5867f53..8e747a3 100644
+--- a/iptables/Makefile.in
++++ b/iptables/Makefile.in
+@@ -101,9 +101,12 @@ host_triplet = @host@
+ 
+ @ENABLE_IPV6_TRUE@am__append_6 = -DENABLE_IPV6
+ @ENABLE_IPV6_TRUE@am__append_7 = ../libiptc/libip6tc.la ../extensions/libext6.a
+-@ENABLE_NFTABLES_TRUE@@ENABLE_STATIC_TRUE@am__append_8 = -DALL_INCLUSIVE
++
++# nftables compatibility layer
++@ENABLE_NFTABLES_TRUE@am__append_8 = xtables-config-parser.h
++@ENABLE_NFTABLES_TRUE@@ENABLE_STATIC_TRUE@am__append_9 = -DALL_INCLUSIVE
+ sbin_PROGRAMS = xtables-multi$(EXEEXT) $(am__EXEEXT_1)
+-@ENABLE_NFTABLES_TRUE@am__append_9 = xtables-compat-multi
++@ENABLE_NFTABLES_TRUE@am__append_10 = xtables-compat-multi
+ subdir = iptables
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_check_linker_flags.m4 \
+@@ -464,14 +467,13 @@ xtlibdir = @xtlibdir@
+ AM_CFLAGS = ${regular_CFLAGS}
+ AM_CPPFLAGS = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
+ AM_YFLAGS = -d
++BUILT_SOURCES = $(am__append_8)
+ xtables_multi_SOURCES = xtables-multi.c iptables-xml.c $(am__append_2) \
+ 	$(am__append_5) xshared.c
+ xtables_multi_CFLAGS = ${AM_CFLAGS} $(am__append_1) $(am__append_3) \
+ 	$(am__append_6)
+ xtables_multi_LDADD = ../extensions/libext.a $(am__append_4) \
+ 	$(am__append_7) ../libxtables/libxtables.la -lm
+-
+-# nftables compatibility layer
+ @ENABLE_NFTABLES_TRUE@xtables_compat_multi_SOURCES =  \
+ @ENABLE_NFTABLES_TRUE@	xtables-compat-multi.c iptables-xml.c \
+ @ENABLE_NFTABLES_TRUE@	xtables-config-parser.y \
+@@ -484,7 +486,7 @@ xtables_multi_LDADD = ../extensions/libext.a $(am__append_4) \
+ @ENABLE_NFTABLES_TRUE@	xtables-eb-standalone.c xtables-eb.c \
+ @ENABLE_NFTABLES_TRUE@	xshared.c
+ @ENABLE_NFTABLES_TRUE@xtables_compat_multi_CFLAGS = ${AM_CFLAGS} \
+-@ENABLE_NFTABLES_TRUE@	$(am__append_8) -DENABLE_NFTABLES \
++@ENABLE_NFTABLES_TRUE@	$(am__append_9) -DENABLE_NFTABLES \
+ @ENABLE_NFTABLES_TRUE@	-DENABLE_IPV4 -DENABLE_IPV6
+ @ENABLE_NFTABLES_TRUE@xtables_compat_multi_LDADD =  \
+ @ENABLE_NFTABLES_TRUE@	../extensions/libext.a \
+@@ -511,7 +513,8 @@ vx_bin_links = iptables-xml
+ @ENABLE_NFTABLES_TRUE@		arptables-compat ebtables-compat
+ 
+ pkgconfig_DATA = xtables.pc
+-all: all-am
++all: $(BUILT_SOURCES)
++	$(MAKE) $(AM_MAKEFLAGS) all-am
+ 
+ .SUFFIXES:
+ .SUFFIXES: .c .l .lo .o .obj .y
+@@ -1314,13 +1317,15 @@ distdir: $(DISTFILES)
+ 	  fi; \
+ 	done
+ check-am: all-am
+-check: check-am
++check: $(BUILT_SOURCES)
++	$(MAKE) $(AM_MAKEFLAGS) check-am
+ all-am: Makefile $(PROGRAMS) $(MANS) $(DATA)
+ installdirs:
+ 	for dir in "$(DESTDIR)$(sbindir)" "$(DESTDIR)$(man1dir)" "$(DESTDIR)$(man8dir)" "$(DESTDIR)$(pkgconfigdir)"; do \
+ 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
+ 	done
+-install: install-am
++install: $(BUILT_SOURCES)
++	$(MAKE) $(AM_MAKEFLAGS) install-am
+ install-exec: install-exec-am
+ install-data: install-data-am
+ uninstall: uninstall-am
+@@ -1354,6 +1359,7 @@ maintainer-clean-generic:
+ 	-rm -f xtables-config-parser.c
+ 	-rm -f xtables-config-parser.h
+ 	-rm -f xtables-config-syntax.c
++	-test -z "$(BUILT_SOURCES)" || rm -f $(BUILT_SOURCES)
+ clean: clean-am
+ 
+ clean-am: clean-generic clean-libtool clean-sbinPROGRAMS \
+@@ -1429,7 +1435,7 @@ uninstall-am: uninstall-man uninstall-pkgconfigDATA \
+ 
+ uninstall-man: uninstall-man1 uninstall-man8
+ 
+-.MAKE: install-am install-exec-am install-strip
++.MAKE: all check install install-am install-exec-am install-strip
+ 
+ .PHONY: CTAGS GTAGS TAGS all all-am check check-am clean clean-generic \
+ 	clean-libtool clean-sbinPROGRAMS cscopelist-am ctags ctags-am \
+-- 
+2.7.4
+

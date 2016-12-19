@@ -1,0 +1,54 @@
+From 7995731fa73fccfd9360921c4869c98797da9f3e Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 19 Dec 2016 17:04:19 +0100
+Subject: [PATCH 2/2] fix automake include paths
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ extensions/GNUmakefile.in | 2 +-
+ iptables/Makefile.am      | 2 +-
+ iptables/Makefile.in      | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/extensions/GNUmakefile.in b/extensions/GNUmakefile.in
+index 53be2cd..b689296 100644
+--- a/extensions/GNUmakefile.in
++++ b/extensions/GNUmakefile.in
+@@ -21,7 +21,7 @@ regular_CPPFLAGS   = @regular_CPPFLAGS@
+ kinclude_CPPFLAGS  = @kinclude_CPPFLAGS@
+ 
+ AM_CFLAGS       = ${regular_CFLAGS}
+-AM_CPPFLAGS     = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_builddir} -I${top_srcdir}/include ${kinclude_CPPFLAGS} ${CPPFLAGS} @libnetfilter_conntrack_CFLAGS@ @libnftnl_CFLAGS@
++AM_CPPFLAGS     = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_builddir} -I${top_srcdir}/include -I${top_srcdir} ${kinclude_CPPFLAGS} ${CPPFLAGS} @libnetfilter_conntrack_CFLAGS@ @libnftnl_CFLAGS@
+ AM_DEPFLAGS     = -Wp,-MMD,$(@D)/.$(@F).d,-MT,$@
+ AM_LDFLAGS      = @noundef_LDFLAGS@
+ 
+diff --git a/iptables/Makefile.am b/iptables/Makefile.am
+index c3eb8a8..eb03ca7 100644
+--- a/iptables/Makefile.am
++++ b/iptables/Makefile.am
+@@ -1,7 +1,7 @@
+ # -*- Makefile -*-
+ 
+ AM_CFLAGS        = ${regular_CFLAGS}
+-AM_CPPFLAGS      = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
++AM_CPPFLAGS      = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include -I${top_srcdir} ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
+ AM_YFLAGS = -d
+ 
+ BUILT_SOURCES =
+diff --git a/iptables/Makefile.in b/iptables/Makefile.in
+index 8e747a3..9e63b4b 100644
+--- a/iptables/Makefile.in
++++ b/iptables/Makefile.in
+@@ -465,7 +465,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ xtlibdir = @xtlibdir@
+ AM_CFLAGS = ${regular_CFLAGS}
+-AM_CPPFLAGS = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
++AM_CPPFLAGS = ${regular_CPPFLAGS} -I${top_builddir}/include -I${top_srcdir}/include -I${top_srcdir} ${kinclude_CPPFLAGS} ${libmnl_CFLAGS} ${libnftnl_CFLAGS} ${libnetfilter_conntrack_CFLAGS}
+ AM_YFLAGS = -d
+ BUILT_SOURCES = $(am__append_8)
+ xtables_multi_SOURCES = xtables-multi.c iptables-xml.c $(am__append_2) \
+-- 
+2.7.4
+
