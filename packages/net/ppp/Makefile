@@ -1,7 +1,7 @@
 PACKAGE = ppp
-VERSION = 2.4.5
+VERSION = 2.4.7
 
-LOCATION = ftp://ftp.samba.org/pub/$(PACKAGE)
+LOCATION = https://download.samba.org/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
