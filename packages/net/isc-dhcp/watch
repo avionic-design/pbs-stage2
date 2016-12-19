@@ -1,2 +1,2 @@
 version=3
-http://ftp.isc.org/isc/dhcp/dhcp-(.*)\.tar\.gz
+http://ftp.isc.org/isc/dhcp/(\d+\.\d+\.\d+)/dhcp-([\d\.]+\d+)\.tar\.gz
