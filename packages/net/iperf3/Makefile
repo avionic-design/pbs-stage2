@@ -1,5 +1,5 @@
 PACKAGE = iperf
-VERSION = 3.0.9
+VERSION = 3.1.4
 LICENSE = custom
 
 LOCATION = http://downloads.es.net/pub/iperf
