@@ -1,0 +1,2 @@
+version=3
+http://ftp.netfilter.org/pub/nftables/nftables-(\d+\.\d)\.tar\.bz2
