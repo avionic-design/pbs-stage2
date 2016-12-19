@@ -1,11 +1,11 @@
 PACKAGE = libpcap
-VERSION = 1.6.2
+VERSION = 1.8.1
 LICENSE = BSD
 
 LOCATION = http://www.tcpdump.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-pcap=linux \
@@ -14,6 +14,20 @@ conf-args += \
 
 conf-vars += \
 	ac_cv_linux_vers=2
+
+ifeq ($(CONFIG_PACKAGE_LIBS_LIBNL),n)
+conf-args += \
+	--with-libnl=$(SYSROOT)$(prefix)
+
+conf-vars += \
+	CFLAGS="$(CFLAGS) -I$(SYSROOT)$(prefix)/include/libnl3"
+else
+conf-args += \
+	--without-libnl
+endif
+
+config-scriptfiles = \
+	$(prefix)/bin/pcap-config
 
 stripfiles = \
 	$(prefix)/lib/*.so.*
