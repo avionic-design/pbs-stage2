@@ -1,5 +1,5 @@
 PACKAGE = tcpdump
-VERSION = 4.7.4
+VERSION = 4.8.1
 LICENSE = BSD
 
 LOCATION = http://www.tcpdump.org/release
