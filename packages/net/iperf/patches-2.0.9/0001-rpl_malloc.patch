@@ -1,0 +1,36 @@
+From 2f36dfebcbccbdf575cc9a2a08857e92f1e3a897 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 19 Dec 2016 14:14:04 +0100
+Subject: [PATCH] rpl_malloc
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/ReportCSV.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/src/ReportCSV.c b/src/ReportCSV.c
+index 8de57dc..50bb227 100644
+--- a/src/ReportCSV.c
++++ b/src/ReportCSV.c
+@@ -56,6 +56,18 @@
+ #include "report_CSV.h"
+ #include "Locale.h"
+ 
++#if malloc == rpl_malloc
++#undef malloc
++void *malloc(size_t size);
++void *rpl_malloc(size_t size)
++{
++	if (size == 0)
++		size = 1;
++
++	return malloc(size);
++}
++#define malloc rpl_malloc
++#endif
+  
+ void CSV_stats( Transfer_Info *stats ) {
+     // $TIMESTAMP,$ID,$INTERVAL,$BYTE,$SPEED,$JITTER,$LOSS,$PACKET,$%LOSS
+-- 
+2.7.4
+

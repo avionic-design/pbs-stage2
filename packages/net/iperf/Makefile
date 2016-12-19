@@ -1,9 +1,9 @@
 PACKAGE = iperf
-VERSION = 2.0.5
+VERSION = 2.0.9
 LICENSE = custom
 
-LOCATION = http://downloads.sourceforge.net/project/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = https://iperf.fr/download/source
+TARBALLS = $(PACKAGE)-$(VERSION)-source.tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
