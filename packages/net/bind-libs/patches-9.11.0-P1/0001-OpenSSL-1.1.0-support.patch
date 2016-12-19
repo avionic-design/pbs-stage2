@@ -1,0 +1,1723 @@
+From 0464ef79006c31af821da8ee11dd457d169d9de1 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 19 Dec 2016 11:02:28 +0100
+Subject: [PATCH] OpenSSL 1.1.0 support
+
+Patch regenerated from upstream.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.in                |   6 +-
+ lib/dns/openssl_link.c      |  36 ++++---
+ lib/dns/openssldh_link.c    | 255 +++++++++++++++++++++++++++++---------------
+ lib/dns/openssldsa_link.c   | 170 +++++++++++++++++++++--------
+ lib/dns/opensslecdsa_link.c |  31 ++++--
+ lib/dns/opensslrsa_link.c   | 246 ++++++++++++++++++++++++++++++------------
+ lib/isc/aes.c               |  36 +++----
+ 7 files changed, 538 insertions(+), 242 deletions(-)
+
+diff --git a/configure.in b/configure.in
+index 2054d3f..614d32f 100644
+--- a/configure.in
++++ b/configure.in
+@@ -1599,15 +1599,13 @@ shared library configuration (e.g., LD_LIBRARY_PATH).)],
+ 		AC_MSG_CHECKING(whether linking with OpenSSL requires -ldl)
+ 		AC_TRY_LINK([
+ #include <openssl/err.h>
+-#include <openssl/dso.h>
+ ],
+-[ DSO_METHOD_dlfcn(); ],
++[ ERR_clear_error(); ],
+ 		[AC_MSG_RESULT(no)],
+ 		[LIBS="$LIBS -ldl"
+ 		AC_TRY_LINK([
+ #include <openssl/err.h>
+-#include <openssl/dso.h>
+-],[ DSO_METHOD_dlfcn(); ],
++],[ ERR_clear_error(); ],
+ 		[AC_MSG_RESULT(yes)
+ 		DST_OPENSSL_LIBS="$DST_OPENSSL_LIBS -ldl"
+ 		],
+diff --git a/lib/dns/openssl_link.c b/lib/dns/openssl_link.c
+index 2e8bcf6..37c3bad 100644
+--- a/lib/dns/openssl_link.c
++++ b/lib/dns/openssl_link.c
+@@ -49,8 +49,10 @@
+ 
+ static RAND_METHOD *rm = NULL;
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ static isc_mutex_t *locks = NULL;
+ static int nlocks;
++#endif
+ 
+ #ifdef USE_ENGINE
+ static ENGINE *e = NULL;
+@@ -102,6 +104,7 @@ entropy_add(const void *buf, int num, double entropy) {
+ }
+ #endif
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ static void
+ lock_callback(int mode, int type, const char *file, int line) {
+ 	UNUSED(file);
+@@ -111,6 +114,7 @@ lock_callback(int mode, int type, const char *file, int line) {
+ 	else
+ 		UNLOCK(&locks[type]);
+ }
++#endif
+ 
+ #if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+ static unsigned long
+@@ -120,7 +124,11 @@ id_callback(void) {
+ #endif
+ 
+ static void *
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ mem_alloc(size_t size) {
++#else
++mem_alloc(size_t size, const char *file, int line) {
++#endif
+ #ifdef OPENSSL_LEAKS
+ 	void *ptr;
+ 
+@@ -134,14 +142,22 @@ mem_alloc(size_t size) {
+ }
+ 
+ static void
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ mem_free(void *ptr) {
++#else
++mem_free(void *ptr, const char *file, int line) {
++#endif
+ 	INSIST(dst__memory_pool != NULL);
+ 	if (ptr != NULL)
+ 		isc_mem_free(dst__memory_pool, ptr);
+ }
+ 
+ static void *
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ mem_realloc(void *ptr, size_t size) {
++#else
++mem_realloc(void *ptr, size_t size, const char *file, int line) {
++#endif
+ #ifdef OPENSSL_LEAKS
+ 	void *rptr;
+ 
+@@ -170,6 +186,7 @@ dst__openssl_init(const char *engine) {
+ 	CRYPTO_mem_ctrl(CRYPTO_MEM_CHECK_ON);
+ #endif
+ 	CRYPTO_set_mem_functions(mem_alloc, mem_realloc, mem_free);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	nlocks = CRYPTO_num_locks();
+ 	locks = mem_alloc(sizeof(isc_mutex_t) * nlocks);
+ 	if (locks == NULL)
+@@ -178,13 +195,12 @@ dst__openssl_init(const char *engine) {
+ 	if (result != ISC_R_SUCCESS)
+ 		goto cleanup_mutexalloc;
+ 	CRYPTO_set_locking_callback(lock_callback);
+-#if OPENSSL_VERSION_NUMBER < 0x10100000L || defined(LIBRESSL_VERSION_NUMBER)
+ 	CRYPTO_set_id_callback(id_callback);
+ #endif
+ 
+ 	ERR_load_crypto_strings();
+ 
+-	rm = mem_alloc(sizeof(RAND_METHOD));
++	rm = malloc(sizeof(RAND_METHOD));
+ 	if (rm == NULL) {
+ 		result = ISC_R_NOMEMORY;
+ 		goto cleanup_mutexinit;
+@@ -254,11 +270,13 @@ dst__openssl_init(const char *engine) {
+ 	rm = NULL;
+ #endif
+  cleanup_mutexinit:
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	CRYPTO_set_locking_callback(NULL);
+ 	DESTROYMUTEXBLOCK(locks, nlocks);
+  cleanup_mutexalloc:
+ 	mem_free(locks);
+ 	locks = NULL;
++#endif
+ 	return (result);
+ }
+ 
+@@ -271,7 +289,7 @@ dst__openssl_destroy(void) {
+ #if OPENSSL_VERSION_NUMBER >= 0x00907000L
+ 		RAND_cleanup();
+ #endif
+-		mem_free(rm);
++		free(rm);
+ 		rm = NULL;
+ 	}
+ #if (OPENSSL_VERSION_NUMBER >= 0x00907000L)
+@@ -300,21 +318,20 @@ dst__openssl_destroy(void) {
+ 	CRYPTO_mem_leaks_fp(stderr);
+ #endif
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	if (locks != NULL) {
+ 		CRYPTO_set_locking_callback(NULL);
+ 		DESTROYMUTEXBLOCK(locks, nlocks);
+ 		mem_free(locks);
+ 		locks = NULL;
+ 	}
++#endif
+ }
+ 
+ static isc_result_t
+ toresult(isc_result_t fallback) {
+ 	isc_result_t result = fallback;
+ 	unsigned long err = ERR_get_error();
+-#ifdef HAVE_OPENSSL_ECDSA
+-	int lib = ERR_GET_LIB(err);
+-#endif
+ 	int reason = ERR_GET_REASON(err);
+ 
+ 	switch (reason) {
+@@ -326,13 +343,6 @@ toresult(isc_result_t fallback) {
+ 		result = ISC_R_NOMEMORY;
+ 		break;
+ 	default:
+-#ifdef HAVE_OPENSSL_ECDSA
+-		if (lib == ERR_R_ECDSA_LIB &&
+-		    reason == ECDSA_R_RANDOM_NUMBER_GENERATION_FAILED) {
+-			result = ISC_R_NOENTROPY;
+-			break;
+-		}
+-#endif
+ 		break;
+ 	}
+ 
+diff --git a/lib/dns/openssldh_link.c b/lib/dns/openssldh_link.c
+index 4237ad0..d78c339 100644
+--- a/lib/dns/openssldh_link.c
++++ b/lib/dns/openssldh_link.c
+@@ -76,6 +76,7 @@ openssldh_computesecret(const dst_key_t *pub, const dst_key_t *priv,
+ 	int ret;
+ 	isc_region_t r;
+ 	unsigned int len;
++	const BIGNUM *pub_key;
+ 
+ 	REQUIRE(pub->keydata.dh != NULL);
+ 	REQUIRE(priv->keydata.dh != NULL);
+@@ -87,7 +88,12 @@ openssldh_computesecret(const dst_key_t *pub, const dst_key_t *priv,
+ 	isc_buffer_availableregion(secret, &r);
+ 	if (r.length < len)
+ 		return (ISC_R_NOSPACE);
+-	ret = DH_compute_key(r.base, dhpub->pub_key, dhpriv);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	pub_key = dhpub->pub_key;
++#else
++	DH_get0_key(dhpub, &pub_key, NULL);
++#endif
++	ret = DH_compute_key(r.base, pub_key, dhpriv);
+ 	if (ret <= 0)
+ 		return (dst__openssl_toresult2("DH_compute_key",
+ 					       DST_R_COMPUTESECRETFAILURE));
+@@ -99,6 +105,9 @@ static isc_boolean_t
+ openssldh_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	int status;
+ 	DH *dh1, *dh2;
++	const BIGNUM *p1, *p2, *g1, *g2;
++	const BIGNUM *pub_key1, *pub_key2;
++	const BIGNUM *priv_key1, *priv_key2;
+ 
+ 	dh1 = key1->keydata.dh;
+ 	dh2 = key2->keydata.dh;
+@@ -108,17 +117,33 @@ openssldh_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	else if (dh1 == NULL || dh2 == NULL)
+ 		return (ISC_FALSE);
+ 
+-	status = BN_cmp(dh1->p, dh2->p) ||
+-		 BN_cmp(dh1->g, dh2->g) ||
+-		 BN_cmp(dh1->pub_key, dh2->pub_key);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	pub_key1 = dh1->pub_key;
++	pub_key2 = dh2->pub_key;
++	priv_key1 = dh1->priv_key;
++	priv_key2 = dh2->priv_key;
++	p1 = dh1->p;
++	g1 = dh1->g;
++	p2 = dh2->p;
++	g2 = dh2->g;
++#else
++	DH_get0_key(dh1, &pub_key1, &priv_key1);
++	DH_get0_key(dh2, &pub_key2, &priv_key2);
++	DH_get0_pqg(dh1, &p1, NULL, &g1);
++	DH_get0_pqg(dh2, &p2, NULL, &g2);
++#endif
++
++	status = BN_cmp(p1, p2) ||
++		 BN_cmp(g1, g2) ||
++		 BN_cmp(pub_key1, pub_key2);
+ 
+ 	if (status != 0)
+ 		return (ISC_FALSE);
+ 
+-	if (dh1->priv_key != NULL || dh2->priv_key != NULL) {
+-		if (dh1->priv_key == NULL || dh2->priv_key == NULL)
++	if (priv_key1 != NULL || priv_key2 != NULL) {
++		if (priv_key1 == NULL || priv_key2 == NULL)
+ 			return (ISC_FALSE);
+-		if (BN_cmp(dh1->priv_key, dh2->priv_key) != 0)
++		if (BN_cmp(priv_key1, priv_key2) != 0)
+ 			return (ISC_FALSE);
+ 	}
+ 	return (ISC_TRUE);
+@@ -128,6 +153,7 @@ static isc_boolean_t
+ openssldh_paramcompare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	int status;
+ 	DH *dh1, *dh2;
++	const BIGNUM *p1, *p2, *g1, *g2;
+ 
+ 	dh1 = key1->keydata.dh;
+ 	dh2 = key2->keydata.dh;
+@@ -137,8 +163,18 @@ openssldh_paramcompare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	else if (dh1 == NULL || dh2 == NULL)
+ 		return (ISC_FALSE);
+ 
+-	status = BN_cmp(dh1->p, dh2->p) ||
+-		 BN_cmp(dh1->g, dh2->g);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	p1 = dh1->p;
++	g1 = dh1->g;
++	p2 = dh2->p;
++	g2 = dh2->g;
++#else
++	DH_get0_pqg(dh1, &p1, NULL, &g1);
++	DH_get0_pqg(dh2, &p2, NULL, &g2);
++#endif
++
++	status = BN_cmp(p1, p2) ||
++		 BN_cmp(g1, g2);
+ 
+ 	if (status != 0)
+ 		return (ISC_FALSE);
+@@ -185,16 +221,29 @@ openssldh_generate(dst_key_t *key, int generator, void (*callback)(int)) {
+ 		    key->key_size == 1024 ||
+ 		    key->key_size == 1536)
+ 		{
++			BIGNUM *p = NULL, *g = NULL;
+ 			dh = DH_new();
+ 			if (dh == NULL)
+ 				return (dst__openssl_toresult(ISC_R_NOMEMORY));
+ 			if (key->key_size == 768)
+-				dh->p = bn768;
++				p = BN_dup(bn768);
+ 			else if (key->key_size == 1024)
+-				dh->p = bn1024;
++				p = BN_dup(bn1024);
+ 			else
+-				dh->p = bn1536;
+-			dh->g = bn2;
++				p = BN_dup(bn1536);
++			g = BN_dup(bn2);
++			if (p == NULL || g == NULL) {
++				DH_free(dh);
++				BN_free(p);
++				BN_free(g);
++				return (dst__openssl_toresult(ISC_R_NOMEMORY));
++			}
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++			dh->p = p;
++			dh->g = g;
++#else
++			DH_set0_pqg(dh, p, NULL, g);
++#endif
+ 		} else
+ 			generator = 2;
+ 	}
+@@ -242,7 +291,11 @@ openssldh_generate(dst_key_t *key, int generator, void (*callback)(int)) {
+ 		return (dst__openssl_toresult2("DH_generate_key",
+ 					       DST_R_OPENSSLFAILURE));
+ 	}
++#if OPENSSL_VERSION_NUMBER >= 0x10100000L
++	DH_clear_flags(dh, DH_FLAG_CACHE_MONT_P);
++#else
+ 	dh->flags &= ~DH_FLAG_CACHE_MONT_P;
++#endif
+ 
+ 	key->keydata.dh = dh;
+ 
+@@ -252,20 +305,23 @@ openssldh_generate(dst_key_t *key, int generator, void (*callback)(int)) {
+ static isc_boolean_t
+ openssldh_isprivate(const dst_key_t *key) {
+ 	DH *dh = key->keydata.dh;
+-	return (ISC_TF(dh != NULL && dh->priv_key != NULL));
++	const BIGNUM *priv_key;
++
++	if (dh == NULL) {
++		return ISC_FALSE;
++	}
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	priv_key = dh->priv_key;
++#else
++	DH_get0_key(dh, NULL, &priv_key);
++#endif
++	return (ISC_TF(priv_key != NULL));
+ }
+ 
+ static void
+ openssldh_destroy(dst_key_t *key) {
+ 	DH *dh = key->keydata.dh;
+ 
+-	if (dh == NULL)
+-		return;
+-
+-	if (dh->p == bn768 || dh->p == bn1024 || dh->p == bn1536)
+-		dh->p = NULL;
+-	if (dh->g == bn2)
+-		dh->g = NULL;
+ 	DH_free(dh);
+ 	key->keydata.dh = NULL;
+ }
+@@ -296,47 +352,58 @@ openssldh_todns(const dst_key_t *key, isc_buffer_t *data) {
+ 	DH *dh;
+ 	isc_region_t r;
+ 	isc_uint16_t dnslen, plen, glen, publen;
++	const BIGNUM *p, *g;
++	const BIGNUM *pub_key;
+ 
+ 	REQUIRE(key->keydata.dh != NULL);
+ 
+ 	dh = key->keydata.dh;
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	p = dh->p;
++	g = dh->g;
++	pub_key = dh->pub_key;
++#else
++	DH_get0_pqg(dh, &p, NULL, &g);
++	DH_get0_key(dh, &pub_key, NULL);
++#endif
++
+ 	isc_buffer_availableregion(data, &r);
+ 
+-	if (dh->g == bn2 &&
+-	    (dh->p == bn768 || dh->p == bn1024 || dh->p == bn1536)) {
++	if (BN_cmp(g, bn2) == 0  &&
++	    (BN_cmp(p, bn768) == 0 || BN_cmp(p, bn1024) == 0 || BN_cmp(p, bn1536) == 0)) {
+ 		plen = 1;
+ 		glen = 0;
+ 	}
+ 	else {
+-		plen = BN_num_bytes(dh->p);
+-		glen = BN_num_bytes(dh->g);
++		plen = BN_num_bytes(p);
++		glen = BN_num_bytes(g);
+ 	}
+-	publen = BN_num_bytes(dh->pub_key);
++	publen = BN_num_bytes(pub_key);
+ 	dnslen = plen + glen + publen + 6;
+ 	if (r.length < (unsigned int) dnslen)
+ 		return (ISC_R_NOSPACE);
+ 
+ 	uint16_toregion(plen, &r);
+ 	if (plen == 1) {
+-		if (dh->p == bn768)
++		if (BN_cmp(p, bn768) == 0)
+ 			*r.base = 1;
+-		else if (dh->p == bn1024)
++		else if (BN_cmp(p, bn1024) == 0)
+ 			*r.base = 2;
+ 		else
+ 			*r.base = 3;
+ 	}
+ 	else
+-		BN_bn2bin(dh->p, r.base);
++		BN_bn2bin(p, r.base);
+ 	isc_region_consume(&r, plen);
+ 
+ 	uint16_toregion(glen, &r);
+ 	if (glen > 0)
+-		BN_bn2bin(dh->g, r.base);
++		BN_bn2bin(g, r.base);
+ 	isc_region_consume(&r, glen);
+ 
+ 	uint16_toregion(publen, &r);
+-	BN_bn2bin(dh->pub_key, r.base);
++	BN_bn2bin(pub_key, r.base);
+ 	isc_region_consume(&r, publen);
+ 
+ 	isc_buffer_add(data, dnslen);
+@@ -350,6 +417,8 @@ openssldh_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 	isc_region_t r;
+ 	isc_uint16_t plen, glen, publen;
+ 	int special = 0;
++	BIGNUM *p, *g;
++	BIGNUM *pub_key;
+ 
+ 	isc_buffer_remainingregion(data, &r);
+ 	if (r.length == 0)
+@@ -358,7 +427,11 @@ openssldh_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 	dh = DH_new();
+ 	if (dh == NULL)
+ 		return (dst__openssl_toresult(ISC_R_NOMEMORY));
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	dh->flags &= ~DH_FLAG_CACHE_MONT_P;
++#else
++	DH_clear_flags(dh, DH_FLAG_CACHE_MONT_P);
++#endif
+ 
+ 	/*
+ 	 * Read the prime length.  1 & 2 are table entries, > 16 means a
+@@ -386,20 +459,20 @@ openssldh_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 		}
+ 		switch (special) {
+ 			case 1:
+-				dh->p = bn768;
++				p = BN_dup(bn768);
+ 				break;
+ 			case 2:
+-				dh->p = bn1024;
++				p = BN_dup(bn1024);
+ 				break;
+ 			case 3:
+-				dh->p = bn1536;
++				p = BN_dup(bn1536);
+ 				break;
+ 			default:
+ 				DH_free(dh);
+ 				return (DST_R_INVALIDPUBLICKEY);
+ 		}
+ 	} else {
+-		dh->p = BN_bin2bn(r.base, plen, NULL);
++		p = BN_bin2bn(r.base, plen, NULL);
+ 		isc_region_consume(&r, plen);
+ 	}
+ 
+@@ -409,35 +482,42 @@ openssldh_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 	 * special, we have a problem.
+ 	 */
+ 	if (r.length < 2) {
++		BN_free(p);
+ 		DH_free(dh);
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	}
+ 	glen = uint16_fromregion(&r);
+ 	if (r.length < glen) {
++		BN_free(p);
+ 		DH_free(dh);
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	}
+ 	if (special != 0) {
+ 		if (glen == 0)
+-			dh->g = bn2;
++			g = BN_dup(bn2);
+ 		else {
+-			dh->g = BN_bin2bn(r.base, glen, NULL);
+-			if (BN_cmp(dh->g, bn2) == 0) {
+-				BN_free(dh->g);
+-				dh->g = bn2;
+-			}
+-			else {
++			g = BN_bin2bn(r.base, glen, NULL);
++			if (BN_cmp(g, bn2) != 0) {
++				BN_free(p);
++				BN_free(g);
+ 				DH_free(dh);
+ 				return (DST_R_INVALIDPUBLICKEY);
+ 			}
+ 		}
+ 	} else {
+ 		if (glen == 0) {
++			BN_free(p);
+ 			DH_free(dh);
+ 			return (DST_R_INVALIDPUBLICKEY);
+ 		}
+-		dh->g = BN_bin2bn(r.base, glen, NULL);
++		g = BN_bin2bn(r.base, glen, NULL);
+ 	}
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dh->p = p;
++	dh->g = g;
++#else
++	DH_set0_pqg(dh, p, NULL, g);
++#endif
+ 	isc_region_consume(&r, glen);
+ 
+ 	if (r.length < 2) {
+@@ -449,10 +529,15 @@ openssldh_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 		DH_free(dh);
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	}
+-	dh->pub_key = BN_bin2bn(r.base, publen, NULL);
++	pub_key = BN_bin2bn(r.base, publen, NULL);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dh->pub_key = pub_key;
++#else
++	DH_set0_key(dh, pub_key, NULL);
++#endif
+ 	isc_region_consume(&r, publen);
+ 
+-	key->key_size = BN_num_bits(dh->p);
++	key->key_size = BN_num_bits(p);
+ 
+ 	isc_buffer_forward(data, plen + glen + publen + 6);
+ 
+@@ -468,6 +553,8 @@ openssldh_tofile(const dst_key_t *key, const char *directory) {
+ 	dst_private_t priv;
+ 	unsigned char *bufs[4];
+ 	isc_result_t result;
++	const BIGNUM *p, *g;
++	const BIGNUM *pub_key, *priv_key;
+ 
+ 	if (key->keydata.dh == NULL)
+ 		return (DST_R_NULLKEY);
+@@ -476,10 +563,19 @@ openssldh_tofile(const dst_key_t *key, const char *directory) {
+ 		return (DST_R_EXTERNALKEY);
+ 
+ 	dh = key->keydata.dh;
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	p = dh->p;
++	g = dh->g;
++	pub_key = dh->pub_key;
++	priv_key = dh->priv_key;
++#else
++	DH_get0_pqg(dh, &p, NULL, &g);
++	DH_get0_key(dh, &pub_key, &priv_key);
++#endif
+ 
+ 	memset(bufs, 0, sizeof(bufs));
+ 	for (i = 0; i < 4; i++) {
+-		bufs[i] = isc_mem_get(key->mctx, BN_num_bytes(dh->p));
++		bufs[i] = isc_mem_get(key->mctx, BN_num_bytes(p));
+ 		if (bufs[i] == NULL) {
+ 			result = ISC_R_NOMEMORY;
+ 			goto fail;
+@@ -489,26 +585,26 @@ openssldh_tofile(const dst_key_t *key, const char *directory) {
+ 	i = 0;
+ 
+ 	priv.elements[i].tag = TAG_DH_PRIME;
+-	priv.elements[i].length = BN_num_bytes(dh->p);
+-	BN_bn2bin(dh->p, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(p);
++	BN_bn2bin(p, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+ 	priv.elements[i].tag = TAG_DH_GENERATOR;
+-	priv.elements[i].length = BN_num_bytes(dh->g);
+-	BN_bn2bin(dh->g, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(g);
++	BN_bn2bin(g, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+ 	priv.elements[i].tag = TAG_DH_PRIVATE;
+-	priv.elements[i].length = BN_num_bytes(dh->priv_key);
+-	BN_bn2bin(dh->priv_key, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(priv_key);
++	BN_bn2bin(priv_key, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+ 	priv.elements[i].tag = TAG_DH_PUBLIC;
+-	priv.elements[i].length = BN_num_bytes(dh->pub_key);
+-	BN_bn2bin(dh->pub_key, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(pub_key);
++	BN_bn2bin(pub_key, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+@@ -518,7 +614,7 @@ openssldh_tofile(const dst_key_t *key, const char *directory) {
+ 	for (i = 0; i < 4; i++) {
+ 		if (bufs[i] == NULL)
+ 			break;
+-		isc_mem_put(key->mctx, bufs[i], BN_num_bytes(dh->p));
++		isc_mem_put(key->mctx, bufs[i], BN_num_bytes(p));
+ 	}
+ 	return (result);
+ }
+@@ -531,6 +627,7 @@ openssldh_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 	DH *dh = NULL;
+ 	isc_mem_t *mctx;
+ #define DST_RET(a) {ret = a; goto err;}
++	BIGNUM *p = NULL, *g = NULL, *priv_key = NULL, *pub_key = NULL;
+ 
+ 	UNUSED(pub);
+ 	mctx = key->mctx;
+@@ -546,7 +643,11 @@ openssldh_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 	dh = DH_new();
+ 	if (dh == NULL)
+ 		DST_RET(ISC_R_NOMEMORY);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ 	dh->flags &= ~DH_FLAG_CACHE_MONT_P;
++#else
++	DH_clear_flags(dh, DH_FLAG_CACHE_MONT_P);
++#endif
+ 	key->keydata.dh = dh;
+ 
+ 	for (i = 0; i < priv.nelements; i++) {
+@@ -558,47 +659,31 @@ openssldh_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 
+ 		switch (priv.elements[i].tag) {
+ 			case TAG_DH_PRIME:
+-				dh->p = bn;
++				p = bn;
+ 				break;
+ 			case TAG_DH_GENERATOR:
+-				dh->g = bn;
++				g = bn;
+ 				break;
+ 			case TAG_DH_PRIVATE:
+-				dh->priv_key = bn;
++				priv_key = bn;
+ 				break;
+ 			case TAG_DH_PUBLIC:
+-				dh->pub_key = bn;
++				pub_key = bn;
+ 				break;
+ 		}
+ 	}
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dh->p = p;
++	dh->g = g;
++	dh->priv_key = priv_key;
++	dh->pub_key = pub_key;
++#else
++	DH_set0_pqg(dh, p, NULL, g);
++	DH_set0_key(dh, pub_key, priv_key);
++#endif
+ 	dst__privstruct_free(&priv, mctx);
+ 
+-	key->key_size = BN_num_bits(dh->p);
+-
+-	if ((key->key_size == 768 ||
+-	     key->key_size == 1024 ||
+-	     key->key_size == 1536) &&
+-	    BN_cmp(dh->g, bn2) == 0)
+-	{
+-		if (key->key_size == 768 && BN_cmp(dh->p, bn768) == 0) {
+-			BN_free(dh->p);
+-			BN_free(dh->g);
+-			dh->p = bn768;
+-			dh->g = bn2;
+-		} else if (key->key_size == 1024 &&
+-			   BN_cmp(dh->p, bn1024) == 0) {
+-			BN_free(dh->p);
+-			BN_free(dh->g);
+-			dh->p = bn1024;
+-			dh->g = bn2;
+-		} else if (key->key_size == 1536 &&
+-			   BN_cmp(dh->p, bn1536) == 0) {
+-			BN_free(dh->p);
+-			BN_free(dh->g);
+-			dh->p = bn1536;
+-			dh->g = bn2;
+-		}
+-	}
++	key->key_size = BN_num_bits(p);
+ 
+ 	return (ISC_R_SUCCESS);
+ 
+diff --git a/lib/dns/openssldsa_link.c b/lib/dns/openssldsa_link.c
+index 184c163..cdb621a 100644
+--- a/lib/dns/openssldsa_link.c
++++ b/lib/dns/openssldsa_link.c
+@@ -48,6 +48,31 @@
+ 
+ static isc_result_t openssldsa_todns(const dst_key_t *key, isc_buffer_t *data);
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++static void
++DSA_get0_pqg(const DSA *d, const BIGNUM **p, const BIGNUM **q, const BIGNUM **g) {
++	if (p != NULL)
++		*p = d->p;
++	if (q != NULL)
++		*q = d->q;
++	if (g != NULL)
++		*g = d->g;
++}
++
++static void
++DSA_get0_key(const DSA *d, const BIGNUM **pub_key, const BIGNUM **priv_key) {
++	if (pub_key != NULL)
++		*pub_key = d->pub_key;
++	if (priv_key != NULL)
++		*priv_key = d->priv_key;
++}
++
++static void
++DSA_clear_flags(DSA *d, int flags) {
++	d->flags &= ~flags;
++}
++#endif
++
+ static isc_result_t
+ openssldsa_createctx(dst_key_t *key, dst_context_t *dctx) {
+ #if USE_EVP
+@@ -59,7 +84,7 @@ openssldsa_createctx(dst_key_t *key, dst_context_t *dctx) {
+ 	if (evp_md_ctx == NULL)
+ 		return (ISC_R_NOMEMORY);
+ 
+-	if (!EVP_DigestInit_ex(evp_md_ctx, EVP_dss1(), NULL)) {
++	if (!EVP_DigestInit_ex(evp_md_ctx, EVP_sha1(), NULL)) {
+ 		EVP_MD_CTX_destroy(evp_md_ctx);
+ 			return (ISC_R_FAILURE);
+ 	}
+@@ -118,7 +143,7 @@ openssldsa_adddata(dst_context_t *dctx, const isc_region_t *data) {
+ }
+ 
+ static int
+-BN_bn2bin_fixed(BIGNUM *bn, unsigned char *buf, int size) {
++BN_bn2bin_fixed(const BIGNUM *bn, unsigned char *buf, int size) {
+ 	int bytes = size - BN_num_bytes(bn);
+ 	while (bytes-- > 0)
+ 		*buf++ = 0;
+@@ -133,6 +158,7 @@ openssldsa_sign(dst_context_t *dctx, isc_buffer_t *sig) {
+ 	isc_region_t r;
+ 	DSA_SIG *dsasig;
+ 	unsigned int klen;
++	const BIGNUM *sig_r, *sig_s;
+ #if USE_EVP
+ 	EVP_MD_CTX *evp_md_ctx = dctx->ctxdata.evp_md_ctx;
+ 	EVP_PKEY *pkey;
+@@ -213,9 +239,15 @@ openssldsa_sign(dst_context_t *dctx, isc_buffer_t *sig) {
+ 	*r.base = klen;
+ 	isc_region_consume(&r, 1);
+ 
+-	BN_bn2bin_fixed(dsasig->r, r.base, ISC_SHA1_DIGESTLENGTH);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	sig_r = dsasig->r;
++	sig_s = dsasig->s;
++#else
++	DSA_SIG_get0(dsasig, &sig_r, &sig_s);
++#endif
++	BN_bn2bin_fixed(sig_r, r.base, ISC_SHA1_DIGESTLENGTH);
+ 	isc_region_consume(&r, ISC_SHA1_DIGESTLENGTH);
+-	BN_bn2bin_fixed(dsasig->s, r.base, ISC_SHA1_DIGESTLENGTH);
++	BN_bn2bin_fixed(sig_s, r.base, ISC_SHA1_DIGESTLENGTH);
+ 	isc_region_consume(&r, ISC_SHA1_DIGESTLENGTH);
+ 	DSA_SIG_free(dsasig);
+ 	isc_buffer_add(sig, ISC_SHA1_DIGESTLENGTH * 2 + 1);
+@@ -230,6 +262,7 @@ openssldsa_verify(dst_context_t *dctx, const isc_region_t *sig) {
+ 	int status = 0;
+ 	unsigned char *cp = sig->base;
+ 	DSA_SIG *dsasig;
++	BIGNUM *r, *s;
+ #if USE_EVP
+ 	EVP_MD_CTX *evp_md_ctx = dctx->ctxdata.evp_md_ctx;
+ #if 0
+@@ -262,9 +295,15 @@ openssldsa_verify(dst_context_t *dctx, const isc_region_t *sig) {
+ 	dsasig = DSA_SIG_new();
+ 	if (dsasig == NULL)
+ 		return (ISC_R_NOMEMORY);
+-	dsasig->r = BN_bin2bn(cp, ISC_SHA1_DIGESTLENGTH, NULL);
++	r = BN_bin2bn(cp, ISC_SHA1_DIGESTLENGTH, NULL);
+ 	cp += ISC_SHA1_DIGESTLENGTH;
+-	dsasig->s = BN_bin2bn(cp, ISC_SHA1_DIGESTLENGTH, NULL);
++	s = BN_bin2bn(cp, ISC_SHA1_DIGESTLENGTH, NULL);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dsasig->r = r;
++	dsasig->s = s;
++#else
++	DSA_SIG_set0(dsasig, r, s);
++#endif
+ 
+ #if 0
+ 	pkey = EVP_PKEY_new();
+@@ -305,6 +344,8 @@ static isc_boolean_t
+ openssldsa_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	int status;
+ 	DSA *dsa1, *dsa2;
++	const BIGNUM *p1, *q1, *g1, *pub_key1, *priv_key1;
++	const BIGNUM *p2, *q2, *g2, *pub_key2, *priv_key2;
+ 
+ 	dsa1 = key1->keydata.dsa;
+ 	dsa2 = key2->keydata.dsa;
+@@ -314,18 +355,23 @@ openssldsa_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	else if (dsa1 == NULL || dsa2 == NULL)
+ 		return (ISC_FALSE);
+ 
+-	status = BN_cmp(dsa1->p, dsa2->p) ||
+-		 BN_cmp(dsa1->q, dsa2->q) ||
+-		 BN_cmp(dsa1->g, dsa2->g) ||
+-		 BN_cmp(dsa1->pub_key, dsa2->pub_key);
++	DSA_get0_pqg(dsa1, &p1, &q1, &g1);
++	DSA_get0_pqg(dsa2, &p2, &q2, &g2);
++	DSA_get0_key(dsa1, &pub_key1, &priv_key1);
++	DSA_get0_key(dsa2, &pub_key2, &priv_key2);
++
++	status = BN_cmp(p1, p2) ||
++		 BN_cmp(q1, q2) ||
++		 BN_cmp(g1, g2) ||
++		 BN_cmp(pub_key1, pub_key2);
+ 
+ 	if (status != 0)
+ 		return (ISC_FALSE);
+ 
+-	if (dsa1->priv_key != NULL || dsa2->priv_key != NULL) {
+-		if (dsa1->priv_key == NULL || dsa2->priv_key == NULL)
++	if (priv_key1 != NULL || priv_key2 != NULL) {
++		if (priv_key1 == NULL || priv_key2 == NULL)
+ 			return (ISC_FALSE);
+-		if (BN_cmp(dsa1->priv_key, dsa2->priv_key))
++		if (BN_cmp(priv_key1, priv_key2))
+ 			return (ISC_FALSE);
+ 	}
+ 	return (ISC_TRUE);
+@@ -417,7 +463,7 @@ openssldsa_generate(dst_key_t *key, int unused, void (*callback)(int)) {
+ 		return (dst__openssl_toresult2("DSA_generate_key",
+ 					       DST_R_OPENSSLFAILURE));
+ 	}
+-	dsa->flags &= ~DSA_FLAG_CACHE_MONT_P;
++	DSA_clear_flags(dsa, DSA_FLAG_CACHE_MONT_P);
+ 
+ 	key->keydata.dsa = dsa;
+ 
+@@ -427,7 +473,12 @@ openssldsa_generate(dst_key_t *key, int unused, void (*callback)(int)) {
+ static isc_boolean_t
+ openssldsa_isprivate(const dst_key_t *key) {
+ 	DSA *dsa = key->keydata.dsa;
+-	return (ISC_TF(dsa != NULL && dsa->priv_key != NULL));
++	const BIGNUM *priv_key;
++
++	if (dsa == NULL)
++		return (ISC_FALSE);
++	DSA_get0_key(dsa, NULL, &priv_key);
++	return (ISC_TF(priv_key != NULL));
+ }
+ 
+ static void
+@@ -444,14 +495,18 @@ openssldsa_todns(const dst_key_t *key, isc_buffer_t *data) {
+ 	isc_region_t r;
+ 	int dnslen;
+ 	unsigned int t, p_bytes;
++	const BIGNUM *p, *q, *g, *pub_key;
+ 
+ 	REQUIRE(key->keydata.dsa != NULL);
+ 
+ 	dsa = key->keydata.dsa;
+ 
++	DSA_get0_pqg(dsa, &p, &q, &g);
++	DSA_get0_key(dsa, &pub_key, NULL);
++
+ 	isc_buffer_availableregion(data, &r);
+ 
+-	t = (BN_num_bytes(dsa->p) - 64) / 8;
++	t = (BN_num_bytes(p) - 64) / 8;
+ 	if (t > 8)
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	p_bytes = 64 + 8 * t;
+@@ -462,13 +517,13 @@ openssldsa_todns(const dst_key_t *key, isc_buffer_t *data) {
+ 
+ 	*r.base = t;
+ 	isc_region_consume(&r, 1);
+-	BN_bn2bin_fixed(dsa->q, r.base, ISC_SHA1_DIGESTLENGTH);
++	BN_bn2bin_fixed(q, r.base, ISC_SHA1_DIGESTLENGTH);
+ 	isc_region_consume(&r, ISC_SHA1_DIGESTLENGTH);
+-	BN_bn2bin_fixed(dsa->p, r.base, key->key_size/8);
++	BN_bn2bin_fixed(p, r.base, key->key_size/8);
+ 	isc_region_consume(&r, p_bytes);
+-	BN_bn2bin_fixed(dsa->g, r.base, key->key_size/8);
++	BN_bn2bin_fixed(g, r.base, key->key_size/8);
+ 	isc_region_consume(&r, p_bytes);
+-	BN_bn2bin_fixed(dsa->pub_key, r.base, key->key_size/8);
++	BN_bn2bin_fixed(pub_key, r.base, key->key_size/8);
+ 	isc_region_consume(&r, p_bytes);
+ 
+ 	isc_buffer_add(data, dnslen);
+@@ -482,6 +537,7 @@ openssldsa_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 	isc_region_t r;
+ 	unsigned int t, p_bytes;
+ 	isc_mem_t *mctx = key->mctx;
++	BIGNUM *p, *q, *g, *pub_key;
+ 
+ 	UNUSED(mctx);
+ 
+@@ -492,7 +548,7 @@ openssldsa_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 	dsa = DSA_new();
+ 	if (dsa == NULL)
+ 		return (ISC_R_NOMEMORY);
+-	dsa->flags &= ~DSA_FLAG_CACHE_MONT_P;
++	DSA_clear_flags(dsa, DSA_FLAG_CACHE_MONT_P);
+ 
+ 	t = (unsigned int) *r.base;
+ 	isc_region_consume(&r, 1);
+@@ -507,18 +563,32 @@ openssldsa_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	}
+ 
+-	dsa->q = BN_bin2bn(r.base, ISC_SHA1_DIGESTLENGTH, NULL);
++	q = BN_bin2bn(r.base, ISC_SHA1_DIGESTLENGTH, NULL);
+ 	isc_region_consume(&r, ISC_SHA1_DIGESTLENGTH);
+ 
+-	dsa->p = BN_bin2bn(r.base, p_bytes, NULL);
++	p = BN_bin2bn(r.base, p_bytes, NULL);
+ 	isc_region_consume(&r, p_bytes);
+ 
+-	dsa->g = BN_bin2bn(r.base, p_bytes, NULL);
++	g = BN_bin2bn(r.base, p_bytes, NULL);
+ 	isc_region_consume(&r, p_bytes);
+ 
+-	dsa->pub_key = BN_bin2bn(r.base, p_bytes, NULL);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dsa->p = p;
++	dsa->q = q;
++	dsa->g = g;
++#else
++	DSA_set0_pqg(dsa, p, q, g);
++#endif
++
++	pub_key = BN_bin2bn(r.base, p_bytes, NULL);
+ 	isc_region_consume(&r, p_bytes);
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dsa->pub_key = pub_key;
++#else
++	DSA_set0_key(dsa, pub_key, NULL);
++#endif
++
+ 	key->key_size = p_bytes * 8;
+ 
+ 	isc_buffer_forward(data, 1 + ISC_SHA1_DIGESTLENGTH + 3 * p_bytes);
+@@ -535,6 +605,7 @@ openssldsa_tofile(const dst_key_t *key, const char *directory) {
+ 	DSA *dsa;
+ 	dst_private_t priv;
+ 	unsigned char bufs[5][128];
++	const BIGNUM *p, *q, *g, *pub_key, *priv_key;
+ 
+ 	if (key->keydata.dsa == NULL)
+ 		return (DST_R_NULLKEY);
+@@ -546,33 +617,36 @@ openssldsa_tofile(const dst_key_t *key, const char *directory) {
+ 
+ 	dsa = key->keydata.dsa;
+ 
++	DSA_get0_pqg(dsa, &p, &q, &g);
++	DSA_get0_key(dsa, &pub_key, &priv_key);
++
+ 	priv.elements[cnt].tag = TAG_DSA_PRIME;
+-	priv.elements[cnt].length = BN_num_bytes(dsa->p);
+-	BN_bn2bin(dsa->p, bufs[cnt]);
++	priv.elements[cnt].length = BN_num_bytes(p);
++	BN_bn2bin(p, bufs[cnt]);
+ 	priv.elements[cnt].data = bufs[cnt];
+ 	cnt++;
+ 
+ 	priv.elements[cnt].tag = TAG_DSA_SUBPRIME;
+-	priv.elements[cnt].length = BN_num_bytes(dsa->q);
+-	BN_bn2bin(dsa->q, bufs[cnt]);
++	priv.elements[cnt].length = BN_num_bytes(q);
++	BN_bn2bin(q, bufs[cnt]);
+ 	priv.elements[cnt].data = bufs[cnt];
+ 	cnt++;
+ 
+ 	priv.elements[cnt].tag = TAG_DSA_BASE;
+-	priv.elements[cnt].length = BN_num_bytes(dsa->g);
+-	BN_bn2bin(dsa->g, bufs[cnt]);
++	priv.elements[cnt].length = BN_num_bytes(g);
++	BN_bn2bin(g, bufs[cnt]);
+ 	priv.elements[cnt].data = bufs[cnt];
+ 	cnt++;
+ 
+ 	priv.elements[cnt].tag = TAG_DSA_PRIVATE;
+-	priv.elements[cnt].length = BN_num_bytes(dsa->priv_key);
+-	BN_bn2bin(dsa->priv_key, bufs[cnt]);
++	priv.elements[cnt].length = BN_num_bytes(priv_key);
++	BN_bn2bin(priv_key, bufs[cnt]);
+ 	priv.elements[cnt].data = bufs[cnt];
+ 	cnt++;
+ 
+ 	priv.elements[cnt].tag = TAG_DSA_PUBLIC;
+-	priv.elements[cnt].length = BN_num_bytes(dsa->pub_key);
+-	BN_bn2bin(dsa->pub_key, bufs[cnt]);
++	priv.elements[cnt].length = BN_num_bytes(pub_key);
++	BN_bn2bin(pub_key, bufs[cnt]);
+ 	priv.elements[cnt].data = bufs[cnt];
+ 	cnt++;
+ 
+@@ -588,6 +662,7 @@ openssldsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 	DSA *dsa = NULL;
+ 	isc_mem_t *mctx = key->mctx;
+ #define DST_RET(a) {ret = a; goto err;}
++	BIGNUM *p = NULL, *g = NULL, *q = NULL, *pub_key = NULL, *priv_key = NULL;
+ 
+ 	/* read private key file */
+ 	ret = dst__privstruct_parse(key, DST_ALG_DSA, lexer, mctx, &priv);
+@@ -610,7 +685,7 @@ openssldsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 	dsa = DSA_new();
+ 	if (dsa == NULL)
+ 		DST_RET(ISC_R_NOMEMORY);
+-	dsa->flags &= ~DSA_FLAG_CACHE_MONT_P;
++	DSA_clear_flags(dsa, DSA_FLAG_CACHE_MONT_P);
+ 	key->keydata.dsa = dsa;
+ 
+ 	for (i = 0; i < priv.nelements; i++) {
+@@ -622,25 +697,36 @@ openssldsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 
+ 		switch (priv.elements[i].tag) {
+ 			case TAG_DSA_PRIME:
+-				dsa->p = bn;
++				p = bn;
+ 				break;
+ 			case TAG_DSA_SUBPRIME:
+-				dsa->q = bn;
++				q = bn;
+ 				break;
+ 			case TAG_DSA_BASE:
+-				dsa->g = bn;
++				g = bn;
+ 				break;
+ 			case TAG_DSA_PRIVATE:
+-				dsa->priv_key = bn;
++				priv_key = bn;
+ 				break;
+ 			case TAG_DSA_PUBLIC:
+-				dsa->pub_key = bn;
++				pub_key = bn;
+ 				break;
+ 		}
+ 	}
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	dsa->p = p;
++	dsa->q = q;
++	dsa->g = g;
++	dsa->pub_key = pub_key;
++	dsa->priv_key = priv_key;
++#else
++	DSA_set0_pqg(dsa, p, q, g);
++	DSA_set0_key(dsa, pub_key, priv_key);
++#endif
++	
+ 	dst__privstruct_free(&priv, mctx);
+ 	memset(&priv, 0, sizeof(priv));
+-	key->key_size = BN_num_bits(dsa->p);
++	key->key_size = BN_num_bits(p);
+ 	return (ISC_R_SUCCESS);
+ 
+  err:
+diff --git a/lib/dns/opensslecdsa_link.c b/lib/dns/opensslecdsa_link.c
+index a967736..9eb8ca8 100644
+--- a/lib/dns/opensslecdsa_link.c
++++ b/lib/dns/opensslecdsa_link.c
+@@ -102,7 +102,7 @@ opensslecdsa_adddata(dst_context_t *dctx, const isc_region_t *data) {
+ }
+ 
+ static int
+-BN_bn2bin_fixed(BIGNUM *bn, unsigned char *buf, int size) {
++BN_bn2bin_fixed(const BIGNUM *bn, unsigned char *buf, int size) {
+ 	int bytes = size - BN_num_bytes(bn);
+ 
+ 	while (bytes-- > 0)
+@@ -122,6 +122,7 @@ opensslecdsa_sign(dst_context_t *dctx, isc_buffer_t *sig) {
+ 	EC_KEY *eckey = EVP_PKEY_get1_EC_KEY(pkey);
+ 	unsigned int dgstlen, siglen;
+ 	unsigned char digest[EVP_MAX_MD_SIZE];
++	const BIGNUM *sig_r, *sig_s;
+ 
+ 	REQUIRE(key->key_alg == DST_ALG_ECDSA256 ||
+ 		key->key_alg == DST_ALG_ECDSA384);
+@@ -148,9 +149,17 @@ opensslecdsa_sign(dst_context_t *dctx, isc_buffer_t *sig) {
+ 		DST_RET(dst__openssl_toresult3(dctx->category,
+ 					       "ECDSA_do_sign",
+ 					       DST_R_SIGNFAILURE));
+-	BN_bn2bin_fixed(ecdsasig->r, r.base, siglen / 2);
++
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	sig_r = ecdsasig->r;
++	sig_s = ecdsasig->s;
++#else
++	ECDSA_SIG_get0(ecdsasig, &sig_r, &sig_s);
++#endif
++
++	BN_bn2bin_fixed(sig_r, r.base, siglen / 2);
+ 	isc_region_consume(&r, siglen / 2);
+-	BN_bn2bin_fixed(ecdsasig->s, r.base, siglen / 2);
++	BN_bn2bin_fixed(sig_s, r.base, siglen / 2);
+ 	isc_region_consume(&r, siglen / 2);
+ 	ECDSA_SIG_free(ecdsasig);
+ 	isc_buffer_add(sig, siglen);
+@@ -174,6 +183,7 @@ opensslecdsa_verify(dst_context_t *dctx, const isc_region_t *sig) {
+ 	EC_KEY *eckey = EVP_PKEY_get1_EC_KEY(pkey);
+ 	unsigned int dgstlen, siglen;
+ 	unsigned char digest[EVP_MAX_MD_SIZE];
++	BIGNUM *r, *s;
+ 
+ 	REQUIRE(key->key_alg == DST_ALG_ECDSA256 ||
+ 		key->key_alg == DST_ALG_ECDSA384);
+@@ -197,15 +207,18 @@ opensslecdsa_verify(dst_context_t *dctx, const isc_region_t *sig) {
+ 	ecdsasig = ECDSA_SIG_new();
+ 	if (ecdsasig == NULL)
+ 		DST_RET (ISC_R_NOMEMORY);
+-	if (ecdsasig->r != NULL)
+-		BN_free(ecdsasig->r);
+-	ecdsasig->r = BN_bin2bn(cp, siglen / 2, NULL);
++	r = BN_bin2bn(cp, siglen / 2, NULL);
+ 	cp += siglen / 2;
+-	if (ecdsasig->s != NULL)
+-		BN_free(ecdsasig->s);
+-	ecdsasig->s = BN_bin2bn(cp, siglen / 2, NULL);
++	s = BN_bin2bn(cp, siglen / 2, NULL);
+ 	/* cp += siglen / 2; */
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	ecdsasig->r = r;
++	ecdsasig->s = s;
++#else
++	ECDSA_SIG_set0(ecdsasig, r, s);
++#endif
++
+ 	status = ECDSA_do_verify(digest, dgstlen, ecdsasig, eckey);
+ 	switch (status) {
+ 	case 1:
+diff --git a/lib/dns/opensslrsa_link.c b/lib/dns/opensslrsa_link.c
+index b5ad913..a2595cd 100644
+--- a/lib/dns/opensslrsa_link.c
++++ b/lib/dns/opensslrsa_link.c
+@@ -49,6 +49,42 @@
+ #include <openssl/engine.h>
+ #endif
+ 
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++static void
++RSA_get0_key(const RSA *r, const BIGNUM **n, const BIGNUM **e, const BIGNUM **d) {
++	if (n != NULL)
++		*n = r->n;
++	if (e != NULL)
++		*e = r->e;
++	if (d != NULL)
++		*d = r->d;
++}
++
++static void
++RSA_get0_factors(const RSA *r, const BIGNUM **p, const BIGNUM **q) {
++	if (p != NULL)
++		*p = r->p;
++	if (q != NULL)
++		*q = r->q;
++}
++
++static void
++RSA_get0_crt_params(const RSA *r, const BIGNUM **dmp1, const BIGNUM **dmq1, const BIGNUM **iqmp) {
++	if (dmp1 != NULL)
++		*dmp1 = r->dmp1;
++	if (dmq1 != NULL)
++		*dmq1 = r->dmq1;
++	if (iqmp != NULL)
++		*iqmp = r->iqmp;
++}
++
++static int
++RSA_test_flags(const RSA *r, int flags) {
++	return r->flags & flags;
++}
++
++#endif
++
+ /*
+  * Limit the size of public exponents.
+  */
+@@ -100,6 +136,7 @@
+ 	(rsa)->flags &= ~RSA_FLAG_BLINDING; \
+ 	} while (0)
+ #elif defined(RSA_FLAG_NO_BLINDING)
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
+ #define SET_FLAGS(rsa) \
+ 	do { \
+ 		(rsa)->flags &= ~RSA_FLAG_BLINDING; \
+@@ -108,6 +145,13 @@
+ #else
+ #define SET_FLAGS(rsa) \
+ 	do { \
++		RSA_clear_flags(rsa, RSA_FLAG_BLINDING); \
++		RSA_set_flags(rsa, RSA_FLAG_NO_BLINDING); \
++	} while (0)
++#endif
++#else
++#define SET_FLAGS(rsa) \
++	do { \
+ 		(rsa)->flags &= ~RSA_FLAG_BLINDING; \
+ 	} while (0)
+ #endif
+@@ -554,6 +598,7 @@ opensslrsa_verify2(dst_context_t *dctx, int maxbits, const isc_region_t *sig) {
+ 	EVP_PKEY *pkey = key->keydata.pkey;
+ 	RSA *rsa;
+ 	int bits;
++	const BIGNUM *e;
+ #else
+ 	/* note: ISC_SHA512_DIGESTLENGTH >= ISC_*_DIGESTLENGTH */
+ 	unsigned char digest[ISC_SHA512_DIGESTLENGTH];
+@@ -583,7 +628,9 @@ opensslrsa_verify2(dst_context_t *dctx, int maxbits, const isc_region_t *sig) {
+ 	rsa = EVP_PKEY_get1_RSA(pkey);
+ 	if (rsa == NULL)
+ 		return (dst__openssl_toresult(DST_R_OPENSSLFAILURE));
+-	bits = BN_num_bits(rsa->e);
++
++	RSA_get0_key(rsa, NULL, &e, NULL);
++	bits = BN_num_bits(e);
+ 	RSA_free(rsa);
+ 	if (bits > maxbits && maxbits != 0)
+ 		return (DST_R_VERIFYFAILURE);
+@@ -731,6 +778,7 @@ opensslrsa_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	RSA *rsa1 = NULL, *rsa2 = NULL;
+ #if USE_EVP
+ 	EVP_PKEY *pkey1, *pkey2;
++	const BIGNUM *n1, *n2, *e1, *e2, *d1, *d2, *p1, *p2, *q1, *q2;
+ #endif
+ 
+ #if USE_EVP
+@@ -758,17 +806,22 @@ opensslrsa_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	else if (rsa1 == NULL || rsa2 == NULL)
+ 		return (ISC_FALSE);
+ 
+-	status = BN_cmp(rsa1->n, rsa2->n) ||
+-		 BN_cmp(rsa1->e, rsa2->e);
++	RSA_get0_key(rsa1, &n1, &e1, &d1);
++	RSA_get0_key(rsa2, &n2, &e2, &d2);
++	RSA_get0_factors(rsa1, &p1, &q1);
++	RSA_get0_factors(rsa2, &p2, &q2);
++
++	status = BN_cmp(n1, n2) ||
++		 BN_cmp(e1, e2);
+ 
+ 	if (status != 0)
+ 		return (ISC_FALSE);
+ 
+ #if USE_EVP
+-	if ((rsa1->flags & RSA_FLAG_EXT_PKEY) != 0 ||
+-	    (rsa2->flags & RSA_FLAG_EXT_PKEY) != 0) {
+-		if ((rsa1->flags & RSA_FLAG_EXT_PKEY) == 0 ||
+-		    (rsa2->flags & RSA_FLAG_EXT_PKEY) == 0)
++	if (RSA_test_flags(rsa1, RSA_FLAG_EXT_PKEY) != 0 ||
++	    RSA_test_flags(rsa2, RSA_FLAG_EXT_PKEY) != 0) {
++		if (RSA_test_flags(rsa1, RSA_FLAG_EXT_PKEY) == 0 ||
++		    RSA_test_flags(rsa2, RSA_FLAG_EXT_PKEY) == 0)
+ 			return (ISC_FALSE);
+ 		/*
+ 		 * Can't compare private parameters, BTW does it make sense?
+@@ -777,12 +830,12 @@ opensslrsa_compare(const dst_key_t *key1, const dst_key_t *key2) {
+ 	}
+ #endif
+ 
+-	if (rsa1->d != NULL || rsa2->d != NULL) {
+-		if (rsa1->d == NULL || rsa2->d == NULL)
++	if (d1 != NULL || d2 != NULL) {
++		if (d1 == NULL || d2 == NULL)
+ 			return (ISC_FALSE);
+-		status = BN_cmp(rsa1->d, rsa2->d) ||
+-			 BN_cmp(rsa1->p, rsa2->p) ||
+-			 BN_cmp(rsa1->q, rsa2->q);
++		status = BN_cmp(d1, d2) ||
++			 BN_cmp(p1, p2) ||
++			 BN_cmp(q1, q2);
+ 
+ 		if (status != 0)
+ 			return (ISC_FALSE);
+@@ -933,9 +986,15 @@ opensslrsa_isprivate(const dst_key_t *key) {
+ #else
+ 	RSA *rsa = key->keydata.rsa;
+ #endif
+-	if (rsa != NULL && (rsa->flags & RSA_FLAG_EXT_PKEY) != 0)
++	const BIGNUM *d;
++
++	if (rsa != NULL && RSA_test_flags(rsa, RSA_FLAG_EXT_PKEY) != 0)
+ 		return (ISC_TRUE);
+-	return (ISC_TF(rsa != NULL && rsa->d != NULL));
++	if (rsa == NULL)
++		return (ISC_FALSE);
++
++	RSA_get0_key(rsa, NULL, NULL, &d);
++	return (ISC_TF(d != NULL));
+ }
+ 
+ static void
+@@ -962,6 +1021,7 @@ opensslrsa_todns(const dst_key_t *key, isc_buffer_t *data) {
+ #if USE_EVP
+ 	EVP_PKEY *pkey;
+ #endif
++	const BIGNUM *n, *e;
+ 
+ #if USE_EVP
+ 	REQUIRE(key->keydata.pkey != NULL);
+@@ -980,8 +1040,9 @@ opensslrsa_todns(const dst_key_t *key, isc_buffer_t *data) {
+ 
+ 	isc_buffer_availableregion(data, &r);
+ 
+-	e_bytes = BN_num_bytes(rsa->e);
+-	mod_bytes = BN_num_bytes(rsa->n);
++	RSA_get0_key(rsa, &n, &e, NULL);
++	e_bytes = BN_num_bytes(e);
++	mod_bytes = BN_num_bytes(n);
+ 
+ 	if (e_bytes < 256) {	/*%< key exponent is <= 2040 bits */
+ 		if (r.length < 1)
+@@ -999,9 +1060,9 @@ opensslrsa_todns(const dst_key_t *key, isc_buffer_t *data) {
+ 	if (r.length < e_bytes + mod_bytes)
+ 		DST_RET(ISC_R_NOSPACE);
+ 
+-	BN_bn2bin(rsa->e, r.base);
++	BN_bn2bin(e, r.base);
+ 	isc_region_consume(&r, e_bytes);
+-	BN_bn2bin(rsa->n, r.base);
++	BN_bn2bin(n, r.base);
+ 
+ 	isc_buffer_add(data, e_bytes + mod_bytes);
+ 
+@@ -1023,6 +1084,7 @@ opensslrsa_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ #if USE_EVP
+ 	EVP_PKEY *pkey;
+ #endif
++	BIGNUM *n, *e;
+ 
+ 	isc_buffer_remainingregion(data, &r);
+ 	if (r.length == 0)
+@@ -1056,12 +1118,19 @@ opensslrsa_fromdns(dst_key_t *key, isc_buffer_t *data) {
+ 		RSA_free(rsa);
+ 		return (DST_R_INVALIDPUBLICKEY);
+ 	}
+-	rsa->e = BN_bin2bn(r.base, e_bytes, NULL);
++	e = BN_bin2bn(r.base, e_bytes, NULL);
+ 	isc_region_consume(&r, e_bytes);
+ 
+-	rsa->n = BN_bin2bn(r.base, r.length, NULL);
++	n = BN_bin2bn(r.base, r.length, NULL);
++
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	rsa->n = n;
++	rsa->e = e;
++#else
++	RSA_set0_key(rsa, n, e, NULL);
++#endif
+ 
+-	key->key_size = BN_num_bits(rsa->n);
++	key->key_size = BN_num_bits(n);
+ 
+ 	isc_buffer_forward(data, length);
+ 
+@@ -1092,6 +1161,8 @@ opensslrsa_tofile(const dst_key_t *key, const char *directory) {
+ 	dst_private_t priv;
+ 	unsigned char *bufs[8];
+ 	isc_result_t result;
++	const BIGNUM *n, *e, *d, *p, *q, *dmp1, *dmq1, *iqmp;
++
+ 
+ #if USE_EVP
+ 	if (key->keydata.pkey == NULL)
+@@ -1112,8 +1183,12 @@ opensslrsa_tofile(const dst_key_t *key, const char *directory) {
+ 		goto fail;
+ 	}
+ 
++	RSA_get0_key(rsa, &n, &e, &d);
++	RSA_get0_factors(rsa, &p, &q);
++	RSA_get0_crt_params(rsa, &dmp1, &dmq1, &iqmp);
++
+ 	for (i = 0; i < 8; i++) {
+-		bufs[i] = isc_mem_get(key->mctx, BN_num_bytes(rsa->n));
++		bufs[i] = isc_mem_get(key->mctx, BN_num_bytes(n));
+ 		if (bufs[i] == NULL) {
+ 			result = ISC_R_NOMEMORY;
+ 			goto fail;
+@@ -1123,61 +1198,61 @@ opensslrsa_tofile(const dst_key_t *key, const char *directory) {
+ 	i = 0;
+ 
+ 	priv.elements[i].tag = TAG_RSA_MODULUS;
+-	priv.elements[i].length = BN_num_bytes(rsa->n);
+-	BN_bn2bin(rsa->n, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(n);
++	BN_bn2bin(n, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+ 	priv.elements[i].tag = TAG_RSA_PUBLICEXPONENT;
+-	priv.elements[i].length = BN_num_bytes(rsa->e);
+-	BN_bn2bin(rsa->e, bufs[i]);
++	priv.elements[i].length = BN_num_bytes(e);
++	BN_bn2bin(e, bufs[i]);
+ 	priv.elements[i].data = bufs[i];
+ 	i++;
+ 
+-	if (rsa->d != NULL) {
++	if (d != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_PRIVATEEXPONENT;
+-		priv.elements[i].length = BN_num_bytes(rsa->d);
+-		BN_bn2bin(rsa->d, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(d);
++		BN_bn2bin(d, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+ 
+-	if (rsa->p != NULL) {
++	if (p != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_PRIME1;
+-		priv.elements[i].length = BN_num_bytes(rsa->p);
+-		BN_bn2bin(rsa->p, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(p);
++		BN_bn2bin(p, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+ 
+-	if (rsa->q != NULL) {
++	if (q != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_PRIME2;
+-		priv.elements[i].length = BN_num_bytes(rsa->q);
+-		BN_bn2bin(rsa->q, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(q);
++		BN_bn2bin(q, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+ 
+-	if (rsa->dmp1 != NULL) {
++	if (dmp1 != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_EXPONENT1;
+-		priv.elements[i].length = BN_num_bytes(rsa->dmp1);
+-		BN_bn2bin(rsa->dmp1, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(dmp1);
++		BN_bn2bin(dmp1, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+ 
+-	if (rsa->dmq1 != NULL) {
++	if (dmq1 != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_EXPONENT2;
+-		priv.elements[i].length = BN_num_bytes(rsa->dmq1);
+-		BN_bn2bin(rsa->dmq1, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(dmq1);
++		BN_bn2bin(dmq1, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+ 
+-	if (rsa->iqmp != NULL) {
++	if (iqmp != NULL) {
+ 		priv.elements[i].tag = TAG_RSA_COEFFICIENT;
+-		priv.elements[i].length = BN_num_bytes(rsa->iqmp);
+-		BN_bn2bin(rsa->iqmp, bufs[i]);
++		priv.elements[i].length = BN_num_bytes(iqmp);
++		BN_bn2bin(iqmp, bufs[i]);
+ 		priv.elements[i].data = bufs[i];
+ 		i++;
+ 	}
+@@ -1208,7 +1283,7 @@ opensslrsa_tofile(const dst_key_t *key, const char *directory) {
+ 	for (i = 0; i < 8; i++) {
+ 		if (bufs[i] == NULL)
+ 			break;
+-		isc_mem_put(key->mctx, bufs[i], BN_num_bytes(rsa->n));
++		isc_mem_put(key->mctx, bufs[i], BN_num_bytes(n));
+ 	}
+ 	return (result);
+ }
+@@ -1216,25 +1291,37 @@ opensslrsa_tofile(const dst_key_t *key, const char *directory) {
+ static isc_result_t
+ rsa_check(RSA *rsa, RSA *pub)
+ {
++	const BIGNUM *rsa_n, *rsa_e, *pub_n, *pub_e;
++
+ 	/* Public parameters should be the same but if they are not set
+ 	 * copy them from the public key. */
++
++	RSA_get0_key(rsa, &rsa_n, &rsa_e, NULL);
++
+ 	if (pub != NULL) {
+-		if (rsa->n != NULL) {
+-			if (BN_cmp(rsa->n, pub->n) != 0)
++		RSA_get0_key(pub, &pub_n, &pub_e, NULL);
++
++		if (rsa_n != NULL && pub_n != NULL) {
++			if (BN_cmp(rsa_n, pub_n) != 0)
+ 				return (DST_R_INVALIDPRIVATEKEY);
+-		} else {
+-			rsa->n = pub->n;
+-			pub->n = NULL;
+-		}
+-		if (rsa->e != NULL) {
+-			if (BN_cmp(rsa->e, pub->e) != 0)
++		} else if (rsa_e != NULL && pub_e != NULL) {
++			if (BN_cmp(rsa_e, pub_e) != 0)
++				return (DST_R_INVALIDPRIVATEKEY);
++		} else if (rsa_e == NULL || rsa_n == NULL) {
++			BIGNUM *new_n, *new_e;
++			if (pub_e == NULL || pub_n == NULL)
+ 				return (DST_R_INVALIDPRIVATEKEY);
+-		} else {
+-			rsa->e = pub->e;
+-			pub->e = NULL;
++			rsa_n = new_n = BN_dup(pub_n);
++			rsa_e = new_e = BN_dup(pub_e);
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++			rsa->n = new_n;
++			rsa->e = new_e;
++#else
++			RSA_set0_key(rsa, new_n, new_e, NULL);
++#endif
+ 		}
+ 	}
+-	if (rsa->n == NULL || rsa->e == NULL)
++	if (rsa_n == NULL || rsa_e == NULL)
+ 		return (DST_R_INVALIDPRIVATEKEY);
+ 	return (ISC_R_SUCCESS);
+ }
+@@ -1246,13 +1333,14 @@ opensslrsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 	int i;
+ 	RSA *rsa = NULL, *pubrsa = NULL;
+ #ifdef USE_ENGINE
+-	ENGINE *e = NULL;
++	ENGINE *eng = NULL;
+ #endif
+ 	isc_mem_t *mctx = key->mctx;
+ 	const char *engine = NULL, *label = NULL;
+ #if defined(USE_ENGINE) || USE_EVP
+ 	EVP_PKEY *pkey = NULL;
+ #endif
++	BIGNUM *n = NULL, *e = NULL, *d = NULL, *p = NULL, *q = NULL, *dmp1 = NULL, *dmq1 = NULL, *iqmp = NULL;
+ 
+ 	/* read private key file */
+ 	ret = dst__privstruct_parse(key, DST_ALG_RSA, lexer, mctx, &priv);
+@@ -1303,10 +1391,10 @@ opensslrsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ #ifdef USE_ENGINE
+ 		if (engine == NULL)
+ 			DST_RET(DST_R_NOENGINE);
+-		e = dst__openssl_getengine(engine);
+-		if (e == NULL)
++		eng = dst__openssl_getengine(engine);
++		if (eng == NULL)
+ 			DST_RET(DST_R_NOENGINE);
+-		pkey = ENGINE_load_private_key(e, label, NULL, NULL);
++		pkey = ENGINE_load_private_key(eng, label, NULL, NULL);
+ 		if (pkey == NULL)
+ 			DST_RET(dst__openssl_toresult2(
+ 					"ENGINE_load_private_key",
+@@ -1374,39 +1462,55 @@ opensslrsa_parse(dst_key_t *key, isc_lex_t *lexer, dst_key_t *pub) {
+ 
+ 		switch (priv.elements[i].tag) {
+ 			case TAG_RSA_MODULUS:
+-				rsa->n = bn;
++				n = bn;
+ 				break;
+ 			case TAG_RSA_PUBLICEXPONENT:
+-				rsa->e = bn;
++				e = bn;
+ 				break;
+ 			case TAG_RSA_PRIVATEEXPONENT:
+-				rsa->d = bn;
++				d = bn;
+ 				break;
+ 			case TAG_RSA_PRIME1:
+-				rsa->p = bn;
++				p = bn;
+ 				break;
+ 			case TAG_RSA_PRIME2:
+-				rsa->q = bn;
++				q = bn;
+ 				break;
+ 			case TAG_RSA_EXPONENT1:
+-				rsa->dmp1 = bn;
++				dmp1 = bn;
+ 				break;
+ 			case TAG_RSA_EXPONENT2:
+-				rsa->dmq1 = bn;
++				dmq1 = bn;
+ 				break;
+ 			case TAG_RSA_COEFFICIENT:
+-				rsa->iqmp = bn;
++				iqmp = bn;
+ 				break;
+ 		}
+ 	}
++
++#if OPENSSL_VERSION_NUMBER < 0x10100000L
++	rsa->n = n;
++	rsa->e = e;
++	rsa->d = d;
++	rsa->p = p;
++	rsa->q = q;
++	rsa->dmp1 = dmp1;
++	rsa->dmq1 = dmq1;
++	rsa->iqmp = iqmp;
++#else
++	RSA_set0_key(rsa, n, e, d);
++	RSA_set0_factors(rsa, p, q);
++	RSA_set0_crt_params(rsa, dmp1, dmq1, iqmp);
++#endif
++
+ 	dst__privstruct_free(&priv, mctx);
+ 	memset(&priv, 0, sizeof(priv));
+ 
+ 	if (rsa_check(rsa, pubrsa) != ISC_R_SUCCESS)
+ 		DST_RET(DST_R_INVALIDPRIVATEKEY);
+-	if (BN_num_bits(rsa->e) > RSA_MAX_PUBEXP_BITS)
++	if (BN_num_bits(e) > RSA_MAX_PUBEXP_BITS)
+ 		DST_RET(ISC_R_RANGE);
+-	key->key_size = BN_num_bits(rsa->n);
++	key->key_size = BN_num_bits(n);
+ 	if (pubrsa != NULL)
+ 		RSA_free(pubrsa);
+ #if USE_EVP
+diff --git a/lib/isc/aes.c b/lib/isc/aes.c
+index a4a61b3..4c12849 100644
+--- a/lib/isc/aes.c
++++ b/lib/isc/aes.c
+@@ -28,48 +28,48 @@ void
+ isc_aes128_crypt(const unsigned char *key, const unsigned char *in,
+ 		 unsigned char *out)
+ {
+-	EVP_CIPHER_CTX c;
++	EVP_CIPHER_CTX *c = EVP_CIPHER_CTX_new();
+ 	int len;
+ 
+-	EVP_CIPHER_CTX_init(&c);
+-	RUNTIME_CHECK(EVP_EncryptInit(&c, EVP_aes_128_ecb(), key, NULL) == 1);
+-	EVP_CIPHER_CTX_set_padding(&c, 0);
+-	RUNTIME_CHECK(EVP_EncryptUpdate(&c, out, &len, in,
++	RUNTIME_CHECK(c != NULL);
++	RUNTIME_CHECK(EVP_EncryptInit(c, EVP_aes_128_ecb(), key, NULL) == 1);
++	EVP_CIPHER_CTX_set_padding(c, 0);
++	RUNTIME_CHECK(EVP_EncryptUpdate(c, out, &len, in,
+ 					ISC_AES_BLOCK_LENGTH) == 1);
+ 	RUNTIME_CHECK(len == ISC_AES_BLOCK_LENGTH);
+-	RUNTIME_CHECK(EVP_CIPHER_CTX_cleanup(&c) == 1);
++	EVP_CIPHER_CTX_free(c);
+ }
+ 
+ void
+ isc_aes192_crypt(const unsigned char *key, const unsigned char *in,
+ 		 unsigned char *out)
+ {
+-	EVP_CIPHER_CTX c;
++	EVP_CIPHER_CTX *c = EVP_CIPHER_CTX_new();
+ 	int len;
+ 
+-	EVP_CIPHER_CTX_init(&c);
+-	RUNTIME_CHECK(EVP_EncryptInit(&c, EVP_aes_192_ecb(), key, NULL) == 1);
+-	EVP_CIPHER_CTX_set_padding(&c, 0);
+-	RUNTIME_CHECK(EVP_EncryptUpdate(&c, out, &len, in,
++	RUNTIME_CHECK(c != NULL);
++	RUNTIME_CHECK(EVP_EncryptInit(c, EVP_aes_192_ecb(), key, NULL) == 1);
++	EVP_CIPHER_CTX_set_padding(c, 0);
++	RUNTIME_CHECK(EVP_EncryptUpdate(c, out, &len, in,
+ 					ISC_AES_BLOCK_LENGTH) == 1);
+ 	RUNTIME_CHECK(len == ISC_AES_BLOCK_LENGTH);
+-	RUNTIME_CHECK(EVP_CIPHER_CTX_cleanup(&c) == 1);
++	EVP_CIPHER_CTX_free(c);
+ }
+ 
+ void
+ isc_aes256_crypt(const unsigned char *key, const unsigned char *in,
+ 		 unsigned char *out)
+ {
+-	EVP_CIPHER_CTX c;
++	EVP_CIPHER_CTX *c = EVP_CIPHER_CTX_new();
+ 	int len;
+ 
+-	EVP_CIPHER_CTX_init(&c);
+-	RUNTIME_CHECK(EVP_EncryptInit(&c, EVP_aes_256_ecb(), key, NULL) == 1);
+-	EVP_CIPHER_CTX_set_padding(&c, 0);
+-	RUNTIME_CHECK(EVP_EncryptUpdate(&c, out, &len, in,
++	RUNTIME_CHECK(c != NULL);
++	RUNTIME_CHECK(EVP_EncryptInit(c, EVP_aes_256_ecb(), key, NULL) == 1);
++	EVP_CIPHER_CTX_set_padding(c, 0);
++	RUNTIME_CHECK(EVP_EncryptUpdate(c, out, &len, in,
+ 					ISC_AES_BLOCK_LENGTH) == 1);
+ 	RUNTIME_CHECK(len == ISC_AES_BLOCK_LENGTH);
+-	RUNTIME_CHECK(EVP_CIPHER_CTX_cleanup(&c) == 1);
++	EVP_CIPHER_CTX_free(c);
+ }
+ 
+ #elif HAVE_OPENSSL_AES
+-- 
+2.7.4
+
