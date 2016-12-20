@@ -1,16 +1,11 @@
 PACKAGE = openntpd
-VERSION = 3.9p1
+VERSION = 6.0p1
 
-LOCATION = ftp://ftp.openbsd.org/pub/OpenBSD/OpenNTPD
-TARBALLS = $(PACKAGE_FULLNAME).tar.gz
-
-##############################################################################
+LOCATION = http://ftp.openbsd.org/pub/OpenBSD/OpenNTPD
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
-install-vars += \
-	STRIP_OPT=''
-
-package-clean:
-	@:
-
+stripfiles = \
+	$(prefix)/sbin/ntpctl \
+	$(prefix)/sbin/ntpd
