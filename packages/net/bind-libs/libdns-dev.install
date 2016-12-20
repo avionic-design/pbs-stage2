@@ -1,3 +1,5 @@
 /usr/include/dns
 /usr/include/dst
+/usr/include/pk11
+/usr/include/pkcs11
 /usr/lib/libdns.a
