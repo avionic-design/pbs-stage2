@@ -2,6 +2,10 @@ PACKAGE = xf86-video-intel
 VERSION = 2.99.917
 LICENSE = MIT
 
+# Temporary solution until this friggin' driver is finally released
+GIT_URL = https://github.com/avionic-design/xf86-video-intel
+GIT_CHECKOUT = 2.99.917-746-ad
+
 include packages/xorg/driver/common.mk
 
 conf-args += \
