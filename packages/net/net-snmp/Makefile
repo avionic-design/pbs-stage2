@@ -10,6 +10,7 @@ include packages/autotools-reconf.mk
 conf-args += \
 	--enable-reentrant \
 	--enable-ipv6 \
+	--enable-silent-libtool \
 	--with-default-snmp-version=2 \
 	--with-logfile=/var/log/snmpd.log \
 	--with-persistent-directory=/var/run/net-snmp \
