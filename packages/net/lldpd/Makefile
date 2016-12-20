@@ -1,5 +1,5 @@
 PACKAGE = lldpd
-VERSION = 0.9.4
+VERSION = 0.9.5
 LICENSE = ISC
 
 LOCATION = http://media.luffy.cx/files/$(PACKAGE)
