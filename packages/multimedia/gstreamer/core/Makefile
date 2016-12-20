@@ -16,7 +16,8 @@ conf-args += \
 	--disable-rpath \
 	--disable-examples \
 	--disable-tests \
-	--disable-check
+	--disable-check \
+	--disable-benchmarks
 
 plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
 
