@@ -1,7 +1,7 @@
-From 0784f2dfc5dd8dcf0c2f9d520935c226bf5e148f Mon Sep 17 00:00:00 2001
+From df45928c1f1f4cf735051d3b72670c855dec3153 Mon Sep 17 00:00:00 2001
 From: Bert van Hall <bert.vanhall@avionic-design.de>
 Date: Thu, 8 Dec 2016 11:41:31 +0100
-Subject: [PATCH] openssl 1.1.0 compatibility
+Subject: [PATCH 1/2] openssl 1.1.0 compatibility
 
 The patch adds compatibility for openssl 1.1.0 and later. This mostly
 involves moving data objects from stack to heap since those have become
