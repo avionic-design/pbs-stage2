@@ -1,0 +1,27 @@
+From fb84a24ca86209dacc0fa496875e92019d4523c7 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 9 Jan 2017 12:21:22 +0100
+Subject: [PATCH] avoid invalid header locations
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ setup.py | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/setup.py b/setup.py
+index af9a414..a6487de 100644
+--- a/setup.py
++++ b/setup.py
+@@ -533,7 +533,8 @@ class PyBuildExt(build_ext):
+                         add_dir_to_list(dir_list, directory)
+ 
+         if os.path.normpath(sys.base_prefix) != '/usr' \
+-                and not sysconfig.get_config_var('PYTHONFRAMEWORK'):
++                and not sysconfig.get_config_var('PYTHONFRAMEWORK') \
++                and not cross_compiling:
+             # OSX note: Don't add LIBDIR and INCLUDEDIR to building a framework
+             # (PYTHONFRAMEWORK is set) to avoid # linking problems when
+             # building a framework with different architectures than
+-- 
+2.7.4
+

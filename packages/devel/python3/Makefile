@@ -14,7 +14,7 @@ conf-args = \
 	--infodir=$(prefix)/share/info \
 	--mandir=$(prefix)/share/man \
 	--sysconfdir=/etc \
-	--with-cxx-main=$(TARGET)-g++ \
+	--without-cxx-main \
 	--enable-ipv6
 
 conf-args += \
