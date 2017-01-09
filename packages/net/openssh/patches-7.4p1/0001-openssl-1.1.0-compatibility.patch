@@ -1,4 +1,4 @@
-From 4c0b7cc1478d4e6f52f91b457062b1845753672f Mon Sep 17 00:00:00 2001
+From f0df36204f7afa41ac7f439950174b3bb8447be3 Mon Sep 17 00:00:00 2001
 From: Bert van Hall <bert.vanhall@avionic-design.de>
 Date: Tue, 20 Dec 2016 14:23:00 +0100
 Subject: [PATCH] openssl 1.1.0 compatibility
@@ -13,7 +13,7 @@ Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
  authfd.c                               |  51 ++-
  cipher-3des1.c                         |  68 ++--
  cipher-bf1.c                           |  27 +-
- cipher.c                               |   8 +-
+ cipher.c                               |  12 +-
  dh.c                                   |  54 +--
  dh.h                                   |   2 +-
  digest-openssl.c                       |  17 +-
@@ -44,7 +44,7 @@ Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
  sshconnect1.c                          |  64 ++--
  sshconnect2.c                          |   1 +
  sshkey.c                               | 631 +++++++++++++++++++++++----------
- 36 files changed, 1573 insertions(+), 467 deletions(-)
+ 36 files changed, 1573 insertions(+), 471 deletions(-)
  create mode 100644 libcrypto-compat.c
  create mode 100644 libcrypto-compat.h
 
@@ -336,10 +336,21 @@ index c205b07..b23bda7 100644
  #endif /* defined(WITH_OPENSSL) && !defined(OPENSSL_NO_BF) */
  
 diff --git a/cipher.c b/cipher.c
-index 2def333..ae56631 100644
+index 2def333..8315ce7 100644
 --- a/cipher.c
 +++ b/cipher.c
-@@ -625,7 +625,7 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
+@@ -390,10 +390,6 @@ cipher_init(struct sshcipher_ctx **ccp, const struct sshcipher *cipher,
+ 			goto out;
+ 		}
+ 	}
+-	if (EVP_CipherInit(cc->evp, NULL, (u_char *)key, NULL, -1) == 0) {
+-		ret = SSH_ERR_LIBCRYPTO_ERROR;
+-		goto out;
+-	}
+ 
+ 	if (cipher->discard_len > 0) {
+ 		if ((junk = malloc(cipher->discard_len)) == NULL ||
+@@ -625,7 +621,7 @@ cipher_get_keyiv(struct sshcipher_ctx *cc, u_char *iv, u_int len)
  			   len, iv))
  			       return SSH_ERR_LIBCRYPTO_ERROR;
  		} else
@@ -348,7 +359,7 @@ index 2def333..ae56631 100644
  		break;
  #endif
  #ifdef WITH_SSH1
-@@ -671,7 +671,7 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
+@@ -671,7 +667,7 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
  			    EVP_CTRL_GCM_SET_IV_FIXED, -1, (void *)iv))
  				return SSH_ERR_LIBCRYPTO_ERROR;
  		} else
@@ -357,7 +368,7 @@ index 2def333..ae56631 100644
  		break;
  #endif
  #ifdef WITH_SSH1
-@@ -685,8 +685,8 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
+@@ -685,8 +681,8 @@ cipher_set_keyiv(struct sshcipher_ctx *cc, const u_char *iv)
  }
  
  #ifdef WITH_OPENSSL
