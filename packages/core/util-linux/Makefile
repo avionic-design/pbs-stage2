@@ -1,5 +1,5 @@
 PACKAGE = util-linux
-VERSION = 2.28
+VERSION = 2.29
 LICENSE = GPL/BSD
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -13,6 +13,7 @@ include packages/autotools.mk
 conf-args += \
 	--disable-rpath \
 	--without-python \
+	--without-ncursesw \
 	--with-sysroot=$(SYSROOT)
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
