@@ -15,7 +15,6 @@ conf-args-$(CONFIG_UCLIBC) = \
 conf-args += \
 	--with-shared \
 	--without-ada \
-	--without-manpages \
 	--without-tests \
 	$(conf-args-y)
 
