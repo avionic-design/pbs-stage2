@@ -12,6 +12,7 @@ obj-$(CONFIG_PACKAGE_NET_ETHTOOL) += ethtool
 obj-$(CONFIG_PACKAGE_NET_HOSTAPD) += hostapd
 obj-$(CONFIG_PACKAGE_NET_IFLINKD) += iflinkd
 obj-$(CONFIG_PACKAGE_NET_IFPLUGD) += ifplugd
+obj-$(CONFIG_PACKAGE_NET_IFTOP) += iftop
 obj-$(CONFIG_PACKAGE_NET_IPERF) += iperf
 obj-$(CONFIG_PACKAGE_NET_IPERF3) += iperf3
 obj-$(CONFIG_PACKAGE_NET_IPROUTE2) += iproute2
