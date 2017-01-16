@@ -1,5 +1,5 @@
 PACKAGE = pcre
-VERSION = 8.39
+VERSION = 8.40
 LICENSE = BSD
 
 LOCATION = ftp://ftp.csx.cam.ac.uk/pub/software/programming/$(PACKAGE)
