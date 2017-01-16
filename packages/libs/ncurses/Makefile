@@ -16,9 +16,11 @@ conf-args += \
 	--with-shared \
 	--without-ada \
 	--without-tests \
+	--enable-pc-files \
+	--with-pkg-config-libdir=$(prefix)/lib/pkgconfig \
 	$(conf-args-y)
 
-prunefiles = \
+config-scriptfiles = \
 	$(prefix)/bin/ncurses$(MAJOR)-config
 
 stripfiles = \
