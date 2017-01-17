@@ -1,7 +1,10 @@
 PACKAGE = nano
-VERSION = 2.3.6
+VERSION = 2.7.4
 
-LOCATION = http://www.nano-editor.org/dist/v2.3
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+LOCATION = http://www.nano-editor.org/dist/v$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
