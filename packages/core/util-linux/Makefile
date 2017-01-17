@@ -57,6 +57,7 @@ stripfiles = \
 	/bin/umount \
 	/bin/wdctl \
 	/sbin/agetty \
+	/sbin/blkdiscard \
 	/sbin/blkid \
 	/sbin/blockdev \
 	/sbin/cfdisk \
@@ -76,6 +77,7 @@ stripfiles = \
 	/sbin/mkfs.cramfs \
 	/sbin/mkfs.minix \
 	/sbin/mkswap \
+	/sbin/nologin \
 	/sbin/pivot_root \
 	/sbin/raw \
 	/sbin/sfdisk \
@@ -85,6 +87,7 @@ stripfiles = \
 	/sbin/swapon \
 	/sbin/switch_root \
 	/sbin/wipefs \
+	/sbin/zramctl \
 	$(prefix)/bin/cal \
 	$(prefix)/bin/chrt \
 	$(prefix)/bin/col \
@@ -102,12 +105,18 @@ stripfiles = \
 	$(prefix)/bin/ipcrm \
 	$(prefix)/bin/ipcs \
 	$(prefix)/bin/isosize \
+	$(prefix)/bin/last \
 	$(prefix)/bin/logger \
 	$(prefix)/bin/look \
 	$(prefix)/bin/lscpu \
+	$(prefix)/bin/lsipc \
 	$(prefix)/bin/lslocks \
+	$(prefix)/bin/lslogins \
+	$(prefix)/bin/lsns \
 	$(prefix)/bin/mcookie \
+	$(prefix)/bin/mesg \
 	$(prefix)/bin/namei \
+	$(prefix)/bin/nsenter \
 	$(prefix)/bin/pg \
 	$(prefix)/bin/prlimit \
 	$(prefix)/bin/rename \
