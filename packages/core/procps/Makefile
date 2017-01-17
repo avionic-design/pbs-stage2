@@ -18,6 +18,12 @@ build-args = \
 	CFLAGS="$(CFLAGS)" \
 	LDFLAGS="$(LDFLAGS)"
 
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+build-args += CURSES="-lncursesw"
+else
+build-args += CURSES="-lncurses"
+endif
+
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && \
 		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)

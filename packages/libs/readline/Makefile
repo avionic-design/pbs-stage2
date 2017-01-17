@@ -13,8 +13,11 @@ conf-args += \
 conf-vars += \
 	bash_cv_wcwidth_broken=no
 
-build-args += \
-	SHLIB_LIBS="-lncurses"
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+  build-args += SHLIB_LIBS="-lncursesw"
+else
+  build-args += SHLIB_LIBS="-lncurses"
+endif
 
 prunefiles =
 stripfiles = \

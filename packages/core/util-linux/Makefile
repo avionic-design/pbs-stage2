@@ -13,11 +13,22 @@ include packages/autotools.mk
 conf-args += \
 	--disable-rpath \
 	--without-python \
-	--without-ncursesw \
 	--with-sysroot=$(SYSROOT)
 
-ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
-  conf-args += --without-ncurses
+ifeq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_NCURSES),y)
+  ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+    conf-args += \
+	--without-ncurses \
+	--with-ncursesw
+  else
+    conf-args += \
+	--with-ncurses \
+	--without-ncursesw
+  endif
+else
+  conf-args += \
+	--without-ncurses \
+	--without-ncursesw
 endif
 
 ifneq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX_PAM),y)

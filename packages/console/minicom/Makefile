@@ -16,6 +16,10 @@ conf-vars += \
 	LIBS='-liconv'
 endif
 
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+  conf-vars += LDFLAGS='-lncursesw'
+endif
+
 stripfiles = \
 	$(prefix)/bin/ascii-xfr \
 	$(prefix)/bin/minicom \

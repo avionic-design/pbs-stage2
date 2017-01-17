@@ -17,6 +17,12 @@ conf-args += \
 	--x-includes=$(SYSROOT)$(prefix)/include \
 	--x-libraries=$(SYSROOT)$(prefix)/lib
 
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+  build-args += LDFLAGS='-lncursesw'
+else
+  build-args += LDFLAGS='-lncurses'
+endif
+
 stripfiles = \
 	$(prefix)/bin/resize \
 	$(prefix)/bin/xterm

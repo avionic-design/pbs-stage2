@@ -12,6 +12,9 @@ include packages/autotools.mk
 conf-args-$(CONFIG_UCLIBC) = \
 	--without-cxx --without-cxx-bindings
 
+conf-args-$(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR) = \
+	--enable-widec
+
 conf-args += \
 	--with-shared \
 	--without-ada \
@@ -21,7 +24,7 @@ conf-args += \
 	$(conf-args-y)
 
 config-scriptfiles = \
-	$(prefix)/bin/ncurses$(MAJOR)-config
+	$(prefix)/bin/ncurses*$(MAJOR)-config
 
 stripfiles = \
 	$(prefix)/bin/captoinfo \

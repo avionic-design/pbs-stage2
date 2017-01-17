@@ -21,8 +21,13 @@ conf-args += \
 	--localstatedir=/var \
 	--sysconfdir=/etc
 
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+  conf-args += --with-tlib=ncursesw
+else
+  conf-args += --with-tlib=ncurses
+endif
+
 conf-args += \
-	--with-tlib=ncurses \
 	--enable-gui=no
 
 conf-vars += \

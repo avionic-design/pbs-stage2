@@ -3,3 +3,15 @@ config PACKAGE_LIBS_NCURSES
 	select VIRTUAL_DEVEL_LIBC
 	select PACKAGE_BUILD_TOOLS_AUTOCONF
 	select PACKAGE_BUILD_TOOLS_AUTOMAKE
+
+if PACKAGE_LIBS_NCURSES
+
+config PACKAGE_LIBS_NCURSES_WIDECHAR
+	bool "wide character (unicode) support"
+	default y
+	help
+	  Build ncurses with wide character support. The resulting ncursesw also
+	  works for ASCII only, but linking with -lncursesw instead of -lncurses
+	  is mandatory.
+
+endif

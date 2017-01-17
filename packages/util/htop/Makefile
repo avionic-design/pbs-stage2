@@ -8,9 +8,13 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 include packages/autotools.mk
 
 conf-args += \
-	--enable-silent-rules \
-	--disbale-unicode
+	--enable-silent-rules
 
+ifeq ($(CONFIG_PACKAGE_LIBS_NCURSES_WIDECHAR),y)
+  conf-args += --enable-unicode
+else
+  conf-args += --disable-unicode
+endif
 
 # The package supplies a config.h which gets included first, so remove it
 $(pkgtree)/drop-old-config.h:
