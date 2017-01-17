@@ -1,2 +1,2 @@
 version=3
-http://sf.net/htop/htop-([\d\.]+)\.tar\.gz
+http://hisham.hm/htop/releases/([\d\.]+)/htop-([\d\.]+)\.tar\.gz

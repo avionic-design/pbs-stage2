@@ -2,7 +2,7 @@ PACKAGE = htop
 VERSION = 1.0.2
 LICENSE = GPL
 
-LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
+LOCATION = http://hisham.hm/$(PACKAGE)/releases/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
