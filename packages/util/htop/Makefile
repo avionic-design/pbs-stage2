@@ -1,20 +1,22 @@
 PACKAGE = htop
-VERSION = 1.0.2
+VERSION = 2.0.2
 LICENSE = GPL
 
 LOCATION = http://hisham.hm/$(PACKAGE)/releases/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
-	--enable-native-affinity \
-	--disable-unicode
+	--enable-silent-rules \
+	--disbale-unicode
 
-conf-vars += \
-	ac_cv_file__proc_stat=yes \
-	ac_cv_file__proc_meminfo=yes \
-	ac_cv_sched_setaffinity=yes
+
+# The package supplies a config.h which gets included first, so remove it
+$(pkgtree)/drop-old-config.h:
+	rm -f $(pkgbuildtree)/config.h
+
+$(pkgtree)/.build: $(pkgtree)/drop-old-config.h
 
 stripfiles = \
 	$(prefix)/bin/htop
