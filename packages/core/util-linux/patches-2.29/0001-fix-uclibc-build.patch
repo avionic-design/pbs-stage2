@@ -1,0 +1,29 @@
+From e1286dc74e455099ffc14581e97d1d3147dbed2c Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 17 Jan 2017 19:27:13 +0100
+Subject: [PATCH] fix uclibc build
+
+While glibc builds apparently do not need -lm for using isnan(), uclibc
+builds do.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ term-utils/Makemodule.am | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/term-utils/Makemodule.am b/term-utils/Makemodule.am
+index 1b7c5fc..626df40 100644
+--- a/term-utils/Makemodule.am
++++ b/term-utils/Makemodule.am
+@@ -21,7 +21,7 @@ if BUILD_SCRIPTREPLAY
+ usrbin_exec_PROGRAMS += scriptreplay
+ dist_man_MANS += term-utils/scriptreplay.1
+ scriptreplay_SOURCES = term-utils/scriptreplay.c
+-scriptreplay_LDADD = $(LDADD) libcommon.la
++scriptreplay_LDADD = $(LDADD) libcommon.la -lm
+ endif # BUILD_SCRIPTREPLAY
+ 
+ 
+-- 
+2.7.4
+
