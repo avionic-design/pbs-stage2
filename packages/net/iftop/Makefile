@@ -17,5 +17,8 @@ $(pkgtree)/.patch-configure.ac:
 
 $(pkgtree)/.autoreconfigure: $(pkgtree)/.patch-configure.ac
 
+conf-args += \
+	--enable-silent-rules
+
 stripfiles = \
 	$(prefix)/sbin/*
