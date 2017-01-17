@@ -1,0 +1,40 @@
+From ed071a1dfd3f5676b65f6ebabe0a86b830eb591e Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 17 Jan 2017 15:34:25 +0100
+Subject: [PATCH] cross compile
+
+Regenerated 2.22 patch.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Make.Rules | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/Make.Rules b/Make.Rules
+index 8347b26..271bcbc 100644
+--- a/Make.Rules
++++ b/Make.Rules
+@@ -49,9 +49,9 @@ KERNEL_HEADERS := $(topdir)/libcap/include/uapi
+ IPATH += -fPIC -I$(KERNEL_HEADERS) -I$(topdir)/libcap/include
+ 
+ CC := gcc
+-CFLAGS := -O2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
++CFLAGS := -O2 -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64 $(EXTRA_CFLAGS)
+ BUILD_CC := $(CC)
+-BUILD_CFLAGS := $(CFLAGS) $(IPATH)
++BUILD_CFLAGS := $(IPATH)
+ AR := ar
+ RANLIB := ranlib
+ DEBUG = -g #-DDEBUG
+@@ -60,7 +60,7 @@ WARNINGS=-Wall -Wwrite-strings \
+         -Wstrict-prototypes -Wmissing-prototypes \
+         -Wnested-externs -Winline -Wshadow
+ LD=$(CC) -Wl,-x -shared
+-LDFLAGS := #-g
++LDFLAGS := $(EXTRA_LDFLAGS) #-g
+ BUILD_GPERF := $(shell which gperf >/dev/null 2>/dev/null && echo yes)
+ 
+ SYSTEM_HEADERS = /usr/include
+-- 
+2.7.4
+

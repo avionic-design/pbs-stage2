@@ -1,5 +1,5 @@
 PACKAGE = libcap
-VERSION = 2.22
+VERSION = 2.25
 LICENSE = GPL
 
 LOCATION = https://www.kernel.org/pub/linux/libs/security/linux-privs/$(PACKAGE)2
