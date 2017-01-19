@@ -1,0 +1,49 @@
+From 8da7a196cecc3a6a722c2e2346ff33d77f9deab5 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 19 Jan 2017 11:11:14 +0100
+Subject: [PATCH] configure: check for ncursesw as well
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.ac | 16 +++++++++++++++-
+ 1 file changed, 15 insertions(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index 9e0d09e..ba9e013 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -167,6 +167,18 @@ PKG_CHECK_MODULES(
+ 	found_ncurses=no
+ )
+ if test "x$found_ncurses" = xno; then
++PKG_CHECK_MODULES(
++	LIBNCURSES,
++	ncursesw,
++	[
++		CPPFLAGS="$LIBNCURSES_CFLAGS $CPPFLAGS"
++		LIBS="$LIBNCURSES_LIBS $LIBS"
++		found_ncurses=yes
++	],
++	found_ncurses=no
++)
++fi
++if test "x$found_ncurses" = xno; then
+ 	# pkg-config didn't work, try ncurses.
+ 	AC_CHECK_LIB(
+ 		ncurses,
+@@ -178,9 +190,11 @@ if test "x$found_ncurses" = xno; then
+ 		ncurses.h,
+ 		,
+ 		found_ncurses=no)
++	if test "x$found_ncurses" = xyes; then
++		LIBS="$LIBS -lncurses"
++	fi
+ fi
+ if test "x$found_ncurses" = xyes; then
+-	LIBS="$LIBS -lncurses"
+ 	AC_DEFINE(HAVE_NCURSES_H)
+ else
+ 	# No ncurses, try curses.
+-- 
+2.7.4
+
