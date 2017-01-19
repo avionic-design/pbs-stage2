@@ -1,0 +1,31 @@
+From b2dfcc6ee808557423c100412598de1d256b4f72 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 19 Jan 2017 14:50:19 +0100
+Subject: [PATCH] live555 2013.07.16+ compatibility
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ modules/demux/live555.cpp | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/modules/demux/live555.cpp b/modules/demux/live555.cpp
+index 8a2ba4b..6021bc0 100644
+--- a/modules/demux/live555.cpp
++++ b/modules/demux/live555.cpp
+@@ -231,8 +231,13 @@ public:
+     RTSPClientVlc( UsageEnvironment& env, char const* rtspURL, int verbosityLevel,
+                    char const* applicationName, portNumBits tunnelOverHTTPPortNum,
+                    demux_sys_t *p_sys) :
++#if LIVEMEDIA_LIBRARY_VERSION_INT >= 1373932800
++                   RTSPClient( env, rtspURL, verbosityLevel, applicationName,
++                   tunnelOverHTTPPortNum, -1 )
++#else
+                    RTSPClient( env, rtspURL, verbosityLevel, applicationName,
+                    tunnelOverHTTPPortNum )
++#endif
+     {
+         this->p_sys = p_sys;
+     }
+-- 
+2.7.4
+
