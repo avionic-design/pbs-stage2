@@ -157,6 +157,10 @@ def process_line(line, options):
 	else:
 		paths = collect_paths(base, dirs, options)
 
+	pattern = re.sub(
+		r'\\\.tar\\\.(gz|bz2|xz|lz|lzma|Z)$',
+		'\\.tar\\.(gz|bz2|xz|lz|lzma|Z)', pattern)
+
 	for path in paths:
 		versions = process_recursive(base + path, pattern, options,
 				True)
