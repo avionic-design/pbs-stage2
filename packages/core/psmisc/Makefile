@@ -5,7 +5,7 @@ LICENSE = GPL
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/autotools-reconf.mk
 
 conf-args += \
 	--disable-harden-flags

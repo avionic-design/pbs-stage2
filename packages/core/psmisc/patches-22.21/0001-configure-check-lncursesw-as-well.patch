@@ -1,0 +1,37 @@
+From 160dcd1ffde3f0db14a9121c939deb030592ffdb Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 19 Jan 2017 00:58:40 +0100
+Subject: [PATCH] configure: check -lncursesw as well
+
+The psmisc package builds perfectly with ncursesw, it just needs to know
+about it.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.ac | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index 20549f6..f1091ff 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -61,10 +61,12 @@ fi
+ dnl Checks for libraries.
+ AC_CHECK_LIB([tinfo], [tgetent], [TERMCAP_LIB=-ltinfo],
+   [ AC_CHECK_LIB([ncurses], [tgetent], [TERMCAP_LIB=-lncurses],
+-    [ AC_CHECK_LIB([termcap], [tgetent], [TERMCAP_LIB=-ltermcap], 
+-      [ AC_MSG_ERROR([Cannot find tinfo, ncurses or termcap libraries])
+-	  ] )
+-	] )
++    [ AC_CHECK_LIB([ncursesw], [tgetent], [TERMCAP_LIB=-lncursesw],
++      [ AC_CHECK_LIB([termcap], [tgetent], [TERMCAP_LIB=-ltermcap],
++        [ AC_MSG_ERROR([Cannot find tinfo, ncurses or termcap libraries])
++            ] )
++          ] )
++      ] )
+   ] )
+ AC_SUBST([TERMCAP_LIB])
+ 
+-- 
+2.7.4
+
