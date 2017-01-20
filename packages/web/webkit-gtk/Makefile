@@ -1,5 +1,5 @@
 PACKAGE = webkitgtk
-VERSION = 2.14.2
+VERSION = 2.14.3
 LICENSE = LGPL BSD
 
 LOCATION = http://www.webkitgtk.org/releases
