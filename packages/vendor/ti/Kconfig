@@ -1,0 +1,12 @@
+menu "TI software"
+
+source "packages/vendor/ti/xdctools/Kconfig"
+source "packages/vendor/ti/xdais/Kconfig"
+source "packages/vendor/ti/linuxutils/Kconfig"
+source "packages/vendor/ti/dvsdk/Kconfig"
+source "packages/vendor/ti/framework-components/Kconfig"
+source "packages/vendor/ti/codec-engine/Kconfig"
+source "packages/vendor/ti/dmai/Kconfig"
+source "packages/vendor/ti/ffmpeg-csc/Kconfig"
+
+endmenu

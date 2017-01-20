@@ -1,2 +1,0 @@
-config PACKAGE_TI_XDAIS
-	bool "xDAIS"

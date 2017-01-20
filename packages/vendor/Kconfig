@@ -2,5 +2,6 @@ menu "Vendor-specific Utilities"
 
 source "packages/vendor/avionic-design/Kconfig"
 source "packages/vendor/nvidia/Kconfig"
+source "packages/vendor/ti/Kconfig"
 
 endmenu
