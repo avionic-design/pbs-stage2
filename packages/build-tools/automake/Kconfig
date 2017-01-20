@@ -1,3 +1,0 @@
-config PACKAGE_BUILD_TOOLS_AUTOMAKE
-	bool "automake"
-	select PACKAGE_BUILD_TOOLS_AUTOCONF

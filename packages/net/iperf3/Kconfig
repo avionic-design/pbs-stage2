@@ -1,8 +1,6 @@
 config PACKAGE_NET_IPERF3
 	bool "iperf3"
 	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_BUILD_TOOLS_AUTOCONF
-	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	help
 	  iperf3 is a network bandwidth measurement tool. This selects
 	  the fully recoded version 3 of iperf, which is incompatible

@@ -1,8 +1,6 @@
 config PACKAGE_CORE_E2FSPROGS
 	bool "e2fsprogs"
 	select VIRTUAL_DEVEL_LIBC
-	select PACKAGE_BUILD_TOOLS_AUTOCONF
-	select PACKAGE_BUILD_TOOLS_AUTOMAKE
 	select PACKAGE_CORE_UTIL_LINUX if !PACKAGE_CORE_E2FSPROGS_USE_INTERNAL
 	help
 	  The e2fsprogs package contains a number of utilities for creating,
