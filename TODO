@@ -53,9 +53,6 @@
   should also ship pkg-config files that are compatible with those provided
   by the libs/mesa package.
 
-+ Move the net/rum and net/remote-control packages into
-  packages/vendor/avionic-design.
-
 + Add per-package log files. With the current build system it is possible to
   run the top-level make invocation with the -j flag to build more than one
   package in parallel. However, this will result in very messy output and
