@@ -1,0 +1,58 @@
+From bb7098f915e5162ff70fc78c58dfbc06d3cf5a3c Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 20 Jan 2017 18:45:06 +0100
+Subject: [PATCH 2/3] JSC/heapcell: fix symbol visibility
+
+The HeapCell::markedBlock() method is referenced outside
+libjavascriptcore and must thus be compiled non-inline and outside its
+current header.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Source/JavaScriptCore/heap/HeapCell.cpp      | 10 ++++++++++
+ Source/JavaScriptCore/heap/HeapCellInlines.h |  5 -----
+ 2 files changed, 10 insertions(+), 5 deletions(-)
+
+diff --git a/Source/JavaScriptCore/heap/HeapCell.cpp b/Source/JavaScriptCore/heap/HeapCell.cpp
+index e3a6597..98a49f0 100644
+--- a/Source/JavaScriptCore/heap/HeapCell.cpp
++++ b/Source/JavaScriptCore/heap/HeapCell.cpp
+@@ -25,9 +25,19 @@
+ 
+ #include "config.h"
+ #include "HeapCell.h"
++#include "MarkedBlock.h"
+ 
+ #include <wtf/PrintStream.h>
+ 
++namespace JSC {
++
++MarkedBlock& HeapCell::markedBlock() const
++{
++    return *MarkedBlock::blockFor(this);
++}
++
++}  // namespace JSC
++
+ namespace WTF {
+ 
+ using namespace JSC;
+diff --git a/Source/JavaScriptCore/heap/HeapCellInlines.h b/Source/JavaScriptCore/heap/HeapCellInlines.h
+index dd36d12..123861c 100644
+--- a/Source/JavaScriptCore/heap/HeapCellInlines.h
++++ b/Source/JavaScriptCore/heap/HeapCellInlines.h
+@@ -44,11 +44,6 @@ ALWAYS_INLINE CellContainer HeapCell::cellContainer() const
+     return markedBlock();
+ }
+ 
+-ALWAYS_INLINE MarkedBlock& HeapCell::markedBlock() const
+-{
+-    return *MarkedBlock::blockFor(this);
+-}
+-
+ ALWAYS_INLINE LargeAllocation& HeapCell::largeAllocation() const
+ {
+     return *LargeAllocation::fromCell(const_cast<HeapCell*>(this));
+-- 
+2.7.4
+

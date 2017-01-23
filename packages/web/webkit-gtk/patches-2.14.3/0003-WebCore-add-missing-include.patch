@@ -1,0 +1,33 @@
+From 86eb53a9a3f8f21b850f9adc77ccdf21ec404d08 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 23 Jan 2017 09:50:59 +0100
+Subject: [PATCH 3/3] WebCore: add missing include
+
+The JSCellInlines.h inclusion leaks Heap::allocateObjectOfType into
+libwebkitgtk but is required for other inclusions. Moving the method out
+of heap/HeapInlines.h breaks JSC, so fix this problem with including yet
+another JSC header. Note that this has also been done upstream, albeit
+in completely unrelated context:
+
+  https://bugs.webkit.org/show_bug.cgi?id=165367
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Source/WebCore/html/canvas/WebGLRenderingContext.cpp | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Source/WebCore/html/canvas/WebGLRenderingContext.cpp b/Source/WebCore/html/canvas/WebGLRenderingContext.cpp
+index 2a5aab1..9795e20 100644
+--- a/Source/WebCore/html/canvas/WebGLRenderingContext.cpp
++++ b/Source/WebCore/html/canvas/WebGLRenderingContext.cpp
+@@ -61,6 +61,7 @@
+ #include <JavaScriptCore/JSCJSValueInlines.h>
+ #include <JavaScriptCore/JSCellInlines.h>
+ #include <JavaScriptCore/JSGenericTypedArrayViewInlines.h>
++#include <heap/HeapInlines.h>
+ 
+ namespace WebCore {
+ 
+-- 
+2.7.4
+
