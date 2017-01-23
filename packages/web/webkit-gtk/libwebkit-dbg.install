@@ -1,1 +1,2 @@
 /debug/usr/lib/*.so.*.dbg
+/debug/usr/libexec/webkit2gtk-4.0/WebKit*.dbg

@@ -44,4 +44,5 @@ stripfiles = \
 	$(prefix)/bin/* \
 	$(prefix)/lib/$(PACKAGE)/WebKitPluginProcess \
 	$(prefix)/lib/$(PACKAGE)/WebKitWebProcess \
-	$(prefix)/lib/*.so.*
+	$(prefix)/lib/*.so.* \
+	$(prefix)/libexec/webkit2gtk-4.0/*
