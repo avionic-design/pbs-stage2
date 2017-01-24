@@ -2,7 +2,7 @@ PACKAGE = kbd
 VERSION = 2.0.3
 LICENSE = GPL
 
-LOCATION = ftp://ftp.altlinux.org/pub/people/legion/$(PACKAGE)
+LOCATION = ftp://ftp.kernel.org/pub/linux/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
