@@ -1,5 +1,5 @@
 PACKAGE = kbd
-VERSION = 2.0.3
+VERSION = 2.0.4
 LICENSE = GPL
 
 LOCATION = ftp://ftp.kernel.org/pub/linux/utils/$(PACKAGE)
