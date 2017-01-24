@@ -4,6 +4,7 @@ env = env -i \
 	PKG_CONFIG_PATH=$(prefix)/lib/pkgconfig \
 	LD_LIBRARY_PATH=$(prefix)/lib \
 	LIBRARY_PATH=$(prefix)/lib \
+	ACLOCAL_PATH=$(prefix)/share/aclocal:$(TOOLCHAIN_BASE_PATH)/share/aclocal \
 	CPATH=$(prefix)/include
 
 NUM_CPU = $(shell cat /proc/cpuinfo | grep '^processor' | wc -l)
