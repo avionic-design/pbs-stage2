@@ -13,17 +13,27 @@ u-boot-tools = \
 	mkenvimage \
 	mkimage
 
+u-boot-config-flags = \
+	CONFIG_CMD_LOADS=y
+
+ifeq ($(CONFIG_PACKAGE_BUILD_TOOLS_UBOOT_FIT),y)
+  u-boot-config-flags += CONFIG_FIT=y
+
+  ifeq ($(CONFIG_PACKAGE_BUILD_TOOLS_UBOOT_FIT_SIG),y)
+    u-boot-config-flags += CONFIG_FIT_SIGNATURE=y
+  endif
+endif
+
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) defconfig && \
-		$(env) $(MAKE) silentoldconfig
+		$(env) $(MAKE) allnoconfig
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(env) $(MAKE) tools-only
+	cd $(pkgbuildtree) && $(env) $(MAKE) $(u-boot-config-flags) tools-only
 	$(call cmd,stamp)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
