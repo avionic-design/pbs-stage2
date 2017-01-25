@@ -64,9 +64,16 @@ config PACKAGE_WEB_WEBKIT_GTK_ENABLE_ANIM_API
 	help
 	  Enables support for Webkit Animation API.
 
-config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2
-	bool "Enable Webkit2 support"
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT1
+	bool "Enable Webkit1 API support (DEPRECATED)"
 	help
-	  Enables support for Webkit2.
+	  Enables support for the deprecated Webkit1 API.
+	  WARNING: Enabling this option limits webkit-gtk to 2.4.x, the last
+	  branch to support the Webkit1 API!
+
+config PACKAGE_WEB_WEBKIT_GTK_ENABLE_WEBKIT2
+	bool "Enable Webkit2 API support"
+	help
+	  Enables support for the Webkit2 API.
 
 endif
