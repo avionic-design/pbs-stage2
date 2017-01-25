@@ -1,7 +1,14 @@
 include packages/cmake.mk
 
+ifeq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
 cmake-args += \
-	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_BUILD_TYPE=RelWithDebInfo
+else
+cmake-args += \
+	-DCMAKE_BUILD_TYPE=Release
+endif
+
+cmake-args += \
 	-DCMAKE_INSTALL_PREFIX=$(prefix) \
 	-DCMAKE_SYSTEM_PROCESSOR=$(CONFIG_ARCH) \
 	-DENABLE_API_TESTS=OFF \
