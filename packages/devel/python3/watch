@@ -1,3 +1,3 @@
 version=3
-http://python.org/ftp/python/([\d\.]+[\d])/Python-(.*)\.tar\.xz
+http://python.org/ftp/python/([\d\.]+[\d])/Python-([\d\.]+[\d])\.tar\.xz
 
