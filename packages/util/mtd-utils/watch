@@ -1,2 +1,2 @@
 version=3
-ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-(.*)\.tar\.bz2
+ftp://ftp.infradead.org/pub/mtd-utils/mtd-utils-([\d\.]+)\.tar\.bz2
