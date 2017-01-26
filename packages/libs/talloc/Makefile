@@ -2,7 +2,7 @@ PACKAGE = talloc
 VERSION = 2.1.8
 LICENSE = LGPL
 
-LOCATION = http://samba.org/ftp/$(PACKAGE)
+LOCATION = https://www.samba.org/ftp/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
