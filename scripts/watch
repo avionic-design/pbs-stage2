@@ -97,15 +97,12 @@ def process_path(base, path, pattern, options):
 		versions = process_recursive(base + path, pattern, options,
 				False)
 		if versions is not None:
-			versions.sort()
+			versions.sort(reverse=True)
 
 			for version in versions:
 				paths.append(path + '/' + str(version))
 	else:
 		paths = [ path + '/' + pattern ]
-
-	if not options.all:
-		return paths[-1:]
 
 	return paths
 
@@ -120,7 +117,7 @@ def collect_paths(base, dirs, options):
 			if options.verbose > 1:
 				print '    path:', path
 
-			paths = process_path(base, path, pattern, options)
+		paths = process_path(base, paths[0], pattern, options)
 
 	return paths
 
@@ -166,6 +163,8 @@ def process_line(line, options):
 				True)
 		if versions is not None:
 			result.extend(versions)
+			if not options.all:
+				break
 
 	return result
 

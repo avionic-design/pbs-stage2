@@ -56,13 +56,6 @@
   should be worked around by putting log files for each package in a "logs"
   subdirectory below the build directory.
 
-+ Fix watch script to cope with situations where a new version has release
-  candidates released but no tarballs that match the regex. Currently this
-  happens with core/util-linux. The subdirectory version match matches v2.21
-  as the newest version, but the directory doesn't contain any tarballs that
-  match the full regex. In such a case, the algorithm should probably
-  backtrack to the directory before last and check again.
-
 + Investigate why libs/glib needs libs/gettext unconditionally. Otherwise
   libs/gettext could depend on ENABLE_LOCALIZATION.
 
