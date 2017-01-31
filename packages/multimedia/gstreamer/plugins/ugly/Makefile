@@ -2,9 +2,6 @@ PACKAGE = gst-plugins-ugly
 VERSION = 1.10.2
 LICENSE = GPL LGPL
 
-MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-MINOR = $(word 2,$(subst ., ,$(VERSION)))
-
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
@@ -42,7 +39,7 @@ conf-args += \
 	--disable-twolame
 endif
 
-plugin = $(prefix)/lib/gstreamer-$(MAJOR).$(MINOR)
+plugin = $(prefix)/lib/gstreamer-1.0
 
 prunefiles = \
 	$(plugin)/*.la
