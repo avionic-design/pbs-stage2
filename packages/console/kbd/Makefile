@@ -2,7 +2,7 @@ PACKAGE = kbd
 VERSION = 2.0.4
 LICENSE = GPL
 
-LOCATION = ftp://ftp.kernel.org/pub/linux/utils/$(PACKAGE)
+LOCATION = https://www.kernel.org/pub/linux/utils/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
