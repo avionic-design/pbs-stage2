@@ -1,5 +1,5 @@
 PACKAGE = LibVNCServer
-VERSION = 0.9.10
+VERSION = 0.9.11
 LICENSE = GPL
 
 LOCATION = https://github.com/LibVNC/libvncserver/archive
@@ -7,11 +7,7 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 pkgbuildtree := $(pkgtree)/libvncserver-$(PACKAGE)-$(VERSION)
 
-include packages/autotools-reconf.mk
-
-conf-args += \
-	--with-libgcrypt-prefix=$(SYSROOT)$(prefix) \
-	--without-libva
+include packages/autotools.mk
 
 prunefiles = \
 	$(prefix)/bin/libvncserver-config \

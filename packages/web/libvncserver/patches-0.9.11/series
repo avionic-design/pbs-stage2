@@ -1,0 +1,2 @@
+0001-fix-openssl-1.1.x-detection.patch
+0002-libvncclient-tls_openssl-support-openssl-1.1.x.patch
