@@ -1,5 +1,5 @@
 PACKAGE = gst-libav
-VERSION = 1.8.2
+VERSION = 1.10.3
 LICENSE = GPL LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))

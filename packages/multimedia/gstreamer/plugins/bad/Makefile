@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-bad
-VERSION = 1.10.2
+VERSION = 1.10.3
 LICENSE = GPL LGPL
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)

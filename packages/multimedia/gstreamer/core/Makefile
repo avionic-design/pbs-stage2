@@ -1,5 +1,5 @@
 PACKAGE = gstreamer
-VERSION = 1.10.2
+VERSION = 1.10.3
 LICENSE = LGPL
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
