@@ -1,5 +1,5 @@
 PACKAGE = mesa
-VERSION = 13.0.2
+VERSION = 13.0.3
 LICENSE = custom
 
 ifneq ($(MAKECMDGOALS),watch)
