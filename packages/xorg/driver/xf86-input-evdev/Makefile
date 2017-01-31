@@ -1,5 +1,5 @@
 PACKAGE = xf86-input-evdev
-VERSION = 2.10.4
+VERSION = 2.10.5
 LICENSE = custom
 
 BUILD_SCRIPT = autotools-reconf.mk
