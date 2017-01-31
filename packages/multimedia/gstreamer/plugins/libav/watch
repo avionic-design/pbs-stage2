@@ -1,2 +1,2 @@
 version=3
-http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-(.*)\.tar\.xz
+http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-([\d\.]+[02468]\.\d+)\.tar\.xz
