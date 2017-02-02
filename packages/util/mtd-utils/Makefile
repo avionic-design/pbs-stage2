@@ -1,44 +1,20 @@
 PACKAGE = mtd-utils
-VERSION = 1.5.2
+VERSION = 2.0.0
 LICENSE = GPL
 
 LOCATION = ftp://ftp.infradead.org/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
-include packages/common.mk
+include packages/autotools.mk
 
-$(pkgtree)/.setup:
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	$(call cmd,stamp)
-
-build-args = \
-	CROSS=$(CROSS_COMPILE) \
-	CFLAGS="$(CFLAGS)" \
-	LDFLAGS="$(LDFLAGS)" \
-	WITHOUT_XATTR=1
+conf-args += --without-xattr
 
 ifeq ($(CONFIG_PACKAGE_UTIL_MTD_UTILS_WITHOUT_LZO),y)
-build-args += WITHOUT_LZO=1
+conf-args += --without-lzo
 endif
 ifeq ($(CONFIG_PACKAGE_UTIL_MTD_UTILS_WITHOUT_UBI),y)
-build-args += WITHOUT_UBI=1
+conf-args += --without-ubifs
 endif
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
-	$(call cmd,stamp)
-
-install-args = \
-	DESTDIR=$(DESTDIR) \
-	$(build-args)
-
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
-	$(call cmd,stamp)
 
 stripfiles = \
 	$(prefix)/sbin/docfdisk \
@@ -79,6 +55,3 @@ stripfiles = \
 	$(prefix)/sbin/ubirmvol \
 	$(prefix)/sbin/ubirsvol \
 	$(prefix)/sbin/ubiupdatevol
-
-include packages/cleanup.mk
-include packages/binary.mk
