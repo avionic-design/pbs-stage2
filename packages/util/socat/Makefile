@@ -1,5 +1,5 @@
 PACKAGE = socat
-VERSION = 1.7.3.1
+VERSION = 1.7.3.2
 LICENSE = GPLv2
 
 LOCATION = http://www.dest-unreach.org/$(PACKAGE)/download
