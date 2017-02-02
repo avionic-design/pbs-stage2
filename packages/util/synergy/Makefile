@@ -1,5 +1,5 @@
 PACKAGE = synergy
-VERSION = 1.8.6
+VERSION = 1.8.7
 
 LOCATION = https://github.com/symless/$(PACKAGE)/archive
 TARBALLS = v$(VERSION)-stable.tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
