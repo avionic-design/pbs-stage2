@@ -1,5 +1,5 @@
 PACKAGE = pulseaudio
-VERSION = 3.0
+VERSION = 10.0
 LICENSE = LGPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -7,11 +7,12 @@ MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 LOCATION = http://freedesktop.org/software/$(PACKAGE)/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-udev-rules-dir=$(prefix)/lib/udev/rules.d \
-	--disable-hal \
+	--disable-hal-compat \
+	--disable-default-build-tests \
 	--disable-static \
 	--disable-rpath \
 	--disable-manpages
