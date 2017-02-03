@@ -1,5 +1,5 @@
 PACKAGE = libgcrypt
-VERSION = 1.7.3
+VERSION = 1.7.6
 LICENCE = GPL
 
 LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
