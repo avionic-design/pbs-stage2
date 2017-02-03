@@ -1,8 +1,8 @@
 PACKAGE = iw
-VERSION = 3.13
+VERSION = 4.9
 
 LOCATION = https://www.kernel.org/pub/software/network/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
@@ -15,7 +15,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 	$(call cmd,stamp)
 
 build-args = \
-	CC='$(CC)' V=1 \
+	CC='$(CC)' \
 	EXTRA_CFLAGS='$(CFLAGS)' \
 	EXTRA_LDFLAGS='$(LDFLAGS)'
 

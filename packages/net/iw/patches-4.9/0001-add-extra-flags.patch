@@ -1,0 +1,32 @@
+From b72d206054f96b4a02514537b6acffb406ec1165 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 3 Feb 2017 14:22:56 +0100
+Subject: [PATCH] add extra flags
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index e61825e..c2de678 100644
+--- a/Makefile
++++ b/Makefile
+@@ -100,12 +100,12 @@ version.c: version.sh $(patsubst %.o,%.c,$(VERSION_OBJS)) nl80211.h iw.h Makefil
+ 
+ %.o: %.c iw.h nl80211.h
+ 	@$(NQ) ' CC  ' $@
+-	$(Q)$(CC) $(CFLAGS) -c -o $@ $<
++	$(Q)$(CC) $(CFLAGS) $(EXTRA_CFLAGS) -c -o $@ $<
+ 
+ ifeq ($(IW_ANDROID_BUILD),)
+ iw:	$(OBJS)
+ 	@$(NQ) ' CC  ' iw
+-	$(Q)$(CC) $(LDFLAGS) $(OBJS) $(LIBS) -o iw
++	$(Q)$(CC) $(LDFLAGS) $(EXTRA_LDFLAGS) $(OBJS) $(LIBS) -o iw
+ endif
+ 
+ check:
+-- 
+2.7.4
+
