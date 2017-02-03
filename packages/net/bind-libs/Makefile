@@ -1,5 +1,5 @@
 PACKAGE = bind
-VERSION = 9.11.0-P1
+VERSION = 9.11.0-P2
 
 LOCATION = http://ftp.isc.org/isc/bind9/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
