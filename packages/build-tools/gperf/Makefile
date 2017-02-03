@@ -1,5 +1,5 @@
 PACKAGE = gperf
-VERSION = 3.0.4
+VERSION = 3.1
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
