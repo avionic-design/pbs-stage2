@@ -1,11 +1,11 @@
 PACKAGE = lighttpd
-VERSION = 1.4.35
+VERSION = 1.4.45
 
 MAJOR   = $(word 1,$(subst ., ,$(VERSION)))
 MINOR   = $(word 2,$(subst ., ,$(VERSION)))
 
 LOCATION = http://download.lighttpd.net/$(PACKAGE)/releases-$(MAJOR).$(MINOR).x
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 

@@ -1,2 +1,2 @@
 version=3
-http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-(.+)\.tar\.bz2
+http://download.lighttpd.net/lighttpd/releases-1.4.x/lighttpd-(.+)\.tar\.xz
