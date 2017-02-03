@@ -1,5 +1,5 @@
 PACKAGE = libnftnl
-VERSION = 1.0.6
+VERSION = 1.0.7
 LICENSE = GPLv2+
 
 LOCATION = http://ftp.netfilter.org/pub/$(PACKAGE)
