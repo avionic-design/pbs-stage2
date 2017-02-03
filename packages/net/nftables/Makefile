@@ -1,5 +1,5 @@
 PACKAGE = nftables
-VERSION = 0.6
+VERSION = 0.7
 LICENSE = GPLv2
 
 LOCATION = http://ftp.netfilter.org/pub/$(PACKAGE)
