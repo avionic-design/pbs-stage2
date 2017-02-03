@@ -56,6 +56,7 @@ source "packages/build-tools/vala/Kconfig"
 source "packages/build-tools/wayland/Kconfig"
 source "packages/build-tools/xmlto/Kconfig"
 source "packages/build-tools/xorg/Kconfig"
+source "packages/build-tools/yasm/Kconfig"
 source "packages/build-tools/zlib/Kconfig"
 
 endmenu

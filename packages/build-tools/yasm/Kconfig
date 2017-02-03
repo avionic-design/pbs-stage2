@@ -1,0 +1,7 @@
+config PACKAGE_BUILD_TOOLS_YASM
+	bool "yasm"
+	select BUILD_TOOLS_GETTEXT
+	select BUILD_TOOLS_PYTHON
+	help
+	  Yasm is a modular assembler and a complete rewrite of the NASM
+	  assembler under the 'new' BSD License.
