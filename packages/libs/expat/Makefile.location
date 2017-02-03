@@ -1,6 +1,6 @@
 PACKAGE = expat
-VERSION = 2.1.0
+VERSION = 2.2.0
 LICENSE = MIT
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
