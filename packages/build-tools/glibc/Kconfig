@@ -1,7 +1,0 @@
-config PACKAGE_BUILD_TOOLS_GLIBC
-	bool "glibc tools"
-
-config PACKAGE_BUILD_TOOLS_GLIBC_LOCALES
-	bool "glibc locales"
-	depends on PACKAGE_BUILD_TOOLS_GLIBC
-	select WITH_BUILD_TOOLS_LOCALES
