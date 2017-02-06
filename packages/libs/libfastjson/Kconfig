@@ -1,0 +1,5 @@
+config PACKAGE_LIBS_LIBFASTJSON
+	bool "libfastjson"
+	help
+	  Having started as a fork of json-c, libfastjson strives to be a faster
+	  alternative with a smaller footprint. Not compatible with json-c.
