@@ -1,0 +1,29 @@
+From c974f835a52706c05444fcdd229f4fc670c76f47 Mon Sep 17 00:00:00 2001
+From: Manolis Ragkousis <manolis837@gmail.com>
+Date: Wed, 25 Jan 2017 18:33:29 +0200
+Subject: build: Properly expand cu_install_program when cross-compiling
+
+* src/local.mk (cu_install_program): Replace @INSTALL_PROGRAM@
+with @INSTALL@ when cross-compiling; missed in commit 477a1e8e.
+Message-Id: <20170125163329.5690-1-manolis837@gmail.com>
+Copyright-paperwork-exempt: Yes
+---
+ src/local.mk | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/local.mk b/src/local.mk
+index 86d0d8e..5b25fcb 100644
+--- a/src/local.mk
++++ b/src/local.mk
+@@ -645,7 +645,7 @@ check-duplicate-no-install: src/tr
+ 
+ # Use the just-built 'ginstall', when not cross-compiling.
+ if CROSS_COMPILING
+-cu_install_program = @INSTALL_PROGRAM@
++cu_install_program = @INSTALL@
+ else
+ cu_install_program = src/ginstall
+ endif
+-- 
+cgit v1.0
+
