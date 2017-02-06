@@ -1,5 +1,5 @@
 PACKAGE = gdb
-VERSION = 7.12
+VERSION = 7.12.1
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
