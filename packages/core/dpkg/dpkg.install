@@ -3,4 +3,4 @@
 /usr/lib
 /usr/sbin
 /usr/share/dpkg
-/var/dpkg
+/var/lib/dpkg

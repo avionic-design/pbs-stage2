@@ -1,12 +1,14 @@
 PACKAGE = dpkg
-VERSION = 1.18.4
+VERSION = 1.18.22
 
 LOCATION = http://ftp.debian.org/debian/pool/main/d/dpkg
 TARBALLS = $(PACKAGE)_$(VERSION).tar.xz
 
 include packages/autotools.mk
 
-prunefiles =
+prunefiles = \
+	$(prefix)/lib/*.la
+
 stripfiles = \
 	$(prefix)/bin/dpkg-deb \
 	$(prefix)/bin/dselect \
