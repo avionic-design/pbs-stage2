@@ -1,8 +1,8 @@
 PACKAGE = diffutils
-VERSION = 2.8.1
+VERSION = 3.5
 
 LOCATION = ftp://ftp.gnu.org/gnu/diffutils
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
