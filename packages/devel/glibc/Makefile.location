@@ -1,5 +1,5 @@
 PACKAGE = glibc
-VERSION = 2.24
+VERSION = 2.25
 LICENSE = LGPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
