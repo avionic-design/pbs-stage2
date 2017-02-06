@@ -1,5 +1,5 @@
 PACKAGE = rsyslog
-VERSION = 8.4.2
+VERSION = 8.24.0
 LICENSE = GPL
 
 LOCATION = http://www.rsyslog.com/files/download/$(PACKAGE)
