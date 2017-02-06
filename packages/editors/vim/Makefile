@@ -1,5 +1,5 @@
 PACKAGE = vim
-VERSION = 7.4
+VERSION = 8.0.069
 LICENSE = Charityware
 
 LOCATION = http://ftp.vim.org/pub/vim/unix
@@ -7,7 +7,10 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/common.mk
 
-pkgbuildtree = $(pkgtree)/$(PACKAGE)$(subst .,,$(VERSION))
+MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+MINOR = $(word 2,$(subst ., ,$(VERSION)))
+
+pkgbuildtree = $(pkgtree)/$(PACKAGE)$(MAJOR)$(MINOR)
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
