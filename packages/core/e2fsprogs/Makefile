@@ -1,5 +1,5 @@
 PACKAGE = e2fsprogs
-VERSION = 1.42.12
+VERSION = 1.43.4
 LICENSE = GPL
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
