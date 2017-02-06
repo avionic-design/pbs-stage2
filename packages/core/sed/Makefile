@@ -1,5 +1,5 @@
 PACKAGE = sed
-VERSION = 4.3
+VERSION = 4.4
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
