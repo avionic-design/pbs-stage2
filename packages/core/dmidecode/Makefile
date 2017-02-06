@@ -1,8 +1,8 @@
 PACKAGE = dmidecode
-VERSION = 2.12
+VERSION = 3.0
 
 LOCATION = http://download.savannah.gnu.org/releases/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
