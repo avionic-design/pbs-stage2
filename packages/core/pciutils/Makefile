@@ -1,9 +1,9 @@
 PACKAGE = pciutils
-VERSION = 3.2.1
+VERSION = 3.5.2
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/software/utils/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
