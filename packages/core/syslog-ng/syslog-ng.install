@@ -1,7 +1,7 @@
 /etc
 /usr/bin
 /usr/sbin
-/usr/lib/systemd
+/usr/lib/systemd/system
 /usr/lib/syslog-ng/*.so
 /usr/lib/syslog-ng/*.so.*
 /usr/lib/*.so

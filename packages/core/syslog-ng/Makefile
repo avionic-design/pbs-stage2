@@ -1,9 +1,9 @@
 PACKAGE = syslog-ng
-VERSION = 3.3.5
+VERSION = 3.9.1
 LICENSE = LGPL/GPL
 
-LOCATION = http://www.balabit.com/downloads/files/$(PACKAGE)/open-source-edition/$(VERSION)/source
-TARBALLS = $(PACKAGE)_$(VERSION).tar.gz
+LOCATION = https://github.com/balabit/$(PACKAGE)/releases/download/$(PACKAGE)-$(VERSION)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
 
@@ -13,7 +13,8 @@ conf-args += \
 	--datadir=$(prefix)/share/syslog-ng \
 	--disable-glibtest \
 	--disable-mongodb \
-	--disable-json
+	--disable-json \
+	--disable-java
 
 ifeq ($(CONFIG_PACKAGE_CORE_SYSTEMD),y)
 conf-args += \
