@@ -1,2 +1,2 @@
 version=3
-http://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-(.+)\.tar\.bz2
+http://www.kernel.org/pub/linux/utils/usb/usbutils/usbutils-(.+)\.tar\.xz

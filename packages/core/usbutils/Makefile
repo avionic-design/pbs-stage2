@@ -1,14 +1,11 @@
 PACKAGE = usbutils
-VERSION = 007
+VERSION = 008
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/usb/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
-
-conf-args += \
-	--datadir=$(prefix)/share/hwdata
 
 stripfiles = \
 	$(prefix)/bin/lsusb \
