@@ -1,4 +1,5 @@
 config PACKAGE_CORE_UPSTART
 	bool "upstart"
+	select PACKAGE_BUILD_TOOLS_LIBNIH
 	select PACKAGE_LIBS_DBUS
 	select PACKAGE_LIBS_LIBNIH
