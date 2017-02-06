@@ -1,0 +1,31 @@
+From 5db53d92ccb5984a4ec44a9647c2b067b4afb74f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 6 Feb 2017 14:14:09 +0100
+Subject: [PATCH] fix building with gperf 3.1
+
+gperf has its API slightly changed and breaks compilation. Change
+invocation to make things work. Adapted from
+
+  https://604802.bugs.gentoo.org/attachment.cgi?id=462080
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ libcap/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libcap/Makefile b/libcap/Makefile
+index d189777..634a042 100644
+--- a/libcap/Makefile
++++ b/libcap/Makefile
+@@ -41,7 +41,7 @@ cap_names.h: _makenames
+ 	./_makenames > cap_names.h
+ 
+ $(GPERF_OUTPUT): cap_names.list.h
+-	perl -e 'print "struct __cap_token_s { const char *name; int index; };\n%{\nconst struct __cap_token_s *__cap_lookup_name(const char *, unsigned int);\n%}\n%%\n"; while ($$l = <>) { $$l =~ s/[\{\"]//g; $$l =~ s/\}.*// ; print $$l; }' < $< | gperf --ignore-case --language=ANSI-C --readonly --null-strings --global-table --hash-function-name=__cap_hash_name --lookup-function-name="__cap_lookup_name" -c -t -m20 $(INDENT) > $@
++	perl -e 'print "struct __cap_token_s { const char *name; int index; };\n%%\n"; while ($$l = <>) { $$l =~ s/[\{\"]//g; $$l =~ s/\}.*// ; print $$l; }' < $< | gperf --ignore-case --language=ANSI-C --includes --readonly --null-strings --global-table --hash-function-name=__cap_hash_name --lookup-function-name="__cap_lookup_name" -c -t -m20 $(INDENT) > $@
+ 
+ cap_names.list.h: Makefile $(KERNEL_HEADERS)/linux/capability.h
+ 	@echo "=> making $@ from $(KERNEL_HEADERS)/linux/capability.h"
+-- 
+2.7.4
+
