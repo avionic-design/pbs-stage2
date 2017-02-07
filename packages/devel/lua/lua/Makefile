@@ -14,7 +14,7 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 
 build-args = \
 	CC='$(CC)' \
-	CFLAGS='$(CFLAGS) -DLUA_USE_LINUX' \
+	CFLAGS='$(CFLAGS) -DLUA_USE_LINUX -DLUA_COMPAT_5_2 -DLUA_COMPAT_5_1' \
 	LDFLAGS='$(LDFLAGS)'
 
 $(pkgtree)/.build: $(pkgtree)/.configure
