@@ -1,8 +1,8 @@
 PACKAGE = net-tools
 VERSION = 1.60
 
-LOCATION  = http://www.tazenda.demon.co.uk/phil/$(PACKAGE)
-TARBALLS  = $(PACKAGE)-$(VERSION).tar.bz2
+LOCATION  = http://http.debian.net/debian/pool/main/n/$(PACKAGE)
+TARBALLS  = $(PACKAGE)_$(VERSION).orig.tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 DOTCONFIG = $(pkgsrctree)/$(PACKAGE)-$(VERSION)
 
 include packages/common.mk
