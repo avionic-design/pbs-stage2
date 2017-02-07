@@ -1,3 +1,7 @@
 config PACKAGE_DEVEL_LUA_RINGS
 	bool "rings"
 	select PACKAGE_DEVEL_LUA
+	help
+	  Rings is a library which provides a way to create new Lua states from
+	  within Lua. It also offers a simple way to communicate between the
+	  creator (master) and the created (slave) states.

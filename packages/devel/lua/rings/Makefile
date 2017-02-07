@@ -1,16 +1,14 @@
 PACKAGE = rings
-VERSION = 1.2.3
+VERSION = 1.3.0
+LICENSE = MIT
 
-LOCATION = http://github.com/downloads/keplerproject/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = https://github.com/keplerproject/$(PACKAGE)/archive
+TARBALLS = v_$(subst .,_,$(VERSION)).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
-LUA_VERSION=5.1
-LUA_PREFIX=/usr
-LUA_DIR=$(LUA_PREFIX)/share/lua/$(LUA_VERSION)
-LUA_LIBDIR=$(LUA_PREFIX)/lib/lua/$(LUA_VERSION)
-LUA_BINDIR=$(LUA_PREFIX)/bin
+# If you're wondering: yes, that leading underscore is part of v1.3.0.
+pkgbuildtree = $(pkgtree)/$(PACKAGE)-v_$(subst .,_,$(VERSION))
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -30,8 +28,7 @@ $(pkgtree)/.build: $(pkgtree)/.configure
 	$(call cmd,stamp)
 
 install-args += \
-	LUA_DIR=$(DESTDIR)$(LUA_DIR) \
-	LUA_LIBDIR=$(DESTDIR)$(LUA_LIBDIR) \
+	PREFIX=$(DESTDIR)$(prefix)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && \
