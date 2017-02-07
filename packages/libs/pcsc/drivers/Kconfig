@@ -1,5 +1,6 @@
 menu "Drivers"
 
+source "packages/libs/pcsc/drivers/acsccid/Kconfig"
 source "packages/libs/pcsc/drivers/ccid/Kconfig"
 source "packages/libs/pcsc/drivers/ifdokrfid/Kconfig"
 
