@@ -1,5 +1,6 @@
 PACKAGE = wsapi
 VERSION = 1.4
+LICENSE = MIT
 
 LOCATION = http://github.com/downloads/keplerproject/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz

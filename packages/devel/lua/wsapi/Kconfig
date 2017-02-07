@@ -2,3 +2,8 @@ config PACKAGE_DEVEL_LUA_WSAPI
 	bool "WSAPI"
 	select PACKAGE_DEVEL_LUA_LUAFILESYSTEM
 	select PACKAGE_DEVEL_LUA_RINGS
+	help
+	  WSAPI is an API that abstracts the web server from Lua web
+	  applications. By coding against WSAPI your application can run on any
+	  of the supported servers and interfaces (currently CGI, FastCGI and
+	  Xavante, on Windows and UNIX-based systems).
