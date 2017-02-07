@@ -1,0 +1,3 @@
+version=3
+version_separator=_
+https://github.com/keplerproject/luafilesystem/releases v(\d[\d_]+).tar.gz
