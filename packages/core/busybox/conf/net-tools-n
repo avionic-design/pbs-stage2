@@ -1,0 +1,9 @@
+# CONFIG_ARP is not set
+# CONFIG_HOSTNAME is not set
+# CONFIG_DNSDOMAINNAME is not set
+# CONFIG_IFCONFIG is not set
+# CONFIG_IPTUNNEL is not set
+# CONFIG_NETSTAT is not set
+# CONFIG_NAMEIF is not set
+# CONFIG_ROUTE is not set
+# CONFIG_SLATTACH is not set

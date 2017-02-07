@@ -3,3 +3,5 @@
 # CONFIG_LZMA is not set
 # CONFIG_UNXZ is not set
 # CONFIG_XZ is not set
+# CONFIG_LZCAT is not set
+# CONFIG_XZCAT is not set

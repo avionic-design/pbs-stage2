@@ -1,5 +1,5 @@
 PACKAGE = busybox
-VERSION = 1.22.1
+VERSION = 1.26.2
 LICENSE = GPL
 
 LOCATION = http://busybox.net/downloads
@@ -20,6 +20,18 @@ ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_MODUTILS),y)
   CONFIGS += modutils-y
 else
   CONFIGS += modutils-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_BZ),y)
+  CONFIGS += bz-y
+else
+  CONFIGS += bz-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_GZIP),y)
+  CONFIGS += gzip-y
+else
+  CONFIGS += gzip-n
 endif
 
 ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_XZ),y)
@@ -62,6 +74,30 @@ ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_NTPD),y)
   CONFIGS += ntpd-y
 else
   CONFIGS += ntpd-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_NET_TOOLS),y)
+  CONFIGS += net-tools-y
+else
+  CONFIGS += net-tools-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_I2C_TOOLS),y)
+  CONFIGS += i2c-tools-y
+else
+  CONFIGS += i2c-tools-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_E2FSPROGS),y)
+  CONFIGS += e2fsprogs-y
+else
+  CONFIGS += e2fsprogs-n
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_BUSYBOX_LESS),y)
+  CONFIGS += less-y
+else
+  CONFIGS += less-n
 endif
 
 CONFIGS := $(addprefix $(pkgsrctree)/conf/,$(CONFIGS))

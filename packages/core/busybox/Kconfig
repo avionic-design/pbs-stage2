@@ -8,6 +8,14 @@ config PACKAGE_CORE_BUSYBOX_MODUTILS
 	bool "modutils"
 	default y if !PACKAGE_KERNEL_KMOD
 
+config PACKAGE_CORE_BUSYBOX_BZ
+	bool "bzip2"
+	default y if !PACKAGE_LIBS_BZ
+
+config PACKAGE_CORE_BUSYBOX_GZIP
+	bool "gzip"
+	default y if !PACKAGE_CORE_GZIP
+
 config PACKAGE_CORE_BUSYBOX_XZ
 	bool "xz"
 	default y if !PACKAGE_LIBS_XZ
@@ -35,5 +43,21 @@ config PACKAGE_CORE_BUSYBOX_BRIDGE_UTILS
 config PACKAGE_CORE_BUSYBOX_NTPD
 	bool "ntpd"
 	default y if !PACKAGE_NET_NTPD
+
+config PACKAGE_CORE_BUSYBOX_NET_TOOLS
+	bool "net-tools"
+	default y if !PACKAGE_NET_NET_TOOLS
+
+config PACKAGE_CORE_BUSYBOX_I2C_TOOLS
+	bool "i2c tools"
+	default y if !PACKAGE_UTIL_I2C_TOOLS
+
+config PACKAGE_CORE_BUSYBOX_E2FSPROGS
+	bool "e2fsprogs"
+	default y if !PACKAGE_CORE_E2FSPROGS
+
+config PACKAGE_CORE_BUSYBOX_LESS
+	bool "less"
+	default y if !PACKAGE_CORE_LESS
 
 endif

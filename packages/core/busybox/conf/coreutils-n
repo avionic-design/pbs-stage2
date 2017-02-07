@@ -5,15 +5,19 @@
 # CONFIG_USERS is not set
 # CONFIG_UPTIME is not set
 # CONFIG_UNIQ is not set
+# CONFIG_UNLINK is not set
 # CONFIG_UNEXPAND is not set
 # CONFIG_UNAME is not set
 # CONFIG_TTY is not set
 # CONFIG_TRUE is not set
+# CONFIG_TRUNCATE is not set
 # CONFIG_TR is not set
 # CONFIG_TOUCH is not set
 # CONFIG_TIMEOUT is not set
 # CONFIG_TEST is not set
 # CONFIG_FEATURE_TEST_64 is not set
+# CONFIG_TEST1 is not set
+# CONFIG_TEST2 is not set
 # CONFIG_TEE is not set
 # CONFIG_TAIL is not set
 # CONFIG_TAC is not set
@@ -24,6 +28,7 @@
 # CONFIG_SPLIT is not set
 # CONFIG_SORT is not set
 # CONFIG_SLEEP is not set
+# CONFIG_SHUF is not set
 # CONFIG_SEQ is not set
 # CONFIG_SHA1SUM is not set
 # CONFIG_SHA256SUM is not set
