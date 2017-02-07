@@ -1,10 +1,13 @@
 PACKAGE = luafilesystem
-VERSION = 1.5.0
+VERSION = 1.6.3
+LICENSE = MIT
 
-LOCATION = http://github.com/downloads/keplerproject/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = https://github.com/keplerproject/$(PACKAGE)/archive
+TARBALLS = v$(subst .,_,$(VERSION)).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
+
+pkgbuildtree = $(pkgtree)/$(PACKAGE)-$(subst .,_,$(VERSION))
 
 LUA_LIBDIR=/usr/lib/lua/5.1
 
