@@ -1,3 +1,8 @@
 config PACKAGE_DEVEL_LUA_CGILUA
 	bool "CGILua"
 	select PACKAGE_DEVEL_LUA
+	help
+	  CGILua is a tool for creating dynamic Web pages and manipulating input
+	  data from Web forms. CGILua allows the separation of logic and data
+	  handling from the generation of pages, making it easy to develop web
+	  applications with Lua.

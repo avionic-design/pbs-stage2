@@ -1,8 +1,9 @@
 PACKAGE = cgilua
-VERSION = 5.1.3
+VERSION = 5.2.1
+LICENSE = MIT
 
-LOCATION = http://luaforge.net/frs/download.php/3970
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+LOCATION = https://github.com/keplerproject/$(PACKAGE)/archive
+TARBALLS = v$(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/common.mk
 
