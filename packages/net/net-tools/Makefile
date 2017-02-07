@@ -14,7 +14,7 @@ $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
-	cp $(DOTCONFIG) $(pkgtree)/config.status
+	cp $(DOTCONFIG) $(pkgbuildtree)/config.status
 	cd $(pkgbuildtree) && yes '' | \
 		$(env) $(MAKE) $(conf-args) config
 	$(call cmd,stamp)
