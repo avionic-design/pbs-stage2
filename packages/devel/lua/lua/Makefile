@@ -1,5 +1,6 @@
 PACKAGE = lua
 VERSION = 5.3.4
+LICENSE = MIT
 
 LOCATION = http://www.lua.org/ftp
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
