@@ -1,0 +1,6 @@
+config PACKAGE_CORE_GZIP
+	bool "gzip"
+	select VIRTUAL_DEVEL_LIBC
+	help
+	  GNU Gzip is a popular data compression program originally written by
+	  Jean-loup Gailly for the GNU project.
