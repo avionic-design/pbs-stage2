@@ -17,6 +17,10 @@
 + Add additional functionality to fetch tarballs from a local proxy. This
   prevents problems when an upstream mirror is down or (re)moves content.
 
++ Replace udev with eudev. The udev package has been merged into systemd,
+  Gentoo forked it into eudev to avoid a systemd dependency when only udev is
+  needed.
+
 + When uClibc gets proper TLS support, remove any related workarounds:
     * core/e2fsprogs
 
