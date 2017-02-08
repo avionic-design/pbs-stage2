@@ -23,7 +23,8 @@ endif
 ifneq ($(LIBC),gnu)
   conf-args += \
 	--disable-tls \
-	--disable-defrag
+	--disable-defrag \
+	--disable-nls
 endif
 
 prunefiles = \
