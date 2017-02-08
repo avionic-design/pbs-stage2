@@ -1,0 +1,28 @@
+From 764a8a2e3db2e509dc34985b6d67c69766b0049b Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 8 Feb 2017 14:44:36 +0100
+Subject: [PATCH] allow no content
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/wsapi/common.lua | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/src/wsapi/common.lua b/src/wsapi/common.lua
+index 04d575f..9190ab0 100644
+--- a/src/wsapi/common.lua
++++ b/src/wsapi/common.lua
+@@ -177,7 +177,9 @@ function _M.send_output(out, status, headers, res_iter, write_method, res_line)
+       end
+    end
+    write(out, "\r\n")
+-   _M.send_content(out, res_iter, write_method)
++   if res_iter ~= nil then
++      _M.send_content(out, res_iter, write_method)
++   end
+ end
+ 
+ -- Formats the standard error message for WSAPI applications
+-- 
+2.7.4
+
