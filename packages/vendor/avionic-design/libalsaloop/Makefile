@@ -14,5 +14,5 @@ prunefiles = \
 	$(prefix)/lib/*.la
 
 stripfiles = \
-	$(prefix)/bin/alsaloop-cmd \
+	$(prefix)/bin/alsaloop-ctl \
 	$(prefix)/lib/*.so.*
