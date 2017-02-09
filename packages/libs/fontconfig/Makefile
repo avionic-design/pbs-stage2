@@ -12,6 +12,12 @@ conf-args += \
 	--with-arch=$(MACHINE) \
 	--disable-docs
 
+# force regeneration of this header until the release after 2.12.1
+$(pkgtree)/.force-new-fcobjshash.h:
+	rm -f $(pkgbuildtree)/src/fcobjshash.h
+
+$(pkgtree)/.configure: $(pkgtree)/.force-new-fcobjshash.h
+
 prunefiles = \
 	$(prefix)/lib/*.la
 
