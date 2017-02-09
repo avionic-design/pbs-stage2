@@ -1,11 +1,11 @@
 PACKAGE = fontconfig
-VERSION = 2.11.95
+VERSION = 2.12.1
 LICENSE = custom
 
 LOCATION = http://fontconfig.org/release
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools-reconf.mk
+include packages/autotools.mk
 
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
