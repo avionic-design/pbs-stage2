@@ -10,7 +10,6 @@ include packages/autotools-reconf.mk
 conf-args += \
 	--with-sysroot=$(SYSROOT) \
 	--with-arch=$(MACHINE) \
-	--disable-libxml2 \
 	--disable-docs
 
 prunefiles = \
