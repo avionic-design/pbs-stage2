@@ -1,5 +1,5 @@
 PACKAGE = openssl
-VERSION = 1.1.0d
+VERSION = 1.1.0e
 
 LOCATION = http://www.openssl.org/source
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
