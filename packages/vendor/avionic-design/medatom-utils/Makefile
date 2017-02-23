@@ -1,5 +1,5 @@
 PACKAGE = medatom-utils
-VERSION = 0.4.2
+VERSION = 0.4.4
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
