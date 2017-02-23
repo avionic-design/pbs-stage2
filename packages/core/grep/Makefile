@@ -1,10 +1,4 @@
-PACKAGE = grep
-VERSION = 2.27
-LICENSE = GPL
-
-LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/core/grep/Makefile.location
 include packages/autotools.mk
 
 ifneq ($(LIBC),gnu)
