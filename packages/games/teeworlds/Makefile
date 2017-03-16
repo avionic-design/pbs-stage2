@@ -1,8 +1,10 @@
 PACKAGE = teeworlds
-VERSION = git
+VERSION = 0.5.4-ad
 
-GIT_URL = http://review.adnet.avionic-design.de/games/teeworlds.git
-include packages/autotools-git.mk
+LOCATION = https://ftp.avionic-design.de/pub/$(PACKAGE)
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+
+include packages/autotools.mk
 
 stripfiles = \
 	$(prefix)/bin/teeworlds \
