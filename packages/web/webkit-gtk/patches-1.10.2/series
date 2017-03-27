@@ -21,3 +21,4 @@ fix-arm-neon-build-issue.patch
 Use-big-media-buttons.patch
 avoid-duplicate-destroy.patch
 avoid-segfault-if-parent-is-null.patch
+0013-fix-build-with-gcc-6-glibc-2.23.patch

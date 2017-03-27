@@ -1,3 +1,4 @@
 0001-Fix-Assertion-failure-in-JavaSCriptCore.patch
 0001-Fix-out-of-tree-build.patch
 0002-Fix-compilation-with-disable-webgl.patch
+0003-fix-build-with-gcc-6-glibc-2.23.patch

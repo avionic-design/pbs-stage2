@@ -1,0 +1,35 @@
+From 42fd28078d67eb8374bd070fd2ae3eecd82d11bd Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 27 Mar 2017 16:16:48 +0200
+Subject: [PATCH] fix build with gcc 6, glibc 2.23
+
+See webkit-gtk bug #159124.
+
+https://bugs.webkit.org/show_bug.cgi?id=159124
+
+Change-Id: Id94b7b678168b0cc736381bbd3fa7e307fb1e453
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+Reviewed-on: http://review.adnet.avionic-design.de/7854
+Reviewed-by: Meike Vocke <meike.vocke@avionic-design.de>
+---
+ Source/WebCore/platform/gtk/GtkClickCounter.cpp | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/Source/WebCore/platform/gtk/GtkClickCounter.cpp b/Source/WebCore/platform/gtk/GtkClickCounter.cpp
+index acc8a32..3bef95f 100644
+--- a/Source/WebCore/platform/gtk/GtkClickCounter.cpp
++++ b/Source/WebCore/platform/gtk/GtkClickCounter.cpp
+@@ -85,8 +85,8 @@ int GtkClickCounter::clickCountForGdkButtonEvent(GtkWidget* widget, GdkEventButt
+     guint32 eventTime = getEventTime(event);
+ 
+     if ((event->type == GDK_2BUTTON_PRESS || event->type == GDK_3BUTTON_PRESS)
+-        || ((abs(buttonEvent->x - m_previousClickPoint.x()) < doubleClickDistance)
+-            && (abs(buttonEvent->y - m_previousClickPoint.y()) < doubleClickDistance)
++        || ((fabs(buttonEvent->x - m_previousClickPoint.x()) < doubleClickDistance)
++            && (fabs(buttonEvent->y - m_previousClickPoint.y()) < doubleClickDistance)
+             && (eventTime - m_previousClickTime < static_cast<guint>(doubleClickTime))
+             && (buttonEvent->button == m_previousClickButton)))
+         m_currentClickCount++;
+-- 
+2.7.4
+
