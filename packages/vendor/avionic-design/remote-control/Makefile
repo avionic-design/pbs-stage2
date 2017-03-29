@@ -1,5 +1,5 @@
 PACKAGE = remote-control
-VERSION = 1.0.2
+VERSION = 2.0.0
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -23,9 +23,6 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_BACKLIGHT_SYSFS),y)
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_VLC),y)
 	conf-args += --with-video-backend=libvlc
-ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_VLC_LIBTNJ3324),y)
-	conf-args += --enable-libtnj3324
-endif
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_VIDEO_GST),y)
 	conf-args += --with-video-backend=gst
@@ -92,10 +89,13 @@ endif
 
 conf-args += \
 	--enable-lldpctl \
-	--disable-nls \
-	--disable-werror
+	--disable-nls
 
 stripfiles = \
 	$(prefix)/bin/remote-control-browser \
+	$(prefix)/bin/remote-control-client \
 	$(prefix)/bin/remote-control \
 	$(prefix)/lib/*.so.*
+
+prunefiles = \
+	$(prefix)/lib/*.la
