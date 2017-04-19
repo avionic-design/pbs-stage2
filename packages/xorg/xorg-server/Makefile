@@ -1,5 +1,5 @@
 PACKAGE = xorg-server
-VERSION = 1.19.1
+VERSION = 1.19.3
 LICENSE = MIT X
 
 ifneq ($(MAKECMDGOALS),watch)
