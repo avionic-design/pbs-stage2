@@ -1,5 +1,5 @@
 PACKAGE = dpkg
-VERSION = 1.18.22
+VERSION = 1.18.23
 
 LOCATION = http://ftp.debian.org/debian/pool/main/d/dpkg
 TARBALLS = $(PACKAGE)_$(VERSION).tar.xz
