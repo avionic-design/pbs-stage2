@@ -1,5 +1,5 @@
 PACKAGE = less
-VERSION = 481
+VERSION = 487
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
