@@ -2,8 +2,8 @@ PACKAGE = systemd
 VERSION = 203
 LICENSE = GPL LGPL MIT
 
-LOCATION = http://www.freedesktop.org/software/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
+LOCATION = https://github.com/systemd/$(PACKAGE)/archive
+TARBALLS = v$(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools-reconf.mk
 
