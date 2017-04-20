@@ -1,9 +1,9 @@
 PACKAGE = syslinux
-VERSION = 4.06
+VERSION = 6.03
 LICENSE = GPL
 
 LOCATION = http://www.kernel.org/pub/linux/utils/boot/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
 
@@ -28,6 +28,12 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 # system.
 build-args += \
 	MAKEFLAGS=
+
+# build EFI 64 bit images on x86_64 only
+ifeq ($(ARCH),x86_64)
+build-args += efi64
+endif
+build-args += bios efi32 installer
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(MAKE) -j $(NUM_CPU) $(build-args)
