@@ -1,0 +1,37 @@
+From 04df6578c8d9b925a6a01baf2444bafd5edd5009 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Fri, 21 Apr 2017 16:26:02 +0200
+Subject: [PATCH] fix unused function error when building without ACL
+
+Since -Werror is set, building without ACL makes the then unused
+is_acl_well_supported function halt the build. Guard it as it is done
+with every call of it.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ logrotate.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/logrotate.c b/logrotate.c
+index 066c4f7..b0be177 100644
+--- a/logrotate.c
++++ b/logrotate.c
+@@ -442,6 +442,7 @@ static int runScript(struct logInfo *log, char *logfn, char *script)
+ 	return rc;
+ }
+ 
++#ifdef WITH_ACL
+ static int is_acl_well_supported(int err)
+ {
+ 	switch (err) {
+@@ -454,6 +455,7 @@ static int is_acl_well_supported(int err)
+ 		return 1;
+ 	}
+ }
++#endif /* WITH_ACL */
+ 
+ static int createOutputFile(char *fileName, int flags, struct stat *sb,
+ 			    acl_type acl, int force_mode)
+-- 
+2.7.4
+

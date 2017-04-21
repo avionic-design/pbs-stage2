@@ -1,40 +1,11 @@
 PACKAGE = logrotate
-VERSION = 3.9.1
+VERSION = 3.12.1
 LICENSE = GPL
 
-LOCATION = https://fedorahosted.org/releases/l/o/$(PACKAGE)
+LOCATION = https://github.com/logrotate/$(PACKAGE)/releases/download/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/common.mk
-
-$(pkgtree)/.setup:
-	$(call cmd,stamp)
-
-$(pkgtree)/.configure: $(pkgtree)/.patch
-	$(call cmd,stamp)
-
-build-args = \
-	CC='$(CC)' \
-	EXTRA_CFLAGS='$(CFLAGS)' \
-	EXTRA_LDFLAGS='$(LDFLAGS)'
-
-$(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) -j $(NUM_CPU) $(build-args)
-	$(call cmd,stamp)
-
-install-args = \
-	PREFIX='$(DESTDIR)' \
-	BASEDIR='$(prefix)' \
-	MANDIR='$$(BASEDIR)/share/man'
-
-$(pkgtree)/.do-install: $(pkgtree)/.build
-	cd $(pkgbuildtree) && \
-		$(env) $(MAKE) $(install-args) install
-	$(call cmd,stamp)
+include packages/autotools.mk
 
 stripfiles = \
 	$(prefix)/sbin/logrotate
-
-include packages/cleanup.mk
-include packages/binary.mk
