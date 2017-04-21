@@ -2,7 +2,7 @@ PACKAGE = Linux-PAM
 VERSION = 1.1.8
 LICENSE = GPL
 
-LOCATION = https://fedorahosted.org/releases/l/i/linux-pam
+LOCATION = http://www.linux-pam.org/library
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools-reconf.mk
