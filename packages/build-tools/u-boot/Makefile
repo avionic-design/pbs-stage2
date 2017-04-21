@@ -1,5 +1,5 @@
 PACKAGE = u-boot
-VERSION = 2017.01
+VERSION = 2017.03
 LICENSE = GPL
 
 LOCATION = ftp://ftp.denx.de/pub/$(PACKAGE)
