@@ -4,7 +4,7 @@ VERSION = 4.2.8p9
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
 
-LOCATION = http://archive.ntp.org/ntp4/$(PACKAGE)-$(MAJOR).$(MINOR)
+LOCATION = http://www.eecis.udel.edu/~ntp/ntp_spool/ntp4/$(PACKAGE)-$(MAJOR).$(MINOR)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 include packages/autotools.mk
