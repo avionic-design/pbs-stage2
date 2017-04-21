@@ -1,5 +1,5 @@
 PACKAGE = libgpg-error
-VERSION = 1.26
+VERSION = 1.27
 LICENSE = LGPL
 
 LOCATION = ftp://ftp.gnupg.org/gcrypt/$(PACKAGE)
