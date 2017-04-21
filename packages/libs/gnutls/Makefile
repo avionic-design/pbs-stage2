@@ -1,5 +1,5 @@
 PACKAGE = gnutls
-VERSION = 3.5.1
+VERSION = 3.5.11
 LICENSE = GPL
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
@@ -12,6 +12,7 @@ include packages/autotools.mk
 
 conf-args += \
 	--with-libz-prefix=$(SYSROOT)$(prefix) \
+	--with-included-unistring \
 	--disable-rpath \
 	--disable-doc
 
