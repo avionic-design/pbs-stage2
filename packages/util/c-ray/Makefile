@@ -2,7 +2,7 @@ PACKAGE = c-ray
 VERSION = 1.1
 LICENSE = custom
 
-LOCATION = http://www.futuretech.blinkenlights.nl/depot
+LOCATION = http://www.phoronix-test-suite.com/benchmark-files
 TARBALLS = ${PACKAGE}-${VERSION}.tar.gz
 
 include packages/common.mk
