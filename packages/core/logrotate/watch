@@ -1,2 +1,2 @@
 version=3
-http://fedorahosted.org/releases/l/o/logrotate/logrotate-(.+)\.tar\.gz
+https://github.com/logrotate/logrotate/releases logrotate-(.+)\.tar\.gz
