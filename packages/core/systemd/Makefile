@@ -25,11 +25,6 @@ ifneq ($(CONFIG_PACKAGE_CORE_SYSTEMD_ENABLE_BINFMT),y)
 conf-args += --disable-binfmt
 endif
 
-ifneq ($(CONFIG_UDEV_SYSTEMD),y)
-  conf-args += --disable-gudev
-else
-  conf-args += --enable-gudev
-endif
 
 compat-links = \
 	/bin/systemctl \

@@ -1,0 +1,9 @@
+config PACKAGE_LIBS_GUDEV
+	bool "libgudev"
+	select PACKAGE_BUILD_TOOLS_PKGCONFIG
+	select PACKAGE_LIBS_GLIB
+	select PACKAGE_CORE_UDEV if !UDEV_SYSTEMD
+	help
+	  This is libgudev, a library providing GObject bindings for libudev. It
+	  used to be part of udev, then merged into systemd. It is now a project
+	  on its own.
