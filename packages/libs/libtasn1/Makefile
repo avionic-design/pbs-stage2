@@ -1,5 +1,5 @@
 PACKAGE = libtasn1
-VERSION = 4.8
+VERSION = 4.10
 LICENSE = LGPL
 
 LOCATION = http://ftp.gnu.org/gnu/$(PACKAGE)
