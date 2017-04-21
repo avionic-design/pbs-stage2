@@ -2,7 +2,7 @@ PACKAGE = liberation-fonts
 VERSION = 2.00.1
 LICENSE = GPL custom
 
-LOCATION = https://fedorahosted.org/releases/l/i/$(PACKAGE)
+LOCATION = https://releases.pagure.org/$(PACKAGE)
 TARBALLS = $(PACKAGE)-ttf-$(VERSION).tar.gz
 
 include packages/common.mk
