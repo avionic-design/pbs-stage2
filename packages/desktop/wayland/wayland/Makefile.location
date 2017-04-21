@@ -1,5 +1,5 @@
 PACKAGE = wayland
-VERSION = 1.12.91
+VERSION = 1.13.0
 LICENSE = custom
 
 LOCATION = http://wayland.freedesktop.org/releases
