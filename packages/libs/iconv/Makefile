@@ -1,5 +1,5 @@
 PACKAGE = libiconv
-VERSION = 1.14
+VERSION = 1.15
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
