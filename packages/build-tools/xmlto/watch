@@ -1,2 +1,2 @@
 version=3
-https://fedorahosted.org/releases/x/m/xmlto/xmlto-([\d\.]*)\.tar\.bz2
+https://releases.pagure.org/xmlto/xmlto-([\d\.]*)\.tar\.bz2
