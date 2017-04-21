@@ -1,1 +1,4 @@
+/usr/include/systemd
+/usr/lib/rpm/macros.d
+/usr/lib/libsystemd.so
 /usr/share/pkgconfig
