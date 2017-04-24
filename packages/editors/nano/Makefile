@@ -1,5 +1,5 @@
 PACKAGE = nano
-VERSION = 2.7.4
+VERSION = 2.8.1
 
 MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 MINOR = $(word 2,$(subst ., ,$(VERSION)))
