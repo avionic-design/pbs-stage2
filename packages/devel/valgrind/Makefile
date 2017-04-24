@@ -1,5 +1,5 @@
 PACKAGE = valgrind
-VERSION = 3.11.0
+VERSION = 3.12.0
 
 LOCATION = http://valgrind.org/downloads
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
