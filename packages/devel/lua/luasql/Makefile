@@ -1,5 +1,5 @@
 PACKAGE = luasql
-VERSION = 2.3.4
+VERSION = 2.3.5
 LICENSE = MIT
 
 LOCATION = https://github.com/keplerproject/$(PACKAGE)/archive
