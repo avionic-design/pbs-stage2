@@ -1,7 +1,7 @@
 PACKAGE = minicom
-VERSION = 2.7
+VERSION = 2.7.1
 
-LOCATION = https://alioth.debian.org/frs/download.php/file/3977
+LOCATION = https://alioth.debian.org/frs/download.php/file/4215
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
 DESCRIPTION = friendly menu-driven serial communication program
