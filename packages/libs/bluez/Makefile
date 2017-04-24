@@ -1,8 +1,8 @@
 PACKAGE = bluez
-VERSION = 5.13
+VERSION = 5.44
 
 LOCATION = http://www.kernel.org/pub/linux/bluetooth
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
