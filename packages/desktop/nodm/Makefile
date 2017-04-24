@@ -1,10 +1,8 @@
 PACKAGE = nodm
-VERSION = 0.12-1
+VERSION = 0.13
 
-LOCATION = https://github.com/spanezz/$(PACKAGE)/archive/debian/
+LOCATION = https://github.com/spanezz/$(PACKAGE)/archive
 TARBALLS = $(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
-
-pkgbuildtree := $(pkgtree)/$(PACKAGE)-debian-$(VERSION)
 
 include packages/autotools.mk
 
