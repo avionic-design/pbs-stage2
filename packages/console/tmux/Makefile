@@ -1,5 +1,5 @@
 PACKAGE = tmux
-VERSION = 2.3
+VERSION = 2.4
 LICENSE = BSD
 
 LOCATION = https://github.com/$(PACKAGE)/$(PACKAGE)/releases/download/$(VERSION)
