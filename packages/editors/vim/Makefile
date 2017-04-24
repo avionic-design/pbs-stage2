@@ -1,5 +1,5 @@
 PACKAGE = vim
-VERSION = 8.0.069
+VERSION = 8.0.586
 LICENSE = Charityware
 
 LOCATION = http://ftp.vim.org/pub/vim/unix
