@@ -1,0 +1,10 @@
+config PACKAGE_LIBS_LININPUT
+	bool "libinput"
+	select PACKAGE_BUILD_TOOLS_GREP
+	select PACKAGE_BUILD_TOOLS_PKGCONFIG
+	select PACKAGE_LIBS_LIBEVDEV
+	select PACKAGE_LIBS_MTDEV
+	select VIRTUAL_UDEV
+	help
+	  libinput is a library that handles input devices for display servers
+	  and other applications that need to directly deal with input devices.
