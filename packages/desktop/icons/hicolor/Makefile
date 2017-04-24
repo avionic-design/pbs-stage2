@@ -1,7 +1,7 @@
 PACKAGE = hicolor-icon-theme
-VERSION = 0.13
+VERSION = 0.15
 
 LOCATION = http://icon-theme.freedesktop.org/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
