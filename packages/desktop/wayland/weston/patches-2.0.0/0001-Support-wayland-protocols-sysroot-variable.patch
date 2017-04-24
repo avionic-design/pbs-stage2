@@ -1,0 +1,29 @@
+From ed59455a6a9ac5bf95ce5971e2a11a6f898c7f8d Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Mon, 24 Apr 2017 17:05:44 +0200
+Subject: [PATCH] Support wayland protocols sysroot variable
+
+Needed for cross-compilation since pkg-config will not prepend its
+sysroot by itself in this case.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ configure.ac | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/configure.ac b/configure.ac
+index a36a516..618c570 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -216,7 +216,7 @@ PKG_CHECK_MODULES(LIBINPUT_BACKEND, [libinput >= 0.8.0])
+ PKG_CHECK_MODULES(COMPOSITOR, [$COMPOSITOR_MODULES])
+ 
+ PKG_CHECK_MODULES(WAYLAND_PROTOCOLS, [wayland-protocols >= 1.7],
+-		  [ac_wayland_protocols_pkgdatadir=`$PKG_CONFIG --variable=pkgdatadir wayland-protocols`])
++		  [ac_wayland_protocols_pkgdatadir=${WAYLAND_PROTOCOLS_SYSROOT_DIR}`$PKG_CONFIG --variable=pkgdatadir wayland-protocols`])
+ AC_SUBST(WAYLAND_PROTOCOLS_DATADIR, $ac_wayland_protocols_pkgdatadir)
+ 
+ AC_ARG_ENABLE(wayland-compositor, [  --enable-wayland-compositor],,
+-- 
+2.7.4
+
