@@ -1,5 +1,5 @@
 PACKAGE = e2fsprogs-libs
-VERSION = 1.43.3
+VERSION = 1.43.4
 
 LOCATION = http://prdownloads.sourceforge.net/e2fsprogs
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
