@@ -1,9 +1,9 @@
 PACKAGE = ConsoleKit
-VERSION = 0.4.5
+VERSION = 0.4.6
 LICENSE = GPL
 
 LOCATION = http://www.freedesktop.org/software/$(PACKAGE)/dist
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
