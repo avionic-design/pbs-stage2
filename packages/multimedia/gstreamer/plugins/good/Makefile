@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-good
-VERSION = 1.10.3
+VERSION = 1.10.4
 LICENSE = LGPL
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
