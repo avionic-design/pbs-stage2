@@ -1,5 +1,5 @@
 PACKAGE = liblogging
-VERSION = 1.0.4
+VERSION = 1.0.6
 LICENSE = BSD
 
 LOCATION = http://download.rsyslog.com/$(PACKAGE)
