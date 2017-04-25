@@ -1,5 +1,5 @@
 PACKAGE = libdrm
-VERSION = 2.4.74
+VERSION = 2.4.80
 LICENSE = custom
 
 LOCATION = http://dri.freedesktop.org/$(PACKAGE)
