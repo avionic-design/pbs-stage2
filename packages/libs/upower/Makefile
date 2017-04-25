@@ -1,8 +1,8 @@
 PACKAGE = upower
-VERSION = 0.9.7
+VERSION = 0.9.23
 
 LOCATION = http://$(PACKAGE).freedesktop.org/releases
-TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
