@@ -1,5 +1,5 @@
 PACKAGE = Linux-PAM
-VERSION = 1.1.8
+VERSION = 1.3.0
 LICENSE = GPL
 
 LOCATION = http://www.linux-pam.org/library
