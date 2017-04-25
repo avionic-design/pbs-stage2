@@ -1,5 +1,5 @@
 PACKAGE = nspr
-VERSION = 4.12
+VERSION = 4.14
 LICENSE = MPL
 
 LOCATION = https://ftp.mozilla.org/pub/mozilla.org/$(PACKAGE)/releases/v$(VERSION)/src
