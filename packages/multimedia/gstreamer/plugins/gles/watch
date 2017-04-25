@@ -1,0 +1,3 @@
+version=3
+release_scheme=even-minor
+http://ftp.avionic-design.de/pub/gst-plugins-gles/gst-plugins-gles-([\d\.]+)\.tar\.xz
