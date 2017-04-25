@@ -1,5 +1,5 @@
 PACKAGE = sqlite-autoconf
-VERSION = 3150200
+VERSION = 3180000
 
 LOCATION = http://ftp.osuosl.org/pub/blfs/conglomeration/sqlite/
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
