@@ -1,10 +1,10 @@
 PACKAGE = freeglut
-VERSION = 2.8.1
+VERSION = 3.0.0
 
 LOCATION = http://prdownloads.sourceforge.net/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
 
-include packages/autotools.mk
+include packages/cmake.mk
 
 prunefiles = \
 	$(prefix)/lib/*.la
