@@ -1,2 +1,2 @@
 version=3
-http://hal.freedesktop.org/releases/polkit-(.*)\.tar\.gz
+http://hal.freedesktop.org/releases/polkit-([\d\.]+)\.tar\.gz
