@@ -1,5 +1,5 @@
 PACKAGE = libsodium
-VERSION = 1.0.11
+VERSION = 1.0.12
 LICENSE = ISC
 
 LOCATION = https://download.libsodium.org/$(PACKAGE)/releases
