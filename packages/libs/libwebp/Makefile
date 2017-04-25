@@ -1,5 +1,5 @@
 PACKAGE = libwebp
-VERSION = 0.5.1
+VERSION = 0.6.0
 LICENSE = custom
 
 LOCATION = https://storage.googleapis.com/downloads.webmproject.org/releases/webp
