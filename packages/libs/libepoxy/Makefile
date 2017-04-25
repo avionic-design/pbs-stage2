@@ -1,5 +1,5 @@
 PACKAGE = libepoxy
-VERSION = 1.3.1
+VERSION = 1.4
 LICENSE = MIT
 
 LOCATION = https://github.com/anholt/libepoxy/archive/
