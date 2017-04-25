@@ -2,7 +2,7 @@ PACKAGE = pixman
 VERSION = 0.34.0
 LICENSE = MIT
 
-LOCATION = http://xorg.freedesktop.org/releases/individual/lib
+LOCATION = https://www.cairographics.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools-reconf.mk
