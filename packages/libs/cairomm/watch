@@ -1,2 +1,3 @@
 version=3
+release_scheme=even-minor
 http://cairographics.org/releases/cairomm-(.*)\.tar\.gz

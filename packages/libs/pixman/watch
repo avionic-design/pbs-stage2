@@ -1,2 +1,3 @@
 version=3
-https://www.cairographics.org/releases/pixman-(\d+\.\d+[02468]\.\d+)\.tar\.bz2
+release_scheme=even-minor
+https://www.cairographics.org/releases/pixman-([\d\.]+)\.tar\.bz2

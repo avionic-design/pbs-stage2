@@ -1,2 +1,3 @@
 version=3
-http://www.webkitgtk.org/releases/webkitgtk-(\d+\.\d*[02468]\.\d+)\.tar\.xz
+release_scheme=even-minor
+http://www.webkitgtk.org/releases/webkitgtk-([\d\.]+)\.tar\.xz

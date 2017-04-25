@@ -9,6 +9,38 @@ import sys
 import re
 
 
+def check_version_release_scheme(vstr, options):
+	"""Checks a version string against a release scheme.
+
+	Watch files can contain a 'release_scheme=<string>' line to indicate
+	which versions are officially stable and deemed an update. Unacceptable
+	versions will be rejected. Supported values are:
+
+	* None: Just return any version as parsed by version.Looseversion()
+	* 'even-minor': Even minor version levels are considered stable.
+	* 'gtk': Like 'even-minor' but additionally deems minors >= 90 unstable.
+	"""
+	scheme = options.release_scheme
+	if not scheme:
+		return version.LooseVersion(vstr)
+
+	try:
+		strict_version = version.StrictVersion(vstr)
+		major, minor, patch = strict_version.version
+	except ValueError:
+		return None
+
+	if scheme == 'even-minor':
+		if minor % 2:
+			return None
+
+	if scheme == 'gtk':
+		if minor % 2 or minor >= 90:
+			return None
+
+	return version.LooseVersion(vstr)
+
+
 def process_recursive(url, pattern, options, final):
 	uri = urlparse.urlparse(url)
 	result = None
@@ -74,7 +106,7 @@ def process_recursive(url, pattern, options, final):
 			else:
 				match = ref.group(0)
 
-			ver = version.LooseVersion(match)
+			ver = check_version_release_scheme(match, options)
 			if ver:
 				if result:
 					if ver not in result:
@@ -176,6 +208,7 @@ def process_line(line, options):
 def process_file(filename, options):
 	result = None
 	options.version_separator = None
+	options.release_scheme = None
 
 	if options.verbose > 0:
 		print 'Processing file', filename
@@ -197,6 +230,11 @@ def process_file(filename, options):
 		match = re.match('version_separator=(.+)', line)
 		if match:
 			options.version_separator = match.group(1)
+			continue
+
+		match = re.match('release_scheme=(.+)', line)
+		if match:
+			options.release_scheme = match.group(1)
 			continue
 
 		match = re.match('^\s*$', line)

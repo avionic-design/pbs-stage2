@@ -1,2 +1,3 @@
 version=3
-http://dbus.freedesktop.org/releases/dbus/dbus-(\d+\.\d*[02468].*)\.tar\.gz
+release_scheme=even-minor
+http://dbus.freedesktop.org/releases/dbus/dbus-([\d\.]+)\.tar\.gz
