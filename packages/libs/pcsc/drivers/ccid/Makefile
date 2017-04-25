@@ -1,8 +1,8 @@
 PACKAGE = ccid
-VERSION = 1.4.23
+VERSION = 1.4.26
 LICENSE = LGPL
 
-LOCATION = https://alioth.debian.org/frs/download.php/file/4169
+LOCATION = https://alioth.debian.org/frs/download.php/file/4205
 TARBALLS = $(PACKAGE)-$(VERSION).tar.bz2
 
 include packages/autotools.mk
