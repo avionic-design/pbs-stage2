@@ -1,5 +1,5 @@
 PACKAGE = libnl
-VERSION = 1.1
+VERSION = 1.1.4
 
 LOCATION = http://www.infradead.org/~tgr/$(PACKAGE)/files
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
