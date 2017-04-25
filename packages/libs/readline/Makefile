@@ -1,5 +1,5 @@
 PACKAGE = readline
-VERSION = 6.3
+VERSION = 7.0
 LICENSE = GPL
 
 LOCATION = http://ftp.gnu.org/pub/gnu/$(PACKAGE)
