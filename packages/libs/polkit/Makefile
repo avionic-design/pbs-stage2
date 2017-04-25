@@ -1,5 +1,5 @@
 PACKAGE = polkit
-VERSION = 0.99
+VERSION = 0.104
 
 LOCATION = http://hal.freedesktop.org/releases
 TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
