@@ -1,5 +1,5 @@
 PACKAGE = gst-plugins-ugly
-VERSION = 1.10.3
+VERSION = 1.10.4
 LICENSE = GPL LGPL
 
 LOCATION = http://gstreamer.freedesktop.org/src/$(PACKAGE)
