@@ -1,8 +1,8 @@
 PACKAGE = libcanberra
-VERSION = 0.28
+VERSION = 0.30
 
 LOCATION = http://0pointer.de/lennart/projects/$(PACKAGE)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.gz
+TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools.mk
 
