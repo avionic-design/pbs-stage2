@@ -1,5 +1,5 @@
 PACKAGE = poppler
-VERSION = 0.51.0
+VERSION = 0.54.0
 LICENSE = GPL
 
 LOCATION = http://poppler.freedesktop.org
