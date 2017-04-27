@@ -1,3 +1,4 @@
 config PACKAGE_LIBS_AT_SPI2_CORE
 	bool "core"
+	select PACKAGE_LIBS_GLIB
 	select PACKAGE_XORG_LIB_XTST
