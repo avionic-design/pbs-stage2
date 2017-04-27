@@ -16,6 +16,10 @@ CFLAGS += \
 	-Wno-cast-align \
 	-Wno-unused-local-typedefs
 
+# Support for char16_t from ICU 59 and newer
+CFLAGS += \
+	--std=c++0x
+
 # Disable debug symbols to allow build on machine without enough RAM
 ifneq ($(CONFIG_PACKAGE_WEB_WEBKIT_WITH_DEBUG),y)
 CFLAGS += -g0

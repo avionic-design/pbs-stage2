@@ -22,3 +22,5 @@ Use-big-media-buttons.patch
 avoid-duplicate-destroy.patch
 avoid-segfault-if-parent-is-null.patch
 0013-fix-build-with-gcc-6-glibc-2.23.patch
+0014-fix-build-with-icu-59-and-newer.patch
+0015-fix-build-with-std-c-0x-enabled.patch

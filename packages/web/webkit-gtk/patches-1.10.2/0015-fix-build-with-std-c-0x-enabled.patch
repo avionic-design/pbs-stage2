@@ -1,0 +1,29 @@
+From 89057416b72fec3a06a5f618f461f30bf9d4d1cd Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 27 Apr 2017 20:51:29 +0200
+Subject: [PATCH] fix build with --std=c++0x enabled
+
+When enabling --std=c++0x, g++ promptly gets a bit sensitive to sloppy
+namespacing.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp b/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
+index 81af05b..c40caa2 100644
+--- a/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
++++ b/Source/WebCore/platform/gtk/LocalizedStringsGtk.cpp
+@@ -610,7 +610,7 @@ String localizedMediaControlElementHelpText(const String& name)
+ 
+ String localizedMediaTimeDescription(float time)
+ {
+-    if (!isfinite(time))
++    if (!std::isfinite(time))
+         return String::fromUTF8(_("indefinite time"));
+ 
+     int seconds = (int)fabsf(time);
+-- 
+2.7.4
+

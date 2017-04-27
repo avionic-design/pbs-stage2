@@ -1,0 +1,55 @@
+From 0b54a7251dfb2fc2779934ba2df58e1ad95b495c Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 27 Apr 2017 18:27:28 +0200
+Subject: [PATCH] fix build with icu 59 and newer
+
+ICU 59 wilfully breaks the API, patch inspired from LFS.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Source/JavaScriptCore/API/JSBase.h      | 1 +
+ Source/JavaScriptCore/API/JSStringRef.h | 2 +-
+ Source/WebKit2/Shared/API/c/WKString.h  | 2 +-
+ 3 files changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/Source/JavaScriptCore/API/JSBase.h b/Source/JavaScriptCore/API/JSBase.h
+index f46a417..3093e56 100644
+--- a/Source/JavaScriptCore/API/JSBase.h
++++ b/Source/JavaScriptCore/API/JSBase.h
+@@ -28,6 +28,7 @@
+ 
+ #ifndef __cplusplus
+ #include <stdbool.h>
++#include <uchar.h>
+ #endif
+ 
+ /* JavaScript engine interface */
+diff --git a/Source/JavaScriptCore/API/JSStringRef.h b/Source/JavaScriptCore/API/JSStringRef.h
+index 75d73c9..4120073 100644
+--- a/Source/JavaScriptCore/API/JSStringRef.h
++++ b/Source/JavaScriptCore/API/JSStringRef.h
+@@ -43,7 +43,7 @@ extern "C" {
+ @typedef JSChar
+ @abstract A Unicode character.
+ */
+-    typedef unsigned short JSChar;
++    typedef char16_t JSChar;
+ #else
+     typedef wchar_t JSChar;
+ #endif
+diff --git a/Source/WebKit2/Shared/API/c/WKString.h b/Source/WebKit2/Shared/API/c/WKString.h
+index f02c455..5bd51ac 100644
+--- a/Source/WebKit2/Shared/API/c/WKString.h
++++ b/Source/WebKit2/Shared/API/c/WKString.h
+@@ -38,7 +38,7 @@ extern "C" {
+ 
+ #if !defined(WIN32) && !defined(_WIN32) \
+     && !((defined(__CC_ARM) || defined(__ARMCC__)) && !defined(__linux__)) /* RVCT */
+-    typedef unsigned short WKChar;
++    typedef char16_t WKChar;
+ #else
+     typedef wchar_t WKChar;
+ #endif
+-- 
+2.7.4
+
