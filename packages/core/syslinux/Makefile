@@ -35,8 +35,9 @@ build-args += efi64
 endif
 build-args += bios efi32 installer
 
+# Parallel builds lead to spurious 'truncated file' errors at linking stage.
 $(pkgtree)/.build: $(pkgtree)/.configure
-	cd $(pkgbuildtree) && $(MAKE) -j $(NUM_CPU) $(build-args)
+	cd $(pkgbuildtree) && $(MAKE) -j 1 $(build-args)
 	$(call cmd,stamp)
 
 install-args = \
