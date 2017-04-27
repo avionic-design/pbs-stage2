@@ -1,0 +1,29 @@
+From 0cfc69751bd44d168d3c19d834a6e42ce2e9e61f Mon Sep 17 00:00:00 2001
+From: Rabin Vincent <rabinv@axis.com>
+Date: Fri, 12 Feb 2016 08:41:44 +0100
+Subject: [PATCH 2/4] missing.h: define IFLA_EXT_MASK
+
+We already define IFLA_PROMISCUITY and some other of these masks in
+order to allow building with older headers.  Define IFLA_EXT_MASK too,
+which was added in the same kernel version as IFLA_PROMISCUITY (v3.10).
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/shared/missing.h | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/shared/missing.h b/src/shared/missing.h
+index 3ff1a21..ec49e67 100644
+--- a/src/shared/missing.h
++++ b/src/shared/missing.h
+@@ -443,6 +443,7 @@ static inline int setns(int fd, int nstype) {
+ #endif
+ 
+ #if !HAVE_DECL_IFLA_PHYS_PORT_ID
++#define IFLA_EXT_MASK 29
+ #undef IFLA_PROMISCUITY
+ #define IFLA_PROMISCUITY 30
+ #define IFLA_NUM_TX_QUEUES 31
+-- 
+2.7.4
+

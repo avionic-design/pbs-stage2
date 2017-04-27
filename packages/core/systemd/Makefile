@@ -5,6 +5,17 @@ LICENSE = GPL LGPL MIT
 LOCATION = https://github.com/systemd/$(PACKAGE)/archive
 TARBALLS = v$(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
 
+KERNEL_PACKAGE := linux
+KERNEL_VERSION := $(shell cat $(objtree)/build/packages/kernel/$(KERNEL_PACKAGE)/build/include/config/kernel.release)
+KERNEL_VERSION_TUPLE = $(word 1, $(subst -, ,$(KERNEL_VERSION)))
+KERNEL_VERSION_MAJOR = $(word 1, $(subst ., ,$(KERNEL_VERSION_TUPLE)))
+KERNEL_VERSION_MINOR = $(word 2, $(subst ., ,$(KERNEL_VERSION_TUPLE)))
+KERNEL_VERSION_MM = $(KERNEL_VERSION_MAJOR).$(KERNEL_VERSION_MINOR)
+
+ifneq "3.7" "$(word 1, $(sort 3.7 $(KERNEL_VERSION_MM)))"
+  VERSION := 216
+endif
+
 include packages/autotools-reconf.mk
 
 conf-args += \

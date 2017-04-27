@@ -1,0 +1,27 @@
+From 09caa037c88a3fff42624998e242137e23231294 Mon Sep 17 00:00:00 2001
+From: Michael Olbrich <m.olbrich@pengutronix.de>
+Date: Thu, 21 Aug 2014 12:38:08 +0200
+Subject: [PATCH 3/4] missing: add BPF_XOR
+
+BPF_XOR was introduced in kernel 3.7
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/shared/missing.h | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/src/shared/missing.h b/src/shared/missing.h
+index ec49e67..4ca8585 100644
+--- a/src/shared/missing.h
++++ b/src/shared/missing.h
+@@ -590,3 +590,7 @@ static inline int setns(int fd, int nstype) {
+ #ifndef NET_NAME_RENAMED
+ #  define NET_NAME_RENAMED 4
+ #endif
++
++#ifndef BPF_XOR
++#  define BPF_XOR 0xa0
++#endif
+-- 
+2.7.4
+

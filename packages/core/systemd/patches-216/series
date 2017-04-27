@@ -1,0 +1,4 @@
+0001-kill-off-gtk-doc.patch
+0002-missing.h-define-IFLA_EXT_MASK.patch
+0003-missing-add-BPF_XOR.patch
+0004-missing-add-IFF_MULTI_QUEUE.patch

@@ -1,0 +1,162 @@
+From 4771baf4d708218508854f95cf4e894898d2025f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 26 Apr 2017 15:26:32 +0200
+Subject: [PATCH 1/4] kill off gtk-doc
+
+Well now this is a bit broken, so remove it and lose the dependency on
+gtk-doc. Looks like it is used for libgudev only anyway,
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am              | 19 -------------------
+ configure.ac             | 18 +-----------------
+ docs/gudev/Makefile.am   | 13 +------------
+ docs/libudev/Makefile.am | 13 +------------
+ 4 files changed, 3 insertions(+), 60 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 4028112..8d5be46 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -2996,15 +2996,6 @@ update-unifont: tools/compile-unifont.py
+ 	@echo "unifont-glyph-array.bin has been regenerated"
+ 
+ # ------------------------------------------------------------------------------
+-if ENABLE_GTK_DOC
+-SUBDIRS += \
+-	docs/libudev
+-
+-noinst_DATA += \
+-	docs/html/libudev \
+-	docs/html/gudev
+-endif
+-
+ include_HEADERS += \
+ 	src/libudev/libudev.h
+ 
+@@ -3429,11 +3420,6 @@ dist_udevrules_DATA += \
+ 
+ # ------------------------------------------------------------------------------
+ if ENABLE_GUDEV
+-if ENABLE_GTK_DOC
+-SUBDIRS += \
+-	docs/gudev
+-endif
+-
+ libgudev_includedir = \
+ 	$(includedir)/gudev-1.0/gudev
+ 
+@@ -5932,11 +5918,6 @@ DISTCHECK_CONFIGURE_FLAGS += \
+ 	--with-python
+ endif
+ 
+-if ENABLE_GTK_DOC
+-DISTCHECK_CONFIGURE_FLAGS += \
+-	--enable-gtk-doc
+-endif
+-
+ #
+ # Require python when making dist
+ #
+diff --git a/configure.ac b/configure.ac
+index 18b7198..9dc3620 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -100,16 +100,6 @@ AS_IF([! ln --relative --help > /dev/null 2>&1], [AC_MSG_ERROR([*** ln doesn't s
+ 
+ M4_DEFINES=
+ 
+-# gtkdocize greps for '^GTK_DOC_CHECK', so it needs to be on its own line
+-m4_ifdef([GTK_DOC_CHECK], [
+-GTK_DOC_CHECK([1.18],[--flavour no-tmpl])],
+-         [AM_CONDITIONAL([ENABLE_GTK_DOC], [false])
+-          enable_gtk_doc=no])
+-
+-AS_IF([test "x$enable_gtk_doc" = "xyes" -a "x$XSLTPROC" = x], [
+-        AC_MSG_ERROR([*** GTK doc requested but xsltproc not found])
+-])
+-
+ m4_ifdef([GOBJECT_INTROSPECTION_CHECK], [
+ GOBJECT_INTROSPECTION_CHECK([1.31.1])
+ ], [
+@@ -1295,12 +1285,7 @@ AS_IF([test "x${enable_split_usr}" = "xyes"], [
+         AC_DEFINE(HAVE_SPLIT_USR, 1, [Define if /bin, /sbin aren't symlinks into /usr])
+ ])
+ 
+-# Work around intltoolize and gtk-doc problems in VPATH builds
+-AM_CONDITIONAL([ENABLE_GTK_DOC_TESTS], [test "x$0" = "x./configure"],
+-                                       [Define to do gtk-doc tests])
+-AS_IF([test "x$0" != "x./configure"], [
+-        AC_SUBST([INTLTOOL_UPDATE], [/bin/true])
+-])
++AC_SUBST([INTLTOOL_UPDATE], [/bin/true])
+ 
+ AC_ARG_ENABLE(tests,
+        [AC_HELP_STRING([--disable-tests], [disable tests])],
+@@ -1386,7 +1371,6 @@ AC_MSG_RESULT([
+         Python:                  ${have_python}
+         Python Headers:          ${have_python_devel}
+         man pages:               ${have_manpages}
+-        gtk-doc:                 ${enable_gtk_doc}
+         test coverage:           ${have_coverage}
+         Split /usr:              ${enable_split_usr}
+         SysV compatibility:      ${SYSTEM_SYSV_COMPAT}
+diff --git a/docs/gudev/Makefile.am b/docs/gudev/Makefile.am
+index 6593303..1792bb7 100644
+--- a/docs/gudev/Makefile.am
++++ b/docs/gudev/Makefile.am
+@@ -94,22 +94,11 @@ GTKDOC_LIBS = \
+ 	$(GLIB_LIBS) \
+ 	$(top_builddir)/libgudev-1.0.la
+ 
+-# This includes the standard gtk-doc make rules, copied by gtkdocize.
+-include $(top_srcdir)/docs/gtk-doc.make
+-
+ # Other files to distribute
+ # e.g. EXTRA_DIST += version.xml.in
+-EXTRA_DIST += version.xml.in
++EXTRA_DIST = version.xml.in
+ 
+ # Files not to distribute
+ # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
+ # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
+ #DISTCLEANFILES +=
+-
+-# Comment this out if you want your docs-status tested during 'make check'
+-if ENABLE_GTK_DOC
+-if ENABLE_GTK_DOC_TESTS
+-#TESTS_ENVIRONMENT = cd $(top_srcdir)
+-#TESTS = $(GTKDOC_CHECK)
+-endif
+-endif
+diff --git a/docs/libudev/Makefile.am b/docs/libudev/Makefile.am
+index cf9a452..16de84e 100644
+--- a/docs/libudev/Makefile.am
++++ b/docs/libudev/Makefile.am
+@@ -88,22 +88,11 @@ override LDFLAGS=
+ GTKDOC_CFLAGS=
+ GTKDOC_LIBS=
+ 
+-# This includes the standard gtk-doc make rules, copied by gtkdocize.
+-include $(top_srcdir)/docs/gtk-doc.make
+-
+ # Other files to distribute
+ # e.g. EXTRA_DIST += version.xml.in
+-EXTRA_DIST += version.xml.in
++EXTRA_DIST = version.xml.in
+ 
+ # Files not to distribute
+ # for --rebuild-types in $(SCAN_OPTIONS), e.g. $(DOC_MODULE).types
+ # for --rebuild-sections in $(SCAN_OPTIONS) e.g. $(DOC_MODULE)-sections.txt
+ #DISTCLEANFILES +=
+-
+-# Comment this out if you want your docs-status tested during 'make check'
+-if ENABLE_GTK_DOC
+-if ENABLE_GTK_DOC_TESTS
+-#TESTS_ENVIRONMENT = cd $(top_srcdir)
+-#TESTS = $(GTKDOC_CHECK)
+-endif
+-endif
+-- 
+2.7.4
+
