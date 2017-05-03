@@ -6,9 +6,6 @@ LOCATION = http://xcb.freedesktop.org/dist
 
 include packages/xorg/lib/common-reconf.mk
 
-env += \
-	LD_LIBRARY_PATH=$(BUILD_TOOLS)/lib
-
 conf-args += \
 	--disable-devel-docs
 
