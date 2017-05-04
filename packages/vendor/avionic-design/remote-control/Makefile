@@ -1,5 +1,5 @@
 PACKAGE = remote-control
-VERSION = 2.0.0
+VERSION = 2.1.0
 
 LOCATION = http://ftp.avionic-design.de/pub/$(PACKAGE)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
@@ -69,6 +69,11 @@ ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_LCD),y)
 	conf-args += --enable-javascript-lcd
 else
 	conf-args += --disable-javascript-lcd
+endif
+ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_MEDIAL),y)
+	conf-args += --enable-javascript-medial
+else
+	conf-args += --disable-javascript-medial
 endif
 ifeq ($(CONFIG_PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_APP_WATCHDOG),y)
 	conf-args += --enable-javascript-app-watchdog

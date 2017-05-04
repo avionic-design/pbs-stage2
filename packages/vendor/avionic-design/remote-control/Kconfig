@@ -155,6 +155,11 @@ config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_IR
 config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_APP_WATCHDOG
 	bool "JavaScript binding - Watchdog support"
 
+config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_MEDIAL
+	bool "JavaScript binding - Medial support"
+	help
+	  JaScript object for interacting with a Medial server.
+
 config PACKAGE_VENDOR_AVIONIC_DESIGN_REMOTE_CONTROL_JAVASCRIPT_LCD
 	bool "JavaScript binding - LCD Display Control"
 	depends on PLATFORM_AVIONIC_DESIGN_PLUTUX
