@@ -1,0 +1,94 @@
+From 658652ae311a461eb93f5c3d7b5ff9efe005743b Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 4 May 2017 11:58:37 +0200
+Subject: [PATCH] fix flex version detection
+
+Those macros were not prepared for a flex version with a minor
+incremented. Fix them to build with flex 2.6.0 properly.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/code.l                            | 2 +-
+ src/commentscan.l                     | 4 ++--
+ src/fortrancode.l                     | 2 +-
+ src/pycode.l                          | 2 +-
+ src/vhdlcode.l                        | 2 +-
+ 5 files changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/src/code.l b/src/code.l
+index 09f1177..19ec42a 100644
+--- a/src/code.l
++++ b/src/code.l
+@@ -3695,7 +3695,7 @@ void codeFreeScanner()
+ extern "C" { // some bogus code to keep the compiler happy
+   void codeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
+ #endif
+ 
+diff --git a/src/commentscan.l b/src/commentscan.l
+index 702a616..eab14db 100644
+--- a/src/commentscan.l
++++ b/src/commentscan.l
+@@ -1098,7 +1098,7 @@ RCSTAG    "$"{ID}":"[^\n$]+"$"
+ 					      // but we need to know the position in the input buffer where this 
+ 					      // rule matched.
+ 					      // for flex 2.5.33+ we should use YY_CURRENT_BUFFER_LVALUE
+-#if YY_FLEX_MINOR_VERSION>=5 && YY_FLEX_SUBMINOR_VERSION>=33
++#if (YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION>=33) || YY_FLEX_MINOR_VERSION>=6
+ 					      inputPosition=prevPosition + (int)(yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf);
+ #else
+ 					      inputPosition=prevPosition + (int)(yy_bp - yy_current_buffer->yy_ch_buf);
+@@ -1160,7 +1160,7 @@ RCSTAG    "$"{ID}":"[^\n$]+"$"
+                                           g_memberGroupHeader.resize(0);
+ 					  parseMore=TRUE;
+                                           needNewEntry = TRUE;
+-#if YY_FLEX_MINOR_VERSION>=5 && YY_FLEX_SUBMINOR_VERSION>=33
++#if (YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION>=33) || YY_FLEX_MINOR_VERSION>=6
+ 				          inputPosition=prevPosition + (int)(yy_bp - YY_CURRENT_BUFFER_LVALUE->yy_ch_buf) + strlen(yytext);
+ #else
+ 				          inputPosition=prevPosition + (int)(yy_bp - yy_current_buffer->yy_ch_buf) + strlen(yytext);
+diff --git a/src/fortrancode.l b/src/fortrancode.l
+index 17a28c3..053c7e9 100644
+--- a/src/fortrancode.l
++++ b/src/fortrancode.l
+@@ -1289,7 +1289,7 @@ void parseFortranCode(CodeOutputInterface &od,const char *className,const QCStri
+ extern "C" { // some bogus code to keep the compiler happy
+   void fortrancodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
+ #else
+ extern "C" { // some bogus code to keep the compiler happy
+diff --git a/src/pycode.l b/src/pycode.l
+index 4f9e396..c07b671 100644
+--- a/src/pycode.l
++++ b/src/pycode.l
+@@ -1503,7 +1503,7 @@ void parsePythonCode(CodeOutputInterface &od,const char * /*className*/,
+ extern "C" { // some bogus code to keep the compiler happy
+   void pycodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4. These are currently incompatible with 2.5.4, and do NOT work with doxygen! Please use version 2.5.4 or expect things to be parsed wrongly! A bug report has been submitted (#732132)."
+ #endif
+ 
+diff --git a/src/vhdlcode.l b/src/vhdlcode.l
+index 2b0841e..c330d9c 100644
+--- a/src/vhdlcode.l
++++ b/src/vhdlcode.l
+@@ -1613,7 +1613,7 @@ void codeFreeVhdlScanner()
+ extern "C" { // some bogus code to keep the compiler happy
+   void vhdlcodeYYdummy() { yy_flex_realloc(0,0); } 
+ }
+-#elif YY_FLEX_SUBMINOR_VERSION<33
++#elif YY_FLEX_MINOR_VERSION==5 && YY_FLEX_SUBMINOR_VERSION<33
+ #error "You seem to be using a version of flex newer than 2.5.4 but older than 2.5.33. These versions do NOT work with doxygen! Please use version <=2.5.4 or >=2.5.33 or expect things to be parsed wrongly!"
+ #endif
+ 
+-- 
+2.7.4
+

@@ -1,0 +1,11 @@
+config PACKAGE_BUILD_TOOLS_DOXYGEN
+	bool "doxygen"
+	select PACKAGE_BUILD_TOOLS_BISON
+	select PACKAGE_BUILD_TOOLS_FLEX
+	select PACKAGE_BUILD_TOOLS_PYTHON
+	help
+	  Doxygen is the de facto standard tool for generating documentation
+	  from annotated C++ sources, but it also supports other popular
+	  programming languages such as C, Objective-C, C-Sharp, PHP, Java,
+	  Python, IDL (Corba, Microsoft, and UNO/OpenOffice flavors), Fortran,
+	  VHDL, Tcl, and to some extent D.
