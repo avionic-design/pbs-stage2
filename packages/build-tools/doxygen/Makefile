@@ -1,5 +1,5 @@
 PACKAGE = doxygen
-VERSION = 1.8.9.1
+VERSION = 1.8.13
 LICENSE = GPL
 
 LOCATION = ftp://ftp.stack.nl/pub/users/dimitri/
@@ -10,14 +10,12 @@ include packages/build-tools/common.mk
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
 
-conf-args = \
-	--prefix=$(prefix) \
-	--shared \
-	--make=$(MAKE)
+cmake-args = \
+	-DCMAKE_INSTALL_PREFIX=$(prefix)
 
 $(pkgtree)/.configure: $(pkgtree)/.patch
 	cd $(pkgbuildtree) && \
-		$(env) ./configure $(conf-args)
+		$(env) cmake . $(cmake-args)
 	$(call cmd,stamp)
 
 $(pkgtree)/.build: $(pkgtree)/.configure
