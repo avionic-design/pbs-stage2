@@ -18,6 +18,15 @@ endif
 
 include packages/autotools-reconf.mk
 
+# systemd detects target tools paths on the host. Ignore their brilliancy and
+# preset paths where needed.
+conf-vars += \
+	ac_cv_path_KILL=/usr/bin/kill \
+	ac_cv_path_KMOD=/usr/bin/kmod \
+	ac_cv_path_MOUNT_PATH=/bin/mount \
+	ac_cv_path_SULOGIN=/sbin/sulogin \
+	ac_cv_path_UMOUNT_PATH=/bin/umount
+
 conf-args += \
 	--with-rootprefix=$(prefix) \
 	--libexecdir=$(prefix)/lib \
