@@ -7,12 +7,31 @@ TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/autotools-reconf.mk
 
+unneeded_binaries =
+ifeq ($(CONFIG_PACKAGE_CORE_UTIL_LINUX),y)
+  unneeded_binaries += kill
+else
+  stripfiles += $(prefix)/bin/kill
+endif
+
+ifeq ($(CONFIG_PACKAGE_CORE_PROCPS),y)
+  unneeded_binaries += uptime
+else
+  stripfiles += $(prefix)/bin/uptime
+endif
+
+comma:= ,
+empty:=
+space:= $(empty) $(empty)
+conf-args += \
+	--enable-no-install-program=$(subst $(space),$(comma),$(strip $(unneeded_binaries)))
+
 conf-vars += \
 	ac_cv_func_canonicalize_file_name=yes \
 	gl_cv_func_realpath_works=yes \
 	PERL=no
 
-stripfiles = \
+stripfiles += \
 	$(prefix)/bin/[ \
 	$(prefix)/bin/base64 \
 	$(prefix)/bin/basename \
@@ -49,7 +68,6 @@ stripfiles = \
 	$(prefix)/bin/id \
 	$(prefix)/bin/install \
 	$(prefix)/bin/join \
-	$(prefix)/bin/kill \
 	$(prefix)/bin/link \
 	$(prefix)/bin/ln \
 	$(prefix)/bin/logname \
@@ -110,7 +128,6 @@ stripfiles = \
 	$(prefix)/bin/unexpand \
 	$(prefix)/bin/uniq \
 	$(prefix)/bin/unlink \
-	$(prefix)/bin/uptime \
 	$(prefix)/bin/users \
 	$(prefix)/bin/vdir \
 	$(prefix)/bin/wc \
