@@ -1,5 +1,5 @@
 include packages/libs/libcap/Makefile.location
-include packages/common.mk
+include packages/build-tools/common.mk
 
 $(pkgtree)/.setup:
 	$(call cmd,stamp)
@@ -10,30 +10,23 @@ $(pkgtree)/.configure: $(pkgtree)/.patch
 build-args = \
 	prefix=$(prefix) \
 	lib=lib \
-	BUILD_CC='gcc' \
-	CC='$(CC)' \
-	EXTRA_CFLAGS='$(CFLAGS)' \
-	EXTRA_LDFLAGS='$(LDFLAGS)'
+	PAM_CAP=no
 
 $(pkgtree)/.build: $(pkgtree)/.configure
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(build-args)
 	$(call cmd,stamp)
 
+# Setting DESTDIR instead of prefix is intentional to avoid an ldconfig call.
 install-args = \
-	prefix=$(prefix) \
+	prefix= \
 	lib=lib \
+	SBINDIR=/bin \
 	RAISE_SETFCAP=no \
-	DESTDIR='$(DESTDIR)'
+	PAM_CAP=no \
+	DESTDIR=$(prefix)
 
 $(pkgtree)/.do-install: $(pkgtree)/.build
 	cd $(pkgbuildtree) && $(env) $(MAKE) $(install-args) install
 	$(call cmd,stamp)
 
-stripfiles = \
-	$(prefix)/sbin/capsh \
-	$(prefix)/sbin/setcap \
-	$(prefix)/sbin/getcap \
-	$(prefix)/sbin/getpcaps
-
 include packages/cleanup.mk
-include packages/binary.mk

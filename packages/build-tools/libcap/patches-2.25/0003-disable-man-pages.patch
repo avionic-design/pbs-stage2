@@ -1,0 +1,25 @@
+From 2da7554e3b75ad694ee2793b180ab065166dd935 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Wed, 24 May 2017 11:37:22 +0200
+Subject: [PATCH] disable man pages
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/Makefile b/Makefile
+index 124d10d..f2393f6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -14,7 +14,6 @@ ifneq ($(PAM_CAP),no)
+ 	$(MAKE) -C pam_cap $@
+ endif
+ 	$(MAKE) -C progs $@
+-	$(MAKE) -C doc $@
+ 
+ all-here:
+ 
+-- 
+2.7.4
+
