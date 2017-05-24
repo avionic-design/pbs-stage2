@@ -43,6 +43,12 @@ $(pkgtree)/.intltoolize:
 
 $(pkgtree)/.configure: $(pkgtree)/.intltoolize
 
+$(pkgtree)/.update-hwdb:
+	cd $(DESTDIR) && \
+		ln -s usr/lib && \
+		$(env) udevadm hwdb --usr --update --root=$(DESTDIR)
+	$(call cmd,stamp)
+
 compat-links = \
 	/bin/systemctl \
 	/bin/systemd
@@ -52,7 +58,7 @@ compat-links := $(addprefix $(DESTDIR),$(compat-links))
 $(compat-links): $(DESTDIR)%: $(obj)/src%
 	$(call cmd,install_link)
 
-$(pkgtree)/.prune: $(compat-links)
+$(pkgtree)/.prune: $(compat-links) $(pkgtree)/.update-hwdb
 
 systemunitdir = $(prefix)/lib/systemd/system
 
@@ -72,6 +78,7 @@ prunefiles = \
 	$(prefix)/lib/security/pam_systemd.la \
 	$(prefix)/lib/tmpfiles.d/tmp.conf \
 	$(prefix)/lib/systemd/*.la \
+	$(prefix)/lib/udev/hwdb.d/* \
 	$(prefix)/lib/*.la \
 
 ifneq ($(CONFIG_PACKAGE_DESKTOP_PLYMOUTH),y)
