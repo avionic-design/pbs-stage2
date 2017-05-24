@@ -1,0 +1,49 @@
+From 37e1252e8037053a27e3e95339c8d38e4112397f Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 23 May 2017 17:30:09 +0200
+Subject: [PATCH] Use uaccess udev rules only with ACL
+
+If ACL is disabled, udev's uaccess does not work.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makefile.am | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/Makefile.am b/Makefile.am
+index 2a56107..cff469e 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -6004,6 +6004,14 @@ liblogind_core_la_LIBADD = \
+ if HAVE_ACL
+ liblogind_core_la_SOURCES += \
+ 	src/login/logind-acl.c
++
++dist_udevrules_DATA += \
++	src/login/70-uaccess.rules \
++	src/login/70-power-switch.rules
++
++nodist_udevrules_DATA += \
++	src/login/71-seat.rules \
++	src/login/73-seat-late.rules
+ endif
+ 
+ noinst_LTLIBRARIES += \
+@@ -6137,14 +6145,6 @@ SYSTEM_UNIT_ALIASES += \
+ BUSNAMES_TARGET_WANTS += \
+ 	org.freedesktop.login1.busname
+ 
+-dist_udevrules_DATA += \
+-	src/login/70-uaccess.rules \
+-	src/login/70-power-switch.rules
+-
+-nodist_udevrules_DATA += \
+-	src/login/71-seat.rules \
+-	src/login/73-seat-late.rules
+-
+ endif
+ 
+ polkitpolicy_in_files += \
+-- 
+2.7.4
+
