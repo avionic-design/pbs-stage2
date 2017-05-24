@@ -1,13 +1,4 @@
-PACKAGE = util-linux
-VERSION = 2.29.2
-LICENSE = GPL/BSD
-
-MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-MINOR = $(word 2,$(subst ., ,$(VERSION)))
-
-LOCATION = http://www.kernel.org/pub/linux/utils/$(PACKAGE)/v$(MAJOR).$(MINOR)
-TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
-
+include packages/core/util-linux/Makefile.location
 include packages/autotools.mk
 
 conf-args += \

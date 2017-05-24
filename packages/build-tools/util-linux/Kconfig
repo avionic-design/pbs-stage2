@@ -1,0 +1,5 @@
+config PACKAGE_BUILD_TOOLS_UTIL_LINUX
+	bool "util-linux-ng"
+	select PACKAGE_BUILD_TOOLS_GETTEXT
+	help
+	  Build tools util-linux, libraries only.
