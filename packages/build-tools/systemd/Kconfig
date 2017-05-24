@@ -1,0 +1,9 @@
+config PACKAGE_BUILD_TOOLS_SYSTEMD
+	bool "systemd"
+	select PACKAGE_BUILD_TOOLS_GETTEXT
+	select PACKAGE_BUILD_TOOLS_GPERF
+	select PACKAGE_BUILD_TOOLS_INTLTOOL
+	select PACKAGE_BUILD_TOOLS_LIBCAP
+	select PACKAGE_BUILD_TOOLS_UTIL_LINUX
+	help
+	  Build tools package for systemd.

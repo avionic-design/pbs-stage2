@@ -1,9 +1,4 @@
-PACKAGE = systemd
-VERSION = 233
-LICENSE = GPL LGPL MIT
-
-LOCATION = https://github.com/systemd/$(PACKAGE)/archive
-TARBALLS = v$(VERSION).tar.gz;filename=$(PACKAGE)-$(VERSION).tar.gz
+include packages/core/systemd/Makefile.location
 
 KERNEL_PACKAGE := linux
 KERNEL_VERSION := $(shell cat $(objtree)/build/packages/kernel/$(KERNEL_PACKAGE)/build/include/config/kernel.release)
