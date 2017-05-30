@@ -1,0 +1,39 @@
+From a67e850a7a445894096b5ba09ef857c59b93cbaa Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 30 May 2017 13:05:16 +0200
+Subject: [PATCH] gettext-tools: drop docs, tests and examples
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ gettext-tools/Makefile.in | 2 +-
+ gettext-tools/configure   | 1 -
+ 2 files changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/gettext-tools/Makefile.in b/gettext-tools/Makefile.in
+index b5e4f0b..2c7c363 100644
+--- a/gettext-tools/Makefile.in
++++ b/gettext-tools/Makefile.in
+@@ -1867,7 +1867,7 @@ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+ AUTOMAKE_OPTIONS = 1.5 gnu no-dependencies
+ ACLOCAL_AMFLAGS = -I m4 -I ../gettext-runtime/m4 -I ../m4 -I gnulib-m4 -I libgrep/gnulib-m4 -I libgettextpo/gnulib-m4
+-SUBDIRS = doc intl gnulib-lib libgrep src libgettextpo po projects styles misc man m4 tests gnulib-tests examples its
++SUBDIRS = intl gnulib-lib libgrep src libgettextpo po projects styles misc m4 its
+ 
+ # Allow users to use "gnulib-tool --update".
+ 
+diff --git a/gettext-tools/configure b/gettext-tools/configure
+index 0fa4093..33606ae 100755
+--- a/gettext-tools/configure
++++ b/gettext-tools/configure
+@@ -77563,7 +77563,6 @@ echo "GNU gettext library from gettext-$VERSION" > intl/VERSION
+ 
+ 
+ 
+-subdirs="$subdirs examples"
+ 
+ 
+ ac_config_files="$ac_config_files Makefile"
+-- 
+2.7.4
+
