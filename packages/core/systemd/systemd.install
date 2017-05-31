@@ -1,5 +1,4 @@
 /etc/binfmt.d
-/etc/init.d
 /etc/kernel/install.d
 /etc/modules-load.d
 /etc/pam.d
