@@ -1,0 +1,28 @@
+From 1ce086721a75e7168f82b0ca91d8edbe34416065 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Tue, 6 Jun 2017 15:14:33 +0200
+Subject: [PATCH] src/belle_sip_uri_impl: fix bogus comparison
+
+Fixes a -Werror=tautological-compare build failure with gcc6.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ src/belle_sip_uri_impl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/belle_sip_uri_impl.c b/src/belle_sip_uri_impl.c
+index 05cf335..e3e8408 100644
+--- a/src/belle_sip_uri_impl.c
++++ b/src/belle_sip_uri_impl.c
+@@ -301,7 +301,7 @@ int belle_sip_uri_equals(const belle_sip_uri_t* uri_a,const belle_sip_uri_t* uri
+ */
+ 	if (uri_a->user && uri_b->user) {
+ 		if (IS_EQUAL(uri_a->user,uri_b->user)) return 0;
+-	} else if (uri_a->user != uri_a->user) {
++	} else if (uri_a->user != uri_b->user) {
+ 		return 0;
+ 	}
+ /*
+-- 
+2.7.4
+

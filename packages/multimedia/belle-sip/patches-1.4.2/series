@@ -1,1 +1,2 @@
 fix_glib_2.24.patch
+0001-src-belle_sip_uri_impl-fix-bogus-comparison.patch
