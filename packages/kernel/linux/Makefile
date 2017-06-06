@@ -134,6 +134,20 @@ ifneq ($(MAKECMDGOALS),clean)
 endif
 
 #
+# create include/linux/compiler-gcc6.h from *-gcc5.h if it does not exist
+#
+
+quiet_cmd_gcc6_compat = GCC6    $@
+      cmd_gcc6_compat = \
+	[ -e $(KERNELSRC)/include/linux/compiler-gcc5.h ] && \
+	cp -n $(KERNELSRC)/include/linux/compiler-gcc5.h \
+	$(KERNELSRC)/include/linux/compiler-gcc6.h || true
+
+$(pkgtree)/.gcc6-compat:
+	$(call cmd,gcc6_compat)
+	$(call cmd,stamp)
+
+#
 # build Linux kernel image, modules and optionally the FDT blob
 #
 
@@ -157,7 +171,7 @@ quiet_cmd_build_targets = BUILD   $(build-targets)
       cmd_build_targets = $(env) $(MAKE) -C $(KERNELSRC) $(build-args) \
 			  $(build-vars) $(build-targets)
 
-$(pkgtree)/.build: $(pkgtree)/.configure
+$(pkgtree)/.build: $(pkgtree)/.gcc6-compat $(pkgtree)/.configure
 	$(call cmd,build_targets)
 	$(call cmd,build_dtbs)
 	$(call cmd,stamp)
