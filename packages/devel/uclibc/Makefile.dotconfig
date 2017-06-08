@@ -11,6 +11,7 @@ endif
 
 CONFIGS += $(pkgsrctree)/conf/common.config
 CONFIGS += $(pkgsrctree)/conf/locale-$(or $(CONFIG_PACKAGE_DEVEL_UCLIBC_WITH_LOCALE),n)
+CONFIGS += $(pkgsrctree)/conf/iconv-$(or $(CONFIG_PACKAGE_DEVEL_UCLIBC_WITH_ICONV),n)
 
 $(pkgtree)/build:
 	$(call cmd,mkdir_p)
