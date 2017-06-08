@@ -1,0 +1,49 @@
+From a22d6085be9c6c248e11bf61fb346c05f2ec8aca Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 8 Jun 2017 11:08:58 +0200
+Subject: [PATCH 2/2] utils: fix out-of-tree builds
+
+Somehow the utils subdirectory is still missing out-of-tree building
+support, while other parts of uclibc support that.
+
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ utils/Makefile    | 4 ++--
+ utils/Makefile.in | 6 +++++-
+ 2 files changed, 7 insertions(+), 3 deletions(-)
+
+diff --git a/utils/Makefile b/utils/Makefile
+index bdaea9f..bdd9519 100644
+--- a/utils/Makefile
++++ b/utils/Makefile
+@@ -6,8 +6,8 @@
+ #
+ 
+ top_srcdir=../
+-top_builddir=../
+-include $(top_builddir)Rules.mak
++top_builddir=$(if $(O),$(O),..)/
++include $(top_srcdir)Rules.mak
+ all: utils
+ include Makefile.in
+ include $(top_srcdir)Makerules
+diff --git a/utils/Makefile.in b/utils/Makefile.in
+index 461e953..c74b2fd 100644
+--- a/utils/Makefile.in
++++ b/utils/Makefile.in
+@@ -102,7 +102,11 @@ utils: $(utils_OBJ) $(utils_LOCALE_OBJ)
+ 
+ # NOTE: We build the utils AFTER we have a uClibc-targeted toolchain.
+ 
+-$(utils_OBJ): $(utils_OUT)/% : $(utils_DIR)/%.c | $(libc)
++subdirs: $(addprefix $(top_builddir),$(subdirs))
++$(addprefix $(top_builddir),$(subdirs)):
++	$(do_mkdir)
++
++$(utils_OBJ): $(utils_OUT)/% : $(utils_DIR)/%.c | $(libc) subdirs
+ 	$(compile.u)
+ 
+ $(utils_OUT)/locale: $(top_srcdir)extra/locale/programs/locale.c | $(libc)
+-- 
+2.7.4
+

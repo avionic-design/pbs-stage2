@@ -1,0 +1,55 @@
+From 33b3ff6c076a62425baf549513230424ca885e85 Mon Sep 17 00:00:00 2001
+From: Bert van Hall <bert.vanhall@avionic-design.de>
+Date: Thu, 8 Jun 2017 10:58:54 +0200
+Subject: [PATCH 1/2] Fix path length issues
+
+Rebase one of two patches fixing build problems due to the long paths
+used in the build system. The other patch has been applied upstream.
+
+Original message:
+
+uClibc: Add two patches to fix path name length issues
+
+The uClibc build system doesn't work well with long path names. When
+building out-of-tree, an absolute path to the build directory is used,
+which in turn causes a number of issues in the build system. The Kconfig
+implementation uses a maximum path length of 127 characters, which is
+relatively easy to break when building in PBS (I first came across this
+issue when building a uClibc-based toolchain). Furthermore the build
+system collects a list of files to link into final static and shared
+libraries. Unfortunately the list contains the absolute path to each of
+the files, which overflows the system-imposed limit for the shell's
+argument and environment list (ARG_MAX).
+
+The former problem can easily be fixed by substituting PATH_MAX + 1 for
+the path length limit, while the latter is more difficult to fix.
+Ideally the build system should probably try and create convenience
+libraries containing a smaller number of files and link that into the
+final libraries. However that would be a very intrusive change, so an
+alternative was chosen for now: when building the final library, we
+change into the build directory and strip the build directory from the
+path to each file, which will significantly reduce the length of each
+parameter listed on the command-line.
+
+Original-author: Thierry Reding <thierry.reding@avionic-design.de>
+Signed-off-by: Bert van Hall <bert.vanhall@avionic-design.de>
+---
+ Makerules | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Makerules b/Makerules
+index fd40e6c..6b80ffd 100644
+--- a/Makerules
++++ b/Makerules
+@@ -273,7 +273,7 @@ cmd_compile.mi= $(cmd_compile.m:-c=-E -dD) $(UCLIBC_EXTRA_CPPFLAGS)
+ cmd_compile-m = $(CC) $^ -c -o $@ $(CFLAGS) $(CFLAGS-$(suffix $@)) $(CFLAGS-$(notdir $(@D))) $(CFLAGS-$(notdir $@)) $(sort $(foreach d,$(^:$(top_srcdir)=),$(collect_multi_flags)))
+ cmd_strip     = $(STRIPTOOL) $(STRIP_FLAGS) $^
+ cmd_t_strip   = $(STRIPTOOL) $(STRIP_FLAGS) $@
+-cmd_ar        = $(AR) $(ARFLAGS) $@ $(call objects_with_syms,,$^)
++cmd_ar        = (cd $(top_builddir) && $(AR) $(ARFLAGS) $@ $(subst $(top_builddir),,$(call objects_with_syms,,$^)))
+ 
+ define do_ln
+ 	@$(disp_ln)
+-- 
+2.7.4
+

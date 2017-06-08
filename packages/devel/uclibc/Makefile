@@ -1,8 +1,8 @@
-PACKAGE = uClibc
-VERSION = 0.9.33.2
+PACKAGE = uClibc-ng
+VERSION = 1.0.24
 LICENSE = LGPL
 
-LOCATION = http://uclibc.org/downloads
+LOCATION = https://downloads.uclibc-ng.org/releases/$(VERSION)
 TARBALLS = $(PACKAGE)-$(VERSION).tar.xz
 
 include packages/common.mk
@@ -64,8 +64,9 @@ $(pkgtree)/.do-install: $(pkgtree)/.build $(dest-dirs)
 	$(call cmd,stamp)
 
 stripfiles = \
+	/lib/ld-uClibc-$(VERSION).so \
 	/lib/libthread-db*.so \
-	/lib/libpthread*.so \
+	/lib/libuClibc-$(VERSION).so \
 	$(prefix)/bin/ldd \
 	$(prefix)/bin/getconf \
 	/sbin/ldconfig
